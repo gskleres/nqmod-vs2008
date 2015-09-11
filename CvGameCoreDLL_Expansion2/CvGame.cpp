@@ -8126,13 +8126,16 @@ void CvGame::updateMoves()
 				else
 					processPlayerAutoMoves = true;
 			}
-
+			
+			// FIRST TURN FIX
+			// Generate an array of player numbers [0,1,..,MAX_PLAYERS-1]
 			size_t Oi;
 			int processOrder[MAX_PLAYERS];
 			for (Oi = 0; Oi < MAX_PLAYERS; Oi++) 
 			{
 				processOrder[Oi] = Oi;
 			}
+			// Fisher-Yates shuffle that array
 			for (Oi = 0; Oi < MAX_PLAYERS - 1; Oi++) 
 			{
 			  size_t j = Oi + rand() / (RAND_MAX / (MAX_PLAYERS - Oi) + 1);
@@ -8140,7 +8143,7 @@ void CvGame::updateMoves()
 			  processOrder[j] = processOrder[Oi];
 			  processOrder[Oi] = t;
 			}
-
+			// Do the turn processing in the new random order
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{
 				CvPlayer& player = GET_PLAYER((PlayerTypes)processOrder[iI]);
@@ -8368,12 +8371,15 @@ void CvGame::updateMoves()
 		if (isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
 		{//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
 			// KWG: This code should go into CheckPlayerTurnDeactivate
+			// FIRST TURN FIX
+			// Generate an array of player numbers [0,1,..,MAX_PLAYERS-1]
 			size_t Oi;
 			int processOrder[MAX_PLAYERS];
 			for (Oi = 0; Oi < MAX_PLAYERS; Oi++) 
 			{
 				processOrder[Oi] = Oi;
 			}
+			// Fisher-Yates shuffle that array
 			for (Oi = 0; Oi < MAX_PLAYERS - 1; Oi++) 
 			{
 			  size_t j = Oi + rand() / (RAND_MAX / (MAX_PLAYERS - Oi) + 1);
@@ -8381,7 +8387,7 @@ void CvGame::updateMoves()
 			  processOrder[j] = processOrder[Oi];
 			  processOrder[Oi] = t;
 			}
-
+			// Do the turn processing in the new random order
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{
 				CvPlayer& player = GET_PLAYER((PlayerTypes)processOrder[iI]);
