@@ -8128,20 +8128,17 @@ void CvGame::updateMoves()
 			}
 			
 			// FIRST TURN FIX
-			// Generate an array of player numbers [0,1,..,MAX_PLAYERS-1]
+			// Generate random order using inside-out Fisher-Yates shuffle
+			// Uses Civ's built-in synchronous random number generator 
 			size_t Oi;
 			int processOrder[MAX_PLAYERS];
 			for (Oi = 0; Oi < MAX_PLAYERS; Oi++) 
 			{
-				processOrder[Oi] = Oi;
-			}
-			// Fisher-Yates shuffle that array
-			for (Oi = 0; Oi < MAX_PLAYERS - 1; Oi++) 
-			{
-			  size_t j = Oi + rand() / (RAND_MAX / (MAX_PLAYERS - Oi) + 1);
-			  int t = processOrder[j];
-			  processOrder[j] = processOrder[Oi];
-			  processOrder[Oi] = t;
+				size_t j = getJonRandNum(Oi+1, "Generate Random Player Update Order");
+				if (j != Oi) {
+					processOrder[Oi] = processOrder[j];
+				}
+				processOrder[j] = Oi;
 			}
 			// Do the turn processing in the new random order
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
@@ -8372,20 +8369,17 @@ void CvGame::updateMoves()
 		{//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
 			// KWG: This code should go into CheckPlayerTurnDeactivate
 			// FIRST TURN FIX
-			// Generate an array of player numbers [0,1,..,MAX_PLAYERS-1]
+			// Generate random order using inside-out Fisher-Yates shuffle
+			// Uses Civ's built-in synchronous random number generator 
 			size_t Oi;
 			int processOrder[MAX_PLAYERS];
 			for (Oi = 0; Oi < MAX_PLAYERS; Oi++) 
 			{
-				processOrder[Oi] = Oi;
-			}
-			// Fisher-Yates shuffle that array
-			for (Oi = 0; Oi < MAX_PLAYERS - 1; Oi++) 
-			{
-			  size_t j = Oi + rand() / (RAND_MAX / (MAX_PLAYERS - Oi) + 1);
-			  int t = processOrder[j];
-			  processOrder[j] = processOrder[Oi];
-			  processOrder[Oi] = t;
+				size_t j = getJonRandNum(Oi+1, "Generate Random Player Update Order");
+				if (j != Oi) {
+					processOrder[Oi] = processOrder[j];
+				}
+				processOrder[j] = Oi;
 			}
 			// Do the turn processing in the new random order
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
