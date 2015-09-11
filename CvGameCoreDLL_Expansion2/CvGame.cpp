@@ -1,5 +1,5 @@
 /*	-------------------------------------------------------------------------------------------------------
-	© 1991-2012 Take-Two Interactive Software and its subsidiaries.  Developed by Firaxis Games.  
+	Â© 1991-2012 Take-Two Interactive Software and its subsidiaries.  Developed by Firaxis Games.  
 	Sid Meier's Civilization V, Civ, Civilization, 2K Games, Firaxis Games, Take-Two Interactive Software 
 	and their respective logos are all trademarks of Take-Two interactive Software, Inc.  
 	All other marks and trademarks are the property of their respective owners.  
@@ -8127,14 +8127,28 @@ void CvGame::updateMoves()
 					processPlayerAutoMoves = true;
 			}
 
+			size_t Oi;
+			int processOrder[MAX_PLAYERS];
+			for (Oi = 0; Oi < MAX_PLAYERS; Oi++) 
+			{
+				processOrder[Oi] = Oi;
+			}
+			for (Oi = 0; Oi < MAX_PLAYERS - 1; Oi++) 
+			{
+			  size_t j = Oi + rand() / (RAND_MAX / (MAX_PLAYERS - Oi) + 1);
+			  int t = processOrder[j];
+			  processOrder[j] = processOrder[Oi];
+			  processOrder[Oi] = t;
+			}
+
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{
-				CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
+				CvPlayer& player = GET_PLAYER((PlayerTypes)processOrder[iI]);
 
 				player.checkInitialTurnAIProcessed();
 				if(player.isTurnActive() && player.isHuman())
 				{
-					playersToProcess.push_back(static_cast<PlayerTypes>(iI));
+					playersToProcess.push_back(static_cast<PlayerTypes>(processOrder[iI]));
 				}
 			}
 		}
@@ -8354,9 +8368,23 @@ void CvGame::updateMoves()
 		if (isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
 		{//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
 			// KWG: This code should go into CheckPlayerTurnDeactivate
+			size_t Oi;
+			int processOrder[MAX_PLAYERS];
+			for (Oi = 0; Oi < MAX_PLAYERS; Oi++) 
+			{
+				processOrder[Oi] = Oi;
+			}
+			for (Oi = 0; Oi < MAX_PLAYERS - 1; Oi++) 
+			{
+			  size_t j = Oi + rand() / (RAND_MAX / (MAX_PLAYERS - Oi) + 1);
+			  int t = processOrder[j];
+			  processOrder[j] = processOrder[Oi];
+			  processOrder[Oi] = t;
+			}
+
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{
-				CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
+				CvPlayer& player = GET_PLAYER((PlayerTypes)processOrder[iI]);
 				if(!player.isTurnActive() && player.isHuman() && player.isAlive() && player.isSimultaneousTurns())
 				{
 					player.setTurnActive(true);
