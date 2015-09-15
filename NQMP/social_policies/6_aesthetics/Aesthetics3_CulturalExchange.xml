@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 6/11/2015 11:59:50 PM -->
+<GameData>
+
+	<!-- Cultural Exchange -->
+	<Policies>
+		<Update>
+			<Set SharedReligionTourismModifier="0" TradeRouteTourismModifier="0" OpenBordersTourismModifier="0" ExtraTourismPerGreatWork="2" />
+			<Where Type="POLICY_ETHICS" />
+		</Update>
+	</Policies>
+	<Policy_ImprovementCultureChanges>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_TRADING_POST</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_LANDMARK</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_BRAZILWOOD_CAMP</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_CHATEAU</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_MOAI</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_ACADEMY</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_CUSTOMS_HOUSE</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_MANUFACTORY</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_CITADEL</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<ImprovementType>IMPROVEMENT_HOLY_SITE</ImprovementType>
+			<CultureChange>1</CultureChange>
+		</Row>
+	</Policy_ImprovementCultureChanges>
+	<Policy_GreatWorkYieldChanges>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<YieldType>YIELD_CULTURE</YieldType>
+			<Yield>2</Yield>
+		</Row>
+	</Policy_GreatWorkYieldChanges>
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_ETHICS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_ETHICS_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement. +2 [ICON_CULTURE] Culture and +2 [ICON_TOURISM] Tourism from every Great Work.</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_ETHICS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_ETHICS_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement. +2 [ICON_CULTURE] Culture and +2 [ICON_TOURISM] Tourism from every Great Work.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_ETHICS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_ETHICS_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement. +2 [ICON_CULTURE] Culture and +2 [ICON_TOURISM] Tourism from every Great Work.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_ETHICS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_ETHICS_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement. +2 [ICON_CULTURE] Culture and +2 [ICON_TOURISM] Tourism from every Great Work.</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>

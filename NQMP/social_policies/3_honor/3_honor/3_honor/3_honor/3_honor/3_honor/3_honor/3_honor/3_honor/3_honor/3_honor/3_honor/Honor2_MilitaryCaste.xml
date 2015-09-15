@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 6/9/2015 11:34:48 PM -->
+<GameData>
+
+	<!-- MILITARY CASTE -->
+	<Policies>
+		<Update>
+			<Set GarrisonFreeMaintenance="true" ProductionPerGarrisonedUnit="1" />
+			<Where Type="POLICY_MILITARY_CASTE" />
+		</Update>
+	</Policies>
+	<Language_en_US>
+		<Update>
+			<Set Text="[COLOR_POSITIVE_TEXT]Military Caste[ENDCOLOR][NEWLINE]Garrisoned units cost no maintenance and provide the city with +1 [ICON_HAPPINESS_1] Happiness, +1 [ICON_PRODUCTION] Production, and +2 [ICON_CULTURE] Culture." />
+			<Where Tag="TXT_KEY_POLICY_MILITARY_CASTE_HELP" />
+		</Update>
+	</Language_en_US>
+
+</GameData>

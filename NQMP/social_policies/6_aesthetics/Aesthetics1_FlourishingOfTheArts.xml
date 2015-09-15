@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 6/11/2015 11:58:48 PM -->
+<GameData>
+
+	<!-- Flourishing of the Arts -->
+	<Policies>
+		<Update>
+			<Set CultureWonderMultiplier="25" />
+			<Where Type="POLICY_FLOURISHING_OF_ARTS" />
+		</Update>
+	</Policies>
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE][ICON_CULTURE] Culture increased by 25% in all cities which have built a World Wonder and the empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE][ICON_CULTURE] Culture increased by 25% in all cities which have built a World Wonder and the empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE][ICON_CULTURE] Culture increased by 25% in all cities which have built a World Wonder and the empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE][ICON_CULTURE] Culture increased by 25% in all cities which have built a World Wonder and the empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>

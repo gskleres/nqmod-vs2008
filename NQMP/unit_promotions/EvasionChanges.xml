@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 5/6/2015 4:16:37 AM -->
+<GameData>
+	
+	<UnitPromotions>
+		<Row>
+			<Type>PROMOTION_EVASION_I2</Type>
+			<Description>TXT_KEY_PROMOTION_EVASION_I2</Description>
+			<Help>TXT_KEY_PROMOTION_EVASION_I2</Help>
+			<Sound>AS2D_IF_LEVELUP</Sound>
+			<EvasionChange>75</EvasionChange>
+			<PortraitIndex>59</PortraitIndex>
+			<IconAtlas>ABILITY_ATLAS</IconAtlas>
+			<PediaType>PEDIA_ATTRIBUTES</PediaType>
+			<PediaEntry>TXT_KEY_PEDIA_PROMOTION_EVASION_I2</PediaEntry>
+		</Row>
+	</UnitPromotions>
+	<Language_en_US>
+		<Row Tag="TXT_KEY_PROMOTION_EVASION_I2">
+			<Text>Evasion (75)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PEDIA_PROMOTION_EVASION_I2">
+			<Text>Evasion (75)</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_PROMOTION_EVASION_I2">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Evasion (75)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PEDIA_PROMOTION_EVASION_I2">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Evasion (75)</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_PROMOTION_EVASION_I2">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Evasion (75)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PEDIA_PROMOTION_EVASION_I2">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Evasion (75)</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_PROMOTION_EVASION_I2">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Evasion (75)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PEDIA_PROMOTION_EVASION_I2">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Evasion (75)</Text>
+		</Row>
+	</Language_RU_RU>
+	
+</GameData>
