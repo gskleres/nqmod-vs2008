@@ -1817,6 +1817,69 @@ CvGlobals::~CvGlobals()
 {
 }
 
+#ifdef NQM_MINIDUMPS
+/************************************************************************************************/
+/* MINIDUMP_MOD                           04/10/11                                terkhen       */
+/*                                                                                              */
+/* See http://www.debuginfo.com/articles/effminidumps.html                                      */
+/************************************************************************************************/
+// Originally for Civ 4, ported by ls612 to Civ 5
+#include <dbghelp.h>
+#pragma comment (lib, "dbghelp.lib")
+
+void CreateMiniDump(EXCEPTION_POINTERS *pep)
+{
+	/* Open a file to store the minidump. */
+	HANDLE hFile = CreateFile(_T("CvMiniDump.dmp"),
+		GENERIC_READ | GENERIC_WRITE,
+		0,
+		NULL,
+		CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL);
+
+	if ((hFile != NULL) && (hFile != INVALID_HANDLE_VALUE))
+	{
+		/* Create the minidump. */
+		MINIDUMP_EXCEPTION_INFORMATION mdei;
+
+		mdei.ThreadId = GetCurrentThreadId();
+		mdei.ExceptionPointers = pep;
+		mdei.ClientPointers = FALSE;
+
+		// Delnar: MiniDumpNormal doesn't always provide enough info, especially if crashes are with an older version
+		MINIDUMP_TYPE mdt = MiniDumpWithPrivateReadWriteMemory;
+
+		BOOL result = MiniDumpWriteDump(GetCurrentProcess(),
+			GetCurrentProcessId(),
+			hFile,
+			mdt,
+			(pep != NULL) ? &mdei : NULL,
+			NULL,
+			NULL);
+
+		if (result)
+			_tprintf(_T("Minidump created.\n"));
+		else
+			_tprintf(_T("MiniDumpWriteDump failed. Error: %u \n"), GetLastError());
+
+		/* Close the file. */
+		CloseHandle(hFile);
+	}
+	else
+	{
+		_tprintf(_T("CreateFile failed. Error: %u \n"), GetLastError());
+		return;
+	}
+}
+
+LONG WINAPI CustomFilter(EXCEPTION_POINTERS *ExceptionInfo)
+{
+	CreateMiniDump(ExceptionInfo);
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+#endif
+
 //
 // allocate
 //
@@ -5621,6 +5684,15 @@ CvString CvGlobals::getDefineSTRING(const char* szName, bool bReportErrors)
 	return strReturn;
 }
 
+#ifdef NQM_CACHE_DOUBLE
+double CvGlobals::getDefineDOUBLE(const char* szName, bool bReportErrors)
+{
+	double dReturn = 0.0;
+	getDefineValue(szName, dReturn, bReportErrors);
+	return dReturn;
+}
+#endif
+
 bool CvGlobals::getDefineValue(const char* szName, int& iValue, bool bReportErrors)
 {
 	bool bSuccess = false;
@@ -5664,6 +5736,30 @@ bool CvGlobals::getDefineValue(const char* szName, float& fValue, bool bReportEr
 
 	return bSuccess;
 }
+
+#ifdef NQM_CACHE_DOUBLE
+bool CvGlobals::getDefineValue(const char* szName, double& dValue, bool bReportErrors)
+{
+	bool bSuccess = false;
+	if (m_kGlobalDefinesLookup.Bind(1, szName))
+	{
+		if (m_kGlobalDefinesLookup.Step())
+		{
+			dValue = m_kGlobalDefinesLookup.GetDouble(0);
+			bSuccess = true;
+		}
+	}
+
+	m_kGlobalDefinesLookup.Reset();
+
+	if (bReportErrors)
+	{
+		CvAssertFmt(bSuccess, "Float Define Value not found for %s", szName);
+	}
+
+	return bSuccess;
+}
+#endif
 
 bool CvGlobals::getDefineValue(const char* szName, CvString& strValue, bool bReportErrors)
 {
