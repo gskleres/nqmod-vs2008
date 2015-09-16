@@ -1,5 +1,5 @@
 /*	-------------------------------------------------------------------------------------------------------
-	© 1991-2012 Take-Two Interactive Software and its subsidiaries.  Developed by Firaxis Games.  
+	Â© 1991-2012 Take-Two Interactive Software and its subsidiaries.  Developed by Firaxis Games.  
 	Sid Meier's Civilization V, Civ, Civilization, 2K Games, Firaxis Games, Take-Two Interactive Software 
 	and their respective logos are all trademarks of Take-Two interactive Software, Inc.  
 	All other marks and trademarks are the property of their respective owners.  
@@ -8126,15 +8126,20 @@ void CvGame::updateMoves()
 				else
 					processPlayerAutoMoves = true;
 			}
-
+			
+			// FIRST TURN FIX
+			// Generate random order
+			int aiOrder[MAX_PLAYERS];
+			shuffleArray(aiOrder, MAX_PLAYERS, getJonRand());
+			// Do the turn processing in the new random order
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{
-				CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
+				CvPlayer& player = GET_PLAYER((PlayerTypes)aiOrder[iI]);
 
 				player.checkInitialTurnAIProcessed();
 				if(player.isTurnActive() && player.isHuman())
 				{
-					playersToProcess.push_back(static_cast<PlayerTypes>(iI));
+					playersToProcess.push_back(static_cast<PlayerTypes>(aiOrder[iI]));
 				}
 			}
 		}
@@ -8354,12 +8359,20 @@ void CvGame::updateMoves()
 		if (isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
 		{//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
 			// KWG: This code should go into CheckPlayerTurnDeactivate
+			// FIRST TURN FIX
+			// Generate random order
+			int aiOrder[MAX_PLAYERS];
+			shuffleArray(aiOrder, MAX_PLAYERS, getJonRand());
+			// Do the turn processing in the new random order
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{
-				CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
+				CvPlayer& player = GET_PLAYER((PlayerTypes)aiOrder[iI]);
 				if(!player.isTurnActive() && player.isHuman() && player.isAlive() && player.isSimultaneousTurns())
 				{
 					player.setTurnActive(true);
+					// introduce a delay when activating players so that 
+					// response times at the beginning of turns are made more fair
+					Sleep(750.0f);
 				}
 			}
 		}
