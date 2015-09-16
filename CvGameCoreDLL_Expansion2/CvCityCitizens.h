@@ -53,7 +53,9 @@ public:
 	void SetFocusType(CityAIFocusTypes eFocus);
 
 	// Specialist AI
+#ifndef NQM_PRUNING
 	bool IsAIWantSpecialistRightNow();
+#endif
 	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
 	int GetSpecialistValue(SpecialistTypes eSpecialist);
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist);

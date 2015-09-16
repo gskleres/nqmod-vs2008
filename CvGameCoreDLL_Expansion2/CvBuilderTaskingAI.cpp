@@ -1966,6 +1966,7 @@ int CvBuilderTaskingAI::GetResourceWeight(ResourceTypes eResource, ImprovementTy
 	return iWeight;
 }
 
+#ifndef NQM_PRUNING
 /// Determine if an improvement will increase any of the outputs of the plot
 bool CvBuilderTaskingAI::IsImprovementBeneficial(CvPlot* pPlot, const CvBuildInfo& kBuild, YieldTypes eYield, bool bIsBreakEvenOK)
 {
@@ -2078,6 +2079,7 @@ bool CvBuilderTaskingAI::IsImprovementBeneficial(CvPlot* pPlot, const CvBuildInf
 
 	return false;
 }
+#endif
 
 /// Get this city that can interact with this plot
 CvCity* CvBuilderTaskingAI::GetWorkingCity(CvPlot* pPlot)

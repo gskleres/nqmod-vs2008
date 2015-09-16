@@ -90,7 +90,9 @@ public:
 	int GetBuildCostWeight(int iWeight, CvPlot* pPlot, BuildTypes eBuild);
 	int GetBuildTimeWeight(CvUnit* pUnit, CvPlot* pPlot, BuildTypes eBuild, bool bIgnoreFeatureTime = false, int iAdditionalTime = 0);
 	int GetResourceWeight(ResourceTypes eResource, ImprovementTypes eImprovement, int iQuantity);
+#ifndef NQM_PRUNING
 	bool IsImprovementBeneficial(CvPlot* pPlot, const CvBuildInfo& kBuild, YieldTypes eYield, bool bIsBreakEvenOK = false);
+#endif
 
 	CvCity* GetWorkingCity(CvPlot* pPlot);
 	bool DoesBuildHelpRush(CvUnit* pUnit, CvPlot* pPlot, BuildTypes eBuild);

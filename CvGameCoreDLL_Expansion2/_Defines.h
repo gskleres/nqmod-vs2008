@@ -25,6 +25,8 @@
 #define NQM_MINIDUMPS
 /// Can cache doubles from XML (Delnar: DatabaseUtility actually supports double-type, don't know why Firaxis didn't bother putting this in for good measure)
 #define NQM_CACHE_DOUBLE
+/// Removes unused functions that simply increase filesize of the DLL without providing any benefit
+#define NQM_PRUNING
 
 // GlobalDefines (GD) wrappers
 // INT

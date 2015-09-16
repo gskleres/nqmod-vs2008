@@ -576,6 +576,7 @@ void CvCityCitizens::SetFocusType(CityAIFocusTypes eFocus)
 	}
 }
 
+#ifndef NQM_PRUNING
 /// Does the AI want a Specialist?
 bool CvCityCitizens::IsAIWantSpecialistRightNow()
 {
@@ -886,13 +887,16 @@ bool CvCityCitizens::IsAIWantSpecialistRightNow()
 
 	return false;
 }
+#endif
 
 /// What is the Building Type the AI likes the Specialist of most right now?
 BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 {
 	BuildingTypes eBestBuilding = NO_BUILDING;
 	int iBestSpecialistValue = -1;
+#ifndef NQM_PRUNING
 	int iBestUnmodifiedSpecialistValue = -1;
+#endif
 
 	SpecialistTypes eSpecialist;
 	int iValue;
@@ -915,23 +919,31 @@ BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 
 					iValue = GetSpecialistValue(eSpecialist);
 
+#ifndef NQM_PRUNING
 					// Add a bit more weight to a Building if it has more slots (10% per).  This will bias the AI to fill a single building over spreading Specialists out
 					int iTemp = ((GetNumSpecialistsAllowedByBuilding(*pkBuildingInfo) - 1) * iValue * 10);
 					iTemp /= 100;
 					iValue += iTemp;
+#endif
 
 					if(iValue > iBestSpecialistValue)
 					{
 						eBestBuilding = eBuilding;
 						iBestSpecialistValue = iValue;
+#ifndef NQM_PRUNING
 						iBestUnmodifiedSpecialistValue = iValue - iTemp;
+#endif
 					}
 				}
 			}
 		}
 	}
 
+#ifdef NQM_PRUNING
+	iSpecialistValue = iBestSpecialistValue;
+#else
 	iSpecialistValue = iBestUnmodifiedSpecialistValue;
+#endif
 	return eBestBuilding;
 }
 
