@@ -446,7 +446,8 @@ void CvPlayerAI::AI_chooseFreeGreatPerson()
 			CvCity* pCapital = getCapitalCity();
 			if(pCapital)
 			{
-				pCapital->GetCityCitizens()->DoSpawnGreatPerson(eDesiredGreatPerson, true, false);
+				// NQMP GJS: AI should also get truly "free" Great People when the player would as well. Changed 2nd parameter below from true to false.
+				pCapital->GetCityCitizens()->DoSpawnGreatPerson(eDesiredGreatPerson, false, false);
 			}
 			ChangeNumFreeGreatPeople(-1);
 		}

@@ -722,7 +722,8 @@ void CvDllNetMessageHandler::ResponseGreatPersonChoice(PlayerTypes ePlayer, Unit
 	CvCity* pCity = kPlayer.GetGreatPersonSpawnCity(eGreatPersonUnit);
 	if(pCity)
 	{
-		pCity->GetCityCitizens()->DoSpawnGreatPerson(eGreatPersonUnit, true, false);
+		// GJS NQMP - changed 2nd parameter to false so that "free" Great People from liberty finisher & buildings are actually free
+		pCity->GetCityCitizens()->DoSpawnGreatPerson(eGreatPersonUnit, false, false);
 	}
 	kPlayer.ChangeNumFreeGreatPeople(-1);
 }
