@@ -5756,7 +5756,9 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 						// Great prophet?
 						if(GC.GetGameUnits()->GetEntry(eFreeUnitType)->IsFoundReligion())
 						{
-							GetCityCitizens()->DoSpawnGreatPerson(eFreeUnitType, true /*bIncrementCount*/, true);
+							// NQMP GJS - this code only runs when a building spawns a unit that can found a religion (currently ONLY Hagia Sophia)
+							// Since that Great Prophet should be free, I changed the 2 boolean parameters below from true to false
+							GetCityCitizens()->DoSpawnGreatPerson(eFreeUnitType, false /*bIncrementCount*/, false);
 						}
 						else
 						{
@@ -5780,51 +5782,59 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 							}
 							else if (pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_WRITER"))
 							{
-								owningPlayer.incrementGreatWritersCreated();
+								// GJS NQMP - Free Great Writer is now actually free
+								//owningPlayer.incrementGreatWritersCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
 							}							
 							else if (pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_ARTIST"))
 							{
-								owningPlayer.incrementGreatArtistsCreated();
+								// GJS NQMP - Free Great Artist is now actually free
+								//owningPlayer.incrementGreatArtistsCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
 							}							
 							else if (pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_MUSICIAN"))
 							{
-								owningPlayer.incrementGreatMusiciansCreated();
+								// GJS NQMP - Free Great Musician is now actually free
+								//owningPlayer.incrementGreatMusiciansCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
 							}
 							// GJS: Start separation of great people
 							else if (pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_SCIENTIST"))
 							{
-								owningPlayer.incrementGreatScientistsCreated();
+								// GJS NQMP - Free Great Scientist is now actually free
+								//owningPlayer.incrementGreatScientistsCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
 							}
 							else if (pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_ENGINEER"))
 							{
-								owningPlayer.incrementGreatEngineersCreated();
+								// GJS NQMP - Free Great Engineer is now actually free
+								//owningPlayer.incrementGreatEngineersCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
 							}
 							else if (pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_MERCHANT"))
 							{
-								owningPlayer.incrementGreatMerchantsCreated();
+								// GJS NQMP - Free Great merchant is now actually free
+								//owningPlayer.incrementGreatMerchantsCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
 							}
 							else if (pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_PROPHET"))
 							{
-								owningPlayer.incrementGreatProphetsCreated();
+								// GJS NQMP - Free Great Prophet is now actually free
+								//owningPlayer.incrementGreatProphetsCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
 							}
 							// GJS: End separation of great people
 							else if (pFreeUnit->IsGreatPerson())
 							{
-								owningPlayer.incrementGreatPeopleCreated();
+								// GJS NQMP - Free Great Person is now actually free
+								//owningPlayer.incrementGreatPeopleCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
 							}

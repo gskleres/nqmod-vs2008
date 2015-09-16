@@ -13368,6 +13368,7 @@ void CvPlayer::DoSpawnGreatPerson(PlayerTypes eMinor)
 		if (pNewGreatPeople)
 		{
 			// Bump up the count
+			/* NQMP GJS: Actually don't bump up the count lolz ... patronage finisher now gives free Great People :)
 			if(pNewGreatPeople->IsGreatGeneral())
 			{
 				incrementGreatGeneralsCreated();
@@ -13410,6 +13411,7 @@ void CvPlayer::DoSpawnGreatPerson(PlayerTypes eMinor)
 			{
 				incrementGreatPeopleCreated();
 			}
+			*/
 
 			if (pNewGreatPeople->IsGreatAdmiral())
 			{
@@ -21713,7 +21715,8 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 									}
 									else if (pNewUnit->getUnitInfo().GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_WRITER"))
 									{
-										incrementGreatWritersCreated();
+										// GJS NQMP - Free Great Writers from policies are actually free
+										//incrementGreatWritersCreated();
 
 										if (pNewUnit->getUnitInfo().GetOneShotTourism() > 0)
 										{
@@ -21724,12 +21727,14 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 									}							
 									else if (pNewUnit->getUnitInfo().GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_ARTIST"))
 									{
-										incrementGreatArtistsCreated();
+										// GJS NQMP - Free Great Artists from policies are actually free
+										//incrementGreatArtistsCreated();
 										pNewUnit->jumpToNearestValidPlot();
 									}							
 									else if (pNewUnit->getUnitInfo().GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_MUSICIAN"))
 									{
-										incrementGreatMusiciansCreated();
+										// GJS NQMP - Free Great Musicians from policies are actually free
+										//incrementGreatMusiciansCreated();
 										pNewUnit->jumpToNearestValidPlot();
 									}
 									// GJS: begin separation of great people
@@ -21737,17 +21742,20 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 									{
 										// GJS: Great Scientists now bulb for science at point of birth, not current science 
 										pNewUnit->SetResearchBulbAmount(GetScienceYieldFromPreviousTurns(GC.getGame().getGameTurn(), pNewUnit->getUnitInfo().GetBaseBeakersTurnsToCount()));
-										incrementGreatScientistsCreated();
+										// GJS NQMP - Free Great Scientists from policies are actually free
+										//incrementGreatScientistsCreated();
 										pNewUnit->jumpToNearestValidPlot();
 									}
 									else if (pNewUnit->getUnitInfo().GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_ENGINEER"))
 									{
-										incrementGreatEngineersCreated();
+										// GJS NQMP - Free Great Engineers from policies are actually free
+										//incrementGreatEngineersCreated();
 										pNewUnit->jumpToNearestValidPlot();
 									}
 									else if (pNewUnit->getUnitInfo().GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_MERCHANT"))
 									{
-										incrementGreatMerchantsCreated();
+										// GJS NQMP - Free Great Merchants from policies are actually free
+										//incrementGreatMerchantsCreated();
 										pNewUnit->jumpToNearestValidPlot();
 									}
 									else if (pNewUnit->getUnitInfo().GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_PROPHET"))

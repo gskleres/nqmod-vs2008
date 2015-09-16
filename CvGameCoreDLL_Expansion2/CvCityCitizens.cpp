@@ -2511,7 +2511,9 @@ void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, b
 			kPlayer.incrementGreatPeopleCreated();
 		}
 	}
-	if(bCountAsProphet || newUnit->getUnitInfo().IsFoundReligion())
+
+	// NQMP GJS: In order to make "free" Great Prophets truly free, had to remove the 2nd half of the check below, left it commented out though in case I screw something up.
+	if(bCountAsProphet)// || newUnit->getUnitInfo().IsFoundReligion())
 	{
 		kPlayer.GetReligions()->ChangeNumProphetsSpawned(1);
 	}
