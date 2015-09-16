@@ -789,6 +789,9 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	{
 		m_abRevealed.setAt(iI, false);
 	}
+#ifdef AUI_CITY_OBSERVER_REVEALS_ALL_CITIES
+	m_abRevealed.setAt(OBSERVER_TEAM, true);
+#endif
 
 	m_strName = "";
 	m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility = "";
@@ -1440,7 +1443,11 @@ CvPlayer* CvCity::GetPlayer()
 //	--------------------------------------------------------------------------------
 void CvCity::doTurn()
 {
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+	AI_PERF_FORMAT("City-AI-perf.csv", ("CvCity::doTurn, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()));
+#else
 	AI_PERF_FORMAT("City-AI-perf.csv", ("CvCity::doTurn, Turn %03d, %s, %s,", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
+#endif
 
 	VALIDATE_OBJECT
 	CvPlot* pLoopPlot;
@@ -10912,7 +10919,11 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 						}
 
 						// if we can't work this tile in this city make it much less likely to be picked
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+						if (hexDistance(iDX, iDY) > NUM_CITY_RINGS)
+#else
 						if (plotDistance(pLoopPlot->getX(),pLoopPlot->getY(),getX(),getY()) > NUM_CITY_RINGS)
+#endif
 						{
 							iInfluenceCost += iPLOT_INFLUENCE_RING_COST;
 						}

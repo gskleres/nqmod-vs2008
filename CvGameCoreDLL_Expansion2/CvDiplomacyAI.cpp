@@ -1903,13 +1903,53 @@ int CvDiplomacyAI::GetRandomPersonalityWeight(int iOriginalValue) const
 	int iMax = /*20*/ GC.getPERSONALITY_FLAVOR_MAX_VALUE();
 	int iPlusMinus = /*2*/ GC.getFLAVOR_RANDOMIZATION_RANGE();
 
+#ifdef AUI_DIPLOMACY_GET_RANDOM_PERSONALITY_WEIGHT_USES_BINOM_RNG
+	int iAdjust = GC.getGame().getJonRandNumBinom(iPlusMinus * 2 + 1, "Diplomacy AI Random Weight");
+#else
 	int iAdjust = GC.getGame().getJonRandNum((iPlusMinus * 2 + 1), "Diplomacy AI Random Weight");
+#endif
 	int iRtnValue = iOriginalValue + iAdjust - iPlusMinus;
 
+#ifdef AUI_DIPLOMACY_GET_RANDOM_PERSONALITY_WEIGHT_USE_REROLLS
+	int iRerolls = 0;
+	if (iRtnValue < iMin)
+	{
+		iRerolls = iMin - iRtnValue;
+		iRtnValue = iMin;
+	}
+	else if (iRtnValue > iMax)
+	{
+		iRerolls = iRtnValue - iMax;
+		iRtnValue = iMax;
+	}
+
+	while (iRerolls != 0)
+	{
+#ifdef AUI_DIPLOMACY_GET_RANDOM_PERSONALITY_WEIGHT_USES_BINOM_RNG
+		iAdjust = GC.getGame().getJonRandNumBinom(2 * iRerolls + 1, "Adjusting Personality Flavor") - iRerolls;
+#else
+		iAdjust = GC.getGame().getJonRandNum(2 * iRerolls + 1, "Adjusting Personality Flavor") - iRerolls;
+#endif
+		iRtnValue += iAdjust;
+
+		iRerolls = 0;
+		if (iRtnValue < iMin)
+		{
+			iRerolls = iMin - iRtnValue;
+			iRtnValue = iMin;
+		}
+		else if (iRtnValue > iMax)
+		{
+			iRerolls = iRtnValue - iMax;
+			iRtnValue = iMax;
+		}
+	}
+#else
 	if(iRtnValue < iMin)
 		iRtnValue = iMin;
 	else if(iRtnValue > iMax)
 		iRtnValue = iMax;
+#endif
 
 	return iRtnValue;
 }
@@ -5502,7 +5542,11 @@ void CvDiplomacyAI::MakeWar()
 		for(int iPlayerLoop = 0; iPlayerLoop < MAX_CIV_PLAYERS; iPlayerLoop++)
 		{
 			PlayerTypes eTarget = (PlayerTypes)iPlayerLoop;
+#ifdef AUI_DIPLOMACY_AI_FIX_WAR_DECLARATION_IN_MULTIPLAYER
+			if (IsPlayerValid(eTarget))
+#else
 			if(IsValidUIDiplomacyTarget(eTarget) && IsPlayerValid(eTarget))
+#endif
 			{
 				iWeight = (int)GetWarProjection(eTarget) + 1;
 
@@ -18892,7 +18936,11 @@ void CvDiplomacyAI::SetPlayerNoSettleRequestAccepted(PlayerTypes ePlayer, bool b
 
 						if(pNearbyPlot != NULL)
 						{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+							if (hexDistance(iLoopX, iLoopY) <= iRange)
+#else
 							if(plotDistance(pNearbyPlot->getX(), pNearbyPlot->getY(), pLoopCity->getX(), pLoopCity->getY()) <= iRange)
+#endif
 							{
 								pNearbyPlot->SetNoSettling(eID, true);
 							}

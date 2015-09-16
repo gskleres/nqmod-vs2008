@@ -290,7 +290,11 @@ CvPlot* CvArmyAI::GetCenterOfMass(DomainTypes eDomainRequired)
 					CvPlot *pLoopPlot = plotXYWithRangeCheck(pRtnValue->getX(), pRtnValue->getY(), iDX, iDY, 2);
 					if (pLoopPlot)
 					{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+						if (hexDistance(iDX, iDY) == 2)
+#else
 						if (plotDistance(pRtnValue->getX(), pRtnValue->getY(), pLoopPlot->getX(), pLoopPlot->getY()) == 2)
+#endif
 						{
 							if (pLoopPlot->isWater() && eDomainRequired == DOMAIN_SEA || !pLoopPlot->isWater() && eDomainRequired == DOMAIN_LAND)
 							{

@@ -227,7 +227,11 @@ void CvTacticalAnalysisMap::RefreshDataForNextPlayer(CvPlayer* pPlayer)
 			m_iTacticalRange = ((GC.getAI_TACTICAL_RECRUIT_RANGE() + GC.getGame().getCurrentEra()) * 2) / 3;  // Have this increase as game goes on
 			m_iUnitStrengthMultiplier = GC.getAI_TACTICAL_MAP_UNIT_STRENGTH_MULTIPLIER() * m_iTacticalRange;
 
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+			AI_PERF_FORMAT("AI-perf.csv", ("Tactical Analysis Map, Turn %03d, %s", GC.getGame().getGameTurn(), m_pPlayer->getCivilizationShortDescription()));
+#else
 			AI_PERF_FORMAT("AI-perf.csv", ("Tactical Analysis Map, Turn %d, %s", GC.getGame().getGameTurn(), m_pPlayer->getCivilizationShortDescription()) );
+#endif
 
 			m_bIsBuilt = false;
 
@@ -408,7 +412,11 @@ void CvTacticalAnalysisMap::SetTargetBombardCells(CvPlot* pTarget, int iRange, b
 			pLoopPlot = plotXY(pTarget->getX(), pTarget->getY(), iDX, iDY);
 			if(pLoopPlot != NULL)
 			{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+				iPlotDistance = hexDistance(iDX, iDY);
+#else
 				iPlotDistance = plotDistance(pLoopPlot->getX(), pLoopPlot->getY(), pTarget->getX(), pTarget->getY());
+#endif
 				if(iPlotDistance > 0 && iPlotDistance <= iRange)
 				{
 					iPlotIndex = GC.getMap().plotNum(pLoopPlot->getX(), pLoopPlot->getY());

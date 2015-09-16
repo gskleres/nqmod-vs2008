@@ -691,7 +691,44 @@ void CvHomelandAI::AssignHomelandMoves()
 	{
 		CvHomelandMove move = *it;
 
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+		static const char* aHomelandMoves[] = { "AI_HOMELAND_MOVE_UNASSIGNED",
+			"AI_HOMELAND_MOVE_EXPLORE",
+			"AI_HOMELAND_MOVE_EXPLORE_SEA",
+			"AI_HOMELAND_MOVE_SETTLE",
+			"AI_HOMELAND_MOVE_GARRISON",
+			"AI_HOMELAND_MOVE_HEAL",
+			"AI_HOMELAND_MOVE_TO_SAFETY",
+			"AI_HOMELAND_MOVE_MOBILE_RESERVE",
+			"AI_HOMELAND_MOVE_SENTRY",
+			"AI_HOMELAND_MOVE_WORKER",
+			"AI_HOMELAND_MOVE_WORKER_SEA",
+			"AI_HOMELAND_MOVE_PATROL",
+			"AI_HOMELAND_MOVE_UPGRADE",
+			"AI_HOMELAND_MOVE_ANCIENT_RUINS",
+			"AI_HOMELAND_MOVE_GARRISON_CITY_STATE",
+			"AI_HOMELAND_MOVE_WRITER",
+			"AI_HOMELAND_MOVE_ARTIST_GOLDEN_AGE",
+			"AI_HOMELAND_MOVE_MUSICIAN",
+			"AI_HOMELAND_MOVE_SCIENTIST_FREE_TECH",
+			"AI_HOMELAND_MOVE_MERCHANT_TRADE",
+			"AI_HOMELAND_MOVE_ENGINEER_HURRY",
+			"AI_HOMELAND_MOVE_GENERAL_GARRISON",
+			"AI_HOMELAND_MOVE_ADMIRAL_GARRISON",
+			"AI_HOMELAND_MOVE_SPACESHIP_PART",
+			"AI_HOMELAND_MOVE_AIRCRAFT_TO_THE_FRONT",
+			"AI_HOMELAND_MOVE_TREASURE",
+			"AI_HOMELAND_MOVE_PROPHET_RELIGION",
+			"AI_HOMELAND_MOVE_MISSIONARY",
+			"AI_HOMELAND_MOVE_INQUISITOR",
+			"AI_HOMELAND_MOVE_TRADE_UNIT",
+			"AI_HOMELAND_MOVE_ARCHAEOLOGIST",
+			"AI_HOMELAND_MOVE_ADD_SPACESHIP_PART",
+			"AI_HOMELAND_MOVE_AIRLIFT" };
+		AI_PERF_FORMAT("AI-perf-home.csv", ("Move Type: %s (%d), Turn %03d, %s", (move.m_eMoveType > 0 && move.m_eMoveType < 33 ? aHomelandMoves[move.m_eMoveType] : "AI_HOMELAND_MOVE_NONE"), (int)move.m_eMoveType, GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()));
+#else
 		AI_PERF_FORMAT("AI-perf-tact.csv", ("Homeland Move: %d, Turn %03d, %s", (int)move.m_eMoveType, GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()) );
+#endif
 
 		switch(move.m_eMoveType)
 		{
@@ -1104,7 +1141,9 @@ void CvHomelandAI::PlotSentryMoves()
 		// See how many moves of this type we can execute
 		for(unsigned int iI = 0; iI < m_TargetedSentryPoints.size(); iI++)
 		{
+#ifndef AUI_PERF_LOGGING_FORMATTING_TWEAKS // Not needed because it's already covered by the general move performance log
 			AI_PERF_FORMAT("Homeland-perf.csv", ("PlotSentryMoves, Turn %03d, %s", GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()) );
+#endif
 
 			CvPlot* pTarget = GC.getMap().plot(m_TargetedSentryPoints[iI].GetTargetX(), m_TargetedSentryPoints[iI].GetTargetY());
 

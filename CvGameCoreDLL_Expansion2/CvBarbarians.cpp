@@ -400,7 +400,11 @@ void CvBarbarians::DoCamps()
 
 															if(pNearbyCampPlot != NULL)
 															{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+																iPlotDistance = hexDistance(iDX, iDY);
+#else
 																iPlotDistance = plotDistance(pNearbyCampPlot->getX(), pNearbyCampPlot->getY(), pLoopPlot->getX(), pLoopPlot->getY());
+#endif
 
 																// Can't be too close to a player
 																if(iPlotDistance <= iPlayerCapitalMinDistance)

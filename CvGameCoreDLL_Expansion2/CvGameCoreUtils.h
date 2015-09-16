@@ -94,6 +94,17 @@ inline int hexspaceXToX(int iHexspaceX, int iHexspaceY)
 inline int hexDistance(int iDX, int iDY)
 {
 	// I'm assuming iDX and iDY are in hex-space
+#ifdef NQM_GAME_CORE_UTILS_OPTIMIZATIONS
+	// Delnar: Using abs() because I trust the compiler to generate more efficient code than if I'd write an abs(int) function myself, especially if the CPU has an abs(int) operation
+	if ((iDX ^ iDY) >= 0)  // the signs match
+	{
+		return abs(iDX) + abs(iDY);
+	}
+	else
+	{
+		return MAX(abs(iDX), abs(iDY));
+	}
+#else
 	if((iDX >= 0) == (iDY >= 0))  // the signs match
 	{
 		int iAbsDX = iDX >= 0 ? iDX : -iDX;
@@ -106,6 +117,7 @@ inline int hexDistance(int iDX, int iDY)
 		int iAbsDY = iDY >= 0 ? iDY : -iDY;
 		return iAbsDX >= iAbsDY ? iAbsDX : iAbsDY;
 	}
+#endif
 }
 
 //
@@ -141,13 +153,21 @@ inline int plotDistance(int iX1, int iY1, int iX2, int iY2)
 
 	iDX = abs(dxWrap(iHX2 - iHX1));
 
+#ifdef NQM_GAME_CORE_UTILS_OPTIMIZATIONS
+	if (((iHX2 - iHX1) ^ (iWrappedDY)) >= 0)  // the signs match
+#else
 	if((iHX2 - iHX1 >= 0) == (iWrappedDY >= 0))  // the signs match
+#endif
 	{
 		return iDX + iDY;
 	}
 	else
 	{
+#ifdef NQM_FAST_COMP
+		return (MAX(iDX, iDY));
+#else
 		return (std::max(iDX, iDY));
+#endif
 	}
 }
 //
@@ -211,6 +231,10 @@ inline CvPlot* PlotFromHex(CvMap& kMap, int iHexX, int iHexY)
 
 inline CvPlot* plotXYWithRangeCheck(int iX, int iY, int iDX, int iDY, int iRange)
 {
+#ifdef NQM_GAME_CORE_UTILS_OPTIMIZATIONS
+	// I'm assuming iDX and iDY are in hex-space
+	if (hexDistance(iDX, iDY) > iRange)
+#else
 	int hexRange;
 
 	// I'm assuming iDX and iDY are in hex-space
@@ -228,6 +252,7 @@ inline CvPlot* plotXYWithRangeCheck(int iX, int iY, int iDX, int iDY, int iRange
 	}
 
 	if(hexRange > iRange)
+#endif
 	{
 		return NULL;
 	}

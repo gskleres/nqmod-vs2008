@@ -509,6 +509,7 @@ bool CvGame::InitMap(CvGameInitialItemsOverrides& kGameInitialItemsOverrides)
 	// Update some cached values
 	GC.getMap().updateAdjacency();
 
+#ifndef AUI_PLOT_OBSERVER_SEE_ALL_PLOTS
 	// Set all the observer teams to be able to see all the plots
 	for(int iI = 0; iI < MAX_PLAYERS; iI++)
 	{
@@ -520,10 +521,15 @@ bool CvGame::InitMap(CvGameInitialItemsOverrides& kGameInitialItemsOverrides)
 			if (eTeam != NO_TEAM)
 			{
 				const int iNumInvisibleInfos = NUM_INVISIBLE_TYPES;
+#endif
 				for(int plotID = 0; plotID < GC.getMap().numPlots(); plotID++)
 				{
 					CvPlot* pLoopPlot = GC.getMap().plotByIndexUnchecked(plotID);
 
+#ifdef AUI_PLOT_OBSERVER_SEE_ALL_PLOTS
+					pLoopPlot->setRevealed(OBSERVER_TEAM, true, false);
+					pLoopPlot->changeVisibilityCount(OBSERVER_TEAM, pLoopPlot->getVisibilityCount(OBSERVER_TEAM) + 1, NO_INVISIBLE, true, true);
+#else
 					pLoopPlot->changeVisibilityCount(eTeam, 1, NO_INVISIBLE, true, false);
 
 					for(int iJ = 0; iJ < iNumInvisibleInfos; iJ++)
@@ -532,10 +538,19 @@ bool CvGame::InitMap(CvGameInitialItemsOverrides& kGameInitialItemsOverrides)
 					}
 
 					pLoopPlot->setRevealed(eTeam, true, false);
+#endif
 				}
+#ifdef AUI_GAME_OBSERVER_MEET_ALL_TEAMS
+				for (int iJ = 0; iJ < MAX_TEAMS; iJ++)
+				{
+					GET_TEAM(OBSERVER_TEAM).makeHasMet(static_cast<TeamTypes>(iJ), true, true);
+				}
+#endif
+#ifndef AUI_PLOT_OBSERVER_SEE_ALL_PLOTS
 			}
 		}
 	}
+#endif
 
 	return true;
 }
@@ -4664,6 +4679,12 @@ bool CvGame::CanOpenCityScreen(PlayerTypes eOpener, CvCity* pCity)
 	{
 		return true;
 	}
+#ifdef AUI_GAME_OBSERVER_CAN_OPEN_CITIES
+	else if (GET_PLAYER(eOpener).isObserver())
+	{
+		return true;
+	}
+#endif
 	else if (!GET_PLAYER(pCity->getOwner()).isMinorCiv() && (GET_PLAYER(eOpener).GetEspionage()->HasEstablishedSurveillanceInCity(pCity) || GET_PLAYER(eOpener).GetEspionage()->IsAnySchmoozing(pCity)))
 	{
 		return true;
@@ -5692,7 +5713,9 @@ bool CvGame::isPaused()
 //	-----------------------------------------------------------------------------------------------
 void CvGame::setPausePlayer(PlayerTypes eNewValue)
 {
+#ifndef AUI_GAME_SET_PAUSED_TURN_TIMERS_PAUSE_ON_RECONNECT
 	if(!isNetworkMultiPlayer())
+#endif
 	{
 		// If we're not in Network MP, if the game is paused the turn timer is too.
 		if(isOption(GAMEOPTION_END_TURN_TIMER_ENABLED))
@@ -9006,6 +9029,16 @@ int CvGame::getJonRandNum(int iNum, const char* pszLog)
 {
 	return m_jonRand.get(iNum, pszLog);
 }
+
+#ifdef AUI_BINOM_RNG
+//	--------------------------------------------------------------------------------
+/// Get a synchronous random number in the range of 0...iNum-1 with binomial distribution
+/// Allows for logging.
+int CvGame::getJonRandNumBinom(int iNum, const char* pszLog)
+{
+	return m_jonRand.getBinom(iNum, pszLog);
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 /// Get a synchronous random number in the range of 0...iNum-1

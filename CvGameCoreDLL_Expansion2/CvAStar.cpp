@@ -1023,7 +1023,11 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 	{
 		iCost = (PATH_MOVEMENT_WEIGHT * iCost);
 
+#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
+		if (eUnitDomain == DOMAIN_LAND && (!pFromPlot->isWater() || pFromPlot->IsAllowsWalkWater()) && bToPlotIsWater && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
+#else
 		if(eUnitDomain == DOMAIN_LAND && !pFromPlot->isWater() && bToPlotIsWater && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
+#endif
 		{
 			iCost += PATH_INCORRECT_EMBARKING_WEIGHT;
 		}
@@ -1679,7 +1683,11 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 	{
 		iCost = (PATH_MOVEMENT_WEIGHT * iCost);
 
+#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
+		if (pUnit->getDomainType() == DOMAIN_LAND && (!pFromPlot->isWater() || pFromPlot->IsAllowsWalkWater()) && pToPlot->isWater() && !pToPlot->IsAllowsWalkWater() && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
+#else
 		if(!pFromPlot->isWater() && pToPlot->isWater() && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
+#endif
 		{
 			iCost += PATH_INCORRECT_EMBARKING_WEIGHT;
 		}

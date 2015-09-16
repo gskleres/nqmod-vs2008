@@ -738,18 +738,30 @@ void CvGameReligions::FoundPantheon(PlayerTypes ePlayer, BeliefTypes eBelief)
 	iIncrement /= 100;
 	SetMinimumFaithNextPantheon(GetMinimumFaithNextPantheon() + iIncrement);
 
+#ifdef AUI_RELIGION_FIX_FOUND_PANTHEON_NULL_POINTER_DEREFERENCE
+	CvCity* pCapitol = GET_PLAYER(ePlayer).getCapitalCity();
+	if (pCapitol)
+	{
+#endif
 	ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 	if(pkScriptSystem) 
 	{
 		CvLuaArgsHandle args;
 		args->Push(ePlayer);
+#ifdef AUI_RELIGION_FIX_FOUND_PANTHEON_NULL_POINTER_DEREFERENCE
+		args->Push(pCapitol->GetID());
+#else
 		args->Push(GET_PLAYER(ePlayer).getCapitalCity()->GetID());
+#endif
 		args->Push(RELIGION_PANTHEON);
 		args->Push(eBelief);
 
 		bool bResult;
 		LuaSupport::CallHook(pkScriptSystem, "PantheonFounded", args.get(), bResult);
 	}
+#ifdef AUI_RELIGION_FIX_FOUND_PANTHEON_NULL_POINTER_DEREFERENCE
+	}
+#endif
 
 	// Spread the pantheon into each of their cities
 	int iLoop;
@@ -3805,6 +3817,7 @@ void CvCityReligions::CityConvertsReligion(ReligionTypes eMajority, ReligionType
 			}
 		}
 
+#ifndef AUI_ACHIEVEMENT_FIX_RELIGION_WE_ARE_FAMILY_WORKING
 		if(m_pCity->isCapital() && pNewReligion->m_eFounder == GC.getGame().getActivePlayer())
 		{
 			//Determine if this is a standard size or larger map.
@@ -3859,6 +3872,7 @@ void CvCityReligions::CityConvertsReligion(ReligionTypes eMajority, ReligionType
 				}
 			}
 		}
+#endif
 
 		// Diplo implications (there must have been religion switch and a responsible party)
 		if(eMajority != eOldMajority && eResponsibleParty != NO_PLAYER)
@@ -4477,7 +4491,11 @@ CvPlot* CvReligionAI::ChooseMissionaryTargetPlot(UnitHandle pUnit, int* piTurns)
 
 #pragma warning ( push )
 #pragma warning ( disable : 6011 ) // Dereferencing NULL pointer
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+	AI_PERF_FORMAT("AI-perf-tact.csv", ("ChooseMissionaryTargetPlot: %s %d (Targeting %s), Turn %03d, %s", pUnit->getName().c_str(), pUnit->GetID(), pCity->getName().c_str(), GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()));
+#else
 	AI_PERF_FORMAT("AI-perf-tact.csv", ("ChooseMissionaryTargetPlot: %s %d; %s, Turn %03d, %s", pUnit->getName().c_str(), pUnit->GetID(), pCity->getName().c_str(), GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()) );
+#endif
 #pragma warning ( pop )
 
 	// Find adjacent plot with no units (that aren't our own)

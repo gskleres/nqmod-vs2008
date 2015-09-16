@@ -219,6 +219,25 @@ public:
 	};
 
 	/// Pick an element from the top iNumChoices
+#ifdef AUI_WEIGHTED_VECTOR_FIX_TOP_CHOICES_USE_UNSIGNED
+	T ChooseFromTopChoices(unsigned int iNumChoices, RandomNumberDelegate *rndFcn, const char *szRollName)
+	{
+		// Loop through the top choices, or the total vector size, whichever is smaller
+		if (iNumChoices > m_pItems.size())
+		{
+			iNumChoices = m_pItems.size();
+		}
+
+#ifdef AUI_WEIGHTED_VECTOR_FIX_TOP_CHOICES_TIE
+		while (iNumChoices + 1 < m_pItems.size() && m_pItems[iNumChoices].m_iWeight == m_pItems[iNumChoices + 1].m_iWeight)
+		{
+			iNumChoices++;
+		}
+#endif
+
+		WeightedElement elem;
+		unsigned int i;
+#else
 	T ChooseFromTopChoices(int iNumChoices, RandomNumberDelegate *rndFcn, const char *szRollName)
 	{
 		// Loop through the top choices, or the total vector size, whichever is smaller
@@ -227,8 +246,19 @@ public:
 			iNumChoices = (int) m_pItems.size();
 		}
 
+#ifdef AUI_WEIGHTED_VECTOR_FIX_TOP_CHOICES_TIE
+		if (iNumChoices >= 0)
+		{
+			while (iNumChoices + 1 < (int)m_pItems.size() && m_pItems[iNumChoices].m_iWeight == m_pItems[iNumChoices + 1].m_iWeight)
+			{
+				iNumChoices++;
+			}
+		}
+#endif
+
 		WeightedElement elem;
 		int i;
+#endif
 		int iChoice;
 		int iTotalTopChoicesWeight = 0;
 

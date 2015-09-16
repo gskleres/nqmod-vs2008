@@ -2685,7 +2685,9 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 		else //if !(bMoveFlags & MOVEFLAG_ATTACK)
 		{
 			bool bEmbarkedAndAdjacent = false;
+#ifndef AUI_UNIT_FIX_RADAR
 			bool bEnemyUnitPresent = false;
+#endif
 
 			// Without this code, Embarked Units can move on top of enemies because they have no visibility
 			if(isEmbarked() || (bMoveFlags & MOVEFLAG_PRETEND_EMBARKED))
@@ -2696,13 +2698,26 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 				}
 			}
 
+#ifdef AUI_UNIT_FIX_RADAR
+			if (!isHuman() || plot.isVisible(getTeam()) || bEmbarkedAndAdjacent)
+			{
+				if (plot.isEnemyCity(*this))
+				{
+					return false;
+				}
+#else
 			bool bPlotContainsCombat = false;
 			if(plot.getNumUnits())
 			{
+#endif
 				for(int iUnitLoop = 0; iUnitLoop < plot.getNumUnits(); iUnitLoop++)
 				{
 					CvUnit* loopUnit = plot.getUnitByIndex(iUnitLoop);
 
+#ifdef AUI_UNIT_FIX_RADAR
+					if (loopUnit && (GET_TEAM(getTeam()).isAtWar(loopUnit->getTeam()) || loopUnit->isAlwaysHostile(plot)) && !loopUnit->canCoexistWithEnemyUnit(getTeam()))
+						return false;
+#else
 					if(loopUnit && GET_TEAM(getTeam()).isAtWar(plot.getUnitByIndex(iUnitLoop)->getTeam()))
 					{
 						bEnemyUnitPresent = true;
@@ -2713,8 +2728,10 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 						}
 						break;
 					}
+#endif
 				}
 			}
+#ifndef AUI_UNIT_FIX_RADAR
 
 			if(bPlotContainsCombat)
 			{
@@ -2733,6 +2750,7 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 					return false;
 				}
 			}
+#endif
 		}
 
 		ePlotTeam = ((isHuman()) ? plot.getRevealedTeam(getTeam()) : plot.getTeam());
@@ -3089,7 +3107,11 @@ bool CvUnit::jumpToNearestValidPlotWithinRange(int iRange)
 								{
 									if(pLoopPlot->isRevealed(getTeam()))
 									{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+										iValue = (hexDistance(iDX, iDY) * 2);
+#else
 										iValue = (plotDistance(getX(), getY(), pLoopPlot->getX(), pLoopPlot->getY()) * 2);
+#endif
 
 										if(pLoopPlot->area() != area())
 										{
@@ -15729,7 +15751,11 @@ int CvUnit::GetReverseGreatGeneralModifier()const
 								{
 									// Within range?
 									int iRange = pLoopUnit->getNearbyEnemyCombatRange();
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+									if (hexDistance(iX, iY) <= iRange)
+#else
 									if(plotDistance(getX(), getY(), pLoopPlot->getX(), pLoopPlot->getY()) <= iRange)
+#endif
 									{
 										return iMod;
 									}
@@ -17321,28 +17347,44 @@ bool CvUnit::isPromotionValid(PromotionTypes ePromotion) const
 	// Can't acquire interception promotion if unit can't intercept!
 	if(promotionInfo->GetInterceptionCombatModifier() != 0)
 	{
+#ifdef AUI_UNIT_FIX_ALLOW_COMBO_AIR_COMBAT_PROMOTIONS
+		if (maxInterceptionProbability() + promotionInfo->GetInterceptChanceChange() <= 0)
+#else
 		if(!canAirDefend())
+#endif
 			return false;
 	}
 
 	// Can't acquire Air Sweep promotion if unit can't air sweep!
 	if(promotionInfo->GetAirSweepCombatModifier() != 0)
 	{
+#ifdef AUI_UNIT_FIX_ALLOW_COMBO_AIR_COMBAT_PROMOTIONS
+		if (!IsAirSweepCapable() && !promotionInfo->IsAirSweepCapable())
+#else
 		if(!IsAirSweepCapable())
+#endif
 			return false;
 	}
 
 	// Max Interception
 	if(promotionInfo->GetInterceptChanceChange() > 0)
 	{
+#ifdef AUI_UNIT_FIX_ALLOW_COMBO_AIR_COMBAT_PROMOTIONS
+		if (maxInterceptionProbability() >= GC.getMAX_INTERCEPTION_PROBABILITY())
+#else
 		if(promotionInfo->GetInterceptChanceChange() + maxInterceptionProbability() > GC.getMAX_INTERCEPTION_PROBABILITY())
+#endif
 			return false;
 	}
 
 	// Max evasion
 	if(promotionInfo->GetEvasionChange() > 0)
 	{
+#ifdef AUI_UNIT_FIX_ALLOW_COMBO_AIR_COMBAT_PROMOTIONS
+		if (evasionProbability() >= GC.getMAX_EVASION_PROBABILITY())
+#else
 		if(promotionInfo->GetEvasionChange() + evasionProbability() > GC.getMAX_EVASION_PROBABILITY())
+#endif
 			return false;
 	}
 

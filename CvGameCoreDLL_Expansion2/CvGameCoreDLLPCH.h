@@ -71,8 +71,17 @@ typedef wchar_t          wchar;
 #define fM_PI		3.141592654f		//!< Pi (float)
 
 #define STDEXT stdext
+#ifdef NQM_FAST_COMP
+// Avoids Visual Studio's compiler from generating inefficient code
+// FastMax() and FastMin() taken from https://randomascii.wordpress.com/2013/11/24/stdmin-causing-three-times-slowdown-on-vc/
+template<class T> inline T FastMax(const T& _Left, const T& _Right) { return (_DEBUG_LT(_Left, _Right) ? _Right : _Left); }
+template<class T> inline T FastMin(const T& _Left, const T& _Right) { return (_DEBUG_LT(_Right, _Left) ? _Right : _Left); }
+#define MAX(a, b) FastMax(a, b)
+#define MIN(a, b) FastMin(a, b)
+#else
 #define MAX(a, b) std::max(a, b)
 #define MIN(a, b) std::min(a, b)
+#endif
 
 #if !defined(FINAL_RELEASE)
 #define AI_PERF_LOGGING

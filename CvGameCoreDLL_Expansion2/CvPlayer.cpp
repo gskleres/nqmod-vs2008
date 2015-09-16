@@ -4050,7 +4050,11 @@ ArtStyleTypes CvPlayer::getArtStyleType() const
 void CvPlayer::doTurn()
 {
 	// Time building of these maps
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+	AI_PERF_FORMAT("AI-perf.csv", ("CvPlayer::doTurn(), Turn %03d, %s", GC.getGame().getGameTurn(), getCivilizationShortDescription()));
+#else
 	AI_PERF_FORMAT("AI-perf.csv", ("CvPlayer::doTurn(), Turn %d, %s", GC.getGame().getGameTurn(), getCivilizationShortDescription()));
+#endif
 
 	CvAssertMsg(isAlive(), "isAlive is expected to be true");
 
@@ -5638,7 +5642,11 @@ bool CvPlayer::canReceiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit) 
 
 				if(pNearbyPlot != NULL)
 				{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+					if (hexDistance(iDX, iDY) <= iBarbCampDistance)
+#else
 					if(plotDistance(pNearbyPlot->getX(), pNearbyPlot->getY(), pPlot->getX(), pPlot->getY()) <= iBarbCampDistance)
+#endif
 					{
 						if(pNearbyPlot->getImprovementType() == barbCampType)
 						{
@@ -5925,6 +5933,10 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 
 	CvGoodyHuts::DoPlayerReceivedGoody(GetID(), eGoody);
 
+#ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
+	int iNumYieldBonuses = 0;
+#endif
+
 	strBuffer = kGoodyInfo.GetDescription();
 
 	// Gold
@@ -5935,6 +5947,10 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		GetTreasury()->ChangeGold(iGold);
 
 		strBuffer += GetLocalizedText("TXT_KEY_MISC_RECEIVED_GOLD", iGold);
+#ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
+		ReportYieldFromKill(YIELD_GOLD, iGold, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
+		iNumYieldBonuses += 1;
+#endif
 	}
 
 	// Population
@@ -5973,6 +5989,10 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iCulture /= 100;
 
 		changeJONSCulture(iCulture);
+#ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
+		ReportYieldFromKill(YIELD_CULTURE, iCulture, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
+		iNumYieldBonuses += 1;
+#endif
 	}
 
 	// Faith
@@ -5984,6 +6004,10 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= 100;
 
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
+		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
+		iNumYieldBonuses += 1;
+#endif
 	}
 
 	// Faith for pantheon
@@ -5996,6 +6020,10 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= iDivisor;
 		iFaith *= iDivisor;
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
+		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
+		iNumYieldBonuses += 1;
+#endif
 	}
 
 	// Faith for percent of great prophet
@@ -6007,6 +6035,10 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= iDivisor;
 		iFaith *= iDivisor;
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
+		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
+		iNumYieldBonuses += 1;
+#endif
 	}
 
 	// Reveal Nearby Barbs
@@ -6021,7 +6053,11 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 				CvPlot* pNearbyBarbarianPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
 				if(pNearbyBarbarianPlot != NULL)
 				{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+					if (hexDistance(iDX, iDY) <= iBarbCampDistance)
+#else
 					if(plotDistance(pNearbyBarbarianPlot->getX(), pNearbyBarbarianPlot->getY(), pPlot->getX(), pPlot->getY()) <= iBarbCampDistance)
+#endif
 					{
 						if(pNearbyBarbarianPlot->getImprovementType() == GC.getBARBARIAN_CAMP_IMPROVEMENT())
 						{
@@ -6068,7 +6104,11 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 
 							iValue = (1 + GC.getGame().getJonRandNum(iRandLimit, "Goody Map"));
 
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+							iValue *= hexDistance(iDX, iDY);
+#else
 							iValue *= plotDistance(pPlot->getX(), pPlot->getY(), pLoopPlot->getX(), pLoopPlot->getY());
+#endif
 
 							if(iValue > iBestValue)
 							{
@@ -6094,7 +6134,11 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 
 				if(pLoopPlot != NULL)
 				{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+					if (hexDistance(iDX, iDY) <= iRange)
+#else
 					if(plotDistance(pBestPlot->getX(), pBestPlot->getY(), pLoopPlot->getX(), pLoopPlot->getY()) <= iRange)
+#endif
 					{
 						if(GC.getGame().getJonRandNum(100, "Goody Map") < kGoodyInfo.getMapProb())
 						{
@@ -6367,7 +6411,11 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 												{
 													iValue = 1 + GC.getGame().getJonRandNum(6, "spawn goody unit that would over-stack"); // okay, I'll admit it, not a great heuristic
 
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+													if (hexDistance(iDX, iDY) > 1)
+#else
 													if(plotDistance(pPlot->getX(),pPlot->getY(),pLoopPlot->getX(),pLoopPlot->getY()) > 1)
+#endif
 													{
 														iValue += 12;
 													}

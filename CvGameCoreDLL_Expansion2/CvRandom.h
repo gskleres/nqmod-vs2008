@@ -30,6 +30,11 @@ public:
 	void reset(unsigned long ulSeed = 0);
 
 	unsigned short get(unsigned short usNum, const char* pszLog = NULL);  //  Returns value from 0 to num-1 inclusive.
+
+#ifdef AUI_BINOM_RNG
+	unsigned int getBinom(unsigned int uiNum, const char* pszLog = NULL); // Returns value from 0 to num-1 inclusive in binomial distribution
+#endif
+
 	float getFloat();
 
 	void reseed(unsigned long ulNewValue);

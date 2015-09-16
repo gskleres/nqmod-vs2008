@@ -422,6 +422,9 @@ public:
 
 	CvRandom& getJonRand();
 	int getJonRandNum(int iNum, const char* pszLog);
+#ifdef AUI_BINOM_RNG
+	int getJonRandNumBinom(int iNum, const char* pszLog);
+#endif
 	int getJonRandNumVA(int iNum, const char* pszLog, ...);
 	int getAsyncRandNum(int iNum, const char* pszLog);
 

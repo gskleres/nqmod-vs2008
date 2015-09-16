@@ -7265,7 +7265,11 @@ bool CvTacticalAI::ExecuteSafeBombards(CvTacticalTarget& kTarget)
 				pLoopPlot = plotXY(kTarget.GetTargetX(), kTarget.GetTargetY(), iDX, iDY);
 				if(pLoopPlot != NULL)
 				{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+					int iDistance = hexDistance(iDX, iDY);
+#else
 					int iDistance = plotDistance(pLoopPlot->getX(), pLoopPlot->getY(), kTarget.GetTargetX(), kTarget.GetTargetY());
+#endif
 					if(iDistance > 0 && iDistance <= iRange)
 					{
 						iPlotIndex = GC.getMap().plotNum(pLoopPlot->getX(), pLoopPlot->getY());
@@ -7401,7 +7405,11 @@ bool CvTacticalAI::ExecuteOneProtectedBombard(CvTacticalTarget& kTarget)
 			pAttackPlot = plotXY(kTarget.GetTargetX(), kTarget.GetTargetY(), iDX, iDY);
 			if(pAttackPlot != NULL)
 			{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+				int iPlotDistance = hexDistance(iDX, iDY);
+#else
 				int iPlotDistance = plotDistance(pAttackPlot->getX(), pAttackPlot->getY(), kTarget.GetTargetX(), kTarget.GetTargetY());
+#endif
 				if(iPlotDistance > 0 && iPlotDistance <= iRange)
 				{
 					iPlotIndex = GC.getMap().plotNum(pAttackPlot->getX(), pAttackPlot->getY());
@@ -9197,7 +9205,11 @@ CvPlot* CvTacticalAI::FindBestBarbarianSeaMove(UnitHandle pUnit)
 				// If still have no value, score equal to distance from my current plot
 				if(iValue == 0)
 				{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+					iValue = hexDistance(iX, iY);
+#else
 					iValue = plotDistance(pUnit->getX(), pUnit->getY(), pConsiderPlot->getX(), pConsiderPlot->getY());
+#endif
 				}
 
 				if(iValue > iBestValue)
@@ -9269,7 +9281,11 @@ CvPlot* CvTacticalAI::FindBarbarianExploreTarget(UnitHandle pUnit)
 			// If still have no value, score equal to distance from my current plot
 			if(iValue == 0)
 			{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+				iValue = hexDistance(iX, iY);
+#else
 				iValue = plotDistance(pUnit->getX(), pUnit->getY(), pPlot->getX(), pPlot->getY());
+#endif
 			}
 
 			if(iValue > iBestValue)

@@ -480,7 +480,11 @@ void CvPlayerAI::AI_chooseFreeTech()
 
 void CvPlayerAI::AI_chooseResearch()
 {
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+	AI_PERF_FORMAT("AI-perf.csv", ("AI_chooseResearch, Turn %03d, %s", GC.getGame().getGameTurn(), getCivilizationShortDescription()));
+#else
 	AI_PERF("AI-perf.csv", "AI_chooseResearch");
+#endif
 
 	TechTypes eBestTech = NO_TECH;
 	int iI;
@@ -540,7 +544,11 @@ struct CityAndProductionEval
 
 void CvPlayerAI::AI_considerAnnex()
 {
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+	AI_PERF_FORMAT("AI-perf.csv", ("AI_considerAnnex, Turn %03d, %s", GC.getGame().getGameTurn(), getCivilizationShortDescription()));
+#else
 	AI_PERF("AI-perf.csv", "AI_ considerAnnex");
+#endif
 
 	// if the empire is unhappy, don't consider annexing
 	if (IsEmpireUnhappy())

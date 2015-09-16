@@ -191,10 +191,12 @@ bool CvUnitMovement::ConsumesAllMoves(const CvUnit* pUnit, const CvPlot* pFromPl
 		return true;
 	}
 
+#ifndef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
 	if (!pUnit->isEmbarked() && (pToPlot->IsAllowsWalkWater() || pFromPlot->IsAllowsWalkWater()))
 	{
 		return false;
 	}
+#endif
 
 	if(!pFromPlot->isValidDomainForLocation(*pUnit))
 	{
@@ -204,10 +206,18 @@ bool CvUnitMovement::ConsumesAllMoves(const CvUnit* pUnit, const CvPlot* pFromPl
 	}
 
 	// if the unit can embark and we are transitioning from land to water or vice versa
+#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
+	if ((pToPlot->isWater() && !pToPlot->IsAllowsWalkWater()) != (pFromPlot->isWater() && !pFromPlot->IsAllowsWalkWater()) && pUnit->CanEverEmbark())
+#else
 	if(pToPlot->isWater() != pFromPlot->isWater() && pUnit->CanEverEmbark())
+#endif
 	{
 		// Is the unit from a civ that can disembark for just 1 MP?
+#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW
+		if (!pToPlot->isWater() && pFromPlot->isWater() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#else
 		if(!pToPlot->isWater() && pFromPlot->isWater() && pUnit->isEmbarked() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#endif
 		{
 			return false;	// Then no, it does not.
 		}
@@ -239,7 +249,11 @@ bool CvUnitMovement::CostsOnlyOne(const CvUnit* pUnit, const CvPlot* pFromPlot, 
 	}
 
 	// Is the unit from a civ that can disembark for just 1 MP?
+#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW
+	if (!pToPlot->isWater() && pFromPlot->isWater() && pUnit->CanEverEmbark() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#else
 	if(!pToPlot->isWater() && pFromPlot->isWater() && pUnit->isEmbarked() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#endif
 	{
 		return true;
 	}
@@ -276,7 +290,11 @@ bool CvUnitMovement::IsSlowedByZOC(const CvUnit* pUnit, const CvPlot* pFromPlot,
 			if(NULL != pAdjPlot)
 			{
 				// check city zone of control
+#ifdef AUI_UNIT_MOVEMENT_FIX_RADAR_ZOC
+				if (pAdjPlot->isEnemyCity(*pUnit) && (pAdjPlot->isRevealed(pUnit->getTeam()) || pUnit->plot() == pFromPlot))
+#else
 				if(pAdjPlot->isEnemyCity(*pUnit))
+#endif
 				{
 					// Loop through plots adjacent to the enemy city and see if it's the same as our unit's Destination Plot
 					for(int iDirection = 0; iDirection < NUM_DIRECTION_TYPES; iDirection++)
@@ -293,6 +311,10 @@ bool CvUnitMovement::IsSlowedByZOC(const CvUnit* pUnit, const CvPlot* pFromPlot,
 					}
 				}
 
+#ifdef AUI_UNIT_MOVEMENT_FIX_RADAR_ZOC
+				if (!pAdjPlot->isVisible(pUnit->getTeam()) && pUnit->plot() != pFromPlot)
+					continue;
+#endif
 				pAdjUnitNode = pAdjPlot->headUnitNode();
 				// Loop through all units to see if there's an enemy unit here
 				while(pAdjUnitNode != NULL)
