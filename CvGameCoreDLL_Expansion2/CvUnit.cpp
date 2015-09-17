@@ -10380,6 +10380,7 @@ int CvUnit::GetGenericMaxStrengthModifier(const CvUnit* pOtherUnit, const CvPlot
 			}
 		}
 
+#ifndef AUI_UNIT_FIX_BAD_BONUS_STACKS // Relies on pOtherUnit instead of pBattlePlot, so moved to (Other Unit Known) conditional
 		// Trait (player level) bonus against larger civs
 		iTempModifier = GET_PLAYER(getOwner()).GetPlayerTraits()->GetCombatBonusVsLargerCiv();
 		if(iTempModifier > 0)
@@ -10389,6 +10390,7 @@ int CvUnit::GetGenericMaxStrengthModifier(const CvUnit* pOtherUnit, const CvPlot
 				iModifier += iTempModifier;
 			}
 		}
+#endif
 	}
 
 	////////////////////////
@@ -10465,6 +10467,17 @@ int CvUnit::GetGenericMaxStrengthModifier(const CvUnit* pOtherUnit, const CvPlot
 				iModifier += 25;
 			}
 		}
+#ifdef AUI_UNIT_FIX_BAD_BONUS_STACKS
+		// Trait (player level) bonus against larger civs
+		iTempModifier = GET_PLAYER(getOwner()).GetPlayerTraits()->GetCombatBonusVsLargerCiv();
+		if (iTempModifier > 0)
+		{
+			if (pOtherUnit->IsLargerCivThan(this))
+			{
+				iModifier += iTempModifier;
+			}
+		}
+#endif
 	}
 
 	return iModifier;
@@ -10578,12 +10591,14 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 			}
 		}
 
+#ifndef AUI_UNIT_FIX_BAD_BONUS_STACKS // Already calculated in generic modifiers
 		// Bonus for attacking in one's lands
 		if(pToPlot->IsFriendlyTerritory(getOwner()))
 		{
 			iTempModifier = getFriendlyLandsAttackModifier();
 			iModifier += iTempModifier;
 		}
+#endif
 
 		////////////////////////
 		// KNOWN ORIGIN PLOT
@@ -10823,6 +10838,9 @@ int CvUnit::GetBaseRangedCombatStrength() const
 int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* pCity, bool bAttacking, bool bForRangedAttack) const
 {
 	VALIDATE_OBJECT
+#if defined(AUI_UNIT_FIX_BAD_BONUS_STACKS)
+	const CvPlot* pMyPlot = plot();
+#endif
 	int iModifier;
 	int iCombat;
 
@@ -10946,6 +10964,9 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 			}
 		}
 
+#ifdef AUI_UNIT_FIX_BAD_BONUS_STACKS
+		const CvPlot* pTargetPlot = pMyPlot;
+#endif
 		// ATTACKING
 		if(bForRangedAttack)
 		{
@@ -10956,7 +10977,11 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 			// KNOWN BATTLE PLOT
 			////////////////////////
 
+#ifdef AUI_UNIT_FIX_BAD_BONUS_STACKS
+			pTargetPlot = pOtherUnit->plot();
+#else
 			CvPlot* pTargetPlot = pOtherUnit->plot();
+#endif
 
 			// Open Ground
 			if(pTargetPlot->isOpenGround())
@@ -10966,6 +10991,63 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 			if(pTargetPlot->isRoughGround())
 				iModifier += roughRangedAttackModifier();
 
+#ifdef AUI_UNIT_FIX_BAD_BONUS_STACKS
+		}
+		// Ranged DEFENSE
+		else
+		{
+			// Unit Class Defense Mod
+			iModifier += unitClassDefenseModifier(pOtherUnit->getUnitClassType());
+		}
+
+		// Bonus for fighting in one's lands
+		if (pMyPlot->IsFriendlyTerritory(getOwner()))
+		{
+			iTempModifier = getFriendlyLandsModifier();
+			iModifier += iTempModifier;
+
+			// Founder Belief bonus
+			CvCity* pPlotCity = pTargetPlot->getWorkingCity();
+			if (pPlotCity)
+			{
+				ReligionTypes eReligion = pPlotCity->GetCityReligions()->GetReligiousMajority();
+				if (eReligion != NO_RELIGION && eReligion == eFoundedReligion)
+				{
+					const CvReligion* pCityReligion = pReligions->GetReligion(eReligion, pPlotCity->getOwner());
+					if (pCityReligion)
+					{
+						iTempModifier = pCityReligion->m_Beliefs.GetCombatModifierFriendlyCities();
+						iModifier += iTempModifier;
+					}
+				}
+			}
+		}
+
+		// Bonus for fighting outside one's lands
+		else
+		{
+			iTempModifier = getOutsideFriendlyLandsModifier();
+			iModifier += iTempModifier;
+
+			// Founder Belief bonus (this must be a city controlled by an enemy)
+			CvCity* pPlotCity = pTargetPlot->getWorkingCity();
+			if (pPlotCity)
+			{
+				if (atWar(getTeam(), pPlotCity->getTeam()))
+				{
+					ReligionTypes eReligion = pPlotCity->GetCityReligions()->GetReligiousMajority();
+					if (eReligion != NO_RELIGION && eReligion == eFoundedReligion)
+					{
+						const CvReligion* pCityReligion = GC.getGame().GetGameReligions()->GetReligion(eReligion, pPlotCity->getOwner());
+						if (pCityReligion)
+						{
+							iTempModifier = pCityReligion->m_Beliefs.GetCombatModifierEnemyCities();
+							iModifier += iTempModifier;
+						}
+					}
+				}
+			}
+#else
 			// Bonus for fighting in one's lands
 			if(pTargetPlot->IsFriendlyTerritory(getOwner()))
 			{
@@ -11019,12 +11101,15 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 		// Ranged DEFENSE
 		else
 		{
+#ifndef AUI_UNIT_FIX_BAD_BONUS_STACKS // Moved out of Known Unit block because this doesn't rely on the other unit
 			// Ranged Defense Mod
 			iModifier += rangedDefenseModifier();
+#endif
 
 			// Unit Class Defense Mod
 			iModifier += unitClassDefenseModifier(pOtherUnit->getUnitClassType());
 		}
+#endif
 	}
 
 	////////////////////////
@@ -11056,17 +11141,41 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 	{
 		iModifier += GetRangedAttackModifier();
 	}
+#ifdef AUI_UNIT_FIX_BAD_BONUS_STACKS
+	else
+	{
+		// Ranged Defense Mod (this was under the known unit bit, which is stupid)
+		iModifier += rangedDefenseModifier();
+		// Hills
+		if (pMyPlot->isHills())
+			iModifier += hillsDefenseModifier();
+	}
+#endif
 
 	// This unit on offense
 	if(bAttacking)
 	{
 		iModifier += getAttackModifier();
+#ifdef AUI_UNIT_FIX_BAD_BONUS_STACKS
+		// Hills
+		if (pMyPlot && pMyPlot->isHills())
+			iModifier += hillsAttackModifier();
+#endif
 	}
 	// This Unit on defense
 	else
 	{
+#ifdef AUI_UNIT_FIX_BAD_BONUS_STACKS
+		// Hills
+		if (pMyPlot && pMyPlot->isHills())
+			iModifier += hillsDefenseModifier();
+#endif
 		// No TERRAIN bonuses for this Unit?
+#if defined(AUI_UNIT_EXTRA_IN_OTHER_PLOT_HELPERS)  || defined(AUI_UNIT_FIX_BAD_BONUS_STACKS)
+		iTempModifier = pMyPlot->defenseModifier(getTeam(), false);
+#else
 		iTempModifier = plot()->defenseModifier(getTeam(), false);
+#endif
 
 		// If we receive normal defensive bonuses OR iTempModifier is actually a PENALTY, then add in the mod
 		if(!noDefensiveBonus() || iTempModifier < 0)
@@ -15780,7 +15889,11 @@ bool CvUnit::IsStackedGreatGeneral() const
 				if(pLoopUnit)
 				{
 					// Great General unit
+#ifdef AUI_UNIT_FIX_GET_STACKED_GREAT_GENERAL_WORKS_WITH_ADMIRAL
+					if (pLoopUnit->IsGreatGeneral() || pLoopUnit->IsGreatAdmiral())
+#else
 					if(pLoopUnit->IsGreatGeneral())
+#endif
 					{
 						// Same domain
 						if(pLoopUnit->getDomainType() == getDomainType())

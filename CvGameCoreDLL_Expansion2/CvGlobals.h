@@ -142,7 +142,11 @@ class CvGlobals
 {
 public:
 
+#ifdef AUI_VC120_FORMALITIES
+	typedef std::tr1::unordered_map<std::string /* type string */, int /* info index */> InfosMap;
+#else
 	typedef stdext::hash_map<std::string /* type string */, int /* info index */> InfosMap;
+#endif
 	typedef std::map<uint /* FString::HashType */, int /* info index */> InfosHashMap;
 
 	// singleton accessor

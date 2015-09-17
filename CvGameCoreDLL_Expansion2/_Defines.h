@@ -51,6 +51,8 @@
 #define AUI_PLOT_VISIBILITY_OPTIMIZATIONS
 /// Optimizes loops that iterate over relative coordinates to hexspace
 #define AUI_HEXSPACE_DX_LOOPS
+/// Fixes some misc. warnings/errors generated when code is attempted to be compiled using VC120 (it won't work because link targets are all VC90-compiled, but all other errors/warnings are legitimate)
+#define AUI_VC120_FORMALITIES
 
 // Fixes to game bugs
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
@@ -93,6 +95,10 @@
 #define AUI_PLOT_FIX_IMPROVEMENT_YIELD_CHANGES_CATCH_PILLAGED_ROUTE
 /// Fixes AI Shoshone Pathfinders not getting any goody hut bonuses (TODO: have AI Shoshone actually choose their goody hut bonus instead of getting a random one)
 #define AUI_PLAYER_FIX_GOODY_HUT_PICKER
+/// Fixes the fact that the function to get a great general stacked with the unit does not detect great admirals (for naval units)
+#define AUI_UNIT_FIX_GET_STACKED_GREAT_GENERAL_WORKS_WITH_ADMIRAL
+/// Fixes badly set up damage modifier checks (eg. Friendly lands modifier gets applied twice to melee attackers, Friendly/Enemy territory bonus for ranged units applied based on plot target intead of unit plot)
+#define AUI_UNIT_FIX_BAD_BONUS_STACKS
 
 // Observer mode fixes
 /// Observers will see all resources

@@ -56,7 +56,11 @@
 #include <tchar.h>
 #include <assert.h>
 #include <map>
+#ifdef AUI_VC120_FORMALITIES
+#include <unordered_map>
+#else
 #include <hash_map>
+#endif
 #include <limits>
 #include <unordered_set>
 
