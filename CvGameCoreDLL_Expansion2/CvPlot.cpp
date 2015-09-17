@@ -1092,11 +1092,21 @@ bool CvPlot::isFreshWater() const
 		return true;
 	}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -1; iDY <= 1; iDY++)
+	{
+		iMaxDX = 1 - MAX(0, iDY);
+		for (iDX = -1 - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(iDX = -1; iDX <= 1; iDX++)
 	{
 		for(iDY = -1; iDY <= 1; iDY++)
 		{
 			pLoopPlot	= plotXYWithRangeCheck(getX(), getY(), iDX, iDY, 1);
+#endif
 
 			if(pLoopPlot != NULL)
 			{
@@ -1248,14 +1258,22 @@ CvPlot* CvPlot::getNearestLandPlotInternal(int iDistance) const
 		return NULL;
 	}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iDX, iMaxDX;
+	for (int iDY = -iDistance; iDY <= iDistance; iDY++)
+	{
+		iMaxDX = iDistance - MAX(0, iDY);
+		for (iDX = -iDistance - MIN(0, iDY); iDX <= iMaxDX; ((iDY == abs(iDistance) || iDX == iMaxDX) ? iDX++ : iDX = iMaxDX)) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 	for(int iDX = -iDistance; iDX <= iDistance; iDX++)
 	{
 		for(int iDY = -iDistance; iDY <= iDistance; iDY++)
+#endif
 		{
 			// bkw - revisit this, it works but is inefficient
 			CvPlot* pPlot = plotXY(getX(), getY(), iDX, iDY);
 #ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
-			if (pPlot != NULL && !pPlot->isWater() && hexDistance(iDX, iDY) == iDistance)
+			if (pPlot != NULL && !pPlot->isWater())
 #else
 			if(pPlot != NULL && !pPlot->isWater() && plotDistance(getX(), getY(), pPlot->getX(), pPlot->getY()) == iDistance)
 #endif
@@ -1868,11 +1886,21 @@ void CvPlot::updateSeeFromSight(bool bIncrement)
 #endif
 #endif
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(iDX = -iRange; iDX <= iRange; iDX++)
 	{
 		for(iDY = -iRange; iDY <= iRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iRange);
+#endif
 
 			if(pLoopPlot != NULL)
 			{
@@ -4027,6 +4055,15 @@ bool CvPlot::isValidRoute(const CvUnit* pUnit) const
 			return true;
 		}
 	}
+#ifdef AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
+	if (pUnit->getOwner() != NO_PLAYER && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsMoveFriendlyWoodsAsRoad())
+	{
+		if (getOwner() == pUnit->getOwner() && (getFeatureType() == FEATURE_FOREST || getFeatureType() == FEATURE_JUNGLE))
+		{
+			return true;
+		}
+	}
+#endif
 
 	return false;
 }
@@ -7226,7 +7263,11 @@ int CvPlot::calculateImprovementYieldChange(ImprovementTypes eImprovement, Yield
 		{
 			eRouteType = eAssumeThisRoute;
 		}
+#ifdef AUI_PLOT_FIX_IMPROVEMENT_YIELD_CHANGES_CATCH_PILLAGED_ROUTE
+		else if (!IsRoutePillaged())
+#else
 		else
+#endif
 		{
 			eRouteType = getRouteType();
 		}
@@ -10043,10 +10084,18 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 	if(!isPotentialCityWork())
 		return 0;
 
+#ifdef AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IGNORE_FEATURE_EXTENDS_TO_CITY
+	CvCity* pCity = getPlotCity();
+	bool bCity = pCity != NULL;
+
+	// Will the build remove the feature?
+	bool bIgnoreFeature = bCity;
+#else
 	bool bCity = false;
 
 	// Will the build remove the feature?
 	bool bIgnoreFeature = false;
+#endif
 	if(getFeatureType() != NO_FEATURE)
 	{
 		if(GC.getBuildInfo(eBuild)->isFeatureRemove(getFeatureType()))
@@ -10066,6 +10115,26 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 			eImprovement = getImprovementType();
 		}
 	}
+
+#ifdef AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IMPROVEMENT_WITH_ROUTE
+	RouteTypes eRoute = (RouteTypes)GC.getBuildInfo(eBuild)->getRoute();
+
+	// If we're not changing the route that's here, use the route that's here already
+	if (eRoute == NO_ROUTE)
+	{
+		if (!IsRoutePillaged() || GC.getBuildInfo(eBuild)->isRepair())
+		{
+			eRoute = getRouteType();
+		}
+	}
+
+	if (eRoute != NO_ROUTE)
+	{
+		CvRouteInfo* pRouteInfo = GC.getRouteInfo(eRoute);
+		if (pRouteInfo)
+			iYield += pRouteInfo->getYieldChange(eYield);
+	}
+#endif
 
 	if(eImprovement != NO_IMPROVEMENT)
 	{
@@ -10093,7 +10162,11 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 			}
 		}
 
+#ifdef AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IMPROVEMENT_WITH_ROUTE
+		iYield += calculateImprovementYieldChange(eImprovement, eYield, ePlayer, false, eRoute);
+#else
 		iYield += calculateImprovementYieldChange(eImprovement, eYield, ePlayer, false);
+#endif
 
 		if (eYield == YIELD_CULTURE && getOwner() != NO_PLAYER)
 		{
@@ -10112,6 +10185,7 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 		}
 	}
 
+#ifndef AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IMPROVEMENT_WITH_ROUTE
 	RouteTypes eRoute = (RouteTypes)GC.getBuildInfo(eBuild)->getRoute();
 
 	// If we're not changing the route that's here, use the route that's here already
@@ -10138,8 +10212,11 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 			}
 		}
 	}
+#endif
 
+#ifndef AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IGNORE_FEATURE_EXTENDS_TO_CITY
 	CvCity* pCity = getPlotCity();
+#endif
 
 	if(ePlayer != NO_PLAYER)
 	{
@@ -10213,7 +10290,11 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 		}
 
 		// Worked Feature extra yield (e.g. University bonus)
+#ifdef AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IGNORE_FEATURE_EXTENDS_TO_CITY
+		if (getFeatureType() != NO_FEATURE && !bIgnoreFeature)
+#else
 		if(getFeatureType() != NO_FEATURE)
+#endif
 		{
 			if(pWorkingCity != NULL)
 				iYield += pWorkingCity->GetFeatureExtraYield(getFeatureType(), eYield);

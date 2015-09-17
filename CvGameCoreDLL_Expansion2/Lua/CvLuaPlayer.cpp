@@ -8541,12 +8541,14 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 
 	int iEvalDistance = GC.getSETTLER_EVALUATION_DISTANCE();
 	int iDistanceDropoffMod = GC.getSETTLER_DISTANCE_DROPOFF_MODIFIER();
+#ifndef AUI_HEXSPACE_DX_LOOPS
 	int iBeginSearchX = iSettlerX - iEvalDistance;
 	int iBeginSearchY = iSettlerY - iEvalDistance;
 	int iEndSearchX   = iSettlerX + iEvalDistance;
 	int iEndSearchY   = iSettlerY + iEvalDistance;
 
 	CvMap& kMap = GC.getMap();
+#endif
 
 	TeamTypes eUnitTeam = pFoundingUnit->getTeam();
 
@@ -8560,11 +8562,23 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 	WeightedPlotVector aBestPlots;
 	aBestPlots.reserve((iEvalDistance+1) * 2);
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pPlot;
+	for (int iDY = -iEvalDistance; iDY <= iEvalDistance; iDY++)
+	{
+		iMaxDX = iEvalDistance - MAX(0, iDY);
+		for (iDX = -iEvalDistance - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pPlot = plotXY(iSettlerX, iSettlerY, iDX, iDY);
+#else
 	for(int iPlotX = iBeginSearchX; iPlotX != iEndSearchX; iPlotX++)
 	{
 		for(int iPlotY = iBeginSearchY; iPlotY != iEndSearchY; iPlotY++)
 		{
 			CvPlot* pPlot = kMap.plot(iPlotX, iPlotY);
+#endif
 			if(!pPlot)
 			{
 				continue;
@@ -8577,7 +8591,11 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 			}
 
 			// Can't actually found here!
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			if (!pkPlayer->canFound(pPlot->getX(), pPlot->getY()))
+#else
 			if(!pkPlayer->canFound(iPlotX, iPlotY))
+#endif
 			{
 				continue;
 			}
@@ -8591,10 +8609,18 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 			// Do we have to check if this is a safe place to go?
 			if(!pPlot->isVisibleEnemyUnit(pkPlayer->GetID()))
 			{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+				iSettlerDistance = hexDistance(iDX, iDY);
+#else
 				iSettlerDistance = plotDistance(iPlotX, iPlotY, iSettlerX, iSettlerY);
+#endif
 
 				//iValue = pPlot->getFoundValue(pkPlayer->GetID());
+#ifdef AUI_HEXSPACE_DX_LOOPS
+				iValue = pkPlayer->AI_foundValue(pPlot->getX(), pPlot->getY(), -1, false);
+#else
 				iValue = pkPlayer->AI_foundValue(iPlotX, iPlotY, -1, false);
+#endif
 
 				iDistanceDropoff = (iDistanceDropoffMod * iSettlerDistance) / iEvalDistance;
 				iValue = iValue * (100 - iDistanceDropoff) / 100;
@@ -8620,7 +8646,11 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 		aBestPlots.SortItems();	// highest score will be first.
 		for (uint i = 0; i < uiListSize; ++i )	
 		{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			pPlot = aBestPlots.GetElement(i);
+#else
 			CvPlot* pPlot = aBestPlots.GetElement(i);
+#endif
 			bool bCanFindPath = pFoundingUnit->GeneratePath(pPlot, MOVE_TERRITORY_NO_UNEXPLORED, true, &iPathTurns);
 			if(bCanFindPath)
 			{

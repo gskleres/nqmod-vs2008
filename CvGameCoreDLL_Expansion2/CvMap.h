@@ -340,6 +340,10 @@ protected:
 	GUID m_guid;
 
 	CvPlotManager	m_kPlotManager;
+
+#ifdef AUI_MAP_FIX_CALCULATE_INFLUENCE_DISTANCE_REUSE_PATHFINDER
+	CvPlot* m_pLastInfluenceSourcePlot;
+#endif
 };
 
 #endif

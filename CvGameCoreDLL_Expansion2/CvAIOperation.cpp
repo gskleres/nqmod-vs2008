@@ -5647,11 +5647,23 @@ CvPlot* CvAIOperationNukeAttack::FindBestTarget()
 
 						// check to see if there is anything good or bad in the radius that we should account for
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+						int iMaxDX, iDX;
+						CvPlot* pLoopPlot;
+						for (int iDY = -iBlastRadius; iDY <= iBlastRadius; iDY++)
+						{
+							iMaxDX = iBlastRadius - MAX(0, iDY);
+							for (iDX = -iBlastRadius - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+							{
+								// No need for range check because loops are set up properly
+								pLoopPlot = plotXY(pCityPlot->getX(), pCityPlot->getY(), iDX, iDY);
+#else
 						for(int iDX = -iBlastRadius; iDX <= iBlastRadius; iDX++)
 						{
 							for(int iDY = -iBlastRadius; iDY <= iBlastRadius; iDY++)
 							{
 								CvPlot* pLoopPlot = plotXYWithRangeCheck(pCityPlot->getX(), pCityPlot->getY(), iDX, iDY, iBlastRadius);
+#endif
 								if(pLoopPlot)
 								{
 									// who owns this plot?

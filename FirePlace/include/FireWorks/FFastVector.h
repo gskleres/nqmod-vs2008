@@ -930,7 +930,7 @@ public:
 
     const T*
 #ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
-	nodeNum(unsigned int iIndex)
+	nodeNum(unsigned int iIndex) const
 #else
     nodeNum( int iIndex ) const
 #endif

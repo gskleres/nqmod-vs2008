@@ -4639,9 +4639,17 @@ CvPlot* CvMinorCivAI::GetBestNearbyCampToKill()
 
 	// Loop in all plots in range
 	int iDX, iDY;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 	for(iDX = -(iRange); iDX <= iRange; iDX++)
 	{
 		for(iDY = -(iRange); iDY <= iRange; iDY++)
+#endif
 		{
 			pLoopPlot = plotXY(pCapital->getX(), pCapital->getY(), iDX, iDY);
 
@@ -4653,9 +4661,11 @@ CvPlot* CvMinorCivAI::GetBestNearbyCampToKill()
 					continue;
 				}
 
+#ifndef AUI_HEXSPACE_DX_LOOPS
 				int iDistance = plotDistance(pCapital->getX(), pCapital->getY(), pLoopPlot->getX(), pLoopPlot->getY());
 
 				if(iDistance <= iRange)
+#endif
 				{
 					// Can't be owned by anyone
 					if(pLoopPlot->getOwner() == NO_PLAYER)
@@ -4663,7 +4673,11 @@ CvPlot* CvMinorCivAI::GetBestNearbyCampToKill()
 						// Camp here?
 						if(pLoopPlot->getImprovementType() == GC.getBARBARIAN_CAMP_IMPROVEMENT())
 						{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+							int iWeight = 1 + (iRange - hexDistance(iDX, iDY)); // Closer camps have higher weight
+#else
 							int iWeight = 1 + (iRange - iDistance); // Closer camps have higher weight
+#endif
 							viPlotIndexes.push_back(pLoopPlot->GetPlotIndex(), iWeight);
 						}
 					}
@@ -7978,11 +7992,22 @@ int CvMinorCivAI::CalculateBullyMetric(PlayerTypes eBullyPlayer, bool bForUnit, 
 	// Include the minor's city power
 	iMinorLocalPower += pMinorCapital->GetPower();
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	for (int iDY = -iComparisonRadius; iDY <= iComparisonRadius; iDY++)
+	{
+		iMaxDX = iComparisonRadius - MAX(0, iDY);
+		for (iDX = -iComparisonRadius - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(iMinorCapitalX, iMinorCapitalY, iDX, iDY);
+#else
 	for(int iDX = -iComparisonRadius; iDX <= iComparisonRadius; iDX++)
 	{
 		for(int iDY = -iComparisonRadius; iDY <= iComparisonRadius; iDY++)
 		{
 			pLoopPlot = ::plotXYWithRangeCheck(iMinorCapitalX, iMinorCapitalY, iDX, iDY, iComparisonRadius);
+#endif
 
 			if(pLoopPlot != NULL)
 			{

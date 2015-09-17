@@ -2308,11 +2308,23 @@ void CvHomelandAI::ExecuteExplorerMoves()
 			iMovementRange = 1;
 		}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		int iMaxDX, iDX;
+		CvPlot* pEvalPlot;
+		for (int iDY = -iMovementRange; iDY <= iMovementRange; iDY++)
+		{
+			iMaxDX = iMovementRange - MAX(0, iDY);
+			for (iDX = -iMovementRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				// No need for range check because loops are set up properly
+				pEvalPlot = plotXY(iUnitX, iUnitY, iDX, iDY);
+#else
 		for(int iX = -iMovementRange; iX <= iMovementRange; iX++)
 		{
 			for(int iY = -iMovementRange; iY <= iMovementRange; iY++)
 			{
 				CvPlot* pEvalPlot = plotXYWithRangeCheck(iUnitX, iUnitY, iX, iY, iMovementRange);
+#endif
 				if(!pEvalPlot)
 				{
 					continue;
@@ -2435,7 +2447,11 @@ void CvHomelandAI::ExecuteExplorerMoves()
 						continue;
 					}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+					pEvalPlot = GC.getMap().plotByIndex(iPlot);
+#else
 					CvPlot* pEvalPlot = GC.getMap().plotByIndex(iPlot);
+#endif
 					if(!pEvalPlot)
 					{
 						continue;
@@ -2799,20 +2815,34 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 			int iRange = pUnit->getUnitInfo().GetMoves();
 
 			// For each plot within movement range of the fleeing unit
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			int iMaxDX, iX;
+			CvPlot* pPlot;
+			for (int iY = -iRange; iY <= iRange; iY++)
+			{
+				iMaxDX = iRange - MAX(0, iY);
+				for (iX = -iRange - MIN(0, iY); iX <= iMaxDX; iX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+				{
+					// No need for range check because loops are set up properly
+					pPlot = plotXY(pUnit->getX(), pUnit->getY(), iX, iY);
+#else
 			for(int iX = -iRange; iX <= iRange; iX++)
 			{
 				for(int iY = -iRange; iY <= iRange; iY++)
 				{
 					CvPlot* pPlot = GC.getMap().plot(pUnit->getX() + iX, pUnit->getY() + iY);
+#endif
 					if(pPlot == NULL)
 					{
 						continue;
 					}
 
+#ifndef AUI_HEXSPACE_DX_LOOPS
 					if (plotDistance(pPlot->getX(), pPlot->getY(), pUnit->getX(), pUnit->getY()) > iRange)
 					{
 						continue;
 					}
+#endif
 
 					//   prefer being in a city with the lowest danger value
 					//   prefer being in a plot with no danger value
@@ -2874,7 +2904,11 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 				aBestPlotList.SortItems();	// highest score will be first.
 				for (uint i = 0; i < uiListSize; ++i )	
 				{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+					pPlot = aBestPlotList.GetElement(i);
+#else
 					CvPlot* pPlot = aBestPlotList.GetElement(i);
+#endif
 
 					if(CanReachInXTurns(pUnit, pPlot, 1))
 					{
@@ -4604,11 +4638,23 @@ bool CvHomelandAI::MoveCivilianToSafety(CvUnit* pUnit, bool bIgnoreUnits)
 	WeightedPlotVector aBestPlotList;
 	aBestPlotList.reserve( ((iSearchRange * 2) + 1) * 2 );
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iSearchRange; iDY <= iSearchRange; iDY++)
+	{
+		iMaxDX = iSearchRange - MAX(0, iDY);
+		for (iDX = -iSearchRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(pUnit->getX(), pUnit->getY(), iDX, iDY);
+#else
 	for(int iDX = -(iSearchRange); iDX <= iSearchRange; iDX++)
 	{
 		for(int iDY = -(iSearchRange); iDY <= iSearchRange; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(pUnit->getX(), pUnit->getY(), iDX, iDY, iSearchRange);
+#endif
 			if(!pLoopPlot)
 			{
 				continue;

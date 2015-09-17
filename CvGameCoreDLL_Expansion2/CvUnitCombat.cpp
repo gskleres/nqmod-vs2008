@@ -1970,11 +1970,25 @@ uint CvUnitCombat::ApplyNuclearExplosionDamage(const CvCombatMemberEntry* pkDama
 	// Then the terrain effects
 	int iBlastRadius = GC.getNUKE_BLAST_RADIUS();
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	if (pkTargetPlot)
+	{
+		for (int iDY = -iBlastRadius; iDY <= iBlastRadius; iDY++)
+		{
+			iMaxDX = iBlastRadius - MAX(0, iDY);
+			for (iDX = -iBlastRadius - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				// No need for range check because loops are set up properly
+				pLoopPlot = plotXY(pkTargetPlot->getX(), pkTargetPlot->getY(), iDX, iDY);
+#else
 	for(int iDX = -(iBlastRadius); iDX <= iBlastRadius; iDX++)
 	{
 		for(int iDY = -(iBlastRadius); iDY <= iBlastRadius; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(pkTargetPlot->getX(), pkTargetPlot->getY(), iDX, iDY, iBlastRadius);
+#endif
 
 			if(pLoopPlot != NULL)
 			{
@@ -2016,6 +2030,9 @@ uint CvUnitCombat::ApplyNuclearExplosionDamage(const CvCombatMemberEntry* pkDama
 			}
 		}
 	}
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	}
+#endif
 
 	// Then the cities
 	for(int i = 0; i < iDamageMembers; ++i)
@@ -2090,11 +2107,23 @@ void CvUnitCombat::GenerateNuclearExplosionDamage(CvPlot* pkTargetPlot, int iDam
 
 	*piDamageMembers = 0;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iBlastRadius; iDY <= iBlastRadius; iDY++)
+	{
+		iMaxDX = iBlastRadius - MAX(0, iDY);
+		for (iDX = -iBlastRadius - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(pkTargetPlot->getX(), pkTargetPlot->getY(), iDX, iDY);
+#else
 	for(int iDX = -(iBlastRadius); iDX <= iBlastRadius; iDX++)
 	{
 		for(int iDY = -(iBlastRadius); iDY <= iBlastRadius; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(pkTargetPlot->getX(), pkTargetPlot->getY(), iDX, iDY, iBlastRadius);
+#endif
 
 			if(pLoopPlot != NULL)
 			{

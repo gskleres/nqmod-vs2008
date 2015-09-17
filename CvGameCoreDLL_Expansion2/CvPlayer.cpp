@@ -2512,11 +2512,23 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 
 	if(bConquest)
 	{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		int iMaxDX, iDX;
+		CvPlot* pLoopPlot;
+		for (int iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+		{
+			iMaxDX = iMaxRange - MAX(0, iDY);
+			for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				// No need for range check because loops are set up properly
+				pLoopPlot = plotXY(iOldCityX, iOldCityY, iDX, iDY);
+#else
 		for(int iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 		{
 			for(int iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 			{
 				CvPlot* pLoopPlot = plotXYWithRangeCheck(iOldCityX, iOldCityY, iDX, iDY, iMaxRange);
+#endif
 				if(pLoopPlot)
 				{
 					pLoopPlot->verifyUnitValidPlot();
@@ -5634,18 +5646,28 @@ bool CvPlayer::canReceiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit) 
 		ImprovementTypes barbCampType = (ImprovementTypes) GC.getBARBARIAN_CAMP_IMPROVEMENT();
 
 		// Look at nearby Plots to make sure another camp isn't too close
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		int iMaxDX;
+		for (iDY = -iBarbCampDistance; iDY <= iBarbCampDistance; iDY++)
+		{
+			iMaxDX = iBarbCampDistance - MAX(0, iDY);
+			for (iDX = -iBarbCampDistance - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 		for(iDX = -(iBarbCampDistance); iDX <= iBarbCampDistance; iDX++)
 		{
 			for(iDY = -(iBarbCampDistance); iDY <= iBarbCampDistance; iDY++)
+#endif
 			{
 				pNearbyPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
 
 				if(pNearbyPlot != NULL)
 				{
+#ifndef AUI_HEXSPACE_DX_LOOPS
 #ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
 					if (hexDistance(iDX, iDY) <= iBarbCampDistance)
 #else
 					if(plotDistance(pNearbyPlot->getX(), pNearbyPlot->getY(), pPlot->getX(), pPlot->getY()) <= iBarbCampDistance)
+#endif
 #endif
 					{
 						if(pNearbyPlot->getImprovementType() == barbCampType)
@@ -5920,6 +5942,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 	int iBestValue;
 	int iPass;
 	int iDX, iDY;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+#endif
 	int iI;
 
 	CvAssertMsg(canReceiveGoody(pPlot, eGoody, pUnit), "Instance is expected to be able to recieve goody");
@@ -6046,17 +6071,31 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 	{
 		// Look at nearby Plots to make sure another camp isn't too close
 		const int iBarbCampDistance = kGoodyInfo.getRevealNearbyBarbariansRange();
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		for (iDY = -iBarbCampDistance; iDY <= iBarbCampDistance; iDY++)
+		{
+#ifdef AUI_FAST_COMP
+			iMaxDX = iBarbCampDistance - FASTMAX(0, iDY);
+			for (iDX = -iBarbCampDistance - FASTMIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
+			iMaxDX = iBarbCampDistance - MAX(0, iDY);
+			for (iDX = -iBarbCampDistance - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#endif
+#else
 		for(iDX = -(iBarbCampDistance); iDX <= iBarbCampDistance; iDX++)
 		{
 			for(iDY = -(iBarbCampDistance); iDY <= iBarbCampDistance; iDY++)
+#endif
 			{
 				CvPlot* pNearbyBarbarianPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
 				if(pNearbyBarbarianPlot != NULL)
 				{
+#ifndef AUI_HEXSPACE_DX_LOOPS
 #ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
 					if (hexDistance(iDX, iDY) <= iBarbCampDistance)
 #else
 					if(plotDistance(pNearbyBarbarianPlot->getX(), pNearbyBarbarianPlot->getY(), pPlot->getX(), pPlot->getY()) <= iBarbCampDistance)
+#endif
 #endif
 					{
 						if(pNearbyBarbarianPlot->getImprovementType() == GC.getBARBARIAN_CAMP_IMPROVEMENT())
@@ -6086,11 +6125,20 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 
 			int iRandLimit;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			for (iDY = -iOffset; iDY <= iOffset; iDY++)
+			{
+				iMaxDX = iOffset - MAX(0, iDY);
+				for (iDX = -iOffset - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+				{
+					pLoopPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
+#else
 			for(iDX = -(iOffset); iDX <= iOffset; iDX++)
 			{
 				for(iDY = -(iOffset); iDY <= iOffset; iDY++)
 				{
 					pLoopPlot = plotXYWithRangeCheck(pPlot->getX(), pPlot->getY(), iDX, iDY, iOffset);
+#endif
 
 					if(pLoopPlot != NULL)
 					{
@@ -6126,18 +6174,27 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 			pBestPlot = pPlot;
 		}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		for (iDY = -iRange; iDY <= iRange; iDY++)
+		{
+			iMaxDX = iRange - MAX(0, iDY);
+			for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 		for(iDX = -(iRange); iDX <= iRange; iDX++)
 		{
 			for(iDY = -(iRange); iDY <= iRange; iDY++)
+#endif
 			{
 				pLoopPlot = plotXY(pBestPlot->getX(), pBestPlot->getY(), iDX, iDY);
 
 				if(pLoopPlot != NULL)
 				{
+#ifndef AUI_HEXSPACE_DX_LOOPS
 #ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
 					if (hexDistance(iDX, iDY) <= iRange)
 #else
-					if(plotDistance(pBestPlot->getX(), pBestPlot->getY(), pLoopPlot->getX(), pLoopPlot->getY()) <= iRange)
+					if (plotDistance(pBestPlot->getX(), pBestPlot->getY(), pLoopPlot->getX(), pLoopPlot->getY()) <= iRange)
+#endif
 #endif
 					{
 						if(GC.getGame().getJonRandNum(100, "Goody Map") < kGoodyInfo.getMapProb())
@@ -6390,11 +6447,20 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 				pBestPlot = NULL;
 				iBestValue = INT_MAX;
 				const int iPopRange = 2;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+				for (iDY = -iPopRange; iDY <= iPopRange; iDY++)
+				{
+					iMaxDX = iPopRange - MAX(0, iDY);
+					for (iDX = -iPopRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+					{
+						pLoopPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
+#else
 				for(iDX = -(iPopRange); iDX <= iPopRange; iDX++)
 				{
 					for(iDY = -(iPopRange); iDY <= iPopRange; iDY++)
 					{
 						pLoopPlot	= plotXYWithRangeCheck(pPlot->getX(), pPlot->getY(), iDX, iDY, iPopRange);
+#endif
 						if(pLoopPlot != NULL)
 						{
 							if(pLoopPlot->isValidDomainForLocation(*pNewUnit))
@@ -6588,9 +6654,14 @@ void CvPlayer::doGoody(CvPlot* pPlot, CvUnit* pUnit)
 			// Any valid Goodies?
 			if(avValidGoodies.size() > 0)
 			{
+#ifdef AUI_PLAYER_FIX_GOODY_HUT_PICKER
+				if (pUnit && GC.getGame().getActivePlayer() == GetID() && pUnit->isHasPromotion((PromotionTypes)GC.getPROMOTION_GOODY_HUT_PICKER()))
+				{
+#else
 				if (pUnit && pUnit->isHasPromotion((PromotionTypes)GC.getPROMOTION_GOODY_HUT_PICKER()))
 				{
 					if(GC.getGame().getActivePlayer() == GetID())
+#endif
 					{
 						CvPopupInfo kPopupInfo(BUTTONPOPUP_CHOOSE_GOODY_HUT_REWARD, GetID(), pUnit->GetID());
 						GC.GetEngineUserInterface()->AddPopup(kPopupInfo);
@@ -11507,7 +11578,11 @@ int CvPlayer::GetUnhappinessFromCapturedCityCount(CvCity* pAssumeCityAnnexed, Cv
 
 //	--------------------------------------------------------------------------------
 /// Unhappiness from City Population
+#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+int CvPlayer::GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted, const CvCity* pAssumeCityGrows) const
+#else
 int CvPlayer::GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted) const
+#endif
 {
 	int iUnhappiness = 0;
 	int iUnhappinessFromThisCity;
@@ -11539,6 +11614,10 @@ int CvPlayer::GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed, CvCit
 		if(bCityValid)
 		{
 			iPopulation = pLoopCity->getPopulation();
+#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+			if (pLoopCity == pAssumeCityGrows)
+				iPopulation++;
+#endif
 
 			// No Unhappiness from Specialist Pop? (Policies, etc.)
 			if(isHalfSpecialistUnhappiness())
@@ -11702,7 +11781,11 @@ int CvPlayer::GetUnhappinessFromCitySpecialists(CvCity* pAssumeCityAnnexed, CvCi
 
 //	--------------------------------------------------------------------------------
 /// Unhappiness from City Population in Occupied Cities
+#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+int CvPlayer::GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted, const CvCity* pAssumeCityGrows) const
+#else
 int CvPlayer::GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted) const
+#endif
 {
 	int iUnhappiness = 0;
 	int iUnhappinessFromThisCity;
@@ -11735,6 +11818,10 @@ int CvPlayer::GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed, CvCit
 		if(bCityValid)
 		{
 			iPopulation = pLoopCity->getPopulation();
+#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+			if (pLoopCity == pAssumeCityGrows)
+				iPopulation++;
+#endif
 
 			// No Unhappiness from Specialist Pop? (Policies, etc.)
 			if(isHalfSpecialistUnhappiness())
@@ -16555,11 +16642,20 @@ void CvPlayer::DoUpdateCramped()
 	int iLoop;
 	for(pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
 	{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		for (int iDY = -iRange; iDY <= iRange; iDY++)
+		{
+			int iMaxDX = iRange - MAX(0, iDY);
+			for (int iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				pPlot = plotXY(pLoopCity->getX(), pLoopCity->getY(), iDX, iDY);
+#else
 		for(int iX = -iRange; iX <= iRange; iX++)
 		{
 			for(int iY = -iRange; iY <= iRange; iY++)
 			{
 				pPlot = plotXYWithRangeCheck(pLoopCity->getX(), pLoopCity->getY(), iX, iY, iRange);
+#endif
 
 				if(pPlot != NULL)
 				{

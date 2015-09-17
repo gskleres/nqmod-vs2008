@@ -22,6 +22,17 @@ bool CvBarbarians::IsPlotValidForBarbCamp(CvPlot* pPlot)
 	int iRange = 4;
 	int iDY;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
+#else
 	int iPlotX = pPlot->getX();
 	int iPlotY = pPlot->getY();
 
@@ -39,6 +50,7 @@ bool CvBarbarians::IsPlotValidForBarbCamp(CvPlot* pPlot)
 
 			// If the counter is below -1 that means a camp was cleared recently
 			CvPlot* pLoopPlot = kMap.plot(iLoopPlotX, iLoopPlotY);
+#endif
 			if (pLoopPlot)
 			{
 				if (m_aiPlotBarbCampSpawnCounter[pLoopPlot->GetPlotIndex()] < -1)
@@ -391,10 +403,18 @@ void CvBarbarians::DoCamps()
 												{
 													bSomethingTooClose = false;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+													int iMaxDX;
+													for (iDY = -(iMaxDistanceToLook); iDY <= iMaxDistanceToLook; iDY++)
+													{
+														iMaxDX = iMaxDistanceToLook - MAX(0, iDY);
+														for (iDX = -(iMaxDistanceToLook) - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 													// Look at nearby Plots to make sure another camp isn't too close
 													for(iDX = -(iMaxDistanceToLook); iDX <= iMaxDistanceToLook; iDX++)
 													{
 														for(iDY = -(iMaxDistanceToLook); iDY <= iMaxDistanceToLook; iDY++)
+#endif
 														{
 															pNearbyCampPlot = plotXY(pLoopPlot->getX(), pLoopPlot->getY(), iDX, iDY);
 
@@ -693,12 +713,23 @@ void CvBarbarians::DoSpawnBarbarianUnit(CvPlot* pPlot, bool bIgnoreMaxBarbarians
 	// Look at nearby Plots to see if there are already too many Barbs nearby
 	iNumNearbyUnits = 0;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iY = -iRange; iY <= iRange; iY++)
+	{
+		iMaxDX = iRange - MAX(0, iY);
+		for (iX = -iRange - MIN(0, iY); iX <= iMaxDX; iX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pNearbyPlot = plotXY(pPlot->getX(), pPlot->getY(), iX, iY);
+#else
 	for(iX = -iRange; iX <= iRange; iX++)
 	{
 		for(iY = -iRange; iY <= iRange; iY++)
 		{
 			// Cut off the corners of the area we're looking at that we don't want
 			pNearbyPlot = plotXYWithRangeCheck(pPlot->getX(), pPlot->getY(), iX, iY, iRange);
+#endif
 
 			if(pNearbyPlot != NULL)
 			{

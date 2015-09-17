@@ -965,11 +965,22 @@ int CvEconomicAI::ScoreExplorePlot(CvPlot* pPlot, TeamTypes eTeam, int iRange, D
 
 	FAssertMsg(pPlot->isRevealed(eTeam), "Plot isn't revealed. This isn't good.");
 	CvPlot* pEvalPlot = NULL;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iX;
+	for (int iY = -iRange; iY <= iRange; iY++)
+	{
+		iMaxDX = iRange - MAX(0, iY);
+		for (iX = -iRange - MIN(0, iY); iX <= iMaxDX; iX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pEvalPlot = plotXY(iPlotX, iPlotY, iX, iY);
+#else
 	for(int iX = -iRange; iX <= iRange; iX++)
 	{
 		for(int iY = -iRange; iY <= iRange; iY++)
 		{
 			pEvalPlot = plotXYWithRangeCheck(iPlotX, iPlotY, iX, iY, iRange);
+#endif
 			if(!pEvalPlot)
 			{
 				continue;

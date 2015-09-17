@@ -450,6 +450,10 @@ void CvMap::reset(CvMapInitData* pInitInfo)
 		m_bWrapY = pInitInfo->m_bWrapY;
 	}
 
+#ifdef AUI_MAP_FIX_CALCULATE_INFLUENCE_DISTANCE_REUSE_PATHFINDER
+	m_pLastInfluenceSourcePlot = NULL;
+#endif
+
 	int iNumResourceInfos = GC.getNumResourceInfos();
 	if(iNumResourceInfos)
 	{
@@ -644,11 +648,23 @@ void CvMap::updateWorkingCity(CvPlot* pPlot, int iRange)
 {
 	if(pPlot && iRange > 0)
 	{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		int iMaxDX, iDX;
+		CvPlot* pLoopPlot;
+		for (int iDY = -iRange; iDY <= iRange; iDY++)
+		{
+			iMaxDX = iRange - MAX(0, iDY);
+			for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				// No need for range check because loops are set up properly
+				pLoopPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
+#else
 		for(int iX = -iRange; iX <= iRange; iX++)
 		{
 			for(int iY = -iRange; iY <= iRange; iY++)
 			{
 				CvPlot* pLoopPlot = plotXYWithRangeCheck(pPlot->getX(), pPlot->getY(), iX, iY, iRange);
+#endif
 				if(pLoopPlot)
 				{
 					pLoopPlot->updateWorkingCity();
@@ -711,6 +727,9 @@ CvPlot* CvMap::syncRandPlot(int iFlags, int iArea, int iMinUnitDistance, int iTi
 	bool bValid;
 	int iCount;
 	int iDX, iDY;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+#endif
 
 	pPlot = NULL;
 
@@ -733,11 +752,21 @@ CvPlot* CvMap::syncRandPlot(int iFlags, int iArea, int iMinUnitDistance, int iTi
 			{
 				if(iMinUnitDistance != -1)
 				{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+					for (iDY = -iMinUnitDistance; iDY <= iMinUnitDistance; iDY++)
+					{
+						iMaxDX = iMinUnitDistance - MAX(0, iDY);
+						for (iDX = -iMinUnitDistance - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+						{
+							// No need for range check because loops are set up properly
+							pLoopPlot = plotXY(pTestPlot->getX(), pTestPlot->getY(), iDX, iDY);
+#else
 					for(iDX = -(iMinUnitDistance); iDX <= iMinUnitDistance; iDX++)
 					{
 						for(iDY = -(iMinUnitDistance); iDY <= iMinUnitDistance; iDY++)
 						{
 							pLoopPlot	= plotXYWithRangeCheck(pTestPlot->getX(), pTestPlot->getY(), iDX, iDY, iMinUnitDistance);
+#endif
 
 							if(pLoopPlot != NULL)
 							{
@@ -1037,11 +1066,22 @@ bool CvMap::findWater(CvPlot* pPlot, int iRange, bool bFreshWater)
 	int iPlotX = pPlot->getX();
 	int iPlotY = pPlot->getY();
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(iPlotX, iPlotY, iDX, iDY);
+#else
 	for(iDX = -(iRange); iDX <= iRange; iDX++)
 	{
 		for(iDY = -(iRange); iDY <= iRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(iPlotX, iPlotY, iDX, iDY, iRange);
+#endif
 
 			if(pLoopPlot != NULL)
 			{
@@ -1327,6 +1367,15 @@ int CvMap::calculateInfluenceDistance(CvPlot* pSource, CvPlot* pDest, int iMaxRa
 	{
 		return -1;
 	}
+
+#ifdef AUI_MAP_FIX_CALCULATE_INFLUENCE_DISTANCE_REUSE_PATHFINDER
+	bCorrectButSlower = false;
+	if (m_pLastInfluenceSourcePlot != pSource)
+	{
+		m_pLastInfluenceSourcePlot = pSource;
+		bCorrectButSlower = true;
+	}
+#endif
 
 	GC.getInfluenceFinder().SetData(&iMaxRange);
 	if(GC.getInfluenceFinder().GeneratePath(pSource->getX(), pSource->getY(), pDest->getX(), pDest->getY(), 0, !bCorrectButSlower))
@@ -1631,6 +1680,9 @@ void CvMap::DoPlaceNaturalWonders()
 
 	int iPlotLoopX;
 	int iPlotLoopY;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+#endif
 	CvPlot* pLoopPlot;
 
 	int iNumMapPlots = numPlots();
@@ -1725,11 +1777,21 @@ void CvMap::DoPlaceNaturalWonders()
 		{
 			bValid = false;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			for (iPlotLoopY = -iCoastDistance; iPlotLoopY <= iCoastDistance; iPlotLoopY++)
+			{
+				iMaxDX = iCoastDistance - MAX(0, iPlotLoopY);
+				for (iPlotLoopX = -iCoastDistance - MIN(0, iPlotLoopY); iPlotLoopX <= iMaxDX; iPlotLoopX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+				{
+					// No need for range check because loops are set up properly
+					pLoopPlot = plotXY(pRandPlot->getX(), pRandPlot->getY(), iPlotLoopX, iPlotLoopY);
+#else
 			for(iPlotLoopX = -iCoastDistance; iPlotLoopX <= iCoastDistance; iPlotLoopX++)
 			{
 				for(iPlotLoopY = -iCoastDistance; iPlotLoopY <= iCoastDistance; iPlotLoopY++)
 				{
 					pLoopPlot = plotXYWithRangeCheck(pRandPlot->getX(), pRandPlot->getY(), iPlotLoopX, iPlotLoopY, iCoastDistance);
+#endif
 
 					if(pLoopPlot != NULL)
 					{
@@ -1761,11 +1823,21 @@ void CvMap::DoPlaceNaturalWonders()
 		bValid = true;
 
 		// Can't be too close to another Natural Wonder
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		for (iPlotLoopY = -iAnotherNWDistance; iPlotLoopY <= iAnotherNWDistance; iPlotLoopY++)
+		{
+			iMaxDX = iAnotherNWDistance - MAX(0, iPlotLoopY);
+			for (iPlotLoopX = -iAnotherNWDistance - MIN(0, iPlotLoopY); iPlotLoopX <= iMaxDX; iPlotLoopX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				// No need for range check because loops are set up properly
+				pLoopPlot = plotXY(pRandPlot->getX(), pRandPlot->getY(), iPlotLoopX, iPlotLoopY);
+#else
 		for(iPlotLoopX = -iAnotherNWDistance; iPlotLoopX <= iAnotherNWDistance; iPlotLoopX++)
 		{
 			for(iPlotLoopY = -iAnotherNWDistance; iPlotLoopY <= iAnotherNWDistance; iPlotLoopY++)
 			{
 				pLoopPlot = plotXYWithRangeCheck(pRandPlot->getX(), pRandPlot->getY(), iPlotLoopX, iPlotLoopY, iAnotherNWDistance);
+#endif
 
 				if(pLoopPlot != NULL)
 				{

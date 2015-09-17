@@ -49,6 +49,8 @@
 #define AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
 /// Optimized parts of functions responsible for updating plot vision code
 #define AUI_PLOT_VISIBILITY_OPTIMIZATIONS
+/// Optimizes loops that iterate over relative coordinates to hexspace
+#define AUI_HEXSPACE_DX_LOOPS
 
 // Fixes to game bugs
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
@@ -71,10 +73,26 @@
 #define AUI_ACHIEVEMENT_FIX_RELIGION_WE_ARE_FAMILY_WORKING
 /// Promotions that grant air combat bonuses are now allowed for units with no ability for air combat if the promotion also grants the ability for air combat
 #define AUI_UNIT_FIX_ALLOW_COMBO_AIR_COMBAT_PROMOTIONS
+/// Fixes radar (Delnar: first bit was covered by GJS, remaining bits are now also covered) 
+#define AUI_ASTAR_FIX_RADAR
 /// Fixes rarer cases of radar
 #define AUI_UNIT_FIX_RADAR
 /// Fixes cases of indirect radaring via ZOC.
 #define AUI_UNIT_MOVEMENT_FIX_RADAR_ZOC
+/// Fixes the function to only enable the reuse pathfinder flag when it wouldn't result in incorrect data
+#define AUI_MAP_FIX_CALCULATE_INFLUENCE_DISTANCE_REUSE_PATHFINDER
+/// Fixes Iroquois' UA so friendly forest tiles will now connect with road tiles!
+#define AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
+/// Fixes base heal mod from players not actually increasing base healing
+#define AUI_UNIT_FIX_BASE_HEAL_MOD
+/// If a plot's feature is ignored when calculating the yield of a tile, this also extends to any yield changes based on the working city
+#define AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IGNORE_FEATURE_EXTENDS_TO_CITY
+/// Fixes the poor setup of calculating the potential gains of having an improvement on a plot with a certain road
+#define AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IMPROVEMENT_WITH_ROUTE
+/// If the plot's current route is pillaged, the extra yield from the route is no longer factored into the function
+#define AUI_PLOT_FIX_IMPROVEMENT_YIELD_CHANGES_CATCH_PILLAGED_ROUTE
+/// Fixes AI Shoshone Pathfinders not getting any goody hut bonuses (TODO: have AI Shoshone actually choose their goody hut bonus instead of getting a random one)
+#define AUI_PLAYER_FIX_GOODY_HUT_PICKER
 
 // Observer mode fixes
 /// Observers will see all resources
@@ -102,13 +120,49 @@
 #define AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USES_BINOM_RNG
 #endif
 
-// Flavor Manager Stuff
+// AI fixes that significantly affect MP
+/// Instead of ignoring all military training buildings (eg. stables, kreposts, etc.), puppets will instead nullify the Military Training and Naval flavors
+#define AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_PUPPETS_NULLIFY_BARRACKS
+/// Scales the GetLastTurnWorkerDisbanded() computation to game speed
+#define AUI_CITYSTRATEGY_FIX_TILE_IMPROVERS_LAST_DISBAND_WORKER_TURN_SCALE
 /// Fixes the "zero'ed out flavor" check to still accept 0 as a possible flavor value, but not accept negative values
 #define AUI_FLAVOR_MANAGER_FIX_RANDOMIZE_WEIGHTS_ZEROED_OUT_FLAVOR
 /// Fixes the function messing up and returning the wrong adjustment when the value to be added is actually negative (eg. for minor civs)
 #define AUI_FLAVOR_MANAGER_FIX_GET_ADJUSTED_VALUE_NEGATIVE_PLUSMINUS
 /// If the first adjusted value is out of bounds, keep rerolling with the amount with which it is out of bounds until we remain in bounds
 #define AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USE_REROLLS
+
+// Citizen Management Fixes
+/// Extra food value assigned to specialists for half food consumption now depends on the XML value for citizen food consumption (instead of assuming the default value)
+#define AUI_CITIZENS_FIX_SPECIALIST_VALUE_HALF_FOOD_CONSUMPTION
+/// Replaces the rudimentary specialist-plot check with a plot vs. default citizen value check
+#define AUI_CITIZENS_IS_PLOT_BETTER_THAN_DEFAULT_SPECIALIST
+/// The value of excess food is multiplied by the city's growth modifiers
+#define AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+/// If a tile would provide enough food to generate excess food, the excess amount has its value halved as if the city was already generating enough food
+#define AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
+/// If a city is using excess food for production, change the value of food yields accordingly (eg. city cannot starve, food is not 1:1 with production)
+#define AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION
+/// If a city has any modifiers on certain yield incomes, this modification is applied to the value of those yields as well (eg. +25% gold increases gold yield value by 25%)
+#define AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+/// Games where happiness is disabled no longer cause the citizen manager to always ignore the avoid growth checkbox
+#define AUI_CITIZENS_FIX_AVOID_GROWTH_FLAG_NOT_IGNORED_IF_NO_HAPPINESS
+/// The citizen manager only forces avoid growth from low happiness when growing in the city would lower the player's happiness
+#define AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+/// When comparing whether a specialist is better than an unemployed citizen, regular value evaluation is used
+#define AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
+
+// City Governor Stuff
+/// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix
+#define AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+/// Replaces the "lower influence cost by 1 if near NW or resource" code with code that lowers the influence cost of plots that are between resources or natural wonders and the closest owned plot of the city
+#define AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+/// Weights the yield contribution to a plot's influence cost by the value of the yield to citizen automation.
+#define AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+/// Actually makes passive acquisition of tiles not adjacent to an already owned tile impossible
+#define AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
+/// Delnar: Moved Fruitstrike's code to prioritize plots with the lowest gold purchasing cost in the case of ties into the end of GetBuyablePlotList() so that plots will still be randomly decided if their gold purchasing costs are the same (instead of prioritizing Northeastern plots)
+#define NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
 
 // GlobalDefines (GD) wrappers
 // INT

@@ -407,6 +407,9 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 
 	// How much surplus food are we making?
 	int iExcessFoodTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100);
+#if defined(AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER) || defined(AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION) || defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS)
+	int iExcessFoodWithPlotTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100) + pPlot->getYield(YIELD_FOOD) * m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
+#endif
 
 	bool bAvoidGrowth = IsAvoidGrowth();
 
@@ -437,6 +440,21 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 		iFaithYieldValue *= 3;
 	}
 
+#ifdef AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION
+	if (m_pCity->isFoodProduction())
+	{
+		iFoodYieldValue = 0;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		int iCurrProdFromFood = m_pCity->foodDifference(true, true, m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100));
+		int iProdFromFoodWithTile = m_pCity->foodDifference(true, true, m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100));
+#else
+		int iCurrProdFromFood = m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100);
+		int iProdFromFoodWithTile = m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100);
+#endif
+		iProductionYieldValue += (iProdFromFoodWithTile - iCurrProdFromFood) * GC.getAI_CITIZEN_VALUE_PRODUCTION() * (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION ? 3 : 0);
+	}
+	else
+#endif
 	// Food can be worth less if we don't want to grow
 	if(bUseAllowGrowthFlag && iExcessFoodTimes100 >= 0 && bAvoidGrowth)
 	{
@@ -454,26 +472,128 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 			if(iFoodT100NeededFor0 > 0)
 			{
 				iFoodYieldValue *= 8;
+#ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
+				if (iExcessFoodWithPlotTimes100 > 0 && iFoodYieldValue != 0)
+				{
+					int iFutureExcessFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * iExcessFoodWithPlotTimes100;
+					if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+						iFutureExcessFoodYieldValue *= 3;
+					else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+						iFutureExcessFoodYieldValue *= 2;
+					iFoodYieldValue -= iFutureExcessFoodYieldValue * 8 / 100;
+					if (!bAvoidGrowth || !bUseAllowGrowthFlag)
+					{
+						iFoodYieldValue += iFutureExcessFoodYieldValue / 200;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+						iFutureExcessFoodYieldValue = (m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100) - iExcessFoodWithPlotTimes100) * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+						if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+							iFutureExcessFoodYieldValue *= 3;
+						else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+							iFutureExcessFoodYieldValue *= 2;
+						iFoodYieldValue += iFutureExcessFoodYieldValue / 200;
+#endif
+					}
+				}
+#endif
 			}
 			else
 			{
 				iFoodYieldValue /= 2;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+				int iExtraFoodValueT100 = (m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100 - iExcessFoodTimes100) -
+					(iExcessFoodWithPlotTimes100 - iExcessFoodTimes100)) * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+				if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+					iExtraFoodValueT100 *= 3;
+				else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+					iExtraFoodValueT100 *= 2;
+				iFoodYieldValue += iExtraFoodValueT100 / 200;
+#endif
 			}
 		}
 		// If our surplus is not at least 2, really emphasize food plots
 		else if(!bAvoidGrowth)
 		{
+#ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
+			int iFoodT100NeededFor2 = 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION() - iExcessFoodTimes100;
+#else
 			int iFoodT100NeededFor2 = 200 - iExcessFoodTimes100;
+#endif
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+			int iExtraFoodValueT100 = (m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100 - iExcessFoodTimes100) -
+				(iExcessFoodWithPlotTimes100 - iExcessFoodTimes100)) * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+			if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+				iExtraFoodValueT100 *= 3;
+			else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+				iExtraFoodValueT100 *= 2;
+#endif
 
 			if(iFoodT100NeededFor2 > 0)
 			{
 				iFoodYieldValue *= 8;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+				iExtraFoodValueT100 = 0;
+#endif
+#ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
+				if (iExcessFoodWithPlotTimes100 > 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION() && iFoodYieldValue != 0)
+				{
+					int iFutureExcessFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * (iExcessFoodWithPlotTimes100 - 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION());
+					if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+						iFutureExcessFoodYieldValue *= 3;
+					else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+						iFutureExcessFoodYieldValue *= 2;
+					iFoodYieldValue -= iFutureExcessFoodYieldValue * 8 / 100;
+					if (eFocus != CITY_AI_FOCUS_TYPE_FOOD)
+						iFoodYieldValue += iFutureExcessFoodYieldValue / 200;
+					else
+						iFoodYieldValue += iFutureExcessFoodYieldValue / 100;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+					iExtraFoodValueT100 = (m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100 - 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION()) -
+						(iExcessFoodWithPlotTimes100 - 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION())) * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+					if (eFocus != CITY_AI_FOCUS_TYPE_FOOD)
+						iExtraFoodValueT100 /= 2;
+#endif
+				}
+#endif
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+				iExtraFoodValueT100 += (m_pCity->foodDifferenceTimes100(true, NULL, true, MIN(iExcessFoodWithPlotTimes100, 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION())) -
+					MIN(iExcessFoodWithPlotTimes100, 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION())) * 8 * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+				if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+					iExtraFoodValueT100 *= 3;
+				else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+					iExtraFoodValueT100 *= 2;
+				iFoodYieldValue += iExtraFoodValueT100 / 100;
+#endif
 			}
 			else if (eFocus != CITY_AI_FOCUS_TYPE_FOOD)
 			{
 				iFoodYieldValue /= 2;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+				iFoodYieldValue += iExtraFoodValueT100 / 200;
+			}
+			else
+			{
+				iFoodYieldValue += iExtraFoodValueT100 / 100;
+#endif
 			}
 		}
+#ifdef AUI_CITIZENS_FIX_GET_VALUE_FOOD_YIELD_VALUE_WHEN_STARVATION_WITH_AVOID_GROWTH
+		// Food focus and negative food, but with avoid growth enabled for some reason
+		else
+		{
+			iFoodYieldValue *= 8;
+#ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
+			if (iExcessFoodWithPlotTimes100 > 0 && iFoodYieldValue != 0)
+			{
+				int iFutureExcessFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * iExcessFoodWithPlotTimes100;
+				if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+					iFutureExcessFoodYieldValue *= 3;
+				else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+					iFutureExcessFoodYieldValue *= 2;
+				iFoodYieldValue -= iFutureExcessFoodYieldValue * 8 / 100;
+			}
+#endif
+		}
+#endif
 	}
 
 	if((eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH) && !bAvoidGrowth && m_pCity->getPopulation() < 5)
@@ -529,14 +649,44 @@ void CvCityCitizens::SetNoAutoAssignSpecialists(bool bValue)
 /// Is this City avoiding growth?
 bool CvCityCitizens::IsAvoidGrowth()
 {
+#ifdef AUI_CITIZENS_FIX_AVOID_GROWTH_FLAG_NOT_IGNORED_IF_NO_HAPPINESS
+	if (GetPlayer()->IsEmpireUnhappy())
+#else
 	if(GC.getGame().isOption(GAMEOPTION_NO_HAPPINESS))
 	{
 		return false;
 	}
 
 	if(GetPlayer()->GetExcessHappiness() < 0)
+#endif
 	{
+#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+		int iPopulation = m_pCity->getPopulation();
+		int iLocalHappinessCap = iPopulation;
+
+		// India has unique way to compute local happiness cap
+		if (GetPlayer()->GetPlayerTraits()->GetCityUnhappinessModifier() != 0)
+		{
+			// 0.67 per population, rounded up
+			iLocalHappinessCap = (iLocalHappinessCap * 20) + 15;
+			iLocalHappinessCap /= 30;
+		}
+		// Growing would not be covered by local happiness
+		if (m_pCity->GetLocalHappiness() < iLocalHappinessCap)
+		{
+			int iHappinessPerXPopulation = GetPlayer()->GetHappinessPerXPopulation();
+			// Growing would not be covered by happiness per X population
+			if (iHappinessPerXPopulation == 0 || m_pCity->IsPuppet() || (iPopulation + 1) / iHappinessPerXPopulation <= iPopulation / iHappinessPerXPopulation)
+			{
+				// Growing would not be covered by reduced unhappiness from population
+				if ((GetPlayer()->GetUnhappinessFromCityPopulation() + GetPlayer()->GetUnhappinessFromOccupiedCities()) / 100 <
+					(GetPlayer()->GetUnhappinessFromCityPopulation(NULL, NULL, m_pCity) + GetPlayer()->GetUnhappinessFromOccupiedCities(NULL, NULL, m_pCity)) / 100)
+					return true;
+			}
+		}
+#else
 		return true;
+#endif
 	}
 
 	return IsForcedAvoidGrowth();
@@ -964,7 +1114,11 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	CvPlayer* pPlayer = m_pCity->GetPlayer();
 
 	// factor in the fact that specialists may need less food
+#ifdef AUI_CITIZENS_FIX_SPECIALIST_VALUE_HALF_FOOD_CONSUMPTION
+	int iFoodConsumptionBonus = (pPlayer->isHalfSpecialistFood()) ? GC.getFOOD_CONSUMPTION_PER_POPULATION() / 2 : 0;
+#else
 	int iFoodConsumptionBonus = (pPlayer->isHalfSpecialistFood()) ? 1 : 0;
+#endif
 
 	// Yield Values
 	int iFoodYieldValue = (GC.getAI_CITIZEN_VALUE_FOOD() * (pPlayer->specialistYield(eSpecialist, YIELD_FOOD) + iFoodConsumptionBonus));
@@ -979,6 +1133,9 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 
 	// How much surplus food are we making?
 	int iExcessFoodTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100);
+#if defined(AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER) || defined(AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION) || defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS)
+	int iExcessFoodWithPlotTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100) + (GC.getAI_CITIZEN_VALUE_FOOD() * (pPlayer->specialistYield(eSpecialist, YIELD_FOOD) + iFoodConsumptionBonus)) * m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
+#endif
 
 	bool bAvoidGrowth = IsAvoidGrowth();
 
@@ -1013,6 +1170,21 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 		iGPPYieldValue *= 3;
 	}
 
+#ifdef AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION
+	if (m_pCity->isFoodProduction())
+	{
+		iFoodYieldValue = 0;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		int iCurrProdFromFood = m_pCity->foodDifference(true, true, m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100));
+		int iProdFromFoodWithTile = m_pCity->foodDifference(true, true, m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100));
+#else
+		int iCurrProdFromFood = m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100);
+		int iProdFromFoodWithTile = m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100);
+#endif
+		iProductionYieldValue += (iProdFromFoodWithTile - iCurrProdFromFood) * GC.getAI_CITIZEN_VALUE_PRODUCTION() * (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION ? 3 : 0);
+	}
+	else
+#endif
 	// Food can be worth less if we don't want to grow
 	if(iExcessFoodTimes100 >= 0 && bAvoidGrowth)
 	{
@@ -1030,26 +1202,128 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 			if(iFoodT100NeededFor0 > 0)
 			{
 				iFoodYieldValue *= 8;
+#ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
+				if (iExcessFoodWithPlotTimes100 > 0 && iFoodYieldValue != 0)
+				{
+					int iFutureExcessFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * iExcessFoodWithPlotTimes100;
+					if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+						iFutureExcessFoodYieldValue *= 3;
+					else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+						iFutureExcessFoodYieldValue *= 2;
+					iFoodYieldValue -= iFutureExcessFoodYieldValue * 8 / 100;
+					if (!bAvoidGrowth)
+					{
+						iFoodYieldValue += iFutureExcessFoodYieldValue / 200;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+						iFutureExcessFoodYieldValue = (m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100) - iExcessFoodWithPlotTimes100) * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+						if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+							iFutureExcessFoodYieldValue *= 3;
+						else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+							iFutureExcessFoodYieldValue *= 2;
+						iFoodYieldValue += iFutureExcessFoodYieldValue / 200;
+#endif
+					}
+				}
+#endif
 			}
 			else
 			{
 				iFoodYieldValue /= 2;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+				int iExtraFoodValueT100 = (m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100 - iExcessFoodTimes100) -
+					(iExcessFoodWithPlotTimes100 - iExcessFoodTimes100)) * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+				if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+					iExtraFoodValueT100 *= 3;
+				else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+					iExtraFoodValueT100 *= 2;
+				iFoodYieldValue += iExtraFoodValueT100 / 200;
+#endif
 			}
 		}
 		// If our surplus is not at least 2, really emphasize food plots
 		else if(!bAvoidGrowth)
 		{
+#ifdef AUI_CITIZENS_FIX_SPECIALIST_VALUE_HALF_FOOD_CONSUMPTION
+			int iFoodT100NeededFor2 = 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION() - iExcessFoodTimes100;
+#else
 			int iFoodT100NeededFor2 = 200 - iExcessFoodTimes100;
+#endif
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+			int iExtraFoodValueT100 = (m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100 - iExcessFoodTimes100) -
+				(iExcessFoodWithPlotTimes100 - iExcessFoodTimes100)) * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+			if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+				iExtraFoodValueT100 *= 3;
+			else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+				iExtraFoodValueT100 *= 2;
+#endif
 
 			if(iFoodT100NeededFor2 > 0)
 			{
 				iFoodYieldValue *= 8;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+				iExtraFoodValueT100 = 0;
+#endif
+#ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
+				if (iExcessFoodWithPlotTimes100 > 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION() && iFoodYieldValue != 0)
+				{
+					int iFutureExcessFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * (iExcessFoodWithPlotTimes100 - 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION());
+					if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+						iFutureExcessFoodYieldValue *= 3;
+					else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+						iFutureExcessFoodYieldValue *= 2;
+					iFoodYieldValue -= iFutureExcessFoodYieldValue * 8 / 100;
+					if (eFocus != CITY_AI_FOCUS_TYPE_FOOD)
+						iFoodYieldValue += iFutureExcessFoodYieldValue / 200;
+					else
+						iFoodYieldValue += iFutureExcessFoodYieldValue / 100;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+					iExtraFoodValueT100 = (m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100 - 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION()) -
+						(iExcessFoodWithPlotTimes100 - 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION())) * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+					if (eFocus != CITY_AI_FOCUS_TYPE_FOOD)
+						iExtraFoodValueT100 /= 2;
+#endif
+				}
+#endif
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+				iExtraFoodValueT100 += (m_pCity->foodDifferenceTimes100(true, NULL, true, MIN(iExcessFoodWithPlotTimes100, 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION())) -
+					MIN(iExcessFoodWithPlotTimes100, 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION())) * 8 * /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
+				if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+					iExtraFoodValueT100 *= 3;
+				else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+					iExtraFoodValueT100 *= 2;
+				iFoodYieldValue += iExtraFoodValueT100 / 100;
+#endif
 			}
 			else if (eFocus != CITY_AI_FOCUS_TYPE_FOOD)
 			{
 				iFoodYieldValue /= 2;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+				iFoodYieldValue += iExtraFoodValueT100 / 200;
+			}
+			else
+			{
+				iFoodYieldValue += iExtraFoodValueT100 / 100;
+#endif
 			}
 		}
+#ifdef AUI_CITIZENS_FIX_GET_VALUE_FOOD_YIELD_VALUE_WHEN_STARVATION_WITH_AVOID_GROWTH
+		// Food focus and negative food, but with avoid growth enabled for some reason
+		else
+		{
+			iFoodYieldValue *= 8;
+#ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
+			if (iExcessFoodWithPlotTimes100 > 0 && iFoodYieldValue != 0)
+			{
+				int iFutureExcessFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * iExcessFoodWithPlotTimes100;
+				if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+					iFutureExcessFoodYieldValue *= 3;
+				else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+					iFutureExcessFoodYieldValue *= 2;
+				iFoodYieldValue -= iFutureExcessFoodYieldValue * 8 / 100;
+			}
+#endif
+		}
+#endif
 	}
 
 	if((eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH) && !bAvoidGrowth && m_pCity->getPopulation() < 5)
@@ -1072,6 +1346,9 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 /// Determine if eSpecialist is preferable to a default specialist, based on our focus
 bool CvCityCitizens::IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist)
 {
+#ifdef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
+	return GetSpecialistValue(eSpecialist) >= GetSpecialistValue((SpecialistTypes)GC.getDEFAULT_SPECIALIST());
+#else
 	CvSpecialistInfo* pSpecialistInfo = GC.getSpecialistInfo(eSpecialist);
 	CvAssertMsg(pSpecialistInfo, "Invalid specialist type when assigning citizens. Please send Anton your save file and version.");
 	if(!pSpecialistInfo) return false; // Assumes that default specialist will work out
@@ -1129,6 +1406,7 @@ bool CvCityCitizens::IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist)
 	}
 
 	return (iSpecialistYield >= iDefaultSpecialistYield); // Unless default Specialist has strictly more, this Specialist is better
+#endif
 }
 
 /// How many Citizens need to be given a job?
@@ -1200,9 +1478,11 @@ bool CvCityCitizens::DoAddBestCitizenFromUnassigned()
 		return true;
 	}
 	// Found a Valid Plot to place a guy?
-	else if (!bSpecialistBetterThanPlot && pBestPlot != NULL) // NQMP GJS - TODO: Fix production AI bug
-		//else if (pBestPlot != NULL && iBestPlotValue >= GetSpecialistValue((SpecialistTypes)GC.getDEFAULT_SPECIALIST()))
-
+#ifdef AUI_CITIZENS_IS_PLOT_BETTER_THAN_DEFAULT_SPECIALIST
+	else if (pBestPlot != NULL && iBestPlotValue >= GetSpecialistValue((SpecialistTypes)GC.getDEFAULT_SPECIALIST()))
+#else
+	else if (!bSpecialistBetterThanPlot && pBestPlot != NULL)
+#endif
 	{
 		// Now assign the guy to the best possible Plot
 		SetWorkingPlot(pBestPlot, true);
@@ -1804,9 +2084,17 @@ bool CvCityCitizens::IsPlotBlockaded(CvPlot* pPlot) const
 	PlayerTypes ePlayer = m_pCity->getOwner();
 
 	// Might be a better way to do this that'd be slightly less CPU-intensive
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iBlockadeDistance; iDY <= iBlockadeDistance; iDY++)
+	{
+		iMaxDX = iBlockadeDistance - MAX(0, iDY);
+		for (iDX = -iBlockadeDistance - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 	for(iDX = -(iBlockadeDistance); iDX <= iBlockadeDistance; iDX++)
 	{
 		for(iDY = -(iBlockadeDistance); iDY <= iBlockadeDistance; iDY++)
+#endif
 		{
 			pNearbyPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
 
@@ -1815,10 +2103,12 @@ bool CvCityCitizens::IsPlotBlockaded(CvPlot* pPlot) const
 				// Must be water in the same Area
 				if(pNearbyPlot->isWater() && pNearbyPlot->getArea() == pPlot->getArea())
 				{
+#ifndef AUI_HEXSPACE_DX_LOOPS
 #ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
 					if (hexDistance(iDX, iDY) <= iBlockadeDistance)
 #else
 					if(plotDistance(pNearbyPlot->getX(), pNearbyPlot->getY(), pPlot->getX(), pPlot->getY()) <= iBlockadeDistance)
+#endif
 #endif
 					{
 						// Enemy boat within range to blockade our plot?

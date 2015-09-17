@@ -321,11 +321,23 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	pPlot->SetCityPurchaseID(m_iID);
 
 	int iRange = 1;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iDX = -iRange; iDX <= iRange; iDX++)
 	{
 		for(int iDY = -iRange; iDY <= iRange; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iRange);
+#endif
 			if(pLoopPlot != NULL)
 			{
 				if(pLoopPlot != NULL)
@@ -474,7 +486,9 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		}
 	}
 
+#ifndef AUI_HEXSPACE_DX_LOOPS
 	CvPlot* pLoopPlot;
+#endif
 
 	// We may need to link Resources to this City if it's constructed within previous borders and the Resources were too far away for another City to link to
 	for(int iJ = 0; iJ < NUM_CITY_PLOTS; iJ++)
@@ -2780,11 +2794,23 @@ void CvCity::DoUpdateFeatureSurrounded()
 	// Look two tiles around this city in every direction to see if at least half the plots are covered in a removable feature
 	const int iRange = 2;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iDX = -iRange; iDX <= iRange; iDX++)
 	{
 		for(int iDY = -iRange; iDY <= iRange; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iRange);
+#endif
 
 			// Increase total plot count
 			iTotalPlots++;
@@ -6610,19 +6636,36 @@ int CvCity::foodConsumption(bool /*bNoAngry*/, int iExtra) const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+int CvCity::foodDifference(bool bBottom, bool bValueKnown, int iValueKnown, int iExtraHappiness) const
+#else
 int CvCity::foodDifference(bool bBottom) const
+#endif
 {
 	VALIDATE_OBJECT
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+	return foodDifferenceTimes100(bBottom, NULL, bValueKnown, iValueKnown * 100) / 100;
+#else
 	return foodDifferenceTimes100(bBottom) / 100;
+#endif
 }
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink, bool bValueKnown, int iValueKnown) const
+#else
 int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iDifference;
 
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+	if (bValueKnown)
+		iDifference = iValueKnown;
+	else
+#endif
 	if(isFoodProduction())
 	{
 		iDifference = std::min(0, GetFoodProduction(getYieldRate(YIELD_FOOD, false) - foodConsumption()) * 100);
@@ -8988,6 +9031,17 @@ bool CvCity::IsBlockaded() const
 	}
 
 	int iRange = 2;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	CvPlot* pLoopPlot = NULL;
 
 	for(int iDX = -iRange; iDX <= iRange; iDX++)
@@ -8995,6 +9049,7 @@ bool CvCity::IsBlockaded() const
 		for(int iDY = -iRange; iDY <= iRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iRange);
+#endif
 			if(!pLoopPlot)
 			{
 				continue;
@@ -10730,11 +10785,22 @@ bool CvCity::CanBuyAnyPlot(void)
 		}
 	}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	for (int iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+	{
+		iMaxDX = iMaxRange - MAX(0, iDY);
+		for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 	{
 		for(int iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMaxRange);
+#endif
 			if(pLoopPlot != NULL)
 			{
 				if(pLoopPlot->getOwner() != NO_PLAYER)
@@ -10762,10 +10828,16 @@ bool CvCity::CanBuyAnyPlot(void)
 CvPlot* CvCity::GetNextBuyablePlot(void)
 {
 	VALIDATE_OBJECT
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+	FFastVector<int, true, c_eCiv5GameplayDLL> aiPlotList;
+	aiPlotList.reserve(NUM_DIRECTION_TYPES * GC.getMAXIMUM_ACQUIRE_PLOT_DISTANCE());
+#else
 	std::vector<int> aiPlotList;
 	aiPlotList.resize(20, -1);
+#endif
 	GetBuyablePlotList(aiPlotList);
 
+#ifndef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
 	// NQMP GJS - Shoshone + Colonialism better extra territory fix begin
 	// get the cheapest tile to currently buy, since that's usually the best one
 	// TODO: better fix?
@@ -10792,8 +10864,11 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 		}
 	}
 	// NQMP GJS - Shoshone + Colonialism better extra territory fix end
+#endif
 
-	/*
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+	int iListLength = aiPlotList.size();
+#else
 	int iListLength = 0;
 	for(uint ui = 0; ui < aiPlotList.size(); ui++)
 	{
@@ -10806,6 +10881,7 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 			break;
 		}
 	}
+#endif
 
 	CvPlot* pPickedPlot = NULL;
 	if(iListLength > 0)
@@ -10813,17 +10889,22 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 		int iPickedIndex = GC.getGame().getJonRandNum(iListLength, "GetNextBuyablePlot picker");
 		pPickedPlot = GC.getMap().plotByIndex(aiPlotList[iPickedIndex]);
 	}
-	*/
 
 	return pPickedPlot;
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+void CvCity::GetBuyablePlotList(BaseVector<int, true>& aiPlotList)
+#else
 void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
+#endif
 {
 	VALIDATE_OBJECT
+#ifndef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
 	aiPlotList.resize(20, -1);
 	int iResultListIndex = 0;
+#endif
 
 	int iLowestCost = INT_MAX;
 	CvPlot* pLoopPlot = NULL;
@@ -10841,7 +10922,9 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 	int iPLOT_INFLUENCE_NW_COST =				/*-105*/ GC.getPLOT_INFLUENCE_NW_COST();
 	int iPLOT_INFLUENCE_YIELD_POINT_COST =		/*-1*/	GC.getPLOT_INFLUENCE_YIELD_POINT_COST();
 
+#ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
 	int iPLOT_INFLUENCE_NO_ADJACENT_OWNED_COST = /*1000*/ GC.getPLOT_INFLUENCE_NO_ADJACENT_OWNED_COST();
+#endif
 
 	int iYieldLoop;
 
@@ -10852,17 +10935,58 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 
 	ImprovementTypes eBarbCamptype = (ImprovementTypes)GC.getBARBARIAN_CAMP_IMPROVEMENT();
 
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+	CityAIFocusTypes eCityFocus = GetCityCitizens()->GetFocusType();
+#endif
+#if defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS) || defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS)
+	const int iYieldValueSum = GC.getAI_CITIZEN_VALUE_FOOD() + GC.getAI_CITIZEN_VALUE_PRODUCTION() + GC.getAI_CITIZEN_VALUE_GOLD() + GC.getAI_CITIZEN_VALUE_SCIENCE() + GC.getAI_CITIZEN_VALUE_CULTURE() + GC.getAI_CITIZEN_VALUE_FAITH();
+#endif
+
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+	{
+		iMaxDX = iMaxRange - MAX(0, iDY);
+		for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for (iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 	{
 		for (iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMaxRange);
+#endif
 			if (pLoopPlot != NULL)
 			{
 				if (pLoopPlot->getOwner() != NO_PLAYER)
 				{
 					continue;
 				}
+
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
+				// Plots not adjacent to another Plot acquired by this City are pretty much impossible to get
+				bFoundAdjacentOwnedByCity = false;
+				for (iDirectionLoop = 0; iDirectionLoop < NUM_DIRECTION_TYPES; iDirectionLoop++)
+				{
+					CvPlot* pAdjacentPlot = plotDirection(pLoopPlot->getX(), pLoopPlot->getY(), (DirectionTypes)iDirectionLoop);
+
+					if (pAdjacentPlot != NULL)
+					{
+						// Have to check plot ownership first because the City IDs match between different players!!!
+						if (pAdjacentPlot->getOwner() == getOwner() && pAdjacentPlot->GetCityPurchaseID() == GetID())
+						{
+							bFoundAdjacentOwnedByCity = true;
+							break;
+						}
+					}
+				}
+				if (!bFoundAdjacentOwnedByCity)
+				{
+					continue;
+				}
+#endif
 
 				ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 				if (pkScriptSystem) 
@@ -10893,6 +11017,23 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 					ResourceTypes eResource = pLoopPlot->getResourceType(thisTeam);
 					if (eResource != NO_RESOURCE)
 					{
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+						if (GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_BONUS)
+						{
+							// undo the bonus - bonus resources only increase yields
+							iInfluenceCost -= iPLOT_INFLUENCE_RESOURCE_COST;
+							if (hexDistance(iDX, iDY) <= NUM_CITY_RINGS)
+							{
+								int* aiYields = GC.getResourceInfo(eResource)->getYieldChangeArray();
+								int iTemp = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD] + GC.getAI_CITIZEN_VALUE_PRODUCTION() * aiYields[YIELD_PRODUCTION] +
+									GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD] + GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE] +
+									GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE] + GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
+								iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTemp * NUM_YIELD_TYPES / iYieldValueSum;
+							}
+						}
+						else
+							iInfluenceCost += iPLOT_INFLUENCE_RESOURCE_COST;
+#else
 						iInfluenceCost += iPLOT_INFLUENCE_RESOURCE_COST;
 						bool bBonusResource = GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_BONUS;
 						if (bBonusResource)
@@ -10908,6 +11049,7 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 								++iInfluenceCost;
 							}
 						}
+#endif
 					}
 					else 
 					{
@@ -10957,13 +11099,81 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 					}
 
 					// More Yield == more desirable
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+					int iLoopYield = 0;
+					int iYieldTotal = 0;
+					for (iYieldLoop = 0; iYieldLoop < NUM_YIELD_TYPES; iYieldLoop++)
+					{
+#ifdef AUI_PLOT_CALCULATE_NATURE_YIELD_USE_POTENTIAL_FUTURE_OWNER_IF_UNOWNED
+						iLoopYield = iPLOT_INFLUENCE_YIELD_POINT_COST * pLoopPlot->calculateNatureYield((YieldTypes)iYieldLoop, getTeam(), false, getOwner());
+#else
+						iLoopYield = (iPLOT_INFLUENCE_YIELD_POINT_COST * pLoopPlot->getYield((YieldTypes)iYieldLoop));
+#endif
+						switch ((YieldTypes)iYieldLoop)
+						{
+						case YIELD_FOOD:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_FOOD();
+							if (eCityFocus == CITY_AI_FOCUS_TYPE_FOOD)
+								iLoopYield *= 3;
+							else if (eCityFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eCityFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+								iLoopYield *= 2;
+						}
+						break;
+						case YIELD_PRODUCTION:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_PRODUCTION();
+							if (eCityFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+								iLoopYield *= 3;
+							else if (eCityFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+								iLoopYield *= 2;
+						}
+						break;
+						case YIELD_GOLD:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_GOLD();
+							if (eCityFocus == CITY_AI_FOCUS_TYPE_GOLD)
+								iLoopYield *= 3;
+							else if (eCityFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+								iLoopYield *= 2;
+						}
+						break;
+						case YIELD_SCIENCE:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_SCIENCE();
+							if (eCityFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+								iLoopYield *= 3;
+						}
+						break;
+						case YIELD_CULTURE:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_CULTURE();
+							if (eCityFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+								iLoopYield *= 3;
+						}
+						break;
+						case YIELD_FAITH:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_FAITH();
+							if (eCityFocus == CITY_AI_FOCUS_TYPE_FAITH)
+								iLoopYield *= 3;
+						}
+						break;
+						}
+						iYieldTotal += iLoopYield;
+					}
+					iInfluenceCost += iYieldTotal * NUM_YIELD_TYPES / iYieldValueSum;
+#else
 					for (iYieldLoop = 0; iYieldLoop < NUM_YIELD_TYPES; iYieldLoop++)
 					{
 						iInfluenceCost += (iPLOT_INFLUENCE_YIELD_POINT_COST * pLoopPlot->getYield((YieldTypes) iYieldLoop));
 					}
+#endif
 
 					// all other things being equal move towards unclaimed resources
+#ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 					bool bUnownedNaturalWonderAdjacentCount = false;
+#endif
 					for (int iI = 0; iI < NUM_DIRECTION_TYPES; ++iI)
 					{
 						CvPlot* pAdjacentPlot = plotDirection(pLoopPlot->getX(), pLoopPlot->getY(), ((DirectionTypes)iI));
@@ -10973,30 +11183,139 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 							if (pAdjacentPlot->getOwner() == NO_PLAYER)
 							{
 								int iPlotDistance = plotDistance(getX(), getY(), pAdjacentPlot->getX(), pAdjacentPlot->getY());
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+								bool bNoExistingAdjacentOwnedPlot = true;
+								for (int iJ = 0; iJ < NUM_DIRECTION_TYPES; ++iJ)
+								{
+									CvPlot* pAdjacentPlot2 = plotDirection(pAdjacentPlot->getX(), pAdjacentPlot->getY(), ((DirectionTypes)iJ));
+									if (pAdjacentPlot2 != NULL && pAdjacentPlot2->getOwner() == getOwner() && pAdjacentPlot2->GetCityPurchaseID() == GetID())
+									{
+										bNoExistingAdjacentOwnedPlot = false;
+										break;
+									}
+								}
+								if (bNoExistingAdjacentOwnedPlot)
+								{
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+									iLoopYield = 0;
+									iYieldTotal = 0;
+									for (iYieldLoop = 0; iYieldLoop < NUM_YIELD_TYPES; iYieldLoop++)
+									{
+#ifdef AUI_PLOT_CALCULATE_NATURE_YIELD_USE_POTENTIAL_FUTURE_OWNER_IF_UNOWNED
+										iLoopYield = iPLOT_INFLUENCE_YIELD_POINT_COST * pAdjacentPlot->calculateNatureYield((YieldTypes)iYieldLoop, getTeam(), false, getOwner());
+#else
+										iLoopYield = (iPLOT_INFLUENCE_YIELD_POINT_COST * pAdjacentPlot->getYield((YieldTypes)iYieldLoop));
+#endif
+										switch ((YieldTypes)iYieldLoop)
+										{
+										case YIELD_FOOD:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_FOOD();
+											if (eCityFocus == CITY_AI_FOCUS_TYPE_FOOD)
+												iLoopYield *= 3;
+											else if (eCityFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eCityFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+												iLoopYield *= 2;
+										}
+										break;
+										case YIELD_PRODUCTION:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_PRODUCTION();
+											if (eCityFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+												iLoopYield *= 3;
+											else if (eCityFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+												iLoopYield *= 2;
+										}
+										break;
+										case YIELD_GOLD:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_GOLD();
+											if (eCityFocus == CITY_AI_FOCUS_TYPE_GOLD)
+												iLoopYield *= 3;
+											else if (eCityFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+												iLoopYield *= 2;
+										}
+										break;
+										case YIELD_SCIENCE:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_SCIENCE();
+											if (eCityFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+												iLoopYield *= 3;
+										}
+										break;
+										case YIELD_CULTURE:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_CULTURE();
+											if (eCityFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+												iLoopYield *= 3;
+										}
+										break;
+										case YIELD_FAITH:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_FAITH();
+											if (eCityFocus == CITY_AI_FOCUS_TYPE_FAITH)
+												iLoopYield *= 3;
+										}
+										break;
+										}
+										iYieldTotal += iLoopYield;
+									}
+									iInfluenceCost += iYieldTotal * NUM_YIELD_TYPES / (iYieldValueSum * NUM_DIRECTION_TYPES);
+#else
+									for (iYieldLoop = 0; iYieldLoop < NUM_YIELD_TYPES; iYieldLoop++)
+									{
+										iInfluenceCost += (iPLOT_INFLUENCE_YIELD_POINT_COST * pAdjacentPlot->getYield((YieldTypes)iYieldLoop)) / NUM_DIRECTION_TYPES;
+									}
+#endif
+#endif
 								ResourceTypes eAdjacentResource = pAdjacentPlot->getResourceType(thisTeam);
 								if (eAdjacentResource != NO_RESOURCE)
 								{
 									// if we are close enough to work, or this is not a bonus resource
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+									if (GC.getResourceInfo(eAdjacentResource)->getResourceUsage() != RESOURCEUSAGE_BONUS && !GetPlayer()->isMinorCiv())
+										iInfluenceCost += (iPLOT_INFLUENCE_RESOURCE_COST - NUM_DIRECTION_TYPES / 2) / (NUM_DIRECTION_TYPES);
+									else if (iPlotDistance <= NUM_CITY_RINGS)
+									{
+										int* aiYields = GC.getResourceInfo(eAdjacentResource)->getYieldChangeArray();
+										int iTemp = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD] + GC.getAI_CITIZEN_VALUE_PRODUCTION() * aiYields[YIELD_PRODUCTION] +
+											GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD] + GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE] +
+											GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE] + GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
+										iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTemp * NUM_YIELD_TYPES / (iYieldValueSum * NUM_DIRECTION_TYPES);
+									}
+#else
 									if (iPlotDistance <= NUM_CITY_RINGS || GC.getResourceInfo(eAdjacentResource)->getResourceUsage() != RESOURCEUSAGE_BONUS)
 									{
 										--iInfluenceCost;
 									}
+#endif
 								}
 								if (pAdjacentPlot->IsNaturalWonder())
 								{
 									if (iPlotDistance <= NUM_CITY_RINGS) // grab for this city
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+										iInfluenceCost += (iPLOT_INFLUENCE_NW_COST - NUM_DIRECTION_TYPES / 2) / (NUM_DIRECTION_TYPES);
+									else
+										--iInfluenceCost;
+#else
 									{
 										bUnownedNaturalWonderAdjacentCount = true;
 									}
 									--iInfluenceCost; // but we will slightly grow towards it for style in any case
+#endif
 								}
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+								}
+#endif
 							}
 						}
 					}
 
+#ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 					// move towards unclaimed NW
 					iInfluenceCost += bUnownedNaturalWonderAdjacentCount ? -1 : 0;
+#endif
 
+#ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
 					// Plots not adjacent to another Plot acquired by this City are pretty much impossible to get
 					bFoundAdjacentOwnedByCity = false;
 					for (iDirectionLoop = 0; iDirectionLoop < NUM_DIRECTION_TYPES; iDirectionLoop++)
@@ -11017,30 +11336,74 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 					{
 						iInfluenceCost += iPLOT_INFLUENCE_NO_ADJACENT_OWNED_COST;
 					}
+#endif
 
 					// Are we cheap enough to get picked next?
 					if (iInfluenceCost < iLowestCost)
 					{
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+						aiPlotList.clear();
+						aiPlotList.push_back(pLoopPlot->GetPlotIndex());
+#else
 						// clear reset list
 						for(uint ui = 0; ui < aiPlotList.size(); ui++)
 						{
 							aiPlotList[ui] = -1;
 						}
 						iResultListIndex = 0;
+#endif
 						iLowestCost = iInfluenceCost;
 						// this will "fall through" to the next conditional
 					}
 
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+					else if (iInfluenceCost == iLowestCost)
+					{
+						aiPlotList.push_back(pLoopPlot->GetPlotIndex());
+#else
 					if (iInfluenceCost == iLowestCost)
 					{
 						aiPlotList[iResultListIndex] = pLoopPlot->GetPlotIndex();
 						iResultListIndex++;
+#endif
 					}
 				}
 			}
 		}
 	}
-
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+	// NQMP GJS - Shoshone + Colonialism better extra territory fix begin
+	// In case of ties, get the cheapest tile to currently buy, and only choose randomly if there are multiple plots in the list with the lowest price
+	if (aiPlotList.size() > 1)
+	{
+		int iLowestBuyCost = MAX_INT;
+		int iCurBuyCost = 0;
+		CvPlot* pLoopPlot;
+		BaseVector<int, true>::iterator it;
+		for (it = aiPlotList.begin(); it != aiPlotList.end(); ++it)
+		{
+			pLoopPlot = GC.getMap().plotByIndex(*it);
+			if (pLoopPlot)
+			{
+				iCurBuyCost = GetBuyPlotCost(pLoopPlot->getX(), pLoopPlot->getY());
+				if (iCurBuyCost < iLowestBuyCost)
+				{
+					iLowestBuyCost = iCurBuyCost;
+				}
+			}
+		}
+		for (it = aiPlotList.begin(); it != aiPlotList.end(); ++it)
+		{
+			pLoopPlot = GC.getMap().plotByIndex(*it);
+			if (!pLoopPlot || GetBuyPlotCost(pLoopPlot->getX(), pLoopPlot->getY()) > iLowestBuyCost)
+			{
+				aiPlotList.erase(it);
+				--it;
+			}
+		}
+	}
+	// NQMP GJS - Shoshone + Colonialism better extra territory fix end
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -11208,11 +11571,22 @@ int CvCity::GetBuyPlotScore(int& iBestX, int& iBestY)
 
 	int iDX, iDY;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+	{
+		iMaxDX = iMaxRange - MAX(0, iDY);
+		for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 	{
 		for(iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMaxRange);
+#endif
 			if(pLoopPlot != NULL)
 			{
 				// Can we actually buy this plot?
@@ -11404,11 +11778,22 @@ void CvCity::DoUpdateCheapestPlotInfluence()
 
 	int iDX, iDY;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+	{
+		iMaxDX = iMaxRange - MAX(0, iDY);
+		for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 	{
 		for(iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMaxRange);
+#endif
 			if(pLoopPlot != NULL)
 			{
 				// If the plot's not owned by us, it doesn't matter
@@ -14160,11 +14545,22 @@ bool CvCity::isValidBuildingLocation(BuildingTypes eBuilding) const
 		const int iMountainRange = 2;
 		CvPlot* pLoopPlot;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		int iMaxDX, iDX;
+		for (int iDY = -iMountainRange; iDY <= iMountainRange; iDY++)
+		{
+			iMaxDX = iMountainRange - MAX(0, iDY);
+			for (iDX = -iMountainRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				// No need for range check because loops are set up properly
+				pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 		for(int iDX = -iMountainRange; iDX <= iMountainRange; iDX++)
 		{
 			for(int iDY = -iMountainRange; iDY <= iMountainRange; iDY++)
 			{
 				pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMountainRange);
+#endif
 				if(pLoopPlot)
 				{
 					if(pLoopPlot->isMountain() && !pLoopPlot->IsNaturalWonder() && pLoopPlot->getOwner() == getOwner())
@@ -14332,9 +14728,17 @@ bool CvCity::CanRangeStrikeNow() const
 	PlayerTypes eActivePlayer = GC.getGame().getActivePlayer();
 	int iGameTurn = GC.getGame().getGameTurn();
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 	for(int iDX = -iRange; iDX <= iRange; iDX++)
 	{
 		for(int iDY = -iRange; iDY <= iRange; iDY++)
+#endif
 		{
 			CvPlot* pTargetPlot = plotXY(iX, iY, iDX, iDY);
 			bool bCanRangeStrike = true;
@@ -14723,15 +15127,29 @@ void CvCity::DoNearbyEnemy()
 		return;
 
 	int iSearchRange = GC.getCITY_ATTACK_RANGE();
+#ifndef AUI_HEXSPACE_DX_LOOPS
 	CvPlot* pBestPlot = NULL;
+#endif
 
 	bool bFoundEnemy = false;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iSearchRange; iDY <= iSearchRange; iDY++)
+	{
+		iMaxDX = iSearchRange - MAX(0, iDY);
+		for (iDX = -iSearchRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iDX = -(iSearchRange); iDX <= iSearchRange && !pBestPlot; iDX++)
 	{
 		for(int iDY = -(iSearchRange); iDY <= iSearchRange && !pBestPlot; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iSearchRange);
+#endif
 
 			if(pLoopPlot != NULL)
 			{

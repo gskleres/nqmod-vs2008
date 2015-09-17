@@ -149,11 +149,21 @@ bool CvCitySiteEvaluator::CanFound(CvPlot* pPlot, const CvPlayer* pPlayer, bool 
 		// look at same land mass
 		iRange = GC.getMIN_CITY_RANGE();
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		int iMaxDX;
+		for (iDY = -iRange; iDY <= iRange; iDY++)
+		{
+			iMaxDX = iRange - MAX(0, iDY);
+			for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				pLoopPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
+#else
 		for(iDX = -(iRange); iDX <= iRange; iDX++)
 		{
 			for(iDY = -(iRange); iDY <= iRange; iDY++)
 			{
 				pLoopPlot = plotXYWithRangeCheck(pPlot->getX(), pPlot->getY(), iDX, iDY, iRange);
+#endif
 
 				if(pLoopPlot != NULL)
 				{
@@ -334,9 +344,17 @@ int CvCitySiteEvaluator::PlotFoundValue(CvPlot* pPlot, CvPlayer* pPlayer, YieldT
 		}
 	}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iDX, iMaxDX;
+	for (int iDY = -7; iDY <= 7; iDY++)
+	{
+		iMaxDX = 7 - MAX(0, iDY);
+		for (iDX = -7 - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 	for (int iDX = -7; iDX <= 7; iDX++)
 	{
 		for (int iDY = -7; iDY <= 7; iDY++)
+#endif
 		{
 			CvPlot* pLoopPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
 
@@ -347,7 +365,9 @@ int CvCitySiteEvaluator::PlotFoundValue(CvPlot* pPlot, CvPlayer* pPlayer, YieldT
 #else
 				int iDistance = plotDistance(pPlot->getX(), pPlot->getY(), pLoopPlot->getX(), pLoopPlot->getY());
 #endif
+#ifndef AUI_HEXSPACE_DX_LOOPS
 				if (iDistance <= 7)
+#endif
 				{
 					if ((pLoopPlot->getOwner() == NO_PLAYER) || (pLoopPlot->getOwner() == pPlayer->GetID()))
 					{
