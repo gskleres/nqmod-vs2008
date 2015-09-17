@@ -18320,7 +18320,11 @@ void CvPlayer::changeResourceSiphoned(ResourceTypes eIndex, int iChange)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayer::getResourceInOwnedPlots(ResourceTypes eIndex) const
+#else
 int CvPlayer::getResourceInOwnedPlots(ResourceTypes eIndex)
+#endif
 {
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumResourceInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
@@ -18328,6 +18332,14 @@ int CvPlayer::getResourceInOwnedPlots(ResourceTypes eIndex)
 	int iCount = 0;
 
 	// Loop through all plots
+#ifdef AUI_CONSTIFY
+	for (uint uiPlotIndex = 0; uiPlotIndex < m_aiPlots.size(); uiPlotIndex++)
+	{
+		if (m_aiPlots[uiPlotIndex] == -1)
+			continue;
+
+		CvPlot* pPlot = GC.getMap().plotByIndex(m_aiPlots[uiPlotIndex]);
+#else
 	const CvPlotsVector& aiPlots = GetPlots();
 	for (uint uiPlotIndex = 0; uiPlotIndex < aiPlots.size(); uiPlotIndex++)
 	{
@@ -18335,6 +18347,7 @@ int CvPlayer::getResourceInOwnedPlots(ResourceTypes eIndex)
 			continue;
 
 		CvPlot* pPlot = GC.getMap().plotByIndex(aiPlots[uiPlotIndex]);
+#endif
 		if (pPlot && pPlot->getResourceType(getTeam()) == eIndex)
 		{
 			iCount++;

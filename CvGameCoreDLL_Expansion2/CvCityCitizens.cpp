@@ -190,13 +190,21 @@ void CvCityCitizens::Write(FDataStream& kStream)
 }
 
 /// Returns the City object this set of Citizens is associated with
+#ifdef AUI_CONSTIFY
+CvCity* CvCityCitizens::GetCity() const
+#else
 CvCity* CvCityCitizens::GetCity()
+#endif
 {
 	return m_pCity;
 }
 
 /// Returns the Player object this City belongs to
+#ifdef AUI_CONSTIFY
+CvPlayer* CvCityCitizens::GetPlayer() const
+#else
 CvPlayer* CvCityCitizens::GetPlayer()
+#endif
 {
 	return &GET_PLAYER(GetOwner());
 }
@@ -647,7 +655,11 @@ void CvCityCitizens::SetNoAutoAssignSpecialists(bool bValue)
 }
 
 /// Is this City avoiding growth?
+#if defined(AUI_CONSTIFY)
+bool CvCityCitizens::IsAvoidGrowth() const
+#else
 bool CvCityCitizens::IsAvoidGrowth()
+#endif
 {
 #ifdef AUI_CITIZENS_FIX_AVOID_GROWTH_FLAG_NOT_IGNORED_IF_NO_HAPPINESS
 	if (GetPlayer()->IsEmpireUnhappy())
@@ -692,7 +704,11 @@ bool CvCityCitizens::IsAvoidGrowth()
 	return IsForcedAvoidGrowth();
 }
 
+#if defined(AUI_CONSTIFY)
+bool CvCityCitizens::IsForcedAvoidGrowth() const
+#else
 bool CvCityCitizens::IsForcedAvoidGrowth()
+#endif
 {
 	return m_bForceAvoidGrowth;
 }
@@ -1344,7 +1360,11 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 }
 
 /// Determine if eSpecialist is preferable to a default specialist, based on our focus
+#ifdef AUI_CONSTIFY
+bool CvCityCitizens::IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const
+#else
 bool CvCityCitizens::IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist)
+#endif
 {
 #ifdef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
 	return GetSpecialistValue(eSpecialist) >= GetSpecialistValue((SpecialistTypes)GC.getDEFAULT_SPECIALIST());
@@ -2319,21 +2339,38 @@ void CvCityCitizens::DoSpecialists()
 }
 
 /// How many Specialists are assigned to this Building Type?
+#ifdef AUI_CONSTIFY
+int CvCityCitizens::GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding) const
+#else
 int CvCityCitizens::GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding)
+#endif
 {
 	return kBuilding.GetSpecialistCount();
 }
 
 /// Are we in the position to add another Specialist to eBuilding?
+#ifdef AUI_CONSTIFY
+bool CvCityCitizens::IsCanAddSpecialistToBuilding(BuildingTypes eBuilding) const
+#else
 bool CvCityCitizens::IsCanAddSpecialistToBuilding(BuildingTypes eBuilding)
+#endif
 {
 	CvAssert(eBuilding > -1);
 	CvAssert(eBuilding < GC.getNumBuildingInfos());
+#ifdef AUI_WARNING_FIXES
+	CvBuildingEntry* pBuildingInfo = GC.getBuildingInfo(eBuilding);
+	if (!pBuildingInfo)
+		return false;
+#endif
 
 	int iNumSpecialistsAssigned = GetNumSpecialistsInBuilding(eBuilding);
 
 	if(iNumSpecialistsAssigned < GetCity()->getPopulation() &&	// Limit based on Pop of City
+#ifdef AUI_WARNING_FIXES
+		iNumSpecialistsAssigned < pBuildingInfo->GetSpecialistCount() &&				// Limit for this particular Building
+#else
 	        iNumSpecialistsAssigned < GC.getBuildingInfo(eBuilding)->GetSpecialistCount() &&				// Limit for this particular Building
+#endif
 	        iNumSpecialistsAssigned < GC.getMAX_SPECIALISTS_FROM_BUILDING())	// Overall Limit
 	{
 		return true;
@@ -2694,7 +2731,11 @@ void CvCityCitizens::DoClearForcedSpecialists()
 }
 
 /// What upgrade progress does a Specialist need to level up?
+#ifdef AUI_CONSTIFY
+int CvCityCitizens::GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass) const
+#else
 int CvCityCitizens::GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass)
+#endif
 {
 	int iThreshold = /*100*/ GC.getGREAT_PERSON_THRESHOLD_BASE();
 	int iNumCreated;

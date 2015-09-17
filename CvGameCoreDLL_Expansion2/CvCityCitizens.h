@@ -29,8 +29,13 @@ public:
 	void Read(FDataStream& kStream);
 	void Write(FDataStream& kStream);
 
+#ifdef AUI_CONSTIFY
+	CvCity* GetCity() const;
+	CvPlayer* GetPlayer() const;
+#else
 	CvCity* GetCity();
 	CvPlayer* GetPlayer();
+#endif
 	PlayerTypes GetOwner() const;
 	TeamTypes GetTeam() const;
 
@@ -46,8 +51,13 @@ public:
 	bool IsNoAutoAssignSpecialists() const;
 	void SetNoAutoAssignSpecialists(bool bValue);
 
+#if defined(AUI_CONSTIFY)
+	bool IsAvoidGrowth() const;
+	bool IsForcedAvoidGrowth() const;
+#else
 	bool IsAvoidGrowth();
 	bool IsForcedAvoidGrowth();
+#endif
 	void SetForcedAvoidGrowth(bool bAvoidGrowth);
 	CityAIFocusTypes GetFocusType() const;
 	void SetFocusType(CityAIFocusTypes eFocus);
@@ -58,7 +68,11 @@ public:
 #endif
 	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
 	int GetSpecialistValue(SpecialistTypes eSpecialist);
+#ifdef AUI_CONSTIFY
+	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const;
+#else
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist);
+#endif
 
 	// Citizen Assignment
 	int GetNumUnassignedCitizens() const;
@@ -102,7 +116,11 @@ public:
 	// Specialists
 	void DoSpecialists();
 
+#ifdef AUI_CONSTIFY
+	bool IsCanAddSpecialistToBuilding(BuildingTypes eBuilding) const;
+#else
 	bool IsCanAddSpecialistToBuilding(BuildingTypes eBuilding);
+#endif
 	void DoAddSpecialistToBuilding(BuildingTypes eBuilding, bool bForced);
 	void DoRemoveSpecialistFromBuilding(BuildingTypes eBuilding, bool bForced, bool bEliminatePopulation = false);
 	void DoRemoveAllSpecialistsFromBuilding(BuildingTypes eBuilding, bool bEliminatePopulation = false);
@@ -129,9 +147,15 @@ public:
 
 	void DoClearForcedSpecialists();
 
+#ifdef AUI_CONSTIFY
+	int GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding) const;
+
+	int GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass) const;
+#else
 	int GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding);
 
 	int GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass);
+#endif
 	void DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet);
 
 private:

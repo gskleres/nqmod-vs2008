@@ -212,6 +212,9 @@ public:
 	CvAStar& GetInternationalTradeRouteLandFinder();
 	CvAStar& GetInternationalTradeRouteWaterFinder();
 	CvTwoLayerPathFinder& GetTacticalAnalysisMapFinder();
+#ifdef AUI_DANGER_PLOTS_REMADE
+	CvTwoLayerPathFinder& getDangerPathFinder();
+#endif
 	ICvDLLDatabaseUtility1* getDatabaseLoadUtility();
 
 	std::vector<CvInterfaceModeInfo*>& getInterfaceModeInfo();
@@ -286,79 +289,152 @@ public:
 	int getNumClimateInfos();
 	int getNumSeaLevelInfos();
 
+#ifdef AUI_WARNING_FIXES
+	uint GetNumColorInfos() const;
+#else
 	int GetNumColorInfos();
+#endif
 	std::vector<CvColorInfo*>& GetColorInfo();
 	_Ret_maybenull_ CvColorInfo* GetColorInfo(ColorTypes e);
 
+#ifdef AUI_WARNING_FIXES
+	uint GetNumPlayerColorInfos() const;
+#else
 	int GetNumPlayerColorInfos();
+#endif
 	std::vector<CvPlayerColorInfo*>& GetPlayerColorInfo();
 	_Ret_maybenull_ CvPlayerColorInfo* GetPlayerColorInfo(PlayerColorTypes e);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumEntityEventInfos() const;
+#else
 	int getNumEntityEventInfos();
+#endif
 	std::vector<CvEntityEventInfo*>& getEntityEventInfo();
 	_Ret_maybenull_ CvEntityEventInfo* getEntityEventInfo(EntityEventTypes e);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumMultiUnitFormationInfos() const;
+#else
 	int getNumMultiUnitFormationInfos();
+#endif
 	std::vector<CvMultiUnitFormationInfo*>& getMultiUnitFormationInfo();
 	_Ret_maybenull_ CvMultiUnitFormationInfo* getMultiUnitFormationInfo(int i);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumTerrainInfos() const;
+#else
 	int getNumTerrainInfos();
+#endif
 	std::vector<CvTerrainInfo*>& getTerrainInfo();
 	CvTerrainInfo* getTerrainInfo(TerrainTypes eTerrainNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumResourceClassInfos() const;
+#else
 	int getNumResourceClassInfos();
+#endif
 	std::vector<CvResourceClassInfo*>& getResourceClassInfo();
 	_Ret_maybenull_ CvResourceClassInfo* getResourceClassInfo(ResourceClassTypes eResourceNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumResourceInfos() const;
+#else
 	int getNumResourceInfos();
+#endif
 	std::vector<CvResourceInfo*>& getResourceInfo();
 	CvResourceInfo* getResourceInfo(ResourceTypes eResourceNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumFeatureInfos() const;
+#else
 	int getNumFeatureInfos();
+#endif
 	std::vector<CvFeatureInfo*>& getFeatureInfo();
 	CvFeatureInfo* getFeatureInfo(FeatureTypes eFeatureNum);
 
 	int& getNumPlayableCivilizationInfos();
 	int& getNumAIPlayableCivilizationInfos();
+#ifdef AUI_WARNING_FIXES
+	uint getNumCivilizationInfos() const;
+#else
 	int getNumCivilizationInfos();
+#endif
 	std::vector<CvCivilizationInfo*>& getCivilizationInfo();
 	_Ret_maybenull_ CvCivilizationInfo* getCivilizationInfo(CivilizationTypes eCivilizationNum);
 	CivilizationTypes getCivilizationInfoIndex(const char* pszType);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumMinorCivInfos() const;
+	uint GetNumPlayableMinorCivs() const;
+#else
 	int getNumMinorCivInfos();
 	int GetNumPlayableMinorCivs() const;
+#endif
 	std::vector<CvMinorCivInfo*>& getMinorCivInfo();
 	CvMinorCivInfo* getMinorCivInfo(MinorCivTypes eMinorCivNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumLeaderHeadInfos() const;
+#else
 	int getNumLeaderHeadInfos();
+#endif
 	std::vector<CvLeaderHeadInfo*>& getLeaderHeadInfo();
 	_Ret_maybenull_ CvLeaderHeadInfo* getLeaderHeadInfo(LeaderHeadTypes eLeaderHeadNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumUnitInfos() const;
+#else
 	int getNumUnitInfos();
+#endif
 	std::vector<CvUnitEntry*>& getUnitInfo();
+#ifdef AUI_CONSTIFY
+	_Ret_maybenull_ CvUnitEntry* getUnitInfo(UnitTypes eUnitNum) const;
+#else
 	_Ret_maybenull_ CvUnitEntry* getUnitInfo(UnitTypes eUnitNum);
+#endif
 	CvUnitXMLEntries* GetGameUnits() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumSpecialUnitInfos() const;
+#else
 	int getNumSpecialUnitInfos();
+#endif
 	std::vector<CvSpecialUnitInfo*>& getSpecialUnitInfo();
 	_Ret_maybenull_ CvSpecialUnitInfo* getSpecialUnitInfo(SpecialUnitTypes eSpecialUnitNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumVoteSourceInfos() const;
+#else
 	int getNumVoteSourceInfos();
+#endif
 	std::vector<CvVoteSourceInfo*>& getVoteSourceInfo();
 	_Ret_maybenull_ CvVoteSourceInfo* getVoteSourceInfo(VoteSourceTypes e);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumUnitCombatClassInfos() const;
+#else
 	int getNumUnitCombatClassInfos();
+#endif
 	std::vector<CvBaseInfo*>& getUnitCombatClassInfo();
 	_Ret_maybenull_ CvBaseInfo* getUnitCombatClassInfo(UnitCombatTypes e);
 
 	std::vector<CvBaseInfo*>& getUnitAIInfo();
 	_Ret_maybenull_ CvBaseInfo* getUnitAIInfo(UnitAITypes eUnitAINum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumGameOptionInfos() const;
+#else
 	int getNumGameOptionInfos();
+#endif
 	std::vector<CvGameOptionInfo*>& getGameOptionInfo();
 	_Ret_maybenull_ CvGameOptionInfo* getGameOptionInfo(GameOptionTypes eGameOptionNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumMPOptionInfos() const;
+#else
 	int getNumMPOptionInfos();
+#endif
 	std::vector<CvMPOptionInfo*>& getMPOptionInfo();
 	_Ret_maybenull_ CvMPOptionInfo* getMPOptionInfo(MultiplayerOptionTypes eMPOptionNum);
 
@@ -366,56 +442,112 @@ public:
 	_Ret_maybenull_ CvPlayerOptionInfo* getPlayerOptionInfo(PlayerOptionTypes ePlayerOptionNum);
 
 	std::vector<CvYieldInfo*>& getYieldInfo();
+#ifdef AUI_CONSTIFY
+	_Ret_maybenull_ CvYieldInfo* getYieldInfo(YieldTypes eYieldNum) const;
+#else
 	_Ret_maybenull_ CvYieldInfo* getYieldInfo(YieldTypes eYieldNum);
+#endif
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumRouteInfos() const;
+#else
 	int getNumRouteInfos();
+#endif
 	std::vector<CvRouteInfo*>& getRouteInfo();
 	_Ret_maybenull_ CvRouteInfo* getRouteInfo(RouteTypes eRouteNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumImprovementInfos() const;
+#else
 	int getNumImprovementInfos();
+#endif
 	std::vector<CvImprovementEntry*>& getImprovementInfo();
 	CvImprovementEntry* getImprovementInfo(ImprovementTypes eImprovementNum);
 	CvImprovementXMLEntries* GetGameImprovements() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumBuildInfos() const;
+#else
 	int getNumBuildInfos();
+#endif
 	std::vector<CvBuildInfo*>& getBuildInfo();
 	CvBuildInfo* getBuildInfo(BuildTypes eBuildNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumHandicapInfos() const;
+#else
 	int getNumHandicapInfos();
+#endif
 	std::vector<CvHandicapInfo*>& getHandicapInfo();
 	_Ret_maybenull_ CvHandicapInfo* getHandicapInfo(HandicapTypes eHandicapNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumGameSpeedInfos() const;
+#else
 	int getNumGameSpeedInfos();
+#endif
 	std::vector<CvGameSpeedInfo*>& getGameSpeedInfo();
 	_Ret_maybenull_ CvGameSpeedInfo* getGameSpeedInfo(GameSpeedTypes eGameSpeedNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumProcessInfos() const;
+#else
 	int getNumProcessInfos();
+#endif
 	std::vector<CvProcessInfo*>& getProcessInfo();
 	CvProcessInfo* getProcessInfo(ProcessTypes e);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumVoteInfos() const;
+#else
 	int getNumVoteInfos();
+#endif
 	std::vector<CvVoteInfo*>& getVoteInfo();
 	CvVoteInfo* getVoteInfo(VoteTypes e);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumProjectInfos() const;
+#else
 	int getNumProjectInfos();
+#endif
 	std::vector<CvProjectEntry*>& getProjectInfo();
 	CvProjectEntry* getProjectInfo(ProjectTypes e);
 	CvProjectXMLEntries* GetGameProjects() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumBuildingClassInfos() const;
+#else
 	int getNumBuildingClassInfos();
+#endif
 	std::vector<CvBuildingClassInfo*>& getBuildingClassInfo();
 	_Ret_maybenull_ CvBuildingClassInfo* getBuildingClassInfo(BuildingClassTypes eBuildingClassNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumBuildingInfos() const;
+#else
 	int getNumBuildingInfos();
+#endif
 	std::vector<CvBuildingEntry*>& getBuildingInfo();
 	_Ret_maybenull_ CvBuildingEntry* getBuildingInfo(BuildingTypes eBuildingNum);
 	CvBuildingXMLEntries* GetGameBuildings() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumUnitClassInfos() const;
+#else
 	int getNumUnitClassInfos();
+#endif
 	std::vector<CvUnitClassInfo*>& getUnitClassInfo();
+#ifdef AUI_CONSTIFY
+	_Ret_maybenull_ CvUnitClassInfo* getUnitClassInfo(UnitClassTypes eUnitClassNum) const;
+#else
 	_Ret_maybenull_ CvUnitClassInfo* getUnitClassInfo(UnitClassTypes eUnitClassNum);
+#endif
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumActionInfos() const;
+#else
 	int getNumActionInfos();
+#endif
 	std::vector<CvActionInfo*>& getActionInfo();
 	CvActionInfo* getActionInfo(int i);
 
@@ -428,121 +560,225 @@ public:
 	std::vector<CvCommandInfo*>& getCommandInfo();
 	_Ret_maybenull_ CvCommandInfo* getCommandInfo(CommandTypes eCommandNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumAutomateInfos() const;
+#else
 	int getNumAutomateInfos();
+#endif
 	std::vector<CvAutomateInfo*>& getAutomateInfo();
+#ifdef AUI_WARNING_FIXES
+	_Ret_maybenull_ CvAutomateInfo* getAutomateInfo(uint iAutomateNum);
+#else
 	_Ret_maybenull_ CvAutomateInfo* getAutomateInfo(int iAutomateNum);
+#endif
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumPromotionInfos() const;
+#else
 	int getNumPromotionInfos();
+#endif
 	std::vector<CvPromotionEntry*>& getPromotionInfo();
 	_Ret_maybenull_ CvPromotionEntry* getPromotionInfo(PromotionTypes ePromotionNum);
 	CvPromotionXMLEntries* GetGamePromotions() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumSpecialistInfos() const;
+#else
 	int getNumSpecialistInfos();
+#endif
 	std::vector<CvSpecialistInfo*>& getSpecialistInfo();
 	_Ret_maybenull_ CvSpecialistInfo* getSpecialistInfo(SpecialistTypes eSpecialistNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumEconomicAIStrategyInfos() const;
+#else
 	int getNumEconomicAIStrategyInfos();
+#endif
 	std::vector<CvEconomicAIStrategyXMLEntry*>& getEconomicAIStrategyInfo();
 	_Ret_maybenull_ CvEconomicAIStrategyXMLEntry* getEconomicAIStrategyInfo(EconomicAIStrategyTypes eAIStrategyNum);
 	CvEconomicAIStrategyXMLEntries* GetGameEconomicAIStrategies() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumCitySpecializationInfos() const;
+#else
 	int getNumCitySpecializationInfos();
+#endif
 	std::vector<CvCitySpecializationXMLEntry*>& getCitySpecializationInfo();
 	_Ret_maybenull_ CvCitySpecializationXMLEntry* getCitySpecializationInfo(CitySpecializationTypes eCitySpecialization);
 	CvCitySpecializationXMLEntries* GetGameCitySpecializations() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumTacticalMoveInfos() const;
+#else
 	int getNumTacticalMoveInfos();
+#endif
 	std::vector<CvTacticalMoveXMLEntry*>& getTacticalMoveInfo();
 	_Ret_maybenull_ CvTacticalMoveXMLEntry* getTacticalMoveInfo(TacticalAIMoveTypes eTacticalMove);
 	CvTacticalMoveXMLEntries* GetGameTacticalMoves() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumMilitaryAIStrategyInfos() const;
+#else
 	int getNumMilitaryAIStrategyInfos();
+#endif
 	std::vector<CvMilitaryAIStrategyXMLEntry*>& getMilitaryAIStrategyInfo();
 	_Ret_maybenull_ CvMilitaryAIStrategyXMLEntry* getMilitaryAIStrategyInfo(MilitaryAIStrategyTypes eAIStrategyNum);
 	CvMilitaryAIStrategyXMLEntries* GetGameMilitaryAIStrategies() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumAIGrandStrategyInfos() const;
+#else
 	int getNumAIGrandStrategyInfos();
+#endif
 	std::vector<CvAIGrandStrategyXMLEntry*>& getAIGrandStrategyInfo();
 	_Ret_maybenull_ CvAIGrandStrategyXMLEntry* getAIGrandStrategyInfo(AIGrandStrategyTypes eAIGrandStrategyNum);
 	CvAIGrandStrategyXMLEntries* GetGameAIGrandStrategies() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumAICityStrategyInfos() const;
+#else
 	int getNumAICityStrategyInfos();
+#endif
 	std::vector<CvAICityStrategyEntry*>& getAICityStrategyInfo();
 	_Ret_maybenull_ CvAICityStrategyEntry* getAICityStrategyInfo(AICityStrategyTypes eAICityStrategyNum);
 	CvAICityStrategies* GetGameAICityStrategies() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumPolicyInfos() const;
+#else
 	int getNumPolicyInfos();
+#endif
 	std::vector<CvPolicyEntry*>& getPolicyInfo();
 	_Ret_maybenull_ CvPolicyEntry* getPolicyInfo(PolicyTypes ePolicyNum);
 	CvPolicyXMLEntries* GetGamePolicies() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumPolicyBranchInfos() const;
+#else
 	int getNumPolicyBranchInfos();
+#endif
 	std::vector<CvPolicyBranchEntry*>& getPolicyBranchInfo();
 	_Ret_maybenull_ CvPolicyBranchEntry* getPolicyBranchInfo(PolicyBranchTypes ePolicyBranchNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumEmphasisInfos() const;
+#else
 	int getNumEmphasisInfos();
+#endif
 	std::vector<CvEmphasisEntry*>& getEmphasisInfo();
 	_Ret_maybenull_ CvEmphasisEntry* getEmphasisInfo(EmphasizeTypes eEmphasisNum);
 	CvEmphasisXMLEntries* GetGameEmphases() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumTraitInfos() const;
+#else
 	int getNumTraitInfos();
+#endif
 	std::vector<CvTraitEntry*>& getTraitInfo();
 	_Ret_maybenull_ CvTraitEntry* getTraitInfo(TraitTypes eTraitNum);
 	CvTraitXMLEntries* GetGameTraits() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumReligionInfos() const;
+#else
 	int getNumReligionInfos();
+#endif
 	std::vector<CvReligionEntry*>& getReligionInfo();
 	_Ret_maybenull_ CvReligionEntry* getReligionInfo(ReligionTypes eReligionNum);
 	CvReligionXMLEntries* GetGameReligions() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumBeliefInfos() const;
+#else
 	int getNumBeliefInfos();
+#endif
 	std::vector<CvBeliefEntry*>& getBeliefInfo();
 	_Ret_maybenull_ CvBeliefEntry* getBeliefInfo(BeliefTypes eBeliefNum);
 	CvBeliefXMLEntries* GetGameBeliefs() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumLeagueSpecialSessionInfos() const;
+#else
 	int getNumLeagueSpecialSessionInfos();
+#endif
 	std::vector<CvLeagueSpecialSessionEntry*>& getLeagueSpecialSessionInfo();
 	_Ret_maybenull_ CvLeagueSpecialSessionEntry* getLeagueSpecialSessionInfo(LeagueSpecialSessionTypes eLeagueSpecialSessionNum);
 	CvLeagueSpecialSessionXMLEntries* GetGameLeagueSpecialSessions() const;
 	
+#ifdef AUI_WARNING_FIXES
+	uint getNumLeagueNameInfos() const;
+#else
 	int getNumLeagueNameInfos();
+#endif
 	std::vector<CvLeagueNameEntry*>& getLeagueNameInfo();
 	_Ret_maybenull_ CvLeagueNameEntry* getLeagueNameInfo(LeagueNameTypes eLeagueNameNum);
 	CvLeagueNameXMLEntries* GetGameLeagueNames() const;
 	
+#ifdef AUI_WARNING_FIXES
+	uint getNumLeagueProjectInfos() const;
+#else
 	int getNumLeagueProjectInfos();
+#endif
 	std::vector<CvLeagueProjectEntry*>& getLeagueProjectInfo();
 	_Ret_maybenull_ CvLeagueProjectEntry* getLeagueProjectInfo(LeagueProjectTypes eLeagueProjectNum);
 	CvLeagueProjectXMLEntries* GetGameLeagueProjects() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumLeagueProjectRewardInfos() const;
+#else
 	int getNumLeagueProjectRewardInfos();
+#endif
 	std::vector<CvLeagueProjectRewardEntry*>& getLeagueProjectRewardInfo();
 	_Ret_maybenull_ CvLeagueProjectRewardEntry* getLeagueProjectRewardInfo(LeagueProjectRewardTypes eLeagueProjectRewardNum);
 	CvLeagueProjectRewardXMLEntries* GetGameLeagueProjectRewards() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumResolutionInfos() const;
+#else
 	int getNumResolutionInfos();
+#endif
 	std::vector<CvResolutionEntry*>& getResolutionInfo();
 	_Ret_maybenull_ CvResolutionEntry* getResolutionInfo(ResolutionTypes eResolutionNum);
 	CvResolutionXMLEntries* GetGameResolutions() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumTechInfos() const;
+#else
 	int getNumTechInfos();
+#endif
 	std::vector<CvTechEntry*>& getTechInfo();
 	_Ret_maybenull_ CvTechEntry* getTechInfo(TechTypes eTechNum);
 	CvTechXMLEntries* GetGameTechs() const;
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumEraInfos() const;
+#else
 	int getNumEraInfos();
+#endif
 	std::vector<CvEraInfo*>& getEraInfo();
 	CvEraInfo* getEraInfo(EraTypes eEraNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumHurryInfos() const;
+#else
 	int getNumHurryInfos();
+#endif
 	std::vector<CvHurryInfo*>& getHurryInfo();
 	_Ret_maybenull_ CvHurryInfo* getHurryInfo(HurryTypes eHurryNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumVictoryInfos() const;
+#else
 	int getNumVictoryInfos();
+#endif
 	std::vector<CvVictoryInfo*>& getVictoryInfo();
 	_Ret_maybenull_ CvVictoryInfo* getVictoryInfo(VictoryTypes eVictoryNum);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumSmallAwardInfos() const;
+#else
 	int getNumSmallAwardInfos();
+#endif
 	std::vector<CvSmallAwardInfo*>& getSmallAwardInfo();
 	_Ret_maybenull_ CvSmallAwardInfo* getSmallAwardInfo(SmallAwardTypes eSmallAwardNum);
 
@@ -577,7 +813,11 @@ public:
 		return m_paszFlavorTypes[e];
 	}
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumUnitDomainInfos() const;
+#else
 	int getNumUnitDomainInfos();
+#endif
 	std::vector<CvDomainInfo*>& getUnitDomainInfo();
 	_Ret_maybenull_ CvDomainInfo* getUnitDomainInfo(DomainTypes eDomainNum);
 
@@ -595,6 +835,22 @@ public:
 
 	// use very sparingly - this is costly
 	CvString getDefineSTRING(const char* szName, bool bReportErrors = true);
+
+#ifdef AUI_DIPLOMACY_AI_LEADERHEAD_DEALS_IN_MULTIPLAYER
+	GD_INT_DEF(MULTIPLAYER_AI_DIPLOMACY_NOTIFICATIONS_ONLY_SIMULTANEOUS);
+#endif
+#ifdef AUI_UNIT_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS
+	GD_INT_DEF(DISABLE_UNIT_AI_FLAVOR_LUA_MODDING);
+#endif
+#ifdef AUI_BUILDING_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS
+	GD_INT_DEF(DISABLE_BUILDING_AI_FLAVOR_LUA_MODDING);
+#endif
+#ifdef AUI_PROJECT_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS
+	GD_INT_DEF(DISABLE_PROJECT_AI_FLAVOR_LUA_MODDING);
+#endif
+#ifdef AUI_PROCESS_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS
+	GD_INT_DEF(DISABLE_PROCESS_AI_FLAVOR_LUA_MODDING);
+#endif
 
 	// -- ints --
 
@@ -5985,6 +6241,9 @@ public:
 	{
 		return m_iSTART_AREA_SCIENCE_MULTIPLIER;
 	}
+#ifdef AUI_SITE_EVALUATION_PLOT_FOUND_VALUE_CONSIDER_CULTURE
+	GD_INT_DEF(START_AREA_CULTURE_MULTIPLIER)
+#endif
 	inline int getSTART_AREA_FAITH_MULTIPLIER()
 	{
 		return m_iSTART_AREA_FAITH_MULTIPLIER;
@@ -6021,6 +6280,9 @@ public:
 	{
 		return m_iSETTLER_SCIENCE_MULTIPLIER;
 	}
+#ifdef AUI_SITE_EVALUATION_PLOT_FOUND_VALUE_CONSIDER_CULTURE
+	GD_INT_DEF(SETTLER_CULTURE_MULTIPLIER)
+#endif
 	inline int getSETTLER_FAITH_MULTIPLIER()
 	{
 		return m_iSETTLER_FAITH_MULTIPLIER;
@@ -6037,6 +6299,9 @@ public:
 	{
 		return m_iSETTLER_BUILD_ON_COAST_PERCENT;
 	}
+#ifdef AUI_SITE_EVALUATION_COMPUTE_YIELD_VALUE_RECOGNIZE_CITY_PLOT
+	GD_INT_DEF(CITY_RING_0_MULTIPLIER)
+#endif
 	inline int getCITY_RING_1_MULTIPLIER()
 	{
 		return m_iCITY_RING_1_MULTIPLIER;
@@ -6057,6 +6322,50 @@ public:
 	{
 		return m_iCITY_RING_5_MULTIPLIER;
 	}
+#ifdef AUI_SITE_EVALUATION_YIELD_MULTIPLIER_DISTANCE_DECAY
+	GD_INT_DEF(SETTLER_FOOD_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_PRODUCTION_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_GOLD_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_SCIENCE_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_CULTURE_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_FAITH_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_HAPPINESS_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_RESOURCES_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_STRATEGIC_RING_0_DIVIDER);
+	GD_INT_DEF(SETTLER_FOOD_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_PRODUCTION_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_GOLD_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_SCIENCE_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_CULTURE_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_FAITH_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_HAPPINESS_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_RESOURCES_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_STRATEGIC_RING_1_DIVIDER);
+	GD_INT_DEF(SETTLER_FOOD_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_PRODUCTION_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_GOLD_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_SCIENCE_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_CULTURE_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_FAITH_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_HAPPINESS_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_RESOURCES_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_STRATEGIC_RING_2_DIVIDER);
+	GD_INT_DEF(SETTLER_FOOD_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_PRODUCTION_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_GOLD_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_SCIENCE_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_CULTURE_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_FAITH_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_HAPPINESS_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_RESOURCES_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_STRATEGIC_RING_3_DIVIDER);
+	GD_INT_DEF(SETTLER_HAPPINESS_RING_4_DIVIDER);
+	GD_INT_DEF(SETTLER_RESOURCES_RING_4_DIVIDER);
+	GD_INT_DEF(SETTLER_STRATEGIC_RING_4_DIVIDER);
+	GD_INT_DEF(SETTLER_HAPPINESS_RING_5_DIVIDER);
+	GD_INT_DEF(SETTLER_RESOURCES_RING_5_DIVIDER);
+	GD_INT_DEF(SETTLER_STRATEGIC_RING_5_DIVIDER);
+#endif
 	inline int getSETTLER_EVALUATION_DISTANCE()
 	{
 		return m_iSETTLER_EVALUATION_DISTANCE;
@@ -7419,6 +7728,9 @@ public:
 	void SetInternationalTradeRouteLandFinder(CvAStar* pVal);
 	void SetInternationalTradeRouteWaterFinder(CvAStar* pVal);
 	void SetTacticalAnalysisMapFinder(CvTwoLayerPathFinder* pVal);
+#ifdef AUI_DANGER_PLOTS_REMADE
+	void setDangerPathFinder(CvTwoLayerPathFinder* pVal);
+#endif
 
 	// So that CvEnums are moddable in the DLL
 	int getNumDirections() const;
@@ -7481,6 +7793,9 @@ protected:
 	CvAStar* m_internationalTradeRouteLandFinder;
 	CvAStar* m_internationalTradeRouteWaterFinder;
 	CvTwoLayerPathFinder* m_tacticalAnalysisMapFinder;
+#ifdef AUI_DANGER_PLOTS_REMADE
+	CvTwoLayerPathFinder* m_pathDangerFinder;
+#endif
 
 	ICvDLLDatabaseUtility1* m_pkDatabaseLoadUtility;
 
@@ -7595,16 +7910,33 @@ protected:
 
 	int getDefineINT(const char* szName, bool bReportErrors = true);
 	float getDefineFLOAT(const char* szName, bool bReportErrors = true);
-#ifdef NQM_CACHE_DOUBLE
+#ifdef AUI_CACHE_DOUBLE
 	double getDefineDOUBLE(const char* szName, bool bReportErrors = true);
 #endif
 
 	bool getDefineValue(const char* szName, int& iValue, bool bReportErrors = true);
 	bool getDefineValue(const char* szName, float& fValue, bool bReportErrors = true);
-#ifdef NQM_CACHE_DOUBLE
+#ifdef AUI_CACHE_DOUBLE
 	bool getDefineValue(const char* szName, double& dValue, bool bReportErrors = true);
 #endif
 	bool getDefineValue(const char* szName, CvString& szValue, bool bReportErrors = true);
+
+	// -- Togglable AuI options
+#ifdef AUI_DIPLOMACY_AI_LEADERHEAD_DEALS_IN_MULTIPLAYER
+	GD_INT_DECL(MULTIPLAYER_AI_DIPLOMACY_NOTIFICATIONS_ONLY_SIMULTANEOUS);
+#endif
+#ifdef AUI_UNIT_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS
+	GD_INT_DECL(DISABLE_UNIT_AI_FLAVOR_LUA_MODDING);
+#endif
+#ifdef AUI_BUILDING_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS
+	GD_INT_DECL(DISABLE_BUILDING_AI_FLAVOR_LUA_MODDING);
+#endif
+#ifdef AUI_PROJECT_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS
+	GD_INT_DECL(DISABLE_PROJECT_AI_FLAVOR_LUA_MODDING);
+#endif
+#ifdef AUI_PROCESS_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS
+	GD_INT_DECL(DISABLE_PROCESS_AI_FLAVOR_LUA_MODDING);
+#endif
 
 	// -- ints --
 
@@ -8955,6 +9287,9 @@ protected:
 	int m_iSTART_AREA_PRODUCTION_MULTIPLIER;
 	int m_iSTART_AREA_GOLD_MULTIPLIER;
 	int m_iSTART_AREA_SCIENCE_MULTIPLIER;
+#ifdef AUI_SITE_EVALUATION_PLOT_FOUND_VALUE_CONSIDER_CULTURE
+	GD_INT_DECL(START_AREA_CULTURE_MULTIPLIER);
+#endif
 	int m_iSTART_AREA_FAITH_MULTIPLIER;
 	int m_iSTART_AREA_RESOURCE_MULTIPLIER;
 	int m_iSTART_AREA_STRATEGIC_MULTIPLIER;
@@ -8964,15 +9299,65 @@ protected:
 	int m_iSETTLER_PRODUCTION_MULTIPLIER;
 	int m_iSETTLER_GOLD_MULTIPLIER;
 	int m_iSETTLER_SCIENCE_MULTIPLIER;
+#ifdef AUI_SITE_EVALUATION_PLOT_FOUND_VALUE_CONSIDER_CULTURE
+	GD_INT_DECL(SETTLER_CULTURE_MULTIPLIER);
+#endif
 	int m_iSETTLER_FAITH_MULTIPLIER;
 	int m_iSETTLER_RESOURCE_MULTIPLIER;
 	int m_iSETTLER_STRATEGIC_MULTIPLIER;
 	int m_iSETTLER_BUILD_ON_COAST_PERCENT;
+#ifdef AUI_SITE_EVALUATION_COMPUTE_YIELD_VALUE_RECOGNIZE_CITY_PLOT
+	GD_INT_DECL(CITY_RING_0_MULTIPLIER);
+#endif
 	int m_iCITY_RING_1_MULTIPLIER;
 	int m_iCITY_RING_2_MULTIPLIER;
 	int m_iCITY_RING_3_MULTIPLIER;
 	int m_iCITY_RING_4_MULTIPLIER;
 	int m_iCITY_RING_5_MULTIPLIER;
+#ifdef AUI_SITE_EVALUATION_YIELD_MULTIPLIER_DISTANCE_DECAY
+	GD_INT_DECL(SETTLER_FOOD_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_PRODUCTION_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_GOLD_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_SCIENCE_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_CULTURE_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_FAITH_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_HAPPINESS_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_RESOURCES_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_STRATEGIC_RING_0_DIVIDER);
+	GD_INT_DECL(SETTLER_FOOD_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_PRODUCTION_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_GOLD_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_SCIENCE_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_CULTURE_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_FAITH_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_HAPPINESS_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_RESOURCES_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_STRATEGIC_RING_1_DIVIDER);
+	GD_INT_DECL(SETTLER_FOOD_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_PRODUCTION_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_GOLD_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_SCIENCE_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_CULTURE_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_FAITH_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_HAPPINESS_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_RESOURCES_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_STRATEGIC_RING_2_DIVIDER);
+	GD_INT_DECL(SETTLER_FOOD_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_PRODUCTION_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_GOLD_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_SCIENCE_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_CULTURE_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_FAITH_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_HAPPINESS_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_RESOURCES_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_STRATEGIC_RING_3_DIVIDER);
+	GD_INT_DECL(SETTLER_HAPPINESS_RING_4_DIVIDER);
+	GD_INT_DECL(SETTLER_RESOURCES_RING_4_DIVIDER);
+	GD_INT_DECL(SETTLER_STRATEGIC_RING_4_DIVIDER);
+	GD_INT_DECL(SETTLER_HAPPINESS_RING_5_DIVIDER);
+	GD_INT_DECL(SETTLER_RESOURCES_RING_5_DIVIDER);
+	GD_INT_DECL(SETTLER_STRATEGIC_RING_5_DIVIDER);
+#endif
 	int m_iSETTLER_EVALUATION_DISTANCE;
 	int m_iSETTLER_DISTANCE_DROPOFF_MODIFIER;
 	int m_iBUILD_ON_RESOURCE_PERCENT;
@@ -9330,7 +9715,7 @@ extern CvGlobals gGlobals;
 #define DLLUI (GC.GetEngineUserInterface())
 #define DLLUIClass CvDLLInterfaceIFaceBase
 
-#ifdef NQM_MINIDUMPS
+#ifdef AUI_MINIDUMPS
 void CreateMiniDump(EXCEPTION_POINTERS *pep = NULL);
 LONG WINAPI CustomFilter(EXCEPTION_POINTERS *ExceptionInfo = NULL);
 #endif

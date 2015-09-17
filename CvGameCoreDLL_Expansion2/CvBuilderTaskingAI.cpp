@@ -2137,7 +2137,13 @@ bool CvBuilderTaskingAI::DoesBuildHelpRush(CvUnit* pUnit, CvPlot* pPlot, BuildTy
 	return true;
 }
 
+#ifdef AUI_WORKER_SCORE_PLOT_CHOP
+int CvBuilderTaskingAI::ScorePlot(BuildTypes eBuild) const
+#elif defined(AUI_CONSTIFY)
+int CvBuilderTaskingAI::ScorePlot() const
+#else
 int CvBuilderTaskingAI::ScorePlot()
+#endif
 {
 	if(!m_pTargetPlot)
 	{
@@ -2145,7 +2151,11 @@ int CvBuilderTaskingAI::ScorePlot()
 	}
 
 	CvCity* pCity = m_pTargetPlot->getWorkingCity();
+#ifdef AUI_WORKER_SCORE_PLOT_NO_SCORE_FROM_RAZE
+	if (!pCity || pCity->IsRazing())
+#else
 	if(!pCity)
+#endif
 	{
 		return -1;
 	}
@@ -2156,6 +2166,15 @@ int CvBuilderTaskingAI::ScorePlot()
 		return -1;
 	}
 
+#ifdef AUI_WORKER_SCORE_PLOT_CHOP
+	CvBuildInfo* pkBuild = GC.getBuildInfo(eBuild);
+	if (!pkBuild)
+	{
+		return -1;
+	}
+	FeatureTypes ePlotFeature = m_pTargetPlot->getFeatureType();
+#endif
+
 	int iScore = 0;
 	bool bAnyNegativeMultiplier = false;
 	YieldTypes eFocusYield = pCityStrategy->GetFocusYield();
@@ -2164,6 +2183,13 @@ int CvBuilderTaskingAI::ScorePlot()
 		int iMultiplier = pCityStrategy->GetYieldDeltaTimes100((YieldTypes)ui);
 		int iAbsMultiplier = abs(iMultiplier);
 		int iYieldDelta = m_aiProjectedPlotYields[ui] - m_aiCurrentPlotYields[ui];
+#ifdef AUI_WORKER_SCORE_PLOT_CHOP
+		double dFlatBonus = 0;
+		if (ePlotFeature != NO_FEATURE && pkBuild->isFeatureRemove(ePlotFeature) && ui == YIELD_PRODUCTION && iYieldDelta >= 0)
+		{
+			dFlatBonus = AUI_WORKER_SCORE_PLOT_CHOP;
+		}
+#endif
 
 		// the multiplier being lower than zero means that we need more of this resource
 		if(iMultiplier < 0)
@@ -2171,6 +2197,24 @@ int CvBuilderTaskingAI::ScorePlot()
 			bAnyNegativeMultiplier = true;
 			if(iYieldDelta > 0)  // this would be an improvement to the yield
 			{
+#ifdef AUI_WORKER_SCORE_PLOT_CHOP
+				iScore += int((m_aiProjectedPlotYields[ui] + dFlatBonus) * iAbsMultiplier + 0.5);
+			}
+			else if (iYieldDelta < 0)  // the yield would go down
+			{
+				iScore += int((iYieldDelta + dFlatBonus) * iAbsMultiplier - 0.5);
+			}
+		}
+		else
+		{
+			if (iYieldDelta >= 0)
+			{
+				iScore += int(m_aiProjectedPlotYields[ui] + dFlatBonus + 0.5); // provide a nominal score to plots that improve anything
+			}
+			else if (iYieldDelta < 0)
+			{
+				iScore += int((iYieldDelta + dFlatBonus) * iAbsMultiplier - 0.5);
+#else
 				iScore += m_aiProjectedPlotYields[ui] * iAbsMultiplier;
 			}
 			else if(iYieldDelta < 0)  // the yield would go down
@@ -2187,6 +2231,7 @@ int CvBuilderTaskingAI::ScorePlot()
 			else if(iYieldDelta < 0)
 			{
 				iScore += iYieldDelta * iAbsMultiplier;
+#endif
 			}
 		}
 	}
@@ -2196,10 +2241,15 @@ int CvBuilderTaskingAI::ScorePlot()
 		int iYieldDelta = m_aiProjectedPlotYields[eFocusYield] - m_aiCurrentPlotYields[eFocusYield];
 		if(iYieldDelta > 0)
 		{
+#ifdef AUI_WORKER_SCORE_PLOT_EFFECT_FROM_CITY_FOCUS
+			iScore += m_aiProjectedPlotYields[eFocusYield] * AUI_WORKER_SCORE_PLOT_EFFECT_FROM_CITY_FOCUS;
+#else
 			iScore += m_aiProjectedPlotYields[eFocusYield] * 100;
+#endif
 		}
 	}
 
+#ifndef AUI_WORKER_SCORE_PLOT_NO_CAPITOL_FAVORING
 	if (pCity->isCapital()) // this is our capital and needs emphasis
 	{
 		iScore *= 8;
@@ -2208,13 +2258,34 @@ int CvBuilderTaskingAI::ScorePlot()
 	{
 		iScore *= 2;
 	}
+#endif
+#ifdef AUI_WORKER_SCORE_PLOT_MULTIPLY_SCORE_IF_WOULD_WORK
+	if (bWouldBeWorked)
+	{
+		iScore *= AUI_WORKER_SCORE_PLOT_MULTIPLY_SCORE_IF_WOULD_WORK;
+	}
+#endif
+#ifdef AUI_WORKER_SCORE_PLOT_REDUCED_PUPPET_SCORE
+	if (pCity->IsPuppet())
+	{
+		iScore /= AUI_WORKER_SCORE_PLOT_REDUCED_PUPPET_SCORE;
+	}
+#endif
 
 	return iScore;
 }
 
+#ifdef AUI_CONSTIFY
+BuildTypes CvBuilderTaskingAI::GetBuildTypeFromImprovement(ImprovementTypes eImprovement) const
+#else
 BuildTypes CvBuilderTaskingAI::GetBuildTypeFromImprovement(ImprovementTypes eImprovement)
+#endif
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 	for(int iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 	{
 		BuildTypes eBuild = (BuildTypes)iBuildIndex;
 		CvBuildInfo* pkBuild = GC.getBuildInfo(eBuild);
@@ -2228,9 +2299,17 @@ BuildTypes CvBuilderTaskingAI::GetBuildTypeFromImprovement(ImprovementTypes eImp
 	return NO_BUILD;
 }
 
+#ifdef AUI_CONSTIFY
+BuildTypes CvBuilderTaskingAI::GetRepairBuild() const
+#else
 BuildTypes CvBuilderTaskingAI::GetRepairBuild(void)
+#endif
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumBuildInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumBuildInfos(); i++)
+#endif
 	{
 		BuildTypes eBuild = (BuildTypes)i;
 		CvBuildInfo* pkBuild = GC.getBuildInfo(eBuild);
@@ -2244,12 +2323,20 @@ BuildTypes CvBuilderTaskingAI::GetRepairBuild(void)
 	return NO_BUILD;
 }
 
+#ifdef AUI_CONSTIFY
+FeatureTypes CvBuilderTaskingAI::GetFalloutFeature() const
+#else
 FeatureTypes CvBuilderTaskingAI::GetFalloutFeature(void)
+#endif
 {
 	return static_cast<FeatureTypes>(GC.getNUKE_FEATURE());
 }
 
+#ifdef AUI_CONSTIFY
+BuildTypes CvBuilderTaskingAI::GetFalloutRemove() const
+#else
 BuildTypes CvBuilderTaskingAI::GetFalloutRemove(void)
+#endif
 {
 	FeatureTypes eFalloutFeature = m_eFalloutFeature;
 	if(eFalloutFeature == NO_FEATURE)
@@ -2262,7 +2349,11 @@ BuildTypes CvBuilderTaskingAI::GetFalloutRemove(void)
 		return NO_BUILD;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuild = 0; iBuild < GC.getNumBuildInfos(); iBuild++)
+#else
 	for(int iBuild = 0; iBuild < GC.getNumBuildInfos(); iBuild++)
+#endif
 	{
 		BuildTypes eBuild = (BuildTypes)iBuild;
 		CvBuildInfo* pBuildInfo = GC.getBuildInfo(eBuild);
@@ -2430,7 +2521,12 @@ void CvBuilderTaskingAI::LogDirective(BuilderDirective directive, CvUnit* pUnit,
 			strLog += pkResourceInfo->GetType();
 			strLog += ",";
 			CvPlot* pPlot = GC.getMap().plot(directive.m_sX, directive.m_sY);
+#ifdef AUI_WARNING_FIXES
+			strTemp.Format("%d,", pPlot->getNumResource());
+			strLog += strTemp;
+#else
 			strLog += pPlot->getNumResource();
+#endif
 			strLog += ",";
 		}
 	}
@@ -2525,6 +2621,37 @@ void CvBuilderTaskingAI::UpdateProjectedPlotYields(CvPlot* pPlot, BuildTypes eBu
 	{
 		m_aiProjectedPlotYields[ui] = pPlot->getYieldWithBuild(eBuild, (YieldTypes)ui, false, m_pPlayer->GetID());
 		m_aiProjectedPlotYields[ui] = max(m_aiProjectedPlotYields[ui], 0);
+#ifdef AUI_WORKER_FIX_CELTIC_IMPROVE_UNIMPROVED_FORESTS
+		if (ui == YIELD_FAITH && m_pPlayer->GetPlayerTraits()->IsFaithFromUnimprovedForest() && pPlot->getImprovementType() == NO_IMPROVEMENT)
+		{
+			CvBuildInfo* pBuildInfo = GC.getBuildInfo(eBuild);
+			if (pBuildInfo && (pBuildInfo->getImprovement() != NO_IMPROVEMENT || pBuildInfo->isFeatureRemove(FEATURE_FOREST)))
+			{
+				CvCity* pNextCity = pPlot->GetAdjacentCity();
+				if (pNextCity && pNextCity->getOwner() == m_pPlayer->GetID())
+				{
+					int iNeighboringForestCount = 1;
+					CvPlot* pAdjacentPlot = NULL;
+					for (int iI = 0; iI < NUM_DIRECTION_TYPES; iI++)
+					{
+						pAdjacentPlot = pNextCity->plot()->getNeighboringPlot((DirectionTypes)iI);
+						if (pAdjacentPlot && pAdjacentPlot != pPlot && pAdjacentPlot->getFeatureType() == FEATURE_FOREST && pPlot->getImprovementType() == NO_IMPROVEMENT)
+						{
+							ResourceTypes eAdjacentResource = pPlot->getResourceType(m_pPlayer->getTeam());
+							if (eAdjacentResource == NO_RESOURCE || GC.getResourceInfo(eAdjacentResource)->getResourceUsage() == RESOURCEUSAGE_BONUS)
+							{
+								iNeighboringForestCount++;
+							}
+						}
+					}
+					if (iNeighboringForestCount == 3 || iNeighboringForestCount == 1)
+					{
+						m_aiProjectedPlotYields[YIELD_FAITH] -= 1;
+					}
+				}
+			}
+		}
+#endif
 
 		if(m_bLogging){
 			CvString strLog;

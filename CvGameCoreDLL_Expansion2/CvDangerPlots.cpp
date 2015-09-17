@@ -508,7 +508,11 @@ bool CvDangerPlots::IsDangerByRelationshipZero(PlayerTypes ePlayer, CvPlot* pPlo
 
 
 /// Should this player be ignored when creating the danger plots?
+#ifdef AUI_CONSTIFY
+bool CvDangerPlots::ShouldIgnorePlayer(PlayerTypes ePlayer) const
+#else
 bool CvDangerPlots::ShouldIgnorePlayer(PlayerTypes ePlayer)
+#endif
 {
 	if(GET_PLAYER(m_ePlayer).isMinorCiv() != GET_PLAYER(ePlayer).isMinorCiv() && !GET_PLAYER(ePlayer).isBarbarian() && !GET_PLAYER(m_ePlayer).isBarbarian())
 	{
@@ -547,7 +551,11 @@ bool CvDangerPlots::ShouldIgnorePlayer(PlayerTypes ePlayer)
 }
 
 /// Should this unit be ignored when creating the danger plots?
+#ifdef AUI_CONSTIFY
+bool CvDangerPlots::ShouldIgnoreUnit(const CvUnit* pUnit, bool bIgnoreVisibility) const
+#else
 bool CvDangerPlots::ShouldIgnoreUnit(CvUnit* pUnit, bool bIgnoreVisibility)
+#endif
 {
 	if(!pUnit->IsCanAttack())
 	{
@@ -582,7 +590,11 @@ bool CvDangerPlots::ShouldIgnoreUnit(CvUnit* pUnit, bool bIgnoreVisibility)
 }
 
 /// Should this city be ignored when creating the danger plots?
+#ifdef AUI_CONSTIFY
+bool CvDangerPlots::ShouldIgnoreCity(const CvCity* pCity, bool bIgnoreVisibility) const
+#else
 bool CvDangerPlots::ShouldIgnoreCity(CvCity* pCity, bool bIgnoreVisibility)
+#endif
 {
 	// ignore unseen cities
 	if(!pCity->isRevealed(GET_PLAYER(m_ePlayer).getTeam(), false)  && !bIgnoreVisibility)
@@ -594,7 +606,11 @@ bool CvDangerPlots::ShouldIgnoreCity(CvCity* pCity, bool bIgnoreVisibility)
 }
 
 /// Should this city be ignored when creating the danger plots?
+#ifdef AUI_CONSTIFY
+bool CvDangerPlots::ShouldIgnoreCitadel(const CvPlot* pCitadelPlot, bool bIgnoreVisibility) const
+#else
 bool CvDangerPlots::ShouldIgnoreCitadel(CvPlot* pCitadelPlot, bool bIgnoreVisibility)
+#endif
 {
 	// ignore unseen cities
 	if(!pCitadelPlot->isRevealed(GET_PLAYER(m_ePlayer).getTeam())  && !bIgnoreVisibility)

@@ -1139,7 +1139,11 @@ public:
 	int getResourceSiphoned(ResourceTypes eIndex) const;
 	void changeResourceSiphoned(ResourceTypes eIndex, int iChange);
 
+#ifdef AUI_CONSTIFY
+	int getResourceInOwnedPlots(ResourceTypes eIndex) const;
+#else
 	int getResourceInOwnedPlots(ResourceTypes eIndex);
+#endif
 
 	int getTotalImprovementsBuilt() const;
 	void changeTotalImprovementsBuilt(int iChange);

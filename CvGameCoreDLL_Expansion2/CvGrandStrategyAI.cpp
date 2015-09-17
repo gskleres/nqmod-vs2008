@@ -234,13 +234,21 @@ void CvGrandStrategyAI::Write(FDataStream& kStream)
 }
 
 /// Returns the Player object the Strategies are associated with
+#ifdef AUI_CONSTIFY
+CvPlayer* CvGrandStrategyAI::GetPlayer() const
+#else
 CvPlayer* CvGrandStrategyAI::GetPlayer()
+#endif
 {
 	return m_pPlayer;
 }
 
 /// Returns AIGrandStrategies object stored in this class
+#ifdef AUI_CONSTIFY
+CvAIGrandStrategyXMLEntries* CvGrandStrategyAI::GetAIGrandStrategies() const
+#else
 CvAIGrandStrategyXMLEntries* CvGrandStrategyAI::GetAIGrandStrategies()
+#endif
 {
 	return m_pAIGrandStrategies;
 }
@@ -250,7 +258,11 @@ void CvGrandStrategyAI::DoTurn()
 {
 	DoGuessOtherPlayersActiveGrandStrategy();
 
+#ifdef AUI_WARNING_FIXES
+	uint iGrandStrategiesLoop;
+#else
 	int iGrandStrategiesLoop;
+#endif
 	AIGrandStrategyTypes eGrandStrategy;
 	CvAIGrandStrategyXMLEntry* pGrandStrategy;
 	CvString strGrandStrategyName;
@@ -384,7 +396,11 @@ void CvGrandStrategyAI::DoTurn()
 }
 
 /// Returns Priority for Conquest Grand Strategy
+#ifdef AUI_CONSTIFY
+int CvGrandStrategyAI::GetConquestPriority() const
+#else
 int CvGrandStrategyAI::GetConquestPriority()
+#endif
 {
 	int iPriority = 0;
 
@@ -536,7 +552,11 @@ int CvGrandStrategyAI::GetConquestPriority()
 }
 
 /// Returns Priority for Culture Grand Strategy
+#ifdef AUI_CONSTIFY
+int CvGrandStrategyAI::GetCulturePriority() const
+#else
 int CvGrandStrategyAI::GetCulturePriority()
+#endif
 {
 	int iPriority = 0;
 
@@ -605,7 +625,11 @@ int CvGrandStrategyAI::GetCulturePriority()
 }
 
 /// Returns Priority for United Nations Grand Strategy
+#ifdef AUI_CONSTIFY
+int CvGrandStrategyAI::GetUnitedNationsPriority() const
+#else
 int CvGrandStrategyAI::GetUnitedNationsPriority()
+#endif
 {
 	int iPriority = 0;
 	PlayerTypes ePlayer = m_pPlayer->GetID();
@@ -711,7 +735,11 @@ int CvGrandStrategyAI::GetUnitedNationsPriority()
 }
 
 /// Returns Priority for Spaceship Grand Strategy
+#ifdef AUI_CONSTIFY
+int CvGrandStrategyAI::GetSpaceshipPriority() const
+#else
 int CvGrandStrategyAI::GetSpaceshipPriority()
+#endif
 {
 	int iPriority = 0;
 
@@ -741,7 +769,11 @@ int CvGrandStrategyAI::GetSpaceshipPriority()
 }
 
 /// Get the base Priority for a Grand Strategy; these are elements common to ALL Grand Strategies
+#ifdef AUI_CONSTIFY
+int CvGrandStrategyAI::GetBaseGrandStrategyPriority(AIGrandStrategyTypes eGrandStrategy) const
+#else
 int CvGrandStrategyAI::GetBaseGrandStrategyPriority(AIGrandStrategyTypes eGrandStrategy)
+#endif
 {
 	CvAIGrandStrategyXMLEntry* pGrandStrategy = GetAIGrandStrategies()->GetEntry(eGrandStrategy);
 
@@ -760,7 +792,11 @@ int CvGrandStrategyAI::GetBaseGrandStrategyPriority(AIGrandStrategyTypes eGrandS
 }
 
 /// Get the base Priority for a Grand Strategy; these are elements common to ALL Grand Strategies
+#ifdef AUI_CONSTIFY
+int CvGrandStrategyAI::GetPersonalityAndGrandStrategy(FlavorTypes eFlavorType) const
+#else
 int CvGrandStrategyAI::GetPersonalityAndGrandStrategy(FlavorTypes eFlavorType)
+#endif
 {
 	if(m_eActiveGrandStrategy != NO_AIGRANDSTRATEGY)
 	{

@@ -261,7 +261,11 @@ public:
 
 	bool isUnit() const;
 	bool isVisibleEnemyDefender(const CvUnit* pUnit) const;
+#ifdef AUI_CONSTIFY
+	CvUnit* getVisibleEnemyDefender(PlayerTypes ePlayer) const;
+#else
 	CvUnit* getVisibleEnemyDefender(PlayerTypes ePlayer);
+#endif
 	int getNumDefenders(PlayerTypes ePlayer) const;
 	int getNumVisibleEnemyDefenders(const CvUnit* pUnit) const;
 	int getNumVisiblePotentialEnemyDefenders(const CvUnit* pUnit) const;
@@ -376,8 +380,13 @@ public:
 
 	void setOwner(PlayerTypes eNewValue, int iAcquiringCityID, bool bCheckUnits = true, bool bUpdateResources = true);
 	void ClearCityPurchaseInfo(void);
+#ifdef AUI_CONSTIFY
+	PlayerTypes GetCityPurchaseOwner() const;
+	int GetCityPurchaseID() const;
+#else
 	PlayerTypes GetCityPurchaseOwner(void);
 	int GetCityPurchaseID(void);
+#endif
 	void SetCityPurchaseID(int iAcquiringCityID);
 
 	bool IsHomeFrontForPlayer(PlayerTypes ePlayer) const;

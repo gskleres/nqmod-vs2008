@@ -314,7 +314,11 @@ public:
 	void ClearGreatWorks();
 	GreatWorkSlotType GetSlotTypeFirstAvailableCultureBuilding() const;
 
+#ifdef AUI_CONSTIFY
+	int GetBaseTourismBeforeModifiers() const;
+#else
 	int GetBaseTourismBeforeModifiers();
+#endif
 	int GetBaseTourism();
 	int GetTourismMultiplier(PlayerTypes ePlayer, bool bIgnoreReligion, bool bIgnoreOpenBorders, bool bIgnoreTrade, bool bIgnorePolicies, bool bIgnoreIdeologies) const;
 

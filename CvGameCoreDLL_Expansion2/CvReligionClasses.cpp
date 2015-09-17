@@ -1394,7 +1394,11 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailablePantheonBeliefs()
 }
 
 // Is the supplied belief available to a pantheon?
+#ifdef AUI_CONSTIFY
+bool CvGameReligions::IsPantheonBeliefAvailable(BeliefTypes eBelief) const
+#else
 bool CvGameReligions::IsPantheonBeliefAvailable(BeliefTypes eBelief)
+#endif
 {
 	CvBeliefXMLEntries* pkBeliefs = GC.GetGameBeliefs();
 	if(!IsInSomeReligion(eBelief))
@@ -1520,7 +1524,11 @@ bool CvGameReligions::IsEligibleForFounderBenefits(ReligionTypes eReligion, Play
 }
 
 /// Is this city state friendly with the player that founded this religion?
+#ifdef AUI_CONSTIFY
+bool CvGameReligions::IsCityStateFriendOfReligionFounder(ReligionTypes eReligion, PlayerTypes ePlayer) const
+#else
 bool CvGameReligions::IsCityStateFriendOfReligionFounder(ReligionTypes eReligion, PlayerTypes ePlayer)
+#endif
 {
 	const CvReligion* religion = GetReligion(eReligion, NO_PLAYER);
 	if(religion)
@@ -1751,7 +1759,11 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailableReformationBeliefs()
 }
 
 /// How much pressure is exerted between these cities?
+#ifdef AUI_CONSTIFY
+int CvGameReligions::GetAdjacentCityReligiousPressure(ReligionTypes eReligion, const CvCity* pFromCity, const CvCity* pToCity, int& iNumTradeRoutesInfluencing, bool bPretendTradeConnection) const
+#else
 int CvGameReligions::GetAdjacentCityReligiousPressure (ReligionTypes eReligion, CvCity *pFromCity, CvCity *pToCity, int& iNumTradeRoutesInfluencing, bool bPretendTradeConnection)
+#endif
 {
 	int iPressure = 0;
 	iNumTradeRoutesInfluencing = 0;
@@ -1902,7 +1914,11 @@ int CvGameReligions::GetFaithGreatPersonNumber(int iNum) const
 }
 
 /// Does the religion in nearby city give this battle winner a yield? If so return multipler of losing unit strength
+#ifdef AUI_CONSTIFY
+int CvGameReligions::GetBeliefYieldForKill(YieldTypes eYield, int iX, int iY, PlayerTypes eWinningPlayer) const
+#else
 int CvGameReligions::GetBeliefYieldForKill(YieldTypes eYield, int iX, int iY, PlayerTypes eWinningPlayer)
+#endif
 {
 	int iRtnValue = 0;
 	int iMultiplier;
@@ -1964,7 +1980,11 @@ CvString CvGameReligions::GetLogFileName() const
 // PRIVATE METHODS
 
 /// Has this religion already been founded?
+#ifdef AUI_CONSTIFY
+bool CvGameReligions::HasBeenFounded(ReligionTypes eReligion) const
+#else
 bool CvGameReligions::HasBeenFounded(ReligionTypes eReligion)
+#endif
 {
 	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
@@ -1979,7 +1999,11 @@ bool CvGameReligions::HasBeenFounded(ReligionTypes eReligion)
 }
 
 /// Does any civ in the game like this religion?
+#ifdef AUI_CONSTIFY
+bool CvGameReligions::IsPreferredByCivInGame(ReligionTypes eReligion) const
+#else
 bool CvGameReligions::IsPreferredByCivInGame(ReligionTypes eReligion)
+#endif
 {
 	PlayerTypes eLoopPlayer;
 
@@ -2640,9 +2664,15 @@ void CvCityReligions::Copy(CvCityReligions* pOldCity)
 }
 
 /// How many citizens here are following this religion?
+#ifdef AUI_CONSTIFY
+int CvCityReligions::GetNumFollowers(ReligionTypes eReligion) const
+{
+	ReligionInCityList::const_iterator religionIt;
+#else
 int CvCityReligions::GetNumFollowers(ReligionTypes eReligion)
 {
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	// Find the religion in the list
 	for(religionIt = m_ReligionStatus.begin(); religionIt != m_ReligionStatus.end(); ++religionIt)
@@ -2657,9 +2687,15 @@ int CvCityReligions::GetNumFollowers(ReligionTypes eReligion)
 }
 
 /// Number of followers of this religion
+#ifdef AUI_CONSTIFY
+int CvCityReligions::GetNumSimulatedFollowers(ReligionTypes eReligion) const
+{
+	ReligionInCityList::const_iterator religionIt;
+#else
 int CvCityReligions::GetNumSimulatedFollowers(ReligionTypes eReligion)
 {
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	// Find the religion in the list
 	for(religionIt = m_SimulatedStatus.begin(); religionIt != m_SimulatedStatus.end(); ++religionIt)
@@ -2674,10 +2710,18 @@ int CvCityReligions::GetNumSimulatedFollowers(ReligionTypes eReligion)
 }
 
 /// How many religions have at least 1 follower?
+#ifdef AUI_CONSTIFY
+int CvCityReligions::GetNumReligionsWithFollowers() const
+#else
 int CvCityReligions::GetNumReligionsWithFollowers()
+#endif
 {
 	int iRtnValue = 0;
+#ifdef AUI_CONSTIFY
+	ReligionInCityList::const_iterator religionIt;
+#else
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	// Find the religion in the list
 	for(religionIt = m_ReligionStatus.begin(); religionIt != m_ReligionStatus.end(); ++religionIt)
@@ -2692,9 +2736,15 @@ int CvCityReligions::GetNumReligionsWithFollowers()
 }
 
 ///Any religion in this city?
+#ifdef AUI_CONSTIFY
+bool CvCityReligions::IsReligionInCity() const
+{
+	ReligionInCityList::const_iterator religionIt;
+#else
 bool CvCityReligions::IsReligionInCity()
 {
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	for(religionIt = m_ReligionStatus.begin(); religionIt != m_ReligionStatus.end(); ++religionIt)
 	{
@@ -2708,9 +2758,15 @@ bool CvCityReligions::IsReligionInCity()
 }
 
 /// Is this the holy city for a specific religion?
+#ifdef AUI_CONSTIFY
+bool CvCityReligions::IsHolyCityForReligion(ReligionTypes eReligion) const
+{
+	ReligionInCityList::const_iterator religionIt;
+#else
 bool CvCityReligions::IsHolyCityForReligion(ReligionTypes eReligion)
 {
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	// Find the religion in the list
 	for(religionIt = m_ReligionStatus.begin(); religionIt != m_ReligionStatus.end(); ++religionIt)
@@ -2725,9 +2781,15 @@ bool CvCityReligions::IsHolyCityForReligion(ReligionTypes eReligion)
 }
 
 /// Is this the holy city for any religion?
+#ifdef AUI_CONSTIFY
+bool CvCityReligions::IsHolyCityAnyReligion() const
+{
+	ReligionInCityList::const_iterator religionIt;
+#else
 bool CvCityReligions::IsHolyCityAnyReligion()
 {
 	ReligionInCityList::iterator religionIt;
+#endif
 	for(religionIt = m_ReligionStatus.begin(); religionIt != m_ReligionStatus.end(); ++religionIt)
 	{
 		if(religionIt->m_bFoundedHere)
@@ -2740,9 +2802,15 @@ bool CvCityReligions::IsHolyCityAnyReligion()
 }
 
 /// Is there a "heretical" religion here that can be stomped out?
+#ifdef AUI_CONSTIFY
+bool CvCityReligions::IsReligionHereOtherThan(ReligionTypes eReligion) const
+{
+	ReligionInCityList::const_iterator it;
+#else
 bool CvCityReligions::IsReligionHereOtherThan(ReligionTypes eReligion)
 {
 	ReligionInCityList::iterator it;
+#endif
 	for(it = m_ReligionStatus.begin(); it != m_ReligionStatus.end(); it++)
 	{
 		if(it->m_eReligion != NO_RELIGION && it->m_eReligion != eReligion)
@@ -2754,14 +2822,22 @@ bool CvCityReligions::IsReligionHereOtherThan(ReligionTypes eReligion)
 }
 
 /// Is there an inquisitor from another religion here?
+#ifdef AUI_CONSTIFY
+bool CvCityReligions::IsDefendedAgainstSpread(ReligionTypes eReligion) const
+#else
 bool CvCityReligions::IsDefendedAgainstSpread(ReligionTypes eReligion)
+#endif
 {
 	CvUnit* pLoopUnit;
 
 	CvPlot* pCityPlot = m_pCity->plot();
 	if(pCityPlot)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iUnitLoop = 0; iUnitLoop < pCityPlot->getNumUnits(); iUnitLoop++)
+#else
 		for(int iUnitLoop = 0; iUnitLoop < pCityPlot->getNumUnits(); iUnitLoop++)
+#endif
 		{
 			pLoopUnit = pCityPlot->getUnitByIndex(iUnitLoop);
 			CvUnitEntry* pkEntry = GC.getUnitInfo(pLoopUnit->getUnitType());
@@ -2782,11 +2858,19 @@ bool CvCityReligions::IsDefendedAgainstSpread(ReligionTypes eReligion)
 
 		if(pAdjacentPlot != NULL)
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iUnitLoop = 0; iUnitLoop < pAdjacentPlot->getNumUnits(); iUnitLoop++)
+#else
 			for(int iUnitLoop = 0; iUnitLoop < pAdjacentPlot->getNumUnits(); iUnitLoop++)
+#endif
 			{
 				pLoopUnit = pAdjacentPlot->getUnitByIndex(iUnitLoop);
+#ifdef AUI_CONSTIFY
+				if (pLoopUnit->getUnitInfo().IsProhibitsSpread())
+#else
 				CvUnitEntry* pkEntry = GC.getUnitInfo(pLoopUnit->getUnitType());
 				if(pkEntry && pkEntry->IsProhibitsSpread())
+#endif
 				{
 					if(pLoopUnit->getOwner() == m_pCity->getOwner() && pLoopUnit->GetReligionData()->GetReligion() != eReligion)
 					{
@@ -2801,13 +2885,21 @@ bool CvCityReligions::IsDefendedAgainstSpread(ReligionTypes eReligion)
 }
 
 /// Is there a religion that at least half of the population follows?
+#ifdef AUI_CONSTIFY
+ReligionTypes CvCityReligions::GetReligiousMajority() const
+#else
 ReligionTypes CvCityReligions::GetReligiousMajority()
+#endif
 {
 	int iTotalFollowers = 0;
 	int iMostFollowerPressure = 0;
 	int iMostFollowers = -1;
 	ReligionTypes eMostFollowers = NO_RELIGION;
+#ifdef AUI_CONSTIFY
+	ReligionInCityList::const_iterator religionIt;
+#else
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	for(religionIt = m_ReligionStatus.begin(); religionIt != m_ReligionStatus.end(); ++religionIt)
 	{
@@ -2832,13 +2924,21 @@ ReligionTypes CvCityReligions::GetReligiousMajority()
 }
 
 /// Just asked to simulate a conversion - who would be the majority religion?
+#ifdef AUI_CONSTIFY
+ReligionTypes CvCityReligions::GetSimulatedReligiousMajority() const
+#else
 ReligionTypes CvCityReligions::GetSimulatedReligiousMajority()
+#endif
 {
 	int iTotalFollowers = 0;
 	int iMostFollowerPressure = 0;
 	int iMostFollowers = -1;
 	ReligionTypes eMostFollowers = NO_RELIGION;
+#ifdef AUI_CONSTIFY
+	ReligionInCityList::const_iterator religionIt;
+#else
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	for(religionIt = m_SimulatedStatus.begin(); religionIt != m_SimulatedStatus.end(); ++religionIt)
 	{
@@ -2863,13 +2963,21 @@ ReligionTypes CvCityReligions::GetSimulatedReligiousMajority()
 }
 
 /// What is the second most popular religion in this city with a majority religion?
+#ifdef AUI_CONSTIFY
+ReligionTypes CvCityReligions::GetSecondaryReligion() const
+#else
 ReligionTypes CvCityReligions::GetSecondaryReligion()
+#endif
 {
 	int iMostFollowers = -1;
 	int iMostPressure = -1;
 	ReligionTypes eMajority = GetReligiousMajority();
 	ReligionTypes eMostFollowers = NO_RELIGION;
+#ifdef AUI_CONSTIFY
+	ReligionInCityList::const_iterator religionIt;
+#else
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	if (eMajority != NO_RELIGION)
 	{	
@@ -2897,7 +3005,11 @@ ReligionTypes CvCityReligions::GetSecondaryReligion()
 }
 
 /// Is there a pantheon belief in the secondary religion here?
+#ifdef AUI_CONSTIFY
+BeliefTypes CvCityReligions::GetSecondaryReligionPantheonBelief() const
+#else
 BeliefTypes CvCityReligions::GetSecondaryReligionPantheonBelief()
+#endif
 {
 	BeliefTypes eRtnValue = NO_BELIEF;
 
@@ -2928,10 +3040,18 @@ BeliefTypes CvCityReligions::GetSecondaryReligionPantheonBelief()
 }
 
 /// How many followers are there of religions OTHER than this one?
+#ifdef AUI_CONSTIFY
+int CvCityReligions::GetFollowersOtherReligions(ReligionTypes eReligion) const
+#else
 int CvCityReligions::GetFollowersOtherReligions(ReligionTypes eReligion)
+#endif
 {
 	int iOtherFollowers = 0;
+#ifdef AUI_CONSTIFY
+	ReligionInCityList::const_iterator religionIt;
+#else
 	ReligionInCityList::iterator religionIt;
+#endif
 
 	for(religionIt = m_ReligionStatus.begin(); religionIt != m_ReligionStatus.end(); ++religionIt)
 	{
@@ -2945,11 +3065,19 @@ int CvCityReligions::GetFollowersOtherReligions(ReligionTypes eReligion)
 }
 
 /// Total pressure exerted by all religions
+#ifdef AUI_CONSTIFY
+int CvCityReligions::GetTotalPressure() const
+#else
 int CvCityReligions::GetTotalPressure()
+#endif
 {
 	int iTotalPressure = 0;
 
+#ifdef AUI_CONSTIFY
+	ReligionInCityList::const_iterator it;
+#else
 	ReligionInCityList::iterator it;
+#endif
 	for(it = m_ReligionStatus.begin(); it != m_ReligionStatus.end(); it++)
 	{
 		iTotalPressure += it->m_iPressure;
@@ -2959,9 +3087,15 @@ int CvCityReligions::GetTotalPressure()
 }
 
 /// Pressure exerted by one religion
+#ifdef AUI_CONSTIFY
+int CvCityReligions::GetPressure(ReligionTypes eReligion) const
+{
+	ReligionInCityList::const_iterator it;
+#else
 int CvCityReligions::GetPressure(ReligionTypes eReligion)
 {
 	ReligionInCityList::iterator it;
+#endif
 	for(it = m_ReligionStatus.begin(); it != m_ReligionStatus.end(); it++)
 	{
 		if(it->m_eReligion == eReligion)
@@ -2974,7 +3108,11 @@ int CvCityReligions::GetPressure(ReligionTypes eReligion)
 }
 
 /// Pressure exerted by one religion per turn
+#ifdef AUI_CONSTIFY
+int CvCityReligions::GetPressurePerTurn(ReligionTypes eReligion, int& iNumTradeRoutesInvolved) const
+#else
 int CvCityReligions::GetPressurePerTurn(ReligionTypes eReligion, int& iNumTradeRoutesInvolved)
+#endif
 {
 	int iPressure = 0;
 	iNumTradeRoutesInvolved = 0;
@@ -3020,9 +3158,15 @@ int CvCityReligions::GetPressurePerTurn(ReligionTypes eReligion, int& iNumTradeR
 }
 
 /// How many trade routes are applying pressure to this city
+#ifdef AUI_CONSTIFY
+int CvCityReligions::GetNumTradeRouteConnections(ReligionTypes eReligion) const
+{
+	ReligionInCityList::const_iterator it;
+#else
 int CvCityReligions::GetNumTradeRouteConnections (ReligionTypes eReligion)
 {
 	ReligionInCityList::iterator it;
+#endif
 	for(it = m_ReligionStatus.begin(); it != m_ReligionStatus.end(); it++)
 	{
 		if(it->m_eReligion == eReligion)
@@ -3035,7 +3179,11 @@ int CvCityReligions::GetNumTradeRouteConnections (ReligionTypes eReligion)
 }
 
 /// Would this city exert religious pressure toward the target city if connected with a trade route
+#ifdef AUI_CONSTIFY
+bool CvCityReligions::WouldExertTradeRoutePressureToward(const CvCity* pTargetCity, ReligionTypes& eReligion, int& iAmount) const
+#else
 bool CvCityReligions::WouldExertTradeRoutePressureToward (CvCity* pTargetCity, ReligionTypes& eReligion, int& iAmount)
+#endif
 {
 	eReligion = NO_RELIGION;
 	iAmount = 0;
@@ -4416,7 +4564,11 @@ BeliefTypes CvReligionAI::ChooseReformationBelief()
 }
 
 /// Find the city where a missionary should next spread his religion
+#ifdef AUI_CONSTIFY
+CvCity* CvReligionAI::ChooseMissionaryTargetCity(UnitHandle pUnit) const
+#else
 CvCity* CvReligionAI::ChooseMissionaryTargetCity(UnitHandle pUnit)
+#endif
 {
 	ReligionTypes eMyReligion = GetReligionToSpread();
 	int iBestScore = 0;
@@ -4460,7 +4612,11 @@ CvCity* CvReligionAI::ChooseMissionaryTargetCity(UnitHandle pUnit)
 }
 
 /// Choose a plot next to the target city for the missionary to maneuver to
+#ifdef AUI_CONSTIFY
+CvPlot* CvReligionAI::ChooseMissionaryTargetPlot(UnitHandle pUnit, int* piTurns) const
+#else
 CvPlot* CvReligionAI::ChooseMissionaryTargetPlot(UnitHandle pUnit, int* piTurns)
+#endif
 {
 	CvCity* pCity = ChooseMissionaryTargetCity(pUnit);
 	int iBestNumTurns = MAX_INT;
@@ -4542,7 +4698,11 @@ CvPlot* CvReligionAI::ChooseMissionaryTargetPlot(UnitHandle pUnit, int* piTurns)
 }
 
 /// Find the city where an inquisitor should next remove heresy
+#ifdef AUI_CONSTIFY
+CvCity* CvReligionAI::ChooseInquisitorTargetCity(UnitHandle pUnit) const
+#else
 CvCity* CvReligionAI::ChooseInquisitorTargetCity(UnitHandle pUnit)
+#endif
 {
 	ReligionTypes eMyReligion = GetReligionToSpread();
 	int iBestScore = 0;
@@ -4578,7 +4738,11 @@ CvCity* CvReligionAI::ChooseInquisitorTargetCity(UnitHandle pUnit)
 }
 
 /// Choose a plot next to the target city for the inquisitor to maneuver to
+#ifdef AUI_CONSTIFY
+CvPlot* CvReligionAI::ChooseInquisitorTargetPlot(UnitHandle pUnit, int* piTurns) const
+#else
 CvPlot* CvReligionAI::ChooseInquisitorTargetPlot(UnitHandle pUnit, int* piTurns)
+#endif
 {
 	CvCity* pCity = ChooseInquisitorTargetCity(pUnit);
 	int iBestNumTurns = MAX_INT;
@@ -4773,7 +4937,11 @@ CvCity *CvReligionAI::ChooseProphetConversionCity(bool bOnlyBetterThanEnhancingR
 }
 
 /// Choose a plot next to the target city for the prophet to maneuver to
+#ifdef AUI_CONSTIFY
+CvPlot* CvReligionAI::ChooseProphetTargetPlot(UnitHandle pUnit, int* piTurns) const
+#else
 CvPlot* CvReligionAI::ChooseProphetTargetPlot(UnitHandle pUnit, int* piTurns)
+#endif
 {
 	CvCity* pCity = ChooseProphetConversionCity(false/*bOnlyBetterThanEnhancingReligion*/);
 	int iBestNumTurns = MAX_INT;
@@ -5190,7 +5358,11 @@ bool CvReligionAI::BuyAnyAvailableFaithBuilding()
 }
 
 /// AI's perceived worth of a belief
+#if defined(AUI_CONSTIFY) || defined(AUI_RELIGION_SCORE_BELIEF_AT_PLOT_REMADE) || defined(AUI_RELIGION_SCORE_BELIEF_AT_CITY_REMADE) || defined(AUI_RELIGION_USE_DOUBLES)
+int CvReligionAI::ScoreBelief(const CvBeliefEntry* pEntry) const
+#else
 int CvReligionAI::ScoreBelief(CvBeliefEntry* pEntry)
+#endif
 {
 	int iRtnValue = 5;  // Base value since everything has SOME value
 
@@ -5805,7 +5977,11 @@ int CvReligionAI::ScoreCityForInquisitor(CvCity* pCity, UnitHandle pUnit)
 }
 
 /// Is this enough new pressure to establish this as the new religious majority?
+#ifdef AUI_CONSTIFY
+bool CvReligionAI::ShouldBecomeNewMajority(const CvCity* pCity, ReligionTypes eReligion, int iNewPressure) const
+#else
 bool CvReligionAI::ShouldBecomeNewMajority(CvCity* pCity, ReligionTypes eReligion, int iNewPressure) const
+#endif
 {
 	CvCityReligions* pCityReligions = pCity->GetCityReligions();
 	int iTotalPressure = pCityReligions->GetTotalPressure() + iNewPressure;

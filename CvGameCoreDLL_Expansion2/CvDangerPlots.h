@@ -37,10 +37,17 @@ public:
 
 	int ModifyDangerByRelationship(PlayerTypes ePlayer, CvPlot* pPlot, int iDanger);
 
+#ifdef AUI_CONSTIFY
+	bool ShouldIgnorePlayer(PlayerTypes ePlayer) const;
+	bool ShouldIgnoreUnit(const CvUnit* pUnit, bool bIgnoreVisibility = false) const;
+	bool ShouldIgnoreCity(const CvCity* pCity, bool bIgnoreVisibility = false) const;
+	bool ShouldIgnoreCitadel(const CvPlot* pCitadelPlot, bool bIgnoreVisibility = false) const;
+#else
 	bool ShouldIgnorePlayer(PlayerTypes ePlayer);
 	bool ShouldIgnoreUnit(CvUnit* pUnit, bool bIgnoreVisibility = false);
 	bool ShouldIgnoreCity(CvCity* pCity, bool bIgnoreVisibility = false);
 	bool ShouldIgnoreCitadel(CvPlot* pCitadelPlot, bool bIgnoreVisibility = false);
+#endif
 	void AssignUnitDangerValue(CvUnit* pUnit, CvPlot* pPlot);
 	void AssignCityDangerValue(CvCity* pCity, CvPlot* pPlot);
 

@@ -25,8 +25,14 @@
 #define NQM_MINIDUMPS
 /// Can cache doubles from XML (Delnar: DatabaseUtility actually supports double-type, don't know why Firaxis didn't bother putting this in for good measure)
 #define NQM_CACHE_DOUBLE
+/// Enables const for functions, variables, and parameters that both allow it and are intended to be const
+#define AUI_CONSTIFY
 /// Removes unused functions that simply increase filesize of the DLL without providing any benefit
 #define NQM_PRUNING
+/// Changes the scopes of certain functions to fall in line with other functions of the same type (eg. CvUnit::CanFallBackFromMelee() is public instead of protected)
+#define AUI_SCOPE_FIXES
+/// Adds a few extra functions that can be used for 128-bit SSE types like __m128i and __m128d
+#define AUI_SIMD_ADDITIONS
 /// Fast comparison functions (to be used for built-in types like int, float, double, etc.)
 #define NQM_FAST_COMP
 /// Performance optimizations related to bit twiddling (http://www.graphics.stanford.edu/~seander/bithacks.html)
@@ -53,6 +59,10 @@
 #define AUI_HEXSPACE_DX_LOOPS
 /// Fixes some misc. warnings/errors generated when code is attempted to be compiled using VC120 (it won't work because link targets are all VC90-compiled, but all other errors/warnings are legitimate)
 #define AUI_VC120_FORMALITIES
+/// CvUnit::canMoveOrAttackInto() no longer calls certain expensive calls twice (also improves pathfinder performance)
+#define AUI_UNIT_FIX_CAN_MOVE_OR_ATTACK_INTO_NO_DUPLICATE_CALLS
+/// CvUnit::canMoveInto() is optimized to not perform redundant checks for attack flag (also improves pathfinder performance)
+#define AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
 
 // Fixes to game bugs
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles

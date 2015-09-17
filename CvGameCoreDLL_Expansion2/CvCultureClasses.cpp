@@ -4057,7 +4057,11 @@ GreatWorkSlotType CvCityCulture::GetSlotTypeFirstAvailableCultureBuilding() cons
 }
 
 /// Compute raw tourism from this city
+#ifdef AUI_CONSTIFY
+int CvCityCulture::GetBaseTourismBeforeModifiers() const
+#else
 int CvCityCulture::GetBaseTourismBeforeModifiers()
+#endif
 {
 	// If we're in Resistance, then no Tourism!
 	if(m_pCity->IsResistance() || m_pCity->IsRazing())
