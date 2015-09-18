@@ -53,6 +53,10 @@
 #include "CvDllCity.h"
 #include "CvGoodyHuts.h"
 
+#ifdef NQM_BARBARIANS_MOVE_BEFORE_SPAWNING
+#include "CvBarbarians.h"
+#endif
+
 // Include this after all other headers.
 #define LINT_WARNINGS_ONLY
 #include "LintFree.h"
@@ -16045,6 +16049,10 @@ void CvPlayer::setTurnActive(bool bNewValue, bool bDoTurn)
 						doTurn();
 
 						doTurnUnits();
+						
+#ifdef NQM_BARBARIANS_MOVE_BEFORE_SPAWNING
+						CvBarbarians::DoUnits();
+#endif
 					}
 				}
 
