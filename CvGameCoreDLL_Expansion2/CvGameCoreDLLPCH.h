@@ -47,6 +47,9 @@
 #endif
 
 #include <algorithm>
+
+#include "_Defines.h"
+
 #include <vector>
 #include <list>
 #include <math.h>

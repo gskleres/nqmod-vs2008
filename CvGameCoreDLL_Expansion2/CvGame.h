@@ -552,6 +552,12 @@ public:
 	void TurnTimerSync(float fCurTurnTime, float fTurnStartTime);
 	void GetTurnTimerData(float& fCurTurnTime, float& fTurnStartTime);
 
+#ifdef NQM_RANDOM_FIRST_TURN
+	float GetTimeSinceGameTurnStart();
+	void ShuffleFirstTurnOrder();
+	float GetFirstTurnDelay(PlayerTypes ePlayer);
+#endif
+
 	int GetDealDuration();
 	int GetPeaceDuration();
 
@@ -654,6 +660,10 @@ protected:
 	bool m_bArchaeologyTriggered;
 
 	CvString m_strScriptData;
+
+#ifdef NQM_RANDOM_FIRST_TURN
+	int* m_aiFirstTurnOrder;
+#endif
 
 	int* m_aiEndTurnMessagesReceived;
 	int* m_aiRankPlayer;        // Ordered by rank...

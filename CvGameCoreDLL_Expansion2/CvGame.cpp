@@ -98,6 +98,9 @@ CvGame::CvGame() :
 	, m_bArchaeologyTriggered(false)
 	, m_lastTurnAICivsProcessed(-1)
 {
+#ifdef NQM_RANDOM_FIRST_TURN
+	m_aiFirstTurnOrder = FNEW(int[MAX_PLAYERS], c_eCiv5GameplayDLL, 0);
+#endif
 	m_aiEndTurnMessagesReceived = FNEW(int[MAX_PLAYERS], c_eCiv5GameplayDLL, 0);
 	m_aiRankPlayer = FNEW(int[MAX_PLAYERS], c_eCiv5GameplayDLL, 0);        // Ordered by rank...
 	m_aiPlayerRank = FNEW(int[MAX_PLAYERS], c_eCiv5GameplayDLL, 0);        // Ordered by player ID...
@@ -146,6 +149,10 @@ CvGame::CvGame() :
 CvGame::~CvGame()
 {
 	uninit();
+
+#ifdef NQM_RANDOM_FIRST_TURN
+	SAFE_DELETE_ARRAY(m_aiFirstTurnOrder);
+#endif
 
 	SAFE_DELETE_ARRAY(m_aiEndTurnMessagesReceived);
 	SAFE_DELETE_ARRAY(m_aiRankPlayer);
@@ -1039,6 +1046,9 @@ void CvGame::uninit()
 	for(int iI = 0; iI < MAX_PLAYERS; iI++)
 	{
 		m_aiEndTurnMessagesReceived[iI] = 0;
+#ifdef NQM_RANDOM_FIRST_TURN
+		m_aiFirstTurnOrder[iI] = 0;
+#endif
 		m_aiRankPlayer[iI] = 0;
 		m_aiPlayerRank[iI] = 0;
 		m_aiPlayerScore[iI] = 0;
@@ -1954,6 +1964,49 @@ void CvGame::GetTurnTimerData(float& fCurTurnTime, float& fTurnStartTime)
 	fCurTurnTime = m_curTurnTimer.Peek();
 	fTurnStartTime = m_timeSinceGameTurnStart.Peek();
 }
+
+#ifdef NQM_RANDOM_FIRST_TURN
+//	-----------------------------------------------------------------------------------------------
+float CvGame::GetTimeSinceGameTurnStart()
+{
+	return(m_timeSinceGameTurnStart.Peek() + m_fCurrentTurnTimerPauseDelta);
+}
+
+//	-----------------------------------------------------------------------------------------------
+void CvGame::ShuffleFirstTurnOrder()
+{
+	int iHumansAlive = countHumanPlayersAlive();
+	shuffleArray(m_aiFirstTurnOrder, iHumansAlive, getJonRand());	
+}
+
+//	-----------------------------------------------------------------------------------------------
+float CvGame::GetFirstTurnDelay(PlayerTypes ePlayer)
+{
+	int iPlayer = (int) ePlayer;
+	if(iPlayer >= 0 && iPlayer < MAX_PLAYERS)
+	{
+		int iArrayIndex = 0;
+
+		for(int iI = 0; iI < iPlayer; iI++)
+		{
+			if(GET_PLAYER((PlayerTypes)iI).isAlive())
+			{
+				if(GET_PLAYER((PlayerTypes)iI).isHuman())
+				{
+					iArrayIndex++;
+				}
+			}
+		}
+
+		return(0.75*m_aiFirstTurnOrder[iArrayIndex]);
+	}
+
+	else
+	{
+		return(0.0);
+	}
+}
+#endif
 
 //	-----------------------------------------------------------------------------------------------
 void CvGame::updateTestEndTurn()
@@ -7489,6 +7542,75 @@ void CvGame::doTurn()
 	int iLoopPlayer;
 	int iI;
 
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	PlayerTypes eLoopPlayer;
+	PlayerTypes eLoopPlayer2;
+	CvBuildingEntry* pkProductionBuildingInfo = NULL;
+	CvBuildingEntry* pkProductionBuildingInfo2 = NULL;
+	// We shuffle the order of the players so that when two players have identical overflow, the winner is randomly picked
+	int playerShuffle[MAX_MAJOR_CIVS];
+	shuffleArray(playerShuffle, MAX_MAJOR_CIVS, getJonRand());
+
+	// First we check all player's cities - are they about to finish a world wonder?
+	for(int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
+	{
+		eLoopPlayer = (PlayerTypes) playerShuffle[iPlayerLoop];
+		if(GET_PLAYER(eLoopPlayer).isAlive())
+		{
+			int iCityLoop;
+			CvCity* pLoopCity = NULL;
+			for(pLoopCity = GET_PLAYER(eLoopPlayer).firstCity(&iCityLoop); pLoopCity != NULL; pLoopCity = GET_PLAYER(eLoopPlayer).nextCity(&iCityLoop))
+			{
+				if(pLoopCity->isProductionBuilding())
+				{
+					pkProductionBuildingInfo = GC.getBuildingInfo(pLoopCity->getProductionBuilding());
+					const CvBuildingClassInfo& kBuildingClass = pkProductionBuildingInfo->GetBuildingClassInfo();
+					
+					if(::isWorldWonderClass(kBuildingClass) && pLoopCity->getProductionTurnsLeft() == 1)
+					{
+						// Now we look through the rest of the cities for those building this wonder, and find the city with the highest overflow production
+						CvCity* pBestCity = pLoopCity;
+						int iBestOverflow = pBestCity->getProduction() - pBestCity->getProductionNeeded();
+						for(int iPlayerLoop2 = iPlayerLoop + 1; iPlayerLoop2 < MAX_MAJOR_CIVS; iPlayerLoop2++)
+						{
+							eLoopPlayer2 = (PlayerTypes) playerShuffle[iPlayerLoop2];
+							if(GET_PLAYER(eLoopPlayer2).isAlive())
+							{
+								int iCityLoop2;
+								CvCity* pLoopCity2 = NULL;
+								for(pLoopCity2 = GET_PLAYER(eLoopPlayer2).firstCity(&iCityLoop2); pLoopCity2 != NULL; pLoopCity2 = GET_PLAYER(eLoopPlayer2).nextCity(&iCityLoop2))
+								{
+									if(pLoopCity2->isProductionBuilding())
+									{
+										pkProductionBuildingInfo2 = GC.getBuildingInfo(pLoopCity2->getProductionBuilding());
+										if(pkProductionBuildingInfo2 == pkProductionBuildingInfo)
+										{
+											int iOverflow = pLoopCity2->getProduction() - pLoopCity2->getProductionNeeded();
+											if(iOverflow > iBestOverflow)
+											{
+												pBestCity = pLoopCity2;
+												iBestOverflow = iOverflow;
+											}
+										}
+									}
+								}
+							}
+						}
+
+						// Now, doTurn early in the city with the highest overflow production for this wonder
+						pBestCity->doTurn();
+						pBestCity->setDidTurnEarly(true);
+					}
+				}
+			}
+		}
+	}
+#endif
+
+#ifdef NQM_RANDOM_FIRST_TURN
+	ShuffleFirstTurnOrder();
+#endif
+
 	if(getAIAutoPlay())
 	{
 		gDLL->AutoSave(false);
@@ -7529,7 +7651,9 @@ void CvGame::doTurn()
 
 	CvBarbarians::DoCamps();
 
+#ifndef NQM_BARBARIANS_MOVE_BEFORE_SPAWNING
 	CvBarbarians::DoUnits();
+#endif
 
 	GetGameReligions()->DoTurn();
 	GetGameTrade()->DoTurn();
@@ -7648,6 +7772,10 @@ void CvGame::doTurn()
 			}
 		}
 	}
+
+#ifdef NQM_BARBARIANS_MOVE_BEFORE_SPAWNING
+	CvBarbarians::DoUnits();
+#endif
 
 	LogGameState();
 
@@ -9298,6 +9426,11 @@ void CvGame::Read(FDataStream& kStream)
 
 	kStream >> m_strScriptData;
 
+#ifdef NQM_RANDOM_FIRST_TURN
+	ArrayWrapper<int> wrapm_aiFirstTurnOrder(MAX_PLAYERS, m_aiFirstTurnOrder);
+	kStream >> wrapm_aiFirstTurnOrder;
+#endif
+
 	ArrayWrapper<int> wrapm_aiEndTurnMessagesReceived(MAX_PLAYERS, m_aiEndTurnMessagesReceived);
 	kStream >> wrapm_aiEndTurnMessagesReceived;
 
@@ -9529,6 +9662,10 @@ void CvGame::Write(FDataStream& kStream) const
 	kStream << m_eIndustrialRoute;
 
 	kStream << m_strScriptData;
+
+#ifdef NQM_RANDOM_FIRST_TURN
+	kStream << ArrayWrapper<int>(MAX_PLAYERS, m_aiFirstTurnOrder);
+#endif
 
 	kStream << ArrayWrapper<int>(MAX_PLAYERS, m_aiEndTurnMessagesReceived);
 	kStream << ArrayWrapper<int>(MAX_PLAYERS, m_aiRankPlayer);

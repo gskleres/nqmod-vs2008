@@ -9667,11 +9667,27 @@ int CvUnit::movesLeft() const
 
 
 //	--------------------------------------------------------------------------------
+#ifdef NQM_RANDOM_FIRST_TURN
+bool CvUnit::canMove() const
+{
+	VALIDATE_OBJECT
+	bool bPermittedToMoveByFirstTurnOrder = true;
+	if(isHuman())
+	{
+		float fTurnStartTime = GC.getGame().GetTimeSinceGameTurnStart();
+		float fDelay = GC.getGame().GetFirstTurnDelay(getOwner());
+		bPermittedToMoveByFirstTurnOrder = fTurnStartTime > fDelay;
+	}
+	return (getMoves() > 0 && bPermittedToMoveByFirstTurnOrder);
+}
+#else
 bool CvUnit::canMove() const
 {
 	VALIDATE_OBJECT
 	return (getMoves() > 0);
 }
+
+#endif
 
 
 //	--------------------------------------------------------------------------------
