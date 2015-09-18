@@ -16051,7 +16051,10 @@ void CvPlayer::setTurnActive(bool bNewValue, bool bDoTurn)
 						doTurnUnits();
 						
 #ifdef NQM_BARBARIANS_MOVE_BEFORE_SPAWNING
-						CvBarbarians::DoUnits();
+						if(isBarbarian())
+						{
+							CvBarbarians::DoUnits();
+						}
 #endif
 					}
 				}
