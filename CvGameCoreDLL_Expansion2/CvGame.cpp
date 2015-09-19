@@ -7651,9 +7651,7 @@ void CvGame::doTurn()
 
 	CvBarbarians::DoCamps();
 
-#ifndef NQM_BARBARIANS_MOVE_BEFORE_SPAWNING
 	CvBarbarians::DoUnits();
-#endif
 
 	GetGameReligions()->DoTurn();
 	GetGameTrade()->DoTurn();
