@@ -8860,7 +8860,11 @@ int CvTacticalAI::ComputeTotalExpectedBombardDamage(UnitHandle pTarget)
 	return rtnValue;
 }
 
+#ifdef AUI_CONSTIFY
+bool CvTacticalAI::IsExpectedToDamageWithRangedAttack(UnitHandle pAttacker, CvPlot* pTargetPlot) const
+#else
 bool CvTacticalAI::IsExpectedToDamageWithRangedAttack(UnitHandle pAttacker, CvPlot* pTargetPlot)
+#endif
 {
 	int iExpectedDamage = 0;
 

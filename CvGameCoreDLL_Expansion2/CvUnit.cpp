@@ -14759,7 +14759,11 @@ bool CvUnit::IsInFriendlyTerritory() const
 bool CvUnit::IsUnderEnemyRangedAttack() const
 {
 	PlayerTypes eLoopPlayer;
+#ifdef AUI_UNIT_FIX_UNDER_ENEMY_RANGED_ATTACK_HEALRATE
+	int iTotalDamage = AUI_UNIT_FIX_UNDER_ENEMY_RANGED_ATTACK_HEALRATE;
+#else
 	int iTotalDamage = 0;
+#endif
 
 	for(int iPlayerLoop = 0; iPlayerLoop < MAX_CIV_PLAYERS; iPlayerLoop++)
 	{
@@ -14775,7 +14779,15 @@ bool CvUnit::IsUnderEnemyRangedAttack() const
 				{
 					if(pLoopCity->canRangeStrikeAt(getX(), getY()))
 					{
+#ifdef AUI_UNIT_FIX_UNDER_ENEMY_RANGED_ATTACK_HEALRATE
+						iTotalDamage += pLoopCity->rangeCombatDamage(this, NULL, false);
+						if (iTotalDamage >= healRate(plot()) || GetCurrHitPoints() - iTotalDamage <= 0)
+						{
+							return true;
+						}
+#else
 						return true;
+#endif
 					}
 				}
 
@@ -14800,7 +14812,11 @@ bool CvUnit::IsUnderEnemyRangedAttack() const
 									// Will we do any damage
 									int iExpectedDamage = pLoopUnit->GetRangeCombatDamage(this, NULL, false);
 									iTotalDamage += iExpectedDamage;
+#ifdef AUI_UNIT_FIX_UNDER_ENEMY_RANGED_ATTACK_HEALRATE
+									if (iTotalDamage >= healRate(plot()))
+#else
 									if (iTotalDamage > healRate(plot()))
+#endif
 									{
 										return true;
 									}
@@ -21026,7 +21042,11 @@ CvUnit* CvUnit::airStrikeTarget(CvPlot& targetPlot, bool bNoncombatAllowed) cons
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvUnit::CanWithdrawFromMelee(const CvUnit& attacker) const
+#else
 bool CvUnit::CanWithdrawFromMelee(CvUnit& attacker)
+#endif
 {
 	VALIDATE_OBJECT
 	int iWithdrawChance = getExtraWithdrawal();
@@ -21098,7 +21118,11 @@ bool CvUnit::DoWithdrawFromMelee(CvUnit& attacker)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvUnit::CanFallBackFromMelee(const CvUnit& attacker) const
+#else
 bool CvUnit::CanFallBackFromMelee(CvUnit& attacker)
+#endif
 {
 	VALIDATE_OBJECT
 	// Are some of the retreat hexes away from the attacker blocked?

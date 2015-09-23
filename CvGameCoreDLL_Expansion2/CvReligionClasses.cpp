@@ -5056,7 +5056,11 @@ void CvReligionAI::DoFaithPurchases()
 
 	CvGameReligions* pReligions = GC.getGame().GetGameReligions();
 	const CvReligion* pMyReligion = pReligions->GetReligion(eReligion, m_pPlayer->GetID());
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+	std::vector<BuildingClassTypes> eFaithBuilding = FaithBuildingAvailable(eReligion);
+#else
 	BuildingClassTypes eFaithBuilding = FaithBuildingAvailable(eReligion);
+#endif
 	bool bTooManyMissionaries = m_pPlayer->GetNumUnitsWithUnitAI(UNITAI_MISSIONARY) > GC.getRELIGION_MAX_MISSIONARIES();
 
 	CvString strLogMsg;
@@ -5122,9 +5126,18 @@ void CvReligionAI::DoFaithPurchases()
 		}
 
 		// Next priority is to establish our faith building in every non-puppet city
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+		else if (eFaithBuilding.size() > 0 && !AreAllOurCitiesHaveFaithBuilding(eReligion, false /*bIncludePuppets*/))
+		{
+			for (std::vector<BuildingClassTypes>::iterator it = eFaithBuilding.begin(); it != eFaithBuilding.end(); ++it)
+			{
+				BuyFaithBuilding(eReligion, (*it));
+			}
+#else
 		else if(eFaithBuilding != NO_BUILDINGCLASS && !AreAllOurCitiesHaveFaithBuilding(eReligion, false /*bIncludePuppets*/))
 		{
 			BuyFaithBuilding(eReligion, eFaithBuilding);
+#endif
 
 			if(GC.getLogging())
 			{
@@ -5158,7 +5171,11 @@ void CvReligionAI::DoFaithPurchases()
 		}
 
 		// Might as well convert puppet-cities to build our religious strength
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+		else if (!bTooManyMissionaries && eFaithBuilding.size() > 0 && !AreAllOurCitiesHaveFaithBuilding(eReligion, true /*bIncludePuppets*/))
+#else
 		else if(!bTooManyMissionaries && eFaithBuilding != NO_BUILDINGCLASS && !AreAllOurCitiesHaveFaithBuilding(eReligion, true /*bIncludePuppets*/))
+#endif
 		{
 			BuyMissionary(eReligion);
 
@@ -5339,10 +5356,19 @@ bool CvReligionAI::BuyAnyAvailableFaithBuilding()
 		ReligionTypes eReligion = pLoopCity->GetCityReligions()->GetReligiousMajority();
 		if(eReligion > RELIGION_PANTHEON)
 		{
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+			std::vector<BuildingClassTypes> eBuildingClass = FaithBuildingAvailable(eReligion);
+			if (eBuildingClass.size() > 0)
+			{
+				for (std::vector<BuildingClassTypes>::iterator it = eBuildingClass.begin(); it != eBuildingClass.end(); ++it)
+				{
+					BuildingTypes eBuilding = (BuildingTypes)m_pPlayer->getCivilizationInfo().getCivilizationBuildings((*it));
+#else
 			BuildingClassTypes eBuildingClass = FaithBuildingAvailable(eReligion);
 			if(eBuildingClass != NO_BUILDINGCLASS)
 			{
 				BuildingTypes eBuilding = (BuildingTypes)m_pPlayer->getCivilizationInfo().getCivilizationBuildings(eBuildingClass);
+#endif
 				if(eBuilding != NO_BUILDING)
 				{
 					if(pLoopCity->IsCanPurchase(true, true, (UnitTypes)-1, eBuilding, (ProjectTypes)-1, YIELD_FAITH))
@@ -5351,6 +5377,9 @@ bool CvReligionAI::BuyAnyAvailableFaithBuilding()
 						return true;
 					}
 				}
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+				}
+#endif
 			}
 		}
 	}
@@ -6016,6 +6045,21 @@ bool CvReligionAI::AreAllOurCitiesConverted(ReligionTypes eReligion, bool bInclu
 bool CvReligionAI::AreAllOurCitiesHaveFaithBuilding(ReligionTypes eReligion, bool bIncludePuppets) const
 {
 	bool bRtnValue = true;
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+	std::vector<BuildingClassTypes> eFaithBuildingClass = FaithBuildingAvailable(eReligion);
+	if (eFaithBuildingClass.size() == 0)
+	{
+		return true;
+	}
+	for (std::vector<BuildingClassTypes>::iterator it = eFaithBuildingClass.begin(); it != eFaithBuildingClass.end() && bRtnValue; ++it)
+	{
+		BuildingTypes eFaithBuilding = (BuildingTypes)m_pPlayer->getCivilizationInfo().getCivilizationBuildings((*it));
+
+		if (eFaithBuilding == NO_BUILDING)
+		{
+			continue;
+		}
+#else
 	BuildingClassTypes eFaithBuildingClass = FaithBuildingAvailable(eReligion);
 	BuildingTypes eFaithBuilding = (BuildingTypes)m_pPlayer->getCivilizationInfo().getCivilizationBuildings(eFaithBuildingClass);
 
@@ -6023,6 +6067,7 @@ bool CvReligionAI::AreAllOurCitiesHaveFaithBuilding(ReligionTypes eReligion, boo
 	{
 		return true;
 	}
+#endif
 
 	int iLoop;
 	CvCity* pLoopCity;
@@ -6040,6 +6085,9 @@ bool CvReligionAI::AreAllOurCitiesHaveFaithBuilding(ReligionTypes eReligion, boo
 			}
 		}
 	}
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+	}
+#endif
 
 	return bRtnValue;
 }
@@ -6149,14 +6197,25 @@ bool CvReligionAI::HaveEnoughInquisitors(ReligionTypes eReligion) const
 }
 
 /// Do we have a belief that allows a faith generating building to be constructed?
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+std::vector<BuildingClassTypes> CvReligionAI::FaithBuildingAvailable(ReligionTypes eReligion) const
+#else
 BuildingClassTypes CvReligionAI::FaithBuildingAvailable(ReligionTypes eReligion) const
+#endif
 {
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+	std::vector<BuildingClassTypes> aeFaithBuildings;
+#endif
 	CvGameReligions* pReligions = GC.getGame().GetGameReligions();
 	const CvReligion* pMyReligion = pReligions->GetReligion(eReligion, m_pPlayer->GetID());
 
 	if (pMyReligion)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			if (pMyReligion->m_Beliefs.IsBuildingClassEnabled((BuildingClassTypes)iI))
 			{
@@ -6166,14 +6225,22 @@ BuildingClassTypes CvReligionAI::FaithBuildingAvailable(ReligionTypes eReligion)
 					CvBuildingEntry* pBuildingEntry = GC.getBuildingInfo(eBuilding);
 					if (pBuildingEntry && pBuildingEntry->GetYieldChange(YIELD_FAITH) > 0)
 					{
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+						aeFaithBuildings.push_back((BuildingClassTypes)iI);
+#else
 						return (BuildingClassTypes)iI;
+#endif
 					}
 				}
 			}
 		}
 	}
 
+#ifdef AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+	return aeFaithBuildings;
+#else
 	return NO_BUILDINGCLASS;
+#endif
 }
 
 /// Can we buy a non-Faith generating building?
@@ -6185,7 +6252,11 @@ bool CvReligionAI::CanBuyNonFaithBuilding() const
 	CvCity* pLoopCity;
 	for(pLoopCity = GET_PLAYER(ePlayer).firstCity(&iLoop); pLoopCity != NULL; pLoopCity = GET_PLAYER(ePlayer).nextCity(&iLoop))
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingTypes eBuilding = (BuildingTypes)m_pPlayer->getCivilizationInfo().getCivilizationBuildings(iI);
 			if(eBuilding != NO_BUILDING)

@@ -3626,6 +3626,36 @@ bool CvPlot::isVisibleEnemyDefender(const CvUnit* pUnit) const
 	return false;
 }
 
+#ifdef AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
+//	-----------------------------------------------------------------------------------------------
+CvUnit* CvPlot::getVisibleEnemyDefender(const CvUnit* pUnit) const
+{
+	CvAssertMsg(pUnit, "Source unit must be valid");
+	const IDInfo* pUnitNode = m_units.head();
+	if (pUnitNode)
+	{
+		TeamTypes eTeam = GET_PLAYER(pUnit->getOwner()).getTeam();
+		bool bAlwaysHostile = pUnit->isAlwaysHostile(*this);
+
+		do
+		{
+			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
+			pUnitNode = m_units.next(pUnitNode);
+
+			if (pLoopUnit && !pLoopUnit->isInvisible(eTeam, false))
+			{
+				if (pLoopUnit->IsCanDefend() && isEnemy(pLoopUnit, eTeam, bAlwaysHostile))
+				{
+					return const_cast<CvUnit*>(pLoopUnit);
+				}
+			}
+		} while (pUnitNode != NULL);
+	}
+
+	return NULL;
+}
+#endif
+
 //	-----------------------------------------------------------------------------------------------
 #ifdef AUI_CONSTIFY
 CvUnit* CvPlot::getVisibleEnemyDefender(PlayerTypes ePlayer) const

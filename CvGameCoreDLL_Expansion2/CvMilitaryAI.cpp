@@ -1562,7 +1562,11 @@ int CvMilitaryAI::GetBarbarianThreatTotal()
 	iRtnValue += GC.getAI_MILITARY_THREAT_WEIGHT_MAJOR() * m_iBarbarianCampCount;
 
 	// One minor threat for every X barbarians
+#ifdef AUI_MILITARY_FIX_BARBARIAN_THREAT
+	iRtnValue += m_iVisibleBarbarianCount * GC.getAI_MILITARY_BARBARIANS_FOR_MINOR_THREAT();
+#else
 	iRtnValue += m_iVisibleBarbarianCount / GC.getAI_MILITARY_BARBARIANS_FOR_MINOR_THREAT();
+#endif
 
 	return iRtnValue;
 }

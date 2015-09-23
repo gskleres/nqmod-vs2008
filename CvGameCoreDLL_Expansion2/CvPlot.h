@@ -261,6 +261,9 @@ public:
 
 	bool isUnit() const;
 	bool isVisibleEnemyDefender(const CvUnit* pUnit) const;
+#ifdef AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
+	CvUnit* getVisibleEnemyDefender(const CvUnit* pUnit) const;
+#endif
 #ifdef AUI_CONSTIFY
 	CvUnit* getVisibleEnemyDefender(PlayerTypes ePlayer) const;
 #else

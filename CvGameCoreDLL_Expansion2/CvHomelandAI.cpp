@@ -985,7 +985,14 @@ void CvHomelandAI::PlotHealMoves()
 		if(pUnit && !pUnit->isHuman())
 		{
 			// Am I under 100% health and not at sea or already in a city?
+#ifdef AUI_HOMELAND_TWEAKED_HEAL_MOVES
+			if (pUnit->healRate(pUnit->plot()) <= 0 || pUnit->isAlwaysHeal() || pUnit->isEmbarked())
+				continue;
+			if (((m_pPlayer->GetPlotDanger(*(pUnit->plot())) <= 0 && pUnit->GetCurrHitPoints() < pUnit->GetMaxHitPoints()) ||
+				(m_pPlayer->GetPlotDanger(*(pUnit->plot())) > 0 && pUnit->GetCurrHitPoints() + pUnit->healRate(pUnit->plot()) < pUnit->GetMaxHitPoints())))
+#else
 			if(pUnit->GetCurrHitPoints() < pUnit->GetMaxHitPoints() && !pUnit->isEmbarked() && !pUnit->plot()->isCity())
+#endif
 			{
 				// If I'm a naval unit I need to be in friendly territory
 				if(pUnit->getDomainType() != DOMAIN_SEA || pUnit->plot()->IsFriendlyTerritory(m_pPlayer->GetID()))
@@ -1073,7 +1080,12 @@ void CvHomelandAI::PlotMovesToSafety()
 				else if(!pUnit->isBarbarian())
 				{
 					int iAcceptableDanger;
+#ifdef AUI_HOMELAND_TWEAKED_ACCEPTABLE_DANGER
+					iAcceptableDanger = pUnit->GetBaseCombatStrengthConsideringDamage() * (int)(AUI_HOMELAND_TWEAKED_ACCEPTABLE_DANGER + 0.5 +
+						(100.0 - AUI_HOMELAND_TWEAKED_ACCEPTABLE_DANGER) * pow((double)pUnit->GetCurrHitPoints() / (double)pUnit->GetMaxHitPoints(), 2.0));
+#else
 					iAcceptableDanger = pUnit->GetBaseCombatStrengthConsideringDamage() * 100;
+#endif
 					if(iDangerLevel > iAcceptableDanger)
 					{
 						bAddUnit = true;
@@ -1306,6 +1318,13 @@ void CvHomelandAI::PlotPatrolMoves()
 		UnitHandle pUnit = m_pPlayer->getUnit(*it);
 		if(pUnit && !pUnit->isHuman() && pUnit->getDomainType() != DOMAIN_AIR && !pUnit->isTrade())
 		{
+#ifdef AUI_HOMELAND_FIND_PATROL_MOVES_CIVILIANS_PATROL_TO_SAFETY
+			if (!pUnit->IsCombatUnit())
+			{
+				MoveCivilianToSafety(pUnit.pointer());
+				continue;
+			}
+#endif
 			CvPlot* pTarget = FindPatrolTarget(pUnit.pointer());
 			if(pTarget)
 			{
@@ -2263,8 +2282,10 @@ void CvHomelandAI::ExecuteExplorerMoves()
 						LogHomelandMessage(strLogString);
 					}
 					pUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), pkStepPlot->getX(), pkStepPlot->getY(), MOVE_TERRITORY_NO_ENEMY | MOVE_MAXIMIZE_EXPLORE | MOVE_UNITS_IGNORE_DANGER, false, false, MISSIONAI_EXPLORE, pkStepPlot);
+#ifndef AUI_HOMELAND_FIX_EXECUTE_EXPLORER_MOVES_MOVE_AFTER_GOODY
 					pUnit->finishMoves();
 					UnitProcessed(pUnit->GetID());
+#endif
 				}
 				else
 				{
@@ -2622,7 +2643,11 @@ void CvHomelandAI::ExecuteExplorerMoves()
 						LogHomelandMessage(strLogString);
 
 						UnitProcessed(pUnit->GetID());
+#ifdef AUI_HOMELAND_FIX_EXECUTE_EXPLORER_MOVES_DISBAND
+						pUnit->scrap();
+#else
 						pUnit->kill(true);
+#endif
 						m_pPlayer->GetEconomicAI()->IncrementExplorersDisbanded();
 					}
 				}
@@ -2812,7 +2837,14 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 		{
 			CvPlot* pBestPlot = NULL;
 
+#ifdef AUI_HOMELAND_FIX_EXECUTE_MOVES_TO_SAFEST_PLOT_USE_GAME_MOVEMENT_RANGE
+			int iRange = pUnit->baseMoves();
+#else
 			int iRange = pUnit->getUnitInfo().GetMoves();
+#endif
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+			IncreaseMoveRangeForRoads(pUnit.pointer(), iRange);
+#endif
 
 			// For each plot within movement range of the fleeing unit
 #ifdef AUI_HEXSPACE_DX_LOOPS
@@ -2855,6 +2887,9 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 					bool bIsInCity = pPlot->isFriendlyCity(*pUnit, false);
 					bool bIsInCover = (pPlot->getNumDefenders(m_pPlayer->GetID()) > 0) && !pUnit->IsCanDefend();
 					bool bIsInTerritory = (pPlot->getTeam() == m_pPlayer->getTeam());
+#ifdef AUI_HOMELAND_FIX_EXECUTE_MOVES_TO_SAFEST_PLOT_NO_EMBARK_SUICIDE
+					bool bNeedEmbark = ((pUnit->getDomainType() == DOMAIN_LAND) && (!pUnit->plot()->isWater()) && (pPlot->isWater()));
+#endif
 
 					#define MAX_DANGER_VALUE	100000
 					#define PREFERENCE_LEVEL(x, y) (x * MAX_DANGER_VALUE) + ((MAX_DANGER_VALUE - 1) - y)
@@ -2886,6 +2921,14 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 					{
 						iScore = PREFERENCE_LEVEL(0, iDanger);
 					}
+
+#ifdef AUI_HOMELAND_FIX_EXECUTE_MOVES_TO_SAFEST_PLOT_NO_EMBARK_SUICIDE
+					// makes sure the AI doesn't suicide units via embarking onto a tile that can be attacked
+					if (bNeedEmbark && !bIsInCover)
+					{
+						iScore = PREFERENCE_LEVEL(0, iDanger);
+					}
+#endif
 
 					aBestPlotList.push_back(pPlot, iScore);
 				}
@@ -5068,11 +5111,13 @@ bool CvHomelandAI::FindUnitsForThisMove(AIHomelandMove eMove, bool bFirstTime)
 					continue;
 				}
 
+#ifndef AUI_HOMELAND_ALWAYS_MOVE_SCOUTS
 				// Scouts aren't useful unless recon is entirely shut off
 				if(pLoopUnit->AI_getUnitAIType() == UNITAI_EXPLORE && m_pPlayer->GetEconomicAI()->GetReconState() != RECON_STATE_ENOUGH)
 				{
 					continue;
 				}
+#endif
 
 				bool bSuitableUnit = false;
 				bool bHighPriority = false;
@@ -5210,11 +5255,18 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 	CvPlot* pAdjacentPlot;
 	CvPlot* pBestPlot;
 	int iValue;
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+	int iValueBonus;
+#endif
 	int iBestValue;
 	int iI;
 
 	iBestValue = 0;
 	pBestPlot = NULL;
+
+#if defined(AUI_HOMELAND_TWEAKED_FIND_PATROL_TARGET_CIVILIAN_NO_DANGER)
+	int iMyDanger = m_pPlayer->GetPlotDanger(*(pUnit->plot()));
+#endif
 
 	for(iI = 0; iI < NUM_DIRECTION_TYPES; iI++)
 	{
@@ -5228,13 +5280,59 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 				{
 					if(pUnit->GeneratePath(pAdjacentPlot, 0, true))
 					{
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+						iValueBonus = 0;
+#endif
 						iValue = (1 + GC.getGame().getJonRandNum(10000, "AI Patrol"));
 
 						// Prefer wandering in our own territory
 						if(pAdjacentPlot->getOwner() == pUnit->getOwner())
 						{
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+							iValueBonus = 5000;
+#ifdef AUI_HOMELAND_FIND_PATROL_MOVES_CIVILIANS_PATROL_TO_SAFETY
+							if (pAdjacentPlot->isAdjacentPlayer(NO_PLAYER) || pAdjacentPlot->IsAdjacentOwnedByOtherTeam(m_pPlayer->getTeam()) || pAdjacentPlot->isValidRoute(pUnit))
+#else
+							if ((pUnit->IsCombatUnit() && (pAdjacentPlot->isAdjacentPlayer(NO_PLAYER) || pAdjacentPlot->IsAdjacentOwnedByOtherTeam(m_pPlayer->getTeam()))) ||
+								(pAdjacentPlot->isValidRoute(pUnit) && (!pAdjacentPlot->isCity() || !pUnit->IsCombatUnit())))
+#endif
+							{
+								iValueBonus += 5000;
+							}
+#else
 							iValue += 10000;
+#endif
 						}
+
+#if defined(AUI_HOMELAND_TWEAKED_FIND_PATROL_TARGET_CIVILIAN_NO_DANGER)
+						if (!pUnit->IsCombatUnit())
+						{
+							int iDanger = m_pPlayer->GetPlotDanger(*pAdjacentPlot);
+							if (iDanger > 0)
+							{
+								if (iMyDanger > 0)
+								{
+									iValue -= iDanger;
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+									iValueBonus = 0;
+#else
+									// Almost nullifies the value bonus from being in our own territory
+									if (pAdjacentPlot->getOwner() == pUnit->getOwner())
+									{
+										iValue -= 9999;
+									}
+#endif
+								}
+								else
+								{
+									iValue = -1;
+								}
+							}
+						}
+#endif
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+						iValue += iValueBonus;
+#endif
 
 						if(GC.getLogging() && GC.getAILogging()){
 							CvString strLogString;
@@ -5634,7 +5732,21 @@ bool CvHomelandAI::ExecuteWorkerMove(CvUnit* pUnit)
 			}
 			else
 			{
+#ifdef AUI_HOMELAND_FIX_EXECUTE_WORKER_MOVE_MOVE_AND_BUILD
+				pUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), aDirective[0].m_sX, aDirective[0].m_sY, 0, false, false, MISSIONAI_BUILD, pPlot);
+				if (pUnit->canMove())
+				{
+					eMission = CvTypes::getMISSION_BUILD();
+				}
+				else
+				{
+					eMission = CvTypes::getMISSION_MOVE_TO();
+					pUnit->finishMoves();
+					UnitProcessed(pUnit->GetID());
+				}
+#else
 				eMission = CvTypes::getMISSION_MOVE_TO();
+#endif
 			}
 
 			if(GC.getLogging() && GC.GetBuilderAILogging())
@@ -5744,12 +5856,14 @@ bool CvHomelandAI::ExecuteWorkerMove(CvUnit* pUnit)
 				}
 				UnitProcessed(pUnit->GetID());
 			}
+#ifndef AUI_HOMELAND_FIX_EXECUTE_WORKER_MOVE_MOVE_AND_BUILD
 			else
 			{
 				pUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), aDirective[0].m_sX, aDirective[0].m_sY, 0, false, false, MISSIONAI_BUILD, pPlot);
 				pUnit->finishMoves();
 				UnitProcessed(pUnit->GetID());
 			}
+#endif
 
 			return true;
 		}

@@ -75,7 +75,11 @@ void CvGameTrade::DoTurn (void)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::CanCreateTradeRoute(const CvCity* pOriginCity, const CvCity* pDestCity, DomainTypes eDomain, TradeConnectionType eConnectionType, bool bIgnoreExisting, bool bCheckPath /*= true*/) const
+#else
 bool CvGameTrade::CanCreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, DomainTypes eDomain, TradeConnectionType eConnectionType, bool bIgnoreExisting, bool bCheckPath /*= true*/)
+#endif
 {
 	if (pOriginCity == NULL)
 	{
@@ -215,7 +219,11 @@ bool CvGameTrade::CanCreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, Do
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::CanCreateTradeRoute(PlayerTypes eOriginPlayer, PlayerTypes eDestPlayer, DomainTypes eDomainRestriction) const
+#else
 bool CvGameTrade::CanCreateTradeRoute(PlayerTypes eOriginPlayer, PlayerTypes eDestPlayer, DomainTypes eDomainRestriction)
+#endif
 {
 	CvGameTrade* pGameTrade = GC.getGame().GetGameTrade();
 
@@ -412,7 +420,11 @@ bool CvGameTrade::CreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, Domai
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsValidTradeRoutePath(const CvCity* pOriginCity, const CvCity* pDestCity, DomainTypes eDomain) const
+#else
 bool CvGameTrade::IsValidTradeRoutePath (CvCity* pOriginCity, CvCity* pDestCity, DomainTypes eDomain)
+#endif
 {
 	// AI_PERF_FORMAT("Trade-route-perf.csv", ("CvGameTrade::IsValidTradeRoutePath, Turn %03d, %s, %s, %d, %d, %s, %d, %d", GC.getGame().getElapsedGameTurns(), pOriginCity->GetPlayer()->getCivilizationShortDescription(), pOriginCity->getName().c_str(), pOriginCity->getX(), pOriginCity->getY(), pDestCity->getName().c_str(), pDestCity->getX(), pDestCity->getY()) );
 
@@ -462,7 +474,11 @@ bool CvGameTrade::IsValidTradeRoutePath (CvCity* pOriginCity, CvCity* pDestCity,
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+CvPlot* CvGameTrade::GetPlotAdjacentToWater(const CvPlot* pTargetLandPlot, const CvPlot* pFromLandPlot) const
+#else
 CvPlot* CvGameTrade::GetPlotAdjacentToWater (CvPlot* pTargetLandPlot, CvPlot* pFromLandPlot)
+#endif
 {
 	CvPlot* pCoastalPlot = NULL;
 	int iBestDistance = MAX_INT;
@@ -486,9 +502,15 @@ CvPlot* CvGameTrade::GetPlotAdjacentToWater (CvPlot* pTargetLandPlot, CvPlot* pF
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsDestinationExclusive(const TradeConnection& kTradeConnection) const
+{
+	const TradeConnection* pConnection = NULL;
+#else
 bool CvGameTrade::IsDestinationExclusive(const TradeConnection& kTradeConnection)
 {
 	TradeConnection* pConnection = NULL;
+#endif
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
 		pConnection = &(m_aTradeConnections[ui]);
@@ -510,7 +532,11 @@ bool CvGameTrade::IsDestinationExclusive(const TradeConnection& kTradeConnection
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsConnectionInternational(const TradeConnection& kConnection) const
+#else
 bool CvGameTrade::IsConnectionInternational	(const TradeConnection& kConnection)
+#endif
 {
 	TeamTypes eOriginTeam = NO_TEAM;
 	TeamTypes eDestTeam = NO_TEAM;
@@ -529,7 +555,11 @@ bool CvGameTrade::IsConnectionInternational	(const TradeConnection& kConnection)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsCityConnectedToPlayer(const CvCity* pCity, PlayerTypes eOtherPlayer, bool bOnlyOwnedByCityOwner) const
+#else
 bool CvGameTrade::IsCityConnectedToPlayer (CvCity* pCity, PlayerTypes eOtherPlayer, bool bOnlyOwnedByCityOwner)
+#endif
 {
 	PlayerTypes eCityOwnerPlayer = pCity->getOwner();
 	int iCityX = pCity->getX();
@@ -542,7 +572,11 @@ bool CvGameTrade::IsCityConnectedToPlayer (CvCity* pCity, PlayerTypes eOtherPlay
 			continue;
 		}
 		
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#endif
 
 		if (pConnection->m_eOriginOwner == eCityOwnerPlayer && pConnection->m_eDestOwner == eOtherPlayer)
 		{
@@ -564,11 +598,19 @@ bool CvGameTrade::IsCityConnectedToPlayer (CvCity* pCity, PlayerTypes eOtherPlay
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+void CvGameTrade::CopyPathIntoTradeConnection(const CvAStarNode* pNode, TradeConnection* pTradeConnection) const
+#else
 void CvGameTrade::CopyPathIntoTradeConnection (CvAStarNode* pNode, TradeConnection* pTradeConnection)
+#endif
 {
 	// beyond the origin player's trade range
 	int iPathSteps = 0;
+#ifdef AUI_CONSTIFY
+	const CvAStarNode* pWalkingPath = pNode;
+#else
 	CvAStarNode* pWalkingPath = pNode;
+#endif
 	while (pWalkingPath)
 	{
 		iPathSteps++;
@@ -593,7 +635,11 @@ void CvGameTrade::CopyPathIntoTradeConnection (CvAStarNode* pNode, TradeConnecti
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGameTrade::GetDomainModifierTimes100(DomainTypes eDomain) const
+#else
 int CvGameTrade::GetDomainModifierTimes100 (DomainTypes eDomain)
+#endif
 {
 	if (eDomain == DOMAIN_SEA)
 	{
@@ -606,11 +652,19 @@ int CvGameTrade::GetDomainModifierTimes100 (DomainTypes eDomain)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsPlayerConnectedToPlayer(PlayerTypes eFirstPlayer, PlayerTypes eSecondPlayer) const
+#else
 bool CvGameTrade::IsPlayerConnectedToPlayer (PlayerTypes eFirstPlayer, PlayerTypes eSecondPlayer)
+#endif
 {
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#endif
 
 		if (IsTradeRouteIndexEmpty(ui))
 		{
@@ -631,13 +685,21 @@ bool CvGameTrade::IsPlayerConnectedToPlayer (PlayerTypes eFirstPlayer, PlayerTyp
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGameTrade::CountNumPlayerConnectionsToPlayer(PlayerTypes eFirstPlayer, PlayerTypes eSecondPlayer) const
+#else
 int CvGameTrade::CountNumPlayerConnectionsToPlayer (PlayerTypes eFirstPlayer, PlayerTypes eSecondPlayer)
+#endif
 {
 	int iCount = 0;
 
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#endif
 
 		if (IsTradeRouteIndexEmpty(ui))
 		{
@@ -658,7 +720,11 @@ int CvGameTrade::CountNumPlayerConnectionsToPlayer (PlayerTypes eFirstPlayer, Pl
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsCityConnectedToCity(const CvCity* pFirstCity, const CvCity* pSecondCity) const
+#else
 bool CvGameTrade::IsCityConnectedToCity (CvCity* pFirstCity, CvCity* pSecondCity)
+#endif
 {
 	int iFirstCityX = pFirstCity->getX();
 	int iFirstCityY = pFirstCity->getY();
@@ -667,7 +733,11 @@ bool CvGameTrade::IsCityConnectedToCity (CvCity* pFirstCity, CvCity* pSecondCity
 
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#endif
 
 		if (IsTradeRouteIndexEmpty(ui))
 		{
@@ -688,7 +758,11 @@ bool CvGameTrade::IsCityConnectedToCity (CvCity* pFirstCity, CvCity* pSecondCity
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsCityConnectedFromCityToCity(const CvCity* pOriginCity, const CvCity* pDestCity) const
+#else
 bool CvGameTrade::IsCityConnectedFromCityToCity (CvCity* pOriginCity, CvCity* pDestCity)
+#endif
 {
 	int iFirstCityX = pOriginCity->getX();
 	int iFirstCityY = pOriginCity->getY();
@@ -697,7 +771,11 @@ bool CvGameTrade::IsCityConnectedFromCityToCity (CvCity* pOriginCity, CvCity* pD
 
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#endif
 
 		if (IsTradeRouteIndexEmpty(ui))
 		{
@@ -714,7 +792,11 @@ bool CvGameTrade::IsCityConnectedFromCityToCity (CvCity* pOriginCity, CvCity* pD
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGameTrade::GetNumTimesOriginCity(const CvCity* pCity, bool bOnlyInternational) const
+#else
 int CvGameTrade::GetNumTimesOriginCity (CvCity* pCity, bool bOnlyInternational)
+#endif
 {
 	int iCount = 0;
 	int iCityX = pCity->getX();
@@ -722,7 +804,11 @@ int CvGameTrade::GetNumTimesOriginCity (CvCity* pCity, bool bOnlyInternational)
 
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#endif
 
 		if (IsTradeRouteIndexEmpty(ui))
 		{
@@ -749,7 +835,11 @@ int CvGameTrade::GetNumTimesOriginCity (CvCity* pCity, bool bOnlyInternational)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGameTrade::GetNumTimesDestinationCity(const CvCity* pCity, bool bOnlyInternational) const
+#else
 int CvGameTrade::GetNumTimesDestinationCity (CvCity* pCity, bool bOnlyInternational)
+#endif
 {
 	int iCount = 0;
 	int iCityX = pCity->getX();
@@ -757,7 +847,11 @@ int CvGameTrade::GetNumTimesDestinationCity (CvCity* pCity, bool bOnlyInternatio
 
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(m_aTradeConnections[ui]);
+#endif
 
 		if (IsTradeRouteIndexEmpty(ui))
 		{
@@ -784,7 +878,11 @@ int CvGameTrade::GetNumTimesDestinationCity (CvCity* pCity, bool bOnlyInternatio
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGameTrade::GetEmptyTradeRouteIndex() const
+#else
 int CvGameTrade::GetEmptyTradeRouteIndex (void)
+#endif
 {
 	for (uint i = 0; i < m_aTradeConnections.size(); i++)
 	{
@@ -798,7 +896,11 @@ int CvGameTrade::GetEmptyTradeRouteIndex (void)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsTradeRouteIndexEmpty(int iIndex) const
+#else
 bool CvGameTrade::IsTradeRouteIndexEmpty(int iIndex)
+#endif
 {
 	if (m_aTradeConnections[iIndex].m_iOriginX == -1 && m_aTradeConnections[iIndex].m_iOriginY == -1 && m_aTradeConnections[iIndex].m_iDestX == -1 && m_aTradeConnections[iIndex].m_iDestY == -1)
 	{
@@ -1080,7 +1182,11 @@ void CvGameTrade::DoAutoWarPlundering(TeamTypes eTeam1, TeamTypes eTeam2)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGameTrade::GetNumTradeRoutesInPlot(const CvPlot* pPlot) const
+#else
 int CvGameTrade::GetNumTradeRoutesInPlot (CvPlot* pPlot)
+#endif
 {
 	int iResult = 0;
 	int iX = pPlot->getX();
@@ -1106,7 +1212,11 @@ int CvGameTrade::GetNumTradeRoutesInPlot (CvPlot* pPlot)
 
 //	--------------------------------------------------------------------------------
 /// GetIndexFromID
+#ifdef AUI_CONSTIFY
+int CvGameTrade::GetIndexFromID(int iID) const
+#else
 int CvGameTrade::GetIndexFromID (int iID)
+#endif
 {
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
@@ -1121,7 +1231,11 @@ int CvGameTrade::GetIndexFromID (int iID)
 
 //	--------------------------------------------------------------------------------
 /// GetOwnerFromID
+#ifdef AUI_CONSTIFY
+PlayerTypes CvGameTrade::GetOwnerFromID(int iID) const
+#else
 PlayerTypes CvGameTrade::GetOwnerFromID (int iID)
+#endif
 {
 	int iIndex = GetIndexFromID(iID);
 	if (iIndex < -1)
@@ -1134,7 +1248,11 @@ PlayerTypes CvGameTrade::GetOwnerFromID (int iID)
 
 //	--------------------------------------------------------------------------------
 /// GetDestFromID
+#ifdef AUI_CONSTIFY
+PlayerTypes CvGameTrade::GetDestFromID(int iID) const
+#else
 PlayerTypes CvGameTrade::GetDestFromID (int iID)
+#endif
 {
 	int iIndex = GetIndexFromID(iID);
 	if (iIndex < -1)
@@ -1147,7 +1265,11 @@ PlayerTypes CvGameTrade::GetDestFromID (int iID)
 
 //	--------------------------------------------------------------------------------
 /// GetIndexFromUnitID
+#ifdef AUI_CONSTIFY
+int CvGameTrade::GetIndexFromUnitID(int iUnitID, PlayerTypes eOwner) const
+#else
 int CvGameTrade::GetIndexFromUnitID(int iUnitID, PlayerTypes eOwner)
+#endif
 {
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 		if (m_aTradeConnections[ui].m_unitID == iUnitID && m_aTradeConnections[ui].m_eOriginOwner == eOwner)
@@ -1157,7 +1279,11 @@ int CvGameTrade::GetIndexFromUnitID(int iUnitID, PlayerTypes eOwner)
 
 //	--------------------------------------------------------------------------------
 /// Is this unit id used? This indicates that this unit is automated
+#ifdef AUI_CONSTIFY
+bool CvGameTrade::IsUnitIDUsed(int iUnitID) const
+#else
 bool CvGameTrade::IsUnitIDUsed (int iUnitID)
+#endif
 {
 	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
 	{
@@ -1260,7 +1386,11 @@ void CvGameTrade::BuildTechDifference ()
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGameTrade::GetTechDifference(PlayerTypes ePlayer, PlayerTypes ePlayer2) const
+#else
 int CvGameTrade::GetTechDifference (PlayerTypes ePlayer, PlayerTypes ePlayer2)
+#endif
 {
 	if(GC.getGame().isOption(GAMEOPTION_NO_SCIENCE))
 	{
@@ -1774,7 +1904,11 @@ void CvPlayerTrade::MoveUnits (void)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionBaseValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer) const
+#else
 int CvPlayerTrade::GetTradeConnectionBaseValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer)
+#endif
 {
 	if (bAsOriginPlayer)
 	{
@@ -1829,7 +1963,11 @@ int CvPlayerTrade::GetTradeConnectionBaseValueTimes100(const TradeConnection& kT
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionGPTValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer, bool bOriginCity) const
+#else
 int CvPlayerTrade::GetTradeConnectionGPTValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer, bool bOriginCity)
+#endif
 {
 	if (bAsOriginPlayer)
 	{
@@ -1882,7 +2020,11 @@ int CvPlayerTrade::GetTradeConnectionGPTValueTimes100(const TradeConnection& kTr
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionResourceValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer) const
+#else
 int CvPlayerTrade::GetTradeConnectionResourceValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer)
+#endif
 {
 	if (bAsOriginPlayer)
 	{
@@ -1942,7 +2084,11 @@ int CvPlayerTrade::GetTradeConnectionResourceValueTimes100(const TradeConnection
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionYourBuildingValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer) const
+#else
 int CvPlayerTrade::GetTradeConnectionYourBuildingValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer)
+#endif
 {
 	// this only applies to international trade routes, so otherwise, buzz off!
 	if (!GC.getGame().GetGameTrade()->IsConnectionInternational(kTradeConnection))
@@ -2015,7 +2161,11 @@ int CvPlayerTrade::GetTradeConnectionYourBuildingValueTimes100(const TradeConnec
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionTheirBuildingValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer) const
+#else
 int CvPlayerTrade::GetTradeConnectionTheirBuildingValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer)
+#endif
 {
 	// this only applies to international trade routes, so otherwise, buzz off!
 	if (!GC.getGame().GetGameTrade()->IsConnectionInternational(kTradeConnection))
@@ -2074,7 +2224,11 @@ int CvPlayerTrade::GetTradeConnectionTheirBuildingValueTimes100(const TradeConne
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionExclusiveValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield) const
+#else
 int CvPlayerTrade::GetTradeConnectionExclusiveValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield)
+#endif
 {
 	// unnecessary code to make it compile for now
 	if (eYield != NO_YIELD)
@@ -2094,7 +2248,11 @@ int CvPlayerTrade::GetTradeConnectionExclusiveValueTimes100(const TradeConnectio
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionPolicyValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield) const
+#else
 int CvPlayerTrade::GetTradeConnectionPolicyValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield)
+#endif
 {
 	// unnecessary code to make it compile for now
 	if (eYield != NO_YIELD)
@@ -2158,7 +2316,11 @@ int CvPlayerTrade::GetTradeConnectionPolicyValueTimes100(const TradeConnection& 
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionOtherTraitValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer) const
+#else
 int CvPlayerTrade::GetTradeConnectionOtherTraitValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer)
+#endif
 {
 	int iValue = 0;
 	if (kTradeConnection.m_eConnectionType == TRADE_CONNECTION_INTERNATIONAL)
@@ -2173,7 +2335,11 @@ int CvPlayerTrade::GetTradeConnectionOtherTraitValueTimes100(const TradeConnecti
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionDomainValueModifierTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield) const
+#else
 int CvPlayerTrade::GetTradeConnectionDomainValueModifierTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield)
+#endif
 {
 	// unnecessary code to make it compile for now
 	if (eYield != NO_YIELD)
@@ -2185,7 +2351,11 @@ int CvPlayerTrade::GetTradeConnectionDomainValueModifierTimes100(const TradeConn
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionRiverValueModifierTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer) const
+#else
 int CvPlayerTrade::GetTradeConnectionRiverValueModifierTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer)
+#endif
 {
 	// unnecessary code to make it compile for now
 	if (eYield != NO_YIELD)
@@ -2228,7 +2398,11 @@ int CvPlayerTrade::GetTradeConnectionRiverValueModifierTimes100(const TradeConne
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeConnectionValueTimes100(const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer) const
+#else
 int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTradeConnection, YieldTypes eYield, bool bAsOriginPlayer)
+#endif
 {
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 	int iValue = 0;
@@ -2421,7 +2595,11 @@ void CvPlayerTrade::UpdateTradeConnectionValues (void)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeValuesAtCityTimes100(const CvCity *const pCity, YieldTypes eYield) const
+#else
 int CvPlayerTrade::GetTradeValuesAtCityTimes100 (const CvCity *const pCity, YieldTypes eYield)
+#endif
 {
 	int iResult = 0;
 	int iCityX = pCity->getX();
@@ -2430,7 +2608,11 @@ int CvPlayerTrade::GetTradeValuesAtCityTimes100 (const CvCity *const pCity, Yiel
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 	for (uint ui = 0; ui < pTrade->m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(pTrade->m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(pTrade->m_aTradeConnections[ui]);
+#endif
 
 		if (pTrade->IsTradeRouteIndexEmpty(ui))
 		{
@@ -2458,13 +2640,21 @@ int CvPlayerTrade::GetTradeValuesAtCityTimes100 (const CvCity *const pCity, Yiel
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetAllTradeValueTimes100(YieldTypes eYield) const
+#else
 int CvPlayerTrade::GetAllTradeValueTimes100 (YieldTypes eYield)
+#endif
 {
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 	int iTotal = 0;
 	for (uint ui = 0; ui < pTrade->m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(pTrade->m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(pTrade->m_aTradeConnections[ui]);
+#endif
 
 		if (pTrade->IsTradeRouteIndexEmpty(ui))
 		{
@@ -2486,13 +2676,21 @@ int CvPlayerTrade::GetAllTradeValueTimes100 (YieldTypes eYield)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetAllTradeValueFromPlayerTimes100(YieldTypes eYield, PlayerTypes ePlayer) const
+#else
 int CvPlayerTrade::GetAllTradeValueFromPlayerTimes100 (YieldTypes eYield, PlayerTypes ePlayer)
+#endif
 {
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 	int iTotal = 0;
 	for (uint ui = 0; ui < pTrade->m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(pTrade->m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(pTrade->m_aTradeConnections[ui]);
+#endif
 
 		if (pTrade->IsTradeRouteIndexEmpty(ui))
 		{
@@ -2514,14 +2712,22 @@ int CvPlayerTrade::GetAllTradeValueFromPlayerTimes100 (YieldTypes eYield, Player
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvPlayerTrade::IsConnectedToPlayer(PlayerTypes eOtherPlayer) const
+#else
 bool CvPlayerTrade::IsConnectedToPlayer(PlayerTypes eOtherPlayer)
+#endif
 {
 	return GC.getGame().GetGameTrade()->IsPlayerConnectedToPlayer(m_pPlayer->GetID(), eOtherPlayer);
 }
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvPlayerTrade::CanCreateTradeRoute(const CvCity* pOriginCity, const CvCity* pDestCity, DomainTypes eDomain, TradeConnectionType eConnectionType, bool bIgnoreExisting, bool bCheckPath /* = true */) const
+#else
 bool CvPlayerTrade::CanCreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, DomainTypes eDomain, TradeConnectionType eConnectionType, bool bIgnoreExisting, bool bCheckPath /* = true */)
+#endif
 {
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 
@@ -2547,7 +2753,11 @@ bool CvPlayerTrade::CanCreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, 
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvPlayerTrade::CanCreateTradeRoute(PlayerTypes eOtherPlayer, DomainTypes eDomain) const
+#else
 bool CvPlayerTrade::CanCreateTradeRoute(PlayerTypes eOtherPlayer, DomainTypes eDomain)
+#endif
 {
 	CvGameTrade* pGameTrade = GC.getGame().GetGameTrade();
 
@@ -2580,7 +2790,11 @@ bool CvPlayerTrade::CanCreateTradeRoute(PlayerTypes eOtherPlayer, DomainTypes eD
 
 //	--------------------------------------------------------------------------------
 //	Can the player create any trade routes in the domain, even with itself.
+#ifdef AUI_CONSTIFY
+bool CvPlayerTrade::CanCreateTradeRoute(DomainTypes eDomain) const
+#else
 bool CvPlayerTrade::CanCreateTradeRoute(DomainTypes eDomain)
+#endif
 {
 	CvGameTrade* pGameTrade = GC.getGame().GetGameTrade();
 
@@ -2702,7 +2916,11 @@ bool CvPlayerTrade::CreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, Dom
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+TradeConnection* CvPlayerTrade::GetTradeConnection(const CvCity* pOriginCity, const CvCity* pDestCity)
+#else
 TradeConnection* CvPlayerTrade::GetTradeConnection(CvCity* pOriginCity, CvCity* pDestCity)
+#endif
 {
 	int iOriginX = pOriginCity->getX();
 	int iOriginY = pOriginCity->getY();
@@ -2726,13 +2944,21 @@ TradeConnection* CvPlayerTrade::GetTradeConnection(CvCity* pOriginCity, CvCity* 
 }
 
 //Returns the number of city state trade routes connected to a city
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetNumberOfCityStateTradeRoutes() const
+#else
 int CvPlayerTrade::GetNumberOfCityStateTradeRoutes()
+#endif
 {
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 	int iNumConnections = 0;
 	for (uint ui = 0; ui < pTrade->m_aTradeConnections.size(); ui++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(pTrade->m_aTradeConnections[ui]);
+#else
 		TradeConnection* pConnection = &(pTrade->m_aTradeConnections[ui]);
+#endif
 
 		if (pConnection->m_eOriginOwner == m_pPlayer->GetID())
 		{
@@ -2747,7 +2973,11 @@ int CvPlayerTrade::GetNumberOfCityStateTradeRoutes()
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvPlayerTrade::IsPreviousTradeRoute(const CvCity* pOriginCity, const CvCity* pDestCity, DomainTypes eDomain, TradeConnectionType eConnectionType) const
+#else
 bool CvPlayerTrade::IsPreviousTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, DomainTypes eDomain, TradeConnectionType eConnectionType)
+#endif
 {
 	int iOriginCityX = pOriginCity->getX();
 	int iOriginCityY = pOriginCity->getY();
@@ -2771,7 +3001,11 @@ bool CvPlayerTrade::IsPreviousTradeRoute(CvCity* pOriginCity, CvCity* pDestCity,
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetNumPotentialConnections(const CvCity* pFromCity, DomainTypes eDomain) const
+#else
 int CvPlayerTrade::GetNumPotentialConnections (CvCity* pFromCity, DomainTypes eDomain)
+#endif
 {
 	CvGameTrade* pGameTrade = GC.getGame().GetGameTrade();
 
@@ -2820,7 +3054,11 @@ int CvPlayerTrade::GetNumPotentialConnections (CvCity* pFromCity, DomainTypes eD
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+std::vector<int> CvPlayerTrade::GetTradeUnitsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound, bool bExcludingMe, bool bOnlyWar) const
+#else
 std::vector<int> CvPlayerTrade::GetTradeUnitsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound, bool bExcludingMe, bool bOnlyWar)
+#endif
 {
 	std::vector<int> aiTradeConnectionIDs;
 
@@ -2837,7 +3075,11 @@ std::vector<int> CvPlayerTrade::GetTradeUnitsAtPlot(const CvPlot* pPlot, bool bF
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 	for (uint uiConnection = 0; uiConnection < pTrade->m_aTradeConnections.size(); uiConnection++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(pTrade->m_aTradeConnections[uiConnection]);
+#else
 		TradeConnection* pConnection = &(pTrade->m_aTradeConnections[uiConnection]);
+#endif
 		if (pTrade->IsTradeRouteIndexEmpty(uiConnection))
 		{
 			continue;
@@ -2876,7 +3118,11 @@ std::vector<int> CvPlayerTrade::GetTradeUnitsAtPlot(const CvPlot* pPlot, bool bF
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+std::vector<int> CvPlayerTrade::GetTradePlotsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound, bool bExcludingMe, bool bOnlyWar) const
+#else
 std::vector<int> CvPlayerTrade::GetTradePlotsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound, bool bExcludingMe, bool bOnlyWar)
+#endif
 {
 	std::vector<int> aiTradeConnectionIDs;
 
@@ -2893,7 +3139,11 @@ std::vector<int> CvPlayerTrade::GetTradePlotsAtPlot(const CvPlot* pPlot, bool bF
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 	for (uint uiConnection = 0; uiConnection < pTrade->m_aTradeConnections.size(); uiConnection++)
 	{
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pConnection = &(pTrade->m_aTradeConnections[uiConnection]);
+#else
 		TradeConnection* pConnection = &(pTrade->m_aTradeConnections[uiConnection]);
+#endif
 		if (pTrade->IsTradeRouteIndexEmpty(uiConnection))
 		{
 			continue;
@@ -2939,13 +3189,21 @@ std::vector<int> CvPlayerTrade::GetTradePlotsAtPlot(const CvPlot* pPlot, bool bF
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+std::vector<int> CvPlayerTrade::GetOpposingTradeUnitsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound) const
+#else
 std::vector<int> CvPlayerTrade::GetOpposingTradeUnitsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound)
+#endif
 {
 	return GetTradeUnitsAtPlot(pPlot, bFailAtFirstFound, true, false);
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvPlayerTrade::ContainsOpposingPlayerTradeUnit(const CvPlot* pPlot) const
+#else
 bool CvPlayerTrade::ContainsOpposingPlayerTradeUnit(const CvPlot* pPlot)
+#endif
 {
 	std::vector<int> aiTradeConnectionIDs;
 	aiTradeConnectionIDs = GetOpposingTradeUnitsAtPlot(pPlot, true);
@@ -2960,13 +3218,21 @@ bool CvPlayerTrade::ContainsOpposingPlayerTradeUnit(const CvPlot* pPlot)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+std::vector<int> CvPlayerTrade::GetEnemyTradeUnitsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound) const
+#else
 std::vector<int> CvPlayerTrade::GetEnemyTradeUnitsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound)
+#endif
 {
 	return GetTradeUnitsAtPlot(pPlot, bFailAtFirstFound, true, true);
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvPlayerTrade::ContainsEnemyTradeUnit(const CvPlot* pPlot) const
+#else
 bool CvPlayerTrade::ContainsEnemyTradeUnit(const CvPlot* pPlot)
+#endif
 {
 	std::vector<int> aiTradeConnectionIDs;
 	aiTradeConnectionIDs = GetEnemyTradeUnitsAtPlot(pPlot, true);
@@ -2981,13 +3247,21 @@ bool CvPlayerTrade::ContainsEnemyTradeUnit(const CvPlot* pPlot)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+std::vector<int> CvPlayerTrade::GetEnemyTradePlotsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound) const
+#else
 std::vector<int> CvPlayerTrade::GetEnemyTradePlotsAtPlot(const CvPlot* pPlot, bool bFailAtFirstFound)
+#endif
 {
 	return GetTradePlotsAtPlot(pPlot, bFailAtFirstFound, true, true);
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvPlayerTrade::ContainsEnemyTradePlot(const CvPlot* pPlot) const
+#else
 bool CvPlayerTrade::ContainsEnemyTradePlot(const CvPlot* pPlot)
+#endif
 {
 	std::vector<int> aiTradeConnectionIDs;
 	aiTradeConnectionIDs = GetEnemyTradePlotsAtPlot(pPlot, true);
@@ -3208,7 +3482,11 @@ bool CvPlayerTrade::PlunderTradeRoute(int iTradeConnectionID)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeRouteRange(DomainTypes eDomain, const CvCity* pOriginCity) const
+#else
 int CvPlayerTrade::GetTradeRouteRange (DomainTypes eDomain, CvCity* pOriginCity)
+#endif
 {
 	int iRange = 0;
 
@@ -3294,7 +3572,11 @@ int CvPlayerTrade::GetTradeRouteRange (DomainTypes eDomain, CvCity* pOriginCity)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetTradeRouteSpeed(DomainTypes eDomain) const
+#else
 int CvPlayerTrade::GetTradeRouteSpeed (DomainTypes eDomain)
+#endif
 {
 	switch (eDomain)
 	{
@@ -3311,7 +3593,11 @@ int CvPlayerTrade::GetTradeRouteSpeed (DomainTypes eDomain)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+uint CvPlayerTrade::GetNumTradeRoutesPossible() const
+#else
 uint CvPlayerTrade::GetNumTradeRoutesPossible (void)
+#endif
 {
 	int iNumRoutes = 0;
 
@@ -3383,7 +3669,11 @@ uint CvPlayerTrade::GetNumTradeRoutesPossible (void)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetNumTradeRoutesUsed(bool bContinueTraining) const
+#else
 int CvPlayerTrade::GetNumTradeRoutesUsed (bool bContinueTraining)
+#endif
 {
 	int iReturnValue = 0;
 	int iLoop;
@@ -3412,13 +3702,21 @@ int CvPlayerTrade::GetNumTradeRoutesUsed (bool bContinueTraining)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetNumTradeRoutesRemaining(bool bContinueTraining) const
+#else
 int CvPlayerTrade::GetNumTradeRoutesRemaining (bool bContinueTraining)
+#endif
 {
 	return (GetNumTradeRoutesPossible() - GetNumTradeRoutesUsed(bContinueTraining));
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvPlayerTrade::GetNumDifferentTradingPartners() const
+#else
 int CvPlayerTrade::GetNumDifferentTradingPartners (void)
+#endif
 {
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 
@@ -3434,7 +3732,11 @@ int CvPlayerTrade::GetNumDifferentTradingPartners (void)
 			continue;
 		}
 
+#ifdef AUI_CONSTIFY
+		const TradeConnection* pTradeConnection = &(pTrade->m_aTradeConnections[ui]);
+#else
 		TradeConnection* pTradeConnection = &(pTrade->m_aTradeConnections[ui]);
+#endif
 		if (pTradeConnection->m_eOriginOwner == pTradeConnection->m_eDestOwner)
 		{
 			continue;
@@ -3538,7 +3840,11 @@ UnitTypes CvPlayerTrade::GetTradeUnit (DomainTypes eDomain)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+std::vector<CvString> CvPlayerTrade::GetPlotToolTips(CvPlot* pPlot) const
+#else
 std::vector<CvString> CvPlayerTrade::GetPlotToolTips (CvPlot* pPlot)
+#endif
 {
 	std::vector<CvString> aToolTips;
 
@@ -3642,7 +3948,11 @@ std::vector<CvString> CvPlayerTrade::GetPlotToolTips (CvPlot* pPlot)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+std::vector<CvString> CvPlayerTrade::GetPlotMouseoverToolTips(CvPlot* pPlot) const
+#else
 std::vector<CvString> CvPlayerTrade::GetPlotMouseoverToolTips (CvPlot* pPlot)
+#endif
 {
 	std::vector<CvString> aToolTips;
 
@@ -4021,7 +4331,11 @@ void CvTradeAI::GetAvailableTR(TradeConnectionList& aTradeConnectionList)
 }
 
 /// Score TR
+#ifdef AUI_CONSTIFY
+int CvTradeAI::ScoreInternationalTR(const TradeConnection& kTradeConnection) const
+#else
 int CvTradeAI::ScoreInternationalTR (const TradeConnection& kTradeConnection)
+#endif
 {
 	// don't evaluate other trade types
 	if (kTradeConnection.m_eConnectionType != TRADE_CONNECTION_INTERNATIONAL)
@@ -4141,7 +4455,11 @@ int CvTradeAI::ScoreInternationalTR (const TradeConnection& kTradeConnection)
 }
 
 /// Score Food TR
+#ifdef AUI_CONSTIFY
+int CvTradeAI::ScoreFoodTR(const TradeConnection& kTradeConnection, const CvCity* pSmallestCity) const
+#else
 int CvTradeAI::ScoreFoodTR (const TradeConnection& kTradeConnection, CvCity* pSmallestCity)
+#endif
 {
 	if (kTradeConnection.m_eConnectionType != TRADE_CONNECTION_FOOD)
 	{
@@ -4198,7 +4516,11 @@ int CvTradeAI::ScoreFoodTR (const TradeConnection& kTradeConnection, CvCity* pSm
 }
 
 /// Score Production TR
+#ifdef AUI_CONSTIFY
+int CvTradeAI::ScoreProductionTR(const TradeConnection& kTradeConnection, std::vector<const CvCity*>& aTargetCityList) const
+#else
 int CvTradeAI::ScoreProductionTR (const TradeConnection& kTradeConnection, std::vector<CvCity*> aTargetCityList)
+#endif
 {
 	// only consider production trades
 	if (kTradeConnection.m_eConnectionType != TRADE_CONNECTION_PRODUCTION)
@@ -4338,7 +4660,11 @@ void CvTradeAI::PrioritizeTradeRoutes(TradeConnectionList& aTradeConnectionList)
 	// PRODUCTION PRODUCTION PRODUCTION PRODUCTION
 	// - Search for wonder city
 	// - Search for spaceship city
+#ifdef AUI_CONSTIFY
+	std::vector<const CvCity*> apProductionTargetCities;
+#else
 	std::vector<CvCity*> apProductionTargetCities;
+#endif
 	CvCity* pWonderCity = m_pPlayer->GetCitySpecializationAI()->GetWonderBuildCity();
 	if (pWonderCity)
 	{

@@ -343,13 +343,21 @@ void CvMap::init(CvMapInitData* pInitInfo/*=NULL*/)
 	m_areas.Init();
 	m_landmasses.Init();
 
+#ifdef AUI_ASTAR_CACHE_PLOTS_AT_NODES
+	//--------------------------------
+	// Init plot data
+	InitPlots();
+#endif
+
 	//--------------------------------
 	// Init non-saved data
 	setup();
 
+#ifndef AUI_ASTAR_CACHE_PLOTS_AT_NODES
 	//--------------------------------
 	// Init other game data
 	InitPlots();
+#endif
 
 	int iW = getGridWidth();
 	int iH = getGridHeight();

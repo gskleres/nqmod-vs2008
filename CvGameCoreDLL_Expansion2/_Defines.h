@@ -109,6 +109,10 @@
 #define AUI_UNIT_FIX_GET_STACKED_GREAT_GENERAL_WORKS_WITH_ADMIRAL
 /// Fixes badly set up damage modifier checks (eg. Friendly lands modifier gets applied twice to melee attackers, Friendly/Enemy territory bonus for ranged units applied based on plot target intead of unit plot)
 #define AUI_UNIT_FIX_BAD_BONUS_STACKS
+/// Implements the missing getter for the enemy defender based on the unit in question (rather than the player); this is important for hidden nationality units
+#define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
+/// Fixes the bug where order-specific hammer bonuses would go into overflow for an order that may not be eligible for those bonuses
+#define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
 
 // Observer mode fixes
 /// Observers will see all resources
@@ -123,6 +127,58 @@
 #define AUI_GAME_OBSERVER_CAN_OPEN_CITIES
 /// All cities are set to be revealed to observers
 #define AUI_CITY_OBSERVER_REVEALS_ALL_CITIES
+
+// Pathfinder (A*) optimizations, tweaks, and fixes
+/// A* functions no longer run the canEnterTerrain() functions during validation (it should normally be run once and cached, but Firaxis did a bunch of stupids)
+#define AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+/// Moves the check for whether a node has no parent to the beginning of PathValid() (originally from Community Patch)
+#define AUI_ASTAR_FIX_PARENT_NODE_ALWAYS_VALID_OPTIMIZATION
+/// Reorders some checks to make sure ones that process faster get executed first (if they fail, then the function skips checking the slower ones)
+#define AUI_ASTAR_FIX_FASTER_CHECKS
+/// Calculates the neighbors of a tile on pathfinder initialization instead of at path construction (originally from Community Patch)
+#define AUI_ASTAR_PRECALCULATE_NEIGHBORS_ON_INITIALIZE
+/// Minor A* optimizations
+#define AUI_ASTAR_MINOR_OPTIMIZATION
+/// Pathfinders now have a built-in turn limiter that invalidates too long paths they are being built instead of after the best path has been calculated (also enables calculating turns to a target from a plot other than the unit's current plot)
+#define AUI_ASTAR_TURN_LIMITER
+/// Gets the last node before the parent (used for planning melee attacks to know where they'd attack from)
+#define AUI_ASTAR_GET_PENULTIMATE_NODE
+/// Fixes possible null pointer dereferences in A*
+#define AUI_ASTAR_FIX_POSSIBLE_NULL_POINTERS
+/// Human-controlled missionaries and units will still want to avoid undesirable tiles a bit when planning paths, though not to the full extent that an AI-controlled unit would (parameter value is the extra "cost" weight added)
+#define AUI_ASTAR_HUMAN_UNITS_GET_DIMINISHED_AVOID_WEIGHT (1)
+/// Pointers to the plot representing each A* node are stored in the A* node in question
+#define AUI_ASTAR_CACHE_PLOTS_AT_NODES
+/// Adds a new function that is a middle-of-the-road fix for allowing the functions to take account of roads and railroads without calling pathfinder too often
+#define AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+/// The danger of a tile will only be considered when checking path nodes, not when checking the destination (stops units from freezing in panic)
+#define AUI_ASTAR_FIX_CONSIDER_DANGER_ONLY_PATH
+/// The path's destination's danger value will be considered instead of the original plot's danger value, otherwise we're just immobilizing AI units (oddly enough, the Civ4 algorithm is fine, only the Civ5 ones needed to be fixed)
+#define AUI_ASTAR_FIX_CONSIDER_DANGER_USES_TO_PLOT_NOT_FROM_PLOT
+#ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_USES_TO_PLOT_NOT_FROM_PLOT
+/// If the pathfinder does not ignore danger, the plot we're moving from must pass the danger check before we consider the destination plot's danger
+#define AUI_ASTAR_FIX_CONSIDER_DANGER_ONLY_POSITIVE_DANGER_DELTA
+#endif
+/// If the pathfinder does not ignore danger, use the unit's combat strength times this value as the danger limit instead of 0 (important for combat units)
+#define AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH (6)
+/// AI-controlled units no longer ignore all paths with peaks; since the peak plots are checked anyway for whether or not a unit can enter them, this check is pointless
+#define AUI_ASTAR_FIX_PATH_VALID_PATH_PEAKS_FOR_NONHUMAN
+/// Mountain tiles are no longer automatically marked as invalid steps
+#define AUI_ASTAR_FIX_STEP_VALID_CONSIDERS_MOUNTAINS
+#ifdef AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
+/// When a unit will attack onto a plot, it will try to minimize the damage it would receive from each plot candidate. If it will always die, it will instead maximize dealt damage.
+#define AUI_ASTAR_CONSIDER_DAMAGE_WHEN_ATTACKING
+#endif
+#ifndef AUI_ASTAR_CONSIDER_DAMAGE_WHEN_ATTACKING // Already handled by the other algorithm
+/// When a unit will attack onto a plot, river crossings are avoided whenever possible
+#define AUI_ASTAR_AVOID_RIVER_CROSSING_WHEN_ATTACKING
+#endif
+/// Units without a defense bonus still consider a tile's defense penalties when pathfinding
+#define AUI_ASTAR_FIX_DEFENSE_PENALTIES_CONSIDERED_FOR_UNITS_WITHOUT_DEFENSE_BONUS
+/// Fixes a nonsense territory check in the Ignore Units pathfinder (can this unit enter territory owned by this unit's team?) by replacing it with one that actually makes sense (can this unit enter territory of the player who owns the target plot?)
+#define AUI_ASTAR_FIX_IGNORE_UNITS_PATHFINDER_TERRITORY_CHECK
+/// In addition to the movement cost from features on a tile, the route recommender will now also consider the movement cost of moving onto a tile with hills
+#define AUI_ASTAR_FIX_BUILD_ROUTE_COST_CONSIDER_HILLS_MOVEMENT
 
 // Binomial RNG Stuff (Delnar: the binomial RNG generates numbers in a binomial distribution instead of a flat one like the regular RNG)
 /// Enables the Binomial Random Number Generator (originally from Artificial Unintelligence)
@@ -141,12 +197,38 @@
 #define AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_PUPPETS_NULLIFY_BARRACKS
 /// Scales the GetLastTurnWorkerDisbanded() computation to game speed
 #define AUI_CITYSTRATEGY_FIX_TILE_IMPROVERS_LAST_DISBAND_WORKER_TURN_SCALE
+/// If a player does not have any non-scouting military units, the "enough workers" city strategy is triggered and the "want workers" and "need workers" city strategies always return false
+#define AUI_CITYSTRATEGY_DONT_EMPHASIZE_WORKERS_IF_NO_MILITARY
 /// Fixes the "zero'ed out flavor" check to still accept 0 as a possible flavor value, but not accept negative values
 #define AUI_FLAVOR_MANAGER_FIX_RANDOMIZE_WEIGHTS_ZEROED_OUT_FLAVOR
 /// Fixes the function messing up and returning the wrong adjustment when the value to be added is actually negative (eg. for minor civs)
 #define AUI_FLAVOR_MANAGER_FIX_GET_ADJUSTED_VALUE_NEGATIVE_PLUSMINUS
 /// If the first adjusted value is out of bounds, keep rerolling with the amount with which it is out of bounds until we remain in bounds
 #define AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USE_REROLLS
+/// Plots that are under immediate threat by an even number of units will properly return that the plot is under immediate threat
+#define AUI_DANGER_PLOTS_FIX_ADD_DANGER_WITHIN_ONE_MOVE
+/// The ignore visibility switch for DangerPlots also works on the plot visibility check
+#define AUI_DANGER_PLOTS_FIX_SHOULD_IGNORE_UNIT_IGNORE_VISIBILITY_PLOT
+/// Minors will always "see" units of major civs in tiles (value) away from their city (since minors don't scout) when plotting danger values (stops excessive worker stealing)
+#define AUI_DANGER_PLOTS_SHOULD_IGNORE_UNIT_MINORS_SEE_MAJORS (5)
+/// Minors will ignore all units of players who are not at war with them
+#define AUI_DANGER_PLOTS_FIX_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_IGNORE_ALL_NONWARRED
+/// Minors will assume tresspassing units are there for war
+#define AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
+/// Fixes bad code for visible barbarian units adding to "barbarian threat" value (affects CS)
+#define AUI_MILITARY_FIX_BARBARIAN_THREAT
+/// If the AI's religion now unlocks multiple faith buildings, AI can now purchase all of them
+#define AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+/// Fixes the check for whether ranged damage would be more than heal rate to use >= instead of >, adds a flat value to total damage at start (both make up for randomness), and treats cities as an expected damage source instead of a flat "yes"
+#define AUI_UNIT_FIX_UNDER_ENEMY_RANGED_ATTACK_HEALRATE (1)
+
+// Flavor system changes (affect CS build queue and puppet build queue)
+/// Free buildings and units that a building would generate are factored into the flavor
+#define AUI_BUILDING_PRODUCTION_AI_CONSIDER_FREE_STUFF
+/// Policies can now alter the flavors of certain buildingclasses (disabled for now because it crashes at initialization)
+//#define AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+/// Beliefs can now alter the flavors of certain buildingclasses
+#define AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
 
 // Citizen Management Fixes
 /// Extra food value assigned to specialists for half food consumption now depends on the XML value for citizen food consumption (instead of assuming the default value)
@@ -179,6 +261,100 @@
 #define AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
 /// Delnar: Moved Fruitstrike's code to prioritize plots with the lowest gold purchasing cost in the case of ties into the end of GetBuyablePlotList() so that plots will still be randomly decided if their gold purchasing costs are the same (instead of prioritizing Northeastern plots)
 #define NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+
+// AI/Automated Worker fixes
+/// AI/Automated Inca workers know that there is no maintenance on hills, so routines are adjusted as a result
+#define AUI_WORKER_INCA_HILLS
+/// AI/Automated workers do not care about the build time or cost of scrubbing fallout
+#define AUI_WORKER_FIX_FALLOUT
+/// Divides score for improvement if built for a puppeted city
+#define AUI_WORKER_SCORE_PLOT_REDUCED_PUPPET_SCORE (2)
+/// No longer artificially increases the score for plots owned by the player's capitol or an original capitol city
+#define AUI_WORKER_SCORE_PLOT_NO_CAPITOL_FAVORING
+/// Multiplies score for improvement if built on a plot that is either already worked or would be worked by the owning city
+#define AUI_WORKER_SCORE_PLOT_MULTIPLY_SCORE_IF_WOULD_WORK (2)
+/// Returns score of 0 for improvement if built for a city being razed
+#define AUI_WORKER_SCORE_PLOT_NO_SCORE_FROM_RAZE
+/// If building an improvement also generates flat hammers, consider the effect as flat +parameter hammer yield
+#define AUI_WORKER_SCORE_PLOT_CHOP (0.5)
+/// Removes the bias to chop forests after optics (since it doesn't actually offer a gameplay improvement)
+#define AUI_WORKER_NO_CHOP_BIAS
+/// Faith now affects tile evaluation for workers, it pulls from culture multiplier though
+#define AUI_WORKER_EVALUATE_FAITH
+/// AI/Automated workers value strategic resources that a player has none of higher than strategic resources that the player has used all of
+#define AUI_WORKER_TWEAKED_DONT_HAVE_MULTIPLIER (6)
+/// Combat workers will increase the maximum allowed plot danger value to their current strength times this value
+#define AUI_WORKER_SHOULD_BUILDER_CONSIDER_PLOT_MAXIMUM_DANGER_BASED_ON_UNIT_STRENGTH (6)
+/// FindTurnsAway() no longer returns raw distance, parameter dictates whether we're reusing paths and ignoring units (fast but rough) or not (slow but accurate)
+#define AUI_WORKER_FIND_TURNS_AWAY_USES_PATHFINDER (true)
+#ifdef AUI_PLOT_CALCULATE_STRATEGIC_VALUE
+/// AddImprovingPlotsDirective() now processes improvement defense rate
+#define AUI_WORKER_ADD_IMPROVING_PLOTS_DIRECTIVE_DEFENSIVES
+#endif
+/// Shifts the check for whether there already is someone building something on the plot to the necessary AddDirectives() functions (so collaborative building is possible)
+#define AUI_WORKER_FIX_SHOULD_BUILDER_CONSIDER_PLOT_EXISTING_BUILD_MISSIONS_SHIFT
+/// New function that is called by AI/Automated workers to construct non-road improvements in a minor's territory (eg. for Portugal)
+#define AUI_WORKER_ADD_IMPROVING_MINOR_PLOTS_DIRECTIVES
+/// Multiplies the weight of unowned luxury resources for plot directives depending on the empire's happiness (value is the multiplier at 0 happiness)
+#define AUI_WORKER_GET_RESOURCE_WEIGHT_INCREASE_UNOWNED_LUXURY_WEIGHT (2.0)
+/// Consider extra sources of happiness once a resource is obtained (eg. extra happiness from luxury resources via policy, extra happiness from resource variety)
+#define AUI_WORKER_GET_RESOURCE_WEIGHT_CONSIDER_EXTRAS_FOR_HAPPINESS_FROM_RESOURCE
+/// Removes the isAdjacent check for whether a work boat can access an area different from its current one (pathfinder takes care of bad cases anyway, it's just a bit slower)
+#define AUI_WORKER_FIX_SHOULD_CONSIDER_PLOT_WORK_BOATS_CONSIDER_ALL_SEA_PLOTS
+/// Only disregard an impassable plot if the unit cannot enter impassable plots
+#define AUI_WORKER_FIX_SHOULD_CONSIDER_PLOT_FLYING_WORKER_DISREGARDS_PEAKS
+/// Added some extra checks for Celts so that 1) they will improve forests when there would still be enough unimproved ones remaining to give the same faith bonnus and 2) they will not improve luxury resources on forests if they do not get any use out of them and would lower faith
+#define AUI_WORKER_FIX_CELTIC_IMPROVE_UNIMPROVED_FORESTS
+/// AI/Automated workers will no longer automatically continue building the improvement they are currently building if the tile they are on is in danger (instead of having this behavior trigger in CvHomelandAI)
+#define AUI_WORKER_EVALUATE_WORKER_RETREAT_AND_BUILD
+/// AI/Automated workers will now consider any modifiers the player has to road maintenance when calculating how much profit the road earns
+#define AUI_WORKER_FIX_CONNECT_CITIES_TO_CAPITOL_CONSIDER_MAINTENANCE_MODIFIERS
+/// No longer requires that an improvement enable use of a bonus resource, since the projected plot yields will be higher from unlocking the resource anyway
+#define AUI_WORKER_FIX_IMPROVING_PLOTS_DIRECTIVE_DONT_REQUIRE_BONUS_RESOURCE_UNLOCKER
+#ifdef AUI_PLAYER_CACHE_UNIQUE_IMPROVEMENTS
+/// Unhardcodes the fact that the AI will not remove features that are needed to construct a civ's unique improvement
+#define AUI_WORKER_UNHARDCODE_NO_REMOVE_FEATURE_THAT_IS_REQUIRED_FOR_UNIQUE_IMPROVEMENT
+#endif
+
+// HomelandAI fixes; used by automated workers/scouts and extensively by CS
+/// Disables the code that would start fortifying scouts if recon state was set as "enough"
+#define AUI_HOMELAND_ALWAYS_MOVE_SCOUTS
+/// Tweaks the algorithm for Plot Heal Moves to keep March promotions in mind and make sure we don't overheal if we're under threat
+#define AUI_HOMELAND_TWEAKED_HEAL_MOVES
+/// Changes the AcceptableDanger value in PlotDangerMoves to be a function of the unit's current HP percent
+#define AUI_HOMELAND_TWEAKED_ACCEPTABLE_DANGER (1.0)
+/// When finding patrol targets for civilian units, subtract off danger value from plot score
+#define AUI_HOMELAND_TWEAKED_FIND_PATROL_TARGET_CIVILIAN_NO_DANGER
+/// Border plots and plots containing routes are preferred over others when patrolling
+#define AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+/// Disbanding explorers now uses the scrap() function instead of the kill() function
+#define AUI_HOMELAND_FIX_EXECUTE_EXPLORER_MOVES_DISBAND
+/// Stops the AI from suiciding units by embarking them onto tiles that can be attacked
+#define AUI_HOMELAND_FIX_EXECUTE_MOVES_TO_SAFEST_PLOT_NO_EMBARK_SUICIDE
+/// If an AI/automated worker can still move after it has reached its target, allow it to queue up a build order
+#define AUI_HOMELAND_FIX_EXECUTE_WORKER_MOVE_MOVE_AND_BUILD
+/// AI/Automated explorers now move after popping goody huts
+#define AUI_HOMELAND_FIX_EXECUTE_EXPLORER_MOVES_MOVE_AFTER_GOODY
+/// Uses the unit's in-game movement range for plot search heuristic instead of relying on the unit's info's pre-determined movement range
+#define AUI_HOMELAND_FIX_EXECUTE_MOVES_TO_SAFEST_PLOT_USE_GAME_MOVEMENT_RANGE
+/// Civilian units execute moves to safety instead of patrolling
+#define AUI_HOMELAND_FIND_PATROL_MOVES_CIVILIANS_PATROL_TO_SAFETY
+
+// Voting/League AI Stuff for when a player is defeated by their AI can still vote on proposals
+/// When voting for a player, the AI will now adjust for the fact that the voting system is First-Past-The-Post (so it will try to vote against players as well)
+#define AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+/// Uses a different algorithm for scoring voting on world ideology
+#define AUI_VOTING_TWEAKED_WORLD_IDEOLOGY
+/// Uses a different algorithm for scoring voting on world religion
+#define AUI_VOTING_TWEAKED_WORLD_RELIGION
+/// Alters some of the algorithms and values used for scoring a proposal overall (instead of just its effects), primarily based on diplomatic relations with the proposer
+#define AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+
+// Start Positioner Fixes (for WorldBuilder Maps and maps not randomly generated but with random starting locations)
+/// Civilizations that are marked as coastal get the same coastal bias as maritime city-states
+#define AUI_STARTPOSITIONER_COASTAL_CIV_WATER_BIAS
+/// When calculating the founding value of a tile, tailor the SiteEvaluation function to the current player instead of the first one
+#define AUI_STARTPOSITIONER_FLAVORED_STARTS
 
 // GlobalDefines (GD) wrappers
 // INT

@@ -170,6 +170,11 @@ void CvTeam::uninit()
 	m_iNumNaturalWondersDiscovered = 0;
 	m_iBestPossibleRoute = NO_ROUTE;
 	m_iNumMinorCivsAttacked = 0;
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	m_iBestRouteFlatCostMultiplier = 0;
+	m_iBestRouteNormalCostMultiplier = 1;
+	m_iUseFlatCostIfBelowThis = -1;
+#endif
 
 	m_bMapCentering = false;
 	m_bHasBrokenPeaceTreaty = false;
@@ -4197,11 +4202,53 @@ void CvTeam::DoUpdateBestRoute()
 		}
 	}
 
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	CvRouteInfo* pRouteInfo = NULL;
+	if (eBestRoute > NO_ROUTE)
+#else
 	if(iBestRouteValue > -1)
+#endif
 	{
 		SetBestPossibleRoute(eBestRoute);
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+		pRouteInfo = GC.getRouteInfo(eBestRoute);
+#endif
 	}
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	if (pRouteInfo)
+	{
+		m_iBestRouteNormalCostMultiplier = GC.getMOVE_DENOMINATOR() / (pRouteInfo->getMovementCost() + getRouteChange(eBestRoute));
+		m_iBestRouteFlatCostMultiplier = GC.getMOVE_DENOMINATOR() / pRouteInfo->getFlatMovementCost();
+		// Extra pRouteInfo->getFlatMovementCost() - 1 is to make sure value is always rounded up
+		m_iUseFlatCostIfBelowThis = (pRouteInfo->getMovementCost() + getRouteChange(eBestRoute) + pRouteInfo->getFlatMovementCost() - 1) / pRouteInfo->getFlatMovementCost();
+	}
+	else
+	{
+		m_iBestRouteFlatCostMultiplier = 0;
+		m_iBestRouteNormalCostMultiplier = 1;
+		m_iUseFlatCostIfBelowThis = -1;
+	}
+#endif
 }
+
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+int CvTeam::GetBestRoadMovementMultiplier(const CvUnit* pUnit) const
+{
+	int iRtnValue = m_iBestRouteNormalCostMultiplier;
+	if (pUnit)
+	{
+		if (pUnit->baseMoves(DOMAIN_LAND) < m_iUseFlatCostIfBelowThis)
+		{
+			iRtnValue = m_iBestRouteFlatCostMultiplier / pUnit->baseMoves(DOMAIN_LAND);
+		}
+	}
+
+	if (iRtnValue < 1)
+		iRtnValue = 1;
+
+	return iRtnValue;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 int CvTeam::getProjectCount(ProjectTypes eIndex) const
@@ -6868,6 +6915,11 @@ void CvTeam::Read(FDataStream& kStream)
 	kStream >> m_iNumNaturalWondersDiscovered;
 	kStream >> m_iBestPossibleRoute;
 	kStream >> m_iNumMinorCivsAttacked;
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	kStream >> m_iBestRouteFlatCostMultiplier;
+	kStream >> m_iBestRouteNormalCostMultiplier;
+	kStream >> m_iUseFlatCostIfBelowThis;
+#endif
 
 	kStream >> m_bMapCentering;
 	kStream >> m_bHasBrokenPeaceTreaty;
@@ -7037,6 +7089,11 @@ void CvTeam::Write(FDataStream& kStream) const
 	kStream << m_iNumNaturalWondersDiscovered;
 	kStream << m_iBestPossibleRoute;
 	kStream << m_iNumMinorCivsAttacked;
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	kStream << m_iBestRouteFlatCostMultiplier;
+	kStream << m_iBestRouteNormalCostMultiplier;
+	kStream << m_iUseFlatCostIfBelowThis;
+#endif
 
 	kStream << m_bMapCentering;
 	kStream << m_bHasBrokenPeaceTreaty;

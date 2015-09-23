@@ -254,6 +254,9 @@ void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibi
 void CvDangerPlots::AddDanger(int iPlotX, int iPlotY, int iValue, bool bWithinOneMove)
 {
 	const int idx = iPlotX + iPlotY * GC.getMap().getGridWidth();
+#ifdef AUI_DANGER_PLOTS_FIX_ADD_DANGER_WITHIN_ONE_MOVE
+	iValue &= ~0x1;
+#else
 	if (iValue > 0)
 	{
 		if (bWithinOneMove)
@@ -265,8 +268,15 @@ void CvDangerPlots::AddDanger(int iPlotX, int iPlotY, int iValue, bool bWithinOn
 			iValue &= ~0x1;
 		}
 	}
+#endif
 
 	m_DangerPlots[idx] += iValue;
+#ifdef AUI_DANGER_PLOTS_FIX_ADD_DANGER_WITHIN_ONE_MOVE
+	if (bWithinOneMove)
+	{
+		m_DangerPlots[idx] |= 0x1;
+	}
+#endif
 }
 
 /// Return the danger value of a given plot
@@ -420,6 +430,9 @@ bool CvDangerPlots::IsDangerByRelationshipZero(PlayerTypes ePlayer, CvPlot* pPlo
 {
 	CvAssertMsg(pPlot, "No plot passed in?");
 	bool bIgnoreInFriendlyTerritory = false;
+#ifdef AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
+	bool bConsiderInFriendlyTerritory = false;
+#endif
 
 	// Full value if a player we're at war with
 	if(GET_TEAM(GET_PLAYER(m_ePlayer).getTeam()).isAtWar(GET_PLAYER(ePlayer).getTeam()))
@@ -438,7 +451,16 @@ bool CvDangerPlots::IsDangerByRelationshipZero(PlayerTypes ePlayer, CvPlot* pPlo
 	{
 		if(!GET_TEAM(GET_PLAYER(m_ePlayer).getTeam()).isAtWar(GET_PLAYER(ePlayer).getTeam()))  // and they're not at war with the other player
 		{
+#ifdef AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
+			bConsiderInFriendlyTerritory = true;
+#ifndef AUI_DANGER_PLOTS_FIX_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_IGNORE_ALL_NONWARRED
 			bIgnoreInFriendlyTerritory = true; // ignore friendly territory
+#endif
+#elif defined(AUI_DANGER_PLOTS_FIX_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_IGNORE_ALL_NONWARRED)
+			return true;
+#else
+			bIgnoreInFriendlyTerritory = true; // ignore friendly territory
+#endif
 		}
 	}
 	else if(!GET_PLAYER(ePlayer).isMinorCiv())
@@ -498,10 +520,20 @@ bool CvDangerPlots::IsDangerByRelationshipZero(PlayerTypes ePlayer, CvPlot* pPlo
 
 	// if the plot is in our own territory and, with the current approach, we should ignore danger values in our own territory
 	// zero out the value
+#ifdef AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
+	if (pPlot && pPlot->getOwner() == m_ePlayer)
+	{
+		if (bConsiderInFriendlyTerritory)
+			return false;
+		if (bIgnoreInFriendlyTerritory)
+			return true;
+	}
+#else
 	if(pPlot && pPlot->getOwner() == m_ePlayer && bIgnoreInFriendlyTerritory)
 	{
 		return true;
 	}
+#endif
 
 	return bResultMultiplierIsZero;
 }
@@ -562,15 +594,32 @@ bool CvDangerPlots::ShouldIgnoreUnit(CvUnit* pUnit, bool bIgnoreVisibility)
 		return true;
 	}
 
-	if(!pUnit->plot()->isVisible(GET_PLAYER(m_ePlayer).getTeam()))
+#if defined(AUI_DANGER_PLOTS_SHOULD_IGNORE_UNIT_MINORS_SEE_MAJORS)
+	if (pUnit->isInvisible(GET_PLAYER(m_ePlayer).getTeam(), false))
 	{
 		return true;
 	}
 
+	if (GET_PLAYER(m_ePlayer).isMinorCiv() && !GET_PLAYER(pUnit->getOwner()).isMinorCiv() && !pUnit->isBarbarian() &&
+		GET_PLAYER(m_ePlayer).GetClosestFriendlyCity(*pUnit->plot(), AUI_DANGER_PLOTS_SHOULD_IGNORE_UNIT_MINORS_SEE_MAJORS))
+		bIgnoreVisibility = true;
+#endif
+
+#ifdef AUI_DANGER_PLOTS_FIX_SHOULD_IGNORE_UNIT_IGNORE_VISIBILITY_PLOT
+	if (!pUnit->plot()->isVisible(GET_PLAYER(m_ePlayer).getTeam()) && !bIgnoreVisibility)
+#else
+	if(!pUnit->plot()->isVisible(GET_PLAYER(m_ePlayer).getTeam()))
+#endif
+	{
+		return true;
+	}
+
+#if !defined(AUI_DANGER_PLOTS_SHOULD_IGNORE_UNIT_MINORS_SEE_MAJORS)
 	if(pUnit->isInvisible(GET_PLAYER(m_ePlayer).getTeam(), false))
 	{
 		return true;
 	}
+#endif
 
 	CvPlot* pPlot = pUnit->plot();
 	CvAssertMsg(pPlot, "Plot is null?")

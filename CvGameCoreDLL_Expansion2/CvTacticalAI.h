@@ -303,7 +303,11 @@ public:
 	{
 		return (m_iAuxData > target.m_iAuxData);
 	};
+#ifdef AUI_CONSTIFY
+	inline AITacticalTargetType GetTargetType() const
+#else
 	inline AITacticalTargetType GetTargetType()
+#endif
 	{
 		return m_eTargetType;
 	}
@@ -311,7 +315,11 @@ public:
 	{
 		m_eTargetType = eTargetType;
 	}
+#ifdef AUI_CONSTIFY
+	inline int GetTargetX() const
+#else
 	inline int GetTargetX()
+#endif
 	{
 		return m_iTargetX;
 	}
@@ -319,7 +327,11 @@ public:
 	{
 		m_iTargetX = iValue;
 	}
+#ifdef AUI_CONSTIFY
+	inline int GetTargetY() const
+#else
 	inline int GetTargetY()
+#endif
 	{
 		return m_iTargetY;
 	}
@@ -327,7 +339,11 @@ public:
 	{
 		m_iTargetY = iValue;
 	}
+#ifdef AUI_CONSTIFY
+	inline PlayerTypes GetTargetPlayer() const
+#else
 	inline PlayerTypes GetTargetPlayer()
+#endif
 	{
 		return m_eTargetPlayer;
 	}
@@ -348,7 +364,11 @@ public:
 
 	// AuxData is used for a pointer to the actual target object (CvUnit, CvCity, etc.)
 	//    (for improvements & barbarian camps this is set to the plot).
+#ifdef AUI_CONSTIFY
+	inline void* GetAuxData() const
+#else
 	inline void* GetAuxData()
+#endif
 	{
 		return m_pAuxData;
 	}
@@ -361,7 +381,11 @@ public:
 	// For defensive items used to SORT targets in priority order
 	//    Set to the weight for defensive bastions
 	//    Set to the danger for cities to be garrisoned
+#ifdef AUI_CONSTIFY
+	inline int GetAuxIntData() const
+#else
 	inline int GetAuxIntData()
+#endif
 	{
 		return m_iAuxData;
 	}
@@ -907,7 +931,11 @@ private:
 	bool FindClosestNavalOperationUnit(CvPlot* pTargetPlot, bool bEscortedUnits);
 	int ComputeTotalExpectedDamage(CvTacticalTarget* target, CvPlot* pTargetPlot);
 	int ComputeTotalExpectedBombardDamage(UnitHandle pTarget);
+#ifdef AUI_CONSTIFY
+	bool IsExpectedToDamageWithRangedAttack(UnitHandle pAttacker, CvPlot* pTarget) const;
+#else
 	bool IsExpectedToDamageWithRangedAttack(UnitHandle pAttacker, CvPlot* pTarget);
+#endif
 	bool MoveToEmptySpaceNearTarget(UnitHandle pUnit, CvPlot* pTargetPlot, bool bLand=true);
 	bool MoveToEmptySpaceTwoFromTarget(UnitHandle pUnit, CvPlot* pTargetPlot, bool bLand=true);
 	bool MoveToUsingSafeEmbark(UnitHandle pUnit, CvPlot* pTargetPlot, bool &bMoveWasSafe);

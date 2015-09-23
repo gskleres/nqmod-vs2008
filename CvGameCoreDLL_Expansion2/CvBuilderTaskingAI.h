@@ -50,10 +50,19 @@ struct BuilderDirective
 
 	BuildTypes m_eBuild;
 	ResourceTypes m_eResource;
+#ifdef AUI_WARNING_FIXES
+	int m_sX;
+	int m_sY;
+#else
 	short m_sX;
 	short m_sY;
+#endif
 	//int m_iGoldCost;
+#ifdef AUI_WARNING_FIXES
+	int m_sMoveTurnsAway;
+#else
 	short m_sMoveTurnsAway;
+#endif
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -82,6 +91,9 @@ public:
 
 	void AddImprovingResourcesDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
 	void AddImprovingPlotsDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
+#ifdef AUI_WORKER_ADD_IMPROVING_MINOR_PLOTS_DIRECTIVES
+	void AddImprovingMinorPlotsDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
+#endif
 	void AddRouteDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
 	void AddRepairDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
 	void AddChopDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
@@ -154,8 +166,10 @@ protected:
 	FeatureTypes m_eFalloutFeature;
 	BuildTypes m_eFalloutRemove;
 
+#ifndef AUI_WORKER_UNHARDCODE_NO_REMOVE_FEATURE_THAT_IS_REQUIRED_FOR_UNIQUE_IMPROVEMENT
 	bool m_bKeepMarshes;
 	bool m_bKeepJungle;
+#endif
 };
 
 #endif //CIV5_BUILDER_TASKING_AI_H
