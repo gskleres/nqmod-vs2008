@@ -161,6 +161,12 @@
 		<Delete PromotionType="PROMOTION_FORMATION_1" />
 		<Delete PromotionType="PROMOTION_AMBUSH_1" />
 	</UnitPromotions_UnitCombats>
+	<Unit_FreePromotions>
+		<Delete PromotionType="PROMOTION_FORMATION_1" />
+		<Delete PromotionType="PROMOTION_FORMATION_2" />
+		<Delete PromotionType="PROMOTION_AMBUSH_1" />
+		<Delete PromotionType="PROMOTION_AMBUSH_2" />
+	</Unit_FreePromotions>
 
 	<!-- Foreign Legions now start with Ambush Formation I for free. -->
 	<Unit_FreePromotions>
@@ -168,7 +174,22 @@
 			<UnitType>UNIT_FRENCH_FOREIGNLEGION</UnitType>
 			<PromotionType>PROMOTION_AMBUSH_FORMATION_1</PromotionType>
 		</Row>
+		<Row>
+			<UnitType>UNIT_LANCER</UnitType>
+			<PromotionType>PROMOTION_AMBUSH_FORMATION_1</PromotionType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_OTTOMAN_SIPAHI</UnitType>
+			<PromotionType>PROMOTION_AMBUSH_FORMATION_1</PromotionType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_POLISH_WINGED_HUSSAR</UnitType>
+			<PromotionType>PROMOTION_AMBUSH_FORMATION_1</PromotionType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_SWEDISH_HAKKAPELIITTA</UnitType>
+			<PromotionType>PROMOTION_AMBUSH_FORMATION_1</PromotionType>
+		</Row>
 	</Unit_FreePromotions>
-
 
 </GameData>

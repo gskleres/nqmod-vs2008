@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Default</Configuration>
     <ProjectGuid>{b41da1e7-5bd5-4efb-a580-8dec19fd7525}</ProjectGuid>
-    <Name>NoQuittersMod_v7.1</Name>
+    <Name>NoQuittersMod_v7.2</Name>
     <Guid>917a39f3-57f0-4b18-b3cb-c4b7dbfbb41e</Guid>
     <ModVersion>7</ModVersion>
     <Stability>Stable</Stability>

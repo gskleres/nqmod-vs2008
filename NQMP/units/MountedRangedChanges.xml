@@ -11,7 +11,7 @@
 	</UnitCombatInfos>
 	<Language_en_US>
 		<Row Tag="TXT_KEY_UNITCOMBAT_MOUNTED_RANGED">
-			<Text>Mounted Units</Text>
+			<Text>Mounted Ranged Units</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -151,6 +151,7 @@
 	</UnitPromotions_UnitCombats>
 
 	<!-- Apply VS-Mounted promotion effect -->
+	<!-- NOTE: Formation and Ambush are merged in /unit_promotions/MergeAmbushAndFormation.xml and loaded before this file. -->
 	<UnitPromotions_UnitCombatMods>
 		<Row>
 			<PromotionType>PROMOTION_FORMATION_1</PromotionType>
@@ -162,6 +163,18 @@
 			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
 			<Modifier>33</Modifier>
 		</Row>
+		<!-- Remove the two Ambush Formation promotion adjustments below if that promotion is removed from the game. -->
+		<Row>
+			<PromotionType>PROMOTION_AMBUSH_FORMATION_1</PromotionType>
+			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
+			<Modifier>33</Modifier>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_AMBUSH_FORMATION_2</PromotionType>
+			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
+			<Modifier>33</Modifier>
+		</Row>
+		<!-- End Ambush Formation promotions. -->
 		<Row>
 			<PromotionType>PROMOTION_ANTI_MOUNTED_I</PromotionType>
 			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
@@ -187,12 +200,26 @@
 			<Modifier>15</Modifier>
 		</Row>
 		<Row>
+			<BuildingType>BUILDING_DUCAL_STABLE</BuildingType>
+			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
+			<Modifier>15</Modifier>
+		</Row>
+		<Row>
 			<BuildingType>BUILDING_TEMPLE_ARTEMIS</BuildingType>
 			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
 			<Modifier>15</Modifier>
 		</Row>
 	</Building_UnitCombatProductionModifiers>
-	
+
+	<!-- Apply Ducal Stable experience boost -->
+	<Building_UnitCombatFreeExperiences>
+		<Row>
+			<BuildingType>BUILDING_DUCAL_STABLE</BuildingType>
+			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
+			<Experience>15</Experience>
+		</Row>
+	</Building_UnitCombatFreeExperiences>
+
 	<!-- Apply American/Songhai/Shoshone/Mongol traits -->
 	<Trait_FreePromotionUnitCombats>
 		<Row>
