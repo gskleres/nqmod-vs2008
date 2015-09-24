@@ -13502,7 +13502,11 @@ void CvCity::doGrowth()
 		}
 		else
 		{
+#ifdef NQM_FAST_COMP
+			changeFood(-MAX(0, growthThreshold() - getFoodKept()));
+#else
 			changeFood(-(std::max(0, (growthThreshold() - getFoodKept()))));
+#endif
 			changePopulation(1);
 
 			// Only show notification if the city is small
@@ -13518,6 +13522,11 @@ void CvCity::doGrowth()
 					pNotifications->Add(NOTIFICATION_CITY_GROWTH, localizedText.toUTF8(), localizedSummary.toUTF8(), getX(), getY(), GetID());
 				}
 			}
+#ifdef AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
+			int iNewDiff = foodDifferenceTimes100() - iDiff;
+			changeFoodTimes100(iNewDiff);
+			changeFoodKept(iNewDiff / 100);
+#endif
 		}
 	}
 	else if(getFood() < 0)
@@ -13527,6 +13536,11 @@ void CvCity::doGrowth()
 		if(getPopulation() > 1)
 		{
 			changePopulation(-1);
+#ifdef AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
+			int iNewDiff = foodDifferenceTimes100() - iDiff;
+			changeFoodTimes100(iNewDiff);
+			changeFoodKept(iNewDiff / 100);
+#endif
 		}
 	}
 }

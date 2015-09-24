@@ -64,7 +64,7 @@
 /// CvUnit::canMoveInto() is optimized to not perform redundant checks for attack flag (also improves pathfinder performance)
 #define AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
 
-// Fixes to game bugs
+// Fixes to game bugs and New/Tweaked gameplay aspects
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
 /// When choosing the top n choices from a weighted vector, choices with weight equal to the last choice are also included
@@ -91,7 +91,7 @@
 #define AUI_UNIT_FIX_RADAR
 /// Fixes cases of indirect radaring via ZOC.
 #define AUI_UNIT_MOVEMENT_FIX_RADAR_ZOC
-/// Fixes the function to only enable the reuse pathfinder flag when it wouldn't result in incorrect data
+/// Fixes the influence cost calculator function to only enable the reuse pathfinder flag when it wouldn't result in incorrect data
 #define AUI_MAP_FIX_CALCULATE_INFLUENCE_DISTANCE_REUSE_PATHFINDER
 /// Fixes Iroquois' UA so friendly forest tiles will now connect with road tiles!
 #define AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
@@ -113,6 +113,8 @@
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
 /// Fixes the bug where order-specific hammer bonuses would go into overflow for an order that may not be eligible for those bonuses
 #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+/// If a city grows or starves a population, it will add any difference in food production after the change to its food supply. Among other things, this means a) the food yields earned by new citizens are evaluated just like all other yields, and b) the food consumption of the new citizen is taken into account on the turn the citizen is added
+#define AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
 
 // Observer mode fixes
 /// Observers will see all resources
