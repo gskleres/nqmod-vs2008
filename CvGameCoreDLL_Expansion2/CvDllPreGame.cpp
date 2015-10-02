@@ -672,7 +672,11 @@ void CvDllPreGame::setDLCAllowed(const GUID& kDLCID, bool bState)
 	CvPreGame::setDLCAllowed(kDLCID, bState);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvDllPreGame::setEarthMap(bool)
+#else
 void CvDllPreGame::setEarthMap(bool bIsEarthMap)
+#endif
 {
 	//This function is no longer used, it only exists for interface compatibility.
 }
@@ -1084,7 +1088,11 @@ StorageLocation CvDllPreGame::LoadFileStorage()
 	return CvPreGame::loadFileStorage();
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvDllPreGame::SetLoadFileName(_In_z_ const char* szFileName, StorageLocation eStorage)
+#else
 void CvDllPreGame::SetLoadFileName(const char* szFileName, StorageLocation eStorage)
+#endif
 {
 	CvString strFileName = szFileName;
 	CvPreGame::setLoadFileName(strFileName, eStorage);

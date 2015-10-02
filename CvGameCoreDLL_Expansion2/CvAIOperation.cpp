@@ -1109,6 +1109,10 @@ bool CvAIOperation::BuyFinalUnit()
 		OperationSlot thisSlot = m_viListOfUnitsWeStillNeedToBuild.back();
 		CvArmyAI* pArmy = GET_PLAYER(m_eOwner).getArmyAI(thisSlot.m_iArmyID);
 		CvMultiUnitFormationInfo* thisFormation = GC.getMultiUnitFormationInfo(pArmy->GetFormationIndex());
+#ifdef AUI_WARNING_FIXES
+		if (!thisFormation)
+			return false;
+#endif
 		const CvFormationSlotEntry& thisSlotEntry = thisFormation->getFormationSlotEntry(thisSlot.m_iSlotID);
 
 		CvUnit* pUnit = GET_PLAYER(m_eOwner).GetMilitaryAI()->BuyEmergencyUnit((UnitAITypes)thisSlotEntry.m_primaryUnitType, pCity);
@@ -1600,13 +1604,21 @@ static CvUnit* GetClosestUnit(CvOperationSearchUnitList& kSearchList, CvPlot* pk
 		for (CvOperationSearchUnitList::iterator itr = kSearchList.begin(); itr != kSearchList.end(); ++itr)
 		{
 			CvUnit *pkLoopUnit = (*itr).GetUnit();
+#ifdef AUI_WARNING_FIXES
+			if (!pkLoopUnit)
+				continue;
+#endif
 			int iDistance = (*itr).GetDistance();
 
 			int iPathDistance = MAX_INT;
 			// Now loop through the units, using the pathfinder to do the final evaluation
 			if (pkMusterPlot != NULL)
 			{
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+				if (!kPathFinder.DoesPathExist(pkLoopUnit, pkLoopUnit->plot(), pkMusterPlot))
+#else
 				if (!kPathFinder.DoesPathExist(*pkLoopUnit, pkLoopUnit->plot(), pkMusterPlot))
+#endif
 					continue;
 
 				iPathDistance = kPathFinder.GetPathLength();
@@ -1614,7 +1626,11 @@ static CvUnit* GetClosestUnit(CvOperationSearchUnitList& kSearchList, CvPlot* pk
 
 			if(pkTarget != NULL && bNeedToCheckTarget)
 			{
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+				if (!kPathFinder.DoesPathExist(pkLoopUnit, pkLoopUnit->plot(), pkTarget))
+#else
 				if (!kPathFinder.DoesPathExist(*pkLoopUnit, pkLoopUnit->plot(), pkTarget))
+#endif
 					continue;
 
 				if (pkMusterPlot == NULL)
@@ -2488,7 +2504,11 @@ bool CvAIOperationDestroyBarbarianCamp::ShouldAbort()
 /// Find the barbarian camp we want to eliminate
 CvPlot* CvAIOperationDestroyBarbarianCamp::FindBestTarget()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvPlot* pBestPlot = NULL;
 	CvPlot* pPlot;
 	int iBestPlotDistance = MAX_INT;
@@ -4068,7 +4088,12 @@ bool CvAIOperationNavalBombardment::ArmyInPosition(CvArmyAI* pArmy)
 /// Find the barbarian camp we want to eliminate
 CvPlot* CvAIOperationNavalBombardment::FindBestTarget()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+	int iDirectionLoop;
+#else
 	int iPlotLoop, iDirectionLoop;
+#endif
 	CvPlot* pBestPlot = NULL;
 	CvPlot* pPlot;
 	CvPlot* pAdjacentPlot;
@@ -4356,7 +4381,11 @@ static CvPlot* GetReachablePlot(UnitHandle pUnit, WeightedPlotVector& aPlots, in
 /// Find the nearest enemy naval unit to eliminate
 CvPlot* CvAIOperationNavalSuperiority::FindBestTarget()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop, iUnitLoop;
+#else
 	int iPlotLoop, iUnitLoop;
+#endif
 	CvPlot* pPlot;
 	CvPlot* pBestPlot = NULL;
 	CvUnit* pInitialUnit;

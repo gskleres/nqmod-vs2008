@@ -197,7 +197,11 @@ void CvBuilderTaskingAI::Update(void)
 
 			LogInfo(str, m_pPlayer, bShowOutput);
 
+#ifdef AUI_WARNING_FIXES
+			for (int ui = 0; ui < NUM_YIELD_TYPES; ui++)
+#else
 			for(uint ui = 0; ui < NUM_YIELD_TYPES; ui++)
+#endif
 			{
 				//double fYield = pLoopCity->GetCityStrategyAI()->GetYieldAverage((YieldTypes)ui);
 				//double fYieldDeficient = pLoopCity->GetCityStrategyAI()->GetDeficientYieldValue((YieldTypes)ui);

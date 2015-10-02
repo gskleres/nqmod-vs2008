@@ -211,7 +211,11 @@ void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibi
 
 	// Citadels
 	int iCitadelValue = GetDangerValueOfCitadel();
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvPlot* pPlot, *pAdjacentPlot;
 	for(iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
 	{

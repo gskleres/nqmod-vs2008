@@ -795,7 +795,11 @@ GreatWorkSlotType CvBuildingEntry::GetGreatWorkSlotType() const
 }
 
 /// How many great works are allowed by this Building
+#ifdef AUI_WARNING_FIXES
+uint CvBuildingEntry::GetGreatWorkCount() const
+#else
 int CvBuildingEntry::GetGreatWorkCount() const
+#endif
 {
 	return m_iGreatWorkCount;
 }
@@ -1904,10 +1908,16 @@ int* CvBuildingEntry::GetFeatureYieldChangeArray(int i) const
 }
 
 /// Change to specialist yield by type
+#ifdef AUI_WARNING_FIXES
+int CvBuildingEntry::GetSpecialistYieldChange(uint i, int j) const
+#else
 int CvBuildingEntry::GetSpecialistYieldChange(int i, int j) const
+#endif
 {
 	CvAssertMsg(i < GC.getNumSpecialistInfos(), "Index out of bounds");
+#ifndef AUI_WARNING_FIXES
 	CvAssertMsg(i > -1, "Index out of bounds");
+#endif
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
 	return m_ppaiSpecialistYieldChange ? m_ppaiSpecialistYieldChange[i][j] : -1;
@@ -2012,7 +2022,11 @@ std::vector<CvBuildingEntry*>& CvBuildingXMLEntries::GetBuildingEntries()
 }
 
 /// Number of defined policies
+#ifdef AUI_WARNING_FIXES
+uint CvBuildingXMLEntries::GetNumBuildings() const
+#else
 int CvBuildingXMLEntries::GetNumBuildings()
+#endif
 {
 	return m_paBuildingEntries.size();
 }
@@ -2029,7 +2043,11 @@ void CvBuildingXMLEntries::DeleteArray()
 }
 
 /// Get a specific entry
+#ifdef AUI_WARNING_FIXES
+_Ret_maybenull_ CvBuildingEntry* CvBuildingXMLEntries::GetEntry(uint index)
+#else
 CvBuildingEntry* CvBuildingXMLEntries::GetEntry(int index)
+#endif
 {
 	return m_paBuildingEntries[index];
 }
@@ -2114,7 +2132,11 @@ void CvCityBuildings::Uninit()
 /// Reset status arrays to all false
 void CvCityBuildings::Reset()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	// Initialize non-arrays
 	m_iNumBuildings = 0;
@@ -2362,7 +2384,11 @@ int CvCityBuildings::GetTotalBaseBuildingMaintenance() const
 {
 	int iTotalCost = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -2789,6 +2815,11 @@ int CvCityBuildings::GetBuildingYieldChange(BuildingClassTypes eBuildingClass, Y
 /// Accessor: Set yield boost for a specific building by yield type
 void CvCityBuildings::SetBuildingYieldChange(BuildingClassTypes eBuildingClass, YieldTypes eYield, int iChange)
 {
+#ifdef AUI_WARNING_FIXES
+	CvCivilizationInfo* pCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());
+	if (!pCivInfo)
+		return;
+#endif
 	for(std::vector<BuildingYieldChange>::iterator it = m_aBuildingYieldChange.begin(); it != m_aBuildingYieldChange.end(); ++it)
 	{
 		if((*it).eBuildingClass == eBuildingClass && (*it).eYield == eYield)
@@ -2806,7 +2837,11 @@ void CvCityBuildings::SetBuildingYieldChange(BuildingClassTypes eBuildingClass, 
 					(*it).iChange = iChange;
 				}
 
+#ifdef AUI_WARNING_FIXES
+				BuildingTypes eBuilding = (BuildingTypes)pCivInfo->getCivilizationBuildings(eBuildingClass);
+#else
 				BuildingTypes eBuilding = (BuildingTypes)GC.getCivilizationInfo(m_pCity->getCivilizationType())->getCivilizationBuildings(eBuildingClass);
+#endif
 				if(NO_BUILDING != eBuilding)
 				{
 					if(GetNumActiveBuilding(eBuilding) > 0)
@@ -2946,7 +2981,11 @@ int CvCityBuildings::GetNumAvailableGreatWorkSlots() const
 {
 	int iCount = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
 		CvCivilizationInfo *pkCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());
@@ -2980,7 +3019,11 @@ int CvCityBuildings::GetNumAvailableGreatWorkSlots(GreatWorkSlotType eSlotType) 
 {
 	int iCount = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
 		CvCivilizationInfo *pkCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());
@@ -3017,15 +3060,34 @@ bool CvCityBuildings::GetNextAvailableGreatWorkSlot(BuildingClassTypes *eBuildin
 {
 	if (eBuildingClass && iSlot)
 	{
+#ifdef AUI_WARNING_FIXES
+		CvBuildingEntry* pBuildingInfo;
+		CvCivilizationInfo* pCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());
+		if (!pCivInfo)
+			return false;
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
+#ifdef AUI_WARNING_FIXES
+			BuildingTypes eBuilding = (BuildingTypes)pCivInfo->getCivilizationBuildings(eLoopBuildingClass);
+#else
 			BuildingTypes eBuilding = (BuildingTypes)GC.getCivilizationInfo(m_pCity->getCivilizationType())->getCivilizationBuildings(eLoopBuildingClass);
+#endif
 			if(NO_BUILDING != eBuilding)
 			{
 				if (GetNumBuilding(eBuilding) > 0)
 				{
+#ifdef AUI_WARNING_FIXES
+					int iNumSlots = 0;
+					pBuildingInfo = GC.getBuildingInfo(eBuilding);
+					if (pBuildingInfo)
+						iNumSlots = pBuildingInfo->GetGreatWorkCount();
+#else
 					int iNumSlots = GC.getBuildingInfo(eBuilding)->GetGreatWorkCount();
+#endif
 					for (int jJ = 0; jJ < iNumSlots; jJ++)
 					{
 						if (GetBuildingGreatWork (eLoopBuildingClass, jJ) == NO_GREAT_WORK)
@@ -3048,17 +3110,38 @@ bool CvCityBuildings::GetNextAvailableGreatWorkSlot(GreatWorkSlotType eGreatWork
 {
 	if (eBuildingClass && iSlot)
 	{
+#ifdef AUI_WARNING_FIXES
+		CvBuildingEntry* pBuildingInfo;
+		CvCivilizationInfo* pCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());
+		if (!pCivInfo)
+			return false;
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
+#ifdef AUI_WARNING_FIXES
+			BuildingTypes eBuilding = (BuildingTypes)pCivInfo->getCivilizationBuildings(eLoopBuildingClass);
+#else
 			BuildingTypes eBuilding = (BuildingTypes)GC.getCivilizationInfo(m_pCity->getCivilizationType())->getCivilizationBuildings(eLoopBuildingClass);
+#endif
 			if(NO_BUILDING != eBuilding)
 			{
 				if (GetNumBuilding(eBuilding) > 0)
 				{
+#ifdef AUI_WARNING_FIXES
+					pBuildingInfo = GC.getBuildingInfo(eBuilding);
+					if (pBuildingInfo && pBuildingInfo->GetGreatWorkSlotType() == eGreatWorkSlot)
+#else
 					if (GC.getBuildingInfo(eBuilding)->GetGreatWorkSlotType() == eGreatWorkSlot)
+#endif
 					{
+#ifdef AUI_WARNING_FIXES
+						int iNumSlots = pBuildingInfo->GetGreatWorkCount();
+#else
 						int iNumSlots = GC.getBuildingInfo(eBuilding)->GetGreatWorkCount();
+#endif
 						for (int jJ = 0; jJ < iNumSlots; jJ++)
 						{
 							if (GetBuildingGreatWork (eLoopBuildingClass, jJ) == NO_GREAT_WORK)
@@ -3171,7 +3254,11 @@ int CvCityBuildings::GetThemingBonuses() const
 {
 	int iBonus = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
 		CvCivilizationInfo *pkCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());
@@ -3196,7 +3283,11 @@ int CvCityBuildings::GetNumBuildingsFromFaith() const
 {
 	int iRtnValue = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
 		CvCivilizationInfo *pkCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());

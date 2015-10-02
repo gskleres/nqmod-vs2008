@@ -274,7 +274,11 @@ void CvEconomicAI::Init(CvEconomicAIStrategyXMLEntries* pAIStrategies, CvPlayer*
 	m_aiTempFlavors = FNEW(int[GC.getNumFlavorTypes()], c_eCiv5GameplayDLL, 0);
 
 	m_auiYields.clear();
+#ifdef AUI_WARNING_FIXES
+	m_auiYields.push_back_copy(0, uint(NUM_YIELD_TYPES));
+#else
 	m_auiYields.push_back_copy(-1, NUM_YIELD_TYPES);
+#endif
 	m_RequestedSavings.clear();
 
 	Reset();
@@ -1891,7 +1895,12 @@ void CvEconomicAI::DoPlotPurchases()
 /// Determine how our recon efforts are going
 void CvEconomicAI::DoReconState()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+	int iDirectionLoop, iUnitLoop;
+#else
 	int iPlotLoop, iDirectionLoop, iUnitLoop;
+#endif
 	CvPlot* pPlot;
 	CvPlot* pAdjacentPlot;
 	CvUnit* pLoopUnit;
@@ -2112,7 +2121,11 @@ void CvEconomicAI::DoReconState()
 void CvEconomicAI::DoAntiquitySites()
 {
 	int iNumSites = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvPlot *pPlot;
 	ResourceTypes eArtifactResourceType = static_cast<ResourceTypes>(GC.getARTIFACT_RESOURCE());
 	ResourceTypes eHiddenArtifactResourceType = static_cast<ResourceTypes>(GC.getHIDDEN_ARTIFACT_RESOURCE());
@@ -2321,7 +2334,11 @@ void CvEconomicAI::UpdatePlots()
 	TeamTypes ePlayerTeam = m_pPlayer->getTeam();
 
 	CvPlot* pPlot;
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getMap().numPlots(); i++)
+#else
 	for(int i = 0; i < GC.getMap().numPlots(); i++)
+#endif
 	{
 		pPlot = GC.getMap().plotByIndexUnchecked(i);
 		if(pPlot == NULL)
@@ -2849,7 +2866,11 @@ bool EconomicAIHelpers::IsTestStrategy_ReallyNeedReconSea(CvPlayer* pPlayer)
 
 			// Figure out which Promotion is the one which makes a unit not cross oceans
 			PromotionTypes eOceanImpassablePromotion = NO_PROMOTION;
+#ifdef AUI_WARNING_FIXES
+			for (uint iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#else
 			for(int iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#endif
 			{
 				const PromotionTypes eLoopPromotion = static_cast<PromotionTypes>(iI);
 				CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(eLoopPromotion);
@@ -3594,8 +3615,12 @@ bool EconomicAIHelpers::IsTestStrategy_NeedImprovement(CvPlayer* pPlayer, YieldT
 
 	// loop through the build types to find one that we can use
 	BuildTypes eBuild;
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 	int iBuildIndex;
 	for(iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 	{
 		eBuild = (BuildTypes)iBuildIndex;
 		CvBuildInfo* pkBuildInfo = GC.getBuildInfo(eBuild);
@@ -3744,7 +3769,11 @@ bool EconomicAIHelpers::IsTestStrategy_IslandStart(EconomicAIStrategyTypes eStra
 			iStartArea = pPlayer->getStartingPlot()->getArea();
 
 			// Have we revealed a high enough percentage of the coast of our landmass?
+#ifdef AUI_WARNING_FIXES
+			for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 			for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 			{
 				pLoopPlot = GC.getMap().plotByIndexUnchecked(iI);
 				if(pLoopPlot->getArea() == iStartArea)

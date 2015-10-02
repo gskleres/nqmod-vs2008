@@ -463,7 +463,11 @@ int getWonderScore(BuildingClassTypes eWonderClass)
 	return 0;
 }
 
+#ifdef AUI_WARNING_FIXES
+ImprovementTypes finalImprovementUpgrade(ImprovementTypes eImprovement, uint iCount)
+#else
 ImprovementTypes finalImprovementUpgrade(ImprovementTypes eImprovement, int iCount)
+#endif
 {
 	CvAssertMsg(eImprovement != NO_IMPROVEMENT, "Improvement is not assigned a valid value");
 
@@ -635,7 +639,11 @@ TechTypes getDiscoveryTech(UnitTypes eUnit, PlayerTypes ePlayer)
 	if(pkUnitInfo)
 	{
 		int iBestValue = 0;
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumTechInfos(); iI++)
+#else
 		for(int iI = 0; iI < GC.getNumTechInfos(); iI++)
+#endif
 		{
 			const TechTypes eTech = static_cast<TechTypes>(iI);
 			CvTechEntry* pkTechInfo = GC.getTechInfo(eTech);
@@ -1454,7 +1462,11 @@ bool GetGUIDSegment(const char* pszGUID, uint* puiIndex, T& kDest)
 		{
 			UINT uiValue = 0;
 			if(GetHexDigitValue(pszGUID[*puiIndex], uiValue))
+#ifdef AUI_WARNING_FIXES
+				kDest = T((kDest * 16) + uiValue);
+#else
 				kDest = (kDest * 16) + uiValue;
+#endif
 			else
 				return false;
 			*puiIndex += 1;

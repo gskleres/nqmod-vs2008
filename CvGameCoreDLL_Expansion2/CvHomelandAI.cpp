@@ -559,7 +559,11 @@ void CvHomelandAI::FindHomelandTargets()
 					{
 						// Find proper improvement
 						BuildTypes eBuild;
+#ifdef AUI_WARNING_FIXES
+						for (uint iJ = 0; iJ < GC.getNumBuildInfos(); iJ++)
+#else
 						for(int iJ = 0; iJ < GC.getNumBuildInfos(); iJ++)
+#endif
 						{
 							eBuild = ((BuildTypes)iJ);
 							CvBuildInfo* pkBuildInfo = GC.getBuildInfo(eBuild);
@@ -1377,7 +1381,11 @@ void CvHomelandAI::PlotUpgradeMoves()
 				{
 					// Resource requirement
 					bMissingResource = false;
+#ifdef AUI_WARNING_FIXES
+					for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos() && !bMissingResource; iResourceLoop++)
+#else
 					for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos() && !bMissingResource; iResourceLoop++)
+#endif
 					{
 						eResource = (ResourceTypes) iResourceLoop;
 						iNumResource = GC.getUnitInfo(eUpgradeUnitType)->GetResourceQuantityRequirement(eResource);
@@ -1460,9 +1468,14 @@ void CvHomelandAI::PlotUpgradeMoves()
 				if(GC.getLogging() && GC.getAILogging())
 				{
 					CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+					CvString strTemp1 = pUnit->getUnitInfo().GetDescription();
+					CvString strTemp2 = pNewUnit->getUnitInfo().GetDescription();
+#else
 					CvString strTemp1, strTemp2;
 					strTemp1 = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
 					strTemp2 = GC.getUnitInfo(pNewUnit->getUnitType())->GetDescription();
+#endif
 					strLogString.Format("Upgrading unit from type %s to type %s, X: %d, Y: %d", strTemp1.GetCString(), strTemp2.GetCString(), pNewUnit->getX(), pNewUnit->getY());
 					LogHomelandMessage(strLogString);
 				}
@@ -1515,9 +1528,13 @@ void CvHomelandAI::PlotUpgradeMoves()
 			if(GC.getLogging() && GC.getAILogging())
 			{
 				CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+				CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 				CvString strTemp;
 
 				strTemp = pUnit->getUnitInfo().GetDescription();
+#endif
 				strLogString.Format("Need gold for %s upgrade, GOLD: Available = %d, Needed = %d, Priority = %d",
 				                    strTemp.GetCString(), m_pPlayer->GetTreasury()->GetGold(), iAmountRequired, iGoldPriority);
 				LogHomelandMessage(strLogString);
@@ -2630,7 +2647,11 @@ void CvHomelandAI::ExecuteExplorerMoves()
 					bool bFoundPath = false;
 					for(pLoopCity = m_pPlayer->firstCity(&iLoop); pLoopCity != NULL; pLoopCity = m_pPlayer->nextCity(&iLoop))
 					{
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+						if (GC.getIgnoreUnitsPathFinder().DoesPathExist(pUnit.pointer(), pUnit->plot(), pLoopCity->plot()))
+#else
 						if(GC.getIgnoreUnitsPathFinder().DoesPathExist(*(pUnit), pUnit->plot(), pLoopCity->plot()))
+#endif
 						{
 							bFoundPath = true;
 							break;
@@ -3776,7 +3797,13 @@ void CvHomelandAI::ExecuteProphetMoves()
 					bool bSkipCity = false;
 
 					CvPlot* pTarget = pLoopCity->plot();
+#ifdef AUI_WARNING_FIXES
+					if (!pTarget)
+						continue;
+					for (uint iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#else
 					for(int iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#endif
 					{
 						// Don't go here if a civilian is already present
 						if(!pTarget->getUnitByIndex(iUnitLoop)->IsCombatUnit())
@@ -3941,8 +3968,12 @@ void CvHomelandAI::ExecuteGeneralMoves()
 					// find the great general improvement
 					BuildTypes eSelectedBuildType = NO_BUILD;
 					BuildTypes eBuild;
+#ifdef AUI_WARNING_FIXES
+					for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 					int iBuildIndex;
 					for(iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 					{
 						eBuild = (BuildTypes)iBuildIndex;
 						CvBuildInfo* pkBuild = GC.getBuildInfo(eBuild);
@@ -4031,7 +4062,13 @@ void CvHomelandAI::ExecuteGeneralMoves()
 				bool bSkipCity = false;
 
 				CvPlot* pTarget = pLoopCity->plot();
+#ifdef AUI_WARNING_FIXES
+				if (!pTarget)
+					continue;
+				for (uint iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#else
 				for(int iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#endif
 				{
 					// Don't go here if a general or admiral is already present
 					if(pTarget->getUnitByIndex(iUnitLoop)->AI_getUnitAIType() == UNITAI_GENERAL)
@@ -4156,7 +4193,11 @@ void CvHomelandAI::ExecuteAdmiralMoves()
 			// Don't go here if a different general or admiral is already present
 			bool bSkipCity = false;
 			CvPlot* pTarget = pLoopCity->plot();
+#ifdef AUI_WARNING_FIXES
+			for (uint iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#else
 			for(int iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#endif
 			{
 				CvUnit *pLoopUnit = pTarget->getUnitByIndex(iUnitLoop);
 				if(pLoopUnit->AI_getUnitAIType() == UNITAI_GENERAL && pLoopUnit->GetID() != pUnit->GetID())
@@ -4636,11 +4677,18 @@ void CvHomelandAI::ExecuteAircraftMoves()
 			if(GC.getLogging() && GC.getAILogging())
 			{
 				CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+				strTemp = pUnit->getUnitInfo().GetDescription();
+				if (pTransportUnit)
+				{
+					strTemp2 = pTransportUnit->getUnitInfo().GetDescription();
+#else
 				CvString strTemp, strTemp2;
 				strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
 				if (pTransportUnit)
 				{
 					strTemp2 = GC.getUnitInfo(pTransportUnit->getUnitType())->GetDescription();
+#endif
 				}
 
 				if (pBestPlot->getPlotCity())
@@ -4661,8 +4709,12 @@ void CvHomelandAI::ExecuteAircraftMoves()
 
 			if(GC.getLogging() && GC.getAILogging())
 			{
+#ifdef AUI_WARNING_FIXES
+				CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 				CvString strTemp;
 				strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 				CvString strLogString;
 				strLogString.Format("No better place to move %s at, X: %d, Y: %d", strTemp.GetCString(), pUnit->getX(), pUnit->getY());
 				LogHomelandMessage(strLogString);
@@ -4791,8 +4843,12 @@ bool CvHomelandAI::MoveCivilianToSafety(CvUnit* pUnit, bool bIgnoreUnits)
 				if(GC.getLogging() && GC.getAILogging())
 				{
 					CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+					CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 					CvString strTemp;
 					strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 					strLogString.Format("%s (%d) tried to move to safety but is at the best spot, X: %d, Y: %d", strTemp.GetCString(), pUnit->GetID(), pBestPlot->getX(), pBestPlot->getY());
 					LogHomelandMessage(strLogString);
 				}
@@ -4805,8 +4861,12 @@ bool CvHomelandAI::MoveCivilianToSafety(CvUnit* pUnit, bool bIgnoreUnits)
 				if(GC.getLogging() && GC.getAILogging())
 				{
 					CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+					CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 					CvString strTemp;
 					strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 					strLogString.Format("%s (%d) tried to move to safety but cannot hold in current location, X: %d, Y: %d", strTemp.GetCString(), pUnit->GetID(), pBestPlot->getX(), pBestPlot->getY());
 					LogHomelandMessage(strLogString);
 				}
@@ -4818,8 +4878,12 @@ bool CvHomelandAI::MoveCivilianToSafety(CvUnit* pUnit, bool bIgnoreUnits)
 			if(GC.getLogging() && GC.getAILogging())
 			{
 				CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+				CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 				CvString strTemp;
 				strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 				strLogString.Format("%s (%d) moving to safety, X: %d, Y: %d", strTemp.GetCString(), pUnit->GetID(), pBestPlot->getX(), pBestPlot->getY());
 				LogHomelandMessage(strLogString);
 			}

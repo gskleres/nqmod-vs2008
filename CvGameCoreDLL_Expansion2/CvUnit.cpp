@@ -18392,31 +18392,56 @@ bool CvUnit::AreUnitsOfSameType(const CvUnit& pUnit2, const bool bPretendEmbarke
 bool CvUnit::CanSwapWithUnitHere(CvPlot& swapPlot) const
 {
 	VALIDATE_OBJECT
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 	bool bSwapPossible = false;
+#endif
 
 	if(getDomainType() == DOMAIN_LAND || getDomainType() == DOMAIN_SEA)
 	{
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 		if(canEnterTerrain(swapPlot))
+#endif
 		{
 			// Can I get there this turn?
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+			CvIgnoreUnitsPathFinder& kPathfinder = GC.getIgnoreUnitsPathFinder();
+#ifdef AUI_ASTAR_TURN_LIMITER
+			if (kPathfinder.DoesPathExist(this, plot(), &swapPlot, 1))
+#else
+			if (kPathfinder.DoesPathExist(this, plot(), &swapPlot))
+#endif
+			{
+				CvPlot* pEndTurnPlot = kPathfinder.GetPathEndTurnPlot();
+#else
 			CvUnit* pUnit = (CvUnit*)this;
 			if(GC.getIgnoreUnitsPathFinder().DoesPathExist(*(pUnit), plot(), &swapPlot))
 			{
 				CvPlot* pEndTurnPlot = GC.getIgnoreUnitsPathFinder().GetPathEndTurnPlot();
+#endif
 				if(pEndTurnPlot == &swapPlot)
 				{
 					if(swapPlot.getNumFriendlyUnitsOfType(this) >= GC.getPLOT_UNIT_LIMIT())
 					{
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+						const IDInfo* pUnitNode = swapPlot.headUnitNode();
+#else
 						const IDInfo* pUnitNode;
+#endif
 						CvUnit* pLoopUnit;
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 						pUnitNode = swapPlot.headUnitNode();
+#endif
 						while(pUnitNode != NULL)
 						{
 							pLoopUnit = (CvUnit*)::getUnit(*pUnitNode);
 							pUnitNode = swapPlot.nextUnitNode(pUnitNode);
 
 							// A unit can't swap with itself (slewis)
+#ifdef AUI_WARNING_FIXES
+							if (!pLoopUnit || pLoopUnit == this)
+#else
 							if (pLoopUnit == this)
+#endif
 							{
 								continue;
 							}
@@ -18426,18 +18451,34 @@ bool CvUnit::CanSwapWithUnitHere(CvPlot& swapPlot) const
 							{
 								if(AreUnitsOfSameType(*pLoopUnit))
 								{
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 									CvPlot* here = plot();
 									if(here && pLoopUnit->canEnterTerrain(*here))
+#endif
 									{
 										// Can the unit I am swapping with get to me this turn?
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+#ifdef AUI_ASTAR_TURN_LIMITER
+										if (pLoopUnit->ReadyToMove() && kPathfinder.DoesPathExist(pLoopUnit, &swapPlot, plot(), 1))
+#else
+										if (pLoopUnit->ReadyToMove() && kPathfinder.DoesPathExist(pLoopUnit, &swapPlot, plot()))
+#endif
+										{
+											CvPlot* pPathEndTurnPlot = kPathfinder.GetPathEndTurnPlot();
+#else
 										if(pLoopUnit->ReadyToMove() && GC.getIgnoreUnitsPathFinder().DoesPathExist(*(pLoopUnit), &swapPlot, plot()))
 										{
 											CvPlot* pPathEndTurnPlot = GC.getIgnoreUnitsPathFinder().GetPathEndTurnPlot();
+#endif
 											if(pPathEndTurnPlot == plot())
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+												return true;
+#else
 											{
 												bSwapPossible = true;
 												break;
 											}
+#endif
 										}
 									}
 								}
@@ -18449,7 +18490,11 @@ bool CvUnit::CanSwapWithUnitHere(CvPlot& swapPlot) const
 		}
 	}
 
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	return false;
+#else
 	return bSwapPossible;
+#endif
 }
 
 //	--------------------------------------------------------------------------------

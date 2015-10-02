@@ -162,7 +162,11 @@ void CvGame::init(HandicapTypes eHandicap)
 	bool bValid;
 	int iStartTurn;
 	int iEstimateEndTurn;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	//--------------------------------
 	// Init saved data
@@ -272,7 +276,11 @@ void CvGame::init(HandicapTypes eHandicap)
 			char szRandomPassword[iPasswordSize];
 			for(int i = 0; i < iPasswordSize-1; i++)
 			{
+#ifdef AUI_WARNING_FIXES
+				szRandomPassword[i] = char(getJonRandNum(128, "Random Keyword"));
+#else
 				szRandomPassword[i] = getJonRandNum(128, "Random Keyword");
+#endif
 			}
 			szRandomPassword[iPasswordSize-1] = 0;
 
@@ -286,9 +294,15 @@ void CvGame::init(HandicapTypes eHandicap)
 	{
 		iStartTurn = 0;
 
+#ifdef AUI_WARNING_FIXES
+		for (int iJ = 0; iJ < kGameSpeedInfo.getNumTurnIncrements(); iJ++)
+		{
+			iStartTurn += kGameSpeedInfo.getGameTurnInfo(iJ).iNumGameTurnsPerIncrement;
+#else
 		for(iI = 0; iI < kGameSpeedInfo.getNumTurnIncrements(); iI++)
 		{
 			iStartTurn += kGameSpeedInfo.getGameTurnInfo(iI).iNumGameTurnsPerIncrement;
+#endif
 		}
 
 		CvEraInfo& kEraInfo = getStartEraInfo();
@@ -308,9 +322,15 @@ void CvGame::init(HandicapTypes eHandicap)
 
 	iEstimateEndTurn = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (int iJ = 0; iJ < kGameSpeedInfo.getNumTurnIncrements(); iJ++)
+	{
+		iEstimateEndTurn += kGameSpeedInfo.getGameTurnInfo(iJ).iNumGameTurnsPerIncrement;
+#else
 	for(iI = 0; iI < kGameSpeedInfo.getNumTurnIncrements(); iI++)
 	{
 		iEstimateEndTurn += kGameSpeedInfo.getGameTurnInfo(iI).iNumGameTurnsPerIncrement;
+#endif
 	}
 
 	setDefaultEstimateEndTurn(iEstimateEndTurn);
@@ -522,7 +542,11 @@ bool CvGame::InitMap(CvGameInitialItemsOverrides& kGameInitialItemsOverrides)
 			{
 				const int iNumInvisibleInfos = NUM_INVISIBLE_TYPES;
 #endif
+#ifdef AUI_WARNING_FIXES
+				for (uint plotID = 0; plotID < GC.getMap().numPlots(); plotID++)
+#else
 				for(int plotID = 0; plotID < GC.getMap().numPlots(); plotID++)
+#endif
 				{
 					CvPlot* pLoopPlot = GC.getMap().plotByIndexUnchecked(plotID);
 
@@ -593,7 +617,11 @@ void CvGame::InitPlayers()
 	CivilizationTypes eMinorCiv = (CivilizationTypes)GC.getMINOR_CIVILIZATION();
 
 	CvCivilizationInfo* pBarbarianCivilizationInfo = GC.getCivilizationInfo(eBarbCiv);
+#ifdef AUI_WARNING_FIXES
+	int barbarianPlayerColor = (pBarbarianCivilizationInfo ? pBarbarianCivilizationInfo->getDefaultPlayerColor() : 0);
+#else
 	int barbarianPlayerColor = pBarbarianCivilizationInfo->getDefaultPlayerColor();
+#endif
 
 	const int iNumPlayerColorInfos = GC.GetNumPlayerColorInfos();
 	for(iI = 0; iI < MAX_MAJOR_CIVS; iI++)
@@ -771,7 +799,11 @@ void CvGame::setInitialItems(CvGameInitialItemsOverrides& kInitialItemOverrides)
 	}
 
 	// Which Tech unlocks the Religion Race? (based on a CvBuildingEntry)
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -807,7 +839,11 @@ void CvGame::CheckGenerateArchaeology()
 
 		if (kTeam1.isAlive() && !kTeam1.isMinorCiv())
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iTech = 0; iTech < GC.getNumTechInfos() && !bTriggered; iTech++)
+#else
 			for (int iTech = 0; iTech < GC.getNumTechInfos() && !bTriggered; iTech++)
+#endif
 			{
 				CvTechEntry *pkTech = GC.getTechInfo((TechTypes)iTech);
 				if (pkTech)
@@ -887,12 +923,20 @@ void CvGame::DoGameStarted()
 {
 	// Are features clearable?
 	BuildTypes eBuild;
+#ifdef AUI_WARNING_FIXES
+	uint iBuildLoop;
+#else
 	int iBuildLoop;
+#endif
 
 	bool bTempClearable;
 
 	FeatureTypes eFeature;
+#ifdef AUI_WARNING_FIXES
+	for (uint iFeatureLoop = 0; iFeatureLoop < GC.getNumFeatureInfos(); iFeatureLoop++)
+#else
 	for(int iFeatureLoop = 0; iFeatureLoop < GC.getNumFeatureInfos(); iFeatureLoop++)
+#endif
 	{
 		eFeature = (FeatureTypes) iFeatureLoop;
 
@@ -946,7 +990,11 @@ void CvGame::uninit()
 
 	if(m_ppaaiTeamVictoryRank != NULL)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumVictoryInfos(); iI++)
+#else
 		for(int iI = 0; iI < GC.getNumVictoryInfos(); iI++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_ppaaiTeamVictoryRank[iI]);
 		}
@@ -1076,7 +1124,11 @@ void CvGame::uninit()
 // Initializes data members that are serialized.
 void CvGame::reset(HandicapTypes eHandicap, bool bConstructorCall)
 {
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	//--------------------------------
 	// Uninit class
@@ -1313,7 +1365,11 @@ void CvGame::initDiplomacy()
 //	--------------------------------------------------------------------------------
 void CvGame::initFreeState(CvGameInitialItemsOverrides& kOverrides)
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumTechInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumTechInfos(); iI++)
+#endif
 	{
 		const TechTypes eTech = static_cast<TechTypes>(iI);
 		CvTechEntry* pkTechInfo = GC.getTechInfo(eTech);
@@ -4132,7 +4188,11 @@ bool CvGame::canTrainNukes() const
 		const PlayerTypes ePlayer = static_cast<PlayerTypes>(iI);
 		if(GET_PLAYER(ePlayer).isAlive())
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iJ = 0; iJ < GC.getNumUnitInfos(); iJ++)
+#else
 			for(int iJ = 0; iJ < GC.getNumUnitInfos(); iJ++)
+#endif
 			{
 				const UnitTypes eUnit = static_cast<UnitTypes>(iJ);
 				CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
@@ -4645,7 +4705,11 @@ void CvGame::SetStaticTutorialActive(bool bStaticTutorialActive)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+bool CvGame::HasAdvisorMessageBeenSeen(_In_z_ const char* szAdvisorMessageName)
+#else
 bool CvGame::HasAdvisorMessageBeenSeen(const char* szAdvisorMessageName)
+#endif
 {
 	std::string strAdvisorMessageName = szAdvisorMessageName;
 	std::tr1::unordered_set<std::string>::iterator it = m_AdvisorMessagesViewed.find(strAdvisorMessageName);
@@ -4653,7 +4717,11 @@ bool CvGame::HasAdvisorMessageBeenSeen(const char* szAdvisorMessageName)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvGame::SetAdvisorMessageHasBeenSeen(_In_z_ const char* szAdvisorMessageName, bool bSeen)
+#else
 void CvGame::SetAdvisorMessageHasBeenSeen(const char* szAdvisorMessageName, bool bSeen)
+#endif
 {
 	std::string strAdvisorMessageName = szAdvisorMessageName;
 	if(bSeen)
@@ -4874,7 +4942,11 @@ void CvGame::initScoreCalculation()
 {
 	// initialize score calculation
 	int iMaxFood = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getMap().numPlots(); i++)
+#else
 	for(int i = 0; i < GC.getMap().numPlots(); i++)
+#endif
 	{
 		CvPlot* pPlot = GC.getMap().plotByIndexUnchecked(i);
 		if(!pPlot->isWater() || pPlot->isAdjacentToLand())
@@ -4897,7 +4969,11 @@ void CvGame::initScoreCalculation()
 	}
 
 	m_iInitTech = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumTechInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumTechInfos(); i++)
+#endif
 	{
 		const TechTypes eTech = static_cast<TechTypes>(i);
 		CvTechEntry* pkTechInfo = GC.getTechInfo(eTech);
@@ -4910,7 +4986,11 @@ void CvGame::initScoreCalculation()
 			else
 			{
 				// count all possible free techs as initial to lower the score from immediate retirement
+#ifdef AUI_WARNING_FIXES
+				for (uint iCiv = 0; iCiv < GC.getNumCivilizationInfos(); iCiv++)
+#else
 				for(int iCiv = 0; iCiv < GC.getNumCivilizationInfos(); iCiv++)
+#endif
 				{
 					const CivilizationTypes eCivilization = static_cast<CivilizationTypes>(iCiv);
 					CvCivilizationInfo* pkCivilizationInfo = GC.getCivilizationInfo(eCivilization);
@@ -5076,7 +5156,11 @@ void CvGame::DoUpdateDiploVictory()
 	int iVotesForHost = 1;
 	int iVotesPerCiv = 1;
 	int iVotesPerCityState = 1;
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#else
 	for (int i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#endif
 	{
 		LeagueSpecialSessionTypes e = (LeagueSpecialSessionTypes)i;
 		CvLeagueSpecialSessionEntry* pInfo = GC.getLeagueSpecialSessionInfo(e);
@@ -5924,7 +6008,11 @@ void CvGame::setWinner(TeamTypes eNewWinner, VictoryTypes eNewVictory)
 					HandicapTypes winnerHandicapType = getHandicapType();
 					if(!bUsingXP2Scenario1 && !bUsingXP2Scenario2) 
 					{
+#ifdef AUI_WARNING_FIXES
+						switch (static_cast<int>(winnerHandicapType))
+#else
 						switch(winnerHandicapType)
+#endif
 						{
 						case 0:
 							gDLL->UnlockAchievement(ACHIEVEMENT_DIFLEVEL_SETTLER);
@@ -5958,7 +6046,11 @@ void CvGame::setWinner(TeamTypes eNewWinner, VictoryTypes eNewVictory)
 					//Different Victory Win Types
 					if(!bUsingXP2Scenario1 && !bUsingXP2Scenario2)
 					{
+#ifdef AUI_WARNING_FIXES
+						switch (static_cast<int>(eNewVictory))
+#else
 						switch(eNewVictory)
+#endif
 						{
 						case 0:
 							OutputDebugString("No current Achievement for a time victory");
@@ -6292,7 +6384,11 @@ void CvGame::setWinner(TeamTypes eNewWinner, VictoryTypes eNewVictory)
 						else if(strCivType == "CIVILIZATION_FRANCE")
 							gDLL->UnlockAchievement(ACHIEVEMENT_SCENARIO_04_NORMANDY);
 
+#ifdef AUI_WARNING_FIXES
+						switch (static_cast<int>(winnerHandicapType))
+#else
 						switch(winnerHandicapType)
+#endif
 						{
 						case 5:	//	Win scenario on Emperor (any civ)  YOU! The Conqueror
 							gDLL->UnlockAchievement(ACHIEVEMENT_SCENARIO_04_WIN_EMPEROR);
@@ -6321,7 +6417,11 @@ void CvGame::setWinner(TeamTypes eNewWinner, VictoryTypes eNewVictory)
 							gDLL->UnlockAchievement(ACHIEVEMENT_SCENARIO_05_WIN_MANCHU);
 
 						// Difficulty
+#ifdef AUI_WARNING_FIXES
+						switch (static_cast<int>(winnerHandicapType))
+#else
 						switch(winnerHandicapType)
+#endif
 						{
 						case 5: // Emperor
 							gDLL->UnlockAchievement(ACHIEVEMENT_SCENARIO_05_WIN_EMPEROR);
@@ -6359,7 +6459,11 @@ void CvGame::setWinner(TeamTypes eNewWinner, VictoryTypes eNewVictory)
 							gDLL->UnlockAchievement(ACHIEVEMENT_SCENARIO_06_WIN_PERSIA);
 
 						// Difficulty
+#ifdef AUI_WARNING_FIXES
+						switch (static_cast<int>(winnerHandicapType))
+#else
 						switch(winnerHandicapType)
+#endif
 						{
 						case 3: // Prince
 							gDLL->UnlockAchievement(ACHIEVEMENT_SCENARIO_06_WIN_PRINCE);
@@ -7379,7 +7483,11 @@ bool CvGame::areNoVictoriesValid() const
 {
 	bool bRtnValue = true;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumVictoryInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumVictoryInfos(); iI++)
+#endif
 	{
 		VictoryTypes eVictory = static_cast<VictoryTypes>(iI);
 		CvVictoryInfo* pkVictoryInfo = GC.getVictoryInfo(eVictory);
@@ -7706,7 +7814,11 @@ UnitTypes CvGame::GetRandomSpawnUnitType(PlayerTypes ePlayer, bool bIncludeUUs, 
 	int iBonusValue;
 
 	// Loop through all Unit Classes
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#else
 	for(int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#endif
 	{
 		bool bValid = false;
 		const UnitTypes eLoopUnit = static_cast<UnitTypes>(iUnitLoop);
@@ -7732,7 +7844,11 @@ UnitTypes CvGame::GetRandomSpawnUnitType(PlayerTypes ePlayer, bool bIncludeUUs, 
 				// Unit has combat strength, make sure it isn't only defensive (and with no ranged combat ability)
 				if(pkUnitInfo->GetRange() == 0)
 				{
+#ifdef AUI_WARNING_FIXES
+					for (uint iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#else
 					for(int iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#endif
 					{
 						const PromotionTypes ePromotion = static_cast<PromotionTypes>(iLoop);
 						CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -7795,7 +7911,11 @@ UnitTypes CvGame::GetCompetitiveSpawnUnitType(PlayerTypes ePlayer, bool bInclude
 	CvWeightedVector<UnitTypes, SAFE_ESTIMATE_NUM_UNITS, true> veUnitRankings;
 
 	// Loop through all Unit Classes
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#else
 	for(int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#endif
 	{
 		const UnitTypes eLoopUnit = (UnitTypes) iUnitLoop;
 		CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eLoopUnit);
@@ -7809,7 +7929,11 @@ UnitTypes CvGame::GetCompetitiveSpawnUnitType(PlayerTypes ePlayer, bool bInclude
 		// Unit has combat strength, make sure it isn't only defensive (and with no ranged combat ability)
 		if(bValid && pkUnitInfo->GetRange() == 0)
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iPromotionLoop = 0; iPromotionLoop < GC.getNumPromotionInfos(); iPromotionLoop++)
+#else
 			for(int iPromotionLoop = 0; iPromotionLoop < GC.getNumPromotionInfos(); iPromotionLoop++)
+#endif
 			{
 				const PromotionTypes ePromotion = (PromotionTypes) iPromotionLoop;
 				CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -7921,7 +8045,11 @@ UnitTypes CvGame::GetRandomUniqueUnitType(bool bIncludeCivsInGame, bool bInclude
 	CvWeightedVector<UnitTypes, SAFE_ESTIMATE_NUM_UNITS, true> veUnitRankings;
 
 	// Loop through all Unit Classes
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#else
 	for(int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#endif
 	{
 		const UnitTypes eLoopUnit = (UnitTypes) iUnitLoop;
 		CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eLoopUnit);
@@ -7935,7 +8063,11 @@ UnitTypes CvGame::GetRandomUniqueUnitType(bool bIncludeCivsInGame, bool bInclude
 		// Unit has combat strength, make sure it isn't only defensive (and with no ranged combat ability)
 		if(bValid && pkUnitInfo->GetRange() == 0)
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iPromotionLoop = 0; iPromotionLoop < GC.getNumPromotionInfos(); iPromotionLoop++)
+#else
 			for(int iPromotionLoop = 0; iPromotionLoop < GC.getNumPromotionInfos(); iPromotionLoop++)
+#endif
 			{
 				const PromotionTypes ePromotion = (PromotionTypes) iPromotionLoop;
 				CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -8718,7 +8850,11 @@ bool CvGame::testVictory(VictoryTypes eVictory, TeamTypes eTeam, bool* pbEndScor
 	{
 		if(getAdjustedLandPercent(eVictory) > 0)
 		{
+#ifdef AUI_WARNING_FIXES
+			if (100 * GET_TEAM(eTeam).getTotalLand() < (int)GC.getMap().getLandPlots() * getAdjustedLandPercent(eVictory))
+#else
 			if(100 * GET_TEAM(eTeam).getTotalLand() < GC.getMap().getLandPlots() * getAdjustedLandPercent(eVictory))
+#endif
 			{
 				bValid = false;
 			}
@@ -8728,7 +8864,11 @@ bool CvGame::testVictory(VictoryTypes eVictory, TeamTypes eTeam, bool* pbEndScor
 	// Buildings
 	if(bValid)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iK = 0; iK < GC.getNumBuildingClassInfos(); iK++)
+#else
 		for(int iK = 0; iK < GC.getNumBuildingClassInfos(); iK++)
+#endif
 		{
 			BuildingClassTypes eBuildingClass = static_cast<BuildingClassTypes>(iK);
 			CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo(eBuildingClass);
@@ -8747,7 +8887,11 @@ bool CvGame::testVictory(VictoryTypes eVictory, TeamTypes eTeam, bool* pbEndScor
 	// Projects
 	if(bValid)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iK = 0; iK < GC.getNumProjectInfos(); iK++)
+#else
 		for(int iK = 0; iK < GC.getNumProjectInfos(); iK++)
+#endif
 		{
 			const ProjectTypes eProject = static_cast<ProjectTypes>(iK);
 			CvProjectEntry* pkProjectInfo = GC.getProjectInfo(eProject);
@@ -8795,7 +8939,11 @@ void CvGame::testVictory()
 
 	std::vector<std::vector<int> > aaiGameWinners;
 	int iTeamLoop = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iVictoryLoop = 0;
+#else
 	int iVictoryLoop = 0;
+#endif
 
 	int iNumCompetitionWinners = 0;
 	for(iTeamLoop = 0; iTeamLoop < MAX_CIV_TEAMS; iTeamLoop++)
@@ -9736,13 +9884,21 @@ void CvGame::addPlayer(PlayerTypes eNewPlayer, LeaderHeadTypes eLeader, Civiliza
 	{
 		if(eColor == NO_PLAYERCOLOR || GET_PLAYER((PlayerTypes)iI).getPlayerColor() == eColor)
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iK = 0; iK < GC.GetNumPlayerColorInfos(); iK++)
+#else
 			for(int iK = 0; iK < GC.GetNumPlayerColorInfos(); iK++)
+#endif
 			{
 				const PlayerColorTypes ePlayerColor = static_cast<PlayerColorTypes>(iK);
 				CvPlayerColorInfo* pkPlayerColorInfo = GC.GetPlayerColorInfo(ePlayerColor);
 				if(pkPlayerColorInfo)
 				{
+#ifdef AUI_WARNING_FIXES
+					if (iK != uint(pkBarbarianCivInfo->getDefaultPlayerColor()))
+#else
 					if(iK != pkBarbarianCivInfo->getDefaultPlayerColor())
+#endif
 					{
 						bool bValid = true;
 
@@ -9953,7 +10109,11 @@ bool CvGame::isUnitEverActive(UnitTypes eUnit) const
 	if(pkUnitInfo == NULL)
 		return false;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iCiv = 0; iCiv < GC.getNumCivilizationInfos(); ++iCiv)
+#else
 	for(int iCiv = 0; iCiv < GC.getNumCivilizationInfos(); ++iCiv)
+#endif
 	{
 		const CivilizationTypes eCiv = static_cast<CivilizationTypes>(iCiv);
 		CvCivilizationInfo* pkCivilizationInfo = GC.getCivilizationInfo(eCiv);
@@ -9978,7 +10138,11 @@ bool CvGame::isBuildingEverActive(BuildingTypes eBuilding) const
 	CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
 	if(pkBuildingInfo)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iCiv = 0; iCiv < GC.getNumCivilizationInfos(); ++iCiv)
+#else
 		for(int iCiv = 0; iCiv < GC.getNumCivilizationInfos(); ++iCiv)
+#endif
 		{
 			const CivilizationTypes eCivilization = static_cast<CivilizationTypes>(iCiv);
 			CvCivilizationInfo* pkCivilizationInfo = GC.getCivilizationInfo(eCivilization);
@@ -10011,7 +10175,11 @@ void CvGame::DoUpdateIndustrialRoute()
 {
 	RouteTypes eIndustrialRoute = NO_ROUTE;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iRouteLoop = 0; iRouteLoop < GC.getNumRouteInfos(); iRouteLoop++)
+#else
 	for(int iRouteLoop = 0; iRouteLoop < GC.getNumRouteInfos(); iRouteLoop++)
+#endif
 	{
 		const RouteTypes eRoute = static_cast<RouteTypes>(iRouteLoop);
 		CvRouteInfo* pkRouteInfo = GC.getRouteInfo(eRoute);
@@ -10129,7 +10297,11 @@ int CvGame::GetTurnsUntilMinorCivElection()
 /// Returns: the action info index or -1.
 int CvGame::GetAction(int iKeyStroke, bool bAlt, bool bShift, bool bCtrl)
 {
+#ifdef AUI_WARNING_FIXES
+	uint i;
+#else
 	int i;
+#endif
 	int iActionIndex = -1;
 	int iPriority = -1;
 
@@ -10169,7 +10341,11 @@ int CvGame::GetAction(int iKeyStroke, bool bAlt, bool bShift, bool bCtrl)
 /// Returns: the action info index or -1.
 int CvGame::IsAction(int iKeyStroke, bool bAlt, bool bShift, bool bCtrl)
 {
+#ifdef AUI_WARNING_FIXES
+	uint i;
+#else
 	int i;
+#endif
 	int iActionIndex = -1;
 	int iPriority = -1;
 
@@ -10431,7 +10607,11 @@ void CvGame::DoTestConquestVictory()
 	// If we got here then only one player remains alive!
 	if (eTeamWhoWon != NO_TEAM)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iVictoryLoop = 0; iVictoryLoop < GC.getNumVictoryInfos(); iVictoryLoop++)
+#else
 		for(int iVictoryLoop = 0; iVictoryLoop < GC.getNumVictoryInfos(); iVictoryLoop++)
+#endif
 		{
 			VictoryTypes eVictory = static_cast<VictoryTypes>(iVictoryLoop);
 			CvVictoryInfo* pkVictoryInfo = GC.getVictoryInfo(eVictory);
@@ -11242,7 +11422,11 @@ int CvGame::GetNumArchaeologySites() const
 	}
 
 	int iRtnValue = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvPlot *pPlot;
 	for (iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
 	{
@@ -11263,7 +11447,11 @@ int CvGame::GetNumHiddenArchaeologySites() const
 	}
 
 	int iRtnValue = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvPlot *pPlot;
 	for (iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
 	{

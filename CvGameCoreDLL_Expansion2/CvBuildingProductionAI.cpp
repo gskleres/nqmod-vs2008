@@ -35,7 +35,11 @@ void CvBuildingProductionAI::Reset()
 	// Loop through reading each one and add an entry with 0 weight to our vector
 	if(m_pCityBuildings)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < m_pCityBuildings->GetBuildings()->GetNumBuildings(); i++)
+#else
 		for(int i = 0; i < m_pCityBuildings->GetBuildings()->GetNumBuildings(); i++)
+#endif
 		{
 			m_BuildingAIWeights.push_back(i, 0);
 		}
@@ -55,7 +59,11 @@ void CvBuildingProductionAI::Read(FDataStream& kStream)
 	// Loop through reading each one and adding it to our vector
 	if(m_pCityBuildings)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < m_pCityBuildings->GetBuildings()->GetNumBuildings(); i++)
+#else
 		for(int i = 0; i < m_pCityBuildings->GetBuildings()->GetNumBuildings(); i++)
+#endif
 		{
 			m_BuildingAIWeights.push_back(i, 0);
 		}
@@ -141,7 +149,11 @@ void CvBuildingProductionAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight)
 	CvBuildingXMLEntries* pkBuildings = m_pCityBuildings->GetBuildings();
 
 	// Loop through all buildings
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuilding = 0; iBuilding < m_pCityBuildings->GetBuildings()->GetNumBuildings(); iBuilding++)
+#else
 	for(int iBuilding = 0; iBuilding < m_pCityBuildings->GetBuildings()->GetNumBuildings(); iBuilding++)
+#endif
 	{
 		CvBuildingEntry* entry = pkBuildings->GetEntry(iBuilding);
 		if(entry)
@@ -276,7 +288,11 @@ int CvBuildingProductionAI::GetWeight(BuildingTypes eBuilding)
 /// Recommend highest-weighted building
 BuildingTypes CvBuildingProductionAI::RecommendBuilding()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iBldgLoop;
+#else
 	int iBldgLoop;
+#endif
 	int iWeight;
 	int iTurnsLeft;
 

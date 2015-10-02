@@ -12,8 +12,13 @@
 #include "CvTypes.h"
 
 //static 
+#ifdef AUI_WARNING_FIXES
+int* CvBarbarians::m_aiPlotBarbCampSpawnCounter = NULL;
+int* CvBarbarians::m_aiPlotBarbCampNumUnitsSpawned = NULL;
+#else
 short* CvBarbarians::m_aiPlotBarbCampSpawnCounter = NULL;
 short* CvBarbarians::m_aiPlotBarbCampNumUnitsSpawned = NULL;
+#endif
 FStaticVector<DirectionTypes, 6, true, c_eCiv5GameplayDLL, 0> CvBarbarians::m_aeValidBarbSpawnDirections;
 
 //	---------------------------------------------------------------------------
@@ -205,11 +210,19 @@ void CvBarbarians::MapInit(int iWorldNumPlots)
 	{
 		if (m_aiPlotBarbCampSpawnCounter == NULL)
 		{
+#ifdef AUI_WARNING_FIXES
+			m_aiPlotBarbCampSpawnCounter = FNEW(int[iWorldNumPlots], c_eCiv5GameplayDLL, 0);
+#else
 			m_aiPlotBarbCampSpawnCounter = FNEW(short[iWorldNumPlots], c_eCiv5GameplayDLL, 0);
+#endif
 		}
 		if (m_aiPlotBarbCampNumUnitsSpawned == NULL)
 		{
+#ifdef AUI_WARNING_FIXES
+			m_aiPlotBarbCampNumUnitsSpawned = FNEW(int[iWorldNumPlots], c_eCiv5GameplayDLL, 0);
+#else
 			m_aiPlotBarbCampNumUnitsSpawned = FNEW(short[iWorldNumPlots], c_eCiv5GameplayDLL, 0);
+#endif
 		}
 
 		// Default values
@@ -238,7 +251,11 @@ void CvBarbarians::Uninit()
 
 //	---------------------------------------------------------------------------
 /// Serialization Read
+#ifdef AUI_WARNING_FIXES
+void CvBarbarians::Read(FDataStream& kStream, uint /*uiParentVersion*/)
+#else
 void CvBarbarians::Read(FDataStream& kStream, uint uiParentVersion)
+#endif
 {
 	// Version number to maintain backwards compatibility
 	uint uiVersion = 0;
@@ -248,8 +265,15 @@ void CvBarbarians::Read(FDataStream& kStream, uint uiParentVersion)
 	int iWorldNumPlots = GC.getMap().numPlots();
 	MapInit(iWorldNumPlots);	// Map will have been initialized/unserialized by now so this is ok.
 
+#ifdef AUI_WARNING_FIXES
+	ArrayWrapper<int> kWrapper1(iWorldNumPlots, m_aiPlotBarbCampSpawnCounter);
+	kStream >> kWrapper1;
+	ArrayWrapper<int> kWrapper2(iWorldNumPlots, m_aiPlotBarbCampNumUnitsSpawned);
+	kStream >> kWrapper2;
+#else
 	kStream >> ArrayWrapper<short>(iWorldNumPlots, m_aiPlotBarbCampSpawnCounter);
 	kStream >> ArrayWrapper<short>(iWorldNumPlots, m_aiPlotBarbCampNumUnitsSpawned);
+#endif
 }
 
 //	---------------------------------------------------------------------------
@@ -261,8 +285,15 @@ void CvBarbarians::Write(FDataStream& kStream)
 	kStream << uiVersion;
 
 	int iWorldNumPlots = GC.getMap().numPlots();
+#ifdef AUI_WARNING_FIXES
+	ArrayWrapper<int> kWrapper1(iWorldNumPlots, m_aiPlotBarbCampSpawnCounter);
+	kStream << kWrapper1;
+	ArrayWrapper<int> kWrapper2(iWorldNumPlots, m_aiPlotBarbCampNumUnitsSpawned);
+	kStream << kWrapper2;
+#else
 	kStream << ArrayWrapper<short>(iWorldNumPlots, m_aiPlotBarbCampSpawnCounter);
 	kStream << ArrayWrapper<short>(iWorldNumPlots, m_aiPlotBarbCampNumUnitsSpawned);
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -288,7 +319,11 @@ void CvBarbarians::DoCamps()
 	{
 		CvMap& kMap = GC.getMap();
 		// Figure out how many Nonvisible tiles we have to base # of camps to spawn on
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < kMap.numPlots(); iI++)
+#else
 		for(int iI = 0; iI < kMap.numPlots(); iI++)
+#endif
 		{
 			pLoopPlot = kMap.plotByIndexUnchecked(iI);
 
@@ -475,7 +510,13 @@ void CvBarbarians::DoCamps()
 
 													if(eBestUnit != NO_UNIT)
 													{
+#ifdef AUI_WARNING_FIXES
+														CvUnitEntry* pUnitInfo = GC.getUnitInfo(eBestUnit);
+														if (pUnitInfo)
+															GET_PLAYER(BARBARIAN_PLAYER).initUnit(eBestUnit, pLoopPlot->getX(), pLoopPlot->getY(), (UnitAITypes)pUnitInfo->GetDefaultUnitAIType());
+#else
 														GET_PLAYER(BARBARIAN_PLAYER).initUnit(eBestUnit, pLoopPlot->getX(), pLoopPlot->getY(), (UnitAITypes) GC.getUnitInfo(eBestUnit)->GetDefaultUnitAIType());
+#endif
 													}
 
 													// If we should update Camp visibility (for Policy), do so
@@ -533,7 +574,11 @@ UnitTypes CvBarbarians::GetRandomBarbarianUnitType(CvArea* pArea, UnitAITypes eU
 
 	CvGame &kGame = GC.getGame();
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitClassLoop = 0; iUnitClassLoop < GC.getNumUnitClassInfos(); iUnitClassLoop++)
+#else
 	for(int iUnitClassLoop = 0; iUnitClassLoop < GC.getNumUnitClassInfos(); iUnitClassLoop++)
+#endif
 	{
 		bool bValid = false;
 		CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo((UnitClassTypes)iUnitClassLoop);
@@ -557,7 +602,11 @@ UnitTypes CvBarbarians::GetRandomBarbarianUnitType(CvArea* pArea, UnitAITypes eU
 				// Unit has combat strength, make sure it isn't only defensive (and with no ranged combat ability)
 				if(kUnit.GetRange() == 0)
 				{
+#ifdef AUI_WARNING_FIXES
+					for (uint iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#else
 					for(int iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#endif
 					{
 						const PromotionTypes ePromotion = static_cast<PromotionTypes>(iLoop);
 						CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -661,7 +710,11 @@ void CvBarbarians::DoUnits()
 	ImprovementTypes eCamp = (ImprovementTypes)GC.getBARBARIAN_CAMP_IMPROVEMENT();
 
 	CvMap& kMap = GC.getMap();
+#ifdef AUI_WARNING_FIXES
+	for (uint iPlotLoop = 0; iPlotLoop < kMap.numPlots(); iPlotLoop++)
+#else
 	for(int iPlotLoop = 0; iPlotLoop < kMap.numPlots(); iPlotLoop++)
+#endif
 	{
 		CvPlot* pLoopPlot = kMap.plotByIndexUnchecked(iPlotLoop);
 
@@ -682,7 +735,11 @@ void CvBarbarians::DoUnits()
 void CvBarbarians::DoSpawnBarbarianUnit(CvPlot* pPlot, bool bIgnoreMaxBarbarians, bool bFinishMoves)
 {
 	int iNumNearbyUnits;
+#ifdef AUI_WARNING_FIXES
+	uint iNearbyUnitLoop;
+#else
 	int iNearbyUnitLoop;
+#endif
 	int iRange = GC.getMAX_BARBARIANS_FROM_CAMP_NEARBY_RANGE();
 	int iX;
 	int iY;
@@ -738,7 +795,11 @@ void CvBarbarians::DoSpawnBarbarianUnit(CvPlot* pPlot, bool bIgnoreMaxBarbarians
 					for(iNearbyUnitLoop = 0; iNearbyUnitLoop < pNearbyPlot->getNumUnits(); iNearbyUnitLoop++)
 					{
 						const CvUnit* const unit = pNearbyPlot->getUnitByIndex(iNearbyUnitLoop);
+#ifdef AUI_WARNING_FIXES
+						if (unit && unit->isBarbarian())
+#else
 						if(unit && pNearbyPlot->getUnitByIndex(iNearbyUnitLoop)->isBarbarian())
+#endif
 						{
 							iNumNearbyUnits++;
 						}

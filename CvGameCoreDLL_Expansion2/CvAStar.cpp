@@ -4497,7 +4497,11 @@ int AttackPathAdd(CvAStarNode* parent, CvAStarNode* node, int data, const void* 
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int AttackPathDestEval(int iToX, int iToY, const void* pointer, const CvAStar* finder, bool bOnlyFortified, bool bOnlyCity)
+#else
 int AttackPathDestEval(int iToX, int iToY, const void* pointer, CvAStar* finder, bool bOnlyFortified, bool bOnlyCity)
+#endif
 {
 	CvUnit* pUnit = ((CvUnit*)pointer);
 	CvAssertMsg(pUnit, "pUnit should be a value");
@@ -4535,21 +4539,33 @@ int AttackPathDestEval(int iToX, int iToY, const void* pointer, CvAStar* finder,
 
 //	--------------------------------------------------------------------------------
 /// Destination is valid if there is an enemy unit there
+#ifdef AUI_CONSTIFY
+int AttackPathDest(int iToX, int iToY, const void* pointer, const CvAStar* finder)
+#else
 int AttackPathDest(int iToX, int iToY, const void* pointer, CvAStar* finder)
+#endif
 {
 	return AttackPathDestEval(iToX, iToY, pointer, finder, false, false);
 }
 
 //	--------------------------------------------------------------------------------
 /// Destination is valid if there is a fortified unit there
+#ifdef AUI_CONSTIFY
+int AttackFortifiedPathDest(int iToX, int iToY, const void* pointer, const CvAStar* finder)
+#else
 int AttackFortifiedPathDest(int iToX, int iToY, const void* pointer, CvAStar* finder)
+#endif
 {
 	return AttackPathDestEval(iToX, iToY, pointer, finder, true, false);
 }
 
 //	--------------------------------------------------------------------------------
 /// Destination is valid if there is a city there
+#ifdef AUI_CONSTIFY
+int AttackCityPathDest(int iToX, int iToY, const void* pointer, const CvAStar* finder)
+#else
 int AttackCityPathDest(int iToX, int iToY, const void* pointer, CvAStar* finder)
+#endif
 {
 	return AttackPathDestEval(iToX, iToY, pointer, finder, false, true);
 }
@@ -5025,7 +5041,11 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 }
 
 //	---------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int FindValidDestinationDest(int iToX, int iToY, const void* pointer, const CvAStar* finder)
+#else
 int FindValidDestinationDest(int iToX, int iToY, const void* pointer, CvAStar* finder)
+#endif
 {
 	CvUnit* pUnit = ((CvUnit*)pointer);
 	CvPlot* pToPlot = GC.getMap().plotUnchecked(iToX, iToY);

@@ -286,7 +286,11 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	//CvPlot* pAdjacentPlot;
 	CvPlot* pPlot;
 	BuildingTypes eLoopBuilding;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	pPlot = GC.getMap().plot(iX, iY);
 
@@ -388,8 +392,12 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	int iNumBuildingInfos = GC.getNumBuildingInfos();
 	for(iI = 0; iI < iNumBuildingInfos; iI++)
+#endif
 	{
 		if(owningPlayer.isBuildingFree((BuildingTypes)iI))
 		{
@@ -431,7 +439,11 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		owningPlayer.ChangeNumCitiesFounded(1);
 
 		// Free resources under city?
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumResourceInfos(); i++)
+#else
 		for(int i = 0; i < GC.getNumResourceInfos(); i++)
+#endif
 		{
 			ResourceTypes eResource = (ResourceTypes)i;
 			FreeResourceXCities freeResource = owningPlayer.GetPlayerTraits()->GetFreeResourceXCities(eResource);
@@ -466,7 +478,11 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 
 	// Policy changes
 	PolicyTypes ePolicy;
+#ifdef AUI_WARNING_FIXES
+	for (uint iPoliciesLoop = 0; iPoliciesLoop < GC.getNumPolicyInfos(); iPoliciesLoop++)
+#else
 	for(int iPoliciesLoop = 0; iPoliciesLoop < GC.getNumPolicyInfos(); iPoliciesLoop++)
+#endif
 	{
 		ePolicy = (PolicyTypes) iPoliciesLoop;
 
@@ -604,7 +620,11 @@ void CvCity::uninit()
 
 	if(m_aaiBuildingSpecialistUpgradeProgresses)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumBuildingInfos(); i++)
+#else
 		for(int i=0; i < GC.getNumBuildingInfos(); i++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_aaiBuildingSpecialistUpgradeProgresses[i]);
 		}
@@ -613,7 +633,11 @@ void CvCity::uninit()
 
 	if(m_ppaiResourceYieldChange)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumResourceInfos(); i++)
+#else
 		for(int i=0; i < GC.getNumResourceInfos(); i++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_ppaiResourceYieldChange[i]);
 		}
@@ -622,7 +646,11 @@ void CvCity::uninit()
 
 	if(m_ppaiFeatureYieldChange)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumFeatureInfos(); i++)
+#else
 		for(int i=0; i < GC.getNumFeatureInfos(); i++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_ppaiFeatureYieldChange[i]);
 		}
@@ -631,7 +659,11 @@ void CvCity::uninit()
 
 	if(m_ppaiTerrainYieldChange)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumTerrainInfos(); i++)
+#else
 		for(int i=0; i < GC.getNumTerrainInfos(); i++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_ppaiTerrainYieldChange[i]);
 		}
@@ -656,7 +688,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	VALIDATE_OBJECT
 	m_syncArchive.reset();
 
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	//--------------------------------
 	// Uninit class
@@ -828,7 +864,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 
 	if(!bConstructorCall)
 	{
+#ifdef AUI_WARNING_FIXES
+		uint iNumResources = GC.getNumResourceInfos();
+#else
 		int iNumResources = GC.getNumResourceInfos();
+#endif
 		CvAssertMsg((0 < iNumResources),  "GC.getNumResourceInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiNoResource.clear();
 		m_paiNoResource.resize(iNumResources);
@@ -843,7 +883,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiNumResourcesLocal.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumProjectInfos = GC.getNumProjectInfos();
+#else
 		int iNumProjectInfos = GC.getNumProjectInfos();
+#endif
 		m_paiProjectProduction.clear();
 		m_paiProjectProduction.resize(iNumProjectInfos);
 		for(iI = 0; iI < iNumProjectInfos; iI++)
@@ -851,17 +895,28 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiProjectProduction.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumSpecialistInfos = GC.getNumSpecialistInfos();
+		m_paiSpecialistProduction.clear();
+		m_paiSpecialistProduction.resize(iNumSpecialistInfos);
+		for (iI = 0; iI < iNumSpecialistInfos; iI++)
+#else
 		int iNumSpecialistInfos = GC.getNumSpecialistInfos();
 		m_paiSpecialistProduction.clear();
 		m_paiSpecialistProduction.resize(iNumSpecialistInfos);
 		for(iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
+#endif
 		{
 			m_paiSpecialistProduction.setAt(iI, 0);
 		}
 
 		m_pCityBuildings->Init(GC.GetGameBuildings(), this);
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumUnitInfos = GC.getNumUnitInfos();
+#else
 		int iNumUnitInfos = GC.getNumUnitInfos();
+#endif
 		CvAssertMsg((0 < iNumUnitInfos),  "GC.getNumUnitInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiUnitProduction.clear();
 		m_paiUnitProduction.resize(iNumUnitInfos);
@@ -891,7 +946,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiFreeSpecialistCount.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumImprovementInfos = GC.getNumImprovementInfos();
+#else
 		int iNumImprovementInfos = GC.getNumImprovementInfos();
+#endif
 		CvAssertMsg((0 < iNumImprovementInfos),  "GC.getNumImprovementInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiImprovementFreeSpecialists.clear();
 		m_paiImprovementFreeSpecialists.resize(iNumImprovementInfos);
@@ -900,7 +959,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiImprovementFreeSpecialists.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumUnitCombatClassInfos = GC.getNumUnitCombatClassInfos();
+#else
 		int iNumUnitCombatClassInfos = GC.getNumUnitCombatClassInfos();
+#endif
 		CvAssertMsg((0 < iNumUnitCombatClassInfos),  "GC.getNumUnitCombatClassInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiUnitCombatFreeExperience.clear();
 		m_paiUnitCombatFreeExperience.resize(iNumUnitCombatClassInfos);
@@ -912,7 +975,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiUnitCombatProductionModifier.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumPromotionInfos = GC.getNumPromotionInfos();
+#else
 		int iNumPromotionInfos = GC.getNumPromotionInfos();
+#endif
 		CvAssertMsg((0 < iNumPromotionInfos),  "GC.getNumPromotionInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiFreePromotionCount.clear();
 		m_paiFreePromotionCount.resize(iNumPromotionInfos);
@@ -923,7 +990,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 
 		int iJ;
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumBuildingInfos = GC.getNumBuildingInfos();
+#else
 		int iNumBuildingInfos = GC.getNumBuildingInfos();
+#endif
 		int iMAX_SPECIALISTS_FROM_BUILDING = GC.getMAX_SPECIALISTS_FROM_BUILDING();
 		CvAssertMsg(m_aaiBuildingSpecialistUpgradeProgresses==NULL, "about to leak memory, CvCity::m_aaiBuildingSpecialistUpgradeProgresses");
 		m_aaiBuildingSpecialistUpgradeProgresses = FNEW(int*[iNumBuildingInfos], c_eCiv5GameplayDLL, 0);
@@ -936,7 +1007,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumResourceInfos = GC.getNumResourceInfos();
+#else
 		int iNumResourceInfos = GC.getNumResourceInfos();
+#endif
 		CvAssertMsg(m_ppaiResourceYieldChange==NULL, "about to leak memory, CvCity::m_ppaiResourceYieldChange");
 		m_ppaiResourceYieldChange = FNEW(int*[iNumResourceInfos], c_eCiv5GameplayDLL, 0);
 		for(iI = 0; iI < iNumResourceInfos; iI++)
@@ -948,7 +1023,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumFeatureInfos = GC.getNumFeatureInfos();
+#else
 		int iNumFeatureInfos = GC.getNumFeatureInfos();
+#endif
 		CvAssertMsg(m_ppaiFeatureYieldChange==NULL, "about to leak memory, CvCity::m_ppaiFeatureYieldChange");
 		m_ppaiFeatureYieldChange = FNEW(int*[iNumFeatureInfos], c_eCiv5GameplayDLL, 0);
 		for(iI = 0; iI < iNumFeatureInfos; iI++)
@@ -960,7 +1039,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumTerrainInfos = GC.getNumTerrainInfos();
+#else
 		int iNumTerrainInfos = GC.getNumTerrainInfos();
+#endif
 		CvAssertMsg(m_ppaiTerrainYieldChange==NULL, "about to leak memory, CvCity::m_ppaiTerrainYieldChange");
 		m_ppaiTerrainYieldChange = FNEW(int*[iNumTerrainInfos], c_eCiv5GameplayDLL, 0);
 		for(iI = 0; iI < iNumTerrainInfos; iI++)
@@ -1029,7 +1112,11 @@ void CvCity::setupWonderGraphics()
 {
 	VALIDATE_OBJECT
 	PlayerTypes ePlayerID = getOwner();
+#ifdef AUI_WARNING_FIXES
+	for (uint eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#else
 	for(int eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(eBuildingType);
 		CvBuildingEntry* buildingInfo = GC.getBuildingInfo(eBuilding);
@@ -1115,7 +1202,11 @@ void CvCity::setupWonderGraphics()
 void CvCity::setupBuildingGraphics()
 {
 	VALIDATE_OBJECT
+#ifdef AUI_WARNING_FIXES
+	for (uint eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#else
 	for(int eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(eBuildingType);
 		CvBuildingEntry* buildingInfo = GC.getBuildingInfo(eBuilding);
@@ -1262,7 +1353,11 @@ void CvCity::PreKill()
 		GET_PLAYER(getOwner()).GetMinorCivAI()->DoRemoveStartingResources(plot());
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		CvBuildingEntry* pkBuilding = GC.getBuildingInfo((BuildingTypes)iI);
 		if(pkBuilding)
@@ -1282,7 +1377,11 @@ void CvCity::PreKill()
 
 	// Could also be non-garrisoned units here that we need to show
 	CvUnit* pLoopUnit;
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < pPlot->getNumUnits(); iUnitLoop++)
+#else
 	for(int iUnitLoop = 0; iUnitLoop < pPlot->getNumUnits(); iUnitLoop++)
+#endif
 	{
 		pLoopUnit = pPlot->getUnitByIndex(iUnitLoop);
 
@@ -1294,7 +1393,11 @@ void CvCity::PreKill()
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
+#else
 	for(int iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
+#endif
 	{
 		CvPlot* pLoopPlot = GC.getMap().plotByIndexUnchecked(iPlotLoop);
 		if(NULL != pLoopPlot && pLoopPlot->GetCityPurchaseOwner() == getOwner() && pLoopPlot->GetCityPurchaseID() == GetID())
@@ -2167,7 +2270,11 @@ int CvCity::findYieldRateRank(YieldTypes eYield)
 
 //	--------------------------------------------------------------------------------
 // Returns one of the upgrades...
+#ifdef AUI_WARNING_FIXES
+UnitTypes CvCity::allUpgradesAvailable(UnitTypes eUnit, uint iUpgradeCount) const
+#else
 UnitTypes CvCity::allUpgradesAvailable(UnitTypes eUnit, int iUpgradeCount) const
+#endif
 {
 	VALIDATE_OBJECT
 	UnitTypes eUpgradeUnit;
@@ -2194,7 +2301,11 @@ UnitTypes CvCity::allUpgradesAvailable(UnitTypes eUnit, int iUpgradeCount) const
 
 	CvCivilizationInfo& thisCiv = getCivilizationInfo();
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#endif
 	{
 		const UnitClassTypes eUnitClass = static_cast<UnitClassTypes>(iI);
 		CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo(eUnitClass);
@@ -2379,9 +2490,15 @@ bool CvCity::canTrain(UnitTypes eUnit, bool bContinue, bool bTestVisible, bool b
 		}
 
 		// See if there are any BuildingClass requirements
+#ifndef AUI_WARNING_FIXES
 		const int iNumBuildingClassInfos = GC.getNumBuildingClassInfos();
+#endif
 		CvCivilizationInfo& thisCivilization = getCivilizationInfo();
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#else
 		for(int iBuildingClassLoop = 0; iBuildingClassLoop < iNumBuildingClassInfos; iBuildingClassLoop++)
+#endif
 		{
 			const BuildingClassTypes eBuildingClass = (BuildingClassTypes) iBuildingClassLoop;
 			CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo(eBuildingClass);
@@ -2454,7 +2571,11 @@ bool CvCity::canTrain(UnitTypes eUnit, bool bContinue, bool bTestVisible, bool b
 bool CvCity::canTrain(UnitCombatTypes eUnitCombat) const
 {
 	VALIDATE_OBJECT
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumUnitInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumUnitInfos(); i++)
+#endif
 	{
 		const UnitTypes eUnit = static_cast<UnitTypes>(i);
 		CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
@@ -3016,7 +3137,11 @@ void CvCity::ChangeNumResourceLocal(ResourceTypes eResource, int iChange)
 		}
 
 		// Building Culture change for a local resource
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 		for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 		{
 			const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
 			CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -3158,7 +3283,11 @@ void CvCity::DoPickResourceDemanded(bool bCurrentResourceInvalid)
 	ResourceTypes eResource;
 
 	// Loop through all resource infos and invalidate resources that only come from minor civs
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		eResource = (ResourceTypes) iResourceLoop;
 		CvResourceInfo* pkResource = GC.getResourceInfo(eResource);
@@ -3199,7 +3328,11 @@ void CvCity::DoPickResourceDemanded(bool bCurrentResourceInvalid)
 
 	// Create list of valid Luxuries
 	FStaticVector<ResourceTypes, 64, true, c_eCiv5GameplayDLL, 0> veValidLuxuryResources;
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		eResource = (ResourceTypes) iResourceLoop;
 
@@ -3643,7 +3776,11 @@ void CvCity::addProductionExperience(CvUnit* pUnit, bool bConscript)
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#endif
 	{
 		const PromotionTypes ePromotion = static_cast<PromotionTypes>(iI);
 		CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -4969,7 +5106,11 @@ void CvCity::changeProductionTimes100(int iChange)
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(_In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	const OrderData* pOrderNode = headOrderQueueNode();
@@ -5010,7 +5151,11 @@ int CvCity::getProductionModifier(CvString* toolTipSink) const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getGeneralProductionModifiers(_In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getGeneralProductionModifiers(CvString* toolTipSink) const
+#endif
 {
 	int iMultiplier = 0;
 
@@ -5029,7 +5174,11 @@ int CvCity::getGeneralProductionModifiers(CvString* toolTipSink) const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(UnitTypes eUnit, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(UnitTypes eUnit, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -5109,7 +5258,11 @@ int CvCity::getProductionModifier(UnitTypes eUnit, CvString* toolTipSink) const
 	iTempMod = 0;
 	int iBuildingMod = 0;
 	BuildingTypes eBuilding;
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		eBuilding = (BuildingTypes) iI;
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -5140,7 +5293,11 @@ int CvCity::getProductionModifier(UnitTypes eUnit, CvString* toolTipSink) const
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(BuildingTypes eBuilding, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(BuildingTypes eBuilding, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iMultiplier = getGeneralProductionModifiers(toolTipSink);
@@ -5250,7 +5407,11 @@ int CvCity::getProductionModifier(BuildingTypes eBuilding, CvString* toolTipSink
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(ProjectTypes eProject, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(ProjectTypes eProject, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iMultiplier = getGeneralProductionModifiers(toolTipSink);
@@ -5271,7 +5432,11 @@ int CvCity::getProductionModifier(ProjectTypes eProject, CvString* toolTipSink) 
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(SpecialistTypes eSpecialist, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(SpecialistTypes eSpecialist, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iMultiplier = getGeneralProductionModifiers(toolTipSink);
@@ -5281,7 +5446,11 @@ int CvCity::getProductionModifier(SpecialistTypes eSpecialist, CvString* toolTip
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(ProcessTypes eProcess, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(ProcessTypes eProcess, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iMultiplier = getGeneralProductionModifiers(toolTipSink);
@@ -5624,7 +5793,11 @@ UnitTypes CvCity::getConscriptUnit() const
 	UnitTypes eBestUnit = NO_UNIT;
 	int iBestValue = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#endif
 	{
 		const UnitClassTypes eUnitClass = static_cast<UnitClassTypes>(iI);
 		CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo(eUnitClass);
@@ -5785,7 +5958,11 @@ int CvCity::getResourceYieldRateModifier(YieldTypes eIndex, ResourceTypes eResou
 	VALIDATE_OBJECT
 	int iModifier = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iI);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -5843,7 +6020,11 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 
 			int iFreeUnitLoop;
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#else
 			for(int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#endif
 			{
 				const UnitTypes eUnit = static_cast<UnitTypes>(iUnitLoop);
 				CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
@@ -6079,7 +6260,11 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 		m_pCityReligions->ChangeReligiousPressureModifier(pBuildingInfo->GetReligiousPressureModifier() * iChange);
 
 		PolicyTypes ePolicy;
+#ifdef AUI_WARNING_FIXES
+		for (uint iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#else
 		for(int iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#endif
 		{
 			ePolicy = (PolicyTypes) iPolicyLoop;
 
@@ -6117,7 +6302,11 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 		// Resource loop
 		int iCulture, iFaith;
 		ResourceTypes eResource;
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			eResource = (ResourceTypes) iResourceLoop;
 
@@ -6223,17 +6412,29 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			changeYieldRateModifier(eYield, pPolicies->GetBuildingClassYieldModifier(eBuildingClass, eYield) * iChange);
 			ChangeBaseYieldRateFromBuildings(eYield, pPolicies->GetBuildingClassYieldChange(eBuildingClass, eYield) * iChange);
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iJ = 0; iJ < GC.getNumResourceInfos(); iJ++)
+#else
 			for(int iJ = 0; iJ < GC.getNumResourceInfos(); iJ++)
+#endif
 			{
 				ChangeResourceExtraYield(((ResourceTypes)iJ), eYield, (GC.getBuildingInfo(eBuilding)->GetResourceYieldChange(iJ, eYield) * iChange));
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iJ = 0; iJ < GC.getNumFeatureInfos(); iJ++)
+#else
 			for(int iJ = 0; iJ < GC.getNumFeatureInfos(); iJ++)
+#endif
 			{
 				ChangeFeatureExtraYield(((FeatureTypes)iJ), eYield, (GC.getBuildingInfo(eBuilding)->GetFeatureYieldChange(iJ, eYield) * iChange));
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iJ = 0; iJ < GC.getNumTerrainInfos(); iJ++)
+#else
 			for(int iJ = 0; iJ < GC.getNumTerrainInfos(); iJ++)
+#endif
 			{
 				ChangeTerrainExtraYield(((TerrainTypes)iJ), eYield, (GC.getBuildingInfo(eBuilding)->GetTerrainYieldChange(iJ, eYield) * iChange));
 			}
@@ -6275,12 +6476,22 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		if (pBuildingInfo->GetSpecialistType() != NO_SPECIALIST)
+		{
+			GetCityCitizens()->ChangeBuildingGreatPeopleRateChanges((SpecialistTypes)pBuildingInfo->GetSpecialistType(), pBuildingInfo->GetGreatPeopleRateChange() * iChange);
+#else
 		if(GC.getBuildingInfo(eBuilding)->GetSpecialistType() != NO_SPECIALIST)
 		{
 			GetCityCitizens()->ChangeBuildingGreatPeopleRateChanges((SpecialistTypes) GC.getBuildingInfo(eBuilding)->GetSpecialistType(), pBuildingInfo->GetGreatPeopleRateChange() * iChange);
+#endif
 		}
 
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumUnitCombatClassInfos(); iI++)
+#else
 		for(int iI = 0; iI < GC.getNumUnitCombatClassInfos(); iI++)
+#endif
 		{
 			const UnitCombatTypes eUnitCombatClass = static_cast<UnitCombatTypes>(iI);
 			CvBaseInfo* pkUnitCombatClassInfo = GC.getUnitCombatClassInfo(eUnitCombatClass);
@@ -6477,7 +6688,11 @@ void CvCity::UpdateReligion(ReligionTypes eNewMajority)
 				}
 
 				// Buildings
+#ifdef AUI_WARNING_FIXES
+				for (uint jJ = 0; jJ < GC.getNumBuildingClassInfos(); jJ++)
+#else
 				for(int jJ = 0; jJ < GC.getNumBuildingClassInfos(); jJ++)
+#endif
 				{
 					BuildingClassTypes eBuildingClass = (BuildingClassTypes)jJ;
 
@@ -7059,7 +7274,11 @@ bool CvCity::hasActiveWorldWonder() const
 
 	CvTeam& kTeam = GET_TEAM(getTeam());
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iI);
 
@@ -8037,7 +8256,11 @@ int CvCity::GetLocalResourceWonderProductionMod(BuildingTypes eBuilding, CvStrin
 		}
 
 		// Resource wonder bonus
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			const ResourceTypes eResource = static_cast<ResourceTypes>(iResourceLoop);
 			CvResourceInfo* pkResource = GC.getResourceInfo(eResource);
@@ -8405,7 +8628,11 @@ void CvCity::changeFreeExperience(int iChange)
 //	--------------------------------------------------------------------------------
 bool CvCity::CanAirlift() const
 {
+#ifdef AUI_WARNING_FIXES
+	uint iBuildingClassLoop;
+#else
 	int iBuildingClassLoop;
+#endif
 	BuildingClassTypes eBuildingClass;
 	CvPlayer &kPlayer = GET_PLAYER(getOwner());
 
@@ -8672,7 +8899,11 @@ void CvCity::DoCreatePuppet()
 	}
 
 	// Remove any buildings that are not applicable to puppets (but might have been earned through traits/policies)
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for (int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		BuildingTypes eBuilding = (BuildingTypes) iI;
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -8772,7 +9003,11 @@ int CvCity::GetLocalHappiness() const
 			}
 
 			// Buildings
+#ifdef AUI_WARNING_FIXES
+			for (uint jJ = 0; jJ < GC.getNumBuildingClassInfos(); jJ++)
+#else
 			for(int jJ = 0; jJ < GC.getNumBuildingClassInfos(); jJ++)
+#endif
 			{
 				BuildingClassTypes eBuildingClass = (BuildingClassTypes)jJ;
 
@@ -8799,9 +9034,17 @@ int CvCity::GetLocalHappiness() const
 
 	// Policy Building Mods
 	int iSpecialPolicyBuildingHappiness = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iBuildingClassLoop;
+#else
 	int iBuildingClassLoop;
+#endif
 	BuildingClassTypes eBuildingClass;
+#ifdef AUI_WARNING_FIXES
+	for (uint iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#else
 	for(int iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#endif
 	{
 		PolicyTypes ePolicy = (PolicyTypes)iPolicyLoop;
 		CvPolicyEntry* pkPolicyInfo = GC.getPolicyInfo(ePolicy);
@@ -8922,10 +9165,16 @@ BuildingTypes CvCity::ChooseFreeWallsBuilding() const
 BuildingTypes CvCity::ChooseFreeCultureBuilding() const
 {
 	BuildingTypes eRtnValue = NO_BUILDING;
+#ifndef AUI_WARNING_FIXES
 	int iNumBuildingInfos = GC.getNumBuildingInfos();
+#endif
 	CvWeightedVector<int, SAFE_ESTIMATE_NUM_BUILDINGS, true> buildingChoices;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < iNumBuildingInfos; iI++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iI);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -8966,10 +9215,16 @@ BuildingTypes CvCity::ChooseFreeCultureBuilding() const
 BuildingTypes CvCity::ChooseFreeFoodBuilding() const
 {
 	BuildingTypes eRtnValue = NO_BUILDING;
+#ifndef AUI_WARNING_FIXES
 	int iNumBuildingInfos = GC.getNumBuildingInfos();
+#endif
 	CvWeightedVector<int, SAFE_ESTIMATE_NUM_BUILDINGS, true> buildingChoices;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < iNumBuildingInfos; iI++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iI);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -9075,7 +9330,11 @@ bool CvCity::IsBlockaded() const
 	CvBuildingXMLEntries* pkGameBuildings = GC.GetGameBuildings();
 
 	// Loop through adding the available buildings
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.GetGameBuildings()->GetNumBuildings(); i++)
+#else
 	for(int i = 0; i < GC.GetGameBuildings()->GetNumBuildings(); i++)
+#endif
 	{
 		BuildingTypes eBuilding = (BuildingTypes)i;
 		CvBuildingEntry* pkBuildingInfo = pkGameBuildings->GetEntry(i);
@@ -9920,7 +10179,11 @@ void CvCity::updateExtraSpecialistYield(YieldTypes eYield)
 	VALIDATE_OBJECT
 	int iOldYield;
 	int iNewYield;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	CvAssertMsg(eYield >= 0, "eYield expected to be >= 0");
 	CvAssertMsg(eYield < NUM_YIELD_TYPES, "eYield expected to be < NUM_YIELD_TYPES");
@@ -10051,7 +10314,11 @@ int CvCity::getDomainFreeExperienceFromGreatWorks(DomainTypes eIndex) const
 	int iXP = 0;
 
 	CvBuildingXMLEntries* pkBuildings = GetCityBuildings()->GetBuildings();
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuilding = 0; iBuilding < GetCityBuildings()->GetBuildings()->GetNumBuildings(); iBuilding++)
+#else
 	for(int iBuilding = 0; iBuilding < GetCityBuildings()->GetBuildings()->GetNumBuildings(); iBuilding++)
+#endif
 	{
 		CvBuildingEntry* pInfo = pkBuildings->GetEntry(iBuilding);
 		if(pInfo)
@@ -12503,7 +12770,11 @@ void CvCity::stopHeadOrder()
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+uint CvCity::getOrderQueueLength()
+#else
 int CvCity::getOrderQueueLength()
+#endif
 {
 	VALIDATE_OBJECT
 	return m_orderQueue.getLength();
@@ -13554,7 +13825,11 @@ bool CvCity::doCheckProduction()
 	UnitTypes eUpgradeUnit;
 	int iUpgradeProduction;
 	int iProductionGold;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 	bool bOK = true;
 
 	int iMaxedUnitGoldPercent = GC.getMAXED_UNIT_GOLD_PERCENT();
@@ -13563,7 +13838,11 @@ bool CvCity::doCheckProduction()
 
 	CvPlayerAI& thisPlayer = GET_PLAYER(getOwner());
 
+#ifdef AUI_WARNING_FIXES
+	uint iNumUnitInfos = GC.getNumUnitInfos();
+#else
 	int iNumUnitInfos = GC.getNumUnitInfos();
+#endif
 	{
 		AI_PERF_FORMAT_NESTED("City-AI-perf.csv", ("CvCity::doCheckProduction_Unit, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
 		for(iI = 0; iI < iNumUnitInfos; iI++)
@@ -13598,7 +13877,11 @@ bool CvCity::doCheckProduction()
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	uint iNumBuildingInfos = GC.getNumBuildingInfos();
+#else
 	int iNumBuildingInfos = GC.getNumBuildingInfos();
+#endif
 	{
 		AI_PERF_FORMAT_NESTED("City-AI-perf.csv", ("CvCity::doCheckProduction_Building, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
 
@@ -13664,8 +13947,12 @@ bool CvCity::doCheckProduction()
 
 	{
 		AI_PERF_FORMAT_NESTED("City-AI-perf.csv", ("CvCity::doCheckProduction_Project, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
+#ifdef AUI_WARNING_FIXES
+		for (iI = 0; iI < GC.getNumProjectInfos(); iI++)
+#else
 		int iNumProjectInfos = GC.getNumProjectInfos();
 		for(iI = 0; iI < iNumProjectInfos; iI++)
+#endif
 		{
 			int iProjectProduction = getProjectProduction((ProjectTypes)iI);
 			if(iProjectProduction > 0)
@@ -13726,7 +14013,11 @@ bool CvCity::doCheckProduction()
 					{
 						if(pOrderNode->eOrderType == ORDER_TRAIN)
 						{
+#ifdef AUI_WARNING_FIXES
+							if ((uint)pOrderNode->iData1 == iI)
+#else
 							if(pOrderNode->iData1 == iI)
+#endif
 							{
 								thisPlayer.changeUnitClassMaking(((UnitClassTypes)(GC.getUnitInfo((UnitTypes)(pOrderNode->iData1))->GetUnitClassType())), -1);
 								pOrderNode->iData1 = eUpgradeUnit;
@@ -13771,7 +14062,11 @@ bool CvCity::doCheckProduction()
 							{
 								if(pOrderNode->eOrderType == ORDER_CONSTRUCT)
 								{
+#ifdef AUI_WARNING_FIXES
+									if ((uint)pOrderNode->iData1 == iI)
+#else
 									if(pOrderNode->iData1 == iI)
+#endif
 									{
 										CvBuildingEntry* pkOrderBuildingInfo = GC.getBuildingInfo((BuildingTypes)pOrderNode->iData1);
 										CvBuildingEntry* pkUpgradeBuildingInfo = GC.getBuildingInfo(eUpgradeBuilding);
@@ -13894,7 +14189,11 @@ void CvCity::doProcess()
 	if (eProcess == NO_PROCESS) return;
 
 	// Contribute production to a League project
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumLeagueProjectInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumLeagueProjectInfos(); iI++)
+#endif
 	{
 		LeagueProjectTypes eLeagueProject = (LeagueProjectTypes) iI;
 		CvLeagueProjectEntry* pInfo = GC.getLeagueProjectInfo(eLeagueProject);
@@ -14226,7 +14525,11 @@ void CvCity::read(FDataStream& kStream)
 	if (uiVersion < 6)
 	{
 		CvCivilizationInfo& thisCivInfo = *GC.getCivilizationInfo(getCivilizationType());
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingClassTypes eBuildingClass = (BuildingClassTypes)iI;
 			BuildingTypes eBuilding = (BuildingTypes)(thisCivInfo.getCivilizationBuildings(eBuildingClass));
@@ -14388,7 +14691,11 @@ void CvCity::read(FDataStream& kStream)
 	{
 		// Recalculate
 		int iTotalExtraHitPoints = 0;
+#ifdef AUI_WARNING_FIXES
+		for (uint eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#else
 		for(int eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#endif
 		{
 			const BuildingTypes eBuilding = static_cast<BuildingTypes>(eBuildingType);
 			CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -14939,7 +15246,11 @@ bool CvCity::IsHasBuildingThatAllowsRangeStrike() const
 	VALIDATE_OBJECT
 	bool bHasBuildingThatAllowsRangeStrike = false;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);

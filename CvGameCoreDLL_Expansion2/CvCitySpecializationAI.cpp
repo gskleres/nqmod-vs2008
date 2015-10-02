@@ -478,7 +478,11 @@ void CvCitySpecializationAI::WeightSpecializations()
 		iGeneralEconomicWeight = GC.getAI_CITY_SPECIALIZATION_GENERAL_ECONOMIC_WEIGHT() /* 200 */;
 
 		//   Add in any contribution from the current grand strategy
+#ifdef AUI_WARNING_FIXES
+		for (uint iGrandStrategyLoop = 0; iGrandStrategyLoop < GC.getNumAIGrandStrategyInfos(); iGrandStrategyLoop++)
+#else
 		for(int iGrandStrategyLoop = 0; iGrandStrategyLoop < GC.getNumAIGrandStrategyInfos(); iGrandStrategyLoop++)
+#endif
 		{
 			CvAIGrandStrategyXMLEntry* grandStrategy = GC.getAIGrandStrategyInfo((AIGrandStrategyTypes)iGrandStrategyLoop);
 			if(grandStrategy)
@@ -598,7 +602,11 @@ int CvCitySpecializationAI::WeightProductionSubtypes(int iFlavorWonder, int iFla
 		iSpaceshipWeight += iFlavorSpaceship * GC.getAI_CITY_SPECIALIZATION_PRODUCTION_WEIGHT_FLAVOR_SPACESHIP() /* 5 */;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iGrandStrategyLoop = 0; iGrandStrategyLoop < GC.getNumAIGrandStrategyInfos(); iGrandStrategyLoop++)
+#else
 	for(int iGrandStrategyLoop = 0; iGrandStrategyLoop < GC.getNumAIGrandStrategyInfos(); iGrandStrategyLoop++)
+#endif
 	{
 		CvAIGrandStrategyXMLEntry* grandStrategy = GC.getAIGrandStrategyInfo((AIGrandStrategyTypes)iGrandStrategyLoop);
 		if(grandStrategy)
@@ -1047,7 +1055,11 @@ CitySpecializationTypes CvCitySpecializationAI::GetWonderSpecialization() const
 {
 	CvCitySpecializationXMLEntry* pEntry;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumCitySpecializationInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumCitySpecializationInfos(); iI++)
+#endif
 	{
 		pEntry = GC.GetGameCitySpecializations()->GetEntry(iI);
 		if(pEntry->IsWonder())
@@ -1064,7 +1076,11 @@ CitySpecializationTypes CvCitySpecializationAI::GetEconomicDefaultSpecialization
 {
 	CvCitySpecializationXMLEntry* pEntry;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumCitySpecializationInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumCitySpecializationInfos(); iI++)
+#endif
 	{
 		pEntry = GC.GetGameCitySpecializations()->GetEntry(iI);
 		if(pEntry->IsDefault())
@@ -1082,7 +1098,11 @@ int CvCitySpecializationAI::GetWonderSubtype() const
 	CvCitySpecializationXMLEntry* pEntry;
 	int iSubType = -1;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumCitySpecializationInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumCitySpecializationInfos(); iI++)
+#endif
 	{
 		pEntry = GC.GetGameCitySpecializations()->GetEntry(iI);
 		if(pEntry->GetYieldType() == YIELD_PRODUCTION)
@@ -1158,7 +1178,11 @@ void CvCitySpecializationAI::FindBestSites()
 {
 	CvPlot* pPlot;
 	int iPlotValue;
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvCity* pNearestCity;
 
 	// Clear output
@@ -1402,7 +1426,11 @@ bool CvCitySpecializationAI::CanBuildSpaceshipParts()
 	CvCity* pCity = m_pPlayer->firstCity(&iLoop);
 
 	// Loop through adding the available units
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < GC.GetGameUnits()->GetNumUnits(); iUnitLoop++)
+#else
 	for(int iUnitLoop = 0; iUnitLoop < GC.GetGameUnits()->GetNumUnits(); iUnitLoop++)
+#endif
 	{
 		const UnitTypes eUnit = static_cast<UnitTypes>(iUnitLoop);
 		CvUnitEntry* pkUnitEntry = GC.getUnitInfo(eUnit);

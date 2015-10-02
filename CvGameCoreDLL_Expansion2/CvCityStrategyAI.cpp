@@ -227,7 +227,11 @@ CvAICityStrategyEntry* CvAICityStrategies::GetEntry(int index)
 //=====================================
 
 /// defining static
+#ifdef AUI_WARNING_FIXES
+unsigned int CvCityStrategyAI::m_acBestYields[NUM_YIELD_TYPES][NUM_CITY_PLOTS];
+#else
 unsigned char  CvCityStrategyAI::m_acBestYields[NUM_YIELD_TYPES][NUM_CITY_PLOTS];
+#endif
 
 /// Constructor
 CvCityStrategyAI::CvCityStrategyAI():
@@ -412,7 +416,11 @@ void CvCityStrategyAI::UpdateFlavorsForNewCity()
 	}
 
 	// Go through all Player strategies and for the active ones apply the Flavors
+#ifdef AUI_WARNING_FIXES
+	for (uint iStrategyLoop = 0; iStrategyLoop < GC.getNumEconomicAIStrategyInfos(); iStrategyLoop++)
+#else
 	for(int iStrategyLoop = 0; iStrategyLoop < GC.getNumEconomicAIStrategyInfos(); iStrategyLoop++)
+#endif
 	{
 		EconomicAIStrategyTypes eStrategy = (EconomicAIStrategyTypes) iStrategyLoop;
 		CvEconomicAIStrategyXMLEntry* pStrategy = GC.getEconomicAIStrategyInfo(eStrategy);
@@ -429,7 +437,11 @@ void CvCityStrategyAI::UpdateFlavorsForNewCity()
 			}
 		}
 	}
+#ifdef AUI_WARNING_FIXES
+	for (uint iStrategyLoop = 0; iStrategyLoop < GC.getNumMilitaryAIStrategyInfos(); iStrategyLoop++)
+#else
 	for(int iStrategyLoop = 0; iStrategyLoop < GC.getNumMilitaryAIStrategyInfos(); iStrategyLoop++)
+#endif
 	{
 		MilitaryAIStrategyTypes eStrategy = (MilitaryAIStrategyTypes) iStrategyLoop;
 		CvMilitaryAIStrategyXMLEntry* pStrategy = GC.getMilitaryAIStrategyInfo(eStrategy);
@@ -738,7 +750,12 @@ double CvCityStrategyAI::GetDeficientYieldValue(YieldTypes eYieldType)
 void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgnoreBldg /* = NO_BUILDING */, UnitTypes eIgnoreUnit/*  = NO_UNIT */)
 {
 	RandomNumberDelegate fcn;
+#ifdef AUI_WARNING_FIXES
+	uint iBldgLoop, iUnitLoop, iProjectLoop, iProcessLoop;
+	int iTempWeight;
+#else
 	int iBldgLoop, iUnitLoop, iProjectLoop, iProcessLoop, iTempWeight;
+#endif
 	CvCityBuildable buildable;
 	CvCityBuildable selection;
 	UnitTypes eUnitForOperation;
@@ -841,7 +858,11 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 			continue;
 
 		// Make sure this building can be built now
+#ifdef AUI_WARNING_FIXES
+		if (iBldgLoop != uint(eIgnoreBldg) && m_pCity->canConstruct(eLoopBuilding))
+#else
 		if(iBldgLoop != eIgnoreBldg && m_pCity->canConstruct(eLoopBuilding))
+#endif
 		{
 			buildable.m_eBuildableType = CITY_BUILDABLE_BUILDING;
 			buildable.m_iIndex = iBldgLoop;
@@ -937,7 +958,11 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 		for(iUnitLoop = 0; iUnitLoop < GC.GetGameUnits()->GetNumUnits(); iUnitLoop++)
 		{
 			// Make sure this unit can be built now
+#ifdef AUI_WARNING_FIXES
+			if (iUnitLoop != uint(eIgnoreUnit) &&
+#else
 			if(iUnitLoop != eIgnoreUnit &&
+#endif
 			        //GC.GetGameBuildings()->GetEntry(iUnitLoop)->GetAdvisorType() != eIgnoreAdvisor &&
 			        m_pCity->canTrain((UnitTypes)iUnitLoop))
 			{
@@ -1499,7 +1524,11 @@ void CvCityStrategyAI::UpdateBestYields()
 
 			CvCityBuildings* pCityBuildings = m_pCity->GetCityBuildings();
 			BuildingTypes eBuilding;
+#ifdef AUI_WARNING_FIXES
+			for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 			for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 			{
 				eBuilding = (BuildingTypes) iI;
 				CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -1589,12 +1618,20 @@ void CvCityStrategyAI::UpdateBestYields()
 	m_eFocusYield = pEntry->GetYieldType();
 }
 
+#ifdef AUI_WARNING_FIXES
+unsigned int CvCityStrategyAI::GetBestYieldAverageTimes100(YieldTypes eYield)
+#else
 unsigned short CvCityStrategyAI::GetBestYieldAverageTimes100(YieldTypes eYield)
+#endif
 {
 	return m_asBestYieldAverageTimes100[eYield];
 }
 
+#ifdef AUI_WARNING_FIXES
+int CvCityStrategyAI::GetYieldDeltaTimes100(YieldTypes eYield)
+#else
 short CvCityStrategyAI::GetYieldDeltaTimes100(YieldTypes eYield)
+#endif
 {
 	return m_asYieldDeltaTimes100[eYield];
 }
@@ -2245,8 +2282,12 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_WantTileImprovers(AICityStrategyT
 						// loop through the build types to find one that we can use
 						ImprovementTypes eCorrectImprovement = NO_IMPROVEMENT;
 						BuildTypes eCorrectBuild = NO_BUILD;
+#ifdef AUI_WARNING_FIXES
+						for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 						int iBuildIndex;
 						for(iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 						{
 							const BuildTypes eBuild = static_cast<BuildTypes>(iBuildIndex);
 							CvBuildInfo* pkBuildInfo = GC.getBuildInfo(eBuild);
@@ -3001,7 +3042,11 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_GoodGPCity(CvCity* pCity)
 
 	int iTotalGPPChange = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#else
 	for (int iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#endif
 	{
 		const SpecialistTypes eSpecialist = static_cast<SpecialistTypes>(iSpecialistLoop);
 		CvSpecialistInfo* pkSpecialistInfo = GC.getSpecialistInfo(eSpecialist);
@@ -3171,6 +3216,10 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_NeedTourismBuilding(CvCity *pCity
 
 bool CityStrategyAIHelpers::IsTestCityStrategy_GoodAirliftCity(CvCity *pCity)
 {
+#ifdef AUI_WARNING_FIXES
+	if (!pCity)
+		return false;
+#endif
 	if (pCity->isCapital())
 	{
 		return true;
@@ -3178,7 +3227,11 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_GoodAirliftCity(CvCity *pCity)
 
 	CvPlayer &kPlayer = GET_PLAYER(pCity->getOwner());
 	CvCity *pCapital = kPlayer.getCapitalCity();
+#ifdef AUI_WARNING_FIXES
+	if (pCapital && pCity->getArea() != pCapital->getArea())
+#else
 	if (pCity && pCity->getArea() != pCapital->getArea())
+#endif
 	{
 		return true;
 	}

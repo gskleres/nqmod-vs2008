@@ -94,8 +94,13 @@ void CvDllNetMessageHandler::ResponseBarbarianRansom(PlayerTypes ePlayer, int iO
 void CvDllNetMessageHandler::ResponseChangeWar(PlayerTypes ePlayer, TeamTypes eRivalTeam, bool bWar)
 {
 	CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
+#ifdef AUI_WARNING_FIXES
+	const TeamTypes eTeam = kPlayer.getTeam();
+	CvTeam& kTeam = GET_TEAM(eTeam);
+#else
 	CvTeam& kTeam = GET_TEAM(kPlayer.getTeam());
 	const TeamTypes eTeam = kPlayer.getTeam();
+#endif
 
 	FAssert(eTeam != eRivalTeam);
 
@@ -112,8 +117,13 @@ void CvDllNetMessageHandler::ResponseChangeWar(PlayerTypes ePlayer, TeamTypes eR
 void CvDllNetMessageHandler::ResponseIgnoreWarning(PlayerTypes ePlayer, TeamTypes eRivalTeam)
 {
 	CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
+#ifdef AUI_WARNING_FIXES
+	const TeamTypes eTeam = kPlayer.getTeam();
+	CvTeam& kTeam = GET_TEAM(eTeam);
+#else
 	CvTeam& kTeam = GET_TEAM(kPlayer.getTeam());
 	const TeamTypes eTeam = kPlayer.getTeam();
+#endif
 	FAssert(eTeam != eRivalTeam);
 	
 	kTeam.PushIgnoreWarning(eRivalTeam);
@@ -207,7 +217,11 @@ void CvDllNetMessageHandler::ResponseCitySwapOrder(PlayerTypes ePlayer, int iCit
 	}
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvDllNetMessageHandler::ResponseChooseElection(PlayerTypes, int, int)
+#else
 void CvDllNetMessageHandler::ResponseChooseElection(PlayerTypes ePlayer, int iSelection, int iVoteId)
+#endif
 {
 	// Unused
 }
@@ -243,7 +257,12 @@ void CvDllNetMessageHandler::ResponseDoCommand(PlayerTypes ePlayer, int iUnitID,
 
 	if(pkUnit != NULL)
 	{
+#ifdef AUI_WARNING_FIXES
+		CvCommandInfo* pCommandInfo = GC.getCommandInfo(eCommand);
+		if (bAlt && pCommandInfo && pCommandInfo->getAll())
+#else
 		if(bAlt && GC.getCommandInfo(eCommand)->getAll())
+#endif
 		{
 			const UnitTypes eUnitType = pkUnit->getUnitType();
 
@@ -343,7 +362,11 @@ void CvDllNetMessageHandler::ResponseFoundReligion(PlayerTypes ePlayer, Religion
 	}
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvDllNetMessageHandler::ResponseEnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligion, const char*, BeliefTypes eBelief1, BeliefTypes eBelief2, int iCityX, int iCityY)
+#else
 void CvDllNetMessageHandler::ResponseEnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligion, const char* szCustomName, BeliefTypes eBelief1, BeliefTypes eBelief2, int iCityX, int iCityY)
+#endif
 {
 	CvGame& kGame(GC.getGame());
 	CvGameReligions* pkGameReligions(kGame.GetGameReligions());
@@ -412,7 +435,11 @@ void CvDllNetMessageHandler::ResponseStageCoup(PlayerTypes eSpyPlayer, int iSpyI
 	CvAssertMsg(pPlayerEspionage, "pPlayerEspionage is null");
 	if(pPlayerEspionage)
 	{
+#ifdef AUI_WARNING_FIXES
+		pPlayerEspionage->AttemptCoup(iSpyIndex);
+#else
 		bool bCoupSuccess = pPlayerEspionage->AttemptCoup(iSpyIndex);
+#endif
 	}
 }
 //------------------------------------------------------------------------------
@@ -625,7 +652,9 @@ void CvDllNetMessageHandler::ResponseMinorNoUnitSpawning(PlayerTypes ePlayer, Pl
 void CvDllNetMessageHandler::ResponsePlayerDealFinalized(PlayerTypes eFromPlayer, PlayerTypes eToPlayer, PlayerTypes eActBy, bool bAccepted)
 {
 	CvGame& game = GC.getGame();
+#ifndef AUI_WARNING_FIXES
 	PlayerTypes eActivePlayer = game.getActivePlayer();
+#endif
 
 	// is the deal valid?
 	if(!game.GetGameDeals()->FinalizeDeal(eFromPlayer, eToPlayer, bAccepted))
@@ -635,7 +664,9 @@ void CvDllNetMessageHandler::ResponsePlayerDealFinalized(PlayerTypes eFromPlayer
 
 		CvPlayerAI& kToPlayer = GET_PLAYER(eToPlayer);
 		CvPlayerAI& kFromPlayer = GET_PLAYER(eFromPlayer);
+#ifndef AUI_WARNING_FIXES
 		CvPlayerAI& kActivePlayer = GET_PLAYER(eActivePlayer);
+#endif
 
 		strMessage = Localization::Lookup("TXT_KEY_DEAL_EXPIRED_FROM_YOU");
 		strMessage << kToPlayer.getNickName();
@@ -772,7 +803,11 @@ void CvDllNetMessageHandler::ResponseIdeologyChoice(PlayerTypes ePlayer, PolicyB
 	kPlayer.GetPlayerPolicies()->SetPolicyBranchUnlocked(eChoice, true, false);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvDllNetMessageHandler::ResponseRenameCity(PlayerTypes ePlayer, int iCityID, _In_z_ const char* szName)
+#else
 void CvDllNetMessageHandler::ResponseRenameCity(PlayerTypes ePlayer, int iCityID, const char* szName)
+#endif
 {
 	CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
 	CvCity* pkCity = kPlayer.getCity(iCityID);
@@ -783,7 +818,11 @@ void CvDllNetMessageHandler::ResponseRenameCity(PlayerTypes ePlayer, int iCityID
 	}
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvDllNetMessageHandler::ResponseRenameUnit(PlayerTypes ePlayer, int iUnitID, _In_z_ const char* szName)
+#else
 void CvDllNetMessageHandler::ResponseRenameUnit(PlayerTypes ePlayer, int iUnitID, const char* szName)
+#endif
 {
 	CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
 	CvUnit* pkUnit = kPlayer.getUnit(iUnitID);
@@ -910,7 +949,11 @@ void CvDllNetMessageHandler::ResponseSetCityAvoidGrowth(PlayerTypes ePlayer, int
 	}
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvDllNetMessageHandler::ResponseSwapUnits(PlayerTypes ePlayer, int iUnitID, MissionTypes, int iData1, int iData2, int, bool bShift)
+#else
 void CvDllNetMessageHandler::ResponseSwapUnits(PlayerTypes ePlayer, int iUnitID, MissionTypes eMission, int iData1, int iData2, int iFlags, bool bShift)
+#endif
 {
 	CvUnit::dispatchingNetMessage(true);
 
@@ -928,7 +971,11 @@ void CvDllNetMessageHandler::ResponseSwapUnits(PlayerTypes ePlayer, int iUnitID,
 			CvPlot* pkOriginationPlot = pkUnit->plot();
 
 			// Find unit to move out
+#ifdef AUI_WARNING_FIXES
+			for (uint iI = 0; iI < pkTargetPlot->getNumUnits(); iI++)
+#else
 			for(int iI = 0; iI < pkTargetPlot->getNumUnits(); iI++)
+#endif
 			{
 				CvUnit* pkUnit2 = pkTargetPlot->getUnitByIndex(iI);
 

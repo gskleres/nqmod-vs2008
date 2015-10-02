@@ -1279,7 +1279,11 @@ int CvLuaPlayer::lGetNumWorldWonders(lua_State* L)
 
 	int iWonderCount = 0;
 
+#ifdef AUI_WARNING_FIXES
+	uint iBuildingLoop;
+#else
 	int iBuildingLoop;
+#endif
 	BuildingTypes eBuilding;
 
 	// Loop through all buildings, see if they're a world wonder
@@ -4418,7 +4422,11 @@ int CvLuaPlayer::lGetGreatWorks(lua_State* L)
 	CvCity* pCity = NULL;
 	for (pCity = pkPlayer->firstCity(&iCityLoop); pCity != NULL; pCity = pkPlayer->nextCity(&iCityLoop))
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#else
 		for(int iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#endif
 		{
 			CvCivilizationInfo& playerCivilizationInfo = pkPlayer->getCivilizationInfo();
 			BuildingTypes eBuilding = (BuildingTypes)playerCivilizationInfo.getCivilizationBuildings((BuildingClassTypes)iBuildingClassLoop);
@@ -8704,6 +8712,10 @@ int CvLuaPlayer::lGetUnimprovedAvailableLuxuryResource(lua_State* L)
 		}
 
 		CvPlot* pPlot = GC.getMap().plotByIndex(aiPlots[uiPlotIndex]);
+#ifdef AUI_WARNING_FIXES
+		if (!pPlot)
+			continue;
+#endif
 
 		// check to see if a resource is here. If not, bail out!
 		ResourceTypes eResource = pPlot->getResourceType(pkPlayer->getTeam());
@@ -8744,7 +8756,11 @@ int CvLuaPlayer::lGetUnimprovedAvailableLuxuryResource(lua_State* L)
 		}
 
 		// see if we can improve the resource
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 		for(int iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 		{
 			BuildTypes eBuild = (BuildTypes)iBuildIndex;
 			CvBuildInfo* buildInfo = GC.getBuildInfo(eBuild);
@@ -9232,7 +9248,11 @@ int CvLuaPlayer::lGetExtraBuildingHappinessFromPolicies(lua_State* L)
 
 			int iExtraHappiness = 0;
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#else
 			for(int iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#endif
 			{
 				const PolicyTypes ePolicy = static_cast<PolicyTypes>(iPolicyLoop);
 				CvPolicyEntry* pkPolicyInfo = GC.getPolicyInfo(ePolicy);
@@ -9498,7 +9518,11 @@ int CvLuaPlayer::lGetPlayerBuildingClassHappiness(lua_State* L)
 	{
 		int iChange = 0;
 
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingClassTypes eParentBuildingClass = (BuildingClassTypes) iI;
 

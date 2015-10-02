@@ -75,7 +75,11 @@ void CvCityCitizens::Reset()
 
 	m_eCityAIFocusTypes = NO_CITY_AI_FOCUS_TYPE;
 
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	CvAssertMsg((0 < NUM_CITY_PLOTS),  "NUM_CITY_PLOTS is not greater than zero but an array is being allocated in CvCityCitizens::reset");
 	for(iI = 0; iI < NUM_CITY_PLOTS; iI++)
@@ -1068,7 +1072,11 @@ BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 	int iValue;
 
 	// Loop through all Buildings
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -1696,7 +1704,11 @@ void CvCityCitizens::DoReallocateCitizens()
 	// Remove Non-Forced Specialists in Buildings
 	int iNumSpecialistsToRemove;
 	BuildingTypes eBuilding;
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 	{
 		eBuilding = (BuildingTypes) iBuildingLoop;
 
@@ -2238,7 +2250,11 @@ void CvCityCitizens::DoSpecialists()
 	int iGPPChange;
 	int iCount;
 	int iMod;
+#ifdef AUI_WARNING_FIXES
+	for (uint iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#else
 	for(int iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#endif
 	{
 		const SpecialistTypes eSpecialist = static_cast<SpecialistTypes>(iSpecialistLoop);
 		CvSpecialistInfo* pkSpecialistInfo = GC.getSpecialistInfo(eSpecialist);
@@ -2550,7 +2566,11 @@ void CvCityCitizens::DoRemoveAllSpecialistsFromBuilding(BuildingTypes eBuilding,
 /// Find the worst Specialist and remove him from duty
 bool CvCityCitizens::DoRemoveWorstSpecialist(SpecialistTypes eDontChangeSpecialist, const BuildingTypes eDontRemoveFromBuilding /* = NO_BUILDING */)
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
 
@@ -2628,7 +2648,11 @@ int CvCityCitizens::GetTotalSpecialistCount() const
 	int iNumSpecialists = 0;
 	SpecialistTypes eSpecialist;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#else
 	for(int iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#endif
 	{
 		eSpecialist = (SpecialistTypes) iSpecialistLoop;
 
@@ -2718,7 +2742,11 @@ void CvCityCitizens::DoClearForcedSpecialists()
 {
 	// Loop through all Buildings
 	BuildingTypes eBuilding;
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 	{
 		eBuilding = (BuildingTypes) iBuildingLoop;
 

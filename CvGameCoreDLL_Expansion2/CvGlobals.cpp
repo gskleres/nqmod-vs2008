@@ -2937,7 +2937,7 @@ std::vector<CvUnitEntry*>& CvGlobals::getUnitInfo()
 	return m_pUnits->GetUnitEntries();
 }
 
-#ifdef AUI_WARNING_FIXES
+#ifdef AUI_CONSTIFY
 _Ret_maybenull_ CvUnitEntry* CvGlobals::getUnitInfo(UnitTypes eUnitNum) const
 #else
 CvUnitEntry* CvGlobals::getUnitInfo(UnitTypes eUnitNum)
@@ -3190,16 +3190,20 @@ std::vector<CvYieldInfo*>& CvGlobals::getYieldInfo()
 	return m_paYieldInfo;
 }
 
-#ifdef AUI_WARNING_FIXES
+#ifdef AUI_CONSTIFY
 _Ret_maybenull_ CvYieldInfo* CvGlobals::getYieldInfo(YieldTypes eYieldNum) const
-{
-	uint uiIndex = uint(eYieldNum);
-	CvAssert(uiIndex < NUM_YIELD_TYPES);
-	if (uiIndex < m_paYieldInfo.size())
-		return m_paYieldInfo[uiIndex];
 #else
 CvYieldInfo* CvGlobals::getYieldInfo(YieldTypes eYieldNum)
+#endif
 {
+#ifdef AUI_WARNING_FIXES
+	_Ret_maybenull_ CvYieldInfo* CvGlobals::getYieldInfo(YieldTypes eYieldNum) const
+	{
+		uint uiIndex = uint(eYieldNum);
+		CvAssert(uiIndex < NUM_YIELD_TYPES);
+		if (uiIndex < m_paYieldInfo.size())
+			return m_paYieldInfo[uiIndex];
+#else
 	CvAssert(eYieldNum > -1);
 	CvAssert(eYieldNum < NUM_YIELD_TYPES);
 	if(eYieldNum > -1 && eYieldNum < (int)m_paYieldInfo.size())
@@ -3574,16 +3578,18 @@ std::vector<CvUnitClassInfo*>& CvGlobals::getUnitClassInfo()
 	return m_paUnitClassInfo;
 }
 
-#ifdef AUI_WARNING_FIXES
+#ifdef AUI_CONSTIFY
 _Ret_maybenull_ CvUnitClassInfo* CvGlobals::getUnitClassInfo(UnitClassTypes eUnitClassNum) const
+#else
+CvUnitClassInfo* CvGlobals::getUnitClassInfo(UnitClassTypes eUnitClassNum)
+#endif
 {
+#ifdef AUI_WARNING_FIXES
 	uint uiIndex = uint(eUnitClassNum);
 	CvAssert(uiIndex < GC.getNumUnitClassInfos());
 	if (uiIndex < m_paUnitClassInfo.size())
 		return m_paUnitClassInfo[uiIndex];
 #else
-CvUnitClassInfo* CvGlobals::getUnitClassInfo(UnitClassTypes eUnitClassNum)
-{
 	CvAssert(eUnitClassNum > -1);
 	CvAssert(eUnitClassNum < GC.getNumUnitClassInfos());
 	if(eUnitClassNum > -1 && eUnitClassNum < (int)m_paUnitClassInfo.size())

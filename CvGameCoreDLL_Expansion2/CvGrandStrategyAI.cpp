@@ -46,9 +46,15 @@ bool CvAIGrandStrategyXMLEntry::CacheResults(Database::Results& kResults, CvData
 }
 
 /// What Flavors will be added by adopting this Grand Strategy?
+#ifdef AUI_WARNING_FIXES
+int CvAIGrandStrategyXMLEntry::GetFlavorValue(uint i) const
+{
+	FAssertMsg(i < GC.getNumFlavorTypes(), "Index out of bounds");
+#else
 int CvAIGrandStrategyXMLEntry::GetFlavorValue(int i) const
 {
 	FAssertMsg(i < GC.getNumFlavorTypes(), "Index out of bounds");
+#endif
 	FAssertMsg(i > -1, "Index out of bounds");
 	return m_piFlavorValue ? m_piFlavorValue[i] : -1;
 }
@@ -62,9 +68,15 @@ int CvAIGrandStrategyXMLEntry::GetSpecializationBoost(YieldTypes eYield) const
 }
 
 /// What Flavors will be added by adopting this Grand Strategy?
+#ifdef AUI_WARNING_FIXES
+int CvAIGrandStrategyXMLEntry::GetFlavorModValue(uint i) const
+{
+	FAssertMsg(i < GC.getNumFlavorTypes(), "Index out of bounds");
+#else
 int CvAIGrandStrategyXMLEntry::GetFlavorModValue(int i) const
 {
 	FAssertMsg(i < GC.getNumFlavorTypes(), "Index out of bounds");
+#endif
 	FAssertMsg(i > -1, "Index out of bounds");
 	return m_piFlavorModValue ? m_piFlavorModValue[i] : 0;
 }
@@ -93,7 +105,11 @@ std::vector<CvAIGrandStrategyXMLEntry*>& CvAIGrandStrategyXMLEntries::GetAIGrand
 }
 
 /// Number of defined AIStrategies
+#ifdef AUI_WARNING_FIXES
+uint CvAIGrandStrategyXMLEntries::GetNumAIGrandStrategies() const
+#else
 int CvAIGrandStrategyXMLEntries::GetNumAIGrandStrategies()
+#endif
 {
 	return m_paAIGrandStrategyEntries.size();
 }
@@ -110,7 +126,11 @@ void CvAIGrandStrategyXMLEntries::DeleteArray()
 }
 
 /// Get a specific entry
+#ifdef AUI_WARNING_FIXES
+CvAIGrandStrategyXMLEntry* CvAIGrandStrategyXMLEntries::GetEntry(uint index) const
+#else
 CvAIGrandStrategyXMLEntry* CvAIGrandStrategyXMLEntries::GetEntry(int index)
+#endif
 {
 	return m_paAIGrandStrategyEntries[index];
 }
@@ -165,7 +185,11 @@ void CvGrandStrategyAI::Uninit()
 /// Reset AIStrategy status array to all false
 void CvGrandStrategyAI::Reset()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	m_iNumTurnsSinceActiveSet = 0;
 
@@ -497,7 +521,11 @@ int CvGrandStrategyAI::GetConquestPriority()
 		if(iNumPlayersMet > 0)
 		{
 			// Check every plot for ownership
+#ifdef AUI_WARNING_FIXES
+			for (uint iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
+#else
 			for(int iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
+#endif
 			{
 				if(GC.getMap().plotByIndexUnchecked(iPlotLoop)->isOwned())
 				{
@@ -890,7 +918,11 @@ void CvGrandStrategyAI::DoGuessOtherPlayersActiveGrandStrategy()
 
 	GuessConfidenceTypes eGuessConfidence = NO_GUESS_CONFIDENCE_TYPE;
 
+#ifdef AUI_WARNING_FIXES
+	uint iGrandStrategiesLoop = 0;
+#else
 	int iGrandStrategiesLoop = 0;
+#endif
 	AIGrandStrategyTypes eGrandStrategy = NO_AIGRANDSTRATEGY;
 	CvAIGrandStrategyXMLEntry* pGrandStrategy = 0;
 	CvString strGrandStrategyName;
@@ -1220,7 +1252,11 @@ void CvGrandStrategyAI::LogGrandStrategies(const FStaticVector< int, 5, true, c_
 		AIGrandStrategyTypes eGrandStrategy;
 
 		// Loop through Grand Strategies
+#ifdef AUI_WARNING_FIXES
+		for (uint iGrandStrategyLoop = 0; iGrandStrategyLoop < GC.getNumAIGrandStrategyInfos(); iGrandStrategyLoop++)
+#else
 		for(int iGrandStrategyLoop = 0; iGrandStrategyLoop < GC.getNumAIGrandStrategyInfos(); iGrandStrategyLoop++)
+#endif
 		{
 			// Get the leading info for this line
 			strBaseString.Format("%03d, ", GC.getGame().getElapsedGameTurns());

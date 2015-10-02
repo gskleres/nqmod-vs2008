@@ -128,8 +128,13 @@ public:
 	virtual bool CacheResults(Database::Results& kResults, CvDatabaseUtility& kUtility);
 
 	// Accessor Functions
+#ifdef AUI_WARNING_FIXES
+	int GetFlavorValue(uint i) const;
+	int GetFlavorModValue(uint i) const;
+#else
 	int GetFlavorValue(int i) const;
 	int GetFlavorModValue(int i) const;
+#endif
 	int GetSpecializationBoost(YieldTypes eYield) const;
 
 private:
