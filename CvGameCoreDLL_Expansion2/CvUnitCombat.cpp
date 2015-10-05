@@ -449,7 +449,11 @@ void CvUnitCombat::ResolveMeleeCombat(const CvCombatInfo& kCombatInfo, uint uiPa
 		}
 		else
 		{
+#ifdef AUI_WARNING_FIXES
+			if (pkTargetPlot && pkDefender)
+#else
 			if(pkTargetPlot)
+#endif
 			{
 				if (pkAttacker->IsCanHeavyCharge() && !pkDefender->isDelayedDeath() && bAttackerDidMoreDamage)
 				{
@@ -1962,6 +1966,9 @@ uint CvUnitCombat::ApplyNuclearExplosionDamage(const CvCombatMemberEntry* pkDama
 					pkUnit->kill(false, eAttackerOwner);
 				}
 
+#ifdef AUI_WARNING_FIXES
+				if (pkAttacker)
+#endif
 				GET_PLAYER(kEntry.GetPlayer()).GetDiplomacyAI()->ChangeNumTimesNuked(pkAttacker->getOwner(), 1);
 			}
 		}
@@ -2058,6 +2065,9 @@ uint CvUnitCombat::ApplyNuclearExplosionDamage(const CvCombatMemberEntry* pkDama
 					pkCity->kill();
 
 					// slewis - check for killing a player
+#ifdef AUI_WARNING_FIXES
+					if (pkAttacker)
+#endif
 					GET_PLAYER(pkAttacker->getOwner()).CheckForMurder(eOldOwner);
 				}
 				else
@@ -2090,6 +2100,9 @@ uint CvUnitCombat::ApplyNuclearExplosionDamage(const CvCombatMemberEntry* pkDama
 					// Add damage to the city
 					pkCity->setDamage(kEntry.GetFinalDamage());
 
+#ifdef AUI_WARNING_FIXES
+					if (pkAttacker)
+#endif
 					GET_PLAYER(pkCity->getOwner()).GetDiplomacyAI()->ChangeNumTimesNuked(pkAttacker->getOwner(), 1);
 				}
 			}
@@ -3025,7 +3038,11 @@ CvUnit* CvUnitCombat::GetFireSupportUnit(PlayerTypes eDefender, int iDefendX, in
 
 		if(pAdjacentPlot != NULL)
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iUnitLoop = 0; iUnitLoop < pAdjacentPlot->getNumUnits(); iUnitLoop++)
+#else
 			for(int iUnitLoop = 0; iUnitLoop < pAdjacentPlot->getNumUnits(); iUnitLoop++)
+#endif
 			{
 				CvUnit* pLoopUnit = pAdjacentPlot->getUnitByIndex(iUnitLoop);
 

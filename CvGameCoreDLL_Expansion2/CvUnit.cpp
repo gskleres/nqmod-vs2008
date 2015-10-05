@@ -354,7 +354,12 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 	VALIDATE_OBJECT
 	CvString strBuffer;
 	int iUnitName;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+	int iJ;
+#else
 	int iI;
+#endif
 
 	CvAssert(NO_UNIT != eUnit);
 
@@ -413,7 +418,11 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 			iNameOffset = GC.getGame().getJonRandNum(iNumNames, "Unit name selection");
 		}
 	
+#ifdef AUI_WARNING_FIXES
+		for (iJ = 0; iJ < iNumNames; iJ++)
+#else
 		for(iI = 0; iI < iNumNames; iI++)
+#endif
 		{
 			int iIndex = (iNameOffset + iI) % iNumNames;
 			CvString strName = getUnitInfo().GetUnitNames(iIndex);
@@ -452,7 +461,11 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 	kPlayer.changeExtraUnitCost(getUnitInfo().GetExtraMaintenanceCost());
 
 	// Add Resource Quantity to Used
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		if(getUnitInfo().GetResourceQuantityRequirement(iResourceLoop) > 0)
 		{
@@ -486,9 +499,15 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 	if(unitCombatType != NO_UNITCOMBAT)
 	{
 		// Any free Promotions to apply?
+#ifdef AUI_WARNING_FIXES
+		for (iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+		{
+			const PromotionTypes promotionID = (PromotionTypes)iI;
+#else
 		for(int iJ = 0; iJ < GC.getNumPromotionInfos(); iJ++)
 		{
 			const PromotionTypes promotionID = (PromotionTypes)iJ;
+#endif
 			if(kPlayer.GetPlayerTraits()->HasFreePromotionUnitCombat(promotionID, unitCombatType))
 			{
 				setHasPromotion(promotionID, true);
@@ -941,7 +960,11 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 		m_extraTerrainAttackPercent.resize(GC.getNumTerrainInfos());
 		m_extraTerrainDefensePercent.resize(GC.getNumTerrainInfos());
 
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumTerrainInfos(); i++)
+#else
 		for(int i = 0; i < GC.getNumTerrainInfos(); i++)
+#endif
 		{
 			m_terrainDoubleMoveCount.setAt(i,0);
 			m_terrainImpassableCount.setAt(i,0);
@@ -960,7 +983,11 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 		m_extraFeatureDefensePercent.resize(GC.getNumFeatureInfos());
 		m_extraFeatureAttackPercent.resize(GC.getNumFeatureInfos());
 
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumFeatureInfos(); i++)
+#else
 		for(int i = 0; i < GC.getNumFeatureInfos(); i++)
+#endif
 		{
 			m_featureDoubleMoveCount.setAt(i,0);
 			m_featureImpassableCount.setAt(i,0);
@@ -971,14 +998,22 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 		CvAssertMsg((0 < GC.getNumUnitCombatClassInfos()), "GC.getNumUnitCombatClassInfos() is not greater than zero but an array is being allocated in CvUnit::reset");
 		m_extraUnitCombatModifier.clear();
 		m_extraUnitCombatModifier.resize(GC.getNumUnitCombatClassInfos());
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumUnitCombatClassInfos(); i++)
+#else
 		for(int i = 0; i < GC.getNumUnitCombatClassInfos(); i++)
+#endif
 		{
 			m_extraUnitCombatModifier.setAt(i,0);
 		}
 
 		m_unitClassModifier.clear();
 		m_unitClassModifier.resize(GC.getNumUnitClassInfos());
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumUnitClassInfos(); i++)
+#else
 		for(int i = 0; i < GC.getNumUnitClassInfos(); i++)
+#endif
 		{
 			CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo((UnitClassTypes)i);
 			if(!pkUnitClassInfo)
@@ -1088,7 +1123,11 @@ void CvUnit::convert(CvUnit* pUnit, bool bIsUpgrade)
 	pPlot = plot();
 
 	// Transfer Promotions over
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#endif
 	{
 		const PromotionTypes ePromotion = static_cast<PromotionTypes>(iI);
 		CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -1413,7 +1452,11 @@ void CvUnit::kill(bool bDelay, PlayerTypes ePlayer /*= NO_PLAYER*/)
 		pPlot->removeUnit(this, false);
 
 	// Remove Resource Quantity from Used
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		if(getUnitInfo().GetResourceQuantityRequirement(iResourceLoop) > 0)
 		{
@@ -1629,6 +1672,20 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 
 					if(kCaptureDef.eCapturingPlayer == GC.getGame().getActivePlayer())
 					{
+#ifdef AUI_WARNING_FIXES
+						CvUnitEntry* pUnitInfo = GC.getUnitInfo(kCaptureDef.eCaptureUnitType);
+						if (pUnitInfo)
+						{
+							if (kCaptureDef.eOriginalOwner == kCaptureDef.eCapturingPlayer)
+							{
+								//player recaptured a friendly unit
+								strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_RECAPTURED_UNIT", pUnitInfo->GetTextKey());
+							}
+							else
+							{
+								strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_CAPTURED_UNIT", pUnitInfo->GetTextKey());
+							}
+#else
 						CvString strBuffer;
 						if(kCaptureDef.eOriginalOwner == kCaptureDef.eCapturingPlayer){
 							//player recaptured a friendly unit
@@ -1636,6 +1693,7 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 						}
 						else{
 							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_CAPTURED_UNIT", GC.getUnitInfo(kCaptureDef.eCaptureUnitType)->GetTextKey());
+#endif
 						}
 						DLLUI->AddUnitMessage(0, IDInfo(kCaptureDef.eCapturingPlayer, pkCapturedUnit->GetID()), kCaptureDef.eCapturingPlayer, true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, "AS2D_UNITCAPTURE", MESSAGE_TYPE_INFO, GC.getUnitInfo(eCaptureUnitType)->GetButton(), (ColorTypes)GC.getInfoTypeForString("COLOR_GREEN"), pPlot->getX(), pPlot->getY()*/);
 					}
@@ -3392,7 +3450,11 @@ bool CvUnit::jumpToNearestValidPlot()
 	CvPlot* pBestPlot;
 	int iValue;
 	int iBestValue;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	CvAssertMsg(!isAttacking(), "isAttacking did not return false as expected");
 	CvAssertMsg(!isFighting(), "isFighting did not return false as expected");
@@ -5198,7 +5260,11 @@ bool CvUnit::canHeal(const CvPlot* pPlot, bool bTestVisible) const
 			int iBestDefenderValue = 0;
 			int iBestDefenderID = 0;
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iUnitLoop = 0; iUnitLoop < plot()->getNumUnits(); iUnitLoop++)
+#else
 			for(int iUnitLoop = 0; iUnitLoop < plot()->getNumUnits(); iUnitLoop++)
+#endif
 			{
 				pUnit = plot()->getUnitByIndex(iUnitLoop);
 
@@ -8433,7 +8499,11 @@ bool CvUnit::repairFleet()
 		return false;
 
 	// Do the repairing - first this hex
+#ifdef AUI_WARNING_FIXES
+	uint iUnitLoop;
+#else
 	int iUnitLoop;
+#endif
 	for (iUnitLoop = 0; iUnitLoop < pPlot->getNumUnits(); iUnitLoop++)
 	{
 		CvUnit *pUnit = pPlot->getUnitByIndex(iUnitLoop);
@@ -9261,7 +9331,11 @@ bool CvUnit::build(BuildTypes eBuild)
 			int iNumResource = 0;
 
 			// Update the amount of a Resource used up by popped Build
+#ifdef AUI_WARNING_FIXES
+			for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 			for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 			{
 				if(eImprovement != NO_IMPROVEMENT)
 				{
@@ -9695,7 +9769,11 @@ bool CvUnit::CanUpgradeRightNow(bool bOnlyTestVisible) const
 		int iNumOfThisResourceAvailable;
 		ResourceTypes eResource;
 		int iNumResourceNeeded;
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			eResource = (ResourceTypes) iResourceLoop;
 			iNumResourceNeeded = pUpgradeUnitInfo->GetResourceQuantityRequirement(eResource);
@@ -9749,7 +9827,11 @@ UnitTypes CvUnit::GetUpgradeUnitType() const
 	CvCivilizationInfo& kCiv = GET_PLAYER(getOwner()).getCivilizationInfo();
 
 	// Determine what we're going to upgrade into
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#endif
 	{
 		const UnitClassTypes eUnitClass = static_cast<UnitClassTypes>(iI);
 		CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo(eUnitClass);
@@ -9765,7 +9847,11 @@ UnitTypes CvUnit::GetUpgradeUnitType() const
 					CvLuaArgsHandle args;
 					args->Push(((int)getOwner()));
 					args->Push(GetID());
+#ifdef AUI_WARNING_FIXES
+					args->Push(int(iI));
+#else
 					args->Push(iI);
+#endif
 					args->Push(eUpgradeUnitType);
 
 					bool bResult = false;
@@ -10127,6 +10213,17 @@ int CvUnit::baseMoves(DomainTypes eIntoDomain /* = NO_DOMAIN */) const
 		return GC.getEMBARKED_UNIT_MOVEMENT() + getExtraNavalMoves() + thisTeam.getEmbarkedExtraMoves() + thisTeam.getExtraMoves(eDomain) + pTraits->GetExtraEmbarkMoves() + pPolicies->GetNumericModifier(POLICYMOD_EMBARKED_EXTRA_MOVES);
 	}
 
+#ifdef AUI_WARNING_FIXES
+	int iExtraNavalMoves = 0;
+	if (eDomain == DOMAIN_SEA)
+	{
+		iExtraNavalMoves += getExtraNavalMoves();
+
+		// Work boats also get extra moves, and they don't have a combat class to receive a promotion from
+		if (m_iBaseCombat == 0)
+		{
+			iExtraNavalMoves += pTraits->GetExtraEmbarkMoves();
+#else
 	int m_iExtraNavalMoves = 0;
 	if(eDomain == DOMAIN_SEA)
 	{
@@ -10136,6 +10233,7 @@ int CvUnit::baseMoves(DomainTypes eIntoDomain /* = NO_DOMAIN */) const
 		if(m_iBaseCombat == 0)
 		{
 			m_iExtraNavalMoves += pTraits->GetExtraEmbarkMoves();
+#endif
 		}
 	}
 
@@ -10147,7 +10245,11 @@ int CvUnit::baseMoves(DomainTypes eIntoDomain /* = NO_DOMAIN */) const
 
 	int iExtraUnitCombatTypeMoves = pTraits->GetMovesChangeUnitCombat((UnitCombatTypes)(m_pUnitInfo->GetUnitCombatType()));
 
+#ifdef AUI_WARNING_FIXES
+	return (m_pUnitInfo->GetMoves() + getExtraMoves() + thisTeam.getExtraMoves(eDomain) + iExtraNavalMoves + iExtraGoldenAgeMoves + iExtraUnitCombatTypeMoves);
+#else
 	return (m_pUnitInfo->GetMoves() + getExtraMoves() + thisTeam.getExtraMoves(eDomain) + m_iExtraNavalMoves + iExtraGoldenAgeMoves + iExtraUnitCombatTypeMoves);
+#endif
 }
 
 
@@ -10220,8 +10322,12 @@ bool CvUnit::canBuildRoute() const
 
 	CvTeamTechs* pTeamTechs = thisTeam.GetTeamTechs();
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildInfos(); iI++)
+#else
 	int iNumBuildInfos = GC.getNumBuildInfos();
 	for(int iI = 0; iI < iNumBuildInfos; iI++)
+#endif
 	{
 		CvBuildInfo* thisBuildInfo = GC.getBuildInfo((BuildTypes)iI);
 		if(NULL != thisBuildInfo && thisBuildInfo->getRoute() != NO_ROUTE)
@@ -10251,7 +10357,11 @@ BuildTypes CvUnit::getBuildType() const
 			RouteTypes eBestRoute = GET_PLAYER(m_eOwner).getBestRoute(plot());
 			if(eBestRoute != NO_ROUTE)
 			{
+#ifdef AUI_WARNING_FIXES
+				for (uint iI = 0; iI < GC.getNumBuildInfos(); iI++)
+#else
 				for(int iI = 0; iI < GC.getNumBuildInfos(); iI++)
+#endif
 				{
 					BuildTypes eBuild = (BuildTypes)iI;
 					CvBuildInfo* pkBuildInfo = GC.getBuildInfo(eBuild);
@@ -12075,8 +12185,16 @@ int CvUnit::GetInterceptionDamage(const CvUnit* pAttacker, bool bIncludeRand) co
 	iInterceptorDamage = int(iInterceptorDamage * fStrengthRatio);
 
 	// Mod to interception damage
+#ifdef AUI_WARNING_FIXES
+	if (pAttacker)
+	{
+		iInterceptorDamage *= (100 + pAttacker->GetInterceptionDefenseDamageModifier());
+		iInterceptorDamage /= 100;
+	}
+#else
 	iInterceptorDamage *= (100 + pAttacker->GetInterceptionDefenseDamageModifier());
 	iInterceptorDamage /= 100;
+#endif
 
 	// Bring it back out of hundreds
 	iInterceptorDamage /= 100;
@@ -14024,7 +14142,11 @@ void CvUnit::setXY(int iX, int iY, bool bGroup, bool bUpdate, bool bShow, bool b
 					{
 						if(pAdjacentPlot->getNumUnits() > 0)
 						{
+#ifdef AUI_WARNING_FIXES
+							for (uint iNearbyUnitLoop = 0; iNearbyUnitLoop < pAdjacentPlot->getNumUnits(); iNearbyUnitLoop++)
+#else
 							for(int iNearbyUnitLoop = 0; iNearbyUnitLoop < pAdjacentPlot->getNumUnits(); iNearbyUnitLoop++)
+#endif
 							{
 								const CvUnit* const adjUnit = pAdjacentPlot->getUnitByIndex(iNearbyUnitLoop);
 								if (adjUnit && adjUnit->getUnitClassType() == eMissionary)
@@ -14330,7 +14452,12 @@ void CvUnit::setXY(int iX, int iY, bool bGroup, bool bUpdate, bool bShow, bool b
 					pAdjacentPlot = plotDirection(pNewPlot->getX(), pNewPlot->getY(), ((DirectionTypes)iI));
 
 					if(pAdjacentPlot != NULL && pAdjacentPlot->getNumUnits() != NULL){
+#ifdef AUI_WARNING_FIXES
+						for (uint iJ = 0; iJ < pAdjacentPlot->getNumUnits(); iJ++)
+						{
+#else
 						for(int iJ = 0; iJ < pAdjacentPlot->getNumUnits(); iJ++){
+#endif
 							if(pAdjacentPlot->getUnitByIndex(iJ)->getUnitType() ==  eExplorer && strcmp(pAdjacentPlot->getUnitByIndex(iJ)->getNameNoDesc(), "TXT_KEY_EXPLORER_LIVINGSTON") == 0){
 								gDLL->UnlockAchievement(ACHIEVEMENT_XP2_52);
 							}
@@ -14597,7 +14724,11 @@ int CvUnit::setDamage(int iNewValue, PlayerTypes ePlayer, float fAdditionalTextD
 		}
 
 		auto_ptr<ICvPlot1> pDllSelectionPlot(DLLUI->getSelectionPlot());
+#ifdef AUI_WARNING_FIXES
+		const uint iSelectionPlotIndex = (pDllSelectionPlot.get() != NULL) ? uint(pDllSelectionPlot->GetPlotIndex()) : MAX_UNSIGNED_INT;
+#else
 		const int iSelectionPlotIndex = (pDllSelectionPlot.get() != NULL)? pDllSelectionPlot->GetPlotIndex() : -1;
+#endif
 
 		if(plot()->GetPlotIndex() == iSelectionPlotIndex)
 		{
@@ -14700,7 +14831,11 @@ void CvUnit::setMoves(int iNewValue)
 		}
 
 		auto_ptr<ICvPlot1> pDllSelectionPlot(DLLUI->getSelectionPlot());
+#ifdef AUI_WARNING_FIXES
+		const uint iSelectionPlotIndex = (pDllSelectionPlot.get() != NULL) ? uint(pDllSelectionPlot->GetPlotIndex()) : MAX_UNSIGNED_INT;
+#else
 		int iSelectionPlotIndex = (pDllSelectionPlot.get() != NULL)? pDllSelectionPlot->GetPlotIndex() : -1;
+#endif
 
 		if(pPlot->GetPlotIndex() == iSelectionPlotIndex)
 		{
@@ -14910,7 +15045,11 @@ void CvUnit::changeExperience(int iChange, int iMax, bool bFromCombat, bool bInB
 		CvPlayer& kPlayer = GET_PLAYER(getOwner());
 
 		// Promotion that changes after combat?
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#else
 		for (int iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#endif
 		{
 			const PromotionTypes eLoopPromotion = static_cast<PromotionTypes>(iI);
 			CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(eLoopPromotion);
@@ -17384,7 +17523,11 @@ void CvUnit::clearCombat()
 		}
 
 		auto_ptr<ICvPlot1> pDllSelectionPlot(DLLUI->getSelectionPlot());
+#ifdef AUI_WARNING_FIXES
+		const uint iSelectionPlotIndex = (pDllSelectionPlot.get() != NULL) ? uint(pDllSelectionPlot->GetPlotIndex()) : MAX_UNSIGNED_INT;
+#else
 		int iSelectionPlotIndex = (pDllSelectionPlot.get() != NULL)? pDllSelectionPlot->GetPlotIndex() : -1;
+#endif
 		if(plot()->GetPlotIndex() == iSelectionPlotIndex)
 		{
 			DLLUI->setDirty(PlotListButtons_DIRTY_BIT, true);
@@ -18105,7 +18248,11 @@ bool CvUnit::canAcquirePromotionAny() const
 	if(isOutOfAttacks())
 		return false;
 
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	for(iI = 0; iI < GC.getNumPromotionInfos(); iI++)
 	{
@@ -18131,7 +18278,11 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 {
 	VALIDATE_OBJECT
 	int iChange;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	if(isHasPromotion(eIndex) != bNewValue)
 	{
@@ -19333,7 +19484,11 @@ void CvUnit::SetActivityType(ActivityTypes eNewValue)
 		}
 
 		auto_ptr<ICvPlot1> pDllSelectionPlot(DLLUI->getSelectionPlot());
+#ifdef AUI_WARNING_FIXES
+		const uint iSelectionPlotIndex = (pDllSelectionPlot.get() != NULL) ? uint(pDllSelectionPlot->GetPlotIndex()) : MAX_UNSIGNED_INT;
+#else
 		int iSelectionPlotIndex = (pDllSelectionPlot.get() != NULL)? pDllSelectionPlot->GetPlotIndex() : -1;
+#endif
 		if(pPlot->GetPlotIndex() == iSelectionPlotIndex)
 		{
 			DLLUI->setDirty(PlotListButtons_DIRTY_BIT, true);
@@ -19636,7 +19791,11 @@ RouteTypes CvUnit::GetBestBuildRoute(CvPlot* pPlot, BuildTypes* peBestBuild) con
 	int iBestValue = 0;
 	RouteTypes eBestRoute = NO_ROUTE;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildInfos(); iI++)
+#endif
 	{
 		const BuildTypes eBuild = static_cast<BuildTypes>(iI);
 		CvBuildInfo* pkBuildInfo = GC.getBuildInfo(eBuild);
@@ -20043,7 +20202,11 @@ int CvUnit::UnitPathTo(int iX, int iY, int iFlags, int iPrevETA, bool bBuildingR
 				pPathPlot = GC.getMap().plotCheckInvalid(pNode->m_iX, pNode->m_iY);
 			}
 
+#ifdef AUI_WARNING_FIXES
+			if (!pPathPlot || !canMoveInto(*pPathPlot, byte(iFlags) | MOVEFLAG_DESTINATION))
+#else
 			if(!pPathPlot || !canMoveInto(*pPathPlot, iFlags | MOVEFLAG_DESTINATION))
+#endif
 			{
 				// add route interrupted
 				CvNotifications* pNotifications = GET_PLAYER(getOwner()).GetNotifications();
@@ -21252,7 +21415,11 @@ void CvUnit::AI_promote()
 	PromotionTypes eBestPromotion;
 	int iValue;
 	int iBestValue;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	iBestValue = 0;
 	eBestPromotion = NO_PROMOTION;
