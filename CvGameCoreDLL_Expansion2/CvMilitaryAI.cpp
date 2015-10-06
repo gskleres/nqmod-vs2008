@@ -4850,7 +4850,11 @@ int MilitaryAIHelpers::NumberOfFillableSlots(CvPlayer* pPlayer, MultiunitFormati
 						{
 							if (!bMustBeDeepWaterNaval || pLoopUnit->getDomainType() != DOMAIN_SEA || !pLoopUnit->isTerrainImpassable(TERRAIN_OCEAN))
 							{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+								for (it = slotsToFill.begin(); it != slotsToFill.end(); ++it)
+#else
 								for(it = slotsToFill.begin(); it != slotsToFill.end(); it++)
+#endif
 								{
 									CvFormationSlotEntry slotEntry = *it;
 									CvUnitEntry& kUnitInfo = pLoopUnit->getUnitInfo();
@@ -4928,7 +4932,11 @@ UnitAITypes MilitaryAIHelpers::FirstSlotCityCanFill(CvPlayer* pPlayer, Multiunit
 						{
 							if (!bMustBeDeepWaterNaval || pLoopUnit->getDomainType() != DOMAIN_SEA || !pLoopUnit->isTerrainImpassable(TERRAIN_OCEAN))
 							{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+								for (it = slotsToFill.begin(); it != slotsToFill.end(); ++it)
+#else
 								for(it = slotsToFill.begin(); it != slotsToFill.end(); it++)
+#endif
 								{
 									CvFormationSlotEntry slotEntry = *it;
 									CvUnitEntry& kUnitInfo = pLoopUnit->getUnitInfo();

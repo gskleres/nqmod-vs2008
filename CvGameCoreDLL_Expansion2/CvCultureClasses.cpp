@@ -674,7 +674,11 @@ FDataStream& operator<<(FDataStream& saveTo, const CvGameCulture& readFrom)
 
 	GreatWorkList::const_iterator it;
 	saveTo << readFrom.m_CurrentGreatWorks.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = readFrom.m_CurrentGreatWorks.begin(); it != readFrom.m_CurrentGreatWorks.end(); ++it)
+#else
 	for(it = readFrom.m_CurrentGreatWorks.begin(); it != readFrom.m_CurrentGreatWorks.end(); it++)
+#endif
 	{
 		saveTo << *it;
 	}
@@ -1226,7 +1230,11 @@ bool CvPlayerCulture::ThemeBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const
 		else
 		{
 			worksToConsider = works1;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			for (it = works2.begin(); it != works2.end(); ++it)
+#else
 			for (it = works2.begin(); it != works2.end(); it++)
+#endif
 			{
 				worksToConsider.push_back(*it);
 			}
@@ -1240,7 +1248,11 @@ bool CvPlayerCulture::ThemeBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const
 		}
 
 		// Try each of the works as the starter
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (it = worksToConsider.begin(); it != worksToConsider.end(); ++it)
+#else
 		for (it = worksToConsider.begin(); it != worksToConsider.end(); it++)
+#endif
 		{
 			// First, make sure this "starter" is valid
 			if (pkBonusInfo->IsRequiresOwner() && it->m_ePlayer != m_pPlayer->GetID())
@@ -1262,7 +1274,11 @@ bool CvPlayerCulture::ThemeBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const
 
 			// Loop through the rest looking for works that will match up
 			it2 = it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			for (++it2; it2 != worksToConsider.end() && aWorksChosen.size() < (unsigned int)iCountSlots; ++it2)
+#else
 			for (it2++; it2 != worksToConsider.end() && aWorksChosen.size() < (unsigned int)iCountSlots; it2++)
+#endif
 			{
 				if (CultureHelpers::IsValidForThemingBonus(pkBonusInfo, it2->m_eEra, aErasSeen, it2->m_ePlayer, aPlayersSeen, m_pPlayer->GetID()))
 				{
@@ -1330,7 +1346,11 @@ bool CvPlayerCulture::ThemeBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const
 										tempWorks.clear();
 										if (!pkBonusInfo->IsMustBeArtifact())
 										{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+											for (it3 = works1.begin(); it3 != works1.end(); ++it3)
+#else
 											for (it3 = works1.begin(); it3 != works1.end(); it3++)
+#endif
 											{
 												if (it3->m_iGreatWorkIndex == iToBeDiscardedWorkIndex)
 												{
@@ -1343,7 +1363,11 @@ bool CvPlayerCulture::ThemeBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const
 										}
 										else
 										{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+											for (it3 = works2.begin(); it3 != works2.end(); ++it3)
+#else
 											for (it3 = works2.begin(); it3 != works2.end(); it3++)
+#endif
 											{
 												if (it3->m_iGreatWorkIndex == iToBeDiscardedWorkIndex)
 												{
@@ -1381,7 +1405,11 @@ bool CvPlayerCulture::ThemeBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const
 
 				// Remove these works from those to consider later
 				tempWorks.clear();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+				for (it3 = works1.begin(); it3 != works1.end(); ++it3)
+#else
 				for (it3 = works1.begin(); it3 != works1.end(); it3++)
+#endif
 				{
 					// Copy it over if not chosen, updating its location
 					if (find(aWorksChosen.begin(), aWorksChosen.end(), it3->m_iGreatWorkIndex) == aWorksChosen.end())
@@ -1393,7 +1421,11 @@ bool CvPlayerCulture::ThemeBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const
 				works1 = tempWorks;
 
 				tempWorks.clear();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+				for (it3 = works2.begin(); it3 != works2.end(); ++it3)
+#else
 				for (it3 = works2.begin(); it3 != works2.end(); it3++)
+#endif
 				{
 					// Copy it over if not chosen, updating its location
 					if (find(aWorksChosen.begin(), aWorksChosen.end(), it3->m_iGreatWorkIndex) == aWorksChosen.end())
@@ -1441,7 +1473,11 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 	CvThemingBonusInfo *pkBonusInfo = pkEntry->GetThemingBonusInfo(iThemingBonusIndex);
 
 	// Try each of the Artifacts as the starter
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = works2.begin(); it != works2.end(); ++it)
+#else
 	for (it = works2.begin(); it != works2.end(); it++)
+#endif
 	{
 		// First, make sure this "starter" is valid
 		if (pkBonusInfo->IsRequiresOwner() && it->m_ePlayer != m_pPlayer->GetID())
@@ -1463,7 +1499,11 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 
 		// Loop through the rest looking for works that will match up
 		vector<CvGreatWorkInMyEmpire>::const_iterator it2 = it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (++it2; it2 != works2.end() && aArtifactsChosen.size() < (unsigned int)iWorksInHalf; ++it2)
+#else
 		for (it2++; it2 != works2.end() && aArtifactsChosen.size() < (unsigned int)iWorksInHalf; it2++)
+#endif
 		{
 			if (CultureHelpers::IsValidForThemingBonus(pkBonusInfo, it2->m_eEra, aArtifactsErasSeen, it2->m_ePlayer, aArtifactsPlayersSeen, m_pPlayer->GetID()))
 			{
@@ -1482,7 +1522,11 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 
 			// Now see if we can get the right number of art works to work as well
 			vector<CvGreatWorkInMyEmpire>::const_iterator it3;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			for (it3 = works1.begin(); it3 != works1.end() && aWorksChosen.size() < (unsigned int)iNumSlots; ++it3)
+#else
 			for (it3 = works1.begin(); it3 != works1.end() && aWorksChosen.size() < (unsigned int)iNumSlots; it3++)
+#endif
 			{
 				// First, make sure this "starter" is valid
 				if (pkBonusInfo->IsRequiresOwner() && it3->m_ePlayer != m_pPlayer->GetID())
@@ -1512,7 +1556,11 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 
 				// Loop through the rest looking for works that will match up
 				vector<CvGreatWorkInMyEmpire>::const_iterator it4 = it3;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+				for (++it4; it4 != works1.end() && aWorksChosen.size() < (unsigned int)iNumSlots; ++it4)
+#else
 				for (it4++; it4 != works1.end() && aWorksChosen.size() < (unsigned int)iNumSlots; it4++)
+#endif
 				{
 					if (CultureHelpers::IsValidForThemingBonus(pkBonusInfo, it4->m_eEra, aErasSeen, it4->m_ePlayer, aPlayersSeen, m_pPlayer->GetID()))
 					{
@@ -1557,7 +1605,11 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 
 											// Update works list
 											tempWorks.clear();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+											for (it5 = works1.begin(); it5 != works1.end(); ++it5)
+#else
 											for (it5 = works1.begin(); it5 != works1.end(); it5++)
+#endif
 											{
 												if (it5->m_iGreatWorkIndex == iToBeDiscardedWorkIndex)
 												{
@@ -1602,7 +1654,11 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 
 					// Remove these works from those to consider later
 					tempWorks.clear();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+					for (it5 = works1.begin(); it5 != works1.end(); ++it5)
+#else
 					for (it5 = works1.begin(); it5 != works1.end(); it5++)
+#endif
 					{
 						// Copy it over if not chosen, updating its location
 						if (find(aWorksChosen.begin(), aWorksChosen.end(), it5->m_iGreatWorkIndex) == aWorksChosen.end())
@@ -1614,7 +1670,11 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 					works1 = tempWorks;
 
 					tempWorks.clear();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+					for (it5 = works2.begin(); it5 != works2.end(); ++it5)
+#else
 					for (it5 = works2.begin(); it5 != works2.end(); it5++)
+#endif
 					{
 						// Copy it over if not chosen, updating its location
 						if (find(aWorksChosen.begin(), aWorksChosen.end(), it5->m_iGreatWorkIndex) == aWorksChosen.end())
@@ -1656,13 +1716,21 @@ bool CvPlayerCulture::FillBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const_
 
 	worksToConsider = works1;
 	vector<CvGreatWorkInMyEmpire>::const_iterator it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = works2.begin(); it != works2.end(); ++it)
+#else
 	for (it = works2.begin(); it != works2.end(); it++)
+#endif
 	{
 		worksToConsider.push_back(*it);
 	}
 
 	it = worksToConsider.begin();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (int iI = 0; iI < iCountSlots && it != worksToConsider.end(); iI++, ++it)
+#else
 	for (int iI = 0; iI < iCountSlots && it != worksToConsider.end(); iI++, it++)
+#endif
 	{
 		aWorksChosen.push_back(worksToConsider[iI].m_iGreatWorkIndex);
 		MoveWorkIntoSlot(worksToConsider[iI], buildingIt->m_iCityID, buildingIt->m_eBuilding, iI);
@@ -1675,7 +1743,11 @@ bool CvPlayerCulture::FillBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const_
 		vector<CvGreatWorkInMyEmpire> tempWorks;
 
 		tempWorks.clear();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (it2 = works1.begin(); it2 != works1.end(); ++it2)
+#else
 		for (it2 = works1.begin(); it2 != works1.end(); it2++)
+#endif
 		{
 			// Copy it over if not chosen, updating its location
 			if (find(aWorksChosen.begin(), aWorksChosen.end(), it2->m_iGreatWorkIndex) == aWorksChosen.end())
@@ -1687,7 +1759,11 @@ bool CvPlayerCulture::FillBuilding(vector<CvGreatWorkBuildingInMyEmpire>::const_
 		works1 = tempWorks;
 
 		tempWorks.clear();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (it2 = works2.begin(); it2 != works2.end(); ++it2)
+#else
 		for (it2 = works2.begin(); it2 != works2.end(); it2++)
+#endif
 		{
 			// Copy it over if not chosen, updating its location
 			if (find(aWorksChosen.begin(), aWorksChosen.end(), it2->m_iGreatWorkIndex) == aWorksChosen.end())
@@ -1780,7 +1856,11 @@ void CvPlayerCulture::RemoveDigCompletePlot(CvPlot *pPlot)
 {
 	vector<CvPlot *>::const_iterator it;
 
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = m_aDigCompletePlots.begin(); it != m_aDigCompletePlots.end(); ++it)
+#else
 	for (it = m_aDigCompletePlots.begin(); it != m_aDigCompletePlots.end(); it++)
+#endif
 	{
 		if (*it == pPlot)
 		{
@@ -1844,7 +1924,11 @@ bool CvPlayerCulture::HasDigCompleteHere(CvPlot *pPlot) const
 {
 	vector<CvPlot *>::const_iterator it;
 
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = m_aDigCompletePlots.begin(); it != m_aDigCompletePlots.end(); ++it)
+#else
 	for (it = m_aDigCompletePlots.begin(); it != m_aDigCompletePlots.end(); it++)
+#endif
 	{
 		if (*it == pPlot)
 		{
@@ -3950,7 +4034,11 @@ FDataStream& operator<<(FDataStream& saveTo, const CvPlayerCulture& readFrom)
 
 	vector<CvPlot *>::const_iterator it;
 	saveTo << readFrom.m_aDigCompletePlots.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = readFrom.m_aDigCompletePlots.begin(); it != readFrom.m_aDigCompletePlots.end(); ++it)
+#else
 	for(it = readFrom.m_aDigCompletePlots.begin(); it != readFrom.m_aDigCompletePlots.end(); it++)
+#endif
 	{
 		CvPlot *pPlot = *it;
 		saveTo << pPlot->getX();

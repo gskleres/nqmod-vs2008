@@ -565,12 +565,21 @@ private:
 #else
 	int ScoreBelief(CvBeliefEntry* pEntry);
 #endif
+#if defined(AUI_CONSTIFY)
+	int ScoreBeliefAtPlot(const CvBeliefEntry* pEntry, const CvPlot* pPlot) const;
+	int ScoreBeliefAtCity(const CvBeliefEntry* pEntry, const CvCity* pCity) const;
+	int ScoreBeliefForPlayer(const CvBeliefEntry* pEntry) const;
+
+	int ScoreCityForMissionary(const CvCity* pCity, UnitHandle pUnit) const;
+	int ScoreCityForInquisitor(const CvCity* pCity, UnitHandle pUnit) const;
+#else
 	int ScoreBeliefAtPlot(CvBeliefEntry* pEntry, CvPlot* pPlot);
 	int ScoreBeliefAtCity(CvBeliefEntry* pEntry, CvCity* pCity);
 	int ScoreBeliefForPlayer(CvBeliefEntry* pEntry);
 
 	int ScoreCityForMissionary(CvCity* pCity, UnitHandle pUnit);
 	int ScoreCityForInquisitor(CvCity* pCity, UnitHandle pUnit);
+#endif
 
 #ifdef AUI_CONSTIFY
 	bool ShouldBecomeNewMajority(const CvCity* pCity, ReligionTypes eReligion, int iNewPressure) const;
