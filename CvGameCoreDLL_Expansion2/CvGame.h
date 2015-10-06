@@ -111,7 +111,9 @@ public:
 	int countCivTeamsEverAlive() const;
 	int countHumanPlayersAlive() const;
 	int countHumanPlayersEverAlive() const;
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	int countSeqHumanTurnsUntilPlayerTurn(PlayerTypes playerID) const;
+#endif
 
 	int countMajorCivsAlive() const;
 	int countMajorCivsEverAlive() const;
@@ -141,7 +143,11 @@ public:
 
 	int getNumHumanPlayers();
 	int GetNumMinorCivsEver();
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	int getCurrentTurnOrderActive() const;
+#else
 	int getNumHumansInHumanWars(PlayerTypes ignorePlayer = NO_PLAYER);
+#endif
 	int getNumSequentialHumans(PlayerTypes ignorePlayer = NO_PLAYER);
 
 	int getGameTurn();
@@ -183,7 +189,9 @@ public:
 	void changeTurnSlice(int iChange);
 
 	void resetTurnTimer(bool resetGameTurnStart = true);
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	int getMaxTurnLen();
+#endif
 
 	bool IsStaticTutorialActive() const;
 	void SetStaticTutorialActive(bool bStaticTutorialActive);
@@ -279,7 +287,12 @@ public:
 	bool isHotSeat() const;
 	bool isPbem() const;
 	bool isPitboss() const;
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	bool isAnySimultaneousTurns() const;
+	bool isAllActivePlayersTurnAllComplete() const;
+#else
 	bool isSimultaneousTeamTurns() const;
+#endif
 
 	bool isFinalInitialized() const;
 	void setFinalInitialized(bool bNewValue);
@@ -754,6 +767,16 @@ protected:
 	void DoCacheMapScoreMod();
 
 	void doTurn();
+
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	void constructTurnOrders();
+	int m_iCurrentTurnOrderActive;
+	int m_iLastTurnOrderID;
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+	void calculateMaxTurnLengths();
+	FFastVector<int, true, c_eCiv5GameplayDLL> m_aiMaxTurnLengths;
+#endif
+#endif
 
 	void updateWar();
 	void updateMoves();

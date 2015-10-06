@@ -396,6 +396,15 @@ void CvGame::init(HandicapTypes eHandicap)
 	m_bArchaeologyTriggered = false;
 	CvGoodyHuts::Reset();
 
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	m_iCurrentTurnOrderActive = 0;
+	m_iLastTurnOrderID = 0;
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+	m_aiMaxTurnLengths.clear();
+	m_aiMaxTurnLengths.reserve(MAX_TEAMS);
+#endif
+#endif
+
 	doUpdateCacheOnTurn();
 }
 
@@ -1116,6 +1125,15 @@ void CvGame::uninit()
 
 	m_iLastMouseoverUnitID = 0;
 
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	m_iCurrentTurnOrderActive = 0;
+	m_iLastTurnOrderID = 0;
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+	m_aiMaxTurnLengths.clear();
+	m_aiMaxTurnLengths.reserve(MAX_TEAMS);
+#endif
+#endif
+
 	CvCityManager::Shutdown();
 }
 
@@ -1540,8 +1558,38 @@ void CvGame::update()
 			// If there are no active players, move on to the AI
 			if(getNumGameTurnActive() == 0)
 			{
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+				bool bDoAI = true;
+				if (isAnySimultaneousTurns())
+				{
+					while (bDoAI && m_iCurrentTurnOrderActive < m_iLastTurnOrderID)
+					{
+						m_iCurrentTurnOrderActive++;
+						//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
+						// KWG: This code should go into CheckPlayerTurnDeactivate
+						for (int iI = 0; iI < MAX_PLAYERS; iI++)
+						{
+							CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
+							if (!player.isTurnActive() && player.isHuman() && player.isAlive() && (player.getTurnOrder() == m_iCurrentTurnOrderActive))
+							{
+								player.setTurnActive(true);
+								bDoAI = false;
+							}
+						}
+					}
+				}
+
+				if (bDoAI)
+				{
+					if (gDLL->CanAdvanceTurn())
+						doTurn();
+				}
+				else
+					resetTurnTimer(false);
+#else
 				if(gDLL->CanAdvanceTurn())
 					doTurn();
+#endif
 			}
 
 			if(!isPaused())	// Check for paused again, the doTurn call might have called something that paused the game and we don't want an update to sneak through
@@ -1634,13 +1682,18 @@ void CvGame::CheckPlayerTurnDeactivate()
 						// In that case, the local human is (should be) the player we just deactivated the turn for
 						// and the AI players will be activated all at once in CvGame::doTurn, once we have received
 						// all the moves from the other human players
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+						if (!isAnySimultaneousTurns())
+#else
 						if(!kPlayer.isSimultaneousTurns())
+#endif
 						{
 							if((isPbem() || isHotSeat()) && kPlayer.isHuman() && countHumanPlayersAlive() > 1)
 							{
 								setHotPbemBetweenTurns(true);
 							}
 
+#ifndef AUI_GAME_BETTER_HYBRID_MODE
 							if(isSimultaneousTeamTurns())
 							{
 								if(!GET_TEAM(kPlayer.getTeam()).isTurnActive())
@@ -1664,6 +1717,7 @@ void CvGame::CheckPlayerTurnDeactivate()
 								}
 							}
 							else
+#endif
 							{
 								if(!GC.GetEngineUserInterface()->isDiploActive())
 								{
@@ -1672,7 +1726,11 @@ void CvGame::CheckPlayerTurnDeactivate()
 										for(int iJ = (kPlayer.GetID() + 1); iJ < MAX_PLAYERS; iJ++)
 										{
 											CvPlayer& kNextPlayer = GET_PLAYER((PlayerTypes)iJ);
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+											if (kNextPlayer.isAlive())
+#else
 											if(kNextPlayer.isAlive() && !kNextPlayer.isSimultaneousTurns())
+#endif
 											{//the player is alive and also running sequential turns.  they're up!
 												if(isPbem() && kNextPlayer.isHuman())
 												{
@@ -1938,6 +1996,12 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 				CvPlayer& curPlayer = GET_PLAYER(playerID);
 
 				// Has the turn expired?
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+				FFastVector<int, true, c_eCiv5GameplayDLL>::const_iterator piCurMaxTurnLength = m_aiMaxTurnLengths.begin();
+				piCurMaxTurnLength += curPlayer.getTurnOrder();
+
+				float fGameTurnEnd = static_cast<float>(*piCurMaxTurnLength);
+#else
 				float gameTurnEnd = static_cast<float>(getMaxTurnLen());
 
 				//NOTE:  These times exclude the time used for AI processing.
@@ -1945,11 +2009,22 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 				float timeSinceCurrentTurnStart = m_curTurnTimer.Peek() + m_fCurrentTurnTimerPauseDelta; 
 				//Time since the game (year) turn started.  Used for measuring time for players in simultaneous turn mode.
 				float timeSinceGameTurnStart = m_timeSinceGameTurnStart.Peek() + m_fCurrentTurnTimerPauseDelta; 
+#endif
 				
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+				float fTimeElapsed = m_curTurnTimer.Peek() + m_fCurrentTurnTimerPauseDelta;
+#elif defined(AUI_GAME_BETTER_HYBRID_MODE)
+				float timeElapsed = timeSinceCurrentTurnStart;
+#else
 				float timeElapsed = (curPlayer.isSimultaneousTurns() ? timeSinceGameTurnStart : timeSinceCurrentTurnStart);
+#endif
 				if(curPlayer.isTurnActive())
 				{//The timer is ticking for our turn
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+					if (fTimeElapsed > fGameTurnEnd)
+#else
 					if(timeElapsed > gameTurnEnd)
+#endif
 					{
 						if(s_unitMoveTurnSlice == 0)
 						{
@@ -1962,6 +2037,7 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 					}
 				}
 
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH // This section is superfluous, so it was cut
 				if((!curPlayer.isTurnActive() || gDLL->HasReceivedTurnComplete(playerID)) //Active player has finished their turn.
 					&& getNumSequentialHumans() > 1)	//or sequential turn mode
 				{//It's not our turn and there are sequential turn human players in the game.
@@ -1994,11 +2070,17 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 						timeElapsed = timeSinceGameTurnStart + (humanTurnsCompleted-1)*timePerPlayer;
 					}
 				}
+#endif
 
 				if(isLocalPlayer)
 				{//update the local end turn timer.
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+					CvPreGame::setEndTurnTimerLength(fGameTurnEnd);
+					iface->updateEndTurnTimer(fTimeElapsed / fGameTurnEnd);
+#else
 					CvPreGame::setEndTurnTimerLength(gameTurnEnd);
 					iface->updateEndTurnTimer(timeElapsed / gameTurnEnd);
+#endif
 				}
 			}
 		}
@@ -2835,7 +2917,11 @@ void CvGame::selectGroup(CvUnit* pUnit, bool bShift, bool bCtrl, bool bAlt)
 				if(pLoopUnit->canMove())
 				{
 					CvPlayerAI* pOwnerPlayer = &(GET_PLAYER(pLoopUnit->getOwner()));
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+					if (!pOwnerPlayer->getTurnOrder() != m_iCurrentTurnOrderActive || !isAnySimultaneousTurns() || getTurnSlice() - pLoopUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
+#else
 					if( !pOwnerPlayer->isSimultaneousTurns() || getTurnSlice() - pLoopUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
+#endif
 					{
 						if(bAlt || (pLoopUnit->getUnitType() == pUnit->getUnitType()))
 						{
@@ -2969,7 +3055,11 @@ bool CvGame::canHandleAction(int iAction, CvPlot* pPlot, bool bTestVisible)
 	{
 		if(pkHeadSelectedUnit->getOwner() == getActivePlayer())
 		{
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+			if ((GET_PLAYER(pkHeadSelectedUnit->getOwner()).getTurnOrder() == m_iCurrentTurnOrderActive && isAnySimultaneousTurns()) || GET_PLAYER(pkHeadSelectedUnit->getOwner()).isTurnActive())
+#else
 			if(GET_PLAYER(pkHeadSelectedUnit->getOwner()).isSimultaneousTurns() || GET_PLAYER(pkHeadSelectedUnit->getOwner()).isTurnActive())
+#endif
 			{
 				if(GC.getActionInfo(iAction)->getMissionType() != NO_MISSION)
 				{
@@ -3377,7 +3467,11 @@ void CvGame::doControl(ControlTypes eControl)
 
 				if(pUnit->getOwner() == getActivePlayer())
 				{
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+					if (GET_PLAYER(pUnit->getOwner()).getTurnOrder() != m_iCurrentTurnOrderActive || !isAnySimultaneousTurns() || getTurnSlice() - pUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
+#else
 					if(!GET_PLAYER(pUnit->getOwner()).isSimultaneousTurns() || getTurnSlice() - pUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
+#endif
 					{
 						if(pUnit->IsHurt())
 						{
@@ -3914,10 +4008,24 @@ int CvGame::countHumanPlayersEverAlive() const
 	return iCount;
 }
 
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 //	--------------------------------------------------------------------------------
 int CvGame::countSeqHumanTurnsUntilPlayerTurn( PlayerTypes playerID ) const
 {//This function counts the number of sequential human player turns that remain before this player's turn.
 	int humanTurnsUntilMe = 0;
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	const CvPlayer& kTargetPlayer = GET_PLAYER(playerID);
+	int iTargetPlayerTurnOrder = kTargetPlayer.getTurnOrder();
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		const CvPlayer& kCurrentPlayer = GET_PLAYER((PlayerTypes)i);
+		if (kCurrentPlayer.isHuman() && kCurrentPlayer.isAlive() &&
+			kCurrentPlayer.getTurnOrder() >= m_iCurrentTurnOrderActive && kCurrentPlayer.getTurnOrder() < iTargetPlayerTurnOrder)
+		{
+			++humanTurnsUntilMe;
+		}
+	}
+#else
 	bool startCountingPlayers = false;
 	CvPlayer& targetPlayer = GET_PLAYER(playerID);
 	if(targetPlayer.isSimultaneousTurns())
@@ -3973,9 +4081,11 @@ int CvGame::countSeqHumanTurnsUntilPlayerTurn( PlayerTypes playerID ) const
 			}
 		}	
 	}
+#endif
 
 	return humanTurnsUntilMe;
 }
+#endif
 
 //	--------------------------------------------------------------------------------
 int CvGame::countMajorCivsAlive() const
@@ -4394,6 +4504,12 @@ int CvGame::GetNumMinorCivsEver()
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+int CvGame::getCurrentTurnOrderActive() const
+{
+	return m_iCurrentTurnOrderActive;
+}
+#else
 int CvGame::getNumHumansInHumanWars(PlayerTypes ignorePlayer)
 {//returns the number of human players who are currently at war with other human players.
 	int humansWarringHumans = 0;
@@ -4410,11 +4526,36 @@ int CvGame::getNumHumansInHumanWars(PlayerTypes ignorePlayer)
 	}
 	return humansWarringHumans;
 }
+#endif
 
 //	--------------------------------------------------------------------------------
 int CvGame::getNumSequentialHumans(PlayerTypes ignorePlayer)
 {//returns the number of human players who are playing sequential turns.
 	int seqHumans = 0;
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	if (isAnySimultaneousTurns())
+	{
+		bool bHasHuman;
+		for (int iJ = 0; iJ <= m_iLastTurnOrderID; iJ++)
+		{
+			bHasHuman = false;
+			for (int i = 0; i < MAX_CIV_PLAYERS; ++i)
+			{
+				const CvPlayer& curPlayer = GET_PLAYER((PlayerTypes)i);
+				if (curPlayer.isAlive() && curPlayer.isHuman() && (ignorePlayer == NO_PLAYER || curPlayer.GetID() != ignorePlayer) //ignore the ignore player
+					&& curPlayer.getTurnOrder() == iJ)
+				{
+					bHasHuman = true;
+					break;
+				}
+			}
+			if (bHasHuman)
+				seqHumans++;
+		}
+	}
+	else
+		seqHumans = getNumHumanPlayers();
+#else
 	for(int i = 0; i < MAX_CIV_PLAYERS; ++i)
 	{
 		const CvPlayer& curPlayer = GET_PLAYER((PlayerTypes)i);
@@ -4426,6 +4567,7 @@ int CvGame::getNumSequentialHumans(PlayerTypes ignorePlayer)
 			++seqHumans;
 		}
 	}
+#endif
 	return seqHumans;
 }
 
@@ -4646,6 +4788,7 @@ void CvGame::resetTurnTimer(bool resetGameTurnStart)
 	}
 }
 
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 //	--------------------------------------------------------------------------------
 int CvGame::getMaxTurnLen()
 {//returns the amount of time players are being given for this turn.
@@ -4691,6 +4834,7 @@ int CvGame::getMaxTurnLen()
 		return baseTurnTime;
 	}
 }
+#endif
 
 //	--------------------------------------------------------------------------------
 bool CvGame::IsStaticTutorialActive() const
@@ -5577,6 +5721,29 @@ bool CvGame::isPitboss() const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+bool CvGame::isAnySimultaneousTurns() const
+{
+	return isNetworkMultiPlayer() && (isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS));
+}
+
+bool CvGame::isAllActivePlayersTurnAllComplete() const
+{
+	for (int iI = 0; iI < MAX_PLAYERS; iI++)
+	{
+		CvPlayer& kCurPlayer = GET_PLAYER((PlayerTypes)iI);
+		if (kCurPlayer.isHuman() && kCurPlayer.isAlive() && (kCurPlayer.getTurnOrder() == m_iCurrentTurnOrderActive || !isAnySimultaneousTurns()))
+		{
+			if (!gDLL->HasReceivedTurnAllComplete((PlayerTypes)iI))
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+#else
 bool CvGame::isSimultaneousTeamTurns() const
 {//When players are taking sequential turns, do they take them simultaneous with every member of their team?
  //WARNING:  This function doesn't indicate if a player is taking sequential turns or not.
@@ -5593,6 +5760,7 @@ bool CvGame::isSimultaneousTeamTurns() const
 
 	return true;
 }
+#endif
 
 //	--------------------------------------------------------------------------------
 bool CvGame::isFinalInitialized() const
@@ -7683,6 +7851,9 @@ void CvGame::doTurn()
 	incrementGameTurn();
 	incrementElapsedGameTurns();
 
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	constructTurnOrders();
+#else
 	if(isOption(GAMEOPTION_DYNAMIC_TURNS))
 	{// update turn mode for dynamic turn mode.
 		for(int teamIdx = 0; teamIdx < MAX_TEAMS; ++teamIdx)
@@ -7691,9 +7862,14 @@ void CvGame::doTurn()
 			curTeam.setDynamicTurnsSimultMode(!curTeam.isHuman() || !curTeam.isAtWarWithHumans());
 		}
 	}
+#endif
 
 	// Configure turn active status for the beginning of the new turn.
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	if (isAnySimultaneousTurns())
+#else
 	if(isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
+#endif
 	{// In multi-player with simultaneous turns, we activate all of the AI players
 	 // at the same time.  The human players who are playing simultaneous turns will be activated in updateMoves after all
 	 // the AI players are processed.
@@ -7712,6 +7888,9 @@ void CvGame::doTurn()
 		}
 	}
 
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	else
+#else
 	if(isSimultaneousTeamTurns())
 	{//We're doing simultaneous team turns, activate the first team in sequence.
 		for(iI = 0; iI < MAX_TEAMS; iI++)
@@ -7725,12 +7904,17 @@ void CvGame::doTurn()
 		}
 	}
 	else if(!isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
+#endif
 	{// player sequential turns.
 		// Sequential turns.  Activate the first player we find from the start, human or AI, who wants a sequential turn.
 		for(iI = 0; iI < MAX_PLAYERS; iI++)
 		{
 			if(GET_PLAYER((PlayerTypes)iI).isAlive() 
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+				)
+#else
 				&& !GET_PLAYER((PlayerTypes)iI).isSimultaneousTurns()) //we don't want to be a person who's doing a simultaneous turn for dynamic turn mode.
+#endif
 			{
 				if(isPbem() && GET_PLAYER((PlayerTypes)iI).isHuman())
 				{
@@ -7789,6 +7973,127 @@ void CvGame::doTurn()
 
 	gDLL->PublishNewGameTurn(getGameTurn());
 }
+
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+void CvGame::constructTurnOrders()
+{
+	m_iCurrentTurnOrderActive = 0;
+	m_iLastTurnOrderID = 0;
+	int iTeamIdx;
+
+	if (isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
+	{
+		// Simultaneous mode, every team set to turn order 0
+		for (iTeamIdx = 0; iTeamIdx < MAX_TEAMS; ++iTeamIdx)
+		{
+			CvTeam& kCurTeam = GET_TEAM((TeamTypes)iTeamIdx);
+			kCurTeam.setTurnOrder(0);
+		}
+		// Hybrid mode, all teams that are at war are set to different turn orders
+		if (isOption(GAMEOPTION_DYNAMIC_TURNS))
+		{
+			bool abIsAliveHumanTeam[MAX_TEAMS] = {};
+			for (iTeamIdx = 0; iTeamIdx < MAX_TEAMS; ++iTeamIdx)
+			{
+				CvTeam& kCurTeam = GET_TEAM((TeamTypes)iTeamIdx);
+				if (kCurTeam.isAlive() && kCurTeam.isHuman())
+				{
+					abIsAliveHumanTeam[iTeamIdx] = true;
+				}
+			}
+			for (iTeamIdx = 0; iTeamIdx < MAX_TEAMS - 1; ++iTeamIdx)
+			{
+				if (abIsAliveHumanTeam[iTeamIdx])
+				{
+					CvTeam& kCurTeam = GET_TEAM((TeamTypes)iTeamIdx);
+					int iCurTeamOrder = kCurTeam.getTurnOrder();
+					for (int iTargetTeamIdx = iTeamIdx + 1; iTargetTeamIdx < MAX_TEAMS; ++iTargetTeamIdx)
+					{
+						if (abIsAliveHumanTeam[iTargetTeamIdx])
+						{
+							CvTeam& kTargetTeam = GET_TEAM((TeamTypes)iTargetTeamIdx);
+							int iTargetTeamOrder = kCurTeam.getTurnOrder();
+							if (iTargetTeamOrder == iCurTeamOrder && kCurTeam.isAtWar((TeamTypes)iTeamIdx))
+							{
+								m_iLastTurnOrderID = iTargetTeamOrder + 1;
+								kTargetTeam.setTurnOrder(m_iLastTurnOrderID);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	// Sequential mode, all teams are set to different turn orders
+	else
+	{
+		m_iLastTurnOrderID = MAX_TEAMS - 1;
+		for (iTeamIdx = 0; iTeamIdx < MAX_TEAMS; ++iTeamIdx)
+		{
+			CvTeam& kCurTeam = GET_TEAM((TeamTypes)iTeamIdx);
+			kCurTeam.setTurnOrder(iTeamIdx);
+		}
+	}
+	calculateMaxTurnLengths();
+}
+
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+void CvGame::calculateMaxTurnLengths()
+{
+	m_aiMaxTurnLengths.clear();
+
+	if (getPitbossTurnTime() != 0)
+	{//manually set turn time.
+		if (isPitboss())
+		{// Turn time is in hours
+			for (int iI = 0; iI <= m_iLastTurnOrderID; ++iI)
+			{
+				m_aiMaxTurnLengths.push_back(getPitbossTurnTime() * 3600);
+			}
+		}
+		else
+		{
+			for (int iI = 0; iI <= m_iLastTurnOrderID; ++iI)
+			{
+				m_aiMaxTurnLengths.push_back(getPitbossTurnTime());
+			}
+		}
+	}
+	else
+	{
+		const CvTurnTimerInfo& kTurnTimer = CvPreGame::turnTimerInfo();
+		for (int iTurnOrder = 0; iTurnOrder <= m_iLastTurnOrderID; ++iTurnOrder)
+		{
+			int iMaxUnits = 0;
+			int iMaxCities = 0;
+
+			// Find out who has the most units and who has the most cities
+			// Calculate the max turn time based on the max number of units and cities
+			for (int iI = 0; iI < MAX_CIV_PLAYERS; ++iI)
+			{
+				const CvPlayer& kCurPlayer = GET_PLAYER((PlayerTypes)iI);
+				if (kCurPlayer.isAlive() && kCurPlayer.isHuman() && kCurPlayer.getTurnOrder() == iTurnOrder)
+				{
+					if (kCurPlayer.getNumUnits() > iMaxUnits)
+					{
+						iMaxUnits = kCurPlayer.getNumUnits();
+					}
+					if (kCurPlayer.getNumCities() > iMaxCities)
+					{
+						iMaxCities = kCurPlayer.getNumCities();
+					}
+				}
+			}
+
+			// Now set turn length based on base length and unit and city resources
+			int iBaseTurnTime = kTurnTimer.getBaseTime() + (kTurnTimer.getCityResource() * iMaxCities) + (kTurnTimer.getUnitResource() * iMaxUnits);
+
+			m_aiMaxTurnLengths.push_back(iBaseTurnTime);
+		}
+	}
+}
+#endif
+#endif
 
 //	--------------------------------------------------------------------------------
 ImprovementTypes CvGame::GetBarbarianCampImprovementType()
@@ -8506,13 +8811,21 @@ void CvGame::updateMoves()
 
 	if(activatePlayers)
 	{
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+		if (isAnySimultaneousTurns())
+#else
 		if (isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
+#endif
 		{//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
 			// KWG: This code should go into CheckPlayerTurnDeactivate
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{
 				CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+				if (!player.isTurnActive() && player.isHuman() && player.isAlive() && (player.getTurnOrder() == m_iCurrentTurnOrderActive))
+#else
 				if(!player.isTurnActive() && player.isHuman() && player.isAlive() && player.isSimultaneousTurns())
+#endif
 				{
 					player.setTurnActive(true);
 				}
@@ -9627,6 +9940,14 @@ void CvGame::Read(FDataStream& kStream)
 		}
 	}
 
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	kStream >> m_iCurrentTurnOrderActive;
+	kStream >> m_iLastTurnOrderID;
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+	kStream >> m_aiMaxTurnLengths;
+#endif
+#endif
+
 	//when loading from file, we need to reset m_lastTurnAICivsProcessed 
 	//so that updateMoves() can turn active players after loading an autosave in simultaneous turns multiplayer.
 	m_lastTurnAICivsProcessed = -1;
@@ -9820,6 +10141,14 @@ void CvGame::Write(FDataStream& kStream) const
 		long nilSize = 0;
 		kStream << nilSize;
 	}
+
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	kStream << m_iCurrentTurnOrderActive;
+	kStream << m_iLastTurnOrderID;
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+	kStream << m_aiMaxTurnLengths;
+#endif
+#endif
 }
 
 //	---------------------------------------------------------------------------

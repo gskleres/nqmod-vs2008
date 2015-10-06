@@ -29,6 +29,8 @@
 #define AUI_CONSTIFY
 /// Removes unused functions that simply increase filesize of the DLL without providing any benefit
 #define NQM_PRUNING
+/// Fixes some sources for level 4 warnings
+#define AUI_WARNING_FIXES
 /// Changes the scopes of certain functions to fall in line with other functions of the same type (eg. CvUnit::CanFallBackFromMelee() is public instead of protected)
 #define AUI_SCOPE_FIXES
 /// Adds a few extra functions that can be used for 128-bit SSE types like __m128i and __m128d
@@ -64,7 +66,7 @@
 /// CvUnit::canMoveInto() is optimized to not perform redundant checks for attack flag (also improves pathfinder performance)
 #define AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
 
-// Fixes to game bugs and New/Tweaked gameplay aspects
+// Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
 /// When choosing the top n choices from a weighted vector, choices with weight equal to the last choice are also included
@@ -131,6 +133,14 @@
 #define AUI_GAME_OBSERVER_CAN_OPEN_CITIES
 /// All cities are set to be revealed to observers
 #define AUI_CITY_OBSERVER_REVEALS_ALL_CITIES
+
+// New hybrid mode
+/// When in hybrid mode, players who are not at war with each other have their turns happen simultaneously, thus speeding games up significantly
+#define AUI_GAME_BETTER_HYBRID_MODE
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+/// Turn lengths are determined for each player at the beginning of the turn and cached, instead of having turn lengths be a global variable whose value can change mid-turn
+#define AUI_GAME_PLAYER_BASED_TURN_LENGTH
+#endif
 
 // Pathfinder (A*) optimizations, tweaks, and fixes
 /// A* functions no longer run the canEnterTerrain() functions during validation (it should normally be run once and cached, but Firaxis did a bunch of stupids)
