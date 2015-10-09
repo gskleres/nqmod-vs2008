@@ -123,13 +123,21 @@ bool CvLandmass::isLake() const
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvLandmass::GetContinentType() const
+#else
 char CvLandmass::GetContinentType() const
+#endif
 {
 	return m_cContinentType;
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvLandmass::SetContinentType(const int cContinent)
+#else
 void CvLandmass::SetContinentType(const char cContinent)
+#endif
 {
 	m_cContinentType = cContinent;
 }
@@ -260,6 +268,16 @@ void CvMap::InitPlots()
 
 	int iNumPlots = numPlots();
 
+#ifdef AUI_WARNING_FIXES
+	m_pYields					= FNEW(int[NUM_YIELD_TYPES*iNumPlots], c_eCiv5GameplayDLL, 0);
+	m_pFoundValue				= FNEW(int[REALLY_MAX_PLAYERS*iNumPlots], c_eCiv5GameplayDLL, 0);
+	m_pPlayerCityRadiusCount	= FNEW(int[REALLY_MAX_PLAYERS*iNumPlots], c_eCiv5GameplayDLL, 0);
+	m_pVisibilityCount			= FNEW(int[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
+	m_pRevealedOwner			= FNEW(int[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
+	m_pRevealed					= FNEW(bool[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
+	m_pRevealedImprovementType	= FNEW(int[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
+	m_pRevealedRouteType		= FNEW(int[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
+#else
 	m_pYields					= FNEW(short[NUM_YIELD_TYPES*iNumPlots], c_eCiv5GameplayDLL, 0);
 	m_pFoundValue				= FNEW(int[REALLY_MAX_PLAYERS*iNumPlots], c_eCiv5GameplayDLL, 0);
 	m_pPlayerCityRadiusCount	= FNEW(char[REALLY_MAX_PLAYERS*iNumPlots], c_eCiv5GameplayDLL, 0);
@@ -268,6 +286,7 @@ void CvMap::InitPlots()
 	m_pRevealed					= FNEW(bool[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
 	m_pRevealedImprovementType  = FNEW(short[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
 	m_pRevealedRouteType		= FNEW(short[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
+#endif
 	m_pNoSettling				= FNEW(bool[MAX_MAJOR_CIVS*iNumPlots], c_eCiv5GameplayDLL, 0);
 	m_pResourceForceReveal		= FNEW(bool[REALLY_MAX_TEAMS*iNumPlots], c_eCiv5GameplayDLL, 0);
 
@@ -283,6 +302,15 @@ void CvMap::InitPlots()
 	memset(m_pResourceForceReveal, 0,REALLY_MAX_TEAMS*iNumPlots *sizeof(bool));
 
 
+#ifdef AUI_WARNING_FIXES
+	int* pYields					= m_pYields;
+	int* pFoundValue				= m_pFoundValue;
+	int* pPlayerCityRadiusCount		= m_pPlayerCityRadiusCount;
+	int* pVisibilityCount			= m_pVisibilityCount;
+	int* pRevealedOwner				= m_pRevealedOwner;
+	int* pRevealedImprovementType	= m_pRevealedImprovementType;
+	int* pRevealedRouteType			= m_pRevealedRouteType;
+#else
 	short* pYields					= m_pYields;
 	int*   pFoundValue				= m_pFoundValue;
 	char*  pPlayerCityRadiusCount   = m_pPlayerCityRadiusCount;
@@ -292,6 +320,7 @@ void CvMap::InitPlots()
 	short* pRevealedRouteType		= m_pRevealedRouteType;
 	bool*  pNoSettling				= m_pNoSettling;
 	bool*  pResourceForceReveal		= m_pResourceForceReveal;
+#endif
 
 	for(int i = 0; i < iNumPlots; i++)
 	{
@@ -520,8 +549,18 @@ void CvMap::setupGraphical()
 
 	if(m_pMapPlots != NULL)
 	{
+#if defined(AUI_WARNING_FIXES) && defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+		for (int iI = 0; iI < (int)numPlots(); iI++)
+#elif defined(AUI_WARNING_FIXES)
+		for (uint iI = 0; iI < numPlots(); iI++)
+#elif defined (AUI_USE_OPENMP)
+#pragma omp parallel for
+		for (int iI = 0; iI < numPlots(); iI++)
+#else
 		int iI;
 		for(iI = 0; iI < numPlots(); iI++)
+#endif
 		{
 			plotByIndexUnchecked(iI)->setupGraphical();
 		}
@@ -532,9 +571,13 @@ void CvMap::setupGraphical()
 //	--------------------------------------------------------------------------------
 void CvMap::erasePlots()
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->erase(true/*bEraseUnitsIfWater*/);
 	}
@@ -544,9 +587,13 @@ void CvMap::erasePlots()
 //	--------------------------------------------------------------------------------
 void CvMap::setRevealedPlots(TeamTypes eTeam, bool bNewValue, bool bTerrainOnly)
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->setRevealed(eTeam, bNewValue, bTerrainOnly);
 	}
@@ -557,7 +604,11 @@ void CvMap::setRevealedPlots(TeamTypes eTeam, bool bNewValue, bool bTerrainOnly)
 void CvMap::setAllPlotTypes(PlotTypes ePlotType)
 {
 
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < numPlots(); i++)
+#else
 	for(int i=0; i<numPlots(); i++)
+#endif
 	{
 		plotByIndexUnchecked(i)->setPlotType(ePlotType, false, false);
 	}
@@ -569,9 +620,13 @@ void CvMap::setAllPlotTypes(PlotTypes ePlotType)
 //	--------------------------------------------------------------------------------
 void CvMap::doTurn()
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->doTurn();
 	}
@@ -581,9 +636,19 @@ void CvMap::doTurn()
 //	--------------------------------------------------------------------------------
 void CvMap::updateFog()
 {
+#if defined(AUI_WARNING_FIXES) && defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+	for (int iI = 0; iI < (int)numPlots(); iI++)
+#elif defined(AUI_WARNING_FIXES)
+	for (uint iI = 0; iI < numPlots(); iI++)
+#elif defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+	for (int iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->updateFog();
 	}
@@ -604,9 +669,19 @@ void CvMap::updateDeferredFog()
 //	--------------------------------------------------------------------------------
 void CvMap::updateVisibility()
 {
+#if defined(AUI_WARNING_FIXES) && defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+	for (int iI = 0; iI < (int)numPlots(); iI++)
+#elif defined(AUI_WARNING_FIXES)
+	for (uint iI = 0; iI < numPlots(); iI++)
+#elif defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+	for (int iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->updateVisibility();
 	}
@@ -615,7 +690,11 @@ void CvMap::updateVisibility()
 //	--------------------------------------------------------------------------------
 void CvMap::updateLayout(bool bDebug)
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	for(int iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		CvPlot* pThisPlot = plotByIndexUnchecked(iI);
 		if(pThisPlot && pThisPlot->isLayoutDirty())
@@ -630,9 +709,13 @@ void CvMap::updateLayout(bool bDebug)
 //	--------------------------------------------------------------------------------
 void CvMap::updateSight(bool bIncrement)
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->updateSight(bIncrement);
 	}
@@ -642,9 +725,19 @@ void CvMap::updateSight(bool bIncrement)
 //	--------------------------------------------------------------------------------
 void CvMap::updateCenterUnit()
 {
+#if defined(AUI_WARNING_FIXES) && defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+	for (int iI = 0; iI < (int)numPlots(); iI++)
+#elif defined(AUI_WARNING_FIXES)
+	for (uint iI = 0; iI < numPlots(); iI++)
+#elif defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+	for (int iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->updateCenterUnit();
 	}
@@ -693,9 +786,13 @@ void CvMap::updateWorkingCity(CvPlot* pPlot, int iRange)
 //	--------------------------------------------------------------------------------
 void CvMap::updateYield()
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->updateYield();
 	}
@@ -705,9 +802,19 @@ void CvMap::updateYield()
 //	Update the adjacency cache values
 void CvMap::updateAdjacency()
 {
+#if defined(AUI_WARNING_FIXES) && defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+	for (int iI = 0; iI < (int)numPlots(); iI++)
+#elif defined(AUI_WARNING_FIXES)
+	for (uint iI = 0; iI < numPlots(); iI++)
+#elif defined(AUI_USE_OPENMP)
+#pragma omp parallel for
+	for (int iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		CvPlot* pPlot = plotByIndexUnchecked(iI);
 		pPlot->m_bIsAdjacentToLand = pPlot->isAdjacentToLand();
@@ -717,9 +824,13 @@ void CvMap::updateAdjacency()
 //	--------------------------------------------------------------------------------
 void CvMap::verifyUnitValidPlot()
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->verifyUnitValidPlot();
 	}
@@ -1131,11 +1242,19 @@ int CvMap::plotY(int iIndex) const
 //	--------------------------------------------------------------------------------
 int CvMap::maxPlotDistance()
 {
+#ifdef NQM_FAST_COMP
+	return MAX(1, plotDistance(0, 0, ((isWrapX()) ? (getGridWidth() / 2) : (getGridWidth() - 1)), ((isWrapY()) ? (getGridHeight() / 2) : (getGridHeight() - 1))));
+#else
 	return std::max(1, plotDistance(0, 0, ((isWrapX()) ? (getGridWidth() / 2) : (getGridWidth() - 1)), ((isWrapY()) ? (getGridHeight() / 2) : (getGridHeight() - 1))));
+#endif
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+uint CvMap::getLandPlots() const
+#else
 int CvMap::getLandPlots()
+#endif
 {
 	return m_iLandPlots;
 }
@@ -1144,13 +1263,22 @@ int CvMap::getLandPlots()
 //	--------------------------------------------------------------------------------
 void CvMap::changeLandPlots(int iChange)
 {
+#ifdef AUI_WARNING_FIXES
+	if (iChange < 0)
+		m_iLandPlots = (m_iLandPlots - abs(iChange));
+	else
+#endif
 	m_iLandPlots = (m_iLandPlots + iChange);
 	CvAssert(getLandPlots() >= 0);
 }
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+uint CvMap::getOwnedPlots() const
+#else
 int CvMap::getOwnedPlots()
+#endif
 {
 	return m_iOwnedPlots;
 }
@@ -1159,6 +1287,11 @@ int CvMap::getOwnedPlots()
 //	--------------------------------------------------------------------------------
 void CvMap::changeOwnedPlots(int iChange)
 {
+#ifdef AUI_WARNING_FIXES
+	if (iChange < 0)
+		m_iOwnedPlots = (m_iOwnedPlots - abs(iChange));
+	else
+#endif
 	m_iOwnedPlots = (m_iOwnedPlots + iChange);
 	CvAssert(getOwnedPlots() >= 0);
 }
@@ -1442,8 +1575,12 @@ void CvMap::Read(FDataStream& kStream)
 	if(numPlots() > 0)
 	{
 		InitPlots();
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < numPlots(); iI++)
+#else
 		int iI;
 		for(iI = 0; iI < numPlots(); iI++)
+#endif
 		{
 			m_pMapPlots[iI].read(kStream);
 		}
@@ -1493,8 +1630,12 @@ void CvMap::Write(FDataStream& kStream) const
 	CvInfosSerializationHelper::WriteHashedDataArray<ResourceTypes>(kStream, m_paiNumResource, GC.getNumResourceInfos());
 	CvInfosSerializationHelper::WriteHashedDataArray<ResourceTypes>(kStream, m_paiNumResourceOnLand, GC.getNumResourceInfos());
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		m_pMapPlots[iI].write(kStream);
 	}
@@ -1536,9 +1677,13 @@ void CvMap::calculateAreas()
 	CvPlot* pLoopPlot;
 	CvArea* pArea;
 	int iArea;
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iI;
 
 	for(iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		pLoopPlot = plotByIndexUnchecked(iI);
 		CvAssertMsg(pLoopPlot != NULL, "LoopPlot is not assigned a valid value");
@@ -1625,9 +1770,14 @@ void CvMap::DoPlaceNaturalWonders()
 	FeatureTypes featureMesa = NO_FEATURE;
 	FeatureTypes featureVolcano = NO_FEATURE;
 
+#ifdef AUI_WARNING_FIXES
+	int nwCount = 0;
+	for (uint iFeatureLoop = 0; iFeatureLoop < GC.getNumFeatureInfos(); iFeatureLoop++)
+#else
 	int iNumFeatureInfos = GC.getNumFeatureInfos();
 	int nwCount = 0;
 	for(int iFeatureLoop = 0; iFeatureLoop < iNumFeatureInfos; iFeatureLoop++)
+#endif
 	{
 		eFeature = (FeatureTypes) iFeatureLoop;
 		CvFeatureInfo* feature = GC.getFeatureInfo(eFeature);
@@ -2114,7 +2264,11 @@ void CvMap::DefaultContinentStamper()
 	}
 
 	// now stamp all plots with the relevant data
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	for(int iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		CvPlot* pLoopPlot = plotByIndexUnchecked(iI);
 		CvLandmass* pLandmass = getLandmass(pLoopPlot->getLandmass());
@@ -2197,8 +2351,12 @@ CvLandmass* CvMap::nextLandmass(int* pIterIdx, bool bRev)
 //	--------------------------------------------------------------------------------
 void CvMap::recalculateLandmasses()
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	int iNumPlots = numPlots();
 	for(int iI = 0; iI < iNumPlots; iI++)
+#endif
 	{
 		plotByIndexUnchecked(iI)->setLandmass(FFreeList::INVALID_INDEX);
 	}
@@ -2221,7 +2379,11 @@ void CvMap::calculateLandmasses()
 	thePathfinder.SetValidFunc(LandmassValid);
 	thePathfinder.SetNotifyListFunc(JoinLandmass);
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	for(int iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		pLoopPlot = plotByIndexUnchecked(iI);
 		if(pLoopPlot->getLandmass() == FFreeList::INVALID_INDEX)

@@ -120,7 +120,11 @@ void CvPlayerAI::AI_doTurnPost()
 		return;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumVictoryInfos(); ++i)
+#else
 	for(int i = 0; i < GC.getNumVictoryInfos(); ++i)
+#endif
 	{
 		AI_launch((VictoryTypes)i);
 	}
@@ -1423,7 +1427,9 @@ CvPlot* CvPlayerAI::FindBestArtistTargetPlot(CvUnit* pGreatArtist, int& iResultS
 
 	iResultScore = 0;
 
+#ifndef AUI_WARNING_FIXES
 	CvPlotsVector& m_aiPlots = GetPlots();
+#endif
 
 	CvPlot* pBestPlot = NULL;
 	int iBestScore = 0;

@@ -74,7 +74,11 @@ void SyncPlots()
 					FMemoryStream memoryStream;
 					std::vector<std::pair<std::string, std::string> > callStacks;
 					archive.saveDelta(memoryStream, callStacks);
+#ifdef AUI_WARNING_FIXES
+					gDLL->sendPlotSyncCheck(authoritativePlayer, short(plot->getX()), short(plot->getY()), memoryStream, callStacks);
+#else
 					gDLL->sendPlotSyncCheck(authoritativePlayer, plot->getX(), plot->getY(), memoryStream, callStacks);
+#endif
 				}
 			}
 		}
@@ -1253,7 +1257,11 @@ CvPlot* CvPlot::getNeighboringPlot(DirectionTypes eDirection) const
 //	--------------------------------------------------------------------------------
 CvPlot* CvPlot::getNearestLandPlotInternal(int iDistance) const
 {
+#ifdef AUI_WARNING_FIXES
+	if (uint(iDistance) > GC.getMap().getGridHeight() && uint(iDistance) > GC.getMap().getGridWidth())
+#else
 	if(iDistance > GC.getMap().getGridHeight() && iDistance > GC.getMap().getGridWidth())
+#endif
 	{
 		return NULL;
 	}
@@ -1864,7 +1872,11 @@ void CvPlot::updateSeeFromSight(bool bIncrement)
 	int iDX, iDY;
 
 	int iRange = GC.getUNIT_VISIBILITY_RANGE() + 1;
+#ifdef AUI_WARNING_FIXES
+	for (uint iPromotion = 0; iPromotion < GC.getNumPromotionInfos(); ++iPromotion)
+#else
 	for(int iPromotion = 0; iPromotion < GC.getNumPromotionInfos(); ++iPromotion)
+#endif
 	{
 		const PromotionTypes ePromotion = static_cast<PromotionTypes>(iPromotion);
 		CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -2495,7 +2507,11 @@ int CvPlot::getBuildTime(BuildTypes eBuild, PlayerTypes ePlayer) const
 
 		if(eRoute != NO_ROUTE)
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iBuildLoop = 0; iBuildLoop < GC.getNumBuildInfos(); iBuildLoop++)
+#else
 			for(int iBuildLoop = 0; iBuildLoop < GC.getNumBuildInfos(); iBuildLoop++)
+#endif
 			{
 				CvBuildInfo* pkBuildInfo = GC.getBuildInfo((BuildTypes) iBuildLoop);
 				if(!pkBuildInfo)
@@ -3868,7 +3884,11 @@ bool CvPlot::IsActualEnemyUnit(PlayerTypes ePlayer, bool bCombatUnitsOnly) const
 	TeamTypes eTeam = GET_PLAYER(ePlayer).getTeam();
 	CvTeam& kTeam = GET_TEAM(eTeam);
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < getNumUnits(); iUnitLoop++)
+#else
 	for(int iUnitLoop = 0; iUnitLoop < getNumUnits(); iUnitLoop++)
+#endif
 	{
 		CvUnit* pkUnit = getUnitByIndex(iUnitLoop);
 		if(pkUnit)
@@ -4956,7 +4976,12 @@ void CvPlot::setOwner(PlayerTypes eNewValue, int iAcquiringCityID, bool bCheckUn
 					// Maintenance change!
 					if(MustPayMaintenanceHere(getOwner()))
 					{
+#ifdef AUI_WARNING_FIXES
+						if (pImprovementInfo)
+							GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-pImprovementInfo->GetGoldMaintenance());
+#else
 						GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-GC.getImprovementInfo(getImprovementType())->GetGoldMaintenance());
+#endif
 					}
 				}
 
@@ -4966,7 +4991,13 @@ void CvPlot::setOwner(PlayerTypes eNewValue, int iAcquiringCityID, bool bCheckUn
 					// Maintenance change!
 					if(MustPayMaintenanceHere(getOwner()))
 					{
+#ifdef AUI_WARNING_FIXES
+						CvRouteInfo* pRouteInfo = GC.getRouteInfo(getRouteType());
+						if (pRouteInfo)
+							GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-pRouteInfo->GetGoldMaintenance());
+#else
 						GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-GC.getRouteInfo(getRouteType())->GetGoldMaintenance());
+#endif
 					}
 				}
 
@@ -5121,7 +5152,12 @@ void CvPlot::setOwner(PlayerTypes eNewValue, int iAcquiringCityID, bool bCheckUn
 					// Maintenance change!
 					if(MustPayMaintenanceHere(eNewValue))
 					{
+#ifdef AUI_WARNING_FIXES
+						if (pImprovementInfo)
+							GET_PLAYER(eNewValue).GetTreasury()->ChangeBaseImprovementGoldMaintenance(pImprovementInfo->GetGoldMaintenance());
+#else
 						GET_PLAYER(eNewValue).GetTreasury()->ChangeBaseImprovementGoldMaintenance(GC.getImprovementInfo(getImprovementType())->GetGoldMaintenance());
+#endif
 					}
 				}
 
@@ -5131,7 +5167,13 @@ void CvPlot::setOwner(PlayerTypes eNewValue, int iAcquiringCityID, bool bCheckUn
 					// Maintenance change!
 					if(MustPayMaintenanceHere(eNewValue))
 					{
+#ifdef AUI_WARNING_FIXES
+						CvRouteInfo* pRouteInfo = GC.getRouteInfo(getRouteType());
+						if (pRouteInfo)
+							GET_PLAYER(eNewValue).GetTreasury()->ChangeBaseImprovementGoldMaintenance(pRouteInfo->GetGoldMaintenance());
+#else
 						GET_PLAYER(eNewValue).GetTreasury()->ChangeBaseImprovementGoldMaintenance(GC.getRouteInfo(getRouteType())->GetGoldMaintenance());
+#endif
 					}
 				}
 
@@ -5956,7 +5998,11 @@ ImprovementTypes CvPlot::getImprovementTypeNeededToImproveResource(PlayerTypes e
 	ImprovementTypes eImprovementNeeded = NO_IMPROVEMENT;
 
 	// see if we can improve the resource
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 	for(int iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 	{
 		BuildTypes eBuild = (BuildTypes) iBuildIndex;
 		CvBuildInfo* pBuildInfo = GC.getBuildInfo(eBuild);
@@ -6046,7 +6092,11 @@ void CvPlot::setImprovementType(ImprovementTypes eNewValue, PlayerTypes eBuilder
 				// Maintenance change!
 				if(MustPayMaintenanceHere(owningPlayerID))
 				{
+#ifdef AUI_WARNING_FIXES
+					GET_PLAYER(owningPlayerID).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-oldImprovementEntry.GetGoldMaintenance());
+#else
 					GET_PLAYER(owningPlayerID).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-GC.getImprovementInfo(getImprovementType())->GetGoldMaintenance());
+#endif
 				}
 
 				// Siphon resource changes
@@ -6076,7 +6126,11 @@ void CvPlot::setImprovementType(ImprovementTypes eNewValue, PlayerTypes eBuilder
 				// Maintenance change!
 				if(MustPayMaintenanceHere(GetPlayerResponsibleForImprovement()))
 				{
+#ifdef AUI_WARNING_FIXES
+					GET_PLAYER(GetPlayerResponsibleForImprovement()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-oldImprovementEntry.GetGoldMaintenance());
+#else
 					GET_PLAYER(GetPlayerResponsibleForImprovement()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-GC.getImprovementInfo(getImprovementType())->GetGoldMaintenance());
+#endif
 				}
 
 				SetPlayerResponsibleForImprovement(NO_PLAYER);
@@ -6456,7 +6510,11 @@ void CvPlot::setRouteType(RouteTypes eNewValue)
 				// Maintenance change!
 				if(MustPayMaintenanceHere(getOwner()))
 				{
+#ifdef AUI_WARNING_FIXES
+					GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-oldRouteInfo.GetGoldMaintenance());
+#else
 					GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-GC.getRouteInfo(getRouteType())->GetGoldMaintenance());
+#endif
 				}
 
 				// Update the amount of a Resource used up by a Route which was previously here
@@ -6795,7 +6853,13 @@ void CvPlot::setPlotCity(CvCity* pNewValue)
 				// Maintenance change!
 				if(MustPayMaintenanceHere(getOwner()))
 				{
+#ifdef AUI_WARNING_FIXES
+					CvRouteInfo* pRouteInfo = GC.getRouteInfo(getRouteType());
+					if (pRouteInfo)
+						GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(pRouteInfo->GetGoldMaintenance());
+#else
 					GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(GC.getRouteInfo(getRouteType())->GetGoldMaintenance());
+#endif
 				}
 			}
 
@@ -6839,7 +6903,13 @@ void CvPlot::setPlotCity(CvCity* pNewValue)
 				// Maintenance change!
 				if(MustPayMaintenanceHere(getOwner()))
 				{
+#ifdef AUI_WARNING_FIXES
+					CvRouteInfo* pRouteInfo = GC.getRouteInfo(getRouteType());
+					if (pRouteInfo)
+						GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-pRouteInfo->GetGoldMaintenance());
+#else
 					GET_PLAYER(getOwner()).GetTreasury()->ChangeBaseImprovementGoldMaintenance(-GC.getRouteInfo(getRouteType())->GetGoldMaintenance());
+#endif
 				}
 			}
 
@@ -7001,7 +7071,11 @@ void CvPlot::changeRiverCrossingCount(int iChange)
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int* CvPlot::getYield()
+#else
 short* CvPlot::getYield()
+#endif
 {
 	return m_aiYield;
 }
@@ -7219,7 +7293,11 @@ int CvPlot::calculateImprovementYieldChange(ImprovementTypes eImprovement, Yield
 	ResourceTypes eResource;
 	int iBestYield;
 	int iYield;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	CvImprovementEntry* pImprovement = GC.getImprovementInfo(eImprovement);
 	if (!pImprovement)
@@ -7882,7 +7960,11 @@ PlotVisibilityChangeResult CvPlot::changeVisibilityCount(TeamTypes eTeam, int iC
 				}
 
 				// If there are any Units here, meet their owners
+#ifdef AUI_WARNING_FIXES
+				for (uint iUnitLoop = 0; iUnitLoop < getNumUnits(); iUnitLoop++)
+#else
 				for(int iUnitLoop = 0; iUnitLoop < getNumUnits(); iUnitLoop++)
+#endif
 				{
 					// If the AI spots a human Unit, don't meet - wait for the human to find the AI
 					CvUnit* loopUnit = getUnitByIndex(iUnitLoop);
@@ -8795,8 +8877,13 @@ bool CvPlot::changeBuildProgress(BuildTypes eBuild, int iChange, PlayerTypes ePl
 	{
 		if(NULL == m_paiBuildProgress)
 		{
+#ifdef AUI_WARNING_FIXES
+			m_paiBuildProgress = FNEW(int[GC.getNumBuildInfos()], c_eCiv5GameplayDLL, 0);
+			for (uint iI = 0; iI < GC.getNumBuildInfos(); ++iI)
+#else
 			m_paiBuildProgress = FNEW(short[GC.getNumBuildInfos()], c_eCiv5GameplayDLL, 0);
 			for(int iI = 0; iI < GC.getNumBuildInfos(); ++iI)
+#endif
 			{
 				m_paiBuildProgress[iI] = 0;
 			}
@@ -9190,18 +9277,31 @@ CvUnit* CvPlot::getLayerUnit(int iIndex, int iLayerID /*= -1*/) const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+uint CvPlot::getNumUnits() const
+#else
 int CvPlot::getNumUnits() const
+#endif
 {
 	return m_units.getLength();
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+uint CvPlot::GetNumCombatUnits() const
+{
+	uint iCount = 0;
+
+	const IDInfo* pUnitNode;
+	const CvUnit* pLoopUnit;
+#else
 int CvPlot::GetNumCombatUnits()
 {
 	int iCount = 0;
 
 	IDInfo* pUnitNode;
 	CvUnit* pLoopUnit;
+#endif
 
 	pUnitNode = headUnitNode();
 
@@ -9222,7 +9322,11 @@ int CvPlot::GetNumCombatUnits()
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+CvUnit* CvPlot::getUnitByIndex(uint iIndex) const
+#else
 CvUnit* CvPlot::getUnitByIndex(int iIndex) const
+#endif
 {
 	const IDInfo* pUnitNode;
 
@@ -9321,7 +9425,11 @@ void CvPlot::removeUnit(CvUnit* pUnit, bool bUpdate)
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	GC.getMap().plotManager().RemoveUnit(pUnit->GetIDInfo(), m_iX, m_iY, MAX_UNSIGNED_INT);
+#else
 	GC.getMap().plotManager().RemoveUnit(pUnit->GetIDInfo(), m_iX, m_iY, -1);
+#endif
 
 	if(bUpdate)
 	{
@@ -9417,7 +9525,12 @@ void CvPlot::setScriptData(const char* szNewValue)
 void CvPlot::processArea(CvArea* pArea, int iChange)
 {
 	CvCity* pCity;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+	int iJ;
+#else
 	int iI, iJ;
+#endif
 
 	pArea->changeNumTiles(iChange);
 
@@ -9574,7 +9687,11 @@ void CvPlot::read(FDataStream& kStream)
 	else
 	{
 		kStream >> m_eFeatureType;
+#ifdef AUI_WARNING_FIXES
+		if ((uint)m_eFeatureType >= GC.getNumFeatureInfos())
+#else
 		if ((int)m_eFeatureType >= GC.getNumFeatureInfos())
+#endif
 			m_eFeatureType = NO_FEATURE;
 	}
 	m_eResourceType = (ResourceTypes) CvInfosSerializationHelper::ReadHashed(kStream);
@@ -9696,7 +9813,11 @@ void CvPlot::read(FDataStream& kStream)
 	if(iCount > 0)
 	{
 		const int iNumBuildInfos = GC.getNumBuildInfos();
+#ifdef AUI_WARNING_FIXES
+		m_paiBuildProgress = FNEW(int[iNumBuildInfos], c_eCiv5GameplayDLL, 0);
+#else
 		m_paiBuildProgress = FNEW(short[iNumBuildInfos], c_eCiv5GameplayDLL, 0);
+#endif
 		ZeroMemory(m_paiBuildProgress, sizeof(short) * iNumBuildInfos);
 		
 		BuildArrayHelpers::Read(kStream, m_paiBuildProgress);
@@ -9920,7 +10041,11 @@ void CvPlot::updateLayout(bool bDebug)
 	if(eThisImprovement == NO_IMPROVEMENT && getAnyBuildProgress() && eFOWMode == FOGOFWARMODE_OFF)
 	{
 		// see if we are improving the tile
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 		for(int iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 		{
 			BuildTypes eBuild = (BuildTypes)iBuildIndex;
 			CvBuildInfo* build = GC.getBuildInfo(eBuild);
@@ -9996,7 +10121,11 @@ void CvPlot::updateLayout(bool bDebug)
 		if(eRoute == NO_ROUTE && getAnyBuildProgress() && eFOWMode == FOGOFWARMODE_OFF)
 		{
 			// see if we are improving the tile
+#ifdef AUI_WARNING_FIXES
+			for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 			for(int iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 			{
 				BuildTypes eBuild = (BuildTypes)iBuildIndex;
 				CvBuildInfo* build = GC.getBuildInfo(eBuild);
@@ -10551,13 +10680,21 @@ void CvPlot::SetBuilderAIScratchPadPlayer(PlayerTypes ePlayer)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvPlot::GetBuilderAIScratchPadTurn() const
+#else
 short CvPlot::GetBuilderAIScratchPadTurn() const
+#endif
 {
 	return m_sBuilderAIScratchPadTurn;
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvPlot::SetBuilderAIScratchPadTurn(int sNewTurnValue)
+#else
 void CvPlot::SetBuilderAIScratchPadTurn(short sNewTurnValue)
+#endif
 {
 	m_sBuilderAIScratchPadTurn = sNewTurnValue;
 }
@@ -10575,31 +10712,51 @@ void CvPlot::SetBuilderAIScratchPadRoute(RouteTypes eRoute)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvPlot::GetBuilderAIScratchPadValue() const
+#else
 short CvPlot::GetBuilderAIScratchPadValue() const
+#endif
 {
 	return m_sBuilderAIScratchPadValue;
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvPlot::SetBuilderAIScratchPadValue(int sNewValue)
+#else
 void CvPlot::SetBuilderAIScratchPadValue(short sNewValue)
+#endif
 {
 	m_sBuilderAIScratchPadValue = sNewValue;
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+uint CvPlot::GetPlotIndex() const
+#else
 int CvPlot::GetPlotIndex() const
+#endif
 {
 	return GC.getMap().plotNum(getX(),getY());
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvPlot::GetContinentType() const
+#else
 char CvPlot::GetContinentType() const
+#endif
 {
 	return m_cContinentType;
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvPlot::SetContinentType(const int cContinent)
+#else
 void CvPlot::SetContinentType(const char cContinent)
+#endif
 {
 	m_cContinentType = cContinent;
 }
