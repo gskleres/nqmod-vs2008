@@ -2479,6 +2479,10 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 
 					int iModifier = 100;
 					int iDomainModifier = GetTradeConnectionDomainValueModifierTimes100(kTradeConnection, eYield);
+#ifdef AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
+					iValue *= iDomainModifier + 100;
+					iValue /= 100;
+#endif
 					int iOriginRiverModifier = GetTradeConnectionRiverValueModifierTimes100(kTradeConnection, eYield, bAsOriginPlayer);
 
 					iValue = iBaseValue;
@@ -2491,7 +2495,9 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 					iValue += iPolicyBonus;
 					iValue += iTraitBonus;
 
+#ifndef AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
 					iModifier += iDomainModifier;
+#endif
 					iModifier += iOriginRiverModifier;
 
 					iValue *= iModifier;
@@ -2528,6 +2534,10 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 
 						int iModifier = 100;
 						int iDomainModifier = GetTradeConnectionDomainValueModifierTimes100(kTradeConnection, eYield);
+#ifdef AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
+						iValue *= iDomainModifier + 100;
+						iValue /= 100;
+#endif
 						int iDestRiverModifier = GetTradeConnectionRiverValueModifierTimes100(kTradeConnection, eYield, false);
 						int iTraitBonus = GetTradeConnectionOtherTraitValueTimes100(kTradeConnection, eYield, false);
 
@@ -2536,7 +2546,9 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 						iValue += iTheirBuildingBonus;
 						iValue += iTraitBonus;
 
+#ifndef AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
 						iModifier += iDomainModifier;
+#endif
 						iModifier += iDestRiverModifier;
 
 						iValue *= iModifier;
@@ -2578,7 +2590,12 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 
 					int iModifier = 100;
 					int iDomainModifier = GetTradeConnectionDomainValueModifierTimes100(kTradeConnection, eYield);
+#ifdef AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
+					iValue *= iDomainModifier + 100;
+					iValue /= 100;
+#else
 					iModifier += iDomainModifier;
+#endif
 					iModifier += GET_PLAYER(kTradeConnection.m_eDestOwner).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_INTERNAL_TRADE_MODIFIER);
 					iValue *= iModifier;
 					iValue /= 100;
@@ -2594,7 +2611,12 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 
 					int iModifier = 100;
 					int iDomainModifier = GetTradeConnectionDomainValueModifierTimes100(kTradeConnection, eYield);
+#ifdef AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
+					iValue *= iDomainModifier + 100;
+					iValue /= 100;
+#else
 					iModifier += iDomainModifier;
+#endif
 					iModifier += GET_PLAYER(kTradeConnection.m_eDestOwner).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_INTERNAL_TRADE_MODIFIER);
 					iValue *= iModifier;
 					iValue /= 100;
