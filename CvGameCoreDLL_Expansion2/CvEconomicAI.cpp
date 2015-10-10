@@ -1743,7 +1743,11 @@ void CvEconomicAI::DoHurry()
 	int iTurnsSaved = 0;
 	int iHurryAmount = 0;
 	int iHurryAmountAvailable = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iI = 0;
+#else
 	int iI = 0;
+#endif
 
 	CvCity* pBestHurryCity = NULL;
 	int iBestHurryTurnsSaved = 0;

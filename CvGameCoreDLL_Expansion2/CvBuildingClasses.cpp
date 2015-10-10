@@ -2945,9 +2945,15 @@ bool CvCityBuildings::IsHoldingGreatWork(BuildingClassTypes eBuildingClass) cons
 }
 
 /// Accessor: How many Great Works are inside this building?
+#ifdef AUI_WARNING_FIXES
+uint CvCityBuildings::GetNumGreatWorksInBuilding(BuildingClassTypes eBuildingClass) const
+{
+	uint iCount = 0;
+#else
 int CvCityBuildings::GetNumGreatWorksInBuilding(BuildingClassTypes eBuildingClass) const
 {
 	int iCount = 0;
+#endif
 	for(std::vector<BuildingGreatWork>::const_iterator it = m_aBuildingGreatWork.begin(); it != m_aBuildingGreatWork.end(); ++it)
 	{
 		if((*it).eBuildingClass == eBuildingClass)
@@ -3319,7 +3325,11 @@ int CvCityBuildings::GetCityStateTradeRouteProductionModifier() const
 {
 	int iRtnValue = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
 		CvCivilizationInfo *pkCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());

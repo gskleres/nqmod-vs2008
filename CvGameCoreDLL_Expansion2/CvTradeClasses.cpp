@@ -944,7 +944,11 @@ bool CvGameTrade::EmptyTradeRoute(int iIndex)
 	kTradeConnection.m_eOriginOwner = NO_PLAYER;
 	kTradeConnection.m_eDomain = NO_DOMAIN;
 	kTradeConnection.m_eConnectionType = NUM_TRADE_CONNECTION_TYPES;
+#ifdef AUI_WARNING_FIXES
+	kTradeConnection.m_iTradeUnitLocationIndex = MAX_UNSIGNED_INT;
+#else
 	kTradeConnection.m_iTradeUnitLocationIndex = -1;
+#endif
 	kTradeConnection.m_bTradeUnitMovingForward = false;
 	kTradeConnection.m_iCircuitsCompleted = 0;
 	kTradeConnection.m_iCircuitsToComplete = 0;
@@ -1536,7 +1540,11 @@ void CvGameTrade::CreateVis(int iIndex)
 }
 
 //	----------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+CvUnit* CvGameTrade::GetVis(uint iIndex) const
+#else
 CvUnit* CvGameTrade::GetVis(int iIndex)
+#endif
 {
 	CvAssertMsg(iIndex >= 0 && iIndex < (int)m_aTradeConnections.size(), "iIndex out of bounds");
 	if (iIndex < 0 || iIndex >= (int)m_aTradeConnections.size())
@@ -1544,7 +1552,11 @@ CvUnit* CvGameTrade::GetVis(int iIndex)
 		return NULL;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	const TradeConnection& kTradeConnection = m_aTradeConnections[iIndex];
+#else
 	TradeConnection& kTradeConnection = m_aTradeConnections[iIndex];
+#endif
 	if (kTradeConnection.m_unitID != -1)
 	{
 		CvPlayer& kPlayer = GET_PLAYER(kTradeConnection.m_eOriginOwner);

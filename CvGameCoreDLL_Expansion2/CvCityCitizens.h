@@ -66,11 +66,13 @@ public:
 #ifndef NQM_PRUNING
 	bool IsAIWantSpecialistRightNow();
 #endif
-	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
-	int GetSpecialistValue(SpecialistTypes eSpecialist);
 #ifdef AUI_CONSTIFY
+	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue) const;
+	int GetSpecialistValue(SpecialistTypes eSpecialist) const;
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const;
 #else
+	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
+	int GetSpecialistValue(SpecialistTypes eSpecialist);
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist);
 #endif
 

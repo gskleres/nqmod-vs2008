@@ -3190,20 +3190,20 @@ std::vector<CvYieldInfo*>& CvGlobals::getYieldInfo()
 	return m_paYieldInfo;
 }
 
+#ifdef AUI_WARNING_FIXES
+_Ret_maybenull_ CvYieldInfo* CvGlobals::getYieldInfo(YieldTypes eYieldNum) const
+{
+	uint uiIndex = uint(eYieldNum);
+	CvAssert(uiIndex < NUM_YIELD_TYPES);
+	if (uiIndex < m_paYieldInfo.size())
+		return m_paYieldInfo[uiIndex];
+#else
 #ifdef AUI_CONSTIFY
 _Ret_maybenull_ CvYieldInfo* CvGlobals::getYieldInfo(YieldTypes eYieldNum) const
 #else
 CvYieldInfo* CvGlobals::getYieldInfo(YieldTypes eYieldNum)
 #endif
 {
-#ifdef AUI_WARNING_FIXES
-	_Ret_maybenull_ CvYieldInfo* CvGlobals::getYieldInfo(YieldTypes eYieldNum) const
-	{
-		uint uiIndex = uint(eYieldNum);
-		CvAssert(uiIndex < NUM_YIELD_TYPES);
-		if (uiIndex < m_paYieldInfo.size())
-			return m_paYieldInfo[uiIndex];
-#else
 	CvAssert(eYieldNum > -1);
 	CvAssert(eYieldNum < NUM_YIELD_TYPES);
 	if(eYieldNum > -1 && eYieldNum < (int)m_paYieldInfo.size())
@@ -3615,11 +3615,18 @@ std::vector<CvActionInfo*>& CvGlobals::getActionInfo()
 	return m_paActionInfo;
 }
 
+#ifdef AUI_WARNING_FIXES
+CvActionInfo* CvGlobals::getActionInfo(uint i)
+{
+	CvAssertMsg(i < getNumActionInfos(), "Index out of bounds");
+	if (i < m_paActionInfo.size())
+#else
 CvActionInfo* CvGlobals::getActionInfo(int i)
 {
 	CvAssertMsg(i < getNumActionInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 	if(i > -1 && i < (int)m_paActionInfo.size())
+#endif
 		return m_paActionInfo[i];
 	else
 		return NULL;

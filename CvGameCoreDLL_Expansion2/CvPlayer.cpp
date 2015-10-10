@@ -17326,7 +17326,7 @@ int CvPlayer::GetScienceFromOtherPlayersTimes100() const
 		{
 			if (GET_PLAYER(ePlayer).GetMinorCivAI()->IsAllies(GetID()))
 			{
-				switch (GetCurrentEra())
+				switch ((int)GetCurrentEra())
 				{
 					case 0:
 						iScienceFromPlayer = 0;

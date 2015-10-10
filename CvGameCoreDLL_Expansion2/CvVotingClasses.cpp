@@ -10214,7 +10214,11 @@ void CvLeagueAI::AllocateProposals(CvLeague* pLeague)
 			if (pLeague->CanProposeRepeal(iID, GetPlayer()->GetID()))
 			{
 				ProposalConsideration consideration(/*bEnact*/ false, iResolutionIndex, LeagueHelpers::CHOICE_NONE);
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+				int iScore = ScoreProposal(pLeague, &vActive[iResolutionIndex], GetPlayer()->GetID());
+#else
 				int iScore = ScoreProposal(pLeague, &vActive[iResolutionIndex]);
+#endif
 				vConsiderations.push_back(consideration, iScore);
 			}
 		}
@@ -10234,7 +10238,11 @@ void CvLeagueAI::AllocateProposals(CvLeague* pLeague)
 					if (pLeague->CanProposeEnact(eResolution, GetPlayer()->GetID(), LeagueHelpers::CHOICE_NONE))
 					{
 						ProposalConsideration consideration(/*bEnact*/ true, iResolutionIndex, LeagueHelpers::CHOICE_NONE);
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+						int iScore = ScoreProposal(pLeague, eResolution, LeagueHelpers::CHOICE_NONE, GetPlayer()->GetID());
+#else
 						int iScore = ScoreProposal(pLeague, eResolution, LeagueHelpers::CHOICE_NONE);
+#endif
 						vConsiderations.push_back(consideration, iScore);
 					}
 				}
@@ -10246,7 +10254,11 @@ void CvLeagueAI::AllocateProposals(CvLeague* pLeague)
 						if (pLeague->CanProposeEnact(eResolution, GetPlayer()->GetID(), iChoice))
 						{
 							ProposalConsideration consideration(/*bEnact*/ true, iResolutionIndex, iChoice);
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+							int iScore = ScoreProposal(pLeague, eResolution, iChoice, GetPlayer()->GetID());
+#else
 							int iScore = ScoreProposal(pLeague, eResolution, iChoice);
+#endif
 							vConsiderations.push_back(consideration, iScore);
 						}
 					}
@@ -10285,9 +10297,15 @@ void CvLeagueAI::AllocateProposals(CvLeague* pLeague)
 	}
 }
 
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+int CvLeagueAI::ScoreProposal(CvLeague* pLeague, ResolutionTypes eResolution, int iChoice, PlayerTypes eProposalPlayer)
+{
+	CvEnactProposal fakeProposal(/*iID*/-1, eResolution, pLeague->GetID(), eProposalPlayer, iChoice);
+#else
 int CvLeagueAI::ScoreProposal(CvLeague* pLeague, ResolutionTypes eResolution, int iChoice)
 {
 	CvEnactProposal fakeProposal(/*iID*/-1, eResolution, pLeague->GetID(), /*eProposalPlayer*/NO_PLAYER, iChoice);
+#endif
 
 	// How much do we like our YES vote on this proposal?
 	int iYesScore = 0;
@@ -10307,14 +10325,27 @@ int CvLeagueAI::ScoreProposal(CvLeague* pLeague, ResolutionTypes eResolution, in
 			}
 		}
 	}
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+	else if (eVoteDecision == RESOLUTION_DECISION_ANY_MEMBER || eVoteDecision == RESOLUTION_DECISION_MAJOR_CIV_MEMBER || eVoteDecision == RESOLUTION_DECISION_OTHER_MAJOR_CIV_MEMBER)
+	{
+		bFoundYes = true;
+		iYesScore = ScoreVoteChoice(&fakeProposal, iChoice);
+	}
+#endif
 	CvAssert(bFoundYes);
 
 	return iYesScore;
 }
 
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+int CvLeagueAI::ScoreProposal(CvLeague* pLeague, CvActiveResolution* pResolution, PlayerTypes eProposalPlayer)
+{
+	CvRepealProposal fakeProposal(pResolution, eProposalPlayer);
+#else
 int CvLeagueAI::ScoreProposal(CvLeague* pLeague, CvActiveResolution* pResolution)
 {
 	CvRepealProposal fakeProposal(pResolution, /*eProposalPlayer*/NO_PLAYER);
+#endif
 
 	// How much do we like our YES vote on this proposal?
 	int iYesScore = 0;

@@ -95,7 +95,11 @@ void CvStartPositioner::ComputeFoundValues()
 	CvPlot* pLoopPlot(NULL);
 
 	// Progress through entire map
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 	for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 	{
 #ifdef AUI_STARTPOSITIONER_FLAVORED_STARTS
 		// Since found values are now computed for each player when they're being positioned, there's no point in storing stuff in CvPlot
@@ -334,7 +338,11 @@ void CvStartPositioner::ComputeTileFertilityValues()
 	CvArea* pLoopArea(NULL);
 	int iLoop;
 	CvPlot* pLoopPlot(NULL);
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 	int uiFertility;
 
 	// Set all area fertilities to 0

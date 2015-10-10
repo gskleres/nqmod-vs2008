@@ -4685,13 +4685,13 @@ void CvHomelandAI::ExecuteAircraftMoves()
 			if(GC.getLogging() && GC.getAILogging())
 			{
 				CvString strLogString;
+				CvString strTemp, strTemp2;
 #ifdef AUI_WARNING_FIXES
 				strTemp = pUnit->getUnitInfo().GetDescription();
 				if (pTransportUnit)
 				{
 					strTemp2 = pTransportUnit->getUnitInfo().GetDescription();
 #else
-				CvString strTemp, strTemp2;
 				strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
 				if (pTransportUnit)
 				{

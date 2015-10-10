@@ -604,7 +604,11 @@ public:
 	int GetBuildingGreatWork(BuildingClassTypes eBuildingClass, int iSlot) const;
 	void SetBuildingGreatWork(BuildingClassTypes eBuildingClass, int iSlot, int iGreatWorkIndex);
 	bool IsHoldingGreatWork(BuildingClassTypes eBuildingClass) const;
+#ifdef AUI_WARNING_FIXES
+	uint GetNumGreatWorksInBuilding(BuildingClassTypes eBuildingClass) const;
+#else
 	int GetNumGreatWorksInBuilding(BuildingClassTypes eBuildingClass) const;
+#endif
   
 	bool HasAnyAvailableGreatWorkSlot() const;
 	bool HasAvailableGreatWorkSlot(GreatWorkSlotType eGreatWorkSlot) const;

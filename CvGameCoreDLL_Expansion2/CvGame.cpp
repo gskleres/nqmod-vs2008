@@ -9536,6 +9536,102 @@ int CvGame::getAsyncRandNum(int iNum, const char* pszLog)
 int CvGame::calculateSyncChecksum()
 {
 	CvUnit* pLoopUnit;
+#if defined(AUI_WARNING_FIXES) || defined(AUI_GAME_FIX_SYNC_CHECKSUM_USE_UNSIGNED)
+	uint uiMultiplier;
+	uint uiValue = 0;
+	int iLoop;
+	uint iJ;
+
+#ifdef AUI_USE_SFMT_RNG
+	uiValue += getMapRand().getSeed().first;
+	uiValue += getMapRand().getSeed().second;
+	uiValue += getJonRand().getSeed().first;
+	uiValue += getJonRand().getSeed().second;
+#else
+	uiValue += getMapRand().getSeed();
+	uiValue += getJonRand().getSeed();
+#endif
+
+	uiValue += getNumCities();
+	uiValue += getTotalPopulation();
+
+	uiValue += GC.getMap().getOwnedPlots();
+	uiValue += GC.getMap().getNumAreas();
+
+	int iTurnSlice = getTurnSlice() % 4;
+
+	for (int iI = 0; iI < MAX_PLAYERS; iI++)
+	{
+		PlayerTypes ePlayer = static_cast<PlayerTypes>(iI);
+		CvPlayer& kPlayer = GET_PLAYER(ePlayer);
+		if (kPlayer.isEverAlive())
+		{
+			uiMultiplier = getPlayerScore((PlayerTypes)iI);
+
+			switch (iTurnSlice)
+			{
+			case 0:
+				uiMultiplier += kPlayer.getTotalPopulation() * 543271;
+				uiMultiplier += kPlayer.getTotalLand() * 327382;
+				uiMultiplier += kPlayer.GetTreasury()->GetGold() * 107564;
+				uiMultiplier += kPlayer.getPower() * 135647;
+				uiMultiplier += kPlayer.getNumCities() * 436432;
+				uiMultiplier += kPlayer.getNumUnits() * 324111;
+				break;
+
+			case 1:
+				for (iJ = 0; iJ < NUM_YIELD_TYPES; iJ++)
+				{
+					uiMultiplier += kPlayer.calculateTotalYield((YieldTypes)iJ) * 432754;
+				}
+				break;
+
+			case 2:
+				for (iJ = 0; iJ < GC.getNumImprovementInfos(); iJ++)
+				{
+					uiMultiplier += kPlayer.getImprovementCount((ImprovementTypes)iJ) * 883422;
+				}
+
+				for (iJ = 0; iJ < GC.getNumBuildingClassInfos(); iJ++)
+				{
+					CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo((BuildingClassTypes)iJ);
+					if (pkBuildingClassInfo)
+					{
+						uiMultiplier += kPlayer.getBuildingClassCountPlusMaking((BuildingClassTypes)iJ) * 954531;
+					}
+				}
+
+				for (iJ = 0; iJ < GC.getNumUnitClassInfos(); iJ++)
+				{
+					CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo((UnitClassTypes)iJ);
+					if (pkUnitClassInfo)
+					{
+						uiMultiplier += kPlayer.getUnitClassCountPlusMaking((UnitClassTypes)iJ) * 754843;
+					}
+				}
+				break;
+
+			case 3:
+				for (pLoopUnit = GET_PLAYER((PlayerTypes)iI).firstUnit(&iLoop); pLoopUnit != NULL; pLoopUnit = GET_PLAYER((PlayerTypes)iI).nextUnit(&iLoop))
+				{
+					uiMultiplier += pLoopUnit->getX() * 876543;
+					uiMultiplier += pLoopUnit->getY() * 985310;
+					uiMultiplier += pLoopUnit->getDamage() * 736373;
+					uiMultiplier += pLoopUnit->getExperience() * 820622;
+					uiMultiplier += pLoopUnit->getLevel() * 367291;
+				}
+				break;
+			}
+
+			if (uiMultiplier != 0)
+			{
+				uiValue *= uiMultiplier;
+			}
+		}
+	}
+
+	return (int)uiValue;
+#else
 	int iMultiplier;
 	int iValue;
 	int iLoop;
@@ -9543,8 +9639,15 @@ int CvGame::calculateSyncChecksum()
 
 	iValue = 0;
 
+#ifdef AUI_USE_SFMT_RNG
+	iValue += getMapRand().getSeed().first;
+	iValue += getMapRand().getSeed().second;
+	iValue += getJonRand().getSeed().first;
+	iValue += getJonRand().getSeed().second;
+#else
 	iValue += getMapRand().getSeed();
 	iValue += getJonRand().getSeed();
+#endif
 
 	iValue += getNumCities();
 	iValue += getTotalPopulation();
@@ -9625,6 +9728,7 @@ int CvGame::calculateSyncChecksum()
 	}
 
 	return iValue;
+#endif
 }
 
 

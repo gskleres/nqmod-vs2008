@@ -556,7 +556,11 @@ std::vector<CvTechEntry*>& CvTechXMLEntries::GetTechEntries()
 }
 
 /// Number of defined techs
+#ifdef AUI_WARNING_FIXES
+uint CvTechXMLEntries::GetNumTechs() const
+#else
 int CvTechXMLEntries::GetNumTechs()
+#endif
 {
 	return m_paTechEntries.size();
 }
@@ -573,7 +577,11 @@ void CvTechXMLEntries::DeleteArray()
 }
 
 /// Get a specific entry
+#ifdef AUI_WARNING_FIXES
+_Ret_maybenull_ CvTechEntry* CvTechXMLEntries::GetEntry(uint index)
+#else
 CvTechEntry* CvTechXMLEntries::GetEntry(int index)
+#endif
 {
 	return m_paTechEntries[index];
 }

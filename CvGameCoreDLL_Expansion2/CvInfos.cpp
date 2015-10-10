@@ -1045,9 +1045,9 @@ int CvActionInfo::getCommandData() const
 	{
 		return GC.getAutomateInfo(m_iOriginalIndex)->getAutomate();
 	}
-#endif
 
 	return -1;
+#endif
 }
 //------------------------------------------------------------------------------
 int CvActionInfo::getAutomateType() const

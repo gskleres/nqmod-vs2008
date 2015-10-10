@@ -520,7 +520,11 @@ bool CvGameCulture::SwapGreatWorks (PlayerTypes ePlayer1, int iWork1, PlayerType
 
 		for (pCity = GET_PLAYER(eTempPlayer).firstCity(&iCityLoop); pCity != NULL; pCity = GET_PLAYER(eTempPlayer).nextCity(&iCityLoop))
 		{
+#ifdef AUI_WARNING_FIXES
+			for (uint iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#else
 			for(int iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#endif
 			{
 				CvCivilizationInfo& playerCivilizationInfo = GET_PLAYER(eTempPlayer).getCivilizationInfo();
 				BuildingTypes eBuilding = (BuildingTypes)playerCivilizationInfo.getCivilizationBuildings((BuildingClassTypes)iBuildingClassLoop);
@@ -982,7 +986,11 @@ void CvPlayerCulture::DoSwapGreatWorks()
 
 	for(pLoopCity = m_pPlayer->firstCity(&iLoop); pLoopCity != NULL; pLoopCity = m_pPlayer->nextCity(&iLoop))
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#else
 		for(int iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#endif
 		{
 			CvCivilizationInfo& playerCivilizationInfo = m_pPlayer->getCivilizationInfo();
 			BuildingTypes eBuilding = (BuildingTypes)playerCivilizationInfo.getCivilizationBuildings((BuildingClassTypes)iBuildingClassLoop);
@@ -5123,7 +5131,7 @@ int CvCityCulture::GetThemingBonusIndex(BuildingClassTypes eBuildingClass) const
 				if (pkBuilding)
 				{
 #ifdef AUI_WARNING_FIXES
-					uint iNumSlots = pkEntry->GetGreatWorkCount();
+					uint iNumSlots = pkBuilding->GetGreatWorkCount();
 #else
 					int iNumSlots = pkBuilding->GetGreatWorkCount();
 #endif
@@ -5327,14 +5335,22 @@ int CultureHelpers::GetThemingBonusIndex(PlayerTypes eOwner, CvBuildingEntry *pk
 
 	if (pkEntry)
 	{
+#ifdef AUI_WARNING_FIXES
+		uint iNumSlots = pkEntry->GetGreatWorkCount();
+#else
 		int iNumSlots = pkEntry->GetGreatWorkCount();
+#endif
 		if (aGreatWorkIndices.size() != iNumSlots)
 		{
 			return -1;  // No theming bonus if some slots still empty or too many entries
 		}
 
 		// Store info on the attributes of all our Great Works
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < iNumSlots; iI++)
+#else
 		for (int iI = 0; iI < iNumSlots; iI++)
+#endif
 		{
 			int iGreatWork = aGreatWorkIndices[iI];
 			CvGreatWork work = pCulture->m_CurrentGreatWorks[iGreatWork];

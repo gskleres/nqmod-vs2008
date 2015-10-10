@@ -53,7 +53,11 @@ void CvBuilderTaskingAI::Init(CvPlayer* pPlayer)
 	// special case code so Brazil doesn't remove jungle
 	m_bKeepJungle = false;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumBuildInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumBuildInfos(); i++)
+#endif
 	{
 		BuildTypes eBuild = (BuildTypes)i;
 		CvBuildInfo* pkBuild = GC.getBuildInfo(eBuild);

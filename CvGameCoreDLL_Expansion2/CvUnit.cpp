@@ -1672,6 +1672,7 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 
 					if(kCaptureDef.eCapturingPlayer == GC.getGame().getActivePlayer())
 					{
+						CvString strBuffer;
 #ifdef AUI_WARNING_FIXES
 						CvUnitEntry* pUnitInfo = GC.getUnitInfo(kCaptureDef.eCaptureUnitType);
 						if (pUnitInfo)
@@ -1686,7 +1687,6 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 								strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_CAPTURED_UNIT", pUnitInfo->GetTextKey());
 							}
 #else
-						CvString strBuffer;
 						if(kCaptureDef.eOriginalOwner == kCaptureDef.eCapturingPlayer){
 							//player recaptured a friendly unit
 							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_RECAPTURED_UNIT", GC.getUnitInfo(kCaptureDef.eCaptureUnitType)->GetTextKey());

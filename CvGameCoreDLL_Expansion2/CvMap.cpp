@@ -318,9 +318,9 @@ void CvMap::InitPlots()
 	char*  pRevealedOwner			= m_pRevealedOwner;
 	short* pRevealedImprovementType = m_pRevealedImprovementType;
 	short* pRevealedRouteType		= m_pRevealedRouteType;
+#endif
 	bool*  pNoSettling				= m_pNoSettling;
 	bool*  pResourceForceReveal		= m_pResourceForceReveal;
-#endif
 
 	for(int i = 0; i < iNumPlots; i++)
 	{
@@ -775,7 +775,11 @@ void CvMap::updateWorkingCity(CvPlot* pPlot, int iRange)
 	}
 	else
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < numPlots(); iI++)
+#else
 		for(int iI = 0; iI < numPlots(); iI++)
+#endif
 		{
 			plotByIndexUnchecked(iI)->updateWorkingCity();
 		}
@@ -2450,7 +2454,11 @@ int CvMap::Validate()
 
 
 	int iErrors = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < numPlots(); iI++)
+#else
 	for(int iI = 0; iI < numPlots(); iI++)
+#endif
 	{
 		CvPlot* pLoopPlot = plotByIndexUnchecked(iI);
 		iErrors |= pLoopPlot->Validate(*this);

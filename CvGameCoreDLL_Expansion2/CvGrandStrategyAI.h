@@ -162,8 +162,13 @@ public:
 
 	// Accessor functions
 	std::vector<CvAIGrandStrategyXMLEntry*>& GetAIGrandStrategyEntries();
+#ifdef AUI_WARNING_FIXES
+	uint GetNumAIGrandStrategies() const;
+	CvAIGrandStrategyXMLEntry* GetEntry(uint index) const;
+#else
 	int GetNumAIGrandStrategies();
 	CvAIGrandStrategyXMLEntry* GetEntry(int index);
+#endif
 
 	void DeleteArray();
 

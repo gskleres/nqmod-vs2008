@@ -1060,7 +1060,11 @@ bool CvCityCitizens::IsAIWantSpecialistRightNow()
 #endif
 
 /// What is the Building Type the AI likes the Specialist of most right now?
+#ifdef AUI_CONSTIFY
+BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue) const
+#else
 BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
+#endif
 {
 	BuildingTypes eBestBuilding = NO_BUILDING;
 	int iBestSpecialistValue = -1;
@@ -1122,7 +1126,11 @@ BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 }
 
 /// How valuable is eSpecialist?
+#ifdef AUI_CONSTIFY
+int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist) const
+#else
 int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
+#endif
 {
 
 	CvSpecialistInfo* pSpecialistInfo = GC.getSpecialistInfo(eSpecialist);

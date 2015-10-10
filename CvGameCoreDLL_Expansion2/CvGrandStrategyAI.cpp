@@ -1315,7 +1315,11 @@ void CvGrandStrategyAI::LogGuessOtherPlayerGrandStrategy(const FStaticVector< in
 		int iPriority;
 
 		// Loop through Grand Strategies
+#ifdef AUI_WARNING_FIXES
+		for (uint iGrandStrategyLoop = 0; iGrandStrategyLoop < GC.getNumAIGrandStrategyInfos(); iGrandStrategyLoop++)
+#else
 		for(int iGrandStrategyLoop = 0; iGrandStrategyLoop < GC.getNumAIGrandStrategyInfos(); iGrandStrategyLoop++)
+#endif
 		{
 			// Get the leading info for this line
 			strBaseString.Format("%03d, ", GC.getGame().getElapsedGameTurns());

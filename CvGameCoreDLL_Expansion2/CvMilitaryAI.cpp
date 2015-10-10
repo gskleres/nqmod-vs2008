@@ -3572,7 +3572,11 @@ UnitHandle CvMilitaryAI::FindBestUnitToScrap(bool bLand, bool bDeficitForcedDisb
 				CvUnitEntry* pUpgradeUnitInfo = GC.GetGameUnits()->GetEntry(eUpgradeUnit);
 				if(pUpgradeUnitInfo != NULL)
 				{
+#ifdef AUI_WARNING_FIXES
+					for(uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos() && !bSkipThisOne; iResourceLoop++)
+#else
 					for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos() && !bSkipThisOne; iResourceLoop++)
+#endif
 					{
 						ResourceTypes eResource = (ResourceTypes) iResourceLoop;
 						int iNumResourceNeeded = pUpgradeUnitInfo->GetResourceQuantityRequirement(eResource);
@@ -3860,7 +3864,11 @@ CvPlot *CvMilitaryAI::GetBestAirSweepTarget(CvUnit* pFighter) const
 						{
 							int iCountFighters = 0;
 
+#ifdef AUI_WARNING_FIXES
+							for (uint iUnitLoop = 0; iUnitLoop < pCityPlot->getNumUnits(); iUnitLoop++)
+#else
 							for (int iUnitLoop = 0; iUnitLoop < pCityPlot->getNumUnits(); iUnitLoop++)
+#endif
 							{
 								CvUnit *pUnit = pCityPlot->getUnitByIndex(iUnitLoop);
 								{

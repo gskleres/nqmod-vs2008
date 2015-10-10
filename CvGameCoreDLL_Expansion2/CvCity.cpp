@@ -1150,7 +1150,11 @@ void CvCity::setupWonderGraphics()
 					{
 						// Is it part of an international project?
 						LeagueProjectTypes eThisBuildingProject = NO_LEAGUE_PROJECT;
+#ifdef AUI_WARNING_FIXES
+						for (uint i = 0; i < GC.getNumLeagueProjectInfos(); i++)
+#else
 						for (int i = 0; i < GC.getNumLeagueProjectInfos(); i++)
+#endif
 						{
 							LeagueProjectTypes eProject = (LeagueProjectTypes)i;
 							CvLeagueProjectEntry* pProjectInfo = GC.getLeagueProjectInfo(eProject);
@@ -6920,7 +6924,7 @@ int CvCity::foodConsumption(bool /*bNoAngry*/, int iExtra) const
 
 //	--------------------------------------------------------------------------------
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
-int CvCity::foodDifference(bool bBottom, bool bValueKnown, int iValueKnown, int iExtraHappiness) const
+int CvCity::foodDifference(bool bBottom, bool bValueKnown, int iValueKnown, int /*iExtraHappiness*/) const
 #else
 int CvCity::foodDifference(bool bBottom) const
 #endif

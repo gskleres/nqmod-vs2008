@@ -1089,12 +1089,11 @@ int PathDestValid(int iToX, int iToY, const void* pointer, CvAStar* finder)
 	FAssert(pToPlot != NULL);
 
 #ifdef AUI_ASTAR_MINOR_OPTIMIZATION
-	CvUnit* pUnit = (CvUnit*)m_pData;
-	const UnitPathCacheData* pCacheData = reinterpret_cast<const UnitPathCacheData*>(GetScratchBuffer());
+	CvUnit* pUnit = (CvUnit*)pointer;
 #else
 	pUnit = ((CvUnit*)pointer);
-	const UnitPathCacheData* pCacheData = reinterpret_cast<const UnitPathCacheData*>(finder->GetScratchBuffer());
 #endif
+	const UnitPathCacheData* pCacheData = reinterpret_cast<const UnitPathCacheData*>(finder->GetScratchBuffer());
 
 	if(pToPlot == NULL || pUnit == NULL)
 		return FALSE;
@@ -1229,11 +1228,11 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 	int iFromPlotX = parent->m_iX;
 	int iFromPlotY = parent->m_iY;
 	CvPlot* pFromPlot = kMap.plotUnchecked(iFromPlotX, iFromPlotY);
-#endif
 
 	int iToPlotX = node->m_iX;
 	int iToPlotY = node->m_iY;
 	CvPlot* pToPlot = kMap.plotUnchecked(iToPlotX, iToPlotY);
+#endif
 
 	CvUnit* pUnit = ((CvUnit*)pointer);
 	const UnitPathCacheData* pCacheData = reinterpret_cast<const UnitPathCacheData*>(finder->GetScratchBuffer());
@@ -1508,8 +1507,8 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 							if (pDefender && pDefender->IsCanDefend())
 							{
 								// handle the Zulu special thrown spear first attack
-								if (pUnit->isRangedSupportFire() && pUnit->canEverRangeStrikeAt(pToPlot, pFromPlot))
-									iDealtDamage = pUnit->GetRangeCombatDamage(pDefender, /*pCity*/ NULL, /*bIncludeRand*/ false, 0, NULL, pFromPlot);
+								if (pUnit->isRangedSupportFire() && pUnit->canEverRangeStrikeAt(pToPlot->getX(), pToPlot->getY()))
+									iDealtDamage = pUnit->GetRangeCombatDamage(pDefender, /*pCity*/ NULL, /*bIncludeRand*/ false);
 
 								if (iDealtDamage < pDefender->GetCurrHitPoints())
 								{
@@ -2507,8 +2506,8 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 							if (pDefender && pDefender->IsCanDefend())
 							{
 								// handle the Zulu special thrown spear first attack
-								if (pUnit->isRangedSupportFire() && pUnit->canEverRangeStrikeAt(pToPlot, pFromPlot))
-									iDealtDamage = pUnit->GetRangeCombatDamage(pDefender, /*pCity*/ NULL, /*bIncludeRand*/ false, 0, NULL, pFromPlot);
+								if (pUnit->isRangedSupportFire() && pUnit->canEverRangeStrikeAt(pToPlot->getX(), pToPlot->getY()))
+									iDealtDamage = pUnit->GetRangeCombatDamage(pDefender, /*pCity*/ NULL, /*bIncludeRand*/ false);
 
 								if (iDealtDamage < pDefender->GetCurrHitPoints())
 								{
@@ -2611,6 +2610,10 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 	CvPlot* pToPlot;
 	bool bAIControl;
 #endif
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+	PlayerTypes unit_owner = pUnit->getOwner();
+	CvPathNodeCacheData& kToNodeCacheData = node->m_kCostCacheData;
+#endif
 
 	if(parent == NULL)
 	{
@@ -2636,7 +2639,7 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 		kToNodeCacheData.bIsWater = (pToPlot->isWater() && !pToPlot->IsAllowsWalkWater());
 		// Recycling bIsMountain for Borders check (only for IgnoreUnits Pathfinder!)
 #ifdef AUI_ASTAR_FIX_IGNORE_UNITS_PATHFINDER_TERRITORY_CHECK
-		kToNodeCacheData.bIsMountain = pUnit->canEnterTerritory(pToPlot->getTeam(), false, false, pUnit->IsDeclareWar() || (GetInfo() & MOVE_DECLARE_WAR));
+		kToNodeCacheData.bIsMountain = pUnit->canEnterTerritory(pToPlot->getTeam(), false, false, pUnit->IsDeclareWar() || (finder->GetInfo() & MOVE_DECLARE_WAR));
 #else
 		kToNodeCacheData.bIsMountain = pUnit->canEnterTerritory(eUnitTeam);
 #endif

@@ -600,7 +600,11 @@ void CvPlayerAI::AI_considerAnnex()
 	float fCutoffValue = GC.getNORMAL_ANNEX();
 	BuildingClassTypes eCourthouseType = NO_BUILDINGCLASS;
 	// find courthouse
+#ifdef AUI_WARNING_FIXES
+	for (uint eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#else
 	for(int eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(eBuildingType);
 		CvBuildingEntry* buildingInfo = GC.getBuildingInfo(eBuilding);
