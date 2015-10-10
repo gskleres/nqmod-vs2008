@@ -494,7 +494,11 @@ BuildingTypes CvWonderProductionAI::ChooseWonder(bool bUseAsyncRandom, bool bAdj
 /// Recommend highest-weighted wonder and what city to build it at
 BuildingTypes CvWonderProductionAI::ChooseWonderForGreatEngineer(bool bUseAsyncRandom, int& iWonderWeight, CvCity*& pCityToBuildAt)
 {
+#ifdef AUI_WARNING_FIXES
+	uint iBldgLoop;
+#else
 	int iBldgLoop;
+#endif
 	int iWeight;
 	int iCityLoop;
 	RandomNumberDelegate fcn;

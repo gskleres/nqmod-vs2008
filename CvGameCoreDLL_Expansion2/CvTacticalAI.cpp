@@ -1187,7 +1187,11 @@ void CvTacticalAI::EstablishTacticalPriorities()
 	m_MovePriorityList.clear();
 
 	// Loop through each possible tactical move
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumTacticalMoveInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumTacticalMoveInfos(); iI++)
+#endif
 	{
 		const TacticalAIMoveTypes eTacticalAIMove = static_cast<TacticalAIMoveTypes>(iI);
 		CvTacticalMoveXMLEntry* pkTacticalMoveInfo = GC.getTacticalMoveInfo(eTacticalAIMove);
@@ -1312,7 +1316,9 @@ void CvTacticalAI::EstablishBarbarianPriorities()
 /// Make lists of everything we might want to target with the tactical AI this turn
 void CvTacticalAI::FindTacticalTargets()
 {
+#ifndef AUI_WARNING_FIXES
 	int iI;
+#endif
 	CvPlot* pLoopPlot;
 	CvTacticalTarget newTarget;
 	bool bValidPlot;
@@ -1325,7 +1331,11 @@ void CvTacticalAI::FindTacticalTargets()
 	bool bBarbsAllowedYet = GC.getGame().getGameTurn() >= GC.getGame().GetBarbarianReleaseTurn();
 
 	// Look at every tile on map
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 	for(iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 	{
 		pLoopPlot = GC.getMap().plotByIndexUnchecked(iI);
 		bValidPlot = false;
@@ -2251,7 +2261,12 @@ void CvTacticalAI::PlotDestroyUnitMoves(AITacticalTargetType targetType, bool bM
 						{
 							CvString strLogString, strTemp, strPlayerName;
 							strPlayerName = GET_PLAYER(pDefender->getOwner()).getCivilizationShortDescription();
+#ifdef AUI_WARNING_FIXES
+							CvUnitEntry* pkUnitInfo = GC.getUnitInfo(pDefender->getUnitType());
+							strTemp = (pkUnitInfo != NULL) ? pkUnitInfo->GetDescription() : "Unknown Unit Type";
+#else
 							strTemp = GC.getUnitInfo(pDefender->getUnitType())->GetDescription();
+#endif
 							switch(targetType)
 							{
 							case AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT:
@@ -5770,7 +5785,11 @@ void CvTacticalAI::IdentifyPriorityBarbarianTargets()
 	CvPlot* pLoopPlot;
 	CvTacticalTarget* pTarget;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 	for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 	{
 		pLoopPlot = GC.getMap().plotByIndexUnchecked(iI);
 		if(pLoopPlot->getImprovementType() == GC.getBARBARIAN_CAMP_IMPROVEMENT())
@@ -6798,11 +6817,19 @@ void CvTacticalAI::ExecuteBarbarianCivilianEscortMove()
 					pCivilian->finishMoves();
 					UnitProcessed(pCivilian->GetID());
 				}
+#ifdef AUI_WARNING_FIXES
+				else if (pCurrent)
+#else
 				else
+#endif
 				{
 					if(pCurrent->getNumUnits() > 1)
 					{
+#ifdef AUI_WARNING_FIXES
+						for (uint iJ = 0; iJ < pCurrent->getNumUnits(); iJ++)
+#else
 						for(int iJ = 0; iJ < pCurrent->getNumUnits(); iJ++)
+#endif
 						{
 							pLoopUnit = pCurrent->getUnitByIndex(iJ);
 							if(pLoopUnit->GetID() != pCivilian->GetID() &&

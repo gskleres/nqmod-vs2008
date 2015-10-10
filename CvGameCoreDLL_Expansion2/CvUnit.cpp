@@ -6534,7 +6534,11 @@ bool CvUnit::createGreatWork()
 	
 	CvPlayer &kPlayer = GET_PLAYER(m_eOwner);
 	BuildingClassTypes eBuildingClass = NO_BUILDINGCLASS; // Passed by reference below
+#ifdef AUI_WARNING_FIXES
+	uint iSlot = MAX_UNSIGNED_INT; // Passed by reference below
+#else
 	int iSlot = -1; // Passed by reference below
+#endif
 	GreatWorkType eGreatWorkType = GetGreatWork();
 	GreatWorkClass eClass = CultureHelpers::GetGreatWorkClass(eGreatWorkType);
 	GreatWorkSlotType eGreatWorkSlot = CultureHelpers::GetGreatWorkSlot(eGreatWorkType);
@@ -18940,7 +18944,11 @@ void CvUnit::write(FDataStream& kStream) const
 
 	//  Write mission list
 	kStream << m_missionQueue.getLength();
+#ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+	for (unsigned int uIdx = 0; uIdx < m_missionQueue.getLength(); ++uIdx)
+#else
 	for(int uIdx = 0; uIdx < m_missionQueue.getLength(); ++uIdx)
+#endif
 	{
 		MissionQueueNode* pNode = m_missionQueue.getAt(uIdx);
 
@@ -20682,10 +20690,18 @@ const MissionData* CvUnit::GetHeadMissionData()
 }
 
 //	---------------------------------------------------------------------------
+#ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+const MissionData* CvUnit::GetMissionData(unsigned int iIndex)
+#else
 const MissionData* CvUnit::GetMissionData(int iIndex)
+#endif
 {
 	VALIDATE_OBJECT
+#ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+	if (iIndex < m_missionQueue.getLength())
+#else
 	if(iIndex >= 0 && iIndex < m_missionQueue.getLength())
+#endif
 		return m_missionQueue.getAt(iIndex);
 
 	return NULL;
@@ -21490,7 +21506,11 @@ int CvUnit::AI_promotionValue(PromotionTypes ePromotion)
 	int iValue = 0;
 	int iTemp;
 	int iExtra;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	// Get flavor info we can use
 	CvFlavorManager* pFlavorMgr = GET_PLAYER(m_eOwner).GetFlavorManager();

@@ -119,16 +119,22 @@ bool CvGameTrade::CanCreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, Do
 		if (eConnectionType == TRADE_CONNECTION_FOOD)
 		{
 			bool bAllowsFoodConnection = false;
+#ifdef AUI_WARNING_FIXES
+			for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 			for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 			{
 				BuildingTypes eBuilding = (BuildingTypes)GET_PLAYER(pOriginCity->getOwner()).getCivilizationInfo().getCivilizationBuildings(iI);
 				if(eBuilding != NO_BUILDING)
 				{
 					CvBuildingEntry* pBuildingEntry = GC.GetGameBuildings()->GetEntry(eBuilding);
+#ifndef AUI_WARNING_FIXES
 					if (!pBuildingEntry)
 					{
 						continue;
 					}
+#endif
 
 					if (pBuildingEntry && pBuildingEntry->AllowsFoodTradeRoutes())
 					{
@@ -148,16 +154,22 @@ bool CvGameTrade::CanCreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, Do
 		else if (eConnectionType == TRADE_CONNECTION_PRODUCTION)
 		{
 			bool bAllowsProductionConnection = false;
+#ifdef AUI_WARNING_FIXES
+			for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 			for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 			{
 				BuildingTypes eBuilding = (BuildingTypes)GET_PLAYER(pOriginCity->getOwner()).getCivilizationInfo().getCivilizationBuildings(iI);
 				if(eBuilding != NO_BUILDING)
 				{
 					CvBuildingEntry* pBuildingEntry = GC.GetGameBuildings()->GetEntry(eBuilding);
+#ifndef AUI_WARNING_FIXES
 					if (!pBuildingEntry)
 					{
 						continue;
 					}
+#endif
 
 					if (pBuildingEntry && pBuildingEntry->AllowsProductionTradeRoutes())
 					{
@@ -1372,7 +1384,11 @@ void CvGameTrade::BuildTechDifference ()
 				int iTechDifference = 0;
 				
 				CvPlayerTechs* pPlayerTechs = GET_PLAYER(ePlayer1).GetPlayerTechs();
+#ifdef AUI_WARNING_FIXES
+				for (uint iTechLoop = 0; iTechLoop < pPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+#else
 				for(int iTechLoop = 0; iTechLoop < pPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+#endif
 				{
 					TechTypes eTech = (TechTypes)iTechLoop;
 					bool bPlayer1Knows = GET_TEAM(eTeam1).GetTeamTechs()->HasTech(eTech);
@@ -1465,7 +1481,11 @@ bool CvGameTrade::StepUnit (int iIndex)
 
 	// if the unit needs to turn around
 	TradeConnection &kTradeConnection = m_aTradeConnections[iIndex];
+#ifdef AUI_WARNING_FIXES
+	bool bAtEndGoingForward = (kTradeConnection.m_bTradeUnitMovingForward && kTradeConnection.m_iTradeUnitLocationIndex + 1 >= kTradeConnection.m_aPlotList.size());
+#else
 	bool bAtEndGoingForward = (kTradeConnection.m_bTradeUnitMovingForward && kTradeConnection.m_iTradeUnitLocationIndex >= ((int)kTradeConnection.m_aPlotList.size() - 1));
+#endif
 	bool bAtEndGoingBackward = (!kTradeConnection.m_bTradeUnitMovingForward && kTradeConnection.m_iTradeUnitLocationIndex <= 0);
 	if (bAtEndGoingForward || bAtEndGoingBackward)
 	{
@@ -1559,8 +1579,12 @@ CvUnit* CvGameTrade::GetVis(int iIndex)
 #endif
 	if (kTradeConnection.m_unitID != -1)
 	{
+#ifdef AUI_WARNING_FIXES
+		return GET_PLAYER(kTradeConnection.m_eOriginOwner).getUnit(kTradeConnection.m_unitID);
+#else
 		CvPlayer& kPlayer = GET_PLAYER(kTradeConnection.m_eOriginOwner);
 		return kPlayer.getUnit(kTradeConnection.m_unitID);
+#endif
 	}
 
 	return NULL;
@@ -2063,7 +2087,11 @@ int CvPlayerTrade::GetTradeConnectionResourceValueTimes100(const TradeConnection
 				}
 
 				int iValue = 0;
+#ifdef AUI_WARNING_FIXES
+				for (uint i = 0; i < GC.getNumResourceInfos(); i++)
+#else
 				for(int i = 0; i < GC.getNumResourceInfos(); i++)
+#endif
 				{
 					ResourceTypes eResource = (ResourceTypes)i;
 					const CvResourceInfo* pkResourceInfo = GC.getResourceInfo(eResource);
@@ -2132,7 +2160,11 @@ int CvPlayerTrade::GetTradeConnectionYourBuildingValueTimes100(const TradeConnec
 	if (bAsOriginPlayer)
 	{
 		CvCity* pOriginCity = CvGameTrade::GetOriginCity(kTradeConnection);
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingTypes eBuilding = (BuildingTypes)GET_PLAYER(pOriginCity->getOwner()).getCivilizationInfo().getCivilizationBuildings(iI);
 			if(eBuilding != NO_BUILDING)
@@ -3534,7 +3566,11 @@ int CvPlayerTrade::GetTradeRouteRange (DomainTypes eDomain, CvCity* pOriginCity)
 	CvTechEntry* pTechInfo = NULL; 
 
 	int iExtendedRange = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint iTechLoop = 0; iTechLoop < pMyPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+#else
 	for(int iTechLoop = 0; iTechLoop < pMyPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+#endif
 	{
 		TechTypes eTech = (TechTypes)iTechLoop;
 		if (!pMyTeamTechs->HasTech(eTech))
@@ -3551,7 +3587,11 @@ int CvPlayerTrade::GetTradeRouteRange (DomainTypes eDomain, CvCity* pOriginCity)
 	}
 	
 	int iRangeModifier = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		BuildingTypes eBuilding = (BuildingTypes)GET_PLAYER(pOriginCity->getOwner()).getCivilizationInfo().getCivilizationBuildings(iI);
 		if(eBuilding != NO_BUILDING)
@@ -3626,7 +3666,11 @@ uint CvPlayerTrade::GetNumTradeRoutesPossible (void)
 	if (pMyPlayerTechEntries == NULL)
 		return 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iTechLoop = 0; iTechLoop < pMyPlayerTechEntries->GetNumTechs(); iTechLoop++)
+#else
 	for(int iTechLoop = 0; iTechLoop < pMyPlayerTechEntries->GetNumTechs(); iTechLoop++)
+#endif
 	{
 		TechTypes eTech = (TechTypes)iTechLoop;
 		if (!pMyTeamTechs->HasTech(eTech))
@@ -3647,7 +3691,11 @@ uint CvPlayerTrade::GetNumTradeRoutesPossible (void)
 	CvCity* pLoopCity;
 	for(pLoopCity = m_pPlayer->firstCity(&iLoop); pLoopCity != NULL; pLoopCity = m_pPlayer->nextCity(&iLoop))
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingTypes eBuilding = (BuildingTypes)kCivInfo.getCivilizationBuildings(iI);
 			if(eBuilding != NO_BUILDING)
@@ -4018,19 +4066,32 @@ std::vector<CvString> CvPlayerTrade::GetPlotMouseoverToolTips (CvPlot* pPlot)
 					pDestCity = GC.getMap().plot(pConnection->m_iDestX, pConnection->m_iDestY)->getPlotCity();
 					if (uiPlotIndex == pConnection->m_iTradeUnitLocationIndex)
 					{
+#ifdef AUI_WARNING_FIXES
+						CvUnitEntry* pTradeUnitInfo = GC.getUnitInfo(GetTradeUnit(pConnection->m_eDomain));
+#endif
 						Localization::String strLine;
 						if(strcmp(GET_PLAYER(pConnection->m_eOriginOwner).getNickName(), "") != 0)
 						{
 							strLine = Localization::Lookup("TXT_KEY_MULTIPLAYER_UNIT_TT");
 							strLine << GET_PLAYER(pConnection->m_eOriginOwner).getNickName();
 							strLine << GET_PLAYER(pConnection->m_eOriginOwner).getCivilizationAdjectiveKey();
+#ifdef AUI_WARNING_FIXES
+							if (pTradeUnitInfo)
+								strLine << pTradeUnitInfo->GetDescription();
+#else
 							strLine << GC.getUnitInfo(GetTradeUnit(pConnection->m_eDomain))->GetDescription();
+#endif
 						}
 						else
 						{
 							strLine = Localization::Lookup("TXT_KEY_PLOTROLL_UNIT_DESCRIPTION_CIV");
 							strLine << GET_PLAYER(pConnection->m_eOriginOwner).getCivilizationAdjectiveKey();
+#ifdef AUI_WARNING_FIXES
+							if (pTradeUnitInfo)
+								strLine << pTradeUnitInfo->GetDescription();
+#else
 							strLine << GC.getUnitInfo(GetTradeUnit(pConnection->m_eDomain))->GetDescription();
+#endif
 						}
 
 						

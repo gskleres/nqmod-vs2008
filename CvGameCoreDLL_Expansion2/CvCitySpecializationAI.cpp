@@ -487,7 +487,11 @@ void CvCitySpecializationAI::WeightSpecializations()
 			CvAIGrandStrategyXMLEntry* grandStrategy = GC.getAIGrandStrategyInfo((AIGrandStrategyTypes)iGrandStrategyLoop);
 			if(grandStrategy)
 			{
+#ifdef AUI_WARNING_FIXES
+				if(iGrandStrategyLoop == (uint)m_pPlayer->GetGrandStrategyAI()->GetActiveGrandStrategy())
+#else
 				if(iGrandStrategyLoop == m_pPlayer->GetGrandStrategyAI()->GetActiveGrandStrategy())
+#endif
 				{
 					iFoodYieldWeight +=	grandStrategy->GetSpecializationBoost(YIELD_FOOD);
 					iGoldYieldWeight += grandStrategy->GetSpecializationBoost(YIELD_GOLD);
@@ -611,7 +615,11 @@ int CvCitySpecializationAI::WeightProductionSubtypes(int iFlavorWonder, int iFla
 		CvAIGrandStrategyXMLEntry* grandStrategy = GC.getAIGrandStrategyInfo((AIGrandStrategyTypes)iGrandStrategyLoop);
 		if(grandStrategy)
 		{
+#ifdef AUI_WARNING_FIXES
+			if (iGrandStrategyLoop == (uint)m_pPlayer->GetGrandStrategyAI()->GetActiveGrandStrategy())
+#else
 			if(iGrandStrategyLoop == m_pPlayer->GetGrandStrategyAI()->GetActiveGrandStrategy())
+#endif
 			{
 				if(grandStrategy->GetSpecializationBoost(YIELD_PRODUCTION) > 0)
 				{

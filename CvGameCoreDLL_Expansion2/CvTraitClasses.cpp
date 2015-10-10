@@ -1228,8 +1228,12 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 
 	// NoTrain
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iUnitClassLoop = 0; iUnitClassLoop < GC.getNumUnitClassInfos(); iUnitClassLoop++)
+#else
 		int iUnitClassLoop;
 		for (iUnitClassLoop = 0; iUnitClassLoop < GC.getNumUnitClassInfos(); iUnitClassLoop++)
+#endif
 		{
 			m_abNoTrainUnitClass.push_back(false);
 		}
@@ -1253,8 +1257,12 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 	// FreeResourceXCities
 	{
 		// Init vector
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		int iResourceLoop;
 		for(iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			FreeResourceXCities temp;
 			m_aFreeResourceXCities.push_back(temp);
@@ -1368,7 +1376,11 @@ void CvPlayerTraits::Init(CvTraitXMLEntries* pTraits, CvPlayer* pPlayer)
 /// Store off data on bonuses from traits
 void CvPlayerTraits::InitPlayerTraits()
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumTraitInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumTraitInfos(); iI++)
+#endif
 	{
 		if(HasTrait((TraitTypes)iI))
 		{
@@ -1538,7 +1550,11 @@ void CvPlayerTraits::InitPlayerTraits()
 				m_iYieldChangeIncomingTradeRoute[iYield] = trait->GetYieldChangeIncomingTradeRoute(iYield);
 				m_iYieldRateModifier[iYield] = trait->GetYieldModifier(iYield);
 
+#ifdef AUI_WARNING_FIXES
+				for (uint iFeatureLoop = 0; iFeatureLoop < GC.getNumFeatureInfos(); iFeatureLoop++)
+#else
 				for(int iFeatureLoop = 0; iFeatureLoop < GC.getNumFeatureInfos(); iFeatureLoop++)
+#endif
 				{
 					int iChange = trait->GetUnimprovedFeatureYieldChanges((FeatureTypes)iFeatureLoop, (YieldTypes)iYield);
 					if(iChange > 0)
@@ -1549,7 +1565,11 @@ void CvPlayerTraits::InitPlayerTraits()
 					}
 				}
 
+#ifdef AUI_WARNING_FIXES
+				for (uint iImprovementLoop = 0; iImprovementLoop < GC.getNumImprovementInfos(); iImprovementLoop++)
+#else
 				for(int iImprovementLoop = 0; iImprovementLoop < GC.getNumImprovementInfos(); iImprovementLoop++)
+#endif
 				{
 					int iChange = trait->GetImprovementYieldChanges((ImprovementTypes)iImprovementLoop, (YieldTypes)iYield);
 					if(iChange > 0)
@@ -1560,7 +1580,11 @@ void CvPlayerTraits::InitPlayerTraits()
 					}
 				}
 
+#ifdef AUI_WARNING_FIXES
+				for (uint iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#else
 				for(int iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#endif
 				{
 					int iChange = trait->GetSpecialistYieldChanges((SpecialistTypes)iSpecialistLoop, (YieldTypes)iYield);
 					if(iChange > 0)
@@ -1572,17 +1596,29 @@ void CvPlayerTraits::InitPlayerTraits()
 				}
 			}
 			CvAssert(GC.getNumTerrainInfos() <= NUM_TERRAIN_TYPES);
+#ifdef AUI_WARNING_FIXES
+			for (uint iTerrain = 0; iTerrain < GC.getNumTerrainInfos(); iTerrain++)
+#else
 			for(int iTerrain = 0; iTerrain < GC.getNumTerrainInfos(); iTerrain++)
+#endif
 			{
 				m_iStrategicResourceQuantityModifier[iTerrain] = trait->GetStrategicResourceQuantityModifier(iTerrain);
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iResource = 0; iResource < GC.getNumResourceInfos(); iResource++)
+#else
 			for(int iResource = 0; iResource < GC.getNumResourceInfos(); iResource++)
+#endif
 			{
 				m_aiResourceQuantityModifier[iResource] = trait->GetResourceQuantityModifier(iResource);
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iUnitClass = 0; iUnitClass < GC.getNumUnitClassInfos(); iUnitClass++)
+#else
 			for (int iUnitClass = 0; iUnitClass < GC.getNumUnitClassInfos(); iUnitClass++)
+#endif
 			{
 				m_abNoTrain[iUnitClass] = trait->NoTrain((UnitClassTypes)iUnitClass);
 			}
@@ -1597,14 +1633,22 @@ void CvPlayerTraits::InitPlayerTraits()
 
 			m_eCombatBonusImprovement = trait->GetCombatBonusImprovement();
 
+#ifdef AUI_WARNING_FIXES
+			for (uint jJ = 0; jJ < GC.getNumUnitCombatClassInfos(); jJ++)
+#else
 			int iNumUnitCombatClassInfos = GC.getNumUnitCombatClassInfos();
 			for(int jJ= 0; jJ < iNumUnitCombatClassInfos; jJ++)
+#endif
 			{
 				m_paiMovesChangeUnitCombat[jJ] += trait->GetMovesChangeUnitCombat(jJ);
 				m_paiMaintenanceModifierUnitCombat[jJ] += trait->GetMaintenanceModifierUnitCombat(jJ);
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 			for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 			{
 				FreeResourceXCities temp = trait->GetFreeResourceXCities((ResourceTypes)iResourceLoop);
 				if(temp.m_iResourceQuantity > 0)
@@ -1754,6 +1798,17 @@ void CvPlayerTraits::Reset()
 		m_iYieldChangeIncomingTradeRoute[iYield] = 0;
 		m_iYieldRateModifier[iYield] = 0;
 
+#ifdef AUI_WARNING_FIXES
+		for (uint iImprovement = 0; iImprovement < GC.getNumImprovementInfos(); iImprovement++)
+		{
+			m_ppaaiImprovementYieldChange[iImprovement] = yield;
+		}
+		for (uint iSpecialist = 0; iSpecialist < GC.getNumSpecialistInfos(); iSpecialist++)
+		{
+			m_ppaaiSpecialistYieldChange[iSpecialist] = yield;
+		}
+		for (uint iFeature = 0; iFeature < GC.getNumFeatureInfos(); iFeature++)
+#else
 		for(int iImprovement = 0; iImprovement < GC.getNumImprovementInfos(); iImprovement++)
 		{
 			m_ppaaiImprovementYieldChange[iImprovement] = yield;
@@ -1763,12 +1818,17 @@ void CvPlayerTraits::Reset()
 			m_ppaaiSpecialistYieldChange[iSpecialist] = yield;
 		}
 		for(int iFeature = 0; iFeature < GC.getNumFeatureInfos(); iFeature++)
+#endif
 		{
 			m_ppaaiUnimprovedFeatureYieldChange[iFeature] = yield;
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iTerrain = 0; iTerrain < GC.getNumTerrainInfos(); iTerrain++)
+#else
 	for(int iTerrain = 0; iTerrain < GC.getNumTerrainInfos(); iTerrain++)
+#endif
 	{
 		m_iStrategicResourceQuantityModifier[iTerrain] = 0;
 	}
@@ -1776,20 +1836,37 @@ void CvPlayerTraits::Reset()
 	m_aiResourceQuantityModifier.clear();
 	m_aiResourceQuantityModifier.resize(GC.getNumResourceInfos());
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iResource = 0; iResource < GC.getNumResourceInfos(); iResource++)
+#else
 	for(int iResource = 0; iResource < GC.getNumResourceInfos(); iResource++)
+#endif
 	{
 		m_aiResourceQuantityModifier[iResource] = 0;
 	}
 
 	m_abNoTrain.clear();
 	m_abNoTrain.resize(GC.getNumUnitClassInfos());
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitClass = 0; iUnitClass < GC.getNumUnitClassInfos(); iUnitClass++)
+#else
 	for (int iUnitClass = 0; iUnitClass < GC.getNumUnitClassInfos(); iUnitClass++)
+#endif
 	{
 		m_abNoTrain[iUnitClass] = false;
 	}
 
 	m_aFreeTraitUnits.clear();
 
+#ifdef AUI_WARNING_FIXES
+	uint iNumUnitCombatClassInfos = GC.getNumUnitCombatClassInfos();
+	CvAssertMsg((0 < iNumUnitCombatClassInfos), "GC.getNumUnitCombatClassInfos() is not greater than zero but an array is being allocated in CvPlayerTraits::Reset");
+	m_paiMovesChangeUnitCombat.clear();
+	m_paiMaintenanceModifierUnitCombat.clear();
+	m_paiMovesChangeUnitCombat.resize(iNumUnitCombatClassInfos);
+	m_paiMaintenanceModifierUnitCombat.resize(iNumUnitCombatClassInfos);
+	for (uint iI = 0; iI < iNumUnitCombatClassInfos; iI++)
+#else
 	int iNumUnitCombatClassInfos = GC.getNumUnitCombatClassInfos();
 	CvAssertMsg((0 < iNumUnitCombatClassInfos),  "GC.getNumUnitCombatClassInfos() is not greater than zero but an array is being allocated in CvPlayerTraits::Reset");
 	m_paiMovesChangeUnitCombat.clear();
@@ -1797,13 +1874,18 @@ void CvPlayerTraits::Reset()
 	m_paiMovesChangeUnitCombat.resize(iNumUnitCombatClassInfos);
 	m_paiMaintenanceModifierUnitCombat.resize(iNumUnitCombatClassInfos);
 	for(int iI = 0; iI < iNumUnitCombatClassInfos; iI++)
+#endif
 	{
 		m_paiMovesChangeUnitCombat[iI] = 0;
 		m_paiMaintenanceModifierUnitCombat[iI] = 0;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	int iResourceLoop;
 	for(iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		FreeResourceXCities temp;
 		m_aFreeResourceXCities.push_back(temp);
@@ -1864,7 +1946,11 @@ bool CvPlayerTraits::WillGetUniqueLuxury(CvArea *pArea) const
 
 		// Loop through all resources and see if we can find one more
 		int iNumUniquesFound = 0;
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			ResourceTypes eResource = (ResourceTypes) iResourceLoop;
 			CvResourceInfo* pkResource = GC.getResourceInfo(eResource);
@@ -1954,7 +2040,11 @@ int CvPlayerTraits::GetUnimprovedFeatureYieldChange(FeatureTypes eFeature, Yield
 bool CvPlayerTraits::HasFreePromotionUnitCombat(const int promotionID, const int unitCombatID) const
 {
 	CvAssertMsg((promotionID >= 0), "promotionID is less than zero");
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumTraitInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumTraitInfos(); iI++)
+#endif
 	{
 		const TraitTypes eTrait = static_cast<TraitTypes>(iI);
 		CvTraitEntry* pkTraitInfo = GC.getTraitInfo(eTrait);
@@ -1976,7 +2066,11 @@ bool CvPlayerTraits::HasFreePromotionUnitCombat(const int promotionID, const int
 /// Does each city get a free building?
 BuildingTypes CvPlayerTraits::GetFreeBuilding() const
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumTraitInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumTraitInfos(); iI++)
+#endif
 	{
 		const TraitTypes eTrait = static_cast<TraitTypes>(iI);
 		CvTraitEntry* pkTraitInfo = GC.getTraitInfo(eTrait);
@@ -1998,7 +2092,11 @@ BuildingTypes CvPlayerTraits::GetFreeBuilding() const
 /// Does each conquered city get a free building?
 BuildingTypes CvPlayerTraits::GetFreeBuildingOnConquest() const
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumTraitInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumTraitInfos(); iI++)
+#endif
 	{
 		const TraitTypes eTrait = static_cast<TraitTypes>(iI);
 		CvTraitEntry* pkTraitInfo = GC.getTraitInfo(eTrait);
@@ -2057,7 +2155,11 @@ void CvPlayerTraits::AddUniqueLuxuries(CvCity *pCity)
 		// Loop through all resources and see if we can find this many unique ones
 		ResourceTypes eResourceToGive = NO_RESOURCE;
 		int iNumUniquesFound = 0;
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			ResourceTypes eResource = (ResourceTypes) iResourceLoop;
 			CvResourceInfo* pkResource = GC.getResourceInfo(eResource);
@@ -2516,7 +2618,11 @@ bool CvPlayerTraits::IsFreeMayaGreatPersonChoice() const
 	SpecialUnitTypes eSpecialUnitGreatPerson = (SpecialUnitTypes) GC.getInfoTypeForString("SPECIALUNIT_PEOPLE");
 
 	// Loop through adding the available units
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#endif
 	{
 		const UnitClassTypes eUnitClass = static_cast<UnitClassTypes>(iI);
 		CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo(eUnitClass);

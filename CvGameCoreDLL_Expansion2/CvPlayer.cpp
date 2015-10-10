@@ -2532,7 +2532,11 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 		if (!paGreatWorkData[jJ].m_bTransferred)
 		{
 			BuildingClassTypes eBuildingClass = NO_BUILDINGCLASS; // Passed by reference below
+#ifdef AUI_WARNING_FIXES
+			uint iSlot = MAX_UNSIGNED_INT; // Passed by reference below
+#else
 			int iSlot = -1; // Passed by reference below
+#endif
 			GreatWorkType eType = GC.getGame().GetGameCulture()->m_CurrentGreatWorks[paGreatWorkData[jJ].m_iGreatWork].m_eType;
 			GreatWorkSlotType eGreatWorkSlot = CultureHelpers::GetGreatWorkSlot(eType);
 			if (pNewCity->GetCityBuildings()->GetNextAvailableGreatWorkSlot(eGreatWorkSlot, &eBuildingClass, &iSlot))
@@ -2544,7 +2548,11 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 			else
 			{
 				BuildingClassTypes eGWBuildingClass;
+#ifdef AUI_WARNING_FIXES
+				uint iGWSlot;
+#else
 				int iGWSlot;
+#endif
 				CvCity *pGWCity = GetCulture()->GetClosestAvailableGreatWorkSlot(pCityPlot->getX(), pCityPlot->getY(), eGreatWorkSlot, &eGWBuildingClass, &iGWSlot);
 				if (pGWCity)
 				{
