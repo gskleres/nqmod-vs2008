@@ -106,6 +106,7 @@ public:
 	int GetDOFGreatPersonModifier() const;
 	int GetLuxuryHappinessRetention() const;
 	int GetExtraSpies() const;
+	int GetHappinessPerReligion() const; // NQMP GJS - New Ottoman UA
 	int GetUnresearchedTechBonusFromKills() const;
 	int GetExtraFoundedCityTerritoryClaimRange() const;
 	int GetFreeSocialPoliciesPerEra() const;
@@ -134,6 +135,17 @@ public:
 	bool IsTechBoostFromCapitalScienceBuildings() const;
 	bool IsStaysAliveZeroCities() const;
 	bool IsFaithFromUnimprovedForest() const;
+
+	// NQMP GJS - New France UA begin
+	bool IsEarnsGreatPersonOnSlotOrGuild() const;
+	bool IsHasBuiltWritersGuild() const;
+	void SetHasBuiltWritersGuild(bool hasBuilt);
+	bool IsHasBuiltArtistsGuild() const;
+	void SetHasBuiltArtistsGuild(bool hasBuilt);
+	bool IsHasBuiltMusiciansGuild() const;
+	void SetHasBuiltMusiciansGuild(bool hasBuilt);
+	// NQMP GJS - New France UA end
+
 	bool IsBonusReligiousBelief() const;
 	bool IsAbleToAnnexCityStates() const;
 	bool IsCrossesMountainsAfterGreatGeneral() const;
@@ -230,6 +242,7 @@ protected:
 	int m_iDOFGreatPersonModifier;
 	int m_iLuxuryHappinessRetention;
 	int m_iExtraSpies;
+	int m_iHappinessPerReligion; // NQMP GJS - New Ottoman UA
 	int m_iUnresearchedTechBonusFromKills;
 	int m_iExtraFoundedCityTerritoryClaimRange;
 	int m_iFreeSocialPoliciesPerEra;
@@ -258,6 +271,14 @@ protected:
 	bool m_bTechBoostFromCapitalScienceBuildings;
 	bool m_bStaysAliveZeroCities;
 	bool m_bFaithFromUnimprovedForest;
+
+	// NQMP GJS - New France UA begin
+	bool m_bEarnsGreatPersonOnSlotOrGuild;
+	bool m_bHasBuiltWritersGuild;
+	bool m_bHasBuiltArtistsGuild;
+	bool m_bHasBuiltMusiciansGuild;
+	// NQMP GJS - New France UA end
+
 	bool m_bBonusReligiousBelief;
 	bool m_bAbleToAnnexCityStates;
 	bool m_bCrossesMountainsAfterGreatGeneral;
@@ -560,6 +581,12 @@ public:
 	{
 		return m_iExtraSpies;
 	};
+	// NQMP GJS - New Ottoman UA begin
+	int GetHappinessPerReligion() const
+	{
+		return m_iHappinessPerReligion;
+	};
+	// NQMP GJS - New Ottoman UA end
 	int GetUnresearchedTechBonusFromKills() const
 	{
 		return m_iUnresearchedTechBonusFromKills;
@@ -645,6 +672,36 @@ public:
 	{
 		return m_bStaysAliveZeroCities;
 	};
+	// NQMP GJS - New France UA begin
+	bool IsEarnsGreatPersonOnSlotOrGuild() const
+	{
+		return m_bEarnsGreatPersonOnSlotOrGuild;
+	};
+	bool IsHasBuiltWritersGuild() const
+	{
+		return m_bHasBuiltWritersGuild;
+	};
+	void SetHasBuiltWritersGuild(bool hasBuilt)
+	{
+		m_bHasBuiltWritersGuild = hasBuilt;
+	};
+	bool IsHasBuiltArtistsGuild() const
+	{
+		return m_bHasBuiltArtistsGuild;
+	};
+	void SetHasBuiltArtistsGuild(bool hasBuilt)
+	{
+		m_bHasBuiltArtistsGuild = hasBuilt;
+	};
+	bool IsHasBuiltMusiciansGuild() const
+	{
+		return m_bHasBuiltMusiciansGuild;
+	};
+	void SetHasBuiltMusiciansGuild(bool hasBuilt)
+	{
+		m_bHasBuiltMusiciansGuild = hasBuilt;
+	};
+	// NQMP GJS - New France UA end
 	bool IsFaithFromUnimprovedForest() const
 	{
 		return m_bFaithFromUnimprovedForest;
@@ -832,6 +889,7 @@ private:
 	int m_iDOFGreatPersonModifier;
 	int m_iLuxuryHappinessRetention;
 	int m_iExtraSpies;
+	int m_iHappinessPerReligion; //NQMP GJS - New Ottoman UA
 	int m_iUnresearchedTechBonusFromKills;
 	int m_iExtraFoundedCityTerritoryClaimRange;
 	int m_iFreeSocialPoliciesPerEra;
@@ -857,6 +915,14 @@ private:
 	bool m_bTechBoostFromCapitalScienceBuildings;
 	bool m_bStaysAliveZeroCities;
 	bool m_bFaithFromUnimprovedForest;
+
+	// NQMP GJS - New France UA begin
+	bool m_bEarnsGreatPersonOnSlotOrGuild;
+	bool m_bHasBuiltWritersGuild;
+	bool m_bHasBuiltArtistsGuild;
+	bool m_bHasBuiltMusiciansGuild;
+	// NQMP GJS - New France UA end
+
 	bool m_bBonusReligiousBelief;
 	bool m_bAbleToAnnexCityStates;
 	bool m_bCrossesMountainsAfterGreatGeneral;

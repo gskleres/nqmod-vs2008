@@ -161,6 +161,7 @@ public:
 	int GetTechShare() const;
 	int GetFreeTechs() const;
 	int GetFreePolicies() const;
+	int GetFreeFlatFaith() const; // NQMP GJS - New Stonehenge
 	int GetFreeGreatPeople() const;
 	int GetMedianTechPercentChange() const;
 	int GetGold() const;
@@ -208,6 +209,7 @@ public:
 	bool IsCityWall() const;
 	bool IsCapital() const;
 	bool IsGoldenAge() const;
+	bool IsGrantsFreeCulturalGreatPersonWithTrait() const; // NQMP GJS - New France UA
 	bool IsMapCentering() const;
 	bool IsNeverCapture() const;
 	bool IsNukeImmune() const;
@@ -373,6 +375,7 @@ private:
 	int m_iTechShare;
 	int m_iFreeTechs;
 	int m_iFreePolicies;
+	int m_iFreeFlatFaith; // NQMP GJS - New Stonehenge
 	int m_iFreeGreatPeople;
 	int m_iMedianTechPercentChange;
 	int m_iGold;
@@ -421,6 +424,7 @@ private:
 	bool m_bPlayerBorderObstacle;
 	bool m_bCapital;
 	bool m_bGoldenAge;
+	bool m_bGrantsFreeCulturalGreatPersonWithTrait; // NQMP GJS - New France UA
 	bool m_bMapCentering;
 	bool m_bNeverCapture;
 	bool m_bNukeImmune;

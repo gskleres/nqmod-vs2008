@@ -89,6 +89,7 @@ CvBuildingEntry::CvBuildingEntry(void):
 	m_iTechShare(0),
 	m_iFreeTechs(0),
 	m_iFreePolicies(0),
+	m_iFreeFlatFaith(0), // NQMP GJS - New Stonehenge
 	m_iFreeGreatPeople(0),
 	m_iMedianTechPercentChange(0),
 	m_iGold(0),
@@ -136,6 +137,7 @@ CvBuildingEntry::CvBuildingEntry(void):
 	m_bPlayerBorderObstacle(false),
 	m_bCapital(false),
 	m_bGoldenAge(false),
+	m_bGrantsFreeCulturalGreatPersonWithTrait(false), // NQMP GJS - New France UA
 	m_bMapCentering(false),
 	m_bNeverCapture(false),
 	m_bNukeImmune(false),
@@ -262,6 +264,7 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 	m_bPlayerBorderObstacle = kResults.GetBool("PlayerBorderObstacle");
 	m_bCapital = kResults.GetBool("Capital");
 	m_bGoldenAge = kResults.GetBool("GoldenAge");
+	m_bGrantsFreeCulturalGreatPersonWithTrait = kResults.GetBool("GrantsFreeCulturalGreatPersonWithTrait"); // NQMP GJS - New France UA
 	m_bMapCentering = kResults.GetBool("MapCentering");
 	m_bNeverCapture = kResults.GetBool("NeverCapture");
 	m_bNukeImmune = kResults.GetBool("NukeImmune");
@@ -326,6 +329,7 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 	m_iTechShare = kResults.GetInt("TechShare");
 	m_iFreeTechs = kResults.GetInt("FreeTechs");
 	m_iFreePolicies = kResults.GetInt("FreePolicies");
+	m_iFreeFlatFaith = kResults.GetInt("FreeFlatFaith"); // NQMP GJS - New Stonehenge
 	m_iFreeGreatPeople = kResults.GetInt("FreeGreatPeople");
 	m_iMedianTechPercentChange = kResults.GetInt("MedianTechPercentChange");
 	m_iGold = kResults.GetInt("Gold");
@@ -1130,6 +1134,14 @@ int CvBuildingEntry::GetFreePolicies() const
 	return m_iFreePolicies;
 }
 
+// NQMP GJS - New Stonehenge begin
+/// Amount of instant flat faith granted by this building
+int CvBuildingEntry::GetFreeFlatFaith() const
+{
+	return m_iFreeFlatFaith;
+}
+// NQMP GJS - New Stonehenge end
+
 /// Number of free Great People granted by this building
 int CvBuildingEntry::GetFreeGreatPeople() const
 {
@@ -1449,6 +1461,14 @@ bool CvBuildingEntry::IsGoldenAge() const
 {
 	return m_bGoldenAge;
 }
+
+// NQMP GJS - New France UA begin
+/// Does this building spawn cultural great person if the civ has the trait that allows it?
+bool CvBuildingEntry::IsGrantsFreeCulturalGreatPersonWithTrait() const
+{
+	return m_bGrantsFreeCulturalGreatPersonWithTrait;
+}
+// NQMP GJS - New France UA end
 
 /// Is the map centered after this building is constructed?
 bool CvBuildingEntry::IsMapCentering() const
