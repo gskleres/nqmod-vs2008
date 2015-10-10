@@ -5,7 +5,7 @@
 	<!-- Update Angkor Wat to provide a free University and 3 Culture (up from 1) -->
 	<Buildings>
 		<Update>
-			<Set FreeBuildingThisCity="BUILDINGCLASS_UNIVERSITY" />
+			<Set FreeBuildingThisCity="BUILDINGCLASS_UNIVERSITY" PrereqTech="TECH_THEOLOGY" Cost="300" GlobalPlotCultureCostModifier="0" GlobalPlotBuyCostModifier="0" />
 			<Where BuildingClass="BUILDINGCLASS_ANGKOR_WAT" />
 		</Update>
 	</Buildings>
@@ -18,25 +18,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
 		<Row Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP">
-			<Text>[ICON_CULTURE] Culture and [ICON_GOLD] Gold costs of acquiring new tiles reduced by 25% in every city. Provides a free University in the city in which it is built.</Text>
+			<Text>Provides a free University in the city in which it is built.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
 		<Row Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][ICON_CULTURE] Culture and [ICON_GOLD] Gold costs of acquiring new tiles reduced by 25% in every city. Provides a free University in the city in which it is built.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Provides a free University in the city in which it is built.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
 		<Row Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][ICON_CULTURE] Culture and [ICON_GOLD] Gold costs of acquiring new tiles reduced by 25% in every city. Provides a free University in the city in which it is built.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Provides a free University in the city in which it is built.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
 		<Row Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][ICON_CULTURE] Culture and [ICON_GOLD] Gold costs of acquiring new tiles reduced by 25% in every city. Provides a free University in the city in which it is built.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Provides a free University in the city in which it is built.</Text>
 		</Row>
 	</Language_RU_RU>
 

@@ -3,16 +3,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Default</Configuration>
     <ProjectGuid>{b41da1e7-5bd5-4efb-a580-8dec19fd7525}</ProjectGuid>
-    <Name>NoQuittersMod_v7.2</Name>
+    <Name>NoQuittersMod_v8.0</Name>
     <Guid>917a39f3-57f0-4b18-b3cb-c4b7dbfbb41e</Guid>
-    <ModVersion>7</ModVersion>
+    <ModVersion>8</ModVersion>
     <Stability>Stable</Stability>
     <Teaser>This is the official mod used for NQ multiplayer competitive games.</Teaser>
     <Description>This is the official mod used for NQ multiplayer competitive games.
 
 Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (see www.reddit.com/r/nqmod) for all their help making this possible! &lt;3</Description>
     <Authors>Fruitstrike</Authors>
-    <SpecialThanks>NotQ, Uncanny Luck, xSnarf, Purple Lurple, Bratpirat</SpecialThanks>
+    <SpecialThanks>NotQ, Uncanny Luck, xSnarf, Purple Lurple, Bratpirat, TONS OF PEOPLE</SpecialThanks>
     <AffectsSavedGames>true</AffectsSavedGames>
     <MinCompatibleSaveVersion>0</MinCompatibleSaveVersion>
     <SupportsSinglePlayer>true</SupportsSinglePlayer>
@@ -23,6 +23,16 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
     <RootNamespace>NQMP</RootNamespace>
     <ModReferences />
     <ModActions>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>buildings/CandiChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>buildings/GardenChanges.xml</FileName>
+      </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
@@ -41,7 +51,22 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>civs/BabylonChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>civs/EthiopiaChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/France_SQL.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/FranceChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -51,7 +76,22 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>civs/KoreaChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>civs/NetherlandsChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/OttomanChanges.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/OttomanChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -67,6 +107,11 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>gameplay/GoodyHutChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/InlandSeaChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -91,6 +136,11 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>ideologies/autocracy/T1_Mobilization.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>improvements/CustomsHouseChanges.xml</FileName>
       </Action>
       <Action>
@@ -107,6 +157,16 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>religion/FounderBeliefChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/FoundingPantheonChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/InquisitorChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -141,11 +201,6 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>unit_promotions/EvasionChanges.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
         <FileName>unit_promotions/FastGeneralChanges.xml</FileName>
       </Action>
       <Action>
@@ -171,7 +226,22 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>units/BallistaChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>units/BatteringRamChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>units/CannonChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>units/CatapultChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -191,7 +261,22 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>units/KrisSwordsmanChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>units/LandsknechtChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>units/MissileCruiserChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>units/MohawkWarriorChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -217,6 +302,16 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>units/StealthBomberChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>units/SwordsmanChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>units/TrebuchetChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -271,6 +366,11 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>wonders_world/BigBenChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>wonders_world/GreatWallChanges.xml</FileName>
       </Action>
       <Action>
@@ -282,6 +382,16 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>wonders_world/PorcelainTowerChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_world/Stonehenge_SQL.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_world/StonehengeChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -617,6 +727,14 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
     <DeployMod>true</DeployMod>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="buildings\CandiChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="buildings\GardenChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="buildings\GranaryChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -629,7 +747,19 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="civs\BabylonChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="civs\EthiopiaChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\FranceChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\France_SQL.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -637,7 +767,19 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="civs\KoreaChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="civs\NetherlandsChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\OttomanChanges.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\OttomanChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -657,6 +799,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
+    <Content Include="gameplay\InlandSeaChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="gameplay\RemoveRAs.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -673,6 +819,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="ideologies\autocracy\T1_Mobilization.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="improvements\CustomsHouseChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -686,6 +836,14 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="religion\FounderBeliefChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\FoundingPantheonChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\InquisitorChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -969,7 +1127,19 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="units\BallistaChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="units\BatteringRamChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="units\CannonChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="units\CatapultChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -985,7 +1155,19 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="units\KrisSwordsmanChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="units\LandsknechtChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="units\MissileCruiserChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="units\MohawkWarriorChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1009,6 +1191,14 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="units\SwordsmanChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="units\TrebuchetChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="units\WorkBoatChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1018,10 +1208,6 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="unit_promotions\AntiTankChanges.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="unit_promotions\EvasionChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1077,6 +1263,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="wonders_world\BigBenChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="wonders_world\GreatWallChanges.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1090,6 +1280,14 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="wonders_world\PorcelainTowerChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_world\StonehengeChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_world\Stonehenge_SQL.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

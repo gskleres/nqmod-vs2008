@@ -17,6 +17,9 @@
 			<Count>2</Count>
 		</Row>
 	</Policy_FreeUnitClasses>
+	<Policy_UnitCombatProductionModifiers>
+		<Delete PolicyType="POLICY_WARRIOR_CODE" UnitCombatType="UNITCOMBAT_MELEE" />
+	</Policy_UnitCombatProductionModifiers>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_WARRIOR_CODE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_WARRIOR_CODE_HELP">

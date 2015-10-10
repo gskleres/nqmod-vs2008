@@ -66,36 +66,48 @@
 		<Row Tag="TXT_KEY_WONDER_MOSQUE_OF_DJENNE_HELP">
 			<Text>All Missionaries born in this city can spread religion three times. Provides a free Mosque in the city in which it is built.</Text>
 		</Row>
+		<!-- This is now updated in /wonders_world/StonehengeChanges.xml
+		<Delete Tag="TXT_KEY_WONDER_STONEHENGE_HELP" />
 		<Row Tag="TXT_KEY_WONDER_STONEHENGE_HELP">
 			<Text>Requires Piety.</Text>
 		</Row>
+		-->
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_WONDER_MOSQUE_OF_DJENNE_HELP" />
 		<Row Tag="TXT_KEY_WONDER_MOSQUE_OF_DJENNE_HELP">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]All Missionaries born in this city can spread religion three times. Provides a free Mosque in the city in which it is built.</Text>
 		</Row>
+		<!-- This is now updated in /wonders_world/StonehengeChanges.xml
+		<Delete Tag="TXT_KEY_WONDER_STONEHENGE_HELP" />
 		<Row Tag="TXT_KEY_WONDER_STONEHENGE_HELP">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Requires Piety.</Text>
 		</Row>
+		-->
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_WONDER_MOSQUE_OF_DJENNE_HELP" />
 		<Row Tag="TXT_KEY_WONDER_MOSQUE_OF_DJENNE_HELP">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]All Missionaries born in this city can spread religion three times. Provides a free Mosque in the city in which it is built.</Text>
 		</Row>
+		<!-- This is now updated in /wonders_world/StonehengeChanges.xml
+		<Delete Tag="TXT_KEY_WONDER_STONEHENGE_HELP" />
 		<Row Tag="TXT_KEY_WONDER_STONEHENGE_HELP">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Requires Piety.</Text>
 		</Row>
+		-->
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_WONDER_MOSQUE_OF_DJENNE_HELP" />
 		<Row Tag="TXT_KEY_WONDER_MOSQUE_OF_DJENNE_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]All Missionaries born in this city can spread religion three times. Provides a free Mosque in the city in which it is built.</Text>
 		</Row>
+		<!-- This is now updated in /wonders_world/StonehengeChanges.xml
+		<Delete Tag="TXT_KEY_WONDER_STONEHENGE_HELP" />
 		<Row Tag="TXT_KEY_WONDER_STONEHENGE_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Requires Piety.</Text>
 		</Row>
+		-->
 	</Language_RU_RU>
 
 

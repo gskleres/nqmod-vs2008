@@ -5,32 +5,39 @@
 	<!-- Flourishing of the Arts -->
 	<Policies>
 		<Update>
-			<Set CultureWonderMultiplier="25" />
+			<Set CultureWonderMultiplier="0" ExtraTourismPerGreatWork="0" CulturePerWonder="2"  />
 			<Where Type="POLICY_FLOURISHING_OF_ARTS" />
 		</Update>
 	</Policies>
+	<Policy_GreatWorkYieldChanges>
+		<Row>
+			<PolicyType>POLICY_FLOURISHING_OF_ARTS</PolicyType>
+			<YieldType>YIELD_CULTURE</YieldType>
+			<Yield>2</Yield>
+		</Row>
+	</Policy_GreatWorkYieldChanges>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE][ICON_CULTURE] Culture increased by 25% in all cities which have built a World Wonder and the empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+2 [ICON_CULTURE] Culture from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE][ICON_CULTURE] Culture increased by 25% in all cities which have built a World Wonder and the empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+2 [ICON_CULTURE] Culture from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE][ICON_CULTURE] Culture increased by 25% in all cities which have built a World Wonder and the empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+2 [ICON_CULTURE] Culture from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE][ICON_CULTURE] Culture increased by 25% in all cities which have built a World Wonder and the empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+2 [ICON_CULTURE] Culture from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age.</Text>
 		</Row>
 	</Language_RU_RU>
 

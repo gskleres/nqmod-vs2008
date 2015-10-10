@@ -5,10 +5,17 @@
 	<!-- Cultural Exchange -->
 	<Policies>
 		<Update>
-			<Set SharedReligionTourismModifier="0" TradeRouteTourismModifier="0" OpenBordersTourismModifier="0" ExtraTourismPerGreatWork="2" />
+			<Set SharedReligionTourismModifier="0" TradeRouteTourismModifier="0" OpenBordersTourismModifier="0" IncludesOneShotFreeUnits="true" />
 			<Where Type="POLICY_ETHICS" />
 		</Update>
 	</Policies>
+	<Policy_FreeUnitClasses>
+		<Row>
+			<PolicyType>POLICY_ETHICS</PolicyType>
+			<UnitClassType>UNITCLASS_WRITER</UnitClassType>
+			<Count>1</Count>
+		</Row>
+	</Policy_FreeUnitClasses>
 	<Policy_ImprovementCultureChanges>
 		<Row>
 			<PolicyType>POLICY_ETHICS</PolicyType>
@@ -61,35 +68,28 @@
 			<CultureChange>1</CultureChange>
 		</Row>
 	</Policy_ImprovementCultureChanges>
-	<Policy_GreatWorkYieldChanges>
-		<Row>
-			<PolicyType>POLICY_ETHICS</PolicyType>
-			<YieldType>YIELD_CULTURE</YieldType>
-			<Yield>2</Yield>
-		</Row>
-	</Policy_GreatWorkYieldChanges>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_ETHICS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_ETHICS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement. +2 [ICON_CULTURE] Culture and +2 [ICON_TOURISM] Tourism from every Great Work.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]A Great Writer appears. +1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_ETHICS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_ETHICS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement. +2 [ICON_CULTURE] Culture and +2 [ICON_TOURISM] Tourism from every Great Work.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]A Great Writer appears. +1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_ETHICS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_ETHICS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement. +2 [ICON_CULTURE] Culture and +2 [ICON_TOURISM] Tourism from every Great Work.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]A Great Writer appears. +1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_ETHICS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_ETHICS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement. +2 [ICON_CULTURE] Culture and +2 [ICON_TOURISM] Tourism from every Great Work.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Exchange[ENDCOLOR][NEWLINE]A Great Writer appears. +1 [ICON_CULTURE] Culture from every Trading Post, Moai, Brazilwood Camp, Chateau, and Great Person tile improvement.</Text>
 		</Row>
 	</Language_RU_RU>
 

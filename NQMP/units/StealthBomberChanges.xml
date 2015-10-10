@@ -9,11 +9,5 @@
 			<Where UnitType="UNIT_STEALTH_BOMBER" ResourceType="RESOURCE_ALUMINUM" />
 		</Update>
 	</Unit_ResourceQuantityRequirements>
-	<Unit_FreePromotions>
-		<Update>
-			<Set PromotionType="PROMOTION_EVASION_I2" />
-			<Where UnitType="UNIT_STEALTH_BOMBER" />
-		</Update>
-	</Unit_FreePromotions>
 	
 </GameData>

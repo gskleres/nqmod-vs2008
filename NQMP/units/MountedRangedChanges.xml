@@ -148,6 +148,11 @@
 			<PromotionType>PROMOTION_STATUE_ZEUS</PromotionType>
 			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
 		</Row>
+		<!-- This is the promotion from the Discipline policy in Honor -->
+		<Row>
+			<PromotionType>PROMOTION_ADJACENT_BONUS</PromotionType>
+			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
+		</Row>
 	</UnitPromotions_UnitCombats>
 
 	<!-- Apply VS-Mounted promotion effect -->

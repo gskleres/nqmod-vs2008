@@ -12,15 +12,15 @@
 	<!-- Increased base cost of Universities, Public Schools, and Research Labs to compensate. -->
 	<Buildings>
 		<Update>
-			<Set FaithCost="290" />
+			<Set FaithCost="400" />
 			<Where BuildingClass="BUILDINGCLASS_UNIVERSITY" />
 		</Update>
 		<Update>
-			<Set FaithCost="390" />
+			<Set FaithCost="533" />
 			<Where BuildingClass="BUILDINGCLASS_PUBLIC_SCHOOL" />
 		</Update>
 		<Update>
-			<Set FaithCost="480" />
+			<Set FaithCost="667" />
 			<Where BuildingClass="BUILDINGCLASS_LABORATORY" />
 		</Update>
 	</Buildings>
