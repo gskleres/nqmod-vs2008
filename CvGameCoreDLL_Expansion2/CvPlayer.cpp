@@ -8500,6 +8500,16 @@ void CvPlayer::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst
 		if(iFreeGreatPeople > 0)
 			ChangeNumFreeGreatPeople(iFreeGreatPeople);
 
+		// NQMP GJS - New Stonehenge begin
+		int iFreeFlatFaith = pBuildingInfo->GetFreeFlatFaith();
+		iFreeFlatFaith *= GC.getGame().getGameSpeedInfo().getTrainPercent();
+		iFreeFlatFaith /= 100;
+		if (iFreeFlatFaith > 0)
+		{
+			ChangeFaith(iFreeFlatFaith);
+		}
+		// NQMP GJS - New Stonehenge end
+
 		// Golden Age
 		if(pBuildingInfo->IsGoldenAge())
 		{

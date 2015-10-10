@@ -75,6 +75,7 @@ CvTraitEntry::CvTraitEntry() :
 	m_iDOFGreatPersonModifier(0),
 	m_iLuxuryHappinessRetention(0),
 	m_iExtraSpies(0),
+	m_iHappinessPerReligion(0), // NQMP GJS - New Ottoman UA
 	m_iUnresearchedTechBonusFromKills(0),
 	m_iExtraFoundedCityTerritoryClaimRange(0),
 	m_iFreeSocialPoliciesPerEra(0),
@@ -97,6 +98,14 @@ CvTraitEntry::CvTraitEntry() :
 	m_bTechBoostFromCapitalScienceBuildings(false),
 	m_bStaysAliveZeroCities(false),
 	m_bFaithFromUnimprovedForest(false),
+
+	// NQMP GJS - New France UA begin
+	m_bEarnsGreatPersonOnSlotOrGuild(false),
+	m_bHasBuiltWritersGuild(false),
+	m_bHasBuiltArtistsGuild(false),
+	m_bHasBuiltMusiciansGuild(false),
+	// NQMP GJS - New France UA end
+
 	m_bBonusReligiousBelief(false),
 	m_bAbleToAnnexCityStates(false),
 	m_bCrossesMountainsAfterGreatGeneral(false),
@@ -446,6 +455,14 @@ int CvTraitEntry::GetExtraSpies() const
 	return m_iExtraSpies;
 }
 
+// NQMP GJS - New Ottoman UA begin
+/// Accessor: number of extra spies
+int CvTraitEntry::GetHappinessPerReligion() const
+{
+	return m_iHappinessPerReligion;
+}
+// NQMP GJS - New Ottoman UA end
+
 /// Accessor: modifier for beaker bonus towards unresearched tech upon killing unit from that tech
 int CvTraitEntry::GetUnresearchedTechBonusFromKills() const
 {
@@ -591,6 +608,44 @@ bool CvTraitEntry::IsFaithFromUnimprovedForest() const
 {
 	return m_bFaithFromUnimprovedForest;
 }
+
+// NQMP GJS - New France UA begin
+// Accessor: does this civ get free cultural Great People from Guilds and Wonders with Great Works Slots?
+bool CvTraitEntry::IsEarnsGreatPersonOnSlotOrGuild() const
+{
+	return m_bEarnsGreatPersonOnSlotOrGuild;
+}
+// Accessor: has this civ already built a writer's guild?
+bool CvTraitEntry::IsHasBuiltWritersGuild() const
+{
+	return m_bHasBuiltWritersGuild;
+};
+// Mutator: set whether this civ has already built a writer's guild
+void CvTraitEntry::SetHasBuiltWritersGuild(bool hasBuilt)
+{
+	m_bHasBuiltWritersGuild = hasBuilt;
+};
+// Accessor: has this civ already built an artist's guild?
+bool CvTraitEntry::IsHasBuiltArtistsGuild() const
+{
+	return m_bHasBuiltArtistsGuild;
+};
+// Mutator: set whether this civ has already built a writer's guild
+void CvTraitEntry::SetHasBuiltArtistsGuild(bool hasBuilt)
+{
+	m_bHasBuiltArtistsGuild = hasBuilt;
+};
+// Accessor: has this civ already built a musician's guild?
+bool CvTraitEntry::IsHasBuiltMusiciansGuild() const
+{
+	return m_bHasBuiltMusiciansGuild;
+};
+// Mutator: set whether this civ has already built a writer's guild
+void CvTraitEntry::SetHasBuiltMusiciansGuild(bool hasBuilt)
+{
+	m_bHasBuiltMusiciansGuild = hasBuilt;
+};
+// NQMP GJS - New France UA end
 
 /// Accessor: does this civ get a bonus religious belief?
 bool CvTraitEntry::IsBonusReligiousBelief() const
@@ -905,6 +960,7 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 	m_iDOFGreatPersonModifier				= kResults.GetInt("DOFGreatPersonModifier");
 	m_iLuxuryHappinessRetention				= kResults.GetInt("LuxuryHappinessRetention");
 	m_iExtraSpies							= kResults.GetInt("ExtraSpies");
+	m_iHappinessPerReligion					= kResults.GetInt("HappinessPerReligion"); // NQMP GJS - New Ottoman UA
 	m_iUnresearchedTechBonusFromKills		= kResults.GetInt("UnresearchedTechBonusFromKills");
 	m_iExtraFoundedCityTerritoryClaimRange  = kResults.GetInt("ExtraFoundedCityTerritoryClaimRange");
 	m_iFreeSocialPoliciesPerEra				= kResults.GetInt("FreeSocialPoliciesPerEra");
@@ -971,6 +1027,7 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 	m_bTechBoostFromCapitalScienceBuildings = kResults.GetBool("TechBoostFromCapitalScienceBuildings");
 	m_bStaysAliveZeroCities = kResults.GetBool("StaysAliveZeroCities");
 	m_bFaithFromUnimprovedForest = kResults.GetBool("FaithFromUnimprovedForest");
+	m_bEarnsGreatPersonOnSlotOrGuild = kResults.GetBool("EarnsGreatPersonOnSlotOrGuild"); // NQMP GJS - New France UA
 	m_bBonusReligiousBelief = kResults.GetBool("BonusReligiousBelief");
 	m_bAbleToAnnexCityStates = kResults.GetBool("AbleToAnnexCityStates");
 	m_bCrossesMountainsAfterGreatGeneral = kResults.GetBool("CrossesMountainsAfterGreatGeneral");
@@ -1368,6 +1425,7 @@ void CvPlayerTraits::InitPlayerTraits()
 			m_iDOFGreatPersonModifier += trait->GetDOFGreatPersonModifier();
 			m_iLuxuryHappinessRetention += trait->GetLuxuryHappinessRetention();
 			m_iExtraSpies += trait->GetExtraSpies();
+			m_iHappinessPerReligion += trait->GetHappinessPerReligion(); // NQMP GJS - New Ottoman UA
 			m_iUnresearchedTechBonusFromKills += trait->GetUnresearchedTechBonusFromKills();
 			m_iExtraFoundedCityTerritoryClaimRange += trait->GetExtraFoundedCityTerritoryClaimRange();
 			m_iFreeSocialPoliciesPerEra += trait->GetFreeSocialPoliciesPerEra();
@@ -1424,6 +1482,12 @@ void CvPlayerTraits::InitPlayerTraits()
 			{
 				m_bFaithFromUnimprovedForest = true;
 			}
+			// NQMP GJS - New France UA begin
+			if(trait->IsEarnsGreatPersonOnSlotOrGuild())
+			{
+				m_bEarnsGreatPersonOnSlotOrGuild = true;
+			}
+			// NQMP GJS - New France UA end
 			if(trait->IsBonusReligiousBelief())
 			{
 				m_bBonusReligiousBelief = true;
@@ -1622,6 +1686,7 @@ void CvPlayerTraits::Reset()
 	m_iDOFGreatPersonModifier = 0;
 	m_iLuxuryHappinessRetention = 0;
 	m_iExtraSpies = 0;
+	m_iHappinessPerReligion = 0; // NQMP GJS - New Ottoman UA
 	m_iUnresearchedTechBonusFromKills = 0;
 	m_iExtraFoundedCityTerritoryClaimRange = 0;
 	m_iFreeSocialPoliciesPerEra = 0;
@@ -1645,6 +1710,14 @@ void CvPlayerTraits::Reset()
 	m_bTechBoostFromCapitalScienceBuildings = false;
 	m_bStaysAliveZeroCities = false;
 	m_bFaithFromUnimprovedForest = false;
+	
+	// NQMP GJS - New France UA begin
+	m_bEarnsGreatPersonOnSlotOrGuild = false;
+	m_bHasBuiltWritersGuild = false;
+	m_bHasBuiltArtistsGuild = false;
+	m_bHasBuiltMusiciansGuild = false;
+	// NQMP GJS - New France UA end
+	
 	m_bBonusReligiousBelief = false;
 	m_bAbleToAnnexCityStates = false;
 	m_bCrossesMountainsAfterGreatGeneral = false;
@@ -2576,6 +2649,8 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 
 	kStream >> m_iExtraSpies;
 
+	kStream >> m_iHappinessPerReligion; // NQMP GJS - New Ottoman UA
+
 	kStream >> m_iUnresearchedTechBonusFromKills;
 
 	if (uiVersion >= 4)
@@ -2688,6 +2763,14 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 	kStream >> m_bStaysAliveZeroCities;
 
 	kStream >> m_bFaithFromUnimprovedForest;
+
+	// NQMP GJS - New France UA begin
+	kStream >> m_bEarnsGreatPersonOnSlotOrGuild;
+	kStream >> m_bHasBuiltWritersGuild;
+	kStream >> m_bHasBuiltArtistsGuild;
+	kStream >> m_bHasBuiltMusiciansGuild;
+	// NQMP GJS - New France UA end
+
 
 	kStream >> m_bBonusReligiousBelief;
 
@@ -2912,6 +2995,7 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << m_iDOFGreatPersonModifier;
 	kStream << m_iLuxuryHappinessRetention;
 	kStream << m_iExtraSpies;
+	kStream << m_iHappinessPerReligion; // NQMP GJS - New Ottoman UA
 	kStream << m_iUnresearchedTechBonusFromKills;
 	kStream << m_iExtraFoundedCityTerritoryClaimRange;
 	kStream << m_iFreeSocialPoliciesPerEra;
@@ -2936,6 +3020,14 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << m_bTechBoostFromCapitalScienceBuildings;
 	kStream << m_bStaysAliveZeroCities;
 	kStream << m_bFaithFromUnimprovedForest;
+
+	// NQMP GJS - New France UA begin
+	kStream << m_bEarnsGreatPersonOnSlotOrGuild;
+	kStream << m_bHasBuiltWritersGuild;
+	kStream << m_bHasBuiltArtistsGuild;
+	kStream << m_bHasBuiltMusiciansGuild;
+	// NQMP GJS - New France UA end
+
 	kStream << m_bBonusReligiousBelief;
 	kStream << m_bAbleToAnnexCityStates;
 	kStream << m_bCrossesMountainsAfterGreatGeneral;
