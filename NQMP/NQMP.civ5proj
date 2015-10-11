@@ -676,36 +676,6 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Flavors.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Buildings.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Leaders.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Policies.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Technologies.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Units.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
         <FileName>_from_AuI/New_CIV5AICityStrategies.xml</FileName>
       </Action>
       <Action>
@@ -1384,30 +1354,6 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Buildings.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Flavors.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Leaders.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Policies.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Technologies.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Units.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
     <Content Include="_from_AuI\New_CIV5AICityStrategies.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1481,7 +1427,6 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
     <Folder Include="unit_promotions" />
     <Folder Include="units" />
     <Folder Include="_from_AuI\" />
-    <Folder Include="_from_AuI\Flavor Changes\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Firaxis\ModBuddy\Civ5Mod.targets" />
 </Project>
