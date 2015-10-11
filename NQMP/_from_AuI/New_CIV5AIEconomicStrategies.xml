@@ -78,6 +78,11 @@
 			<FlavorType>FLAVOR_GOLD</FlavorType>
 			<Flavor>5</Flavor>
 		</Row>
+		<Row>
+			<AIEconomicStrategyType>ECONOMICAISTRATEGY_GS_CULTURE</AIEconomicStrategyType>
+			<FlavorType>FLAVOR_TOURISM</FlavorType>
+			<Flavor>35</Flavor>
+		</Row>
 		<!-- Population = Science -->
 		<Row>
 			<AIEconomicStrategyType>ECONOMICAISTRATEGY_GS_SPACESHIP</AIEconomicStrategyType>
@@ -158,6 +163,11 @@
 			<FlavorType>FLAVOR_GOLD</FlavorType>
 			<Flavor>5</Flavor>
 		</Row>
+		<Row>
+			<AIEconomicStrategyType>ECONOMICAISTRATEGY_GS_CULTURE</AIEconomicStrategyType>
+			<FlavorType>FLAVOR_TOURISM</FlavorType>
+			<Flavor>45</Flavor>
+		</Row>
 		<!-- Population = Science -->
 		<Row>
 			<AIEconomicStrategyType>ECONOMICAISTRATEGY_GS_SPACESHIP</AIEconomicStrategyType>
@@ -184,6 +194,11 @@
 			<AIEconomicStrategyType>ECONOMICAISTRATEGY_GS_SPACESHIP_HOMESTRETCH</AIEconomicStrategyType>
 			<FlavorType>FLAVOR_PRODUCTION</FlavorType>
 			<Flavor>15</Flavor>
+		</Row>
+		<Row>
+			<AIEconomicStrategyType>ECONOMICAISTRATEGY_NEED_MUSEUMS</AIEconomicStrategyType>
+			<FlavorType>FLAVOR_TOURISM</FlavorType>
+			<Flavor>40</Flavor>
 		</Row>
 	</AIEconomicStrategy_City_Flavors>
 	<AIEconomicStrategy_Flavors>
