@@ -876,6 +876,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="CvGameCore_Expansion2.pdb">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
     <Content Include="gameplay\GoodyHutChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>

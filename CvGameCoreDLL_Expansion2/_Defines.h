@@ -246,7 +246,7 @@
 /// Policies can now alter the flavors of certain buildingclasses (disabled for now because it crashes at initialization)
 //#define AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
 /// Beliefs can now alter the flavors of certain buildingclasses
-#define AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+//#define AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
 
 // Citizen Management Fixes
 /// Extra food value assigned to specialists for half food consumption now depends on the XML value for citizen food consumption (instead of assuming the default value)
