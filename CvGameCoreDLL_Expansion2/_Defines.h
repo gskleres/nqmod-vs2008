@@ -111,7 +111,7 @@
 #define AUI_PLAYER_FIX_GOODY_HUT_PICKER
 /// Fixes the fact that the function to get a great general stacked with the unit does not detect great admirals (for naval units)
 #define AUI_UNIT_FIX_GET_STACKED_GREAT_GENERAL_WORKS_WITH_ADMIRAL
-/// Fixes badly set up damage modifier checks (eg. Friendly lands modifier gets applied twice to melee attackers, Friendly/Enemy territory bonus for ranged units applied based on plot target intead of unit plot)
+/// Fixes badly set up damage modifier checks (eg. Friendly lands modifier got applied twice to melee attackers, Friendly/Enemy territory bonus for ranged units applied based on plot target intead of unit plot)
 #define AUI_UNIT_FIX_BAD_BONUS_STACKS
 /// Implements the missing getter for the enemy defender based on the unit in question (rather than the player); this is important for hidden nationality units
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
@@ -133,7 +133,7 @@
 #define AUI_GAME_OBSERVER_MEET_ALL_TEAMS
 /// Natural wonder popups do not trigger for observers
 #define AUI_PLOT_OBSERVER_NO_NW_POPUPS
-/// Observers can now open the city screen
+/// Observers can now open the city screen as if they had spies in every city
 #define AUI_GAME_OBSERVER_CAN_OPEN_CITIES
 /// All cities are set to be revealed to observers
 #define AUI_CITY_OBSERVER_REVEALS_ALL_CITIES
@@ -358,7 +358,7 @@
 /// Civilian units execute moves to safety instead of patrolling
 #define AUI_HOMELAND_FIND_PATROL_MOVES_CIVILIANS_PATROL_TO_SAFETY
 
-// Voting/League AI Stuff for when a player is defeated by their AI can still vote on proposals
+// Voting/League AI Stuff for when a player is defeated but their AI can still vote on proposals
 /// When voting for a player, the AI will now adjust for the fact that the voting system is First-Past-The-Post (so it will try to vote against players as well)
 #define AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
 /// Uses a different algorithm for scoring voting on world ideology

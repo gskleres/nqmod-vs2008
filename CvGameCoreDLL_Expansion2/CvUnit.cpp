@@ -17445,7 +17445,8 @@ void CvUnit::setCombatUnit(CvUnit* pCombatUnit, bool bAttacking)
 	{
 		CvAssertMsg(getCombatUnit() == NULL && getCombatCity() == NULL, "Combat Unit or City is not expected to be assigned");
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
-		m_bCombatFocus = bAttacking && !(DLLUI->isFocusedWidget()) && ((getOwner() == GC.getGame().getActivePlayer()) || ((pCombatUnit->getOwner() == GC.getGame().getActivePlayer()) && !GC.getGame().isAnySimultaneousTurns()));
+		PlayerTypes eActivePlayer = GC.getGame().getActivePlayer();
+		m_bCombatFocus = bAttacking && !(DLLUI->isFocusedWidget()) && ((getOwner() == eActivePlayer) || ((pCombatUnit->getOwner() == eActivePlayer) && (!GET_PLAYER(eActivePlayer).isHuman() || !GC.getGame().isAnySimultaneousTurns() || GET_PLAYER(eActivePlayer).getTurnOrder() != GC.getGame().getCurrentTurnOrderActive())));
 #else
 		m_bCombatFocus = (bAttacking && !(DLLUI->isFocusedWidget()) && ((getOwner() == GC.getGame().getActivePlayer()) || ((pCombatUnit->getOwner() == GC.getGame().getActivePlayer()) && !(GET_PLAYER(GC.getGame().getActivePlayer()).isSimultaneousTurns()))));
 #endif
@@ -17492,7 +17493,8 @@ void CvUnit::setCombatCity(CvCity* pCombatCity)
 	{
 		CvAssertMsg(getCombatUnit() == NULL && getCombatCity() == NULL, "Combat Unit or City is not expected to be assigned");
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
-		m_bCombatFocus = !(DLLUI->isFocusedWidget()) && ((getOwner() == GC.getGame().getActivePlayer()) || ((pCombatCity->getOwner() == GC.getGame().getActivePlayer()) && !GC.getGame().isAnySimultaneousTurns()));
+		PlayerTypes eActivePlayer = GC.getGame().getActivePlayer();
+		m_bCombatFocus = !(DLLUI->isFocusedWidget()) && ((getOwner() == eActivePlayer) || ((pCombatCity->getOwner() == eActivePlayer) && (!GET_PLAYER(eActivePlayer).isHuman() || !GC.getGame().isAnySimultaneousTurns() || GET_PLAYER(eActivePlayer).getTurnOrder() != GC.getGame().getCurrentTurnOrderActive())));
 #else
 		m_bCombatFocus = (!(DLLUI->isFocusedWidget()) && ((getOwner() == GC.getGame().getActivePlayer()) || ((pCombatCity->getOwner() == GC.getGame().getActivePlayer()) && !(GET_PLAYER(GC.getGame().getActivePlayer()).isSimultaneousTurns()))));
 #endif
