@@ -26,7 +26,11 @@ REMARK_GROUP("CvDangerPlots");
 /// Constructor
 CvDangerPlots::CvDangerPlots(void)
 	: m_ePlayer(NO_PLAYER)
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	, m_DangerPlots(NULL)
+#else
 	, m_bArrayAllocated(false)
+#endif
 	, m_bDirty(false)
 {
 	m_fMajorWarMod = GC.getAI_DANGER_MAJOR_APPROACH_WAR();
@@ -58,12 +62,17 @@ void CvDangerPlots::Init(PlayerTypes ePlayer, bool bAllocate)
 	{
 		int iGridSize = GC.getMap().numPlots();
 		CvAssertMsg(iGridSize > 0, "iGridSize is zero");
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+		m_DangerPlots = FNEW(uint[iGridSize], c_eCiv5GameplayDLL, 0);
+		fill(m_DangerPlots, &m_DangerPlots[iGridSize - 1], 0);
+#else
 		m_DangerPlots.resize(iGridSize);
 		m_bArrayAllocated = true;
 		for(int i = 0; i < iGridSize; i++)
 		{
 			m_DangerPlots[i] = 0;
 		}
+#endif
 	}
 }
 
@@ -71,8 +80,13 @@ void CvDangerPlots::Init(PlayerTypes ePlayer, bool bAllocate)
 void CvDangerPlots::Uninit()
 {
 	m_ePlayer = NO_PLAYER;
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	if (m_DangerPlots)
+		SAFE_DELETE_ARRAY(m_DangerPlots);
+#else
 	m_DangerPlots.clear();
 	m_bArrayAllocated = false;
+#endif
 	m_bDirty = false;
 }
 
@@ -80,7 +94,11 @@ void CvDangerPlots::Uninit()
 void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibility)
 {
 	// danger plots have not been initialized yet, so no need to update
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	if (!m_DangerPlots)
+#else
 	if(!m_bArrayAllocated)
+#endif
 	{
 		return;
 	}
@@ -88,10 +106,14 @@ void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibi
 	// wipe out values
 	int iGridSize = GC.getMap().numPlots();
 	CvAssertMsg(iGridSize == m_DangerPlots.size(), "iGridSize does not match number of DangerPlots");
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	fill(m_DangerPlots, &m_DangerPlots[iGridSize - 1], 0);
+#else
 	for(int i = 0; i < iGridSize; i++)
 	{
 		m_DangerPlots[i] = 0;
 	}
+#endif
 
 	CvPlayer& thisPlayer = GET_PLAYER(m_ePlayer);
 	TeamTypes thisTeam = thisPlayer.getTeam();
@@ -756,16 +778,32 @@ void CvDangerPlots::Read(FDataStream& kStream)
 	kStream >> uiVersion;
 
 	kStream >> m_ePlayer;
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	bool bArrayAllocated = false;
+	kStream >> bArrayAllocated;
+#else
 	kStream >> m_bArrayAllocated;
+#endif
 
 	int iGridSize;
 	kStream >> iGridSize;
 
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	if (m_DangerPlots)
+		SAFE_DELETE_ARRAY(m_DangerPlots);
+	if (bArrayAllocated)
+	{
+		m_DangerPlots = FNEW(uint[iGridSize], c_eCiv5GameplayDLL, 0);
+#else
 	m_DangerPlots.resize(iGridSize);
+#endif
 	for(int i = 0; i < iGridSize; i++)
 	{
 		kStream >> m_DangerPlots[i];
 	}
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	}
+#endif
 
 	m_bDirty = false;
 }
@@ -778,14 +816,35 @@ void CvDangerPlots::Write(FDataStream& kStream) const
 	kStream << uiVersion;
 
 	kStream << m_ePlayer;
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	kStream << (m_DangerPlots != NULL);
+#else
 	kStream << m_bArrayAllocated;
+#endif
 
 	int iGridSize = GC.getMap().getGridWidth() * GC.getMap().getGridHeight();
 	kStream << iGridSize;
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	if (m_DangerPlots)
+	{
+		for (int i = 0; i < iGridSize; i++)
+		{
+			kStream << m_DangerPlots[i];
+		}
+	}
+	else
+	{
+		for (int i = 0; i < iGridSize; i++)
+		{
+			kStream << (uint)0;
+		}
+	}
+#else
 	for(int i = 0; i < iGridSize; i++)
 	{
 		kStream << m_DangerPlots[i];
 	}
+#endif
 }
 
 //	-----------------------------------------------------------------------------------------------

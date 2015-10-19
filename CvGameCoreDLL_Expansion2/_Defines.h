@@ -67,6 +67,8 @@
 #define AUI_UNIT_FIX_CAN_MOVE_OR_ATTACK_INTO_NO_DUPLICATE_CALLS
 /// CvUnit::canMoveInto() is optimized to not perform redundant checks for attack flag (also improves pathfinder performance)
 #define AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
+/// The object used to store danger values is changed to an array instead of an FFastVector
+#define AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles

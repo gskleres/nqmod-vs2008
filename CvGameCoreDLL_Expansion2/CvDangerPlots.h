@@ -67,7 +67,9 @@ protected:
 	int GetDangerValueOfCitadel() const;
 
 	PlayerTypes m_ePlayer;
+#ifndef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
 	bool m_bArrayAllocated;
+#endif
 	bool m_bDirty;
 	double m_fMajorWarMod;
 	double m_fMajorHostileMod;
@@ -81,7 +83,11 @@ protected:
 	double m_fMinorBullyMod;
 	double m_fMinorConquestMod;
 
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	uint* m_DangerPlots;
+#else
 	FFastVector<uint, true, c_eCiv5GameplayDLL, 0> m_DangerPlots;
+#endif
 };
 
 #endif //CIV5_PROJECT_CLASSES_H
