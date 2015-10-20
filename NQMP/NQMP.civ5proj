@@ -758,6 +758,11 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Type>UpdateDatabase</Type>
         <FileName>_from_AuI/New_GlobalDiplomacyAIDefines.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>scoring_tweaks/New_GlobalDefines.xml</FileName>
+      </Action>
     </ModActions>
     <ModContent>
       <Content>
@@ -945,6 +950,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="religion\ReformationChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="scoring_tweaks\New_GlobalDefines.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1466,6 +1475,7 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
     <Folder Include="ideologies\order" />
     <Folder Include="improvements" />
     <Folder Include="ideologies" />
+    <Folder Include="scoring_tweaks\" />
     <Folder Include="ui" />
     <Folder Include="social_policies" />
     <Folder Include="social_policies\1_tradition" />

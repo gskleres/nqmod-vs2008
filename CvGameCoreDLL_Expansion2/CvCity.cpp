@@ -6027,23 +6027,23 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			// NQMP GJS - New France UA begin
 			if(pBuildingInfo->IsGrantsFreeCulturalGreatPersonWithTrait() && isCapital() && owningPlayer.GetPlayerTraits()->IsEarnsGreatPersonOnSlotOrGuild())
 			{
-				bool getWriter = false;
-				bool getArtist = false;
-				bool getMusician = false;
+				bool bGetWriter = false;
+				bool bGetArtist = false;
+				bool bGetMusician = false;
 				if (pBuildingInfo->GetGreatWorkCount() > 0) // it has great work slots and is marked as something that gives France the bonus
 				{
 					GreatWorkSlotType slotType = pBuildingInfo->GetGreatWorkSlotType();
 					if (slotType == CvTypes::getGREAT_WORK_SLOT_LITERATURE())
 					{
-						getWriter = true;
+						bGetWriter = true;
 					}
 					else if (slotType == CvTypes::getGREAT_WORK_SLOT_ART_ARTIFACT())
 					{
-						getArtist = true;
+						bGetArtist = true;
 					}
 					else if (slotType == CvTypes::getGREAT_WORK_SLOT_MUSIC())
 					{
-						getMusician = true;
+						bGetMusician = true;
 					}
 				}
 				else // check for guilds, they also give France the bonus
@@ -6052,38 +6052,41 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 					if (buildingType == GC.getInfoTypeForString("BUILDINGCLASS_WRITERS_GUILD") && !owningPlayer.GetPlayerTraits()->IsHasBuiltWritersGuild())
 					{
 						owningPlayer.GetPlayerTraits()->SetHasBuiltWritersGuild(true);
-						getWriter = true;
+						bGetWriter = true;
 					}
 					else if (buildingType == GC.getInfoTypeForString("BUILDINGCLASS_ARTISTS_GUILD") && !owningPlayer.GetPlayerTraits()->IsHasBuiltArtistsGuild())
 					{
 						owningPlayer.GetPlayerTraits()->SetHasBuiltArtistsGuild(true);
-						getArtist = true;
+						bGetArtist = true;
 					}
 					else if (buildingType == GC.getInfoTypeForString("BUILDINGCLASS_MUSICIANS_GUILD") && !owningPlayer.GetPlayerTraits()->IsHasBuiltMusiciansGuild())
 					{
 						owningPlayer.GetPlayerTraits()->SetHasBuiltMusiciansGuild(true);
-						getMusician = true;
+						bGetMusician = true;
 					}
 				}
 
-#ifdef AUI_WARNING_FIXES
-				for (uint iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
-#else
-				for(int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
-#endif
+				if (bGetWriter || bGetArtist || bGetMusician)
 				{
-					const UnitTypes eUnit = static_cast<UnitTypes>(iUnitLoop);
-					CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
-					if (pkUnitInfo)
+#ifdef AUI_WARNING_FIXES
+					for (uint iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#else
+					for (int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#endif
 					{
-						const UnitTypes eFreeUnitType = (UnitTypes)thisCiv.getCivilizationUnits((UnitClassTypes)pkUnitInfo->GetUnitClassType());
-						if ((getWriter && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_WRITER")) ||
-							(getArtist && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_ARTIST")) ||
-							(getMusician && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_MUSICIAN")))
+						const UnitTypes eUnit = static_cast<UnitTypes>(iUnitLoop);
+						CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
+						if (pkUnitInfo)
 						{
-							pFreeUnit = owningPlayer.initUnit(eFreeUnitType, getX(), getY());
-							if (!pFreeUnit->jumpToNearestValidPlot())
-								pFreeUnit->kill(false);	// Could not find a valid spot!
+							const UnitTypes eFreeUnitType = (UnitTypes)thisCiv.getCivilizationUnits((UnitClassTypes)pkUnitInfo->GetUnitClassType());
+							if ((bGetWriter && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_WRITER")) ||
+								(bGetArtist && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_ARTIST")) ||
+								(bGetMusician && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_MUSICIAN")))
+							{
+								pFreeUnit = owningPlayer.initUnit(eFreeUnitType, getX(), getY());
+								if (!pFreeUnit->jumpToNearestValidPlot())
+									pFreeUnit->kill(false);	// Could not find a valid spot!
+							}
 						}
 					}
 				}
@@ -9047,7 +9050,7 @@ int CvCity::GetLocalHappiness() const
 	}
 	
 	// NQMP GJS - New Ottoman UA begin
-	iLocalHappiness += (GetCityReligions()->GetNumReligionsWithFollowers() * kPlayer.GetPlayerTraits()->GetHappinessPerReligion());
+	iLocalHappiness += GetCityReligions()->GetNumReligionsWithFollowers() * kPlayer.GetPlayerTraits()->GetHappinessPerReligion();
 	// NQMP GJS - New Ottoman UA end
 
 	// Follower beliefs
@@ -9221,8 +9224,11 @@ void CvCity::SetIgnoreCityForHappiness(bool bValue)
 BuildingTypes CvCity::ChooseFreeWallsBuilding() const
 {
 	CvString strWallBuildingClass = "BUILDINGCLASS_WALLS";
-	int iNumBuildingClassInfos = GC.getNumBuildingClassInfos();
-	for(int iI = 0; iI < iNumBuildingClassInfos; iI++)
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
+	for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		const BuildingClassTypes eBuildingClass = static_cast<BuildingClassTypes>(iI);
 		CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo(eBuildingClass);

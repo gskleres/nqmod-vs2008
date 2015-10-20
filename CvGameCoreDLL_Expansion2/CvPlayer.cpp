@@ -6908,7 +6908,7 @@ void CvPlayer::found(int iX, int iY)
 		return;
 
 	int iExtraTerritoryClaim = GetPlayerTraits()->GetExtraFoundedCityTerritoryClaimRange();
-	iExtraTerritoryClaim += this->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_EXTRA_TERRITORY_CLAIM); // NQMP GJS - Colonialism
+	iExtraTerritoryClaim += GetPlayerPolicies()->GetNumericModifier(POLICYMOD_EXTRA_TERRITORY_CLAIM); // NQMP GJS - Colonialism
 	for (int i = 0; i < iExtraTerritoryClaim; i++)
 	{
 		CvPlot* pPlotToAcquire = pCity->GetNextBuyablePlot();

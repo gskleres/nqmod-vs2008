@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+	<Defines>
+		<!-- Each of these multipliers are fairly straightforward: (amount of stuff) * (relevant multiplier) gets added to the player's score -->
+		<Update>
+			<Set Value="6" /> <!-- Was 8 -->
+			<Where Name="SCORE_CITY_MULTIPLIER" />
+		</Update>
+		<Update>
+			<Set Value="6" /> <!-- Was 4 -->
+			<Where Name="SCORE_POPULATION_MULTIPLIER" />
+		</Update>
+		<Update>
+			<Set Value="2" /> <!-- Was 25 -->
+			<Where Name="SCORE_WONDER_MULTIPLIER" />
+		</Update>
+		<Update>
+			<Set Value="10" /> <!-- Was 4 -->
+			<Where Name="SCORE_TECH_MULTIPLIER" />
+		</Update>
+		<Update>
+			<Set Value="4" /> <!-- Was 10 -->
+			<Where Name="SCORE_FUTURE_TECH_MULTIPLIER" />
+		</Update>
+		<Update>
+			<Set Value="6" /> <!-- Was 4 -->
+			<Where Name="SCORE_POLICY_MULTIPLIER" />
+		</Update>
+		<Update>
+			<Set Value="1" /> <!-- Was 4 -->
+			<Where Name="SCORE_GREAT_WORK_MULTIPLIER" />
+		</Update>
+		<Update>
+			<Set Value="2" /> <!-- Was 20 -->
+			<Where Name="SCORE_BELIEF_MULTIPLIER" />
+		</Update>
+	</Defines>
+</GameData>
