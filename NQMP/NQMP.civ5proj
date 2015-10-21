@@ -676,92 +676,92 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Flavors.xml</FileName>
+        <FileName>_from_AuI/Flavor Changes/AuI_CIV5Flavors_Tourism.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Buildings.xml</FileName>
+        <FileName>_from_AuI/Flavor Changes/AuI_CIV5Buildings_Flavors.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Leaders.xml</FileName>
+        <FileName>_from_AuI/Flavor Changes/AuI_CIV5Leaders_Flavors.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Policies.xml</FileName>
+        <FileName>_from_AuI/Flavor Changes/AuI_CIV5Policies_Flavors.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Technologies.xml</FileName>
+        <FileName>_from_AuI/Flavor Changes/AuI_CIV5Technologies_Flavors.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/Flavor Changes/New_CIV5Units.xml</FileName>
+        <FileName>_from_AuI/Flavor Changes/AuI_CIV5Units_Flavors.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_CIV5AICityStrategies.xml</FileName>
+        <FileName>_from_AuI/AuI_CIV5AICityStrategies.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_CIV5AIEconomicStrategies.xml</FileName>
+        <FileName>_from_AuI/AuI_CIV5AIEconomicStrategies.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_CIV5AIGrandStrategies.xml</FileName>
+        <FileName>_from_AuI/AuI_CIV5AIGrandStrategies.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_CIV5AIMilitaryStrategies.xml</FileName>
+        <FileName>_from_AuI/AuI_CIV5AIMilitaryStrategies.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_CIV5CitySpecializations.xml</FileName>
+        <FileName>_from_AuI/AuI_CIV5CitySpecializations.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_CIV5MultiUnitFormations.xml</FileName>
+        <FileName>_from_AuI/AuI_CIV5MultiUnitFormations.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_CIV5TacticalMoves.xml</FileName>
+        <FileName>_from_AuI/AuI_CIV5TacticalMoves.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_CIV5Units.xml</FileName>
+        <FileName>_from_AuI/AuI_CIV5Units.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_GlobalAIDefines.xml</FileName>
+        <FileName>_from_AuI/AuI_GlobalAIDefines.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_GlobalDefines.xml</FileName>
+        <FileName>_from_AuI/AuI_GlobalDefines.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>_from_AuI/New_GlobalDiplomacyAIDefines.xml</FileName>
+        <FileName>_from_AuI/AuI_GlobalDiplomacyAIDefines.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>scoring_tweaks/New_GlobalDefines.xml</FileName>
+        <FileName>scoring_tweaks/Better_Score_Multipliers.xml</FileName>
       </Action>
     </ModActions>
     <ModContent>
@@ -953,7 +953,7 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="scoring_tweaks\New_GlobalDefines.xml">
+    <Content Include="scoring_tweaks\Better_Score_Multipliers.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1397,71 +1397,71 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Buildings.xml">
+    <Content Include="_from_AuI\Flavor Changes\AuI_CIV5Buildings_Flavors.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Flavors.xml">
+    <Content Include="_from_AuI\Flavor Changes\AuI_CIV5Flavors_Tourism.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Leaders.xml">
+    <Content Include="_from_AuI\Flavor Changes\AuI_CIV5Leaders_Flavors.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Policies.xml">
+    <Content Include="_from_AuI\Flavor Changes\AuI_CIV5Policies_Flavors.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Technologies.xml">
+    <Content Include="_from_AuI\Flavor Changes\AuI_CIV5Technologies_Flavors.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\Flavor Changes\New_CIV5Units.xml">
+    <Content Include="_from_AuI\Flavor Changes\AuI_CIV5Units_Flavors.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_CIV5AICityStrategies.xml">
+    <Content Include="_from_AuI\AuI_CIV5AICityStrategies.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_CIV5AIEconomicStrategies.xml">
+    <Content Include="_from_AuI\AuI_CIV5AIEconomicStrategies.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_CIV5AIGrandStrategies.xml">
+    <Content Include="_from_AuI\AuI_CIV5AIGrandStrategies.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_CIV5AIMilitaryStrategies.xml">
+    <Content Include="_from_AuI\AuI_CIV5AIMilitaryStrategies.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_CIV5CitySpecializations.xml">
+    <Content Include="_from_AuI\AuI_CIV5CitySpecializations.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_CIV5MultiUnitFormations.xml">
+    <Content Include="_from_AuI\AuI_CIV5MultiUnitFormations.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_CIV5TacticalMoves.xml">
+    <Content Include="_from_AuI\AuI_CIV5TacticalMoves.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_CIV5Units.xml">
+    <Content Include="_from_AuI\AuI_CIV5Units.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_GlobalAIDefines.xml">
+    <Content Include="_from_AuI\AuI_GlobalAIDefines.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_GlobalDefines.xml">
+    <Content Include="_from_AuI\AuI_GlobalDefines.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="_from_AuI\New_GlobalDiplomacyAIDefines.xml">
+    <Content Include="_from_AuI\AuI_GlobalDiplomacyAIDefines.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
