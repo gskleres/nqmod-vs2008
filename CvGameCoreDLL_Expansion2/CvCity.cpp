@@ -11363,11 +11363,11 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 
 	ImprovementTypes eBarbCamptype = (ImprovementTypes)GC.getBARBARIAN_CAMP_IMPROVEMENT();
 
-#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
-	CityAIFocusTypes eCityFocus = GetCityCitizens()->GetFocusType();
-#endif
 #if defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS) || defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS)
-	const int iYieldValueSum = GC.getAI_CITIZEN_VALUE_FOOD() + GC.getAI_CITIZEN_VALUE_PRODUCTION() + GC.getAI_CITIZEN_VALUE_GOLD() + GC.getAI_CITIZEN_VALUE_SCIENCE() + GC.getAI_CITIZEN_VALUE_CULTURE() + GC.getAI_CITIZEN_VALUE_FAITH();
+	int iYieldValueSum = GC.getAI_CITIZEN_VALUE_FOOD() + GC.getAI_CITIZEN_VALUE_PRODUCTION() + GC.getAI_CITIZEN_VALUE_GOLD() + GC.getAI_CITIZEN_VALUE_SCIENCE() + GC.getAI_CITIZEN_VALUE_CULTURE() + GC.getAI_CITIZEN_VALUE_FAITH();
+#endif
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+	int iLowestBuyCost = MAX_INT;
 #endif
 
 #ifdef AUI_HEXSPACE_DX_LOOPS
@@ -11542,49 +11542,31 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 						case YIELD_FOOD:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_FOOD();
-							if (eCityFocus == CITY_AI_FOCUS_TYPE_FOOD)
-								iLoopYield *= 3;
-							else if (eCityFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eCityFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
-								iLoopYield *= 2;
 						}
 						break;
 						case YIELD_PRODUCTION:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_PRODUCTION();
-							if (eCityFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
-								iLoopYield *= 3;
-							else if (eCityFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
-								iLoopYield *= 2;
 						}
 						break;
 						case YIELD_GOLD:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_GOLD();
-							if (eCityFocus == CITY_AI_FOCUS_TYPE_GOLD)
-								iLoopYield *= 3;
-							else if (eCityFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
-								iLoopYield *= 2;
 						}
 						break;
 						case YIELD_SCIENCE:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_SCIENCE();
-							if (eCityFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
-								iLoopYield *= 3;
 						}
 						break;
 						case YIELD_CULTURE:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_CULTURE();
-							if (eCityFocus == CITY_AI_FOCUS_TYPE_CULTURE)
-								iLoopYield *= 3;
 						}
 						break;
 						case YIELD_FAITH:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_FAITH();
-							if (eCityFocus == CITY_AI_FOCUS_TYPE_FAITH)
-								iLoopYield *= 3;
 						}
 						break;
 						}
@@ -11639,49 +11621,31 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 										case YIELD_FOOD:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_FOOD();
-											if (eCityFocus == CITY_AI_FOCUS_TYPE_FOOD)
-												iLoopYield *= 3;
-											else if (eCityFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eCityFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
-												iLoopYield *= 2;
 										}
 										break;
 										case YIELD_PRODUCTION:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_PRODUCTION();
-											if (eCityFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
-												iLoopYield *= 3;
-											else if (eCityFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
-												iLoopYield *= 2;
 										}
 										break;
 										case YIELD_GOLD:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_GOLD();
-											if (eCityFocus == CITY_AI_FOCUS_TYPE_GOLD)
-												iLoopYield *= 3;
-											else if (eCityFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
-												iLoopYield *= 2;
 										}
 										break;
 										case YIELD_SCIENCE:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_SCIENCE();
-											if (eCityFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
-												iLoopYield *= 3;
 										}
 										break;
 										case YIELD_CULTURE:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_CULTURE();
-											if (eCityFocus == CITY_AI_FOCUS_TYPE_CULTURE)
-												iLoopYield *= 3;
 										}
 										break;
 										case YIELD_FAITH:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_FAITH();
-											if (eCityFocus == CITY_AI_FOCUS_TYPE_FAITH)
-												iLoopYield *= 3;
 										}
 										break;
 										}
@@ -11771,7 +11735,6 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 					{
 #ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
 						aiPlotList.clear();
-						aiPlotList.push_back(pLoopPlot->GetPlotIndex());
 #else
 						// clear reset list
 						for(uint ui = 0; ui < aiPlotList.size(); ui++)
@@ -11782,56 +11745,33 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 #endif
 						iLowestCost = iInfluenceCost;
 						// this will "fall through" to the next conditional
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+						iLowestBuyCost = MAX_INT;
+#endif
 					}
 
-#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
-					else if (iInfluenceCost == iLowestCost)
-					{
-						aiPlotList.push_back(pLoopPlot->GetPlotIndex());
-#else
 					if (iInfluenceCost == iLowestCost)
 					{
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+						int iCurBuyCost = GetBuyPlotCost(pLoopPlot->getX(), pLoopPlot->getY());
+						if (iCurBuyCost <= iLowestBuyCost)
+						{
+							iLowestBuyCost = iCurBuyCost;
+#endif
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+						aiPlotList.push_back(pLoopPlot->GetPlotIndex());
+#else
 						aiPlotList[iResultListIndex] = pLoopPlot->GetPlotIndex();
 						iResultListIndex++;
 #endif
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+						}
+#endif
 					}
 				}
 			}
 		}
 	}
-#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
-	// NQMP GJS - Shoshone + Colonialism better extra territory fix begin
-	// In case of ties, get the cheapest tile to currently buy, and only choose randomly if there are multiple plots in the list with the lowest price
-	if (aiPlotList.size() > 1)
-	{
-		int iLowestBuyCost = MAX_INT;
-		int iCurBuyCost = 0;
-		CvPlot* pLoopPlot;
-		BaseVector<int, true>::iterator it;
-		for (it = aiPlotList.begin(); it != aiPlotList.end(); ++it)
-		{
-			pLoopPlot = GC.getMap().plotByIndex(*it);
-			if (pLoopPlot)
-			{
-				iCurBuyCost = GetBuyPlotCost(pLoopPlot->getX(), pLoopPlot->getY());
-				if (iCurBuyCost < iLowestBuyCost)
-				{
-					iLowestBuyCost = iCurBuyCost;
-				}
-			}
-		}
-		for (it = aiPlotList.begin(); it != aiPlotList.end(); ++it)
-		{
-			pLoopPlot = GC.getMap().plotByIndex(*it);
-			if (!pLoopPlot || GetBuyPlotCost(pLoopPlot->getX(), pLoopPlot->getY()) > iLowestBuyCost)
-			{
-				aiPlotList.erase(it);
-				--it;
-			}
-		}
-	}
-	// NQMP GJS - Shoshone + Colonialism better extra territory fix end
-#endif
 }
 
 //	--------------------------------------------------------------------------------
