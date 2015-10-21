@@ -8972,6 +8972,7 @@ void CvCity::DoCreatePuppet()
 		}
 	}
 
+#ifndef AUI_CITY_FIX_DO_CREATE_PUPPET_FREE_COURTHOUSES_KEPT
 	// Remove any buildings that are not applicable to puppets (but might have been earned through traits/policies)
 #ifdef AUI_WARNING_FIXES
 	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
@@ -8989,6 +8990,7 @@ void CvCity::DoCreatePuppet()
 			}
 		}
 	}
+#endif
 
 	GET_PLAYER(getOwner()).DoUpdateHappiness();
 	GET_PLAYER(getOwner()).DoUpdateNextPolicyCost();
