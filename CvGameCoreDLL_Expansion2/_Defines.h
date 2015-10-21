@@ -269,6 +269,10 @@
 #define AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
 /// When comparing whether a specialist is better than an unemployed citizen, regular value evaluation is used
 #define AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
+/// The value of food is now properly increased if the city is on food focus with the avoid growth flag set
+#define AUI_CITIZENS_FIX_GET_VALUE_FOOD_YIELD_VALUE_WHEN_STARVATION_WITH_AVOID_GROWTH
+/// Instead of cities with 4 or less population and set to either no focus or partial food focus multiplying food value by 4, all cities with 4 or less population will want at least 2 food just like ones set to no focus or partial/full food focus
+#define AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix
