@@ -131,6 +131,8 @@
 #define AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
 /// Free courthouses are no longer removed when puppeting a city
 #define AUI_CITY_FIX_DO_CREATE_PUPPET_FREE_COURTHOUSES_KEPT
+/// Fixes the fact that in simultaneous turns multiplayer, barbarians can spawn and then move units in the same turn.
+#define AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
 
 // Observer mode fixes
 /// Observers will see all resources
