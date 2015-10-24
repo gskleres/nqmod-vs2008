@@ -1565,6 +1565,49 @@ CvPlayer* CvCity::GetPlayer()
 	return &GET_PLAYER(getOwner());
 }
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvCity::cacheYieldsForTurn()
+{
+	DoUpdateFeatureSurrounded();
+
+	DoUpdateIndustrialRouteToCapital();
+
+	// GPP
+	GetCityCitizens()->cacheGPChangesT100ForThisTurn();
+
+	// Food
+	setCachedYieldT100ForThisTurn(YIELD_FOOD, foodDifferenceTimes100());
+
+	// Production
+	setCachedYieldT100ForThisTurn(YIELD_PRODUCTION, getCurrentProductionDifferenceTimes100(false, isProduction()));
+
+	// Gold
+	//setCachedYieldT100ForThisTurn(YIELD_GOLD, getYieldRateTimes100(YIELD_GOLD, false));
+
+	// Science
+	//setCachedYieldT100ForThisTurn(YIELD_SCIENCE, getYieldRateTimes100(YIELD_GOLD, false));
+
+	// Culture
+	setCachedYieldT100ForThisTurn(YIELD_CULTURE, MAX(getJONSCulturePerTurn(), 0));
+
+	// Faith
+	//setCachedYieldT100ForThisTurn(YIELD_FAITH, GetFaithPerTurn());
+}
+
+void CvCity::doTurnEnd()
+{
+	GetCityCitizens()->DoSpecialists();
+
+	doGrowth();
+
+	doProduction(!doCheckProduction());
+
+	doDecay();
+
+	ChangeJONSCultureStored(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 void CvCity::doTurn()
 {
@@ -1608,7 +1651,9 @@ void CvCity::doTurn()
 
 	GetCityCitizens()->DoTurn();
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	AI_doTurn();
+#endif
 
 	bool bRazed = DoRazingTurn();
 
@@ -1616,6 +1661,15 @@ void CvCity::doTurn()
 	{
 		DoResistanceTurn();
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		if(!isHuman() || isProductionAutomated())
+		{
+			if(!isProduction() || isProductionProcess() || AI_isChooseProductionDirty())
+			{
+				AI_chooseProduction(false /*bInterruptWonders*/);
+			}
+		}
+#else
 		bool bAllowNoProduction = !doCheckProduction();
 
 		doGrowth();
@@ -1625,6 +1679,7 @@ void CvCity::doTurn()
 		doProduction(bAllowNoProduction);
 
 		doDecay();
+#endif
 
 		doMeltdown();
 
@@ -1650,11 +1705,13 @@ void CvCity::doTurn()
 		// Following function also looks at WLTKD stuff
 		DoTestResourceDemanded();
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		// Culture accumulation
 		if(getJONSCulturePerTurn() > 0)
 		{
 			ChangeJONSCultureStored(getJONSCulturePerTurn());
 		}
+#endif
 
 		// Enough Culture to acquire a new Plot?
 		if(GetJONSCultureStored() >= GetJONSCultureThreshold())
@@ -9618,6 +9675,18 @@ void CvCity::SetPlayersReligion(PlayerTypes eNewValue)
 	m_ePlayersReligion = eNewValue;
 }
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+int CvCity::getCachedYieldT100ForThisTurn(YieldTypes eIndex) const
+{
+	return m_aCachedYieldT100ForThisTurn[eIndex];
+}
+
+void CvCity::setCachedYieldT100ForThisTurn(YieldTypes eIndex, int iAmount)
+{
+	m_aCachedYieldT100ForThisTurn[eIndex] = iAmount;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 TeamTypes CvCity::getTeam() const
 {
@@ -11352,6 +11421,16 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 	int iPLOT_INFLUENCE_NW_COST =				/*-105*/ GC.getPLOT_INFLUENCE_NW_COST();
 	int iPLOT_INFLUENCE_YIELD_POINT_COST =		/*-1*/	GC.getPLOT_INFLUENCE_YIELD_POINT_COST();
 
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+	iPLOT_INFLUENCE_DISTANCE_MULTIPLIER *= 10;
+	iPLOT_INFLUENCE_RING_COST *= 10;
+	iPLOT_INFLUENCE_WATER_COST *= 10;
+	iPLOT_INFLUENCE_IMPROVEMENT_COST *= 10;
+	iPLOT_INFLUENCE_ROUTE_COST *= 10;
+	iPLOT_INFLUENCE_RESOURCE_COST *= 10;
+	iPLOT_INFLUENCE_NW_COST *= 10;
+#endif
+
 #ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
 	int iPLOT_INFLUENCE_NO_ADJACENT_OWNED_COST = /*1000*/ GC.getPLOT_INFLUENCE_NO_ADJACENT_OWNED_COST();
 #endif
@@ -11367,6 +11446,7 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 
 #if defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS) || defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS)
 	int iYieldValueSum = GC.getAI_CITIZEN_VALUE_FOOD() + GC.getAI_CITIZEN_VALUE_PRODUCTION() + GC.getAI_CITIZEN_VALUE_GOLD() + GC.getAI_CITIZEN_VALUE_SCIENCE() + GC.getAI_CITIZEN_VALUE_CULTURE() + GC.getAI_CITIZEN_VALUE_FAITH();
+	CityAIFocusTypes eFocus = GetCityCitizens()->GetFocusType();
 #endif
 #ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
 	int iLowestBuyCost = MAX_INT;
@@ -11455,10 +11535,35 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 							if (hexDistance(iDX, iDY) <= NUM_CITY_RINGS)
 							{
 								int* aiYields = GC.getResourceInfo(eResource)->getYieldChangeArray();
-								int iTemp = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD] + GC.getAI_CITIZEN_VALUE_PRODUCTION() * aiYields[YIELD_PRODUCTION] +
-									GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD] + GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE] +
-									GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE] + GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
-								iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTemp * NUM_YIELD_TYPES / iYieldValueSum;
+								int iTotal = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD];
+								if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+									iTotal *= 3;
+								else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+									iTotal *= 2;
+								int iTemp = GC.getAI_CITIZEN_VALUE_PRODUCTION() * aiYields[YIELD_PRODUCTION];
+								if (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+									iTemp *= 3;
+								else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+									iTemp *= 2;
+								iTotal += iTemp;
+								int iTemp = GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD];
+								if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+									iTemp *= 3;
+								else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+									iTemp *= 2;
+								iTotal += iTemp;
+								int iTemp = GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE];
+								if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+									iTemp *= 3;
+								iTotal += iTemp;
+								int iTemp = GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE];
+								if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+									iTemp *= 3;
+								iTotal += iTemp;
+								int iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
+								if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
+									iTemp *= 3;
+								iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / iYieldValueSum;
 							}
 						}
 						else
@@ -11544,31 +11649,49 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 						case YIELD_FOOD:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_FOOD();
+							if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+								iLoopYield *= 3;
+							else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+								iLoopYield *= 2;
 						}
 						break;
 						case YIELD_PRODUCTION:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_PRODUCTION();
+							if (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+								iLoopYield *= 3;
+							else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+								iLoopYield *= 2;
 						}
 						break;
 						case YIELD_GOLD:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_GOLD();
+							if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+								iLoopYield *= 3;
+							else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+								iLoopYield *= 2;
 						}
 						break;
 						case YIELD_SCIENCE:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_SCIENCE();
+							if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+								iLoopYield *= 3;
 						}
 						break;
 						case YIELD_CULTURE:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_CULTURE();
+							if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+								iLoopYield *= 3;
 						}
 						break;
 						case YIELD_FAITH:
 						{
 							iLoopYield *= GC.getAI_CITIZEN_VALUE_FAITH();
+							if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
+								iLoopYield *= 3;
 						}
 						break;
 						}
@@ -11623,31 +11746,49 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 										case YIELD_FOOD:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_FOOD();
+											if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+												iLoopYield *= 3;
+											else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+												iLoopYield *= 2;
 										}
 										break;
 										case YIELD_PRODUCTION:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_PRODUCTION();
+											if (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+												iLoopYield *= 3;
+											else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+												iLoopYield *= 2;
 										}
 										break;
 										case YIELD_GOLD:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_GOLD();
+											if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+												iLoopYield *= 3;
+											else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+												iLoopYield *= 2;
 										}
 										break;
 										case YIELD_SCIENCE:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_SCIENCE();
+											if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+												iLoopYield *= 3;
 										}
 										break;
 										case YIELD_CULTURE:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_CULTURE();
+											if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+												iLoopYield *= 3;
 										}
 										break;
 										case YIELD_FAITH:
 										{
 											iLoopYield *= GC.getAI_CITIZEN_VALUE_FAITH();
+											if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
+												iLoopYield *= 3;
 										}
 										break;
 										}
@@ -11671,10 +11812,35 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 									else if (iPlotDistance <= NUM_CITY_RINGS)
 									{
 										int* aiYields = GC.getResourceInfo(eAdjacentResource)->getYieldChangeArray();
-										int iTemp = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD] + GC.getAI_CITIZEN_VALUE_PRODUCTION() * aiYields[YIELD_PRODUCTION] +
-											GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD] + GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE] +
-											GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE] + GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
-										iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTemp * NUM_YIELD_TYPES / (iYieldValueSum * NUM_DIRECTION_TYPES);
+										int iTotal = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD];
+										if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+											iTotal *= 3;
+										else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+											iTotal *= 2;
+										int iTemp = GC.getAI_CITIZEN_VALUE_PRODUCTION() * aiYields[YIELD_PRODUCTION];
+										if (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+											iTemp *= 3;
+										else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+											iTemp *= 2;
+										iTotal += iTemp;
+										int iTemp = GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD];
+										if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+											iTemp *= 3;
+										else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+											iTemp *= 2;
+										iTotal += iTemp;
+										int iTemp = GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE];
+										if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+											iTemp *= 3;
+										iTotal += iTemp;
+										int iTemp = GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE];
+										if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+											iTemp *= 3;
+										iTotal += iTemp;
+										int iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
+										if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
+											iTemp *= 3;
+										iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / (iYieldValueSum * NUM_DIRECTION_TYPES);
 									}
 #else
 									if (iPlotDistance <= NUM_CITY_RINGS || GC.getResourceInfo(eAdjacentResource)->getResourceUsage() != RESOURCEUSAGE_BONUS)
@@ -13767,7 +13933,11 @@ void CvCity::doGrowth()
 		return;
 	}
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int iDiff = getCachedYieldT100ForThisTurn(YIELD_FOOD);
+#else
 	int iDiff = foodDifferenceTimes100();
+#endif
 
 	if(iDiff < 0)
 	{
@@ -14131,6 +14301,7 @@ void CvCity::doProduction(bool bAllowNoProduction)
 	VALIDATE_OBJECT
 	AI_PERF_FORMAT("City-AI-perf.csv", ("CvCity::doProduction, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	if(!isHuman() || isProductionAutomated())
 	{
 		if(!isProduction() || isProductionProcess() || AI_isChooseProductionDirty())
@@ -14138,6 +14309,7 @@ void CvCity::doProduction(bool bAllowNoProduction)
 			AI_chooseProduction(false /*bInterruptWonders*/);
 		}
 	}
+#endif
 
 	if(!bAllowNoProduction && !isProduction())
 	{
@@ -14171,7 +14343,11 @@ void CvCity::doProduction(bool bAllowNoProduction)
 			}
 		}
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		changeProductionTimes100(getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+#else
 		changeProductionTimes100(getCurrentProductionDifferenceTimes100(false, true));
+#endif
 
 		setOverflowProduction(0);
 		setFeatureProduction(0);
@@ -14199,7 +14375,11 @@ void CvCity::doProduction(bool bAllowNoProduction)
 	}
 	else
 	{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		changeOverflowProductionTimes100(getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+#else
 		changeOverflowProductionTimes100(getCurrentProductionDifferenceTimes100(false, false));
+#endif
 	}
 }
 
@@ -14224,7 +14404,11 @@ void CvCity::doProcess()
 		{
 			if (pInfo->GetProcess() == eProcess)
 			{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				GC.getGame().GetGameLeagues()->DoLeagueProjectContribution(getOwner(), eLeagueProject, getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+#else
 				GC.getGame().GetGameLeagues()->DoLeagueProjectContribution(getOwner(), eLeagueProject, getCurrentProductionDifferenceTimes100(false, true));
+#endif
 			}
 		}
 	}

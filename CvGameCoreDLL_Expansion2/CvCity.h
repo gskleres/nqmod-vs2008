@@ -63,6 +63,10 @@ public:
 	CvPlayer* GetPlayer();
 #endif
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void cacheYieldsForTurn();
+	void doTurnEnd();
+#endif
 	void doTurn();
 
 	bool isCitySelected();
@@ -575,6 +579,11 @@ public:
 	PlayerTypes GetPlayersReligion() const;
 	void SetPlayersReligion(PlayerTypes eNewValue);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int getCachedYieldT100ForThisTurn(YieldTypes eIndex) const;
+	void setCachedYieldT100ForThisTurn(YieldTypes eIndex, int iAmount);
+#endif
+
 	// Yield
 
 	int getSeaPlotYield(YieldTypes eIndex) const;
@@ -1030,6 +1039,9 @@ protected:
 	int** m_ppaiResourceYieldChange;
 	int** m_ppaiFeatureYieldChange;
 	int** m_ppaiTerrainYieldChange;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int m_aCachedYieldT100ForThisTurn[NUM_YIELD_TYPES];
+#endif
 
 	CvCityBuildings* m_pCityBuildings;
 	CvCityStrategyAI* m_pCityStrategyAI;

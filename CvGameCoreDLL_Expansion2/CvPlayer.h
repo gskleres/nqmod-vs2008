@@ -143,8 +143,18 @@ public:
 	const CvString getWorstEnemyName() const;
 	ArtStyleTypes getArtStyleType() const;
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int getCachedJONSCultureForThisTurn() const;
+	int getCachedScienceT100ForThisTurn() const;
+	int getCachedFaithForThisTurn() const;
+	int getCachedExcessHappinessForThisTurn() const;
+#endif
+
 	void doTurn();
 	void doTurnPostDiplomacy();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void doTurnEnd();
+#endif
 	void doTurnUnits();
 	void SetAllUnitsUnprocessed();
 	void DoUnitReset();
@@ -1590,6 +1600,13 @@ protected:
 
 	FAutoVariable<PlayerTypes, CvPlayer> m_eID;
 	FAutoVariable<LeaderHeadTypes, CvPlayer> m_ePersonalityType;
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int m_iCachedJONSCultureForThisTurn;
+	int m_iCachedScienceT100ForThisTurn;
+	int m_iCachedFaithForThisTurn;
+	int m_iCachedExcessHappinessForThisTurn;
+#endif
 
 	FAutoVariable<int, CvPlayer> m_iStartingX;
 	FAutoVariable<int, CvPlayer> m_iStartingY;

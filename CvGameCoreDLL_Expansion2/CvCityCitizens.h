@@ -116,6 +116,10 @@ public:
 	CvPlot* GetCityPlotFromIndex(int iIndex) const;
 
 	// Specialists
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int getCachedGPChangeT100ForThisTurn(SpecialistTypes eGPSpecialistType) const;
+	void cacheGPChangesT100ForThisTurn();
+#endif
 	void DoSpecialists();
 
 #ifdef AUI_CONSTIFY
@@ -184,6 +188,9 @@ private:
 	int* m_aiNumSpecialistsInBuilding;
 	int* m_aiNumForcedSpecialistsInBuilding;
 	int* m_piBuildingGreatPeopleRateChanges;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int* m_aiCachedGPChangeT100ForThisTurn;
+#endif
 
 	bool m_bInited;
 

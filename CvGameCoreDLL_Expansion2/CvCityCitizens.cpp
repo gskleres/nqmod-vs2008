@@ -31,6 +31,9 @@ CvCityCitizens::CvCityCitizens()
 	m_aiNumSpecialistsInBuilding = NULL;
 	m_aiNumForcedSpecialistsInBuilding = NULL;
 	m_piBuildingGreatPeopleRateChanges = NULL;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	m_aiCachedGPChangeT100ForThisTurn = NULL;
+#endif
 }
 
 /// Destructor
@@ -60,6 +63,9 @@ void CvCityCitizens::Uninit()
 		SAFE_DELETE_ARRAY(m_aiNumSpecialistsInBuilding);
 		SAFE_DELETE_ARRAY(m_aiNumForcedSpecialistsInBuilding);
 		SAFE_DELETE_ARRAY(m_piBuildingGreatPeopleRateChanges);
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		SAFE_DELETE_ARRAY(m_aiCachedGPChangeT100ForThisTurn);
+#endif
 	}
 	m_bInited = false;
 }
@@ -125,6 +131,14 @@ void CvCityCitizens::Reset()
 	{
 		m_piBuildingGreatPeopleRateChanges[iI] = 0;
 	}
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	m_aiCachedGPChangeT100ForThisTurn = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
+	for (iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
+	{
+		m_aiCachedGPChangeT100ForThisTurn[iI] = 0;
+	}
+#endif
 
 	m_bForceAvoidGrowth = false;
 }
@@ -399,7 +413,9 @@ void CvCityCitizens::DoTurn()
 	CvAssertMsg((GetNumCitizensWorkingPlots() + GetTotalSpecialistCount() + GetNumUnassignedCitizens()) <= GetCity()->getPopulation(), "Gameplay: More workers than population in the city.");
 	DoReallocateCitizens();
 	CvAssertMsg((GetNumCitizensWorkingPlots() + GetTotalSpecialistCount() + GetNumUnassignedCitizens()) <= GetCity()->getPopulation(), "Gameplay: More workers than population in the city.");
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	DoSpecialists();
+#endif
 
 	CvAssertMsg((GetNumCitizensWorkingPlots() + GetTotalSpecialistCount() + GetNumUnassignedCitizens()) <= GetCity()->getPopulation(), "Gameplay: More workers than population in the city.");
 }
@@ -2310,13 +2326,107 @@ CvPlot* CvCityCitizens::GetCityPlotFromIndex(int iIndex) const
 ///////////////////////////////////////////////////
 
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+int CvCityCitizens::getCachedGPChangeT100ForThisTurn(SpecialistTypes eGPSpecialistType) const
+{
+	return m_aiCachedGPChangeT100ForThisTurn[eGPSpecialistType];
+}
 
-/// Called at the end of every turn: Looks at the specialists in this City and levels them up
-void CvCityCitizens::DoSpecialists()
+void CvCityCitizens::cacheGPChangesT100ForThisTurn()
 {
 	int iGPPChange;
 	int iCount;
 	int iMod;
+#ifdef AUI_WARNING_FIXES
+	for (uint iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#else
+	for (int iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
+#endif
+	{
+		const SpecialistTypes eSpecialist = static_cast<SpecialistTypes>(iSpecialistLoop);
+		m_aiCachedGPChangeT100ForThisTurn[eSpecialist] = 0;
+		CvSpecialistInfo* pkSpecialistInfo = GC.getSpecialistInfo(eSpecialist);
+		if (pkSpecialistInfo)
+		{
+			// Does this Specialist spawn a GP?
+			if (pkSpecialistInfo->getGreatPeopleUnitClass() != NO_UNITCLASS)
+			{
+				iCount = GetSpecialistCount(eSpecialist);
+
+				// GPP from Specialists
+				iGPPChange = pkSpecialistInfo->getGreatPeopleRateChange() * iCount * 100;
+
+				// GPP from Buildings
+				iGPPChange += GetBuildingGreatPeopleRateChanges(eSpecialist) * 100;
+
+				if (iGPPChange > 0)
+				{
+					iMod = 0;
+
+					// City mod
+					iMod += GetCity()->getGreatPeopleRateModifier();
+
+					// Player mod
+					iMod += GetPlayer()->getGreatPeopleRateModifier();
+
+					// Player and Golden Age mods to this specific class
+					if ((UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass() == GC.getInfoTypeForString("UNITCLASS_SCIENTIST"))
+					{
+						iMod += GetPlayer()->getGreatScientistRateModifier();
+					}
+					else if ((UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass() == GC.getInfoTypeForString("UNITCLASS_WRITER"))
+					{
+						if (GetPlayer()->isGoldenAge())
+						{
+							iMod += GetPlayer()->GetPlayerTraits()->GetGoldenAgeGreatWriterRateModifier();
+						}
+						iMod += GetPlayer()->getGreatWriterRateModifier();
+					}
+					else if ((UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass() == GC.getInfoTypeForString("UNITCLASS_ARTIST"))
+					{
+						if (GetPlayer()->isGoldenAge())
+						{
+							iMod += GetPlayer()->GetPlayerTraits()->GetGoldenAgeGreatArtistRateModifier();
+						}
+						iMod += GetPlayer()->getGreatArtistRateModifier();
+					}
+					else if ((UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass() == GC.getInfoTypeForString("UNITCLASS_MUSICIAN"))
+					{
+						if (GetPlayer()->isGoldenAge())
+						{
+							iMod += GetPlayer()->GetPlayerTraits()->GetGoldenAgeGreatMusicianRateModifier();
+						}
+						iMod += GetPlayer()->getGreatMusicianRateModifier();
+					}
+					else if ((UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass() == GC.getInfoTypeForString("UNITCLASS_MERCHANT"))
+					{
+						iMod += GetPlayer()->getGreatMerchantRateModifier();
+					}
+					else if ((UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass() == GC.getInfoTypeForString("UNITCLASS_ENGINEER"))
+					{
+						iMod += GetPlayer()->getGreatEngineerRateModifier();
+					}
+
+					// Apply mod
+					iGPPChange *= (100 + iMod);
+					iGPPChange /= 100;
+
+					m_aiCachedGPChangeT100ForThisTurn[eSpecialist] = iGPPChange;
+				}
+			}
+		}
+	}
+}
+#endif
+
+/// Called at the end of every turn: Looks at the specialists in this City and levels them up
+void CvCityCitizens::DoSpecialists()
+{
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int iGPPChange;
+	int iCount;
+	int iMod;
+#endif
 #ifdef AUI_WARNING_FIXES
 	for (uint iSpecialistLoop = 0; iSpecialistLoop < GC.getNumSpecialistInfos(); iSpecialistLoop++)
 #else
@@ -2327,6 +2437,14 @@ void CvCityCitizens::DoSpecialists()
 		CvSpecialistInfo* pkSpecialistInfo = GC.getSpecialistInfo(eSpecialist);
 		if(pkSpecialistInfo)
 		{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			UnitClassTypes eGPUnitClassType = (UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass();
+			if (eGPUnitClassType != NO_UNITCLASS)
+			{
+				ChangeSpecialistGreatPersonProgressTimes100(eSpecialist, getCachedGPChangeT100ForThisTurn(eSpecialist));
+
+				int iGPThreshold = GetSpecialistUpgradeThreshold(eGPUnitClassType);
+#else
 			int iGPThreshold = GetSpecialistUpgradeThreshold((UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass());
 
 			// Does this Specialist spawn a GP?
@@ -2394,6 +2512,7 @@ void CvCityCitizens::DoSpecialists()
 
 					ChangeSpecialistGreatPersonProgressTimes100(eSpecialist, iGPPChange);
 				}
+#endif
 
 				// Enough to spawn a GP?
 				if(GetSpecialistGreatPersonProgress(eSpecialist) >= iGPThreshold)

@@ -1582,7 +1582,9 @@ void CvGame::update()
 				if (bDoAI)
 				{
 					if (gDLL->CanAdvanceTurn())
+					{
 						doTurn();
+					}
 				}
 				else
 					resetTurnTimer(false);
@@ -7853,6 +7855,11 @@ void CvGame::doTurn()
 	incrementGameTurn();
 	incrementElapsedGameTurns();
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	// Victory stuff
+	testVictory();
+#endif
+
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 	constructTurnOrders();
 #else
@@ -7942,8 +7949,10 @@ void CvGame::doTurn()
 		}
 	}
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	// Victory stuff
 	testVictory();
+#endif
 
 	// Who's Winning
 	if(GET_PLAYER(getActivePlayer()).isAlive() && !IsStaticTutorialActive())
@@ -8573,6 +8582,20 @@ void CvGame::updateMoves()
 
 			if(!processPlayerAutoMoves)
 			{
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+				if (isAnySimultaneousTurns())
+				{//fully simultaneous turns.
+					// All humans must be ready for auto moves
+					bool readyForAutoMoves = true;
+					for (iI = 0; iI < MAX_PLAYERS; iI++)
+					{
+						CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
+						if (player.isHuman() && player.getTurnOrder() == m_iCurrentTurnOrderActive && !player.isObserver() && !player.isAutoMoves())
+							readyForAutoMoves = false;
+					}
+					processPlayerAutoMoves = readyForAutoMoves;
+				}
+#else
 				if(!GC.getGame().isOption(GAMEOPTION_DYNAMIC_TURNS) && GC.getGame().isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
 				{//fully simultaneous turns.
 					// All humans must be ready for auto moves
@@ -8585,6 +8608,7 @@ void CvGame::updateMoves()
 					}
 					processPlayerAutoMoves = readyForAutoMoves;
 				}
+#endif
 				else
 					processPlayerAutoMoves = true;
 			}
@@ -8788,7 +8812,13 @@ void CvGame::updateMoves()
 				}
 
 				// KWG: This code should go into CheckPlayerTurnDeactivate
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				if(!player.isEndTurn())
+				{
+					if (!player.isHuman() || gDLL->HasReceivedTurnComplete(player.GetID()))
+#else
 				if(!player.isEndTurn() && gDLL->HasReceivedTurnComplete(player.GetID()) && player.isHuman() /* && (isNetworkMultiPlayer() || (!isNetworkMultiPlayer() && player.GetID() != getActivePlayer())) */)
+#endif
 				{
 					if(!player.hasBusyUnitOrCity())
 					{
@@ -8806,6 +8836,9 @@ void CvGame::updateMoves()
 							player.setEndTurn(true);
 						}
 					}
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				}
+#endif
 				}
 			}
 		}

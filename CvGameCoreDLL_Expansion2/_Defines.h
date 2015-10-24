@@ -71,6 +71,8 @@
 #define AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
+/// Yields are cached and processed after the player's turn completes, not before the player's turn starts
+#define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
 /// When choosing the top n choices from a weighted vector, choices with weight equal to the last choice are also included
@@ -119,10 +121,12 @@
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
 /// Fixes the bug where order-specific hammer bonuses would go into overflow for an order that may not be eligible for those bonuses
 #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /// If a city grows or starves a population, it will add any difference in food production after the change to its food supply. Among other things, this means a) the food yields earned by new citizens are evaluated just like all other yields, and b) the food consumption of the new citizen is taken into account on the turn the citizen is added
 #define AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
 /// Food and production earned from a newly constructed building is added into the city's food and production pools, just like how new buildings add onto all other yields the turn they are constructed
 #define AUI_CITY_FIX_DO_PRODUCTION_CONSIDER_FOOD_HAMMERS_FROM_NEW_BUILDING
+#endif
 /// Domain modifiers to trade route yields now stack multiplicatively with other modifiers instead of additively. Among other things, this fixes Iron Curtain giving a lower-than-expected bonus to naval trade routes
 #define AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
 /// Free courthouses are no longer removed when puppeting a city

@@ -4150,6 +4150,28 @@ ArtStyleTypes CvPlayer::getArtStyleType() const
 	}
 }
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+int CvPlayer::getCachedJONSCultureForThisTurn() const
+{
+	return m_iCachedJONSCultureForThisTurn;
+}
+
+int CvPlayer::getCachedScienceT100ForThisTurn() const
+{
+	return m_iCachedScienceT100ForThisTurn;
+}
+
+int CvPlayer::getCachedFaithForThisTurn() const
+{
+	return m_iCachedFaithForThisTurn;
+}
+
+int CvPlayer::getCachedExcessHappinessForThisTurn() const
+{
+	return m_iCachedExcessHappinessForThisTurn;
+}
+#endif
+
 //	---------------------------------------------------------------------------
 void CvPlayer::doTurn()
 {
@@ -4283,8 +4305,10 @@ void CvPlayer::doTurnPostDiplomacy()
 		ChangeTourismBonusTurns(-1);
 	}
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	// Golden Age
 	DoProcessGoldenAge();
+#endif
 
 	// Great People gifts from Allied City States (if we have that policy)
 	DoGreatPeopleSpawnTurn();
@@ -4302,6 +4326,7 @@ void CvPlayer::doTurnPostDiplomacy()
 		}
 	}
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	// Gold
 	GetTreasury()->DoGold();
 
@@ -4318,6 +4343,7 @@ void CvPlayer::doTurnPostDiplomacy()
 	{
 		changeJONSCulture(GetTotalJONSCulturePerTurn());
 	}
+#endif
 
 	// Compute the cost of policies for this turn
 	DoUpdateNextPolicyCost();
@@ -4380,8 +4406,10 @@ void CvPlayer::doTurnPostDiplomacy()
 		GetPlayerPolicies()->DoPolicyAI();
 	}
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	// Science
 	doResearch();
+#endif
 
 	GetEspionage()->DoTurn();
 
@@ -4407,6 +4435,77 @@ void CvPlayer::doTurnPostDiplomacy()
 
 	AI_doTurnPost();
 }
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvPlayer::doTurnEnd()
+{
+	CvGame& kGame = GC.getGame();
+
+	// Cache Happiness
+	m_iCachedExcessHappinessForThisTurn = GetExcessHappiness();
+
+	// Cache Food, Production, Border-growth culture, GPP
+	int iLoop;
+	CvCity* pLoopCity;
+	for (pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
+	{
+		pLoopCity->cacheYieldsForTurn();
+	}
+	// Cache Gold
+	m_pTreasury->cacheGoldT100ForThisTurn();
+
+	// Cache Culture
+	m_iCachedJONSCultureForThisTurn = GetTotalJONSCulturePerTurn();
+
+	// Cache Science
+	m_iCachedScienceT100ForThisTurn = GetScienceTimes100();
+
+	// Cache Faith
+	m_iCachedFaithForThisTurn = GetTotalFaithPerTurn();
+
+	// Golden Age
+	DoProcessGoldenAge();
+
+	// Do turn for all Cities
+	{
+		AI_PERF_FORMAT("AI-perf.csv", ("Do City Turns, Turn %03d, %s", GC.getGame().getElapsedGameTurns(), getCivilizationShortDescription()));
+		if (getNumCities() > 0)
+		{
+			int iLoop = 0;
+			for (CvCity* pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
+			{
+				pLoopCity->doTurnEnd();
+			}
+		}
+	}
+
+	// Gold
+	GetTreasury()->DoGold();
+
+	// Culture
+
+	// Prevent exploits in turn timed MP games - no accumulation of culture if player hasn't picked yet
+	GetCulture()->SetLastTurnLifetimeCulture(GetJONSCultureEverGenerated());
+	if (kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED))
+	{
+		if (getJONSCulture() < getNextPolicyCost())
+			changeJONSCulture(getCachedJONSCultureForThisTurn());
+	}
+	else
+	{
+		changeJONSCulture(getCachedJONSCultureForThisTurn());
+	}
+
+	// Science
+	doResearch();
+
+	int iFaithPerTurn = getCachedFaithForThisTurn();
+	if (iFaithPerTurn > 0)
+	{
+		ChangeFaith(iFaithPerTurn);
+	}
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 void CvPlayer::doTurnUnits()
@@ -12736,7 +12835,11 @@ void CvPlayer::DoProcessGoldenAge()
 		else
 		{
 			// Note: This will actually REDUCE the GA meter if the player is running in the red
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			ChangeGoldenAgeProgressMeter(getCachedExcessHappinessForThisTurn());
+#else
 			ChangeGoldenAgeProgressMeter(GetExcessHappiness());
+#endif
 
 			// Enough GA Progress to trigger new GA?
 			if(GetGoldenAgeProgressMeter() >= GetGoldenAgeProgressThreshold())
@@ -16703,13 +16806,23 @@ void CvPlayer::setEndTurn(bool bNewValue)
 		}
 		else
 			setAutoMoves(false);
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		doTurnEnd();
+#endif
 	}
 	else
 	{
 		// This check is here for the AI.  Currently, the setEndTurn(true) never seems to get called for AI players, the automoves are just set directly
 		// Why is this?  It would be great if all players were processed the same.
 		if(!bNewValue && isAutoMoves())
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		{
 			setAutoMoves(false);
+			doTurnEnd();
+		}
+#else
+			setAutoMoves(false);
+#endif
 	}
 }
 
@@ -20278,7 +20391,11 @@ void CvPlayer::doResearch()
 		// Force player to pick Research if he doesn't have anything assigned
 		if(GetPlayerTechs()->GetCurrentResearch() == NO_TECH)
 		{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			if (GetID() == GC.getGame().getActivePlayer() && getCachedScienceT100ForThisTurn() > 0)
+#else
 			if(GetID() == GC.getGame().getActivePlayer() && GetScienceTimes100() > 0)
+#endif
 			{
 				chooseTech();
 			}
@@ -20294,7 +20411,11 @@ void CvPlayer::doResearch()
 		TechTypes eCurrentTech = GetPlayerTechs()->GetCurrentResearch();
 		if(eCurrentTech == NO_TECH)
 		{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			int iOverflow = (getCachedScienceT100ForThisTurn()) / MAX(1, calculateResearchModifier(eCurrentTech));
+#else
 			int iOverflow = (GetScienceTimes100()) / std::max(1, calculateResearchModifier(eCurrentTech));
+#endif
 			changeOverflowResearchTimes100(iOverflow);
 		}
 		else
@@ -20303,9 +20424,15 @@ void CvPlayer::doResearch()
 			setOverflowResearch(0);
 			if(GET_TEAM(getTeam()).GetTeamTechs())
 			{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				int iBeakersTowardsTechTimes100 = getCachedScienceT100ForThisTurn() + iOverflowResearch;
+				GET_TEAM(getTeam()).GetTeamTechs()->ChangeResearchProgressTimes100(eCurrentTech, iBeakersTowardsTechTimes100, GetID());
+				UpdateResearchAgreements(getCachedScienceT100ForThisTurn() / 100);
+#else
 				int iBeakersTowardsTechTimes100 = GetScienceTimes100() + iOverflowResearch;
 				GET_TEAM(getTeam()).GetTeamTechs()->ChangeResearchProgressTimes100(eCurrentTech, iBeakersTowardsTechTimes100, GetID());
 				UpdateResearchAgreements(GetScienceTimes100() / 100);
+#endif
 			}
 		}
 
