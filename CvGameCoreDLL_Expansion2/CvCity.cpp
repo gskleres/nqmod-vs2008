@@ -11546,21 +11546,21 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 								else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
 									iTemp *= 2;
 								iTotal += iTemp;
-								int iTemp = GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD];
+								iTemp = GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD];
 								if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
 									iTemp *= 3;
 								else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
 									iTemp *= 2;
 								iTotal += iTemp;
-								int iTemp = GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE];
+								iTemp = GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE];
 								if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
 									iTemp *= 3;
 								iTotal += iTemp;
-								int iTemp = GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE];
+								iTemp = GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE];
 								if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
 									iTemp *= 3;
 								iTotal += iTemp;
-								int iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
+								iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
 								if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
 									iTemp *= 3;
 								iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / iYieldValueSum;
@@ -11823,21 +11823,21 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 										else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
 											iTemp *= 2;
 										iTotal += iTemp;
-										int iTemp = GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD];
+										iTemp = GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD];
 										if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
 											iTemp *= 3;
 										else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
 											iTemp *= 2;
 										iTotal += iTemp;
-										int iTemp = GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE];
+										iTemp = GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE];
 										if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
 											iTemp *= 3;
 										iTotal += iTemp;
-										int iTemp = GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE];
+										iTemp = GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE];
 										if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
 											iTemp *= 3;
 										iTotal += iTemp;
-										int iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
+										iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
 										if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
 											iTemp *= 3;
 										iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / (iYieldValueSum * NUM_DIRECTION_TYPES);
