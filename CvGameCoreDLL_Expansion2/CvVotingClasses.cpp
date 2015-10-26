@@ -8062,7 +8062,11 @@ void CvLeagueAI::CancelVoteCommitmentsToPlayer(PlayerTypes eToPlayer)
 		if (it->eToPlayer == eToPlayer)
 		{
 			m_vVoteCommitmentList.erase(it);
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			--it;
+#else
 			it--;
+#endif
 		}
 	}
 }
@@ -8106,7 +8110,11 @@ void CvLeagueAI::DoVoteCommitments(CvLeague* pLeague)
 		if (bProcessed)
 		{
 			m_vVoteCommitmentList.erase(it);
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			--it;
+#else
 			it--;
+#endif
 		}
 	}
 }
