@@ -7816,7 +7816,9 @@ void CvGame::doTurn()
 
 	updateScore();
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	m_kGameDeals.DoTurn();
+#endif
 
 	for(iI = 0; iI < MAX_TEAMS; iI++)
 	{
@@ -7841,10 +7843,14 @@ void CvGame::doTurn()
 #endif
 	CvBarbarians::DoUnits();
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	GetGameReligions()->DoTurn();
+#endif
 	GetGameTrade()->DoTurn();
 	GetGameLeagues()->DoTurn();
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	GetGameCulture()->DoTurn();
+#endif
 
 	GC.GetEngineUserInterface()->setCanEndTurn(false);
 	GC.GetEngineUserInterface()->setHasMovedUnit(false);

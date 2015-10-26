@@ -153,7 +153,7 @@ public:
 	void doTurn();
 	void doTurnPostDiplomacy();
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	void doTurnEnd();
+	void cacheYields();
 #endif
 	void doTurnUnits();
 	void SetAllUnitsUnprocessed();

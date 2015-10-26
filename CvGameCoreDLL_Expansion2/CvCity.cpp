@@ -1593,19 +1593,6 @@ void CvCity::cacheYieldsForTurn()
 	// Faith
 	//setCachedYieldT100ForThisTurn(YIELD_FAITH, GetFaithPerTurn());
 }
-
-void CvCity::doTurnEnd()
-{
-	GetCityCitizens()->DoSpecialists();
-
-	doGrowth();
-
-	doProduction(!doCheckProduction());
-
-	doDecay();
-
-	ChangeJONSCultureStored(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
-}
 #endif
 
 //	--------------------------------------------------------------------------------
@@ -1649,11 +1636,11 @@ void CvCity::doTurn()
 
 	GetCityStrategyAI()->DoTurn();
 
-	GetCityCitizens()->DoTurn();
-
 #ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	AI_doTurn();
+	GetCityCitizens()->DoTurn();
 #endif
+
+	AI_doTurn();
 
 	bool bRazed = DoRazingTurn();
 
@@ -1669,7 +1656,7 @@ void CvCity::doTurn()
 				AI_chooseProduction(false /*bInterruptWonders*/);
 			}
 		}
-#else
+#endif
 		bool bAllowNoProduction = !doCheckProduction();
 
 		doGrowth();
@@ -1679,7 +1666,6 @@ void CvCity::doTurn()
 		doProduction(bAllowNoProduction);
 
 		doDecay();
-#endif
 
 		doMeltdown();
 
@@ -1705,19 +1691,25 @@ void CvCity::doTurn()
 		// Following function also looks at WLTKD stuff
 		DoTestResourceDemanded();
 
-#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		// Culture accumulation
 		if(getJONSCulturePerTurn() > 0)
 		{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			ChangeJONSCultureStored(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
+#else
 			ChangeJONSCultureStored(getJONSCulturePerTurn());
-		}
 #endif
+		}
 
 		// Enough Culture to acquire a new Plot?
 		if(GetJONSCultureStored() >= GetJONSCultureThreshold())
 		{
 			DoJONSCultureLevelIncrease();
 		}
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		GetCityCitizens()->DoTurn();
+#endif
 
 		// Resource Demanded Counter
 		if(GetResourceDemandedCountdown() > 0)

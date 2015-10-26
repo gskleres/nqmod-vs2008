@@ -1199,7 +1199,12 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 	// Cancel Trade Deals, RAs, diplomats
 	if(!isBarbarian())
 	{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		// Because second team is the "to" team, so cancel all of their deals to this team first
+		GC.getGame().GetGameDeals()->DoCancelDealsBetweenTeams(eTeam, GetID());
+#else
 		GC.getGame().GetGameDeals()->DoCancelDealsBetweenTeams(GetID(), eTeam);
+#endif
 		CloseEmbassyAtTeam(eTeam);
 		GET_TEAM(eTeam).CloseEmbassyAtTeam(m_eID);
 		CancelResearchAgreement(eTeam);

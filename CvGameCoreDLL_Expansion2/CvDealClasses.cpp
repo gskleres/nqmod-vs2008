@@ -1984,6 +1984,9 @@ void CvGameDeals::Init()
 	m_ProposedDeals.clear();
 	m_CurrentDeals.clear();
 	m_HistoricalDeals.clear();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	m_CurrentlyEndingDeals.clear();
+#endif
 }
 
 /// Save off a new deal that has been agreed to
@@ -2351,6 +2354,144 @@ void CvGameDeals::SetTempDeal(CvDeal* pDeal)
 }
 
 /// Update deals for the start of a new turn
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
+{
+	if (eForPlayer == NO_PLAYER || eForPlayer == BARBARIAN_PLAYER)
+		return;
+
+	DealList::iterator it;
+	TradedItemList::iterator itemIter;
+	PlayerTypes eFromPlayer = NO_PLAYER;
+	PlayerTypes eToPlayer = NO_PLAYER;
+
+	bool bSomethingChanged = false;
+
+	int iGameTurn = GC.getGame().getGameTurn();
+
+	if (m_CurrentlyEndingDeals.size() > 0)
+	{
+		for (it = m_CurrentlyEndingDeals.begin(); it != m_CurrentlyEndingDeals.end(); ++it)
+		{
+			for (itemIter = it->m_TradedItems.begin(); itemIter != it->m_TradedItems.end(); ++itemIter)
+			{
+				eFromPlayer = itemIter->m_eFromPlayer;
+				eToPlayer = it->GetOtherPlayer(eFromPlayer);
+				if (eToPlayer == eForPlayer && itemIter->m_eItemType != TRADE_ITEM_RESEARCH_AGREEMENT) // Research agreements are the only items processed at the same time for both players
+				{
+					bSomethingChanged = true;
+
+					DoEndTradedItem(&*itemIter, eToPlayer, it->m_bDealCancelled);
+				}
+			}
+		}
+	}
+
+	if (m_CurrentDeals.size() > 0)
+	{
+		// Check to see if any of our TradeItems in any of our Deals expire this turn
+		for (it = m_CurrentDeals.begin(); it != m_CurrentDeals.end(); ++it)
+		{
+			for (itemIter = it->m_TradedItems.begin(); itemIter != it->m_TradedItems.end(); ++itemIter)
+			{
+				eFromPlayer = itemIter->m_eFromPlayer;
+				eToPlayer = it->GetOtherPlayer(eFromPlayer);
+				if (eToPlayer == eForPlayer || itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT)
+				{
+					int iFinalTurn = itemIter->m_iFinalTurn;
+					CvAssertMsg(iFinalTurn >= -1, "DEAL: Trade item has a negative final turn.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
+					CvAssertMsg(iFinalTurn < GC.getGame().getEstimateEndTurn() * 2, "DEAL: Trade item has a final turn way beyond the end of the game.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
+					CvAssertMsg(itemIter->m_iDuration < GC.getGame().getEstimateEndTurn() * 2, "DEAL: Trade item has a crazy long duration (probably invalid).  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
+					CvAssertMsg(itemIter->m_eFromPlayer == it->m_eFromPlayer || itemIter->m_eFromPlayer == it->m_eToPlayer, "DEAL: Processing turn for a deal that has an item for a player that's not actually in this deal!  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
+
+					if (iFinalTurn == iGameTurn)
+					{
+						bSomethingChanged = true;
+
+						DoEndTradedItem(&*itemIter, eToPlayer, false);
+					}
+				}
+			}
+		}
+
+		// check to see if one of our deals in no longer valid
+		for (it = m_CurrentDeals.begin(); it != m_CurrentDeals.end(); ++it)
+		{
+			bool bInvalidDeal = false;
+			bool bUnbreakable = false;
+			for (itemIter = it->m_TradedItems.begin(); itemIter != it->m_TradedItems.end(); ++itemIter)
+			{
+				eFromPlayer = itemIter->m_eFromPlayer;
+				if (it->GetOtherPlayer(eFromPlayer) == eForPlayer)
+				{
+					int iFinalTurn = itemIter->m_iFinalTurn;
+					if (iFinalTurn != iGameTurn)  // if this was the last turn the deal was ending anyways
+					{
+						// check to see if we are negative on resource or gold
+						bool bHaveEnoughGold = true;
+						bool bHaveEnoughResource = true;
+						//if (itemIter->m_eItemType == TRADE_ITEM_GOLD_PER_TURN)
+						//{
+						//	int iGoldPerTurn = itemIter->m_iData1;
+						//	bHaveEnoughGold = GET_PLAYER(eFromPlayer).GetTreasury()->GetGold() > iGoldPerTurn;
+						//}
+						// Resource
+						/*else */
+						if (itemIter->m_eItemType == TRADE_ITEM_RESOURCES)
+						{
+							ResourceTypes eResource = (ResourceTypes)itemIter->m_iData1;
+							//int iResourceQuantity = itemIter->m_iData2;
+							bHaveEnoughResource = GET_PLAYER(eFromPlayer).getNumResourceTotal(eResource) >= 0;
+						}
+						else if (itemIter->m_eItemType == TRADE_ITEM_PEACE_TREATY)
+						{
+							bUnbreakable = true;
+							break;
+						}
+
+						if (!bHaveEnoughGold || !bHaveEnoughResource)
+						{
+							bInvalidDeal = true;
+						}
+					}
+				}
+			}
+
+			if (!bUnbreakable && bInvalidDeal)
+			{
+				bSomethingChanged = true;
+				it->m_iFinalTurn = iGameTurn;
+				it->m_bDealCancelled = true;
+
+				for (itemIter = it->m_TradedItems.begin(); itemIter != it->m_TradedItems.end(); ++itemIter)
+				{
+					// Cancel individual items
+					itemIter->m_iFinalTurn = GC.getGame().getGameTurn();
+
+					eFromPlayer = itemIter->m_eFromPlayer;
+					eToPlayer = it->GetOtherPlayer(eFromPlayer);
+					if (eToPlayer == eForPlayer || itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT)
+					{
+						DoEndTradedItem(&*itemIter, eToPlayer, true);
+					}
+				}
+			}
+		}
+	}
+
+	if (bSomethingChanged)
+	{
+		// Update UI if we were involved in the deal
+		PlayerTypes eActivePlayer = GC.getGame().getActivePlayer();
+		if (eForPlayer == eActivePlayer || eFromPlayer == eActivePlayer)
+		{
+			GC.GetEngineUserInterface()->setDirty(GameData_DIRTY_BIT, true);
+		}
+	}
+
+	DoUpdateCurrentDealsList();
+}
+#else
 void CvGameDeals::DoTurn()
 {
 	DealList::iterator it;
@@ -2466,6 +2607,7 @@ void CvGameDeals::DoTurn()
 		DoUpdateCurrentDealsList();
 	}
 }
+#endif
 
 
 PlayerTypes CvGameDeals::HasMadeProposal(PlayerTypes ePlayer)
@@ -2528,7 +2670,15 @@ void CvGameDeals::DoUpdateCurrentDealsList()
 	m_CurrentDeals.clear();
 	for(it = tempDeals.begin(); it != tempDeals.end(); ++it)
 	{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		if (it->m_iFinalTurn == GC.getGame().getGameTurn())
+		{
+			m_CurrentlyEndingDeals.push_back(*it);
+		}
+		else if (it->m_iFinalTurn < GC.getGame().getGameTurn())
+#else
 		if(it->m_iFinalTurn <= GC.getGame().getGameTurn())
+#endif
 		{
 			m_HistoricalDeals.push_back(*it);
 		}
@@ -2589,6 +2739,9 @@ void CvGameDeals::DoCancelDealsBetweenPlayers(PlayerTypes eFromPlayer, PlayerTyp
 
 	if(m_CurrentDeals.size() > 0)
 	{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		bool bOtherPlayerCanRespond = !GET_PLAYER(eFromPlayer).isEndTurn();
+#endif
 		bool bSomethingChanged = false;
 
 		// Copy the deals into a temporary container
@@ -2606,6 +2759,9 @@ void CvGameDeals::DoCancelDealsBetweenPlayers(PlayerTypes eFromPlayer, PlayerTyp
 			{
 				// Change final turn
 				it->m_iFinalTurn = GC.getGame().getGameTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				it->m_bDealCancelled = true;
+#endif
 
 				// Cancel individual items
 				TradedItemList::iterator itemIter;
@@ -2615,11 +2771,26 @@ void CvGameDeals::DoCancelDealsBetweenPlayers(PlayerTypes eFromPlayer, PlayerTyp
 
 					itemIter->m_iFinalTurn = GC.getGame().getGameTurn();
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+					PlayerTypes eItemFromPlayer = itemIter->m_eFromPlayer;
+					PlayerTypes eItemToPlayer = it->GetOtherPlayer(eItemFromPlayer);
+
+					if (eItemToPlayer == eToPlayer || bOtherPlayerCanRespond || itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT)
+					{
+						DoEndTradedItem(&*itemIter, eItemToPlayer, true);
+					}
+#else
 					eFromPlayer = itemIter->m_eFromPlayer;
 					eToPlayer = it->GetOtherPlayer(eFromPlayer);
 
 					DoEndTradedItem(&*itemIter, eToPlayer, true);
+#endif
 				}
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				if (!bOtherPlayerCanRespond)
+					m_CurrentlyEndingDeals.push_back(*it);
+				else
+#endif
 				m_HistoricalDeals.push_back(*it);
 			}
 			else
@@ -2813,12 +2984,22 @@ void CvGameDeals::DoEndTradedItem(CvTradedItem* pItem, PlayerTypes eToPlayer, bo
 		if(!GET_TEAM(eFromTeam).isAtWar(eToTeam) && !bCancelled)
 		{
 			// Beaker boost = ((sum of both players' beakers over term of RA) / 2) / 3) * (median tech percentage rate)
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 			CvTeam& kTeam = GET_TEAM(toPlayer.getTeam());
+#endif
 			int iToPlayerBeakers = toPlayer.GetResearchAgreementCounter(eFromPlayer);
 			int iFromPlayerBeakers = fromPlayer.GetResearchAgreementCounter(eToPlayer);
+#ifdef AUI_DEAL_FIX_ACCURATE_EARLYGAME_RESEARCH_AGREEMENT_YIELDS
+			int iBeakersBonus = MIN(iToPlayerBeakers, iFromPlayerBeakers) * toPlayer.GetMedianTechPercentage();
+			iBeakersBonus /= 100 * GC.getRESEARCH_AGREEMENT_BOOST_DIVISOR();
+#else
 			int iBeakersBonus = min(iToPlayerBeakers, iFromPlayerBeakers) / GC.getRESEARCH_AGREEMENT_BOOST_DIVISOR(); //one (third) of minimum contribution
 			iBeakersBonus = (iBeakersBonus * toPlayer.GetMedianTechPercentage()) / 100;
+#endif
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			toPlayer.changeOverflowResearch(iBeakersBonus);
+#else
 			TechTypes eCurrentTech = toPlayer.GetPlayerTechs()->GetCurrentResearch();
 			if(eCurrentTech == NO_TECH)
 			{
@@ -2828,6 +3009,7 @@ void CvGameDeals::DoEndTradedItem(CvTradedItem* pItem, PlayerTypes eToPlayer, bo
 			{
 				kTeam.GetTeamTechs()->ChangeResearchProgress(eCurrentTech, iBeakersBonus, eToPlayer);
 			}
+#endif
 
 			pNotifications = toPlayer.GetNotifications();
 			if(pNotifications)
@@ -2925,7 +3107,9 @@ void CvGameDeals::DoEndTradedItem(CvTradedItem* pItem, PlayerTypes eToPlayer, bo
 	else if(pItem->m_eItemType == TRADE_ITEM_VOTE_COMMITMENT)
 	{
 		fromPlayer.GetLeagueAI()->CancelVoteCommitmentsToPlayer(eToPlayer);
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		toPlayer.GetLeagueAI()->CancelVoteCommitmentsToPlayer(eFromPlayer);
+#endif
 	}
 }
 
@@ -3376,6 +3560,16 @@ FDataStream& OldLoad(FDataStream& loadFrom, CvGameDeals& writeTo)
 		writeTo.m_HistoricalDeals.push_back(tempItem);
 	}
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	writeTo.m_CurrentlyEndingDeals.clear();
+	loadFrom >> iEntriesToRead;
+	for (int iI = 0; iI < iEntriesToRead; iI++)
+	{
+		loadFrom = OldLoad(loadFrom, tempItem);
+		writeTo.m_CurrentlyEndingDeals.push_back(tempItem);
+	}
+#endif
+
 	return loadFrom;
 }
 
@@ -3412,6 +3606,16 @@ FDataStream& operator>>(FDataStream& loadFrom, CvGameDeals& writeTo)
 		writeTo.m_HistoricalDeals.push_back(tempItem);
 	}
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	writeTo.m_CurrentlyEndingDeals.clear();
+	loadFrom >> iEntriesToRead;
+	for (int iI = 0; iI < iEntriesToRead; iI++)
+	{
+		loadFrom >> tempItem;
+		writeTo.m_CurrentlyEndingDeals.push_back(tempItem);
+	}
+#endif
+
 	return loadFrom;
 }
 
@@ -3437,6 +3641,14 @@ FDataStream& operator<<(FDataStream& saveTo, const CvGameDeals& readFrom)
 	{
 		saveTo << *it;
 	}
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	saveTo << readFrom.m_CurrentlyEndingDeals.size();
+	for (it = readFrom.m_CurrentlyEndingDeals.begin(); it != readFrom.m_CurrentlyEndingDeals.end(); ++it)
+	{
+		saveTo << *it;
+	}
+#endif
 
 	return saveTo;
 }

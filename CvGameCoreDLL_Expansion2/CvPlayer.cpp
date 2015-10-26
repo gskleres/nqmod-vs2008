@@ -4188,6 +4188,10 @@ void CvPlayer::doTurn()
 
 	AI_doTurnPre();
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	cacheYields();
+#endif
+
 	if(getCultureBombTimer() > 0)
 		changeCultureBombTimer(-1);
 
@@ -4208,6 +4212,12 @@ void CvPlayer::doTurn()
 	{
 		ChangeNumMayaBoosts(1);
 	}
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	GetCulture()->DoTurn();
+
+	GC.getGame().GetGameDeals()->DoTurn(GetID());
+#endif
 
 	bool bHasActiveDiploRequest = false;
 	if(isAlive())
@@ -4305,10 +4315,8 @@ void CvPlayer::doTurnPostDiplomacy()
 		ChangeTourismBonusTurns(-1);
 	}
 
-#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	// Golden Age
 	DoProcessGoldenAge();
-#endif
 
 	// Great People gifts from Allied City States (if we have that policy)
 	DoGreatPeopleSpawnTurn();
@@ -4321,12 +4329,14 @@ void CvPlayer::doTurnPostDiplomacy()
 			int iLoop = 0;
 			for(CvCity* pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
 			{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				kGame.GetGameReligions()->SpreadReligionToOneCity(pLoopCity);
+#endif
 				pLoopCity->doTurn();
 			}
 		}
 	}
 
-#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	// Gold
 	GetTreasury()->DoGold();
 
@@ -4337,13 +4347,20 @@ void CvPlayer::doTurnPostDiplomacy()
 	if(kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED))
 	{
 		if(getJONSCulture() < getNextPolicyCost())
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			changeJONSCulture(getCachedJONSCultureForThisTurn());
+#else
 			changeJONSCulture(GetTotalJONSCulturePerTurn());
+#endif
 	}
 	else
 	{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		changeJONSCulture(getCachedJONSCultureForThisTurn());
+#else
 		changeJONSCulture(GetTotalJONSCulturePerTurn());
-	}
 #endif
+	}
 
 	// Compute the cost of policies for this turn
 	DoUpdateNextPolicyCost();
@@ -4406,10 +4423,8 @@ void CvPlayer::doTurnPostDiplomacy()
 		GetPlayerPolicies()->DoPolicyAI();
 	}
 
-#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	// Science
 	doResearch();
-#endif
 
 	GetEspionage()->DoTurn();
 
@@ -4437,10 +4452,8 @@ void CvPlayer::doTurnPostDiplomacy()
 }
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-void CvPlayer::doTurnEnd()
+void CvPlayer::cacheYields()
 {
-	CvGame& kGame = GC.getGame();
-
 	// Cache Happiness
 	m_iCachedExcessHappinessForThisTurn = GetExcessHappiness();
 
@@ -4462,48 +4475,6 @@ void CvPlayer::doTurnEnd()
 
 	// Cache Faith
 	m_iCachedFaithForThisTurn = GetTotalFaithPerTurn();
-
-	// Golden Age
-	DoProcessGoldenAge();
-
-	// Do turn for all Cities
-	{
-		AI_PERF_FORMAT("AI-perf.csv", ("Do City Turns, Turn %03d, %s", GC.getGame().getElapsedGameTurns(), getCivilizationShortDescription()));
-		if (getNumCities() > 0)
-		{
-			int iLoop = 0;
-			for (CvCity* pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
-			{
-				pLoopCity->doTurnEnd();
-			}
-		}
-	}
-
-	// Gold
-	GetTreasury()->DoGold();
-
-	// Culture
-
-	// Prevent exploits in turn timed MP games - no accumulation of culture if player hasn't picked yet
-	GetCulture()->SetLastTurnLifetimeCulture(GetJONSCultureEverGenerated());
-	if (kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED))
-	{
-		if (getJONSCulture() < getNextPolicyCost())
-			changeJONSCulture(getCachedJONSCultureForThisTurn());
-	}
-	else
-	{
-		changeJONSCulture(getCachedJONSCultureForThisTurn());
-	}
-
-	// Science
-	doResearch();
-
-	int iFaithPerTurn = getCachedFaithForThisTurn();
-	if (iFaithPerTurn > 0)
-	{
-		ChangeFaith(iFaithPerTurn);
-	}
 }
 #endif
 
@@ -16806,23 +16777,13 @@ void CvPlayer::setEndTurn(bool bNewValue)
 		}
 		else
 			setAutoMoves(false);
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-		doTurnEnd();
-#endif
 	}
 	else
 	{
 		// This check is here for the AI.  Currently, the setEndTurn(true) never seems to get called for AI players, the automoves are just set directly
 		// Why is this?  It would be great if all players were processed the same.
 		if(!bNewValue && isAutoMoves())
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-		{
 			setAutoMoves(false);
-			doTurnEnd();
-		}
-#else
-			setAutoMoves(false);
-#endif
 	}
 }
 

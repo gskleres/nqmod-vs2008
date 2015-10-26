@@ -133,6 +133,8 @@
 #define AUI_CITY_FIX_DO_CREATE_PUPPET_FREE_COURTHOUSES_KEPT
 /// Fixes the fact that in simultaneous turns multiplayer, barbarians can spawn and then move units in the same turn.
 #define AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
+/// Fixes the bug where a low beaker yield put into an RA would result in an artificually lower beaker reward
+#define AUI_DEAL_FIX_ACCURATE_EARLYGAME_RESEARCH_AGREEMENT_YIELDS
 
 // Observer mode fixes
 /// Observers will see all resources

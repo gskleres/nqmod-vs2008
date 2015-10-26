@@ -247,7 +247,11 @@ public:
 
 	void AddProposedDeal(CvDeal kDeal);
 	bool FinalizeDeal(PlayerTypes eFromPlayer, PlayerTypes eToPlayer, bool bAccepted);
-	void DoTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void DoTurn(PlayerTypes eForPlayer);
+#else
+	void DoTurn();	
+#endif
 
 	void DoUpdateCurrentDealsList();
 
@@ -281,6 +285,9 @@ public:
 	DealList m_ProposedDeals;
 	DealList m_CurrentDeals;
 	DealList m_HistoricalDeals;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	DealList m_CurrentlyEndingDeals;
+#endif
 
 protected:
 	void LogDealComplete(CvDeal* pDeal);
