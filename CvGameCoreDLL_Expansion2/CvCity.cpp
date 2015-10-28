@@ -11438,7 +11438,11 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 
 #if defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS) || defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS)
 	int iYieldValueSum = GC.getAI_CITIZEN_VALUE_FOOD() + GC.getAI_CITIZEN_VALUE_PRODUCTION() + GC.getAI_CITIZEN_VALUE_GOLD() + GC.getAI_CITIZEN_VALUE_SCIENCE() + GC.getAI_CITIZEN_VALUE_CULTURE() + GC.getAI_CITIZEN_VALUE_FAITH();
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_CONSIDER_CITY_FOCUS
 	CityAIFocusTypes eFocus = GetCityCitizens()->GetFocusType();
+#else
+	CityAIFocusTypes eFocus = NO_CITY_AI_FOCUS_TYPE;
+#endif
 #endif
 #ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
 	int iLowestBuyCost = MAX_INT;
@@ -11707,7 +11711,11 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 
 						if (pAdjacentPlot != NULL)
 						{
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+							if (pAdjacentPlot->getOwner() == NO_PLAYER && pAdjacentPlot->isRevealed(getTeam()))
+#else
 							if (pAdjacentPlot->getOwner() == NO_PLAYER)
+#endif
 							{
 								int iPlotDistance = plotDistance(getX(), getY(), pAdjacentPlot->getX(), pAdjacentPlot->getY());
 #ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS

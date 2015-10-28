@@ -291,6 +291,10 @@
 #define AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 /// Weights the yield contribution to a plot's influence cost by the value of the yield to citizen automation.
 #define AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+#if defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS) || defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS)
+/// City focus is considered when the city governor weighs the values of certain yields over others
+#define AUI_CITY_GET_BUYABLE_PLOT_LIST_CONSIDER_CITY_FOCUS
+#endif
 /// Actually makes passive acquisition of tiles not adjacent to an already owned tile impossible
 #define AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
 /// Delnar: Moved Fruitstrike's code to prioritize plots with the lowest gold purchasing cost in the case of ties into the end of GetBuyablePlotList() so that plots will still be randomly decided if their gold purchasing costs are the same (instead of prioritizing Northeastern plots)
