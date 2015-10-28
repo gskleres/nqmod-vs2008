@@ -44,7 +44,11 @@ CvTradedItem::CvTradedItem()
 {
 	m_eItemType = TRADE_ITEM_NONE;
 	m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	m_iTurnsRemaining = -1;
+#else
 	m_iFinalTurn = 0;
+#endif
 	m_iData1 = 0;
 	m_iData2 = 0;
 	m_iData3 = 0;
@@ -64,14 +68,22 @@ bool CvTradedItem::operator==(const CvTradedItem& rhs) const
 			m_bFlag1 == rhs.m_bFlag1 &&
 	        m_eFromPlayer == rhs.m_eFromPlayer &&
 	        m_iDuration == rhs.m_iDuration &&
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			m_iTurnsRemaining == rhs.m_iTurnsRemaining);
+#else
 	        m_iFinalTurn == rhs.m_iFinalTurn);
+#endif
 }
 
 FDataStream& OldLoad(FDataStream& loadFrom, CvTradedItem& writeTo)
 {
 	loadFrom >> writeTo.m_eItemType;
 	loadFrom >> writeTo.m_iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	loadFrom >> writeTo.m_iTurnsRemaining;
+#else
 	loadFrom >> writeTo.m_iFinalTurn;
+#endif
 	loadFrom >> writeTo.m_iData1;
 	loadFrom >> writeTo.m_iData2;
 	loadFrom >> writeTo.m_eFromPlayer;
@@ -87,7 +99,11 @@ FDataStream& operator>>(FDataStream& loadFrom, CvTradedItem& writeTo)
 	loadFrom >> uiVersion;
 	loadFrom >> writeTo.m_eItemType;
 	loadFrom >> writeTo.m_iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	loadFrom >> writeTo.m_iTurnsRemaining;
+#else
 	loadFrom >> writeTo.m_iFinalTurn;
+#endif
 	loadFrom >> writeTo.m_iData1;
 	loadFrom >> writeTo.m_iData2;
 	if (uiVersion >= 2)
@@ -113,7 +129,11 @@ FDataStream& operator<<(FDataStream& saveTo, const CvTradedItem& readFrom)
 	saveTo << uiVersion;
 	saveTo << readFrom.m_eItemType;
 	saveTo << readFrom.m_iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	saveTo << readFrom.m_iTurnsRemaining;
+#else
 	saveTo << readFrom.m_iFinalTurn;
+#endif
 	saveTo << readFrom.m_iData1;
 	saveTo << readFrom.m_iData2;
 	saveTo << readFrom.m_iData3;
@@ -503,20 +523,31 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 		if (pRenewDeal)
 		{
 			// count any that are in the renew deal
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 			int iEndingTurn = -1;
+#endif
 			TradedItemList::iterator it;
 			for(it = pRenewDeal->m_TradedItems.begin(); it != pRenewDeal->m_TradedItems.end(); ++it)
 			{
 				if(it->m_eItemType == TRADE_ITEM_OPEN_BORDERS && (it->m_eFromPlayer == ePlayer || it->m_eFromPlayer == eToPlayer == ePlayer))
 				{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+					if (it->m_iTurnsRemaining == 0)
+					{
+						bIgnoreExistingOP = false;
+					}
+#else
 					iEndingTurn = it->m_iFinalTurn;
+#endif
 				}
 			}
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 			if (iEndingTurn == GC.getGame().getGameTurn())
 			{
 				bIgnoreExistingOP = false;
 			}
+#endif
 		}
 
 		// Already has OP
@@ -923,7 +954,11 @@ void CvDeal::AddGoldTrade(PlayerTypes eFrom, int iAmount)
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_GOLD;
 		item.m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_iData1 = iAmount;
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
@@ -944,7 +979,11 @@ void CvDeal::AddGoldPerTurnTrade(PlayerTypes eFrom, int iAmount, int iDuration)
 		item.m_eItemType = TRADE_ITEM_GOLD_PER_TURN;
 		item.m_iDuration = iDuration;
 		//item.m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_iData1 = iAmount;
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
@@ -965,7 +1004,11 @@ void CvDeal::AddMapTrade(PlayerTypes eFrom)
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_MAPS;
 		item.m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
 	}
@@ -989,7 +1032,11 @@ void CvDeal::AddResourceTrade(PlayerTypes eFrom, ResourceTypes eResource, int iA
 		item.m_eItemType = TRADE_ITEM_RESOURCES;
 		item.m_iDuration = iDuration;
 		//item.m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_iData1 = (int)eResource;
 		item.m_iData2 = iAmount;
 		item.m_eFromPlayer = eFrom;
@@ -1015,7 +1062,11 @@ void CvDeal::AddCityTrade(PlayerTypes eFrom, int iCityID)
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_CITIES;
 		item.m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 
 		item.m_iData1 = x;
 		item.m_iData2 = y;
@@ -1039,7 +1090,11 @@ void CvDeal::AddUnitTrade(PlayerTypes eFrom, int iUnitID)
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_UNITS;
 		item.m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_iData1 = iUnitID;
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
@@ -1081,7 +1136,11 @@ void CvDeal::AddOpenBorders(PlayerTypes eFrom, int iDuration)
 		item.m_eItemType = TRADE_ITEM_OPEN_BORDERS;
 		item.m_iDuration = iDuration;
 		//item.m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
 	}
@@ -1104,7 +1163,11 @@ void CvDeal::AddDefensivePact(PlayerTypes eFrom, int iDuration)
 		item.m_eItemType = TRADE_ITEM_DEFENSIVE_PACT;
 		item.m_iDuration = iDuration;
 		//item.m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
 	}
@@ -1127,7 +1190,11 @@ void CvDeal::AddResearchAgreement(PlayerTypes eFrom, int iDuration)
 		item.m_eItemType = TRADE_ITEM_RESEARCH_AGREEMENT;
 		item.m_iDuration = iDuration;
 		//item.m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
 	}
@@ -1150,7 +1217,11 @@ void CvDeal::AddTradeAgreement(PlayerTypes eFrom, int iDuration)
 		item.m_eItemType = TRADE_ITEM_TRADE_AGREEMENT;
 		item.m_iDuration = iDuration;
 		//item.m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
 	}
@@ -1168,7 +1239,11 @@ void CvDeal::AddPermamentAlliance()
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_PERMANENT_ALLIANCE;
 		item.m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		m_TradedItems.push_back(item);
 	}
 //	else
@@ -1187,7 +1262,11 @@ void CvDeal::AddSurrender(PlayerTypes eFrom)
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_SURRENDER;
 		item.m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
 	}
@@ -1205,7 +1284,11 @@ void CvDeal::AddTruce()
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_TRUCE;
 		item.m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		m_TradedItems.push_back(item);
 	}
 //	else
@@ -1224,7 +1307,11 @@ void CvDeal::AddPeaceTreaty(PlayerTypes eFrom, int iDuration)
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_PEACE_TREATY;
 		item.m_iDuration = iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
 	}
@@ -1244,7 +1331,11 @@ void CvDeal::AddThirdPartyPeace(PlayerTypes eFrom, TeamTypes eThirdPartyTeam, in
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_THIRD_PARTY_PEACE;
 		item.m_iDuration = iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_iData1 = eThirdPartyTeam;
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
@@ -1265,7 +1356,11 @@ void CvDeal::AddThirdPartyWar(PlayerTypes eFrom, TeamTypes eThirdPartyTeam)
 		CvTradedItem item;
 		item.m_eItemType = TRADE_ITEM_THIRD_PARTY_WAR;
 		item.m_iDuration = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_iData1 = eThirdPartyTeam;
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
@@ -1289,7 +1384,11 @@ void CvDeal::AddThirdPartyEmbargo(PlayerTypes eFrom, PlayerTypes eThirdParty, in
 		item.m_eItemType = TRADE_ITEM_THIRD_PARTY_EMBARGO;
 		item.m_iDuration = iDuration;
 		//item.m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		item.m_iTurnsRemaining = -1;
+#else
 		item.m_iFinalTurn = -1;
+#endif
 		item.m_iData1 = eThirdParty;
 		item.m_eFromPlayer = eFrom;
 		m_TradedItems.push_back(item);
@@ -1414,7 +1513,11 @@ bool CvDeal::ChangeGoldPerTurnTrade(PlayerTypes eFrom, int iNewAmount, int iDura
 			{
 				it->m_iData1 = iNewAmount;
 				it->m_iDuration = iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				it->m_iTurnsRemaining = iDuration;
+#else
 				it->m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#endif
 				return true;
 			}
 		}
@@ -1454,7 +1557,11 @@ bool CvDeal::ChangeResourceTrade(PlayerTypes eFrom, ResourceTypes eResource, int
 			{
 				it->m_iData2 = iAmount;
 				it->m_iDuration = iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				it->m_iTurnsRemaining = iDuration;
+#else
 				it->m_iFinalTurn = iDuration + GC.getGame().getGameTurn();
+#endif
 				return true;
 			}
 		}
@@ -2083,11 +2190,19 @@ bool CvGameDeals::FinalizeDeal(PlayerTypes eFromPlayer, PlayerTypes eToPlayer, b
 				// Calculate duration
 				if(it->m_iDuration > 0)
 				{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+					it->m_iTurnsRemaining = it->m_iDuration;
+#else
 					it->m_iFinalTurn = it->m_iDuration + GC.getGame().getGameTurn();
+#endif
 					if(it->m_iDuration > iLongestDuration)
 					{
 						iLongestDuration = it->m_iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+						iLatestItemLastTurn = it->m_iDuration + GC.getGame().getGameTurn();
+#else
 						iLatestItemLastTurn = it->m_iFinalTurn;
+#endif
 					}
 				}
 			}
@@ -2396,15 +2511,15 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 			{
 				eFromPlayer = itemIter->m_eFromPlayer;
 				eToPlayer = it->GetOtherPlayer(eFromPlayer);
-				if (eToPlayer == eForPlayer || itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT)
+				if (eToPlayer == eForPlayer || (itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT && eFromPlayer == eForPlayer))
 				{
-					int iFinalTurn = itemIter->m_iFinalTurn;
-					CvAssertMsg(iFinalTurn >= -1, "DEAL: Trade item has a negative final turn.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
-					CvAssertMsg(iFinalTurn < GC.getGame().getEstimateEndTurn() * 2, "DEAL: Trade item has a final turn way beyond the end of the game.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
+					// Process the item's turns remaining count
+					itemIter->m_iTurnsRemaining -= 1;
+
 					CvAssertMsg(itemIter->m_iDuration < GC.getGame().getEstimateEndTurn() * 2, "DEAL: Trade item has a crazy long duration (probably invalid).  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
 					CvAssertMsg(itemIter->m_eFromPlayer == it->m_eFromPlayer || itemIter->m_eFromPlayer == it->m_eToPlayer, "DEAL: Processing turn for a deal that has an item for a player that's not actually in this deal!  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
 
-					if (iFinalTurn == iGameTurn)
+					if (itemIter->m_iTurnsRemaining == 0)
 					{
 						bSomethingChanged = true;
 
@@ -2422,10 +2537,10 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 			for (itemIter = it->m_TradedItems.begin(); itemIter != it->m_TradedItems.end(); ++itemIter)
 			{
 				eFromPlayer = itemIter->m_eFromPlayer;
-				if (it->GetOtherPlayer(eFromPlayer) == eForPlayer)
+				eToPlayer = it->GetOtherPlayer(eFromPlayer);
+				if (eToPlayer == eForPlayer || (itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT && eFromPlayer == eForPlayer))
 				{
-					int iFinalTurn = itemIter->m_iFinalTurn;
-					if (iFinalTurn != iGameTurn)  // if this was the last turn the deal was ending anyways
+					if (itemIter->m_iTurnsRemaining != 0)  // if this was the last turn the deal was ending anyways
 					{
 						// check to see if we are negative on resource or gold
 						bool bHaveEnoughGold = true;
@@ -2466,14 +2581,12 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 				for (itemIter = it->m_TradedItems.begin(); itemIter != it->m_TradedItems.end(); ++itemIter)
 				{
 					// Cancel individual items
-					itemIter->m_iFinalTurn = GC.getGame().getGameTurn();
+					itemIter->m_iTurnsRemaining = 0;
 
 					eFromPlayer = itemIter->m_eFromPlayer;
 					eToPlayer = it->GetOtherPlayer(eFromPlayer);
-					if (eToPlayer == eForPlayer || itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT)
-					{
-						DoEndTradedItem(&*itemIter, eToPlayer, true);
-					}
+
+					DoEndTradedItem(&*itemIter, eToPlayer, true);
 				}
 			}
 		}
@@ -2489,7 +2602,7 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 		}
 	}
 
-	DoUpdateCurrentDealsList();
+	DoUpdateCurrentDealsList(eForPlayer);
 }
 #else
 void CvGameDeals::DoTurn()
@@ -2653,7 +2766,11 @@ CvDeal* CvGameDeals::GetProposedDeal(PlayerTypes eFromPlayer, PlayerTypes eToPla
 
 
 /// If a deal has actually ended, move it from the current list to the historic list
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvGameDeals::DoUpdateCurrentDealsList(PlayerTypes eForPlayer)
+#else
 void CvGameDeals::DoUpdateCurrentDealsList()
+#endif
 {
 	DealList::iterator it;
 
@@ -2664,6 +2781,13 @@ void CvGameDeals::DoUpdateCurrentDealsList()
 	{
 		tempDeals.push_back(*it);
 	}
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	for (it = m_CurrentlyEndingDeals.begin(); it != m_CurrentlyEndingDeals.end(); ++it)
+	{
+		tempDeals.push_back(*it);
+	}
+	m_CurrentlyEndingDeals.clear();
+#endif
 
 	// Copy them to either current or historical deals based on whether or not they
 	// are still active
@@ -2671,7 +2795,7 @@ void CvGameDeals::DoUpdateCurrentDealsList()
 	for(it = tempDeals.begin(); it != tempDeals.end(); ++it)
 	{
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-		if (it->m_iFinalTurn == GC.getGame().getGameTurn())
+		if (it->m_iFinalTurn == GC.getGame().getGameTurn() && (it->m_eFromPlayer == eForPlayer || it->m_eToPlayer == eForPlayer))
 		{
 			m_CurrentlyEndingDeals.push_back(*it);
 		}
@@ -2769,7 +2893,11 @@ void CvGameDeals::DoCancelDealsBetweenPlayers(PlayerTypes eFromPlayer, PlayerTyp
 				{
 					bSomethingChanged = true;
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+					itemIter->m_iTurnsRemaining = 0;
+#else
 					itemIter->m_iFinalTurn = GC.getGame().getGameTurn();
+#endif
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 					PlayerTypes eItemFromPlayer = itemIter->m_eFromPlayer;
