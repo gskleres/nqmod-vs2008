@@ -282,6 +282,11 @@ void CvGrandStrategyAI::DoTurn()
 {
 	DoGuessOtherPlayersActiveGrandStrategy();
 
+#ifdef AUI_GS_FIX_NO_ACTIVE_GS_FOR_HUMANS
+	if (GetPlayer()->isHuman())
+		return;
+#endif
+
 #ifdef AUI_WARNING_FIXES
 	uint iGrandStrategiesLoop;
 #else

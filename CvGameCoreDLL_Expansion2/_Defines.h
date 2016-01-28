@@ -135,6 +135,8 @@
 #define AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
 /// Fixes the bug where a low beaker yield put into an RA would result in an artificually lower beaker reward
 #define AUI_DEAL_FIX_ACCURATE_EARLYGAME_RESEARCH_AGREEMENT_YIELDS
+/// Automating a unit no longer resets the turn timer (from theCAndeMan)
+#define NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
 
 // Observer mode fixes
 /// Observers will see all resources
@@ -223,6 +225,8 @@
 #endif
 
 // AI fixes that significantly affect MP
+/// Disables the active grand strategy for AIs operating behind human players, the primary effect of which is that puppets don't do as much weird stuff
+#define AUI_GS_FIX_NO_ACTIVE_GS_FOR_HUMANS
 /// Instead of ignoring all military training buildings (eg. stables, kreposts, etc.), puppets will instead nullify the Military Training and Naval flavors
 #define AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_PUPPETS_NULLIFY_BARRACKS
 /// Scales the GetLastTurnWorkerDisbanded() computation to game speed

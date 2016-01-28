@@ -1981,7 +1981,11 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 		ICvUserInterface2* iface = GC.GetEngineUserInterface();
 		if(getElapsedGameTurns() > 0)
 		{
+#ifdef NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
+			if (isLocalPlayer && !gDLL->allAICivsProcessedThisTurn() && allUnitAIProcessed())
+#else
 			if(isLocalPlayer && (!gDLL->allAICivsProcessedThisTurn() || !allUnitAIProcessed()))
+#endif
 			{//the turn timer doesn't doesn't start until all ai processing has been completed for this game turn.
 				resetTurnTimer(true);
 
