@@ -2494,6 +2494,8 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 				eToPlayer = it->GetOtherPlayer(eFromPlayer);
 				if (eToPlayer == eForPlayer && itemIter->m_eItemType != TRADE_ITEM_RESEARCH_AGREEMENT) // Research agreements are the only items processed at the same time for both players
 				{
+					itemIter->m_iTurnsRemaining = 0;
+
 					bSomethingChanged = true;
 
 					DoEndTradedItem(&*itemIter, eToPlayer, it->m_bDealCancelled);
@@ -2514,7 +2516,8 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 				if (eToPlayer == eForPlayer || (itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT && eFromPlayer == eForPlayer))
 				{
 					// Process the item's turns remaining count
-					itemIter->m_iTurnsRemaining -= 1;
+					if (itemIter->m_eItemType != TRADE_ITEM_RESEARCH_AGREEMENT || eFromPlayer != eForPlayer || itemIter->m_iTurnsRemaining == 1)
+						itemIter->m_iTurnsRemaining -= 1;
 
 					CvAssertMsg(itemIter->m_iDuration < GC.getGame().getEstimateEndTurn() * 2, "DEAL: Trade item has a crazy long duration (probably invalid).  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
 					CvAssertMsg(itemIter->m_eFromPlayer == it->m_eFromPlayer || itemIter->m_eFromPlayer == it->m_eToPlayer, "DEAL: Processing turn for a deal that has an item for a player that's not actually in this deal!  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
