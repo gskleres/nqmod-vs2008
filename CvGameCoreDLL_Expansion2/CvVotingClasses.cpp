@@ -6887,6 +6887,9 @@ void CvGameLeagues::DoTurn()
 		// Not yet founded - is it time to start?
 		if (GetNumActiveLeagues() == 0)
 		{
+#ifdef AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+			FStaticVector<PlayerTypes, MAX_MAJOR_CIVS, true> vePossibleFounders;
+#endif
 			// Has any living major civ met every other living major civ?
 			for (int iCiv = 0; iCiv < MAX_MAJOR_CIVS; iCiv++)
 			{
@@ -6913,12 +6916,22 @@ void CvGameLeagues::DoTurn()
 
 						if (bMetEveryone && GC.getGame().countMajorCivsAlive() > 1)
 						{
+#ifdef AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+							vePossibleFounders.push_back(eCiv);
+#else
 							FoundLeague(eCiv);
 							break;
+#endif
 						}
 					}
 				}
 			}
+#ifdef AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+			if (vePossibleFounders.size() > 0)
+			{
+				FoundLeague(vePossibleFounders.at(uint(GC.getGame().getJonRandNum(int(vePossibleFounders.size()), NULL))));
+			}
+#endif
 		}
 		// Already founded - do we want to trigger a special session, or just a normal turn?
 		else
