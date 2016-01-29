@@ -7849,8 +7849,8 @@ void CvGame::doTurn()
 
 #ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	GetGameReligions()->DoTurn();
-#endif
 	GetGameTrade()->DoTurn();
+#endif
 	GetGameLeagues()->DoTurn();
 #ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	GetGameCulture()->DoTurn();

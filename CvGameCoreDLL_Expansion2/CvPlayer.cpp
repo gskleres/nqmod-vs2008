@@ -4214,6 +4214,8 @@ void CvPlayer::doTurn()
 	}
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	GC.getGame().GetGameTrade()->DoTurn(GetID());
+
 	GetCulture()->DoTurn();
 
 	GC.getGame().GetGameDeals()->DoTurn(GetID());

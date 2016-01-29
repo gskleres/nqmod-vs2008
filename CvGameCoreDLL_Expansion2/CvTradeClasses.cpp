@@ -68,10 +68,17 @@ void CvGameTrade::Reset (void)
 
 //	--------------------------------------------------------------------------------
 /// DoTurn
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvGameTrade::DoTurn(PlayerTypes eForPlayer)
+{
+	ResetTechDifference(eForPlayer);
+	BuildTechDifference(eForPlayer);
+#else
 void CvGameTrade::DoTurn (void)
 {
 	ResetTechDifference();
 	BuildTechDifference();
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -1341,6 +1348,25 @@ CvCity* CvGameTrade::GetDestCity(const TradeConnection& kTradeConnection)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvGameTrade::ResetTechDifference(PlayerTypes eForPlayer)
+{
+	if (eForPlayer == NO_PLAYER)
+	{
+		for (uint ui = 0; ui < MAX_MAJOR_CIVS; ui++)
+		{
+			for (uint ui2 = 0; ui2 < MAX_MAJOR_CIVS; ui2++)
+			{
+				m_aaiTechDifference[ui][ui2] = -1; // undefined
+			}
+		}
+	}
+	else
+	{
+		for (uint ui2 = 0; ui2 < MAX_MAJOR_CIVS; ui2++)
+		{
+			m_aaiTechDifference[eForPlayer][ui2] = -1; // undefined
+#else
 void CvGameTrade::ResetTechDifference ()
 {
 	for (uint ui = 0; ui < MAX_MAJOR_CIVS; ui++)
@@ -1348,12 +1374,17 @@ void CvGameTrade::ResetTechDifference ()
 		for (uint ui2 = 0; ui2 < MAX_MAJOR_CIVS; ui2++)
 		{
 			m_aaiTechDifference[ui][ui2] = -1; // undefined
+#endif
 		}
 	}
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvGameTrade::BuildTechDifference(PlayerTypes eForPlayer)
+#else
 void CvGameTrade::BuildTechDifference ()
+#endif
 {
 	if(GC.getGame().isOption(GAMEOPTION_NO_SCIENCE))
 	{
@@ -1361,6 +1392,86 @@ void CvGameTrade::BuildTechDifference ()
 	}
 
 	// for each major civ
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	if (eForPlayer == NO_PLAYER)
+	{
+		for (uint uiPlayer1 = 0; uiPlayer1 < MAX_MAJOR_CIVS; uiPlayer1++)
+		{
+			PlayerTypes ePlayer1 = (PlayerTypes)uiPlayer1;
+			TeamTypes eTeam1 = GET_PLAYER(ePlayer1).getTeam();
+
+			for (uint uiPlayer2 = 0; uiPlayer2 < MAX_MAJOR_CIVS; uiPlayer2++)
+			{
+				PlayerTypes ePlayer2 = (PlayerTypes)uiPlayer2;
+				TeamTypes eTeam2 = GET_PLAYER(ePlayer2).getTeam();
+
+				if (eTeam1 == eTeam2)
+				{
+					m_aaiTechDifference[uiPlayer1][uiPlayer2] = 0;
+				}
+				else if (!GET_PLAYER(ePlayer1).isAlive() || !GET_PLAYER(ePlayer2).isAlive())
+				{
+					m_aaiTechDifference[uiPlayer1][uiPlayer2] = 0;
+				}
+				else
+				{
+					int iTechDifference = 0;
+
+					CvPlayerTechs* pPlayerTechs = GET_PLAYER(ePlayer1).GetPlayerTechs();
+					for (uint iTechLoop = 0; iTechLoop < pPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+					{
+						TechTypes eTech = (TechTypes)iTechLoop;
+						bool bPlayer1Knows = GET_TEAM(eTeam1).GetTeamTechs()->HasTech(eTech);
+						bool bPlayer2Knows = GET_TEAM(eTeam2).GetTeamTechs()->HasTech(eTech);
+						if (bPlayer2Knows && !bPlayer1Knows)
+						{
+							iTechDifference++;
+						}
+					}
+
+					m_aaiTechDifference[uiPlayer1][uiPlayer2] = iTechDifference;
+				}
+			}
+		}
+	}
+	else
+	{
+		TeamTypes eTeam1 = GET_PLAYER(eForPlayer).getTeam();
+
+		for (uint uiPlayer2 = 0; uiPlayer2 < MAX_MAJOR_CIVS; uiPlayer2++)
+		{
+			PlayerTypes ePlayer2 = (PlayerTypes)uiPlayer2;
+			TeamTypes eTeam2 = GET_PLAYER(ePlayer2).getTeam();
+
+			if (eTeam1 == eTeam2)
+			{
+				m_aaiTechDifference[eForPlayer][uiPlayer2] = 0;
+			}
+			else if (!GET_PLAYER(eForPlayer).isAlive() || !GET_PLAYER(ePlayer2).isAlive())
+			{
+				m_aaiTechDifference[eForPlayer][uiPlayer2] = 0;
+			}
+			else
+			{
+				int iTechDifference = 0;
+
+				CvPlayerTechs* pPlayerTechs = GET_PLAYER(eForPlayer).GetPlayerTechs();
+				for (uint iTechLoop = 0; iTechLoop < pPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+				{
+					TechTypes eTech = (TechTypes)iTechLoop;
+					bool bPlayer1Knows = GET_TEAM(eTeam1).GetTeamTechs()->HasTech(eTech);
+					bool bPlayer2Knows = GET_TEAM(eTeam2).GetTeamTechs()->HasTech(eTech);
+					if (bPlayer2Knows && !bPlayer1Knows)
+					{
+						iTechDifference++;
+					}
+				}
+
+				m_aaiTechDifference[eForPlayer][uiPlayer2] = iTechDifference;
+			}
+		}
+	}
+#else
 	for (uint uiPlayer1 = 0; uiPlayer1 < MAX_MAJOR_CIVS; uiPlayer1++)
 	{
 		PlayerTypes ePlayer1 = (PlayerTypes)uiPlayer1;
@@ -1403,6 +1514,7 @@ void CvGameTrade::BuildTechDifference ()
 			}
 		}
 	}
+#endif
 }
 
 //	--------------------------------------------------------------------------------

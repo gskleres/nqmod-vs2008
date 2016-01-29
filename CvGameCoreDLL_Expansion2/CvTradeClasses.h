@@ -64,7 +64,11 @@ public:
 	void Uninit (void);
 	void Reset (void);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void DoTurn(PlayerTypes eForPlayer = NO_PLAYER);
+#else
 	void DoTurn (void);
+#endif
 
 #ifdef AUI_CONSTIFY
 	bool CanCreateTradeRoute(const CvCity* pOriginCity, const CvCity* pDestCity, DomainTypes eDomain, TradeConnectionType eConnectionType, bool bIgnoreExisting, bool bCheckPath = true) const;
@@ -154,8 +158,13 @@ public:
 	static CvCity* GetOriginCity(const TradeConnection& kTradeConnection);
 	static CvCity* GetDestCity(const TradeConnection& kTradeConnection);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void ResetTechDifference(PlayerTypes eForPlayer = NO_PLAYER);
+	void BuildTechDifference(PlayerTypes eForPlayer = NO_PLAYER);
+#else
 	void ResetTechDifference ();
 	void BuildTechDifference ();
+#endif
 #ifdef AUI_CONSTIFY
 	int GetTechDifference(PlayerTypes ePlayer, PlayerTypes ePlayer2) const;
 #else
