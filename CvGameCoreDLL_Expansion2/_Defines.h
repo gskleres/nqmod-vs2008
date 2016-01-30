@@ -49,8 +49,8 @@
 #define AUI_PERF_LOGGING_FORMATTING_TWEAKS
 /// Slightly increases stopwatch (performance counter) precision by performing the time delta subtraction bit before casting the result as a double
 #define AUI_STOPWATCH_SUBTRACT_BEFORE_DELTA_CAST
-/// Implements the missing iterator typedefs and empty push_back() functions for BaseVector (so it can now work as an interface... because C++ still makes using interfaces harder than it should be)
-#define AUI_FIX_FFASTVECTOR_BASEVECTOR_INTERFACE
+/// Implements the missing iterator typedefs for BaseVector
+#define AUI_FIX_FFASTVECTOR_BASEVECTOR_ITERATOR
 /// Implements the missing erase(iterator) function for FFastVector
 #define AUI_FIX_FFASTVECTOR_ERASE
 /// Functions that called ints for variables used for indexes and choice numbers now call unsigned ints instead

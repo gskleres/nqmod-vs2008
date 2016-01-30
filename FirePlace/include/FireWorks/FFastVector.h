@@ -94,7 +94,7 @@ public:
 
 	typedef BaseVector< T, bPODType > THIS_TYPE;
 
-#ifdef AUI_FIX_FFASTVECTOR_BASEVECTOR_INTERFACE
+#ifdef AUI_FIX_FFASTVECTOR_BASEVECTOR_ITERATOR
 	typedef T* iterator;
 	typedef const T* const_iterator;
 #endif
@@ -109,22 +109,6 @@ public:
 
 
 	~BaseVector(){};
-
-#ifdef AUI_FIX_FFASTVECTOR_BASEVECTOR_INTERFACE
-	/////////////////////////////////////////////////////////////////////////////////////
-	//Add/remove elements
-	/////////////////////////////////////////////////////////////////////////////////////
-	virtual unsigned int push_back(const T& element) = 0;
-
-	//Add n elements to the end of the vector
-	virtual void push_back(const T* pElements, unsigned int uiNum) = 0;
-
-	// remove the element pointed to by 'it' and shrink the list
-	virtual void erase(iterator it) = 0;
-
-	//Add uiNum copies of element to the end of the vector.
-	virtual void push_back_copy(const T& element, unsigned int uiNum) = 0;
-#endif
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	// Functions to delete

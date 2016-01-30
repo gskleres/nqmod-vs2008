@@ -764,7 +764,7 @@ public:
 #endif
 	CvPlot* GetNextBuyablePlot();
 #ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
-	void GetBuyablePlotList(BaseVector<int, true>& aiPlotList);
+	void GetBuyablePlotList(FFastVector<int, true, c_eCiv5GameplayDLL>& aiPlotList);
 #else
 	void GetBuyablePlotList(std::vector<int>& aiPlotList);
 #endif

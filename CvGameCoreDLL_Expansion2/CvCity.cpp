@@ -11386,7 +11386,7 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 
 //	--------------------------------------------------------------------------------
 #ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
-void CvCity::GetBuyablePlotList(BaseVector<int, true>& aiPlotList)
+void CvCity::GetBuyablePlotList(FFastVector<int, true, c_eCiv5GameplayDLL>& aiPlotList)
 #else
 void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 #endif
@@ -11526,8 +11526,6 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 #ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 						if (GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_BONUS)
 						{
-							// undo the bonus - bonus resources only increase yields
-							iInfluenceCost -= iPLOT_INFLUENCE_RESOURCE_COST;
 							if (hexDistance(iDX, iDY) <= NUM_CITY_RINGS)
 							{
 								int* aiYields = GC.getResourceInfo(eResource)->getYieldChangeArray();
