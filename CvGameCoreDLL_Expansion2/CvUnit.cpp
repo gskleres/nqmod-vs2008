@@ -2175,12 +2175,6 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 		}
 	}
 	
-	//NQMP GJS - icebreaker ships
-	if (enterPlot.isWater())
-	{
-
-	}
-
 	if(enterPlot.isMountain())
 	{
 		CvPlayer& kPlayer = GET_PLAYER(getOwner());
@@ -7573,6 +7567,21 @@ int CvUnit::getHurryProduction(const CvPlot* pPlot) const
 
 	iProduction = getMaxHurryProduction(pCity);
 
+	// NQMP GJS - Great Engineers are twice as effective on spaceship parts BEGIN
+	if (pCity->isProductionUnit())
+	{
+		UnitTypes eUnit = pCity->getProductionUnit();
+		if (eUnit != -1)
+		{
+			CvUnitEntry *pkUnit = GC.GetGameUnits()->GetEntry(eUnit);
+			if (pkUnit && pkUnit->GetSpaceshipProject() != NO_PROJECT)
+			{
+				iProduction *= 2;
+			}
+		}
+	}
+	// NQMP GJS - Great Engineers are twice as effective on spaceship parts END
+
 	iProduction = std::min(pCity->productionLeft(), iProduction);
 
 	return std::max(0, iProduction);
@@ -11463,8 +11472,9 @@ int CvUnit::GetInterceptionDamage(const CvUnit* pAttacker, bool bIncludeRand) co
 
 	// Bring it back out of hundreds
 	iInterceptorDamage /= 100;
-
+	
 	iInterceptorDamage = max(1,iInterceptorDamage);
+	iInterceptorDamage = min(99,iInterceptorDamage); // NQMP GJS: Clamp interception damage from 1 - 99
 
 	return iInterceptorDamage;
 }
@@ -11622,7 +11632,8 @@ int CvUnit::maxXPValue() const
 
 	iMaxValue = INT_MAX;
 
-	if(isBarbarian())
+	if(isBarbarian() || 
+		GET_PLAYER(this->getOwner()).isMinorCiv()) // NQMP GJS: city states give max 30 XP
 	{
 		iMaxValue = std::min(iMaxValue, GC.getBARBARIAN_MAX_XP_VALUE());
 	}

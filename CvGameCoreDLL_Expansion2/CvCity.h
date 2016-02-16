@@ -428,7 +428,7 @@ public:
 
 	int getMaxFoodKeptPercent() const;
 	void changeMaxFoodKeptPercent(int iChange);
-
+	
 	int getOverflowProduction() const;
 	void setOverflowProduction(int iNewValue);
 	void changeOverflowProduction(int iChange);
@@ -546,6 +546,9 @@ public:
 
 	int getSeaPlotYield(YieldTypes eIndex) const;
 	void changeSeaPlotYield(YieldTypes eIndex, int iChange);
+
+	int getMountainScienceYield() const; // NQMP GJS - mountain science yield
+	void changeMountainScienceYield(int iChange); // NQMP GJS - mountain science yield
 
 	int getRiverPlotYield(YieldTypes eIndex) const;
 	void changeRiverPlotYield(YieldTypes eIndex, int iChange);
@@ -896,7 +899,8 @@ protected:
 	FAutoVariable<PlayerTypes, CvCity> m_ePreviousOwner;
 	FAutoVariable<PlayerTypes, CvCity> m_eOriginalOwner;
 	FAutoVariable<PlayerTypes, CvCity> m_ePlayersReligion;
-
+	
+	FAutoVariable<int, CvCity> m_iMountainScienceYield; // NQMP GJS - mountain science yield
 	FAutoVariable<std::vector<int>, CvCity> m_aiSeaPlotYield;
 	FAutoVariable<std::vector<int>, CvCity> m_aiRiverPlotYield;
 	FAutoVariable<std::vector<int>, CvCity> m_aiLakePlotYield;

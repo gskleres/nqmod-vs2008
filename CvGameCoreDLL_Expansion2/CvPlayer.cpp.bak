@@ -303,7 +303,6 @@ CvPlayer::CvPlayer() :
 	, m_iPlotCultureCostModifier("CvPlayer::m_iPlotCultureCostModifier", m_syncArchive)
 	, m_iPlotCultureExponentModifier(0)
 	, m_iNumCitiesPolicyCostDiscount(0)
-	, m_iNumCitiesResearchCostDiscount(0) // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
 	, m_iGarrisonedCityRangeStrikeModifier(0)
 	, m_iGarrisonFreeMaintenanceCount(0)
 	, m_iNumCitiesFreeAestheticsSchools(0) // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
@@ -923,7 +922,6 @@ void CvPlayer::uninit()
 	m_iPlotCultureCostModifier = 0;
 	m_iPlotCultureExponentModifier = 0;
 	m_iNumCitiesPolicyCostDiscount = 0;
-	m_iNumCitiesResearchCostDiscount = 0; // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
 	m_iGarrisonedCityRangeStrikeModifier = 0;
 	m_iGarrisonFreeMaintenanceCount = 0;
 	m_iNumCitiesFreeAestheticsSchools = 0; // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
@@ -2621,12 +2619,7 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 			pNewCity->SetOccupied(true);
 
 			int iInfluenceReduction = GetCulture()->GetInfluenceCityConquestReduction(eOldOwner);
-
-			// NQMP GJS - reduce resistance time BEGIN
-			int iResistanceTurns = ceil(pNewCity->getPopulation() * GC.getGame().getGameSpeedInfo().getVictoryDelayPercent() / 200.0f);
-			iResistanceTurns *= (100 - iInfluenceReduction); // take tourism into account
-			iResistanceTurns /= 100;
-			// NQMP GJS - reduce resistance time END
+			int iResistanceTurns = pNewCity->getPopulation() * (100 - iInfluenceReduction) / 100;
 
 			if (iResistanceTurns > 0)
 			{
@@ -5575,7 +5568,7 @@ bool CvPlayer::canReceiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit) 
 		}
 	}
 
-	// NQMP GJS - NQMP_1_GJS fix so that culture ruins cannot be selected before turn 12
+	// NQMP GJS - NQMP_1_GJS fix so that culture ruins cannot be selected before turn 15
 	if (kGoodyInfo.getCulture() > 0)
 	{
 		if (GC.getGame().getElapsedGameTurns() < 12)
@@ -5626,8 +5619,6 @@ bool CvPlayer::canReceiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit) 
 	}
 
 	// Reveal Nearby Barbs
-	// NQMP GJS - commenting out this entire block to merge barb camp & map reveal ruin into one previously it was not happening because there were never 2 barb camps within 5 tiles reveal
-	/*
 	if(kGoodyInfo.getRevealNearbyBarbariansRange() > 0)
 	{
 		int iDX, iDY;
@@ -5664,7 +5655,6 @@ bool CvPlayer::canReceiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit) 
 			return false;
 		}
 	}
-	*/
 
 	// Reveal Unknown Resource
 	if(kGoodyInfo.isRevealUnknownResource())
@@ -17063,7 +17053,7 @@ int CvPlayer::GetScienceYieldFromPreviousTurns(int iGameTurn, int iNumPreviousTu
 		}
 		else if (iTurnScience == -1) // No data for this turn (ex. late era start)
 		{
-			iSum += (/*3 * */ GetScience()); // NQMP GJS - Fix Scientist bulbing to give 8 turns of science, not 10
+			iSum += (3 * GetScience());
 		}
 	}
 
@@ -21202,7 +21192,6 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 	ChangePlotCultureCostModifier(pPolicy->GetPlotCultureCostModifier() * iChange);
 	ChangePlotCultureExponentModifier(pPolicy->GetPlotCultureExponentModifier() * iChange);
 	ChangeNumCitiesPolicyCostDiscount(pPolicy->GetNumCitiesPolicyCostDiscount() * iChange);
-	ChangeNumCitiesResearchCostDiscount(pPolicy->GetNumCitiesResearchCostDiscount() * iChange); // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
 	ChangeGarrisonFreeMaintenanceCount(pPolicy->IsGarrisonFreeMaintenance() * iChange);
 	ChangeGarrisonedCityRangeStrikeModifier(pPolicy->GetGarrisonedCityRangeStrikeModifier() * iChange);
 	ChangeUnitPurchaseCostModifier(pPolicy->GetUnitPurchaseCostModifier() * iChange);
@@ -22322,7 +22311,6 @@ void CvPlayer::Read(FDataStream& kStream)
 	kStream >> m_iPlotCultureCostModifier;
 	kStream >> m_iPlotCultureExponentModifier;
 	kStream >> m_iNumCitiesPolicyCostDiscount;
-	kStream >> m_iNumCitiesResearchCostDiscount; // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
 	kStream >> m_iGarrisonFreeMaintenanceCount;
 	kStream >> m_iGarrisonedCityRangeStrikeModifier;
 	kStream >> m_iNumCitiesFreeAestheticsSchools; // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
@@ -22826,7 +22814,6 @@ void CvPlayer::Write(FDataStream& kStream) const
 	kStream << m_iPlotCultureCostModifier;
 	kStream << m_iPlotCultureExponentModifier;
 	kStream << m_iNumCitiesPolicyCostDiscount;
-	kStream << m_iNumCitiesResearchCostDiscount; // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
 	kStream << m_iGarrisonFreeMaintenanceCount;
 	kStream << m_iGarrisonedCityRangeStrikeModifier;
 	kStream << m_iNumCitiesFreeAestheticsSchools; // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
@@ -23763,22 +23750,6 @@ void CvPlayer::ChangeNumCitiesPolicyCostDiscount(int iChange)
 		m_iNumCitiesPolicyCostDiscount += iChange;
 	}
 }
-
-// NQMP GJS - new Dictatorship of the Proletariat i.e. Communism BEGIN
-/// Changes how much we dampen the growth of policy costs based on number of cities
-int CvPlayer::GetNumCitiesResearchCostDiscount() const
-{
-	return m_iNumCitiesResearchCostDiscount;
-}
-
-void CvPlayer::ChangeNumCitiesResearchCostDiscount(int iChange)
-{
-	if(iChange != 0)
-	{
-		m_iNumCitiesResearchCostDiscount += iChange;
-	}
-}
-// NQMP GJS - new Dictatorship of the Proletariat i.e. Communism END
 
 //	--------------------------------------------------------------------------------
 /// Do we save on unit maintenance for garrisons?

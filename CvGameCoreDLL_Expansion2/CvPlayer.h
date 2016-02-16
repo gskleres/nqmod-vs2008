@@ -1324,6 +1324,9 @@ public:
 	int GetNumCitiesPolicyCostDiscount() const;
 	void ChangeNumCitiesPolicyCostDiscount(int iChange);
 
+	int GetNumCitiesResearchCostDiscount() const; // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
+	void ChangeNumCitiesResearchCostDiscount(int iChange); // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
+
 	int GetGarrisonedCityRangeStrikeModifier() const;
 	void ChangeGarrisonedCityRangeStrikeModifier(int iChange);
 	bool IsGarrisonFreeMaintenance() const;
@@ -1759,6 +1762,7 @@ protected:
 	FAutoVariable<int, CvPlayer> m_iPlotCultureCostModifier;
 	int m_iPlotCultureExponentModifier;
 	int m_iNumCitiesPolicyCostDiscount;
+	int m_iNumCitiesResearchCostDiscount; // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
 	int m_iGarrisonedCityRangeStrikeModifier;
 	int m_iGarrisonFreeMaintenanceCount;
 	int m_iNumCitiesFreeAestheticsSchools; // NQMP GJS - add support for NumCitiesFreeAestheticsSchools

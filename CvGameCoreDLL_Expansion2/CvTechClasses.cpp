@@ -1435,6 +1435,16 @@ int CvPlayerTechs::GetResearchCost(TechTypes eTech) const
 
 	// Mod for City Count
 	int iMod = GC.getMap().getWorldInfo().GetNumCitiesTechCostMod();	// Default is 40, gets smaller on larger maps
+
+	// NQMP GJS - new Dictatorship of the Proletariat i.e. Communism BEGIN
+	int iResearchModDiscount = m_pPlayer->GetNumCitiesResearchCostDiscount();
+	if (iResearchModDiscount != 0)
+	{
+		iMod = iMod * (100 + iResearchModDiscount);
+		iMod /= 100;
+	}
+	// NQMP GJS - new Dictatorship of the Proletariat i.e. Communism END
+
 	iMod = iMod * m_pPlayer->GetMaxEffectiveCities(/*bIncludePuppets*/ true);
 	iResearchCost = iResearchCost * (100 + iMod) / 100;
 

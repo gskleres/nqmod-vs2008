@@ -7412,6 +7412,19 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 				}
 			}
 		}
+		
+		// NQMP GJS - mountain science yield begin
+		if (isMountain() && !IsNaturalWonder())
+		{
+			if (NULL != pWorkingCity)
+			{
+				if (eYield == YIELD_SCIENCE)
+				{
+					iYield += pWorkingCity->getMountainScienceYield();
+				}
+			}
+		}
+		// NQMP GJS - mountain science yield end
 
 		// Extra yield for features
 		if(getFeatureType() != NO_FEATURE)

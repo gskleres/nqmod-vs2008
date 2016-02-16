@@ -90,6 +90,7 @@ CvBuildingEntry::CvBuildingEntry(void):
 	m_iFreeTechs(0),
 	m_iFreePolicies(0),
 	m_iFreeFlatFaith(0), // NQMP GJS - New Stonehenge
+	m_iMountainScienceYield(0), // NQMP GJS - mountain science yield
 	m_iFreeGreatPeople(0),
 	m_iMedianTechPercentChange(0),
 	m_iGold(0),
@@ -115,6 +116,7 @@ CvBuildingEntry::CvBuildingEntry(void):
 	m_iTradeRouteLandDistanceModifier(0),
 	m_iTradeRouteLandGoldBonus(0),
 	m_iCityStateTradeRouteProductionModifier(0),
+	m_iCityStateTradeRouteGoldModifier(0), // NQMP GJS - new Economic Union
 	m_iInstantSpyRankChange(0),
 	m_iLandmarksTourismPercent(0),
 	m_iInstantMilitaryIncrease(0),
@@ -330,6 +332,7 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 	m_iFreeTechs = kResults.GetInt("FreeTechs");
 	m_iFreePolicies = kResults.GetInt("FreePolicies");
 	m_iFreeFlatFaith = kResults.GetInt("FreeFlatFaith"); // NQMP GJS - New Stonehenge
+	m_iMountainScienceYield = kResults.GetInt("MountainScienceYield"); // NQMP GJS - mountain science yield
 	m_iFreeGreatPeople = kResults.GetInt("FreeGreatPeople");
 	m_iMedianTechPercentChange = kResults.GetInt("MedianTechPercentChange");
 	m_iGold = kResults.GetInt("Gold");
@@ -354,6 +357,7 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 	m_iTradeRouteLandDistanceModifier = kResults.GetInt("TradeRouteLandDistanceModifier");
 	m_iTradeRouteLandGoldBonus = kResults.GetInt("TradeRouteLandGoldBonus");
 	m_iCityStateTradeRouteProductionModifier = kResults.GetInt("CityStateTradeRouteProductionModifier");
+	m_iCityStateTradeRouteGoldModifier = kResults.GetInt("CityStateTradeRouteGoldModifier"); // NQMP GJS - new Economic Union
 	m_iInstantSpyRankChange = kResults.GetInt("InstantSpyRankChange");
 	m_iLandmarksTourismPercent = kResults.GetInt("LandmarksTourismPercent");
 	m_iInstantMilitaryIncrease = kResults.GetInt("InstantMilitaryIncrease");
@@ -1142,6 +1146,14 @@ int CvBuildingEntry::GetFreeFlatFaith() const
 }
 // NQMP GJS - New Stonehenge end
 
+// NQMP GJS - mountain science yield begin
+/// Amount of instant flat faith granted by this building
+int CvBuildingEntry::GetMountainScienceYield() const
+{
+	return m_iMountainScienceYield;
+}
+// NQMP GJS - mountain science yield end
+
 /// Number of free Great People granted by this building
 int CvBuildingEntry::GetFreeGreatPeople() const
 {
@@ -1279,6 +1291,13 @@ int CvBuildingEntry::GetCityStateTradeRouteProductionModifier() const
 {
 	return m_iCityStateTradeRouteProductionModifier;
 }
+
+// NQMP GJS - new Economic Union BEGIN
+int CvBuildingEntry::GetCityStateTradeRouteGoldModifier() const
+{
+	return m_iCityStateTradeRouteGoldModifier;
+}
+// NQMP GJS - new Economic Union END
 
 int CvBuildingEntry::GetGreatScientistBeakerModifier() const
 {
@@ -3276,6 +3295,42 @@ int CvCityBuildings::GetCityStateTradeRouteProductionModifier() const
 
 	return iRtnValue;
 }
+
+// NQMP GJS - new Economic Union BEGIN
+/// Accessor: What is the gold modifier for each city state trade route?
+int CvCityBuildings::GetCityStateTradeRouteGoldModifier() const
+{
+	int iRtnValue = 0;
+
+	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+	{
+		BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
+		CvCivilizationInfo *pkCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());
+		if (pkCivInfo)
+		{
+			BuildingTypes eBuilding = (BuildingTypes)pkCivInfo->getCivilizationBuildings(eLoopBuildingClass);
+			if (NO_BUILDING != eBuilding)
+			{
+				if (GetNumBuilding(eBuilding) > 0)
+				{
+					CvBuildingEntry *pkEntry = GC.getBuildingInfo(eBuilding);
+					if (pkEntry)
+					{
+						int iGoldModifier = pkEntry->GetCityStateTradeRouteGoldModifier();
+						int iCityStates = GET_PLAYER(m_pCity->getOwner()).GetTrade()->GetNumberOfCityStateTradeRoutes();
+						if (iGoldModifier > 0  && iCityStates > 0)
+						{
+							iRtnValue = iGoldModifier * iCityStates;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return iRtnValue;
+}
+// NQMP GJS - new Economic Union END
 
 
 /// Accessor: Get current production modifier from buildings

@@ -8654,7 +8654,8 @@ void CvMinorCivAI::DoElection()
 					pNotifications->Add(NOTIFICATION_SPY_RIG_ELECTION_SUCCESS, strNotification.toUTF8(), strSummary.toUTF8(), pCapital->getX(), pCapital->getY(), -1);
 				}
 
-				ChangeFriendshipWithMajor(ePlayer, GC.getESPIONAGE_INFLUENCE_GAINED_FOR_RIGGED_ELECTION(), false);
+				int iInfluenceModifier = GET_PLAYER(ePlayer).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_RIGGING_ELECTION_MODIFIER); // NQMP GJS - new Covert Action
+				ChangeFriendshipWithMajor(ePlayer, GC.getESPIONAGE_INFLUENCE_GAINED_FOR_RIGGED_ELECTION() * (100 + iInfluenceModifier) / 100, false); // NQMP GJS - new Covert Action
 
 				//Achievements!
 				if(ePlayer == GC.getGame().getActivePlayer())
@@ -8701,7 +8702,8 @@ void CvMinorCivAI::DoElection()
 
 				if (GetEffectiveFriendshipWithMajorTimes100(ePlayer) > 0)
 				{
-					int iDiminishAmount = min(GC.getESPIONAGE_INFLUENCE_LOST_FOR_RIGGED_ELECTION() * 100, GetEffectiveFriendshipWithMajorTimes100(ePlayer));
+					int iInfluenceModifier = GET_PLAYER(eElectionWinner).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_RIGGING_ELECTION_MODIFIER); // NQMP GJS - new Covert Action
+					int iDiminishAmount = min(GC.getESPIONAGE_INFLUENCE_LOST_FOR_RIGGED_ELECTION() * (100 + iInfluenceModifier), GetEffectiveFriendshipWithMajorTimes100(ePlayer)); // NQMP GJS - new Covert Action
 					ChangeFriendshipWithMajorTimes100(ePlayer, -iDiminishAmount, false);
 				}
 			}

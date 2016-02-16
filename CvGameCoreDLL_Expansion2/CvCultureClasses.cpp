@@ -2868,6 +2868,34 @@ int CvPlayerCulture::GetTourismModifierWith(PlayerTypes ePlayer) const
 	int iCommonFoeMod = m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_MOD_COMMON_FOE);
 	if (iCommonFoeMod > 0)
 	{
+		// NQMP GJS - new Cult of Personality BEGIN
+		int rank = 0;
+		int totalEnemies = 0;
+		int myStrength = m_pPlayer->GetMilitaryMight();
+
+		PlayerTypes eLoopPlayer;
+		for (int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
+		{
+			eLoopPlayer = (PlayerTypes) iPlayerLoop;
+			if (eLoopPlayer != m_pPlayer->GetID() && m_pPlayer->GetDiplomacyAI()->IsPlayerValid(eLoopPlayer))
+			{
+				totalEnemies++;
+				if (GET_PLAYER(eLoopPlayer).GetMilitaryMight() > myStrength)
+				{
+					rank++;
+				}
+			}
+		}
+
+		// divide the tourism boost into chunks, so that lowest player gets 0%, highest gets 100%, and the rest are evenly distributed in between
+		// so for example in a 6 player game, based on the player being 6th/5th/4th/3rd/2nd/1st in military strength they get 0%/20%/40%/60%/80%/100% boost
+		if (totalEnemies > 0)
+		{
+			iCommonFoeMod = iCommonFoeMod * (totalEnemies - rank) / totalEnemies;
+			iMultiplier += iCommonFoeMod;
+		}
+		/*
+		// old code
 		PlayerTypes eLoopPlayer;
 		for(int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
 		{
@@ -2882,6 +2910,8 @@ int CvPlayerCulture::GetTourismModifierWith(PlayerTypes ePlayer) const
 				}
 			}
 		}
+		*/
+		// NQMP GJS - new Cult of Personality END
 	}
 	int iSharedIdeologyMod = m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_MOD_SHARED_IDEOLOGY);
 	if (iSharedIdeologyMod > 0)
@@ -2955,6 +2985,35 @@ CvString CvPlayerCulture::GetTourismModifierWithTooltip(PlayerTypes ePlayer) con
 	int iCommonFoeMod = m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_MOD_COMMON_FOE);
 	if (iCommonFoeMod > 0)
 	{
+		// NQMP GJS - new Cult of Personality BEGIN
+		int rank = 0;
+		int totalEnemies = 0;
+		int myStrength = m_pPlayer->GetMilitaryMight();
+
+		PlayerTypes eLoopPlayer;
+		for (int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
+		{
+			eLoopPlayer = (PlayerTypes) iPlayerLoop;
+			if (eLoopPlayer != m_pPlayer->GetID() && m_pPlayer->GetDiplomacyAI()->IsPlayerValid(eLoopPlayer))
+			{
+				totalEnemies++;
+				if (GET_PLAYER(eLoopPlayer).GetMilitaryMight() > myStrength)
+				{
+					rank++;
+				}
+			}
+		}
+
+		// divide the tourism boost into chunks, so that lowest player gets 0%, highest gets 100%, and the rest are evenly distributed in between
+		// so for example in a 6 player game, based on the player being 6th/5th/4th/3rd/2nd/1st in military strength they get 0%/20%/40%/60%/80%/100% boost
+		if (totalEnemies > 0)
+		{
+			iCommonFoeMod = iCommonFoeMod * (totalEnemies - rank) / totalEnemies;
+			szRtnValue += "[COLOR_POSITIVE_TEXT]" + GetLocalizedText("TXT_KEY_CO_PLAYER_TOURISM_COMMON_FOE", iCommonFoeMod) + "[ENDCOLOR]";
+		}
+
+		/*
+		// old code
 		PlayerTypes eLoopPlayer;
 		for(int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
 		{
@@ -2969,6 +3028,8 @@ CvString CvPlayerCulture::GetTourismModifierWithTooltip(PlayerTypes ePlayer) con
 				}
 			}
 		}
+		*/
+		// NQMP GJS - new Cult of Personality END
 	}
 
 	int iLessHappyMod = m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_MOD_LESS_HAPPY);
@@ -4066,7 +4127,12 @@ int CvCityCulture::GetBaseTourismBeforeModifiers()
 	}
 
 	int iBonusTourismPerGreatWork = GET_PLAYER(m_pCity->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_EXTRA_TOURISM_PER_GREAT_WORK); // NQMP GJS - Cultural Exchange
-	int iBase = GetNumGreatWorks() * (GC.getBASE_TOURISM_PER_GREAT_WORK() + iBonusTourismPerGreatWork); // NQMP GJS - Cultural Exchange
+
+	int iBonusTourismPerWonder = GET_PLAYER(m_pCity->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_PER_WONDER); // NQMP GJS - Flourishing of the Arts
+	int iTotalBonusTourismForWonders = m_pCity->getNumWorldWonders() * iBonusTourismPerWonder;
+
+	int iBase = GetNumGreatWorks() * (GC.getBASE_TOURISM_PER_GREAT_WORK() + iBonusTourismPerGreatWork) + iTotalBonusTourismForWonders; // NQMP GJS - Cultural Exchange
+
 	int iBonus = (m_pCity->GetCityBuildings()->GetGreatWorksTourismModifier() * iBase / 100);
 	iBase += iBonus;
 
@@ -4268,6 +4334,35 @@ int CvCityCulture::GetTourismMultiplier(PlayerTypes ePlayer, bool bIgnoreReligio
 		int iCommonFoeMod = kCityPlayer.GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_MOD_COMMON_FOE);
 		if (iCommonFoeMod > 0)
 		{
+			// NQMP GJS - new Cult of Personality BEGIN
+			int rank = 0;
+			int totalEnemies = 0;
+			int myStrength = kCityPlayer.GetMilitaryMight();
+
+			PlayerTypes eLoopPlayer;
+			for (int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
+			{
+				eLoopPlayer = (PlayerTypes) iPlayerLoop;
+				if(eLoopPlayer != m_pCity->getOwner() && kCityPlayer.GetDiplomacyAI()->IsPlayerValid(eLoopPlayer))
+				{
+					totalEnemies++;
+					if (GET_PLAYER(eLoopPlayer).GetMilitaryMight() > myStrength)
+					{
+						rank++;
+					}
+				}
+			}
+
+			// divide the tourism boost into chunks, so that lowest player gets 0%, highest gets 100%, and the rest are evenly distributed in between
+			// so for example in a 6 player game, based on the player being 6th/5th/4th/3rd/2nd/1st in military strength they get 0%/20%/40%/60%/80%/100% boost
+			if (totalEnemies > 0)
+			{
+				iCommonFoeMod = iCommonFoeMod * (totalEnemies - rank) / totalEnemies;
+				iMultiplier += iCommonFoeMod;
+			}
+
+			/*
+			// old code
 			PlayerTypes eLoopPlayer;
 			for(int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
 			{
@@ -4282,7 +4377,10 @@ int CvCityCulture::GetTourismMultiplier(PlayerTypes ePlayer, bool bIgnoreReligio
 					}
 				}
 			}
+			*/
+			// NQMP GJS - new Cult of Personality END
 		}
+
 		int iSharedIdeologyMod = kCityPlayer.GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_MOD_SHARED_IDEOLOGY);
 		if (iSharedIdeologyMod > 0)
 		{
@@ -4319,7 +4417,15 @@ CvString CvCityCulture::GetTourismTooltip()
 	int iBonusTourismPerGreatWork = GET_PLAYER(m_pCity->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_EXTRA_TOURISM_PER_GREAT_WORK); // NQMP GJS - Cultural Exchange
 	int iGWTourism = GetNumGreatWorks() * (GC.getBASE_TOURISM_PER_GREAT_WORK() + iBonusTourismPerGreatWork); // NQMP GJS - Cultural Exchange
 	iGWTourism += (m_pCity->GetCityBuildings()->GetGreatWorksTourismModifier() * iGWTourism / 100);
-	szRtnValue = GetLocalizedText("TXT_KEY_CO_CITY_TOURISM_GREAT_WORKS", iGWTourism, m_pCity->GetCityCulture()->GetNumGreatWorks());
+
+	// NQMP GJS - Flourishing of the Arts BEGIN
+	int iBonusTourismPerWonder = GET_PLAYER(m_pCity->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_PER_WONDER);
+	int iNumWorldWonders = m_pCity->getNumWorldWonders();
+	int iTotalBonusTourismForWonders = iNumWorldWonders * iBonusTourismPerWonder; 
+	iTotalBonusTourismForWonders += (m_pCity->GetCityBuildings()->GetGreatWorksTourismModifier() * iTotalBonusTourismForWonders / 100);
+	szRtnValue = GetLocalizedText("TXT_KEY_CO_CITY_TOURISM_GREAT_WORKS", iGWTourism, m_pCity->GetCityCulture()->GetNumGreatWorks(), iTotalBonusTourismForWonders, iNumWorldWonders); // edited
+	// NQMP GJS - Flourishing of the Arts END
+
 
 	int iThemingBonuses = m_pCity->GetCityBuildings()->GetThemingBonuses();
 	if (iThemingBonuses > 0)
@@ -4504,11 +4610,38 @@ CvString CvCityCulture::GetTourismTooltip()
 				}
 				if (iCommonFoeMod > 0)
 				{
+					// NQMP GJS - new Cult of Personality BEGIN
+					int rank = 0;
+					int totalEnemies = 0;
+					int myStrength = kCityPlayer.GetMilitaryMight();
+
+					PlayerTypes eLoopPlayer;
+					for (int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
+					{
+						eLoopPlayer = (PlayerTypes) iPlayerLoop;
+						if(eLoopPlayer != m_pCity->getOwner() && kCityPlayer.GetDiplomacyAI()->IsPlayerValid(eLoopPlayer))
+						{
+							totalEnemies++;
+							if (GET_PLAYER(eLoopPlayer).GetMilitaryMight() > myStrength)
+							{
+								rank++;
+							}
+						}
+					}
+
+					// divide the tourism boost into chunks, so that lowest player gets 0%, highest gets 100%, and the rest are evenly distributed in between
+					// so for example in a 6 player game, based on the player being 6th/5th/4th/3rd/2nd/1st in military strength they get 0%/20%/40%/60%/80%/100% boost
+					if (totalEnemies > 0)
+					{
+						iCommonFoeMod = iCommonFoeMod * (totalEnemies - rank) / totalEnemies;
+					}
+
+					/*
+					// old code
 					PlayerTypes eLoopPlayer;
 					for(int iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
 					{
 						eLoopPlayer = (PlayerTypes) iPlayerLoop;
-
 						if(eLoopPlayer !=(PlayerTypes) iLoopPlayer && eLoopPlayer != m_pCity->getOwner() && kCityPlayer.GetDiplomacyAI()->IsPlayerValid(eLoopPlayer))
 						{
 							// Are they at war with me too?
@@ -4522,6 +4655,8 @@ CvString CvCityCulture::GetTourismTooltip()
 							}
 						}
 					}
+					*/
+					// NQMP GJS - new Cult of Personality END
 				}
 
 				// Shared ideology bonus (comes from a policy)
@@ -4593,7 +4728,7 @@ CvString CvCityCulture::GetTourismTooltip()
 				szRtnValue += "[NEWLINE][NEWLINE]";
 			}
 			szTemp = GetLocalizedText("TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS", iCommonFoeMod);
-			szRtnValue += szTemp + commonFoeCivs;
+			szRtnValue += szTemp /*+ commonFoeCivs*/; // NQMP GJS - new Cult of Personality - commented out this bit
 		}
 		if (sharedIdeologyCivs.length() > 0)
 		{
