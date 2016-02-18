@@ -16265,7 +16265,7 @@ void CvPlayer::setAlive(bool bNewValue, bool bNotify)
 
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 			CvGame& kCurGame = GC.getGame();
-			if ((kCurGame.getNumGameTurnActive() == 0) || (isSimultaneousTurns() && (GET_TEAM(getTeam()).isTurnActive() || kCurGame.getCurrentTurnOrderActive() == getTurnOrder())))
+			if (kCurGame.isNoPlayerActive() || (isSimultaneousTurns() && (GET_TEAM(getTeam()).isTurnActive() || kCurGame.getCurrentTurnOrderActive() == getTurnOrder())))
 #else
 			if(isSimultaneousTurns() || (GC.getGame().getNumGameTurnActive() == 0) || (GC.getGame().isSimultaneousTeamTurns() && GET_TEAM(getTeam()).isTurnActive()))
 #endif

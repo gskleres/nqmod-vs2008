@@ -205,8 +205,16 @@ public:
 	int getTargetScore() const;
 	void setTargetScore(int iNewValue);
 
+#ifdef AUI_CONSTIFY
+	int getNumGameTurnActive() const;
+	int countNumHumanGameTurnActive() const;
+#else
 	int getNumGameTurnActive();
 	int countNumHumanGameTurnActive();
+#endif
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	bool isNoPlayerActive() const;
+#endif
 	void changeNumGameTurnActive(int iChange, const std::string& why);
 
 	int getNumCities() const;

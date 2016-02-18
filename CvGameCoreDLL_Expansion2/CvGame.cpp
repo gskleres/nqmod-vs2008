@@ -1556,24 +1556,24 @@ void CvGame::update()
 			}
 
 			// If there are no active players, move on to the AI
-			if(getNumGameTurnActive() == 0)
-			{
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
+			if (isNoPlayerActive())
+			{
 				bool bDoAI = true;
 				if (isAnySimultaneousTurns())
 				{
-					while (bDoAI && m_iCurrentTurnOrderActive < m_iLastTurnOrderID)
+					while (m_iCurrentTurnOrderActive <= m_iLastTurnOrderID)
 					{
 						m_iCurrentTurnOrderActive++;
-						//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
-						// KWG: This code should go into CheckPlayerTurnDeactivate
+						// If there's a human player who still needs to go, breaking out of the loop and reseting the turn timer is enough
+						// The code in updateMoves() that activates simultaneous mode players will catch the occurence and activate the human(s)
 						for (int iI = 0; iI < MAX_PLAYERS; iI++)
 						{
 							CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
 							if (!player.isTurnActive() && player.isHuman() && player.isAlive() && (player.getTurnOrder() == m_iCurrentTurnOrderActive))
 							{
-								player.setTurnActive(true);
 								bDoAI = false;
+								break;
 							}
 						}
 					}
@@ -1589,6 +1589,8 @@ void CvGame::update()
 				else
 					resetTurnTimer(false);
 #else
+			if(getNumGameTurnActive() == 0)
+			{
 				if(gDLL->CanAdvanceTurn())
 					doTurn();
 #endif
@@ -3063,7 +3065,7 @@ bool CvGame::canHandleAction(int iAction, CvPlot* pPlot, bool bTestVisible)
 		{
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 			CvPlayer& kSelectedUnitOwner = GET_PLAYER(pkHeadSelectedUnit->getOwner());
-			if ((isAnySimultaneousTurns() && (!kSelectedUnitOwner.isHuman() || kSelectedUnitOwner.getTurnOrder() == m_iCurrentTurnOrderActive)) || kSelectedUnitOwner.isTurnActive())
+			if ((isAnySimultaneousTurns() && kSelectedUnitOwner.isHuman() && kSelectedUnitOwner.getTurnOrder() == m_iCurrentTurnOrderActive) || kSelectedUnitOwner.isTurnActive())
 #else
 			if(GET_PLAYER(pkHeadSelectedUnit->getOwner()).isSimultaneousTurns() || GET_PLAYER(pkHeadSelectedUnit->getOwner()).isTurnActive())
 #endif
@@ -3476,7 +3478,7 @@ void CvGame::doControl(ControlTypes eControl)
 				{
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 					CvPlayer& kUnitOwner = GET_PLAYER(pUnit->getOwner());
-					if (!kUnitOwner.isHuman() || kUnitOwner.getTurnOrder() != m_iCurrentTurnOrderActive || !isAnySimultaneousTurns() || getTurnSlice() - pUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
+					if (!kUnitOwner.isHuman() || !isAnySimultaneousTurns() || kUnitOwner.getTurnOrder() != m_iCurrentTurnOrderActive || getTurnSlice() - pUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
 #else
 					if(!GET_PLAYER(pUnit->getOwner()).isSimultaneousTurns() || getTurnSlice() - pUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
 #endif
@@ -4929,7 +4931,11 @@ void CvGame::setTargetScore(int iNewValue)
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGame::getNumGameTurnActive() const
+#else
 int CvGame::getNumGameTurnActive()
+#endif
 {
 	int numActive = 0;
 	for(int i = 0; i < MAX_PLAYERS; i++)
@@ -4944,7 +4950,11 @@ int CvGame::getNumGameTurnActive()
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvGame::countNumHumanGameTurnActive() const
+#else
 int CvGame::countNumHumanGameTurnActive()
+#endif
 {
 	int iCount;
 	int iI;
@@ -4965,6 +4975,19 @@ int CvGame::countNumHumanGameTurnActive()
 	return iCount;
 }
 
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+bool CvGame::isNoPlayerActive() const
+{
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		if (GET_PLAYER((PlayerTypes)i).isAlive() && GET_PLAYER((PlayerTypes)i).isTurnActive())
+		{
+			return false;
+		}
+	}
+	return true;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 void CvGame::changeNumGameTurnActive(int iChange, const std::string& why)
@@ -8015,7 +8038,8 @@ void CvGame::constructTurnOrders()
 		for (iTeamIdx = 0; iTeamIdx < MAX_TEAMS; ++iTeamIdx)
 		{
 			CvTeam& kCurTeam = GET_TEAM((TeamTypes)iTeamIdx);
-			kCurTeam.setTurnOrder(0);
+			if (kCurTeam.isAlive())
+				kCurTeam.setTurnOrder(0);
 		}
 		// Hybrid mode, all teams that are at war are set to different turn orders
 		if (isOption(GAMEOPTION_DYNAMIC_TURNS))
@@ -8578,8 +8602,10 @@ void CvGame::updateMoves()
 	}
 
 
+#ifndef AUI_GAME_BETTER_HYBRID_MODE
 	int currentTurn = getGameTurn();
 	bool activatePlayers = playersToProcess.empty() && m_lastTurnAICivsProcessed != currentTurn;
+#endif
 	// If no AI with an active turn, check humans.
 	if(playersToProcess.empty())
 	{
@@ -8608,10 +8634,6 @@ void CvGame::updateMoves()
 					{
 						CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
 						if (player.isHuman() && player.getTurnOrder() == m_iCurrentTurnOrderActive && !player.isObserver() && !player.isAutoMoves())
-							readyForAutoMoves = false;
-					}
-					processPlayerAutoMoves = readyForAutoMoves;
-				}
 #else
 				if(!GC.getGame().isOption(GAMEOPTION_DYNAMIC_TURNS) && GC.getGame().isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
 				{//fully simultaneous turns.
@@ -8621,11 +8643,11 @@ void CvGame::updateMoves()
 					{
 						CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
 						if(player.isHuman() && !player.isObserver() && !player.isAutoMoves())
+#endif
 							readyForAutoMoves = false;
 					}
 					processPlayerAutoMoves = readyForAutoMoves;
 				}
-#endif
 				else
 					processPlayerAutoMoves = true;
 			}
@@ -8642,6 +8664,11 @@ void CvGame::updateMoves()
 			}
 		}
 	}
+
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	// This needed to be moved so that simultaneous mode players would not be activated if there are any active human players
+	bool activatePlayers = playersToProcess.empty() && m_lastTurnAICivsProcessed != getGameTurn();
+#endif
 
 	FStaticVector<PlayerTypes, MAX_PLAYERS, true, c_eCiv5GameplayDLL, 0>::const_iterator i;
 
@@ -8830,9 +8857,7 @@ void CvGame::updateMoves()
 
 				// KWG: This code should go into CheckPlayerTurnDeactivate
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-				if(!player.isEndTurn())
-				{
-					if (!player.isHuman() || gDLL->HasReceivedTurnComplete(player.GetID()))
+				if (!player.isEndTurn() && (!player.isHuman() || gDLL->HasReceivedTurnComplete(player.GetID())))
 #else
 				if(!player.isEndTurn() && gDLL->HasReceivedTurnComplete(player.GetID()) && player.isHuman() /* && (isNetworkMultiPlayer() || (!isNetworkMultiPlayer() && player.GetID() != getActivePlayer())) */)
 #endif
@@ -8853,9 +8878,6 @@ void CvGame::updateMoves()
 							player.setEndTurn(true);
 						}
 					}
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-				}
-#endif
 				}
 			}
 		}
