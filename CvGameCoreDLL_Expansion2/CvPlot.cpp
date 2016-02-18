@@ -8693,14 +8693,29 @@ bool CvPlot::isAdjacentNonrevealed(TeamTypes eTeam) const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_CONSIDER_2ND_RING_NONREVEALED
+int CvPlot::getNumNonrevealedInRange(TeamTypes eTeam, int iRange) const
+#else
 int CvPlot::getNumAdjacentNonrevealed(TeamTypes eTeam) const
+#endif
 {
 	CvPlot* pAdjacentPlot;
 	int iCount = 0;
 
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_CONSIDER_2ND_RING_NONREVEALED
+	int iMaxDX, iDX;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pAdjacentPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int i = 0; i < NUM_DIRECTION_TYPES; ++i)
 	{
 		pAdjacentPlot = plotDirection(getX(), getY(), ((DirectionTypes)i));
+#endif
 
 		if(pAdjacentPlot != NULL)
 		{
@@ -8710,6 +8725,9 @@ int CvPlot::getNumAdjacentNonrevealed(TeamTypes eTeam) const
 			}
 		}
 	}
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_CONSIDER_2ND_RING_NONREVEALED
+	}
+#endif
 
 	return iCount;
 }

@@ -42,7 +42,11 @@
 #define PATH_STACKING_WEIGHT									(1000000)
 #define PATH_CITY_AVOID_WEIGHT									(0) // slewis - reduced this to zero because we shouldn't avoid cities any more due to new garrison rules
 #define	PATH_EXPLORE_NON_HILL_WEIGHT							(300)
+#ifdef AUI_ASTAR_TWEAKED_PATH_EXPLORE_NON_REVEAL_WEIGHT
+#define PATH_EXPLORE_NON_REVEAL_WEIGHT							AUI_ASTAR_TWEAKED_PATH_EXPLORE_NON_REVEAL_WEIGHT
+#else
 #define PATH_EXPLORE_NON_REVEAL_WEIGHT							(10)
+#endif
 #define PATH_INCORRECT_EMBARKING_WEIGHT							(1000000)
 #define PATH_BUILD_ROUTE_EXISTING_ROUTE_WEIGHT					(10)
 //#define PATH_BUILD_ROUTE_RESOURCE_WEIGHT						(2)
@@ -350,16 +354,19 @@ bool CvAStar::GeneratePath(int iXstart, int iYstart, int iXdest, int iYdest, int
 
 #ifdef AUI_ASTAR_MINOR_OPTIMIZATION
 	int retval = 0;
+
+	do
 #else
 	retval = 0;
-#endif
 
 	while(retval == 0)
+#endif
 	{
 		retval = Step();
 	}
-
 #ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	while (retval == 0);
+
 	if (udUninitializeFunc)
 		udUninitializeFunc(m_pData, this);
 #endif
@@ -573,17 +580,19 @@ void CvAStar::CreateChildren(CvAStarNode* node)
 void CvAStar::LinkChild(CvAStarNode* node, CvAStarNode* check)
 {
 #if defined(AUI_ASTAR_MINOR_OPTIMIZATION)
-		int iKnownCost = node->m_iKnownCost + udFunc(udCost, node, check, 0, m_pData);
+	int iKnownCost = node->m_iKnownCost + udFunc(udCost, node, check, 0, m_pData);
 #else
 	int iKnownCost;
-#endif
 
 	iKnownCost = node->m_iKnownCost + udFunc(udCost, node, check, 0, m_pData);
+#endif
 
 	if(check->m_eCvAStarListType == CVASTARLIST_OPEN)
 	{
 		node->m_apChildren.push_back(check);
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 		node->m_iNumChildren++;
+#endif
 
 		if(iKnownCost < check->m_iKnownCost)
 		{
@@ -600,7 +609,9 @@ void CvAStar::LinkChild(CvAStarNode* node, CvAStarNode* check)
 	else if(check->m_eCvAStarListType == CVASTARLIST_CLOSED)
 	{
 		node->m_apChildren.push_back(check);
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 		node->m_iNumChildren++;
+#endif
 
 		if(iKnownCost < check->m_iKnownCost)
 		{
@@ -634,7 +645,9 @@ void CvAStar::LinkChild(CvAStarNode* node, CvAStarNode* check)
 		AddToOpen(check);
 
 		node->m_apChildren.push_back(check);
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 		node->m_iNumChildren++;
+#endif
 	}
 }
 
@@ -899,7 +912,11 @@ void CvAStar::UpdateParents(CvAStarNode* node)
 
 	while(parent != NULL)
 	{
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		iNumChildren = parent->m_apChildren.size();
+#else
 		iNumChildren = parent->m_iNumChildren;
+#endif
 
 		for(i = 0; i < iNumChildren; i++)
 		{
@@ -1017,6 +1034,11 @@ struct UnitPathCacheData
 	inline bool CanEverEmbark() const { return m_bCanEverEmbark; }
 	inline bool isEmbarked() const { return m_bIsEmbarked; }
 	inline bool IsCanAttack() const { return m_bCanAttack; }
+
+#ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH
+	int m_iBaseCombatStrengthConsideringDamage;
+	inline int baseCombatStrengthConsideringDamage() const { return m_iBaseCombatStrengthConsideringDamage; }
+#endif
 };
 
 //	--------------------------------------------------------------------------------
@@ -1043,6 +1065,11 @@ void UnitPathInitialize(const void* pointer, CvAStar* finder)
 	pCacheData->m_bCanEverEmbark = pUnit->CanEverEmbark();
 	pCacheData->m_bIsEmbarked = pUnit->isEmbarked();
 	pCacheData->m_bCanAttack = pUnit->IsCanAttack();
+#ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH
+	pCacheData->m_iBaseCombatStrengthConsideringDamage = 0;
+	if (!pCacheData->m_bIsHuman || pCacheData->m_bIsAutomated)
+		pCacheData->m_iBaseCombatStrengthConsideringDamage = pUnit->GetBaseCombatStrengthConsideringDamage();
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -1134,7 +1161,7 @@ int PathDestValid(int iToX, int iToY, const void* pointer, CvAStar* finder)
 			if(!pUnit->IsCombatUnit() || pUnit->getArmyID() == FFreeList::INVALID_INDEX)
 			{
 #ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH
-				if (GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pToPlot) > pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
+				if (GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pToPlot) > pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
 #else
 				if(GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pToPlot) > 0)
 #endif
@@ -1236,6 +1263,9 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 
 	CvUnit* pUnit = ((CvUnit*)pointer);
 	const UnitPathCacheData* pCacheData = reinterpret_cast<const UnitPathCacheData*>(finder->GetScratchBuffer());
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	bool bIsAIControl = !pCacheData->isHuman() || pCacheData->IsAutomated();
+#endif
 
 	DomainTypes eUnitDomain = pCacheData->getDomainType();
 
@@ -1279,7 +1309,11 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 #endif
 
 	TeamTypes eUnitTeam = pCacheData->getTeam();
+#ifdef AUI_ASTAR_EXPLORE_UNITAITYPE_ALWAYS_MAXIMIZES_EXPLORE
+	bool bMaximizeExplore = finder->GetInfo() & MOVE_MAXIMIZE_EXPLORE || pUnit->AI_getUnitAIType() == UNITAI_EXPLORE || pUnit->AI_getUnitAIType() == UNITAI_EXPLORE_SEA;
+#else
 	bool bMaximizeExplore = finder->GetInfo() & MOVE_MAXIMIZE_EXPLORE;
+#endif
 
 	int iMovesLeft = iMax - iCost;
 	// Is the cost greater than our max?
@@ -1305,10 +1339,14 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 
 		if(bMaximizeExplore)
 		{
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_UNHARDCODE_HILL_PREFERENCE
+			iCost += PATH_EXPLORE_NON_HILL_WEIGHT * (2 - pToPlot->seeFromLevel(eUnitTeam));
+#else
 			if(!pToPlot->isHills())
 			{
 				iCost += PATH_EXPLORE_NON_HILL_WEIGHT;
 			}
+#endif
 		}
 
 		// Damage caused by features (mods)
@@ -1343,7 +1381,11 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 		if(pToPlot->isMountain())
 		{
 			// We want to discourage AIs and automated units from exhausting their movement on a mountain, but if the unit is manually controlled by the human, let them do what they want.
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+			if (bIsAIControl)
+#else
 			if (!pCacheData->isHuman() || pCacheData->IsAutomated())
+#endif
 			{
 				iCost += PATH_END_TURN_MOUNTAIN_WEIGHT;
 			}
@@ -1359,7 +1401,11 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 		{
 			// Avoid being in a territory that we are not welcome in, unless the human is manually controlling the unit.
 #ifndef AUI_ASTAR_HUMAN_UNITS_GET_DIMINISHED_AVOID_WEIGHT
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+			if (bIsAIControl)
+#else
 			if (!pCacheData->isHuman() || pCacheData->IsAutomated())
+#endif
 #endif
 			{
 				// Also, ignore the penalty if the destination of the path is in the same team's territory, no sense in avoiding a place we want to get to.				
@@ -1371,7 +1417,11 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 					if (ePlotOwner != NO_PLAYER && !GET_PLAYER(ePlotOwner).isMinorCiv() && ePlotTeam != pCacheData->getTeam() && !GET_TEAM(ePlotTeam).IsAllowsOpenBordersToTeam(pCacheData->getTeam()))
 					{
 #ifdef AUI_ASTAR_HUMAN_UNITS_GET_DIMINISHED_AVOID_WEIGHT
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+						if (bIsAIControl)
+#else
 						if (!pCacheData->isHuman() || pCacheData->IsAutomated())
+#endif
 						{
 							iCost += PATH_END_TURN_MISSIONARY_OTHER_TERRITORY;
 						}
@@ -1408,7 +1458,11 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 
 	if(bMaximizeExplore)
 	{
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_CONSIDER_2ND_RING_NONREVEALED
+		int iUnseenPlots = pToPlot->getNumNonrevealedInRange(eUnitTeam, pToPlot->seeFromLevel(eUnitTeam));
+#else
 		int iUnseenPlots = pToPlot->getNumAdjacentNonrevealed(eUnitTeam);
+#endif
 		if(!pToPlot->isRevealed(eUnitTeam))
 		{
 			iUnseenPlots += 1;
@@ -1424,7 +1478,11 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 #ifdef AUI_ASTAR_HUMAN_UNITS_GET_DIMINISHED_AVOID_WEIGHT
 	if (eUnitDomain == DOMAIN_LAND && bToPlotIsWater)
 	{
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		if (bIsAIControl)
+#else
 		if (!pCacheData->isHuman() || pCacheData->IsAutomated())
+#endif
 		{
 			iCost += PATH_THROUGH_WATER;
 		}
@@ -2009,10 +2067,10 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 #ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_USES_TO_PLOT_NOT_FROM_PLOT
 #ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH
 #ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_ONLY_POSITIVE_DANGER_DELTA
-					if (GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pToPlot) > pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH &&
-						GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pFromPlot) <= pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
+					if (GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pToPlot) > pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH &&
+						GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pFromPlot) <= pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
 #else
-					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
+					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
 #endif
 #elif defined(AUI_ASTAR_FIX_CONSIDER_DANGER_ONLY_POSITIVE_DANGER_DELTA)
 					if (GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pToPlot) > 0 && GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pFromPlot) <= 0)
@@ -2020,7 +2078,7 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > 0)
 #endif
 #elif defined(AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
-					if (GET_PLAYER(unit_owner).GetPlotDanger(*pFromPlot) > pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
+					if (GET_PLAYER(unit_owner).GetPlotDanger(*pFromPlot) > pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
 #else
 					if(GET_PLAYER(unit_owner).GetPlotDanger(*pFromPlot) > 0)
 #endif
@@ -2309,6 +2367,9 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 	pUnit = ((CvUnit*)pointer);
 #endif
 	const UnitPathCacheData* pCacheData = reinterpret_cast<const UnitPathCacheData*>(finder->GetScratchBuffer());
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	bool bIsAIControl = !pCacheData->isHuman() || pCacheData->IsAutomated();
+#endif
 
 	CvAssertMsg(pUnit->getDomainType() != DOMAIN_AIR, "pUnit->getDomainType() is not expected to be equal with DOMAIN_AIR");
 
@@ -2369,12 +2430,20 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 			iCost += PATH_TERRITORY_WEIGHT;
 		}
 
+#ifdef AUI_ASTAR_EXPLORE_UNITAITYPE_ALWAYS_MAXIMIZES_EXPLORE
+		if (finder->GetInfo() & MOVE_MAXIMIZE_EXPLORE || pUnit->AI_getUnitAIType() == UNITAI_EXPLORE || pUnit->AI_getUnitAIType() == UNITAI_EXPLORE_SEA)
+#else
 		if(finder->GetInfo() & MOVE_MAXIMIZE_EXPLORE)
+#endif
 		{
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_UNHARDCODE_HILL_PREFERENCE
+			iCost += PATH_EXPLORE_NON_HILL_WEIGHT * pToPlot->seeFromLevel(eUnitTeam);
+#else
 			if(!pToPlot->isHills())
 			{
 				iCost += PATH_EXPLORE_NON_HILL_WEIGHT;
 			}
+#endif
 		}
 
 		// Damage caused by features (mods)
@@ -2405,9 +2474,17 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 		iCost = (PATH_MOVEMENT_WEIGHT * iCost);
 	}
 
+#ifdef AUI_ASTAR_EXPLORE_UNITAITYPE_ALWAYS_MAXIMIZES_EXPLORE
+	if (finder->GetInfo() & MOVE_MAXIMIZE_EXPLORE || pUnit->AI_getUnitAIType() == UNITAI_EXPLORE || pUnit->AI_getUnitAIType() == UNITAI_EXPLORE_SEA)
+#else
 	if(finder->GetInfo() & MOVE_MAXIMIZE_EXPLORE)
+#endif
 	{
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_CONSIDER_2ND_RING_NONREVEALED
+		int iUnseenPlots = pToPlot->getNumNonrevealedInRange(eUnitTeam, pToPlot->seeFromLevel(eUnitTeam));
+#else
 		int iUnseenPlots = pToPlot->getNumAdjacentNonrevealed(eUnitTeam);
+#endif
 		if(!pToPlot->isRevealed(eUnitTeam))
 		{
 			iUnseenPlots += 1;
@@ -2423,7 +2500,11 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 #ifdef AUI_ASTAR_HUMAN_UNITS_GET_DIMINISHED_AVOID_WEIGHT
 	if (pCacheData->getDomainType() == DOMAIN_LAND && (pToPlot->isWater() && !pToPlot->IsAllowsWalkWater()))
 	{
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		if (bIsAIControl)
+#else
 		if (!pCacheData->isHuman() || pCacheData->IsAutomated())
+#endif
 		{
 			iCost += PATH_THROUGH_WATER;
 		}
@@ -2602,8 +2683,7 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 #else
 	CvPlot* pToPlot = theMap.plotUnchecked(node->m_iX, node->m_iY);
 #endif
-	bool bAIControl = pUnit->IsAutomated();
-	bool bIsHuman = pCacheData->isHuman();
+	bool bIsAIControl = !pCacheData->isHuman() || pCacheData->IsAutomated();
 #else
 	CvUnit* pUnit;
 	CvPlot* pFromPlot;
@@ -2644,16 +2724,16 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 		kToNodeCacheData.bIsMountain = pUnit->canEnterTerritory(eUnitTeam);
 #endif
 		kToNodeCacheData.bIsRevealedToTeam = pToPlot->isRevealed(eUnitTeam);
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		if (bIsAIControl || kToNodeCacheData.bIsRevealedToTeam)
+#else
 		if (bAIControl || kToNodeCacheData.bIsRevealedToTeam || !bIsHuman)
+#endif
 			kToNodeCacheData.bCanEnterTerrain = pUnit->canEnterTerrain(*pToPlot, CvUnit::MOVEFLAG_PRETEND_CORRECT_EMBARK_STATE);
 		else
 			kToNodeCacheData.bCanEnterTerrain = true;
 	}
 
-#endif
-
-#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
-	CvMap& theMap = GC.getMap();
 #endif
 
 #ifdef AUI_ASTAR_MINOR_OPTIMIZATION
@@ -2666,6 +2746,8 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 #endif
 	CvPlot* pUnitPlot = pUnit->plot();
 #else
+	CvMap& theMap = GC.getMap();
+
 #ifdef AUI_ASTAR_CACHE_PLOTS_AT_NODES
 	pFromPlot = parent->m_pPlot;
 	pToPlot = node->m_pPlot;
@@ -2741,11 +2823,19 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 
 	// slewis - added AI check and embark check to prevent units from moving into unexplored areas
 #ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	if (bIsAIControl || kFromNodeCacheData.bIsRevealedToTeam || pCacheData->isEmbarked())
+#else
 	if (bAIControl || !bIsHuman || kFromNodeCacheData.bIsRevealedToTeam || pCacheData->isEmbarked())
+#endif
 	{
 		if (!kToNodeCacheData.bCanEnterTerrain || !kToNodeCacheData.bIsMountain) // Recycling bIsMountain for Borders check (only for IgnoreUnits Pathfinder!)
 #else
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	if (bIsAIControl || (pFromPlot->isRevealed(eUnitTeam) || pCacheData->isEmbarked()))
+#else
 	if(bAIControl || (pFromPlot->isRevealed(eUnitTeam) || pCacheData->isEmbarked()) || !pCacheData->isHuman())
+#endif
 	{
 #ifdef AUI_ASTAR_FIX_IGNORE_UNITS_PATHFINDER_TERRITORY_CHECK
 		if (!pUnit->canEnterTerrain(*pToPlot, CvUnit::MOVEFLAG_PRETEND_CORRECT_EMBARK_STATE) || !pUnit->canEnterTerritory(pToPlot->getTeam(), false, false, pUnit->IsDeclareWar() || (GetInfo() & MOVE_DECLARE_WAR)))
@@ -4986,10 +5076,10 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 #ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_USES_TO_PLOT_NOT_FROM_PLOT
 #ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH
 #ifdef AUI_ASTAR_FIX_CONSIDER_DANGER_ONLY_POSITIVE_DANGER_DELTA
-					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH &&
-						GET_PLAYER(unit_owner).GetPlotDanger(*pFromPlot) <= pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
+					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH &&
+						GET_PLAYER(unit_owner).GetPlotDanger(*pFromPlot) <= pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
 #else
-					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
+					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
 #endif
 #elif defined(AUI_ASTAR_FIX_CONSIDER_DANGER_ONLY_POSITIVE_DANGER_DELTA)
 					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > 0 && GET_PLAYER(pUnit->getOwner()).GetPlotDanger(*pFromPlot) <= 0)
@@ -4997,7 +5087,7 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 					if (GET_PLAYER(unit_owner).GetPlotDanger(*pToPlot) > 0)
 #endif
 #elif defined(AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
-					if (GET_PLAYER(unit_owner).GetPlotDanger(*pFromPlot) > pUnit->GetBaseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
+					if (GET_PLAYER(unit_owner).GetPlotDanger(*pFromPlot) > pCacheData->baseCombatStrengthConsideringDamage() * AUI_ASTAR_FIX_CONSIDER_DANGER_USES_COMBAT_STRENGTH)
 #else
 					if(GET_PLAYER(unit_owner).GetPlotDanger(*pFromPlot) > 0)
 #endif

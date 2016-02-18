@@ -117,7 +117,9 @@ public:
 		m_iTotalCost = 0;
 		m_iKnownCost = 0;
 		m_iHeuristicCost = 0;
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 		m_iNumChildren = 0;
+#endif
 		m_iData1 = 0;
 		m_iData2 = 0;
 
@@ -151,7 +153,7 @@ public:
 	CvAStarNode* m_pStack;					// For Push/Pop Stack
 
 #ifdef AUI_ASTAR_MINOR_OPTIMIZATION
-	FStaticVector<CvAStarNode*, NUM_DIRECTION_TYPES + 1, true, c_eCiv5GameplayDLL, 0> m_apChildren;
+	FStaticVector<CvAStarNode*, NUM_DIRECTION_TYPES, true, c_eCiv5GameplayDLL, 0> m_apChildren;
 #else
 	FStaticVector<CvAStarNode*, 6, true, c_eCiv5GameplayDLL, 0> m_apChildren;
 #endif
@@ -164,7 +166,9 @@ public:
 #ifdef AUI_ASTAR_CACHE_PLOTS_AT_NODES
 	CvPlot* m_pPlot;
 #endif
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 	short m_iNumChildren;
+#endif
 	bool m_bOnStack;
 
 #ifdef AUI_ASTAR_PRECALCULATE_NEIGHBORS_ON_INITIALIZE

@@ -611,7 +611,11 @@ public:
 	bool setRevealed(TeamTypes eTeam, bool bNewValue, bool bTerrainOnly = false, TeamTypes eFromTeam = NO_TEAM);
 	bool isAdjacentRevealed(TeamTypes eTeam) const;
 	bool isAdjacentNonrevealed(TeamTypes eTeam) const;
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_CONSIDER_2ND_RING_NONREVEALED
+	int getNumNonrevealedInRange(TeamTypes eTeam, int iRange = 0) const;
+#else
 	int getNumAdjacentNonrevealed(TeamTypes eTeam) const;
+#endif
 	bool IsResourceForceReveal(TeamTypes eTeam) const;
 	void SetResourceForceReveal(TeamTypes eTeam, bool bValue);
 
