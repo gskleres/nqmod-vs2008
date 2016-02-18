@@ -27,7 +27,7 @@
 #define NQM_CACHE_DOUBLE
 /// Enables const for functions, variables, and parameters that both allow it and are intended to be const
 #define AUI_CONSTIFY
-/// Removes unused functions that simply increase filesize of the DLL without providing any benefit
+/// Removes unused functions that simply increase file size of the DLL without providing any benefit
 #define NQM_PRUNING
 /// Fixes some sources for level 4 warnings
 #define AUI_WARNING_FIXES
@@ -115,7 +115,7 @@
 #define AUI_PLAYER_FIX_GOODY_HUT_PICKER
 /// Fixes the fact that the function to get a great general stacked with the unit does not detect great admirals (for naval units)
 #define AUI_UNIT_FIX_GET_STACKED_GREAT_GENERAL_WORKS_WITH_ADMIRAL
-/// Fixes badly set up damage modifier checks (eg. Friendly lands modifier got applied twice to melee attackers, Friendly/Enemy territory bonus for ranged units applied based on plot target intead of unit plot)
+/// Fixes badly set up damage modifier checks (eg. Friendly lands modifier got applied twice to melee attackers, Friendly/Enemy territory bonus for ranged units applied based on plot target instead of unit plot)
 #define AUI_UNIT_FIX_BAD_BONUS_STACKS
 /// Implements the missing getter for the enemy defender based on the unit in question (rather than the player); this is important for hidden nationality units
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
@@ -133,12 +133,18 @@
 #define AUI_CITY_FIX_DO_CREATE_PUPPET_FREE_COURTHOUSES_KEPT
 /// Fixes the fact that in simultaneous turns multiplayer, barbarians can spawn and then move units in the same turn.
 #define AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
-/// Fixes the bug where a low beaker yield put into an RA would result in an artificually lower beaker reward
+/// Fixes the bug where a low beaker yield put into an RA would result in an artificially lower beaker reward
 #define AUI_DEAL_FIX_ACCURATE_EARLYGAME_RESEARCH_AGREEMENT_YIELDS
 /// Automating a unit no longer resets the turn timer (from theCAndeMan)
 #define NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
 /// If multiple civs have are eligible to found the league, choose a random one instead of the one with the highest slot
 #define AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+
+// Deliberate AI hindrances
+/// AI players will no longer spread their religion to other human players' cities
+#define NQM_AI_GIMP_NO_RELIGION_SPREAD
+/// AI players will no longer attempt to build any world wonders or world projects
+#define NQM_AI_GIMP_NO_WORLD_WONDERS
 
 // Observer mode fixes
 /// Observers will see all resources
@@ -147,7 +153,7 @@
 #define AUI_PLOT_OBSERVER_SEE_ALL_PLOTS
 /// Observers are set to have met every team in the game
 #define AUI_GAME_OBSERVER_MEET_ALL_TEAMS
-/// Natural wonder popups do not trigger for observers
+/// Natural wonder pop-ups do not trigger for observers
 #define AUI_PLOT_OBSERVER_NO_NW_POPUPS
 /// Observers can now open the city screen as if they had spies in every city
 #define AUI_GAME_OBSERVER_CAN_OPEN_CITIES
@@ -213,6 +219,14 @@
 #define AUI_ASTAR_FIX_IGNORE_UNITS_PATHFINDER_TERRITORY_CHECK
 /// In addition to the movement cost from features on a tile, the route recommender will now also consider the movement cost of moving onto a tile with hills
 #define AUI_ASTAR_FIX_BUILD_ROUTE_COST_CONSIDER_HILLS_MOVEMENT
+/// When a unit is set to auto-explore, it will consider how many tiles are revealed past the 1st ring as well
+#define AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_CONSIDER_2ND_RING_NONREVEALED
+/// Units that are on automated explore will prefer to visit tiles that have a higher "see from" stat instead of just hills (eg. helps with Carthage)
+#define AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_UNHARDCODE_HILL_PREFERENCE
+/// Tweaks the amount of extra cost a tile receives for each new tile it doesn't reveal
+#define AUI_ASTAR_TWEAKED_PATH_EXPLORE_NON_REVEAL_WEIGHT (50)
+/// Units with the Explore UnitAIType will always move to maximize exploration
+#define AUI_ASTAR_EXPLORE_UNITAITYPE_ALWAYS_MAXIMIZES_EXPLORE
 
 // Binomial RNG Stuff (Delnar: the binomial RNG generates numbers in a binomial distribution instead of a flat one like the regular RNG)
 /// Enables the Binomial Random Number Generator (originally from Artificial Unintelligence)
@@ -235,7 +249,7 @@
 #define AUI_CITYSTRATEGY_FIX_TILE_IMPROVERS_LAST_DISBAND_WORKER_TURN_SCALE
 /// If a player does not have any non-scouting military units, the "enough workers" city strategy is triggered and the "want workers" and "need workers" city strategies always return false
 #define AUI_CITYSTRATEGY_DONT_EMPHASIZE_WORKERS_IF_NO_MILITARY
-/// Fixes the "zero'ed out flavor" check to still accept 0 as a possible flavor value, but not accept negative values
+/// Fixes the "zeroed out flavor" check to still accept 0 as a possible flavor value, but not accept negative values
 #define AUI_FLAVOR_MANAGER_FIX_RANDOMIZE_WEIGHTS_ZEROED_OUT_FLAVOR
 /// Fixes the function messing up and returning the wrong adjustment when the value to be added is actually negative (eg. for minor civs)
 #define AUI_FLAVOR_MANAGER_FIX_GET_ADJUSTED_VALUE_NEGATIVE_PLUSMINUS
@@ -249,7 +263,7 @@
 #define AUI_DANGER_PLOTS_SHOULD_IGNORE_UNIT_MINORS_SEE_MAJORS (5)
 /// Minors will ignore all units of players who are not at war with them
 #define AUI_DANGER_PLOTS_FIX_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_IGNORE_ALL_NONWARRED
-/// Minors will assume tresspassing units are there for war
+/// Minors will assume trespassing units are there for war
 #define AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
 /// Fixes bad code for visible barbarian units adding to "barbarian threat" value (affects CS)
 #define AUI_MILITARY_FIX_BARBARIAN_THREAT
@@ -257,6 +271,8 @@
 #define AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
 /// Fixes the check for whether ranged damage would be more than heal rate to use >= instead of >, adds a flat value to total damage at start (both make up for randomness), and treats cities as an expected damage source instead of a flat "yes"
 #define AUI_UNIT_FIX_UNDER_ENEMY_RANGED_ATTACK_HEALRATE (1)
+/// The AI will consider promises it made not to convert cities of a player when choosing a prophet conversion target
+#define AUI_RELIGION_FIX_CHOOSE_PROPHET_CONVERSION_CITY_HONOR_NONCONVERT_PROMISE
 
 // Flavor system changes (affect CS build queue and puppet build queue)
 /// Free buildings and units that a building would generate are factored into the flavor
@@ -347,7 +363,7 @@
 #define AUI_WORKER_FIX_SHOULD_CONSIDER_PLOT_WORK_BOATS_CONSIDER_ALL_SEA_PLOTS
 /// Only disregard an impassable plot if the unit cannot enter impassable plots
 #define AUI_WORKER_FIX_SHOULD_CONSIDER_PLOT_FLYING_WORKER_DISREGARDS_PEAKS
-/// Added some extra checks for Celts so that 1) they will improve forests when there would still be enough unimproved ones remaining to give the same faith bonnus and 2) they will not improve luxury resources on forests if they do not get any use out of them and would lower faith
+/// Added some extra checks for Celts so that 1) they will improve forests when there would still be enough unimproved ones remaining to give the same faith bonus and 2) they will not improve luxury resources on forests if they do not get any use out of them and would lower faith
 #define AUI_WORKER_FIX_CELTIC_IMPROVE_UNIMPROVED_FORESTS
 /// AI/Automated workers will no longer automatically continue building the improvement they are currently building if the tile they are on is in danger (instead of having this behavior trigger in CvHomelandAI)
 #define AUI_WORKER_EVALUATE_WORKER_RETREAT_AND_BUILD
