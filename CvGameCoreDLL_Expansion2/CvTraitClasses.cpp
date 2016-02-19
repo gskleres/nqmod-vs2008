@@ -3295,7 +3295,11 @@ bool CvPlayerTraits::ConvertBarbarianNavalUnit(UnitHandle pUnit)
 		m_pPlayer->GetTreasury()->ChangeGold(iNumGold);
 
 		// Convert the barbarian into our unit
+#ifdef AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
+		pGiftUnit = m_pPlayer->initUnit(pUnit->getUnitType(), pUnit->getX(), pUnit->getY(), pUnit->AI_getUnitAIType(), NO_DIRECTION, true /*bNoMove*/, false, DEFAULT_UNIT_MAP_LAYER, 0, true);
+#else
 		pGiftUnit = m_pPlayer->initUnit(pUnit->getUnitType(), pUnit->getX(), pUnit->getY(), pUnit->AI_getUnitAIType(), NO_DIRECTION, true /*bNoMove*/, false);
+#endif
 		CvAssertMsg(pGiftUnit, "GiftUnit is not assigned a valid value");
 		pGiftUnit->convert(pUnit.pointer(), false);
 		pGiftUnit->setupGraphical();

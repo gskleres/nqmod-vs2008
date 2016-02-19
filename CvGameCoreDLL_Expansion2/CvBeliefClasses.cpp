@@ -1818,7 +1818,11 @@ bool CvBeliefHelpers::ConvertBarbarianUnit(CvPlayer *pPlayer, UnitHandle pUnit)
 	CvPlot *pPlot = pUnit->plot();
 
 	// Convert the barbarian into our unit
+#ifdef AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
+	pNewUnit = pPlayer->initUnit(pUnit->getUnitType(), pUnit->getX(), pUnit->getY(), pUnit->AI_getUnitAIType(), NO_DIRECTION, true /*bNoMove*/, false, DEFAULT_UNIT_MAP_LAYER, 0, true);
+#else
 	pNewUnit = pPlayer->initUnit(pUnit->getUnitType(), pUnit->getX(), pUnit->getY(), pUnit->AI_getUnitAIType(), NO_DIRECTION, true /*bNoMove*/, false);
+#endif
 	CvAssertMsg(pNewUnit, "pNewUnit is not assigned a valid value");
 	pNewUnit->convert(pUnit.pointer(), false);
 	pNewUnit->setupGraphical();

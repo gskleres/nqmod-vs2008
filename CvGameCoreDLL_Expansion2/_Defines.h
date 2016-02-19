@@ -139,6 +139,8 @@
 #define NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
 /// If multiple civs have are eligible to found the league, choose a random one instead of the one with the highest slot
 #define AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+/// Adds a few more things that are transferred to gifted units (GS beaker count, whether the unit is set up for ranged attacks, how many interceptions the unit has made) and removed some things being applied to gifted units (eg. gifted GP no longer triggers CS quests)
+#define AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
 
 // Deliberate AI hindrances
 /// AI players will no longer spread their religion to other human players' cities
