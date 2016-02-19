@@ -18,6 +18,10 @@
 		<Row Tag="TXT_KEY_POLICY_MERCHANT_NAVY_HELP">
 			<Text>[COLOR_POSITIVE_TEXT]Colonialism[ENDCOLOR][NEWLINE]Newly founded cities start with 3 extra [ICON_CITIZEN] Population, a free Worker, 6 additional tiles claimed, and a Governor's Mansion which provides 3 [ICON_HAPPINESS_1] Happiness.</Text>
 		</Row>
+		<Delete Tag="TXT_KEY_POLICY_MERCHANTNAVY_TEXT" />
+		<Row Tag="TXT_KEY_POLICY_MERCHANTNAVY_TEXT">
+			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Colonialism)[ENDCOLOR][NEWLINE][NEWLINE]Colonialism is the establishment, exploitation, maintenance, acquisition, and expansion of colony in one territory by a political power from another territory. It is a set of unequal relationships between the colonial power and the colony and often between the colonists and the indigenous population.[NEWLINE][NEWLINE]The European colonial period was the era from the 16th century to the mid-20th century when several European powers established colonies in Asia, Africa, and the Americas. At first the countries followed mercantilist policies designed to strengthen the home economy at the expense of rivals, so the colonies were usually allowed to trade only with the mother country. By the mid-19th century, however, the powerful British Empire gave up mercantilism and trade restrictions and introduced the principle of free trade, with few restrictions or tariffs.</Text>
+		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_MERCHANT_NAVY" />
@@ -27,6 +31,10 @@
 		<Delete Tag="TXT_KEY_POLICY_MERCHANT_NAVY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MERCHANT_NAVY_HELP">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Colonialism[ENDCOLOR][NEWLINE]Newly founded cities start with 3 extra [ICON_CITIZEN] Population, a free Worker, 6 additional tiles claimed, and a Governor's Mansion which provides 3 [ICON_HAPPINESS_1] Happiness.</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_MERCHANTNAVY_TEXT" />
+		<Row Tag="TXT_KEY_POLICY_MERCHANTNAVY_TEXT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Colonialism)[ENDCOLOR][NEWLINE][NEWLINE]Colonialism is the establishment, exploitation, maintenance, acquisition, and expansion of colony in one territory by a political power from another territory. It is a set of unequal relationships between the colonial power and the colony and often between the colonists and the indigenous population.[NEWLINE][NEWLINE]The European colonial period was the era from the 16th century to the mid-20th century when several European powers established colonies in Asia, Africa, and the Americas. At first the countries followed mercantilist policies designed to strengthen the home economy at the expense of rivals, so the colonies were usually allowed to trade only with the mother country. By the mid-19th century, however, the powerful British Empire gave up mercantilism and trade restrictions and introduced the principle of free trade, with few restrictions or tariffs.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -38,6 +46,10 @@
 		<Row Tag="TXT_KEY_POLICY_MERCHANT_NAVY_HELP">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Colonialism[ENDCOLOR][NEWLINE]Newly founded cities start with 3 extra [ICON_CITIZEN] Population, a free Worker, 6 additional tiles claimed, and a Governor's Mansion which provides 3 [ICON_HAPPINESS_1] Happiness.</Text>
 		</Row>
+		<Delete Tag="TXT_KEY_POLICY_MERCHANTNAVY_TEXT" />
+		<Row Tag="TXT_KEY_POLICY_MERCHANTNAVY_TEXT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Colonialism)[ENDCOLOR][NEWLINE][NEWLINE]Colonialism is the establishment, exploitation, maintenance, acquisition, and expansion of colony in one territory by a political power from another territory. It is a set of unequal relationships between the colonial power and the colony and often between the colonists and the indigenous population.[NEWLINE][NEWLINE]The European colonial period was the era from the 16th century to the mid-20th century when several European powers established colonies in Asia, Africa, and the Americas. At first the countries followed mercantilist policies designed to strengthen the home economy at the expense of rivals, so the colonies were usually allowed to trade only with the mother country. By the mid-19th century, however, the powerful British Empire gave up mercantilism and trade restrictions and introduced the principle of free trade, with few restrictions or tariffs.</Text>
+		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_MERCHANT_NAVY" />
@@ -47,6 +59,10 @@
 		<Delete Tag="TXT_KEY_POLICY_MERCHANT_NAVY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MERCHANT_NAVY_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Colonialism[ENDCOLOR][NEWLINE]Newly founded cities start with 3 extra [ICON_CITIZEN] Population, a free Worker, 6 additional tiles claimed, and a Governor's Mansion which provides 3 [ICON_HAPPINESS_1] Happiness.</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_MERCHANTNAVY_TEXT" />
+		<Row Tag="TXT_KEY_POLICY_MERCHANTNAVY_TEXT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Colonialism)[ENDCOLOR][NEWLINE][NEWLINE]Colonialism is the establishment, exploitation, maintenance, acquisition, and expansion of colony in one territory by a political power from another territory. It is a set of unequal relationships between the colonial power and the colony and often between the colonists and the indigenous population.[NEWLINE][NEWLINE]The European colonial period was the era from the 16th century to the mid-20th century when several European powers established colonies in Asia, Africa, and the Americas. At first the countries followed mercantilist policies designed to strengthen the home economy at the expense of rivals, so the colonies were usually allowed to trade only with the mother country. By the mid-19th century, however, the powerful British Empire gave up mercantilism and trade restrictions and introduced the principle of free trade, with few restrictions or tariffs.</Text>
 		</Row>
 	</Language_RU_RU>
 	

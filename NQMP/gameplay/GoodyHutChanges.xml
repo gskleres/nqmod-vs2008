@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 4/21/2015 11:42:59 PM -->
 <GameData>
 	
-	<!-- Merge Map + Barb ruin, and make them do a map 7 tiles radius from the ruin, with no empty spaces -->
+	<!-- Merge Map + Barb ruin, and make them do a map 5 tiles radius from the ruin, with no empty spaces -->
 	<GoodyHuts>
 		<Update>
-			<Set RevealNearbyBarbariansRange="5" MapOffset="0" MapRange="5" MapProb="100" />
+			<Set RevealNearbyBarbariansRange="5" MapOffset="1" MapRange="5" MapProb="100" />
 			<Where Type="GOODY_MAP" />
 		</Update>
 	</GoodyHuts>

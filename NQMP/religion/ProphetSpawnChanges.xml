@@ -3,8 +3,12 @@
 <GameData>
 	<Defines>
 		<Update>
-			<Set Value="25" />
+			<Set Value="100" />
 			<Where Name="RELIGION_BASE_CHANCE_PROPHET_SPAWN" />
+		</Update>
+		<Update>
+			<Set Value="300" />
+			<Where Name="RELIGION_MIN_FAITH_FIRST_PROPHET" />
 		</Update>
 	</Defines>
 </GameData>

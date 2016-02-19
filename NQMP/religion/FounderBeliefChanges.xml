@@ -4,14 +4,6 @@
 
 	<!-- *** CHANGE EXISTING FOUNDER BELIEFS *** -->
 
-	<!-- Interfaith Dialogue: Doubled the Science gain (No update to tooltip needed). -->
-	<Beliefs>
-		<Update>
-			<Set SciencePerOtherReligionFollower="20" />
-			<Where Type="BELIEF_INTERFAITH_DIALOGUE" />
-		</Update>
-	</Beliefs>
-	
 	<!-- Peace Loving: Name changed to "Baptisms" and no longer requires peace. -->
 	<!-- NOTE: Code change is in the DLL under "new Peace Loving" -->
 	<Language_en_US>

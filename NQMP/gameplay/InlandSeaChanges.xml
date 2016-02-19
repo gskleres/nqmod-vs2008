@@ -13,6 +13,15 @@
 		</Update>
 	</Defines>
 
+	<!-- allow production of naval units in those cities -->
+	<Units>
+		<Update>
+			<Set MinAreaSize="6" />
+			<Where Domain="DOMAIN_SEA" />
+		</Update>
+	</Units>
+	
+	<!-- allow production of coastal buildings in those cities -->
 	<Buildings>
 		<!--Normal Buildings-->
 		<Update>

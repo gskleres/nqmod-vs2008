@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 6/2/2015 9:36:44 PM -->
 <GameData>
 	
-	<!-- Meritocracy now also provides +1 Gold per City and +15% Gold from City Connections. -->
+	<!-- Meritocracy now also provides +15% Gold from City Connections. -->
 	
 	<!-- Gameplay -->
 	<Policies>
@@ -11,7 +11,9 @@
 			<Where Type="POLICY_MERITOCRACY" />
 		</Update>
 	</Policies>
-	
+
+
+
 	<!-- Localization -->
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_MERITOCRACY_HELP" />

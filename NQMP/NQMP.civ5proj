@@ -5,16 +5,14 @@
     <ProjectGuid>{b41da1e7-5bd5-4efb-a580-8dec19fd7525}</ProjectGuid>
     <Name>No Quitters Mod</Name>
     <Guid>917a39f3-57f0-4b18-b3cb-c4b7dbfbb41e</Guid>
-    <ModVersion>81</ModVersion>
-    <Stability>Stable</Stability>
-    <Teaser>This is the official mod used for NQ multiplayer competitive games.</Teaser>
-    <Description>This is the official mod used for NQ multiplayer competitive games.
-
-Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (see www.reddit.com/r/nqmod) for all their help making this possible! &lt;3</Description>
+    <ModVersion>91</ModVersion>
+    <Stability>Alpha</Stability>
+    <Teaser>Optional balance mod for NQ multiplayer games.</Teaser>
+    <Description>Optional balance mod for NQ multiplayer games.</Description>
     <Authors>Fruitstrike</Authors>
-    <SpecialThanks>NotQ, Uncanny Luck, xSnarf, Purple Lurple, Bratpirat, Delnar_Ersike, TONS OF PEOPLE</SpecialThanks>
+    <SpecialThanks>Hellblazer, NotQ, Delnar_Ersike, Uncanny Luck, and all the wonderful testers!!</SpecialThanks>
     <AffectsSavedGames>true</AffectsSavedGames>
-    <MinCompatibleSaveVersion>81</MinCompatibleSaveVersion>
+    <MinCompatibleSaveVersion>91</MinCompatibleSaveVersion>
     <SupportsSinglePlayer>true</SupportsSinglePlayer>
     <SupportsMultiplayer>true</SupportsMultiplayer>
     <SupportsHotSeat>true</SupportsHotSeat>
@@ -23,6 +21,16 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
     <RootNamespace>NQMP</RootNamespace>
     <ModReferences />
     <ModActions>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>unit_promotions/RemoveBlitzFromParadrops.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>_sql/Policies_ExtraTourismPerGreatWork.sql</FileName>
+      </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
@@ -46,12 +54,37 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>buildings/Observatory_SQL.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>buildings/ObservatoryChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>buildings/StoneworksChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>civs/AssyriaChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>civs/BabylonChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/BrazilChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/CarthageChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -67,6 +100,11 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>civs/FranceChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/GermanyChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -136,7 +174,72 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>great_people/GreatEngineerChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/autocracy/T1_EliteForces.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>ideologies/autocracy/T1_Mobilization.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/autocracy/T3_CultOfPersonality.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/freedom/T1_CovertAction.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/freedom/T1_CreativeExpression.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/freedom/T1_EconomicUnion.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/freedom/T1_EconomicUnion.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/freedom/T2_Urbanization.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T2_CulturalRevolution.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T2_PartyLeadership.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T3_DictatorshipOfTheProletariat.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T3_DictatorshipOfTheProletariat.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T3_IronCurtain.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -186,7 +289,22 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>resolutions/RemoveScholarsInResidence.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>resolutions/WorldIdeologyChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>technologies/CompassChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ui/GameSetupUI.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -212,11 +330,6 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>unit_promotions/NavalMeleeChanges.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>unit_promotions/RemoveBlitzFromParadrops.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -321,6 +434,11 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>terrain/IronChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>wonders_national/EastIndiaCompanyChanges.xml</FileName>
       </Action>
       <Action>
@@ -376,12 +494,22 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>wonders_world/HubbleChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>wonders_world/NotreDameChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>wonders_world/PorcelainTowerChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_world/PyramidChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -412,6 +540,11 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>social_policies/2_liberty/Liberty0_OpenerAndFinisher.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>social_policies/2_liberty/Liberty4_Representation.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -636,6 +769,11 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>social_policies/8_exploration/Exploration2_MaritimeInfrastructure.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>social_policies/8_exploration/Exploration3_NavalTradition.xml</FileName>
       </Action>
       <Action>
@@ -801,9 +939,21 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
         <Description>Commerce4_Entrepreneurship</Description>
         <FileName>social_policies/7_commerce/Commerce4_Entrepreneurship.xml</FileName>
       </Content>
+      <Content>
+        <Type>InGameUIAddin</Type>
+        <Name>T1_EconomicUnion</Name>
+        <Description>T1_EconomicUnion</Description>
+        <FileName>ideologies/freedom/T1_EconomicUnion.xml</FileName>
+      </Content>
+      <Content>
+        <Type>InGameUIAddin</Type>
+        <Name>T1_CovertAction</Name>
+        <Description>T1_CovertAction</Description>
+        <FileName>ideologies/freedom/T1_CovertAction.xml</FileName>
+      </Content>
     </ModContent>
     <ModProperties />
-    <Homepage>http://https://docs.google.com/document/d/1me025Vepd3qXN5QqQtqakPUuSfQmk8D5Jv15SZp9ly8/edit?usp=sharing</Homepage>
+    <Homepage>http://www.reddit.com/r/nqmod</Homepage>
     <ModDependencies>
       <Association>
         <Type>Dlc</Type>
@@ -891,11 +1041,31 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="buildings\ObservatoryChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="buildings\Observatory_SQL.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="buildings\StoneworksChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="civs\AssyriaChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="civs\BabylonChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\BrazilChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\CarthageChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -908,6 +1078,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="civs\France_SQL.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\GermanyChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -971,7 +1145,67 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="great_people\GreatEngineerChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\autocracy\T1_EliteForces.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="ideologies\autocracy\T1_Mobilization.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\autocracy\T3_CultOfPersonality.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\freedom\T1_CovertAction.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\freedom\T1_CovertAction.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\freedom\T1_CreativeExpression.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\freedom\T1_EconomicUnion.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\freedom\T1_EconomicUnion.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\freedom\T1_EconomicUnion.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\freedom\T2_Urbanization.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\order\T2_CulturalRevolution.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\order\T2_PartyLeadership.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\order\T3_DictatorshipOfTheProletariat.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\order\T3_DictatorshipOfTheProletariat.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\order\T3_IronCurtain.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1015,6 +1249,14 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="resolutions\RemoveScholarsInResidence.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="resolutions\WorldIdeologyChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="social_policies\1_tradition\Tradition1_Oligarchy.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1028,6 +1270,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="social_policies\2_liberty\Liberty0_OpenerAndFinisher.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="social_policies\2_liberty\Liberty4_Representation.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1211,6 +1457,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="social_policies\8_exploration\Exploration2_MaritimeInfrastructure.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="social_policies\8_exploration\Exploration4_NaviationSchool.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1271,11 +1521,27 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="terrain\IronChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\AdvancedSetup.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
     <Content Include="ui\EUI_tooltips.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
+    <Content Include="ui\GameSetupUI.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="ui\InfoTooltipInclude.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\SelectCivilization.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
@@ -1447,6 +1713,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="wonders_world\HubbleChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="xml_localization_template.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1534,6 +1804,10 @@ Special thanks to NotQ, UncannyLuck, Bratpirat and all of my fabulous testers (s
     <Folder Include="improvements" />
     <Folder Include="ideologies" />
     <Folder Include="scoring_tweaks\" />
+    <Folder Include="great_people" />
+    <Folder Include="_sql" />
+    <Folder Include="terrain" />
+    <Folder Include="resolutions" />
     <Folder Include="ui" />
     <Folder Include="social_policies" />
     <Folder Include="social_policies\1_tradition" />

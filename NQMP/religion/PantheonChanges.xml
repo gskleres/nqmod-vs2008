@@ -2,37 +2,47 @@
 <!-- Created by ModBuddy on 4/14/2015 11:57:31 AM -->
 <GameData>
 	
+	<!-- Move Faith Healers to Follower belief -->
+	<Beliefs>
+		<Update>
+			<Set Pantheon="false" Follower="true" />
+			<Where Type="BELIEF_FAITH_HEALERS" />
+		</Update>
+	</Beliefs>
+	
 	<!-- *** CHANGE EXISTING PANTHEONS *** -->
 	
-	<!-- Ancestor Worship: Now +2 Culture for Shrines (up from +1) -->
+	<!-- Ancestor Worship: Now also provides +1 Faith per Monument -->
 	<Belief_BuildingClassYieldChanges>
-		<Update>
-			<Set YieldChange="2" />
-			<Where BeliefType="BELIEF_ANCESTOR_WORSHIP" BuildingClassType="BUILDINGCLASS_SHRINE" YieldType="YIELD_CULTURE" />
-		</Update>
+		<Row>
+			<BeliefType>BELIEF_ANCESTOR_WORSHIP</BeliefType>
+			<BuildingClassType>BUILDINGCLASS_MONUMENT</BuildingClassType>
+			<YieldType>YIELD_FAITH</YieldType>
+			<YieldChange>1</YieldChange>
+		</Row>
 	</Belief_BuildingClassYieldChanges>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BELIEF_ANCESTOR_WORSHIP" />
 		<Row Tag="TXT_KEY_BELIEF_ANCESTOR_WORSHIP">
-			<Text>+2 [ICON_CULTURE] Culture from Shrines</Text>
+			<Text>+1 [ICON_CULTURE] Culture from Shrines and +1 [ICON_PEACE] Faith from Monuments</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BELIEF_ANCESTOR_WORSHIP" />
 		<Row Tag="TXT_KEY_BELIEF_ANCESTOR_WORSHIP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+2 [ICON_CULTURE] Culture from Shrines</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_CULTURE] Culture from Shrines and +1 [ICON_PEACE] Faith from Monuments</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BELIEF_ANCESTOR_WORSHIP" />
 		<Row Tag="TXT_KEY_BELIEF_ANCESTOR_WORSHIP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+2 [ICON_CULTURE] Culture from Shrines</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_CULTURE] Culture from Shrines and +1 [ICON_PEACE] Faith from Monuments</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BELIEF_ANCESTOR_WORSHIP" />
 		<Row Tag="TXT_KEY_BELIEF_ANCESTOR_WORSHIP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+2 [ICON_CULTURE] Culture from Shrines</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_CULTURE] Culture from Shrines and +1 [ICON_PEACE] Faith from Monuments</Text>
 		</Row>
 	</Language_RU_RU>
 	
@@ -287,7 +297,7 @@
 	</Language_RU_RU>
 	
 
-	<!-- Goddess of Protection: Ranged combat strength +50% (up from +30%) and now also provides +2 Faith from Walls -->
+	<!-- Goddess of Protection: Ranged combat strength +50% (up from +30%) and now also provides +1 Faith from Walls -->
 	<Beliefs>
 		<Update>
 			<Set CityRangeStrikeModifier="50" />
@@ -299,97 +309,134 @@
 			<BeliefType>BELIEF_GODDESS_STRATEGY</BeliefType>
 			<BuildingClassType>BUILDINGCLASS_WALLS</BuildingClassType>
 			<YieldType>YIELD_FAITH</YieldType>
-			<YieldChange>2</YieldChange>
+			<YieldChange>1</YieldChange>
 		</Row>
 	</Belief_BuildingClassYieldChanges>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BELIEF_GODDESS_STRATEGY" />
 		<Row Tag="TXT_KEY_BELIEF_GODDESS_STRATEGY">
-			<Text>Cities gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength and Walls provide +2 [ICON_PEACE] Faith</Text>
+			<Text>Cities gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength and Walls provide +1 [ICON_PEACE] Faith</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BELIEF_GODDESS_STRATEGY" />
 		<Row Tag="TXT_KEY_BELIEF_GODDESS_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Cities gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength and Walls provide +2 [ICON_PEACE] Faith</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Cities gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength and Walls provide +1 [ICON_PEACE] Faith</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BELIEF_GODDESS_STRATEGY" />
 		<Row Tag="TXT_KEY_BELIEF_GODDESS_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Cities gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength and Walls provide +2 [ICON_PEACE] Faith</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Cities gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength and Walls provide +1 [ICON_PEACE] Faith</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BELIEF_GODDESS_STRATEGY" />
 		<Row Tag="TXT_KEY_BELIEF_GODDESS_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Cities gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength and Walls provide +2 [ICON_PEACE] Faith</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Cities gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength and Walls provide +1 [ICON_PEACE] Faith</Text>
 		</Row>
 	</Language_RU_RU>
 
-
+	
+	<!-- Goddess of the Hunt: Added +1 Faith from Camps -->
+	<Belief_ImprovementYieldChanges>
+		<Row>
+			<BeliefType>BELIEF_GODDESS_HUNT</BeliefType>
+			<ImprovementType>IMPROVEMENT_CAMP</ImprovementType>
+			<YieldType>YIELD_FAITH</YieldType>
+			<Yield>1</Yield>
+		</Row>
+	</Belief_ImprovementYieldChanges>
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_BELIEF_GODDESS_HUNT" />
+		<Row Tag="TXT_KEY_BELIEF_GODDESS_HUNT">
+			<Text>+1 [ICON_FOOD] Food and +1 [ICON_PEACE] Faith from Camps</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_BELIEF_GODDESS_HUNT" />
+		<Row Tag="TXT_KEY_BELIEF_GODDESS_HUNT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_PEACE] Faith from Camps</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_BELIEF_GODDESS_HUNT" />
+		<Row Tag="TXT_KEY_BELIEF_GODDESS_HUNT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_PEACE] Faith from Camps</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_BELIEF_GODDESS_HUNT" />
+		<Row Tag="TXT_KEY_BELIEF_GODDESS_HUNT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_PEACE] Faith from Camps</Text>
+		</Row>
+	</Language_RU_RU>
+	
+	
 	<!-- Monument to the Gods: +20% production boost (up from +15%) -->
 	<Beliefs>
 		<Update>
-			<Set WonderProductionModifier="20" />
+			<Set WonderProductionModifier="20" ObsoleteEra="ERA_RENAISSANCE" />
 			<Where Type="BELIEF_MONUMENT_GODS" />
 		</Update>
 	</Beliefs>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BELIEF_MONUMENT_GODS" />
 		<Row Tag="TXT_KEY_BELIEF_MONUMENT_GODS">
-			<Text>+20% [ICON_PRODUCTION] Production of Ancient/Classical Wonders</Text>
+			<Text>+20% [ICON_PRODUCTION] Production of Ancient/Classical/Medieval Wonders</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BELIEF_MONUMENT_GODS" />
 		<Row Tag="TXT_KEY_BELIEF_MONUMENT_GODS">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+20% [ICON_PRODUCTION] Production of Ancient/Classical Wonders</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+20% [ICON_PRODUCTION] Production of Ancient/Classical/Medieval Wonders</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BELIEF_MONUMENT_GODS" />
 		<Row Tag="TXT_KEY_BELIEF_MONUMENT_GODS">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+20% [ICON_PRODUCTION] Production of Ancient/Classical Wonders</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+20% [ICON_PRODUCTION] Production of Ancient/Classical/Medieval Wonders</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BELIEF_MONUMENT_GODS" />
 		<Row Tag="TXT_KEY_BELIEF_MONUMENT_GODS">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+20% [ICON_PRODUCTION] Production of Ancient/Classical Wonders</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+20% [ICON_PRODUCTION] Production of Ancient/Classical/Medieval Wonders</Text>
 		</Row>
 	</Language_RU_RU>
 	
 
-	<!-- Oral Tradition: +2 Culture from Plantations (up from +1) -->
+	<!-- Oral Tradition: +1 Food and +1 Culture from Plantations (Food added in additional to Culture) -->
 	<Belief_ImprovementYieldChanges>
-		<Update>
-			<Set Yield="2" />
-			<Where BeliefType="BELIEF_ORAL_TRADITION" ImprovementType="IMPROVEMENT_PLANTATION" YieldType="YIELD_CULTURE" />
-		</Update>
+		<Row>
+			<BeliefType>BELIEF_ORAL_TRADITION</BeliefType>
+			<ImprovementType>IMPROVEMENT_PLANTATION</ImprovementType>
+			<YieldType>YIELD_FOOD</YieldType>
+			<Yield>1</Yield>
+		</Row>
 	</Belief_ImprovementYieldChanges>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BELIEF_ORAL_TRADITION" />
 		<Row Tag="TXT_KEY_BELIEF_ORAL_TRADITION">
-			<Text>+2 [ICON_CULTURE] Culture from Plantations</Text>
+			<Text>+1 [ICON_FOOD] Food and +1 [ICON_CULTURE] Culture from Plantations</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BELIEF_ORAL_TRADITION" />
 		<Row Tag="TXT_KEY_BELIEF_ORAL_TRADITION">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+2 [ICON_CULTURE] Culture from Plantations</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_CULTURE] Culture from Plantations</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BELIEF_ORAL_TRADITION" />
 		<Row Tag="TXT_KEY_BELIEF_ORAL_TRADITION">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+2 [ICON_CULTURE] Culture from Plantations</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_CULTURE] Culture from Plantations</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BELIEF_ORAL_TRADITION" />
 		<Row Tag="TXT_KEY_BELIEF_ORAL_TRADITION">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+2 [ICON_CULTURE] Culture from Plantations</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_CULTURE] Culture from Plantations</Text>
 		</Row>
 	</Language_RU_RU>
 
@@ -469,10 +516,44 @@
 	</Language_RU_RU>
 
 
+	<!-- Stone Circles: Now also provides +1 Production from Quarries -->
+	<Belief_ImprovementYieldChanges>
+		<Row>
+			<BeliefType>BELIEF_STONE_CIRCLES</BeliefType>
+			<ImprovementType>IMPROVEMENT_QUARRY</ImprovementType>
+			<YieldType>YIELD_PRODUCTION</YieldType>
+			<Yield>1</Yield>
+		</Row>
+	</Belief_ImprovementYieldChanges>
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_BELIEF_STONE_CIRCLES" />
+		<Row Tag="TXT_KEY_BELIEF_STONE_CIRCLES">
+			<Text>+1 [ICON_PRODUCTION] Production and +2 [ICON_PEACE] Faith from Quarries</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_BELIEF_STONE_CIRCLES" />
+		<Row Tag="TXT_KEY_BELIEF_STONE_CIRCLES">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_PRODUCTION] Production and +2 [ICON_PEACE] Faith from Quarries</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_BELIEF_STONE_CIRCLES" />
+		<Row Tag="TXT_KEY_BELIEF_STONE_CIRCLES">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_PRODUCTION] Production and +2 [ICON_PEACE] Faith from Quarries</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_BELIEF_STONE_CIRCLES" />
+		<Row Tag="TXT_KEY_BELIEF_STONE_CIRCLES">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_PRODUCTION] Production and +2 [ICON_PEACE] Faith from Quarries</Text>
+		</Row>
+	</Language_RU_RU>
+	
 
 	<!-- *** ADD NEW PANTHEONS *** -->
 
-	<!-- Daughter of Autumn: +1 Food and +1 Faith from Plantations -->
+	<!-- Daughter of Autumn: +1 Production and +1 Faith from Plantations -->
 	<Beliefs>
 		<Row>
 			<Type>BELIEF_DAUGHTER_AUTUMN</Type>
@@ -485,7 +566,7 @@
 		<Row>
 			<BeliefType>BELIEF_DAUGHTER_AUTUMN</BeliefType>
 			<ImprovementType>IMPROVEMENT_PLANTATION</ImprovementType>
-			<YieldType>YIELD_FOOD</YieldType>
+			<YieldType>YIELD_PRODUCTION</YieldType>
 			<Yield>1</Yield>
 		</Row>
 		<Row>
@@ -497,7 +578,7 @@
 	</Belief_ImprovementYieldChanges>
 	<Language_en_US>
 		<Row Tag="TXT_KEY_BELIEF_DAUGHTER_AUTUMN">
-			<Text>+1 [ICON_FOOD] Food and +1 [ICON_PEACE] Faith from Plantations</Text>
+			<Text>+1 [ICON_PRODUCTION] Production and +1 [ICON_PEACE] Faith from Plantations</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DAUGHTER_AUTUMN_SHORT">
 			<Text>Daughter of Autumn</Text>
@@ -505,7 +586,7 @@
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_BELIEF_DAUGHTER_AUTUMN">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_PEACE] Faith from Plantations</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_PRODUCTION] Production and +1 [ICON_PEACE] Faith from Plantations</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DAUGHTER_AUTUMN_SHORT">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Daughter of Autumn</Text>
@@ -513,7 +594,7 @@
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_BELIEF_DAUGHTER_AUTUMN">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_PEACE] Faith from Plantations</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_PRODUCTION] Production and +1 [ICON_PEACE] Faith from Plantations</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DAUGHTER_AUTUMN_SHORT">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Daughter of Autumn</Text>
@@ -521,7 +602,7 @@
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BELIEF_DAUGHTER_AUTUMN">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_PEACE] Faith from Plantations</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_PRODUCTION] Production and +1 [ICON_PEACE] Faith from Plantations</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DAUGHTER_AUTUMN_SHORT">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Daughter of Autumn</Text>
