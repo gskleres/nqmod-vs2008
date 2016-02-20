@@ -141,6 +141,8 @@
 #define AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
 /// Adds a few more things that are transferred to gifted units (GS beaker count, whether the unit is set up for ranged attacks, how many interceptions the unit has made) and removed some things being applied to gifted units (eg. gifted GP no longer triggers CS quests)
 #define AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
+/// Fixes a piece of code related to setting tiles around puppets to be worked by the puppet that not only did not work as intended, but could also have strange side-effects as well.
+#define AUI_CITY_FIX_PUPPET_WORKED_PLOT_OVERRIDE
 
 // Deliberate AI hindrances
 /// AI players will no longer spread their religion to other human players' cities

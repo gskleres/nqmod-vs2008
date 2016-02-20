@@ -9009,6 +9009,17 @@ void CvCity::DoCreatePuppet()
 	CvPlot* pLoopPlot;
 
 	// Loop through all plots near this City
+#ifdef AUI_CITY_FIX_PUPPET_WORKED_PLOT_OVERRIDE
+	int iMaxDX;
+	for (int iDY = -iForceWorkingPuppetRange; iDY <= iForceWorkingPuppetRange; iDY++)
+	{
+		iMaxDX = iForceWorkingPuppetRange - MAX(0, iDY);
+		for (int iDX = -iForceWorkingPuppetRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			if (iDX == 0 && iDY == 0)
+				continue;
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iPlotLoop = 0; iPlotLoop < NUM_CITY_PLOTS; iPlotLoop++)
 	{
 		pLoopPlot = plotCity(getX(), getY(), iPlotLoop);
@@ -9017,6 +9028,7 @@ void CvCity::DoCreatePuppet()
 		{
 			// Cut off areas around the city we don't care about
 			pLoopPlot = plotXYWithRangeCheck(pLoopPlot->getX(), pLoopPlot->getY(), getX(), getY(), iForceWorkingPuppetRange);
+#endif
 
 			if(pLoopPlot != NULL)
 			{
