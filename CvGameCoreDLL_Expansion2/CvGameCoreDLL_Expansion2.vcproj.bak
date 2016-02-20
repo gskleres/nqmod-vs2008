@@ -18,11 +18,11 @@
 	<Configurations>
 		<Configuration
 			Name="Mod|Win32"
-			OutputDirectory="$(SolutionDir)\BuildOutput\VS2008_$(ConfigurationName)$(PlatformName)\"
+			OutputDirectory="$(SolutionDir)\BouldOutput\VS2008_$(ConfigurationName)$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)\BuildTemp\VS2008_$(ProjectName)$(ConfigurationName)$(PlatformName)\"
 			ConfigurationType="2"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -45,27 +45,19 @@
 				Optimization="3"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)CvWorldBuilderMap\include\&quot;;&quot;$(SolutionDir)CvGameCoreDLLUtil\include\&quot;;&quot;$(SolutionDir)CvLocalization\include\&quot;;&quot;$(SolutionDir)CvGameDatabase\include\&quot;;&quot;$(SolutionDir)FirePlace\include\&quot;;&quot;$(SolutionDir)FirePlace\include\FireWorks\&quot;;&quot;$(SolutionDir)ThirdPartyLibs\Lua51\include\&quot;"
 				PreprocessorDefinitions="FXS_IS_DLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;CVGAMECOREDLL_EXPORTS;FINAL_RELEASE;_CRT_SECURE_NO_WARNINGS"
-				StringPooling="true"
 				ExceptionHandling="0"
 				RuntimeLibrary="2"
-				StructMemberAlignment="5"
-				BufferSecurityCheck="true"
+				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="true"
-				EnableEnhancedInstructionSet="2"
-				FloatingPointModel="2"
-				RuntimeTypeInfo="false"
+				FloatingPointModel="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="CvGameCoreDLLPCH.h"
-				AssemblerOutput="4"
-				WarningLevel="4"
+				WarningLevel="3"
 				DebugInformationFormat="3"
-				CompileAs="0"
-				DisableSpecificWarnings="4512;4201;4505"
 				EnablePREfast="true"
 			/>
 			<Tool
@@ -82,21 +74,19 @@
 				AdditionalDependencies="CvWorldBuilderMapWin32.lib CvGameCoreDLLUtilWin32.lib CvLocalizationWin32.lib CvGameDatabaseWin32.lib FireWorksWin32.lib FLuaWin32.lib lua51_Win32.lib winmm.lib"
 				OutputFile="$(OutDir)\CvGameCore_Expansion2.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="true"
+				SuppressStartupBanner="false"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)\CvWorldBuilderMap\lib\&quot;;&quot;$(SolutionDir)\CvGameCoreDLLUtil\lib\&quot;;&quot;$(SolutionDir)\CvLocalization\lib\&quot;;&quot;$(SolutionDir)\CvGameDatabase\lib\&quot;;&quot;$(SolutionDir)FirePlace\lib\&quot;;&quot;$(SolutionDir)ThirdPartyLibs\Lua51\lib\&quot;"
 				ModuleDefinitionFile="$(ProjectDir)CvGameCoreDLL.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/CvGameCore_Expansion2.pdb"
+				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
 				SubSystem="2"
 				LargeAddressAware="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				LinkTimeCodeGeneration="1"
-				RandomizedBaseAddress="2"
-				DataExecutionPrevention="2"
-				ImportLibrary="$(OutDir)/CvGameCore_Expansion2.lib"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)/$(TargetName).lib"
 				TargetMachine="1"
-				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -519,10 +509,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\_Defines.h"
-				>
-			</File>
 			<File
 				RelativePath=".\banned.h"
 				>

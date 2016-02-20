@@ -166,6 +166,7 @@ public:
 	int GetFreeTechs() const;
 	int GetFreePolicies() const;
 	int GetFreeFlatFaith() const; // NQMP GJS - New Stonehenge
+	int GetMountainScienceYield() const; // NQMP GJS - mountain science yield
 	int GetFreeGreatPeople() const;
 	int GetMedianTechPercentChange() const;
 	int GetGold() const;
@@ -195,6 +196,7 @@ public:
 	int GetTradeRouteLandDistanceModifier() const;
 	int GetTradeRouteLandGoldBonus() const;
 	int GetCityStateTradeRouteProductionModifier() const;
+	int GetCityStateTradeRouteGoldModifier() const; // NQMP GJS - new Economic Union
 	int GetGreatScientistBeakerModifier() const;
 	int GetExtraLeagueVotes() const;
 	int GetPreferredDisplayPosition() const;
@@ -388,6 +390,7 @@ private:
 	int m_iFreeTechs;
 	int m_iFreePolicies;
 	int m_iFreeFlatFaith; // NQMP GJS - New Stonehenge
+	int m_iMountainScienceYield; // NQMP GJS - mountain science yield
 	int m_iFreeGreatPeople;
 	int m_iMedianTechPercentChange;
 	int m_iGold;
@@ -418,6 +421,7 @@ private:
 	int m_iTradeRouteLandDistanceModifier;
 	int m_iTradeRouteLandGoldBonus;
 	int m_iCityStateTradeRouteProductionModifier;
+	int m_iCityStateTradeRouteGoldModifier; // NQMP GJS - new Economic Union
 	int m_iGreatScientistBeakerModifier;
 	int m_iExtraLeagueVotes;
 	int m_iPreferredDisplayPosition;
@@ -652,6 +656,7 @@ public:
 	int GetNumBuildingsFromFaith() const;
 
 	int GetCityStateTradeRouteProductionModifier() const;
+	int GetCityStateTradeRouteGoldModifier() const; // NQMP GJS - new Economic Union
 
 	int GetBuildingProductionModifier() const;
 	void ChangeBuildingProductionModifier(int iChange);

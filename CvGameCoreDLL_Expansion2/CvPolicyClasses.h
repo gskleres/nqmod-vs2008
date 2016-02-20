@@ -95,6 +95,7 @@ public:
 	int GetPlotCultureCostModifier() const;
 	int GetPlotCultureExponentModifier() const;
 	int GetNumCitiesPolicyCostDiscount() const;
+	int GetNumCitiesResearchCostDiscount() const; // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
 	int GetGarrisonedCityRangeStrikeModifier() const;
 	int GetUnitPurchaseCostModifier() const;
 	int GetBuildingPurchaseCostModifier() const;
@@ -155,6 +156,7 @@ public:
 	int GetCityStateBonusModifier() const; // NQMP GJS - Patronage Finisher
 	int GetExtraTerritoryClaim() const; // NQMP GJS - Colonialism
 	int GetExtraTourismPerGreatWork() const; // NQMP GJS - Cultural Exchange
+	int GetTourismPerWonder() const; // NQMP GJS - Flourishing of the Arts
 	int GetProductionFromGarrison() const; // NQMP GJS - Military Caste
 	int GetPolicyBranchType() const;
 	int GetNumExtraBranches() const;
@@ -299,6 +301,7 @@ private:
 	int m_iPlotCultureCostModifier;
 	int m_iPlotCultureExponentModifier;
 	int m_iNumCitiesPolicyCostDiscount;
+	int m_iNumCitiesResearchCostDiscount; // NQMP GJS - new Dictatorship of the Proletariat i.e. Communism
 	int m_iGarrisonedCityRangeStrikeModifier;
 	int m_iUnitPurchaseCostModifier;
 	int m_iBuildingPurchaseCostModifier;
@@ -356,6 +359,7 @@ private:
 	int m_iCityStateBonusModifier; // NQMP GJS - Patronage Finisher
 	int m_iExtraTerritoryClaim; // NQMP GJS - Colonialism
 	int m_iExtraTourismPerGreatWork; // NQMP GJS - Cultural Exchange
+	int m_iTourismPerWonder; // NQMP GJS - Flourishing of the Arts
 	int m_iProductionFromGarrison; // NQMP GJS - Military Caste
 	int m_iFreeSpecialist;
 	int m_iMaxConscript;
@@ -577,6 +581,7 @@ enum PolicyModifierType
 	POLICYMOD_EXTRA_TERRITORY_CLAIM, // NQMP GJS - Colonialism
 	POLICYMOD_PRODUCTION_FROM_GARRISON, // NQMP GJS - Military Caste
 	POLICYMOD_EXTRA_TOURISM_PER_GREAT_WORK, // NQMP GJS - Cultural Exchange
+	POLICYMOD_TOURISM_PER_WONDER, // NQMP GJS - Flourishing of the Arts
 	POLICYMOD_INTERNAL_TRADE_GOLD_CHANGE, // NQMP GJS - Silk Road
 };
 
