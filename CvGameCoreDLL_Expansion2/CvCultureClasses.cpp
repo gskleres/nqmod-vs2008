@@ -4691,20 +4691,16 @@ CvString CvCityCulture::GetTourismTooltip()
 #else
 	int iGWTourism = GetNumGreatWorks() * (GC.getBASE_TOURISM_PER_GREAT_WORK() + iBonusTourismPerGreatWork); // NQMP GJS - Cultural Exchange
 	iGWTourism += (m_pCity->GetCityBuildings()->GetGreatWorksTourismModifier() * iGWTourism / 100);
-<<<<<<< HEAD
 	szRtnValue = GetLocalizedText("TXT_KEY_CO_CITY_TOURISM_GREAT_WORKS", iGWTourism, m_pCity->GetCityCulture()->GetNumGreatWorks());
 #endif
-=======
 
 	// NQMP GJS - Flourishing of the Arts BEGIN
 	int iBonusTourismPerWonder = GET_PLAYER(m_pCity->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_PER_WONDER);
 	int iNumWorldWonders = m_pCity->getNumWorldWonders();
 	int iTotalBonusTourismForWonders = iNumWorldWonders * iBonusTourismPerWonder; 
 	iTotalBonusTourismForWonders += (m_pCity->GetCityBuildings()->GetGreatWorksTourismModifier() * iTotalBonusTourismForWonders / 100);
-	szRtnValue = GetLocalizedText("TXT_KEY_CO_CITY_TOURISM_GREAT_WORKS", iGWTourism, m_pCity->GetCityCulture()->GetNumGreatWorks(), iTotalBonusTourismForWonders, iNumWorldWonders); // edited
+	szRtnValue = GetLocalizedText("TXT_KEY_CO_CITY_TOURISM_GREAT_WORKS", iGWTourism, (int)m_pCity->GetCityCulture()->GetNumGreatWorks(), iTotalBonusTourismForWonders, iNumWorldWonders); // edited
 	// NQMP GJS - Flourishing of the Arts END
-
->>>>>>> refs/remotes/gskleres/master
 
 	int iThemingBonuses = m_pCity->GetCityBuildings()->GetThemingBonuses();
 	if (iThemingBonuses > 0)

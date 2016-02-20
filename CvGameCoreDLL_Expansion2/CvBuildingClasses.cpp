@@ -3463,7 +3463,7 @@ int CvCityBuildings::GetCityStateTradeRouteGoldModifier() const
 {
 	int iRtnValue = 0;
 
-	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+	for(uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
 	{
 		BuildingClassTypes eLoopBuildingClass = (BuildingClassTypes) iI;
 		CvCivilizationInfo *pkCivInfo = GC.getCivilizationInfo(m_pCity->getCivilizationType());

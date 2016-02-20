@@ -2286,7 +2286,7 @@ FreeResourceXCities CvPlayerTraits::GetFreeResourceXCities(ResourceTypes eResour
 /// Is this civ currently able to cross mountains with combat units?
 bool CvPlayerTraits::IsAbleToCrossMountains() const
 {
-	return (m_bCrossesMountainsAfterGreatGeneral /*&& m_pPlayer->getGreatGeneralsCreated()*/ > 0); // NQMP GJS - new Carthage UA no longer needs Great General
+	return (m_bCrossesMountainsAfterGreatGeneral /*&& m_pPlayer->getGreatGeneralsCreated() > 0*/); // NQMP GJS - new Carthage UA no longer needs Great General
 }
 
 bool CvPlayerTraits::NoTrain(UnitClassTypes eUnitClassType)

@@ -2711,9 +2711,11 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 			int iInfluenceReduction = GetCulture()->GetInfluenceCityConquestReduction(eOldOwner);
 
 			// NQMP GJS - reduce resistance time BEGIN
-			int iResistanceTurns = ceil(pNewCity->getPopulation() * GC.getGame().getGameSpeedInfo().getVictoryDelayPercent() / 200.0f);
+			int iResistanceTurns = pNewCity->getPopulation() * GC.getGame().getGameSpeedInfo().getVictoryDelayPercent();
 			iResistanceTurns *= (100 - iInfluenceReduction); // take tourism into account
-			iResistanceTurns /= 100;
+			if (iResistanceTurns % 20000 != 0)
+				iResistanceTurns += 20000; // acts as ceil(), but without any weird int <-> float conversions
+			iResistanceTurns /= 20000;
 			// NQMP GJS - reduce resistance time END
 
 			if (iResistanceTurns > 0)
