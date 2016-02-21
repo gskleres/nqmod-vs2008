@@ -179,6 +179,9 @@ CvCity::CvCity() :
 	, m_iTradeRouteRecipientBonus(0)
 	, m_iTradeRouteTargetBonus(0)
 	, m_unitBeingBuiltForOperation()
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	, m_bDidTurnEarly("CvCity::m_bDidTurnEarly", m_syncArchive)
+#endif
 	, m_bNeverLost("CvCity::m_bNeverLost", m_syncArchive)
 	, m_bDrafted("CvCity::m_bDrafted", m_syncArchive)
 	, m_bAirliftTargeted("CvCity::m_bAirliftTargeted", m_syncArchive)   // unused
@@ -401,6 +404,10 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	setGameTurnFounded(iGameTurn);
 	setGameTurnAcquired(iGameTurn);
 	setGameTurnLastExpanded(iGameTurn);
+
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	setDidTurnEarly(false);
+#endif
 
 	GC.getMap().updateWorkingCity(pPlot,NUM_CITY_RINGS*2);
 	GetCityCitizens()->DoFoundCity();
@@ -714,6 +721,10 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	m_iCountExtraLuxuries = 0;
 	m_iCheapestPlotInfluence = 0;
 	m_unitBeingBuiltForOperation.Invalidate();
+
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	m_bDidTurnEarly = false;
+#endif
 
 	m_bNeverLost = true;
 	m_bDrafted = false;
@@ -1442,6 +1453,11 @@ CvPlayer* CvCity::GetPlayer()
 //	--------------------------------------------------------------------------------
 void CvCity::doTurn()
 {
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	if(!didTurnEarly())
+	{
+#endif
+
 	AI_PERF_FORMAT("City-AI-perf.csv", ("CvCity::doTurn, Turn %03d, %s, %s,", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
 
 	VALIDATE_OBJECT
@@ -1654,6 +1670,9 @@ void CvCity::doTurn()
 #endif
 		// XXX
 	}
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	}
+#endif
 }
 
 
@@ -7209,6 +7228,25 @@ void CvCity::setGameTurnLastExpanded(int iNewValue)
 	}
 }
 
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+//	--------------------------------------------------------------------------------
+bool CvCity::didTurnEarly() const
+{
+	VALIDATE_OBJECT
+
+	return m_bDidTurnEarly;
+}
+
+//	--------------------------------------------------------------------------------
+void CvCity::setDidTurnEarly(bool bValue)
+{
+	VALIDATE_OBJECT
+	if(didTurnEarly() != bValue)
+	{
+		m_bDidTurnEarly = bValue;
+	}
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 int CvCity::getPopulation() const
@@ -13724,6 +13762,10 @@ void CvCity::read(FDataStream& kStream)
 	kStream >> m_unitBeingBuiltForOperation.m_iArmyID;
 	kStream >> m_unitBeingBuiltForOperation.m_iSlotID;
 
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	kStream >> m_bDidTurnEarly;
+#endif
+
 	kStream >> m_bNeverLost;
 	kStream >> m_bDrafted;
 	kStream >> m_bAirliftTargeted;  // unused
@@ -14047,6 +14089,10 @@ void CvCity::write(FDataStream& kStream) const
 	kStream << m_unitBeingBuiltForOperation.m_iOperationID;
 	kStream << m_unitBeingBuiltForOperation.m_iArmyID;
 	kStream << m_unitBeingBuiltForOperation.m_iSlotID;
+
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	kStream << m_bDidTurnEarly;
+#endif
 
 	kStream << m_bNeverLost;
 	kStream << m_bDrafted;

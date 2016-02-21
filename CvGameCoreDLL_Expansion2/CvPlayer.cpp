@@ -4197,6 +4197,9 @@ void CvPlayer::doTurnPostDiplomacy()
 			for(CvCity* pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
 			{
 				pLoopCity->doTurn();
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+				pLoopCity->setDidTurnEarly(false);
+#endif
 			}
 		}
 	}

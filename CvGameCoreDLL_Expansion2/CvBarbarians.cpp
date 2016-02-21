@@ -646,7 +646,11 @@ void CvBarbarians::DoUnits()
 		{
 			if(ShouldSpawnBarbFromCamp(pLoopPlot))
 			{
+#ifdef NQM_BARBARIANS_MOVE_BEFORE_SPAWNING
+				DoSpawnBarbarianUnit(pLoopPlot, false, true);
+#else
 				DoSpawnBarbarianUnit(pLoopPlot, false, false);
+#endif
 				DoCampActivationNotice(pLoopPlot);
 			}
 		}

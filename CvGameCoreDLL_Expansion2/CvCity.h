@@ -311,6 +311,11 @@ public:
 	int getGameTurnLastExpanded() const;
 	void setGameTurnLastExpanded(int iNewValue);
 
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	bool didTurnEarly() const;
+	void setDidTurnEarly(bool bValue);
+#endif
+
 	int getPopulation() const;
 	void setPopulation(int iNewValue, bool bReassignPop = true);
 	void changePopulation(int iChange, bool bReassignPop = true);
@@ -882,6 +887,10 @@ protected:
 	int m_iEspionageModifier;
 
 	OperationSlot m_unitBeingBuiltForOperation;
+
+#ifdef NQM_SAME_TURN_WORLD_WONDERS_DECIDED_BY_PRODUCTION_OVERFLOW
+	FAutoVariable<bool, CvCity> m_bDidTurnEarly;
+#endif
 
 	FAutoVariable<bool, CvCity> m_bNeverLost;
 	FAutoVariable<bool, CvCity> m_bDrafted;

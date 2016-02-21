@@ -73,7 +73,11 @@ void CvCityCitizens::Reset()
 	m_iNumCitizensWorkingPlots = 0;
 	m_iNumForcedWorkingPlots = 0;
 
+#ifdef NQM_HUMAN_CITIES_PRODUCTION_FOCUS_DEFAULT
+	m_eCityAIFocusTypes = GET_PLAYER(m_pCity->getOwner()).isHuman() ? CITY_AI_FOCUS_TYPE_PRODUCTION : NO_CITY_AI_FOCUS_TYPE;
+#else
 	m_eCityAIFocusTypes = NO_CITY_AI_FOCUS_TYPE;
+#endif
 
 	int iI;
 
