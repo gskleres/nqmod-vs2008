@@ -143,6 +143,8 @@
 #define AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
 /// Fixes a piece of code related to setting tiles around puppets to be worked by the puppet that not only did not work as intended, but could also have strange side-effects as well.
 #define AUI_CITY_FIX_PUPPET_WORKED_PLOT_OVERRIDE
+/// Units that are marked for death no longer generate a ZoC (from RushSecond)
+#define AUI_UNIT_MOVEMENT_FIX_DELAYED_DEATH_UNITS_GENERATE_ZOC
 
 // Deliberate AI hindrances
 /// AI players will no longer spread their religion to other human players' cities

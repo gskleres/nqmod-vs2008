@@ -369,6 +369,11 @@ bool CvUnitMovement::IsSlowedByZOC(const CvUnit* pUnit, const CvPlot* pFromPlot,
 
 					if(!pLoopUnit) continue;
 
+#ifdef AUI_UNIT_MOVEMENT_FIX_DELAYED_DEATH_UNITS_GENERATE_ZOC
+					if (pLoopUnit->isDelayedDeath())
+						continue;
+#endif
+
 					TeamTypes unit_loop_team_type = pLoopUnit->getTeam();
 
 					if(pLoopUnit->isInvisible(unit_team_type,false)) continue;
