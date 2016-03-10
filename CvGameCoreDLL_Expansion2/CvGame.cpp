@@ -5692,7 +5692,9 @@ bool CvGame::isPaused()
 //	-----------------------------------------------------------------------------------------------
 void CvGame::setPausePlayer(PlayerTypes eNewValue)
 {
+#ifndef AUI_GAME_SET_PAUSED_TURN_TIMERS_PAUSE_ON_RECONNECT
 	if(!isNetworkMultiPlayer())
+#endif
 	{
 		// If we're not in Network MP, if the game is paused the turn timer is too.
 		if(isOption(GAMEOPTION_END_TURN_TIMER_ENABLED))
@@ -7529,6 +7531,9 @@ void CvGame::doTurn()
 
 	CvBarbarians::DoCamps();
 
+#ifdef AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
+	if (!isOption(GAMEOPTION_DYNAMIC_TURNS) && !isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
+#endif
 	CvBarbarians::DoUnits();
 
 	GetGameReligions()->DoTurn();
@@ -8353,6 +8358,10 @@ void CvGame::updateMoves()
 	{
 		if (isOption(GAMEOPTION_DYNAMIC_TURNS) || isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
 		{//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
+#ifdef AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
+			// Only spawn barbarians now, otherwise the barbarian player gets a turn to move/attack after its units spawn before the human players do
+			CvBarbarians::DoUnits();
+#endif
 			// KWG: This code should go into CheckPlayerTurnDeactivate
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{

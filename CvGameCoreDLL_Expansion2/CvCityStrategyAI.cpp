@@ -885,6 +885,13 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 				}
 			}
 
+#ifdef NQM_AI_GIMP_NO_WORLD_WONDERS
+			if (GC.getAI_CANNOT_BUILD_WORLD_WONDERS() != 0 && isWorldWonderClass(pkBuildingInfo->GetBuildingClassInfo()))
+			{
+				iTempWeight = 0;
+			}
+#endif
+
 			// If the City is a puppet, it avoids Wonders (because the human can't change it if he wants to build it somewhere else!)
 			if(GetCity()->IsPuppet())
 			{
@@ -986,6 +993,10 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 		// Loop through adding the available projects
 		for(iProjectLoop = 0; iProjectLoop < GC.GetGameProjects()->GetNumProjects(); iProjectLoop++)
 		{
+#ifdef NQM_AI_GIMP_NO_WORLD_WONDERS
+			if (GC.getAI_CANNOT_BUILD_WORLD_WONDERS() != 0 && isWorldProject((ProjectTypes)iProjectLoop))
+				continue;
+#endif
 			if(m_pCity->canCreate((ProjectTypes)iProjectLoop))
 			{
 				buildable.m_eBuildableType = CITY_BUILDABLE_PROJECT;
@@ -2082,6 +2093,12 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_Landlocked(CvCity* pCity)
 bool CityStrategyAIHelpers::IsTestCityStrategy_NeedTileImprovers(AICityStrategyTypes eStrategy, CvCity* pCity)
 {
 	CvPlayer& kPlayer = GET_PLAYER(pCity->getOwner());
+#ifdef AUI_CITYSTRATEGY_DONT_EMPHASIZE_WORKERS_IF_NO_MILITARY
+	if (kPlayer.getNumMilitaryUnits() - kPlayer.GetNumUnitsWithUnitAI(UNITAI_EXPLORE) <= 0)
+	{
+		return false;
+	}
+#endif
 	int iCurrentNumCities = kPlayer.getNumCities();
 
 	int iLastTurnWorkerDisbanded = kPlayer.GetEconomicAI()->GetLastTurnWorkerDisbanded();
@@ -2146,6 +2163,12 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_NeedTileImprovers(AICityStrategyT
 bool CityStrategyAIHelpers::IsTestCityStrategy_WantTileImprovers(AICityStrategyTypes eStrategy, CvCity* pCity)
 {
 	CvPlayer& kPlayer = GET_PLAYER(pCity->getOwner());
+#ifdef AUI_CITYSTRATEGY_DONT_EMPHASIZE_WORKERS_IF_NO_MILITARY
+	if (kPlayer.getNumMilitaryUnits() - kPlayer.GetNumUnitsWithUnitAI(UNITAI_EXPLORE) <= 0)
+	{
+		return false;
+	}
+#endif
 	int iLastTurnWorkerDisbanded = kPlayer.GetEconomicAI()->GetLastTurnWorkerDisbanded();
 	if(iLastTurnWorkerDisbanded >= 0 && GC.getGame().getGameTurn() - iLastTurnWorkerDisbanded <= 10)
 	{
@@ -2315,6 +2338,12 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_WantTileImprovers(AICityStrategyT
 bool CityStrategyAIHelpers::IsTestCityStrategy_EnoughTileImprovers(AICityStrategyTypes eStrategy, CvCity* pCity)
 {
 	CvPlayer& kPlayer = GET_PLAYER(pCity->getOwner());
+#ifdef AUI_CITYSTRATEGY_DONT_EMPHASIZE_WORKERS_IF_NO_MILITARY
+	if (kPlayer.getNumMilitaryUnits() - kPlayer.GetNumUnitsWithUnitAI(UNITAI_EXPLORE) <= 0)
+	{
+		return true;
+	}
+#endif
 	int iLastTurnWorkerDisbanded = kPlayer.GetEconomicAI()->GetLastTurnWorkerDisbanded();
 	if(iLastTurnWorkerDisbanded >= 0 && GC.getGame().getGameTurn() - iLastTurnWorkerDisbanded <= 10)
 	{
