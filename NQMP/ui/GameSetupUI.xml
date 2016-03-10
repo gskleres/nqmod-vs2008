@@ -4,12 +4,12 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_RANDOM_LEADER" />
 		<Row Tag="TXT_KEY_RANDOM_LEADER">
-			<Text>(v9.0) Random Leader</Text>
+			<Text>(v9.1) Random Leader</Text>
 		</Row>
 
 		<Delete Tag="TXT_KEY_RANDOM_CIV" />
 		<Row Tag="TXT_KEY_RANDOM_CIV">
-			<Text>(v9.0) Random Civilization</Text>
+			<Text>(v9.1) Random Civilization</Text>
 		</Row>
 
 		<Row Tag="TXT_KEY_RANDOM_CIV_LEADER">
