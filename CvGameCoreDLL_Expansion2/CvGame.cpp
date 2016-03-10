@@ -7859,16 +7859,20 @@ void CvGame::doTurn()
 
 	GC.GetEngineUserInterface()->doTurn();
 
-	CvBarbarians::DoCamps();
-
 #ifdef AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 	if (!isAnySimultaneousTurns())
 #else
 	if (!isOption(GAMEOPTION_DYNAMIC_TURNS) && !isOption(GAMEOPTION_SIMULTANEOUS_TURNS))
 #endif
+	{
 #endif
+	CvBarbarians::DoCamps();
+
 	CvBarbarians::DoUnits();
+#ifdef AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
+	}
+#endif
 
 #ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	GetGameReligions()->DoTurn();
@@ -8893,6 +8897,7 @@ void CvGame::updateMoves()
 		{//Activate human players who are playing simultaneous turns now that we've finished moves for the AI.
 #ifdef AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
 			// Only spawn barbarians now, otherwise the barbarian player gets a turn to move/attack after its units spawn before the human players do
+			CvBarbarians::DoCamps();
 			CvBarbarians::DoUnits();
 #endif
 			// KWG: This code should go into CheckPlayerTurnDeactivate
