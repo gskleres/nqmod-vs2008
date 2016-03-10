@@ -4708,6 +4708,10 @@ CvCity *CvReligionAI::ChooseProphetConversionCity(bool bOnlyBetterThanEnhancingR
 			CvPlayer &kLoopPlayer = GET_PLAYER((PlayerTypes)iPlayerLoop);
 			if(kLoopPlayer.isAlive() && iPlayerLoop != m_pPlayer->GetID())
 			{
+#ifdef NQM_AI_GIMP_NO_RELIGION_SPREAD
+				if (GC.getAI_CANNOT_SPREAD_RELIGION_TO_HUMANS() != 0 && kLoopPlayer.isHuman())
+					continue;
+#endif
 				int iCityLoop;
 				for(pLoopCity = GET_PLAYER((PlayerTypes)iPlayerLoop).firstCity(&iCityLoop); pLoopCity != NULL; pLoopCity = GET_PLAYER((PlayerTypes)iPlayerLoop).nextCity(&iCityLoop))
 				{
@@ -5729,6 +5733,10 @@ int CvReligionAI::ScoreCityForMissionary(CvCity* pCity, UnitHandle pUnit)
 
 	if (!GET_PLAYER(pCity->getOwner()).isMinorCiv())
 	{
+#ifdef NQM_AI_GIMP_NO_RELIGION_SPREAD
+		if (GC.getAI_CANNOT_SPREAD_RELIGION_TO_HUMANS() != 0 && GET_PLAYER(pCity->getOwner()).isHuman())
+			return 0;
+#endif
 		if (m_pPlayer->GetDiplomacyAI()->IsPlayerAgreeNotToConvert(pCity->getOwner()))
 		{
 			return 0;
@@ -5886,6 +5894,10 @@ bool CvReligionAI::HaveNearbyConversionTarget(ReligionTypes eReligion, bool bCan
 			{
 				if (!kPlayer.isBarbarian())
 				{
+#ifdef NQM_AI_GIMP_NO_RELIGION_SPREAD
+					if (GC.getAI_CANNOT_SPREAD_RELIGION_TO_HUMANS() != 0 && kPlayer.isHuman())
+						continue;
+#endif
 					if (m_pPlayer->GetDiplomacyAI()->IsPlayerAgreeNotToConvert(ePlayer))
 					{
 						continue;

@@ -3988,6 +3988,15 @@ bool CvPlot::isValidRoute(const CvUnit* pUnit) const
 			return true;
 		}
 	}
+#ifdef AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
+	if (pUnit->getOwner() != NO_PLAYER && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsMoveFriendlyWoodsAsRoad())
+	{
+		if (getOwner() == pUnit->getOwner() && (getFeatureType() == FEATURE_FOREST || getFeatureType() == FEATURE_JUNGLE))
+		{
+			return true;
+		}
+	}
+#endif
 
 	return false;
 }
