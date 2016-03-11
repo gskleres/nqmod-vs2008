@@ -14,120 +14,84 @@
 		</Row>
 	</GameOptions>
 	<Language_en_US>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI Cannot Spread Religion to Humans</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
+			<Text>AI Cannot Spread Religion to Humans</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD_HELP">
 			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
 		</Row>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_WORLD_WONDER">
-			<Text>AI Cannot Build World Wonders</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD">
-			<Text>AI players cannot build world projects or wonders.</Text>
+			<Text>AI Cannot Build World Wonders</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD_HELP">
 			<Text>AI players cannot build world projects or wonders.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI Cannot Spread Religion to Humans</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
+			<Text>AI Cannot Spread Religion to Humans</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD_HELP">
 			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
 		</Row>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_WORLD_WONDER">
-			<Text>AI Cannot Build World Wonders</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD">
-			<Text>AI players cannot build world projects or wonders.</Text>
+			<Text>AI Cannot Build World Wonders</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD_HELP">
 			<Text>AI players cannot build world projects or wonders.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_ES_ES>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI Cannot Spread Religion to Humans</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
+			<Text>AI Cannot Spread Religion to Humans</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD_HELP">
 			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
 		</Row>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_WORLD_WONDER">
-			<Text>AI Cannot Build World Wonders</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD">
-			<Text>AI players cannot build world projects or wonders.</Text>
+			<Text>AI Cannot Build World Wonders</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD_HELP">
 			<Text>AI players cannot build world projects or wonders.</Text>
 		</Row>
 	</Language_ES_ES>
 	<Language_FR_FR>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI Cannot Spread Religion to Humans</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
+			<Text>AI Cannot Spread Religion to Humans</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD_HELP">
 			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
 		</Row>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_WORLD_WONDER">
-			<Text>AI Cannot Build World Wonders</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD">
-			<Text>AI players cannot build world projects or wonders.</Text>
+			<Text>AI Cannot Build World Wonders</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD_HELP">
 			<Text>AI players cannot build world projects or wonders.</Text>
 		</Row>
 	</Language_FR_FR>
 	<Language_PL_PL>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI Cannot Spread Religion to Humans</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
+			<Text>AI Cannot Spread Religion to Humans</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD_HELP">
 			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
 		</Row>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_WORLD_WONDER">
-			<Text>AI Cannot Build World Wonders</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD">
-			<Text>AI players cannot build world projects or wonders.</Text>
+			<Text>AI Cannot Build World Wonders</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD_HELP">
 			<Text>AI players cannot build world projects or wonders.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI Cannot Spread Religion to Humans</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
-			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
+			<Text>AI Cannot Spread Religion to Humans</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD_HELP">
 			<Text>AI players cannot use missionaries and great prophets to spread their religion to cities owned by human players.</Text>
 		</Row>
-		<Row Tag="GAMEOPTION_AI_GIMP_NO_WORLD_WONDER">
-			<Text>AI Cannot Build World Wonders</Text>
-		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD">
-			<Text>AI players cannot build world projects or wonders.</Text>
+			<Text>AI Cannot Build World Wonders</Text>
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_WORLD_WONDER_SPREAD_HELP">
 			<Text>AI players cannot build world projects or wonders.</Text>
