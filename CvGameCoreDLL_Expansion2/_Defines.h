@@ -145,6 +145,8 @@
 #define AUI_CITY_FIX_PUPPET_WORKED_PLOT_OVERRIDE
 /// Units that are marked for death no longer generate a ZoC (from RushSecond)
 #define AUI_UNIT_MOVEMENT_FIX_DELAYED_DEATH_UNITS_GENERATE_ZOC
+/// Fixed the fact that some player-based modifiers to research costs are all only aesthetic, i.e. their only effect before would be to increase the number the UI displays for tech cost (they didn't actually modify tech cost)
+#define AUI_TECH_FIX_PLAYER_BASED_RESEARCH_COST_ONLY_AESTHETIC
 
 // Deliberate AI hindrances
 /// AI players will no longer spread their religion to other human players' cities

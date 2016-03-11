@@ -19306,8 +19306,13 @@ int CvPlayer::GetHurryGoldCost(HurryTypes eHurry) const
 
 		if(eTech != NO_TECH)
 		{
+#ifdef AUI_TECH_FIX_PLAYER_BASED_RESEARCH_COST_ONLY_AESTHETIC
+			int iTotalCost = GetPlayerTechs()->GetResearchCost(eTech);
+			int iResearchLeft = MAX(0, (iTotalCost - GET_TEAM(getTeam()).GetTeamTechs()->GetResearchProgress(eTech)));
+#else
 			int iTotalCost = GET_TEAM(getTeam()).GetTeamTechs()->GetResearchCost(eTech);
 			int iResearchLeft = GET_TEAM(getTeam()).GetTeamTechs()->GetResearchLeft(eTech);
+#endif
 
 			// Cost of Gold rushing based on the ORIGINAL Research price
 			int iGoldForFullPrice = iTotalCost * pkHurryInfo->getGoldPerBeaker();
@@ -19594,7 +19599,11 @@ int CvPlayer::findPathLength(TechTypes eTech, bool bCost) const
 		iPathLength += iShortestPath;
 	}
 
+#ifdef AUI_TECH_FIX_PLAYER_BASED_RESEARCH_COST_ONLY_AESTHETIC
+	return (iPathLength + ((bCost) ? GetPlayerTechs()->GetResearchCost(eTech) : 1));
+#else
 	return (iPathLength + ((bCost) ? GET_TEAM(getTeam()).GetTeamTechs()->GetResearchCost(eTech) : 1));
+#endif
 }
 
 
@@ -21562,7 +21571,11 @@ int CvPlayer::getAdvancedStartTechCost(TechTypes eTech, bool bAdd)
 		return -1;
 	}
 
+#ifdef AUI_TECH_FIX_PLAYER_BASED_RESEARCH_COST_ONLY_AESTHETIC
+	int iCost = (GetPlayerTechs()->GetResearchCost(eTech) * GC.getTechInfo(eTech)->GetAdvancedStartCost()) / 100;
+#else
 	int iCost = (GET_TEAM(getTeam()).GetTeamTechs()->GetResearchCost(eTech) * GC.getTechInfo(eTech)->GetAdvancedStartCost()) / 100;
+#endif
 	if(iCost < 0)
 	{
 		return -1;
