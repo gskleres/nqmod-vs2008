@@ -425,7 +425,7 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 
 	// Yield Values
 #ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
-	int iFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * 8;
+	int iFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * 2;
 #else
 	int iFoodYieldValue = (/*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * pPlot->getYield(YIELD_FOOD));
 #endif
@@ -516,7 +516,8 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 		{
 			iExcessFoodYieldValue = iFoodYieldValue / 16;
 #ifdef AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
-			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || m_pCity->getPopulation() < 5)
+			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH
+				|| eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || m_pCity->getPopulation() <= (GC.getUNHAPPINESS_PER_CITY() + 1))
 #else
 			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
 #endif
@@ -541,8 +542,8 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 			iExcessFoodPlotYieldT100 -= iTargetFoodT100;
 		}
 
-		iFoodYieldValue *= iNonExcessFoodPlotYieldT100 / 100;
-		iFoodYieldValue += (iExcessFoodPlotYieldT100 * iExcessFoodYieldValue) / 100;
+		iFoodYieldValue *= iNonExcessFoodPlotYieldT100;
+		iFoodYieldValue += (iExcessFoodPlotYieldT100 * iExcessFoodYieldValue);
 #else
 		// If we have a non-default and non-food focus, only worry about getting to 0 food
 #ifdef AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
