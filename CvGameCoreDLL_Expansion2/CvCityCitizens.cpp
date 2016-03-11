@@ -425,7 +425,7 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 
 	// Yield Values
 #ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
-	int iFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * 2;
+	int iFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
 #else
 	int iFoodYieldValue = (/*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * pPlot->getYield(YIELD_FOOD));
 #endif
