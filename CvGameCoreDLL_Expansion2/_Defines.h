@@ -313,6 +313,8 @@
 #define AUI_CITIZENS_FIX_GET_VALUE_FOOD_YIELD_VALUE_WHEN_STARVATION_WITH_AVOID_GROWTH
 /// Instead of cities with 4 or less population and set to either no focus or partial food focus multiplying food value by 4, all cities with 4 or less population will want at least 2 food just like ones set to no focus or partial/full food focus
 #define AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
+/// If a city is set to avoid growth, it will assign a value of 1 to excess food instead of 0. While it's still much less than a Gold yield, it at least makes 3 food tiles more preferable to 2 food tiles even when avoiding growth
+#define AUI_CITIZENS_AVOID_GROWTH_STILL_VALUES_EXCESS_FOOD
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix

@@ -499,7 +499,15 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 	if(bUseAllowGrowthFlag && iExcessFoodTimes100 >= 0 && bAvoidGrowth)
 	{
 		// If we at least have enough Food to feed everyone, zero out the value of additional food
+#ifdef AUI_CITIZENS_AVOID_GROWTH_STILL_VALUES_EXCESS_FOOD
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+		iFoodYieldValue = 100;
+#else
+		iFoodYieldValue = 1;
+#endif
+#else
 		iFoodYieldValue = 0;
+#endif
 	}
 	// We want to grow here
 	else
@@ -510,7 +518,11 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 		iExcessFoodTimes100 = m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodTimes100);
 		iExcessFoodWithPlotTimes100 = m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100);
 #endif
+#ifdef AUI_CITIZENS_AVOID_GROWTH_STILL_VALUES_EXCESS_FOOD
+		int iExcessFoodYieldValue = 1;
+#else
 		int iExcessFoodYieldValue = 0;
+#endif
 		int iTargetFoodT100 = 0;
 		if (!bUseAllowGrowthFlag || !bAvoidGrowth)
 		{
