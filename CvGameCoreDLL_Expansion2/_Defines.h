@@ -168,6 +168,9 @@
 /// All cities are set to be revealed to observers
 #define AUI_CITY_OBSERVER_REVEALS_ALL_CITIES
 
+// Altered score calculations as an option toggleable in-game
+#define NQM_OPTIONAL_SCORING_TWEAKS
+
 // New hybrid mode
 /// When in hybrid mode, players who are not at war with each other have their turns happen simultaneously, thus speeding games up significantly
 //#define AUI_GAME_BETTER_HYBRID_MODE

@@ -5307,6 +5307,10 @@ void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, b
 
 			// Repeating techs are good for score!
 			int iScoreChange = /*10*/ GC.getSCORE_FUTURE_TECH_MULTIPLIER();
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+			if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+				iScoreChange = GC.getNEW_SCORE_FUTURE_TECH_MULTIPLIER();
+#endif
 			for(int iI = 0; iI < MAX_PLAYERS; iI++)
 			{
 				const PlayerTypes eLoopPlayer = static_cast<PlayerTypes>(iI);

@@ -5137,7 +5137,15 @@ int CvPlayer::GetScore(bool bFinal, bool bWinner) const
 // Score from Cities: 10 per city (with mod for map size)
 int CvPlayer::GetScoreFromCities() const
 {
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+	int iScore = getNumCities();
+	if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+		iScore *= GC.getNEW_SCORE_CITY_MULTIPLIER();
+	else
+		iScore *= GC.getSCORE_CITY_MULTIPLIER();
+#else
 	int iScore = getNumCities() * /*10*/ GC.getSCORE_CITY_MULTIPLIER();
+#endif
 
 	iScore *= GC.getGame().GetMapScoreMod();
 	iScore /= 100;
@@ -5149,7 +5157,15 @@ int CvPlayer::GetScoreFromCities() const
 // Score from Population: 6 per pop (with mod for map size)
 int CvPlayer::GetScoreFromPopulation() const
 {
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+	int iScore = getTotalPopulation();
+	if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+		iScore *= GC.getNEW_SCORE_POPULATION_MULTIPLIER();
+	else
+		iScore *= GC.getSCORE_POPULATION_MULTIPLIER();
+#else
 	int iScore = getTotalPopulation() * /*4*/ GC.getSCORE_POPULATION_MULTIPLIER();
+#endif
 
 	iScore *= GC.getGame().GetMapScoreMod();
 	iScore /= 100;
@@ -5173,7 +5189,15 @@ int CvPlayer::GetScoreFromLand() const
 // Score from world wonders
 int CvPlayer::GetScoreFromWonders() const
 {
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+	int iScore = GetNumWonders();
+	if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+		iScore *= GC.getNEW_SCORE_WONDER_MULTIPLIER();
+	else
+		iScore *= GC.getSCORE_WONDER_MULTIPLIER();
+#else
 	int iScore = GetNumWonders() * /*25*/ GC.getSCORE_WONDER_MULTIPLIER();
+#endif
 	return iScore;
 }
 
@@ -5185,7 +5209,15 @@ int CvPlayer::GetScoreFromPolicies() const
 	{
 		return 0;
 	}
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+	int iScore = GetPlayerPolicies()->GetNumPoliciesOwned();
+	if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+		iScore *= GC.getNEW_SCORE_POLICY_MULTIPLIER();
+	else
+		iScore *= GC.getSCORE_POLICY_MULTIPLIER();
+#else
 	int iScore = GetPlayerPolicies()->GetNumPoliciesOwned() * /*4*/ GC.getSCORE_POLICY_MULTIPLIER();
+#endif
 	return iScore;
 }
 
@@ -5193,7 +5225,15 @@ int CvPlayer::GetScoreFromPolicies() const
 // Score from world wonders: 40 per
 int CvPlayer::GetScoreFromGreatWorks() const
 {
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+	int iScore = GetCulture()->GetNumGreatWorks();
+	if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+		iScore *= GC.getNEW_SCORE_GREAT_WORK_MULTIPLIER();
+	else
+		iScore *= GC.getSCORE_GREAT_WORK_MULTIPLIER();
+#else
 	int iScore = GetCulture()->GetNumGreatWorks() * /*4*/ GC.getSCORE_GREAT_WORK_MULTIPLIER();
+#endif
 	return iScore;
 }
 
@@ -5211,7 +5251,15 @@ int CvPlayer::GetScoreFromReligion() const
 	if (eReligion > RELIGION_PANTHEON)
 	{
 		const CvReligion *pReligion = pGameReligions->GetReligion(eReligion, GetID());
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+		iScore = pReligion->m_Beliefs.GetNumBeliefs();
+		if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+			iScore *= GC.getNEW_SCORE_BELIEF_MULTIPLIER();
+		else
+			iScore *= GC.getSCORE_BELIEF_MULTIPLIER();
+#else
 		iScore += pReligion->m_Beliefs.GetNumBeliefs() * /*20*/ GC.getSCORE_BELIEF_MULTIPLIER();
+#endif
 		iScore += pGameReligions->GetNumCitiesFollowing(eReligion) * /*1*/ GC.getSCORE_RELIGION_CITIES_MULTIPLIER();
 	}
 	return iScore;
@@ -5227,7 +5275,15 @@ int CvPlayer::GetScoreFromTechs() const
 	}
 
 	// Normally we recompute it each time
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+	int iScore = GET_TEAM(getTeam()).GetTeamTechs()->GetNumTechsKnown();
+	if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+		iScore *= GC.getNEW_SCORE_TECH_MULTIPLIER();
+	else
+		iScore *= GC.getSCORE_TECH_MULTIPLIER();
+#else
 	int iScore = GET_TEAM(getTeam()).GetTeamTechs()->GetNumTechsKnown() * /*4*/ GC.getSCORE_TECH_MULTIPLIER();
+#endif
 	return iScore;
 }
 
