@@ -4,20 +4,12 @@
 	
 	<!-- Recolored Ethiopia slightly so it's not as close to barbarian colors -->
 	<Colors>
-		<Delete Type="COLOR_PLAYER_ETHIOPIA_ICON"/>
 		<Delete Type="COLOR_PLAYER_ETHIOPIA_BACKGROUND"/>
 		<Row>
-			<Type>COLOR_PLAYER_ETHIOPIA_ICON</Type>
-			<Red>0.95</Red>
-			<Green>0.8</Green>
-			<Blue>0.1</Blue>
-			<Alpha>1</Alpha>
-		</Row>
-		<Row>
 			<Type>COLOR_PLAYER_ETHIOPIA_BACKGROUND</Type>
-			<Red>0.0</Red>
-			<Green>0.22</Green>
-			<Blue>0.0</Blue>
+			<Red>0.0234375</Red>
+			<Green>0.4375</Green>
+			<Blue>0.1640625</Blue>
 			<Alpha>1</Alpha>
 		</Row>
 	</Colors>
