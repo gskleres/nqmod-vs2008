@@ -391,8 +391,8 @@
 #define AUI_HOMELAND_TWEAKED_ACCEPTABLE_DANGER (1.0)
 /// When finding patrol targets for civilian units, subtract off danger value from plot score
 #define AUI_HOMELAND_TWEAKED_FIND_PATROL_TARGET_CIVILIAN_NO_DANGER
-/// Border plots and plots containing routes are preferred over others when patrolling
-#define AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+/// Border plots, plots containing routes, and plots containing civilians are preferred over others when patrolling
+#define AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
 /// Disbanding explorers now uses the scrap() function instead of the kill() function
 #define AUI_HOMELAND_FIX_EXECUTE_EXPLORER_MOVES_DISBAND
 /// Stops the AI from suiciding units by embarking them onto tiles that can be attacked

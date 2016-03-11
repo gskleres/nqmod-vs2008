@@ -5327,14 +5327,37 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 	CvPlot* pAdjacentPlot;
 	CvPlot* pBestPlot;
 	int iValue;
-#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
-	int iValueBonus;
-#endif
 	int iBestValue;
 	int iI;
 
 	iBestValue = 0;
 	pBestPlot = NULL;
+
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
+	int iValueBonus;
+	if (pUnit->IsCombatUnit())
+	{
+		pBestPlot = pUnit->plot();
+		const IDInfo* pUnitNode = pBestPlot->headUnitNode();
+		const UnitHandle pLoopUnit;
+
+		while (pUnitNode != NULL)
+		{
+			pLoopUnit = GetPlayerUnit(*pUnitNode);
+			if (pLoopUnit && !pLoopUnit->IsCombatUnit())
+			{
+				if (!pLoopUnit->canMove())
+					return pBestPlot;
+				else
+				{
+					iBestValue = 20001;
+					break;
+				}
+			}
+			pUnitNode = pBestPlot->nextUnitNode(pUnitNode);
+		}
+	}
+#endif
 
 #if defined(AUI_HOMELAND_TWEAKED_FIND_PATROL_TARGET_CIVILIAN_NO_DANGER)
 	int iMyDanger = m_pPlayer->GetPlotDanger(*(pUnit->plot()));
@@ -5352,7 +5375,7 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 				{
 					if(pUnit->GeneratePath(pAdjacentPlot, 0, true))
 					{
-#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
 						iValueBonus = 0;
 #endif
 						iValue = (1 + GC.getGame().getJonRandNum(10000, "AI Patrol"));
@@ -5360,7 +5383,7 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 						// Prefer wandering in our own territory
 						if(pAdjacentPlot->getOwner() == pUnit->getOwner())
 						{
-#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
 							iValueBonus = 5000;
 #ifdef AUI_HOMELAND_FIND_PATROL_MOVES_CIVILIANS_PATROL_TO_SAFETY
 							if (pAdjacentPlot->isAdjacentPlayer(NO_PLAYER) || pAdjacentPlot->IsAdjacentOwnedByOtherTeam(m_pPlayer->getTeam()) || pAdjacentPlot->isValidRoute(pUnit))
@@ -5385,7 +5408,7 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 								if (iMyDanger > 0)
 								{
 									iValue -= iDanger;
-#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
 									iValueBonus = 0;
 #else
 									// Almost nullifies the value bonus from being in our own territory
@@ -5401,8 +5424,27 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 								}
 							}
 						}
+						else
+						{
+							const IDInfo* pUnitNode = pAdjacentPlot->headUnitNode();
+							const UnitHandle pLoopUnit;
+
+							while (pUnitNode != NULL)
+							{
+								pLoopUnit = GetPlayerUnit(*pUnitNode);
+								if (pLoopUnit && !pLoopUnit->IsCombatUnit())
+								{
+									if (!pLoopUnit->canMove())
+										iValueBonus += 100000;
+									else
+										iValueBonus += 10000;
+									break;
+								}
+								pUnitNode = pAdjacentPlot->nextUnitNode(pUnitNode);
+							}
+						}
 #endif
-#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
 						iValue += iValueBonus;
 #endif
 
