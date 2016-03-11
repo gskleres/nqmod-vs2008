@@ -901,6 +901,11 @@
         <Type>UpdateDatabase</Type>
         <FileName>scoring_tweaks/Better_Score_Multipliers.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ui/CIV5GameOptions_AI_Gimps.xml</FileName>
+      </Action>
     </ModActions>
     <ModContent>
       <Content>
@@ -1528,6 +1533,10 @@
     <Content Include="ui\AdvancedSetup.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\CIV5GameOptions_AI_Gimps.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="ui\EUI_tooltips.lua">
       <SubType>Lua</SubType>

@@ -916,7 +916,7 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 			}
 
 #ifdef NQM_AI_GIMP_NO_WORLD_WONDERS
-			if (GC.getAI_CANNOT_BUILD_WORLD_WONDERS() != 0 && isWorldWonderClass(pkBuildingInfo->GetBuildingClassInfo()))
+			if (GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_WORLD_WONDER") && isWorldWonderClass(pkBuildingInfo->GetBuildingClassInfo()))
 			{
 				iTempWeight = 0;
 			}
@@ -1030,7 +1030,7 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 		for(iProjectLoop = 0; iProjectLoop < GC.GetGameProjects()->GetNumProjects(); iProjectLoop++)
 		{
 #ifdef NQM_AI_GIMP_NO_WORLD_WONDERS
-			if (GC.getAI_CANNOT_BUILD_WORLD_WONDERS() != 0 && isWorldProject((ProjectTypes)iProjectLoop))
+			if (GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_WORLD_WONDER") && isWorldProject((ProjectTypes)iProjectLoop))
 				continue;
 #endif
 			if(m_pCity->canCreate((ProjectTypes)iProjectLoop))
