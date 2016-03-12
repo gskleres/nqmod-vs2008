@@ -500,10 +500,13 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 	{
 		// If we at least have enough Food to feed everyone, zero out the value of additional food
 #ifdef AUI_CITIZENS_AVOID_GROWTH_STILL_VALUES_EXCESS_FOOD
-#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
-		iFoodYieldValue = 100;
-#else
-		iFoodYieldValue = 1;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		iExcessFoodTimes100 = m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodTimes100);
+		iExcessFoodWithPlotTimes100 = m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100);
+#endif
+		iFoodYieldValue = iExcessFoodWithPlotTimes100 - iExcessFoodTimes100;
+#ifndef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+		iFoodYieldValue /= 100;
 #endif
 #else
 		iFoodYieldValue = 0;
@@ -556,6 +559,9 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 
 		iFoodYieldValue *= iNonExcessFoodPlotYieldT100;
 		iFoodYieldValue += (iExcessFoodPlotYieldT100 * iExcessFoodYieldValue);
+#ifndef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+		iFoodYieldValue /= 100;
+#endif
 #else
 		// If we have a non-default and non-food focus, only worry about getting to 0 food
 #ifdef AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
