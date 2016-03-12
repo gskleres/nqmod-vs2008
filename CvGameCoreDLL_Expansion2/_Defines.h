@@ -308,7 +308,7 @@
 #define AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
 /// Games where happiness is disabled no longer cause the citizen manager to always ignore the avoid growth checkbox
 #define AUI_CITIZENS_FIX_AVOID_GROWTH_FLAG_NOT_IGNORED_IF_NO_HAPPINESS
-/// The citizen manager only forces avoid growth from low happiness when growing in the city would lower the player's happiness
+/// The citizen manager only forces avoid growth from low happiness when growing in the city would lower the player's happiness. Also, avoid growth is enabled for cities that would grow next turn to make the empire unhappy.
 #define AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
 /// When comparing whether a specialist is better than an unemployed citizen, regular value evaluation is used
 #define AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES

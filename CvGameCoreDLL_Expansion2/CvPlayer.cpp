@@ -4481,12 +4481,18 @@ void CvPlayer::doTurnPostDiplomacy()
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 void CvPlayer::cacheYields()
 {
+	// Reallocate citizens in all our cities before we cache anything
+	int iLoop;
+	CvCity* pLoopCity;
+	for (pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
+	{
+		pLoopCity->GetCityCitizens()->DoReallocateCitizens();
+	}
+
 	// Cache Happiness
 	m_iCachedExcessHappinessForThisTurn = GetExcessHappiness();
 
 	// Cache Food, Production, Border-growth culture, GPP
-	int iLoop;
-	CvCity* pLoopCity;
 	for (pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
 	{
 		pLoopCity->cacheYieldsForTurn();

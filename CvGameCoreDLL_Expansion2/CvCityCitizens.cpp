@@ -704,18 +704,16 @@ bool CvCityCitizens::IsAvoidGrowth() const
 bool CvCityCitizens::IsAvoidGrowth()
 #endif
 {
-#ifdef AUI_CITIZENS_FIX_AVOID_GROWTH_FLAG_NOT_IGNORED_IF_NO_HAPPINESS
-	if (GetPlayer()->IsEmpireUnhappy())
-#else
+#ifndef AUI_CITIZENS_FIX_AVOID_GROWTH_FLAG_NOT_IGNORED_IF_NO_HAPPINESS
 	if(GC.getGame().isOption(GAMEOPTION_NO_HAPPINESS))
 	{
 		return false;
 	}
-
-	if(GetPlayer()->GetExcessHappiness() < 0)
 #endif
-	{
+
 #ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+	if (GetPlayer()->GetExcessHappiness() < 0 || (GetPlayer()->GetExcessHappiness() == 0 && m_pCity->foodDifferenceTimes100() + m_pCity->getFoodTimes100() >= m_pCity->growthThreshold() * 100))
+	{
 		int iPopulation = m_pCity->getPopulation();
 		int iLocalHappinessCap = iPopulation;
 
@@ -740,6 +738,8 @@ bool CvCityCitizens::IsAvoidGrowth()
 			}
 		}
 #else
+	if(GetPlayer()->GetExcessHappiness() < 0)
+	{
 		return true;
 #endif
 	}
