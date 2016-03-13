@@ -3628,7 +3628,11 @@ bool CvPlot::isVisibleEnemyDefender(const CvUnit* pUnit) const
 			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
 			pUnitNode = m_units.next(pUnitNode);
 
+#ifdef AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
+			if (pLoopUnit && !pLoopUnit->isDelayedDeath() && !pLoopUnit->isInvisible(eTeam, false))
+#else
 			if(pLoopUnit)
+#endif
 			{
 				if(pLoopUnit->IsCanDefend() && isEnemy(pLoopUnit, eTeam, bAlwaysHostile))
 				{
@@ -3658,7 +3662,7 @@ CvUnit* CvPlot::getVisibleEnemyDefender(const CvUnit* pUnit) const
 			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
 			pUnitNode = m_units.next(pUnitNode);
 
-			if (pLoopUnit && !pLoopUnit->isInvisible(eTeam, false))
+			if (pLoopUnit && !pLoopUnit->isDelayedDeath() && !pLoopUnit->isInvisible(eTeam, false))
 			{
 				if (pLoopUnit->IsCanDefend() && isEnemy(pLoopUnit, eTeam, bAlwaysHostile))
 				{
@@ -3688,7 +3692,11 @@ CvUnit* CvPlot::getVisibleEnemyDefender(PlayerTypes ePlayer)
 			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
 			pUnitNode = m_units.next(pUnitNode);
 
+#ifdef AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
+			if (pLoopUnit && !pLoopUnit->isDelayedDeath() && !pLoopUnit->isInvisible(eTeam, false))
+#else
 			if(pLoopUnit && !pLoopUnit->isInvisible(eTeam, false))
+#endif
 			{
 				if(pLoopUnit->IsCanDefend() && isEnemy(pLoopUnit, eTeam, false))
 				{
@@ -3747,7 +3755,11 @@ int CvPlot::getNumVisibleEnemyDefenders(const CvUnit* pUnit) const
 			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
 			pUnitNode = m_units.next(pUnitNode);
 
+#ifdef AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
+			if (pLoopUnit && !pLoopUnit->isDelayedDeath() && !pLoopUnit->isInvisible(eTeam, false))
+#else
 			if(pLoopUnit && !pLoopUnit->isInvisible(eTeam, false))
+#endif
 			{
 				if(pLoopUnit->IsCanDefend() && isEnemy(pLoopUnit, eTeam, bAlwaysHostile))
 				{
@@ -3777,7 +3789,11 @@ int CvPlot::getNumVisiblePotentialEnemyDefenders(const CvUnit* pUnit) const
 			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
 			pUnitNode = m_units.next(pUnitNode);
 
+#ifdef AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
+			if (pLoopUnit && !pLoopUnit->isDelayedDeath() && !pLoopUnit->isInvisible(eTeam, false))
+#else
 			if(pLoopUnit && !pLoopUnit->isInvisible(eTeam, false))
+#endif
 			{
 				if(pLoopUnit->IsCanDefend() && isPotentialEnemy(pLoopUnit, eTeam, bAlwaysHostile))
 				{
@@ -3806,7 +3822,11 @@ bool CvPlot::isVisibleEnemyUnit(PlayerTypes ePlayer) const
 			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
 			pUnitNode = m_units.next(pUnitNode);
 
+#ifdef AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
+			if (pLoopUnit && !pLoopUnit->isDelayedDeath() && !pLoopUnit->isInvisible(eTeam, false))
+#else
 			if(pLoopUnit && !pLoopUnit->isInvisible(eTeam, false))
+#endif
 			{
 				if(isEnemy(pLoopUnit, eTeam, false))
 				{
@@ -3835,7 +3855,11 @@ bool CvPlot::isVisibleEnemyUnit(const CvUnit* pUnit) const
 			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
 			pUnitNode = m_units.next(pUnitNode);
 
+#ifdef AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
+			if (pLoopUnit && !pLoopUnit->isDelayedDeath() && !pLoopUnit->isInvisible(eTeam, false))
+#else
 			if(pLoopUnit && !pLoopUnit->isInvisible(eTeam, false))
+#endif
 			{
 				if(isEnemy(pLoopUnit, eTeam, bAlwaysHostile))
 				{
@@ -3863,7 +3887,11 @@ bool CvPlot::isVisibleOtherUnit(PlayerTypes ePlayer) const
 			const CvUnit* pLoopUnit = GetPlayerUnit(*pUnitNode);
 			pUnitNode = m_units.next(pUnitNode);
 
+#ifdef AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
+			if (pLoopUnit && !pLoopUnit->isDelayedDeath() && !pLoopUnit->isInvisible(eTeam, false))
+#else
 			if(pLoopUnit && !pLoopUnit->isInvisible(eTeam, false))
+#endif
 			{
 				if(isOtherTeam(pLoopUnit, eTeam))
 				{

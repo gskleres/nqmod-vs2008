@@ -69,6 +69,8 @@
 #define AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
 /// The object used to store danger values is changed to an array instead of an FFastVector
 #define AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+/// Units who are delayed dead will not be fetched by functions that get enemy defenders
+#define AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts

@@ -1714,6 +1714,10 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="wonders_world\PyramidChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="wonders_world\StonehengeChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1799,6 +1803,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="_from_AuI\AuI_GlobalDiplomacyAIDefines.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="_sql\Policies_ExtraTourismPerGreatWork.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

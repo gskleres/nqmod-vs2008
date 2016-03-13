@@ -2883,7 +2883,7 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 					CvUnit* loopUnit = plot.getUnitByIndex(iUnitLoop);
 
 #ifdef AUI_UNIT_FIX_RADAR
-					if (loopUnit && (GET_TEAM(getTeam()).isAtWar(loopUnit->getTeam()) || loopUnit->isAlwaysHostile(plot)) && !loopUnit->canCoexistWithEnemyUnit(getTeam()))
+					if (loopUnit && !loopUnit->IsDead() && (GET_TEAM(getTeam()).isAtWar(loopUnit->getTeam()) || loopUnit->isAlwaysHostile(plot)) && !loopUnit->canCoexistWithEnemyUnit(getTeam()))
 						return false;
 #else
 					if(loopUnit && GET_TEAM(getTeam()).isAtWar(plot.getUnitByIndex(iUnitLoop)->getTeam()))
@@ -3211,9 +3211,6 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 		else //if !bMoveFlagAttack
 		{
 			bool bEmbarkedAndAdjacent = false;
-#ifndef AUI_UNIT_FIX_RADAR
-			bool bEnemyUnitPresent = false;
-#endif
 
 			// Without this code, Embarked Units can move on top of enemies because they have no visibility
 			if (isEmbarked() || (bMoveFlags & MOVEFLAG_PRETEND_EMBARKED))
@@ -3239,7 +3236,7 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 				{
 					CvUnit* loopUnit = plot.getUnitByIndex(iUnitLoop);
 
-					if (loopUnit && (GET_TEAM(getTeam()).isAtWar(loopUnit->getTeam()) || loopUnit->isAlwaysHostile(plot)) && !loopUnit->canCoexistWithEnemyUnit(getTeam()))
+					if (loopUnit && !loopUnit->IsDead() && (GET_TEAM(getTeam()).isAtWar(loopUnit->getTeam()) || loopUnit->isAlwaysHostile(plot)) && !loopUnit->canCoexistWithEnemyUnit(getTeam()))
 						return false;
 				}
 			}
