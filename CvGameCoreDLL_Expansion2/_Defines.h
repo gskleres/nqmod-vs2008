@@ -320,6 +320,10 @@
 #define AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
 /// If a city is set to avoid growth, it will assign a value of 1 to excess food instead of 0. While it's still much less than a Gold yield, it at least makes 3 food tiles more preferable to 2 food tiles even when avoiding growth
 #define AUI_CITIZENS_AVOID_GROWTH_STILL_VALUES_EXCESS_FOOD
+/// Unhardcodes the value assigned to specialists for happiness (flat value is the base multiplier for value of a single happiness point before modifications)
+#define AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS (8)
+/// If the player has negative gold income and would lose science as a result, gold yield is scored as if it were science yield
+#define AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix

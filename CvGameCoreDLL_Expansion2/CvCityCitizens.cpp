@@ -430,8 +430,13 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 	int iFoodYieldValue = (/*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * pPlot->getYield(YIELD_FOOD));
 #endif
 	int iProductionYieldValue = (/*8*/ GC.getAI_CITIZEN_VALUE_PRODUCTION() * pPlot->getYield(YIELD_PRODUCTION));
+#ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
+	int iGoldYieldValue = (pPlot->getYield(YIELD_GOLD));
+	int iScienceYieldValue = (pPlot->getYield(YIELD_SCIENCE));
+#else
 	int iGoldYieldValue = (/*10*/ GC.getAI_CITIZEN_VALUE_GOLD() * pPlot->getYield(YIELD_GOLD));
 	int iScienceYieldValue = (/*6*/ GC.getAI_CITIZEN_VALUE_SCIENCE() * pPlot->getYield(YIELD_SCIENCE));
+#endif
 	int iCultureYieldValue = (GC.getAI_CITIZEN_VALUE_CULTURE() * pPlot->getYield(YIELD_CULTURE));
 	int iFaithYieldValue = (GC.getAI_CITIZEN_VALUE_FAITH() * pPlot->getYield(YIELD_FAITH));
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
@@ -443,6 +448,13 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 	iScienceYieldValue *= m_pCity->getBaseYieldRateModifier(YIELD_SCIENCE);
 	iCultureYieldValue *= m_pCity->getBaseYieldRateModifier(YIELD_CULTURE);
 	iFaithYieldValue *= m_pCity->getBaseYieldRateModifier(YIELD_FAITH);
+#endif
+#ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
+	int iGoldToScienceT100 = MIN(GetPlayer()->calculateGoldRateTimes100() + GetPlayer()->GetTreasury()->GetGoldTimes100(), 0);
+	iGoldYieldValue -= iGoldToScienceT100;
+	iScienceYieldValue += iGoldToScienceT100;
+	iGoldYieldValue *= GC.getAI_CITIZEN_VALUE_GOLD();
+	iGoldYieldValue *= GC.getAI_CITIZEN_VALUE_SCIENCE();
 #endif
 
 	// How much surplus food are we making?
@@ -460,7 +472,15 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 	else if(eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
 		iProductionYieldValue *= 3;
 	else if(eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+#ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
+	{
 		iGoldYieldValue *= 3;
+		if (iGoldToScienceT100 > 0)
+			iScienceYieldValue *= 3;
+	}
+#else
+		iGoldYieldValue *= 3;
+#endif
 	else if(eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
 		iScienceYieldValue *= 3;
 	else if(eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
@@ -469,6 +489,10 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 	{
 		iFoodYieldValue *= 2;
 		iGoldYieldValue *= 2;
+#ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
+		if (iGoldToScienceT100 > 0)
+			iScienceYieldValue *= 2;
+#endif
 	}
 	else if(eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
 	{
@@ -698,7 +722,7 @@ void CvCityCitizens::SetNoAutoAssignSpecialists(bool bValue)
 }
 
 /// Is this City avoiding growth?
-#if defined(AUI_CONSTIFY)
+#ifdef AUI_CONSTIFY
 bool CvCityCitizens::IsAvoidGrowth() const
 #else
 bool CvCityCitizens::IsAvoidGrowth()
@@ -712,7 +736,7 @@ bool CvCityCitizens::IsAvoidGrowth()
 #endif
 
 #ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
-	if (GetPlayer()->GetExcessHappiness() < 0 || (GetPlayer()->GetExcessHappiness() == 0 && m_pCity->foodDifferenceTimes100() + m_pCity->getFoodTimes100() >= m_pCity->growthThreshold() * 100))
+	if (GetPlayer()->GetExcessHappiness() <= 0)
 	{
 		int iPopulation = m_pCity->getPopulation();
 		int iLocalHappinessCap = iPopulation;
@@ -1193,7 +1217,7 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 
 	// Yield Values
 #ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
-	int iFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD() * 8;
+	int iFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
 #else
 	int iFoodYieldValue = (GC.getAI_CITIZEN_VALUE_FOOD() * (pPlayer->specialistYield(eSpecialist, YIELD_FOOD) + iFoodConsumptionBonus));
 #endif
@@ -1254,8 +1278,37 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	iGPPYieldValue *= iGPPModifier;
 #endif
 #endif
+#ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
+	int iHappinessYieldValue = 0;
+	if (pPlayer->isHalfSpecialistUnhappiness())
+	{
+		iHappinessYieldValue = GC.getUNHAPPINESS_PER_POPULATION() * 50 * AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS;
+		if (pPlayer->GetCapitalUnhappinessMod() != 0 && m_pCity->isCapital())
+		{
+			iHappinessYieldValue *= 100;
+			iHappinessYieldValue /= (100 + pPlayer->GetCapitalUnhappinessMod());
+		}
+		iHappinessYieldValue *= 100;
+		iHappinessYieldValue /= (100 + pPlayer->GetUnhappinessMod());
+		iHappinessYieldValue *= 100;
+		iHappinessYieldValue /= (100 + pPlayer->GetPlayerTraits()->GetPopulationUnhappinessModifier());
+		// Handicap mod
+		iHappinessYieldValue *= 100;
+		iHappinessYieldValue /= pPlayer->getHandicapInfo().getPopulationUnhappinessMod();
+
+		if (pPlayer->GetExcessHappiness() <= 0)
+		{
+			iHappinessYieldValue = int(iHappinessYieldValue * pow(2.0, 1.0 - (double)pPlayer->GetExcessHappiness() / 10.0) + 0.5);
+			iScienceYieldValue += GetPlayer()->GetScienceFromHappinessTimes100();
+		}
+
+		// For the initial *50
+		iHappinessYieldValue /= 100;
+	}
+#else
 	int iHappinessYieldValue = (m_pCity->GetPlayer()->isHalfSpecialistUnhappiness()) ? 5 : 0; // TODO: un-hardcode this
 	iHappinessYieldValue = m_pCity->GetPlayer()->IsEmpireUnhappy() ? iHappinessYieldValue * 2 : iHappinessYieldValue; // TODO: un-hardcode this
+#endif
 
 	// How much surplus food are we making?
 	int iExcessFoodTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100);
@@ -1314,8 +1367,19 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	// Food can be worth less if we don't want to grow
 	if(iExcessFoodTimes100 >= 0 && bAvoidGrowth)
 	{
+#ifdef AUI_CITIZENS_AVOID_GROWTH_STILL_VALUES_EXCESS_FOOD
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		iExcessFoodTimes100 = m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodTimes100);
+		iExcessFoodWithPlotTimes100 = m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100);
+#endif
+		iFoodYieldValue = iExcessFoodWithPlotTimes100 - iExcessFoodTimes100;
+#ifndef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+		iFoodYieldValue /= 100;
+#endif
+#else
 		// If we at least have enough Food to feed everyone, zero out the value of additional food
 		iFoodYieldValue = 0;
+#endif
 	}
 	// We want to grow here
 	else
@@ -1326,13 +1390,18 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 		iExcessFoodTimes100 = m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodTimes100);
 		iExcessFoodWithPlotTimes100 = m_pCity->foodDifferenceTimes100(true, NULL, true, iExcessFoodWithPlotTimes100);
 #endif
+#ifdef AUI_CITIZENS_AVOID_GROWTH_STILL_VALUES_EXCESS_FOOD
+		int iExcessFoodYieldValue = 1;
+#else
 		int iExcessFoodYieldValue = 0;
+#endif
 		int iTargetFoodT100 = 0;
 		if (!bAvoidGrowth)
 		{
 			iExcessFoodYieldValue = iFoodYieldValue / 16;
 #ifdef AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
-			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || m_pCity->getPopulation() < 5)
+			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH
+				|| eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || m_pCity->getPopulation() <= (GC.getUNHAPPINESS_PER_CITY() + 1))
 #else
 			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
 #endif
@@ -1357,8 +1426,11 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 			iExcessFoodPlotYieldT100 -= iTargetFoodT100;
 		}
 
-		iFoodYieldValue *= iNonExcessFoodPlotYieldT100 / 100;
-		iFoodYieldValue += (iExcessFoodPlotYieldT100 * iExcessFoodYieldValue) / 100;
+		iFoodYieldValue *= iNonExcessFoodPlotYieldT100;
+		iFoodYieldValue += (iExcessFoodPlotYieldT100 * iExcessFoodYieldValue);
+#ifndef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+		iFoodYieldValue /= 100;
+#endif
 #else
 		// If we have a non-default and non-food focus, only worry about getting to 0 food
 #ifdef AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD

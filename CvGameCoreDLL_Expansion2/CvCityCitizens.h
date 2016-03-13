@@ -51,7 +51,7 @@ public:
 	bool IsNoAutoAssignSpecialists() const;
 	void SetNoAutoAssignSpecialists(bool bValue);
 
-#if defined(AUI_CONSTIFY)
+#ifdef AUI_CONSTIFY
 	bool IsAvoidGrowth() const;
 	bool IsForcedAvoidGrowth() const;
 #else
