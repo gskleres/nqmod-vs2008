@@ -66,12 +66,17 @@ public:
 #ifndef NQM_PRUNING
 	bool IsAIWantSpecialistRightNow();
 #endif
-#ifdef AUI_CONSTIFY
+#ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
+	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue, bool bGetWorst = false, SpecialistTypes eIgnoreSpecialist = NO_SPECIALIST) const;
+#elif defined(AUI_CONSTIFY)
 	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue) const;
+#else
+	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
+#endif
+#ifdef AUI_CONSTIFY
 	int GetSpecialistValue(SpecialistTypes eSpecialist) const;
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const;
 #else
-	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
 	int GetSpecialistValue(SpecialistTypes eSpecialist);
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist);
 #endif
@@ -82,10 +87,17 @@ public:
 	int GetNumCitizensWorkingPlots() const;
 	void ChangeNumCitizensWorkingPlots(int iChange);
 
+#ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
+	bool DoAddBestCitizenFromUnassigned(int* piBestScore = NULL);
+#else
 	bool DoAddBestCitizenFromUnassigned();
+#endif
 	bool DoRemoveWorstCitizen(bool bRemoveForcedStatus = false, SpecialistTypes eDontChangeSpecialist = NO_SPECIALIST, int iCurrentCityPopulation = -1);
 
 	void DoReallocateCitizens();
+#ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
+	void DoSelfConsistencyCheck(int iMaxIterations = -1);
+#endif
 
 	CvPlot* GetBestCityPlotWithValue(int& iValue, bool bWantBest, bool bWantWorked);
 

@@ -71,6 +71,10 @@
 #define AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
 /// Units who are delayed dead will not be fetched by functions that get enemy defenders
 #define AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
+/// When the citizen manager reallocates all citizens, it no longer goes through the costly process of calculating the worst plot multiple times
+#define AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_NO_COSTLY_PLOT_REMOVAL
+/// Fixes a few possible cases of null pointer dereferences in FindTacticalTargets()
+#define AUI_TACTICAL_FIX_FIND_TACTICAL_TARGETS_NULL_POINTER
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -322,8 +326,24 @@
 #define AUI_CITIZENS_AVOID_GROWTH_STILL_VALUES_EXCESS_FOOD
 /// Unhardcodes the value assigned to specialists for happiness (flat value is the base multiplier for value of a single happiness point before modifications)
 #define AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS (8)
+#ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
+/// Citizen Manager considers the effect of half specialist unhappiness on other yields
+#define AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+#endif
 /// If the player has negative gold income and would lose science as a result, gold yield is scored as if it were science yield
 #define AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
+/// The function that removes the worst specialist from their slot actually removes the worst one instead of just the first specialist encountered
+#define AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
+/// Adds a self-consistency check function to citizen manager, which constantly shifts the worst scoring citizen to the best scoring spot until it's not actually shifting the citizen or it keeps shifting back and forth between the same spots.
+#define AUI_CITIZENS_SELF_CONSISTENCY_CHECK (0) // This is the score difference threshold below which the SC loop will terminate
+#ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
+/// Reallocate citizens runs a self-consistency check after it reallocates everyone
+#define AUI_CITIZENS_REALLOCATE_CITIZENS_USES_SELF_CONSISTENCY
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+/// After reallocating citizens in all cities at the beginning of the turn, a self-consistency check is run for all cities (so 
+#define AUI_PLAYER_SELF_CONSISTENCY_SWEEP_AFTER_INITIAL_REALLOCATE
+#endif
+#endif
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix

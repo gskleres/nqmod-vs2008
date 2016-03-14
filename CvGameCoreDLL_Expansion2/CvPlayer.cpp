@@ -4488,6 +4488,12 @@ void CvPlayer::cacheYields()
 	{
 		pLoopCity->GetCityCitizens()->DoReallocateCitizens();
 	}
+#ifdef AUI_PLAYER_SELF_CONSISTENCY_SWEEP_AFTER_INITIAL_REALLOCATE
+	for (pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
+	{
+		pLoopCity->GetCityCitizens()->DoSelfConsistencyCheck();
+	}
+#endif
 
 	// Cache Happiness
 	m_iCachedExcessHappinessForThisTurn = GetExcessHappiness();
@@ -11979,14 +11985,12 @@ int CvPlayer::GetUnhappinessFromCapturedCityCount(CvCity* pAssumeCityAnnexed, Cv
 
 //	--------------------------------------------------------------------------------
 /// Unhappiness from City Population
-#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
-int CvPlayer::GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted, const CvCity* pAssumeCityGrows) const
-{
-	int iDummy = 0;
+#if defined(AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS) || defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS)
+int CvPlayer::GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted, const CvCity* pAssumeCityGrows, const CvCity* pAssumeCityExtraSpecialist) const
 #else
 int CvPlayer::GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted) const
-{
 #endif
+{
 	int iUnhappiness = 0;
 	int iUnhappinessFromThisCity;
 
@@ -12017,7 +12021,7 @@ int CvPlayer::GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed, CvCit
 		if(bCityValid)
 		{
 			iPopulation = pLoopCity->getPopulation();
-#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+#if defined(AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS) || defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS)
 			if (pLoopCity == pAssumeCityGrows)
 				iPopulation++;
 #endif
@@ -12027,8 +12031,8 @@ int CvPlayer::GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed, CvCit
 			{
 				iSpecialistCount = pLoopCity->GetCityCitizens()->GetTotalSpecialistCount();
 				iSpecialistCount++; // Round up
-#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
-				if (pLoopCity == pAssumeCityGrows && pLoopCity->GetCityCitizens()->GetAIBestSpecialistBuilding(iDummy) != NO_BUILDING)
+#if defined(AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS) || defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS)
+				if (pLoopCity == pAssumeCityExtraSpecialist)
 					iSpecialistCount++;
 #endif
 				iPopulation -= (iSpecialistCount / 2);
@@ -12188,8 +12192,8 @@ int CvPlayer::GetUnhappinessFromCitySpecialists(CvCity* pAssumeCityAnnexed, CvCi
 
 //	--------------------------------------------------------------------------------
 /// Unhappiness from City Population in Occupied Cities
-#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
-int CvPlayer::GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted, const CvCity* pAssumeCityGrows) const
+#if defined(AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS) || defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS)
+int CvPlayer::GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted, const CvCity* pAssumeCityGrows, const CvCity* pAssumeCityExtraSpecialist) const
 #else
 int CvPlayer::GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted) const
 #endif
@@ -12225,7 +12229,7 @@ int CvPlayer::GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed, CvCit
 		if(bCityValid)
 		{
 			iPopulation = pLoopCity->getPopulation();
-#ifdef AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+#if defined(AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS) || defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS)
 			if (pLoopCity == pAssumeCityGrows)
 				iPopulation++;
 #endif
@@ -12235,6 +12239,10 @@ int CvPlayer::GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed, CvCit
 			{
 				iSpecialistCount = pLoopCity->GetCityCitizens()->GetTotalSpecialistCount();
 				iSpecialistCount++; // Round up
+#if defined(AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS) || defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS)
+				if (pLoopCity == pAssumeCityExtraSpecialist)
+					iSpecialistCount++;
+#endif
 				iPopulation -= (iSpecialistCount / 2);
 			}
 

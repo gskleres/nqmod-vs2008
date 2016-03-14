@@ -7047,14 +7047,17 @@ int CvCity::foodConsumption(bool /*bNoAngry*/, int iExtra) const
 
 //	--------------------------------------------------------------------------------
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
-int CvCity::foodDifference(bool bBottom, bool bValueKnown, int iValueKnown, int /*iExtraHappiness*/) const
+int CvCity::foodDifference(bool bBottom, const int* iValueKnown, int iExtraHappiness) const
 #else
 int CvCity::foodDifference(bool bBottom) const
 #endif
 {
 	VALIDATE_OBJECT
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
-	return foodDifferenceTimes100(bBottom, NULL, bValueKnown, iValueKnown * 100) / 100;
+	int iToPassValueKnown = 0;
+	if (iValueKnown)
+		iToPassValueKnown = *iValueKnown * 100;
+	return foodDifferenceTimes100(bBottom, NULL, (iValueKnown ? &iToPassValueKnown : NULL), iExtraHappiness) / 100;
 #else
 	return foodDifferenceTimes100(bBottom) / 100;
 #endif
@@ -7063,7 +7066,7 @@ int CvCity::foodDifference(bool bBottom) const
 
 //	--------------------------------------------------------------------------------
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
-int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink, bool bValueKnown, int iValueKnown) const
+int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink, const int* iValueKnown, int iExtraHappiness) const
 #else
 int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink) const
 #endif
@@ -7072,8 +7075,8 @@ int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink) const
 	int iDifference;
 
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
-	if (bValueKnown)
-		iDifference = iValueKnown;
+	if (iValueKnown)
+		iDifference = *iValueKnown;
 	else
 #endif
 	if(isFoodProduction())
@@ -7138,14 +7141,22 @@ int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink) const
 		}
 
 		// Cities stop growing when empire is very unhappy
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		if (!GC.getGame().isOption(GAMEOPTION_NO_HAPPINESS) && GET_PLAYER(getOwner()).GetExcessHappiness() + iExtraHappiness <= /*-10*/ GC.getVERY_UNHAPPY_THRESHOLD())
+#else
 		if(GET_PLAYER(getOwner()).IsEmpireVeryUnhappy())
+#endif
 		{
 			int iMod = /*-100*/ GC.getVERY_UNHAPPY_GROWTH_PENALTY();
 			iTotalMod += iMod;
 			GC.getGame().BuildProdModHelpText(toolTipSink, "TXT_KEY_FOODMOD_UNHAPPY", iMod);
 		}
 		// Cities grow slower if the player is over his Happiness Limit
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		else if (!GC.getGame().isOption(GAMEOPTION_NO_HAPPINESS) && GET_PLAYER(getOwner()).GetExcessHappiness() + iExtraHappiness < 0)
+#else
 		else if(GET_PLAYER(getOwner()).IsEmpireUnhappy())
+#endif
 		{
 			int iMod = /*-75*/ GC.getUNHAPPY_GROWTH_PENALTY();
 			iTotalMod += iMod;

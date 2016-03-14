@@ -1360,6 +1360,10 @@ void CvTacticalAI::FindTacticalTargets()
 				{
 					bValidPlot = false;
 				}
+#ifdef AUI_TACTICAL_FIX_FIND_TACTICAL_TARGETS_NULL_POINTER
+				else if(GC.getGame().GetTacticalAnalysisMap()->GetCell(iI) == NULL)
+					bValidPlot = false;
+#endif
 			}
 		}
 
