@@ -1224,10 +1224,14 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 
 #ifdef AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP
 	const CvReligion* pReligion = NULL;
+	const CvBeliefEntry* pSecondaryBelief = NULL;
 	ReligionTypes eMajority = m_pCity->GetCityReligions()->GetReligiousMajority();
 	if (eMajority != NO_RELIGION && GetTotalSpecialistCount() <= 0)
 	{
 		pReligion = GC.getGame().GetGameReligions()->GetReligion(eMajority, GetPlayer()->GetID());
+		BeliefTypes eSecondaryPantheon = m_pCity->GetCityReligions()->GetSecondaryReligionPantheonBelief();
+		if (eSecondaryPantheon != NO_BELIEF)
+			pSecondaryBelief = GC.GetGameBeliefs()->GetEntry(eSecondaryPantheon);
 	}
 #endif
 
@@ -1260,6 +1264,19 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 #endif
 		iCultureYieldValue += GC.getAI_CITIZEN_VALUE_CULTURE() * pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_CULTURE);
 		iFaithYieldValue += GC.getAI_CITIZEN_VALUE_FAITH() * pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_FAITH);
+	}
+	if (pSecondaryBelief)
+	{
+		iProductionYieldValue += GC.getAI_CITIZEN_VALUE_PRODUCTION() * pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_PRODUCTION);
+#ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
+		iGoldYieldValue += pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_GOLD);
+		iScienceYieldValue += pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_SCIENCE);
+#else
+		iGoldYieldValue += GC.getAI_CITIZEN_VALUE_GOLD() * pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_GOLD);
+		iScienceYieldValue += GC.getAI_CITIZEN_VALUE_SCIENCE() * pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_SCIENCE);
+#endif
+		iCultureYieldValue += GC.getAI_CITIZEN_VALUE_CULTURE() * pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_CULTURE);
+		iFaithYieldValue += GC.getAI_CITIZEN_VALUE_FAITH() * pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_FAITH);
 	}
 #endif
 	int iGPPYieldValue = pSpecialistInfo->getGreatPeopleRateChange() * 3; // TODO: un-hardcode this
@@ -1361,6 +1378,8 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 #ifdef AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP
 	if (pReligion)
 		iExcessFoodWithPlotTimes100 += pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_FOOD) * 100;
+	if (pSecondaryBelief)
+		iExcessFoodWithPlotTimes100 += pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_FOOD) * 100;
 #endif
 #endif
 #ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
