@@ -9009,6 +9009,19 @@ void CvCity::SetPuppet(bool bValue)
 	if(IsPuppet() != bValue)
 	{
 		m_bPuppet = bValue;
+#ifdef AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
+		if (bValue)
+		{
+			GetCityCitizens()->SetFocusType(CITY_AI_FOCUS_TYPE_GOLD);
+			GetCityCitizens()->SetNoAutoAssignSpecialists(false);
+			GetCityCitizens()->SetForcedAvoidGrowth(false);
+		}
+		else
+		{
+			GetCityCitizens()->SetFocusType(NO_CITY_AI_FOCUS_TYPE);
+		}
+		GetCityCitizens()->DoReallocateCitizens();
+#endif
 	}
 }
 
@@ -9021,9 +9034,11 @@ void CvCity::DoCreatePuppet()
 	// Turn this off - used to display info for annex/puppet/raze popup
 	SetIgnoreCityForHappiness(false);
 
+#ifndef AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
 	SetPuppet(true);
 
 	setProductionAutomated(true, true);
+#endif
 
 	int iForceWorkingPuppetRange = 2;
 
@@ -9076,6 +9091,12 @@ void CvCity::DoCreatePuppet()
 			}
 		}
 	}
+#endif
+
+#ifdef AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
+	SetPuppet(true);
+
+	setProductionAutomated(true, true);
 #endif
 
 	GET_PLAYER(getOwner()).DoUpdateHappiness();

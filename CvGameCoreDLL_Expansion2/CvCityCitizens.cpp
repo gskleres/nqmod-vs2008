@@ -264,6 +264,7 @@ void CvCityCitizens::DoTurn()
 		SetFocusType(CITY_AI_FOCUS_TYPE_GOLD);
 		SetNoAutoAssignSpecialists(false);
 		SetForcedAvoidGrowth(false);
+#ifndef AUI_CITIZENS_PUPPET_STILL_WANTS_GROWTH
 		int iExcessFoodTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100);
 		if(iExcessFoodTimes100 < 0)
 		{
@@ -271,6 +272,7 @@ void CvCityCitizens::DoTurn()
 			//SetNoAutoAssignSpecialists(true);
 			SetForcedAvoidGrowth(false);
 		}
+#endif
 	}
 	else if(!thisPlayer.isHuman())
 	{

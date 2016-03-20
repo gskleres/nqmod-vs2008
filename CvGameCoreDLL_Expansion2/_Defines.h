@@ -348,8 +348,10 @@
 #endif
 /// If a city's religion has the Guruship belief, the citizen manager will account for the extra production gained from the first citizen slot
 #define AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP
-/// Puppets not set to soft or hard avoid growth will still want at least 1 excess food (Gold Focus would disallow this)
+/// Puppets not set to soft or hard avoid growth will still want at least 1 excess food (Gold Focus would disallow this). This removes need for some code that helps avoid starvation but could be abused by a human, so this code was disabled.
 #define AUI_CITIZENS_PUPPET_STILL_WANTS_GROWTH
+/// Puppeting or annexing a city will immediately reallocate citizens and set focuses when the order is given. It also means players don't have to manually remove Gold focus when unpuppeting a city.
+#define AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix
