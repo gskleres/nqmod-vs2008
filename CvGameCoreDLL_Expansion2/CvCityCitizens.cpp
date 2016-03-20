@@ -553,6 +553,10 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 			{
 				iTargetFoodT100 = 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION();
 			}
+#ifdef AUI_CITIZENS_PUPPET_STILL_WANTS_GROWTH
+			else if (m_pCity->IsPuppet())
+				iTargetFoodT100 = 50 * GC.getFOOD_CONSUMPTION_PER_POPULATION();
+#endif
 		}
 
 		int iNonExcessFoodPlotYieldT100 = iExcessFoodWithPlotTimes100 - iExcessFoodTimes100;
@@ -1501,6 +1505,10 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 			{
 				iTargetFoodT100 = 100 * GC.getFOOD_CONSUMPTION_PER_POPULATION();
 			}
+#ifdef AUI_CITIZENS_PUPPET_STILL_WANTS_GROWTH
+			else if (m_pCity->IsPuppet())
+				iTargetFoodT100 = 50 * GC.getFOOD_CONSUMPTION_PER_POPULATION();
+#endif
 		}
 
 		int iNonExcessFoodPlotYieldT100 = iExcessFoodWithPlotTimes100 - iExcessFoodTimes100;
