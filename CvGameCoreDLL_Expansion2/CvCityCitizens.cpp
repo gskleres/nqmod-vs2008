@@ -1222,6 +1222,15 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	int iFoodConsumptionBonus = (pPlayer->isHalfSpecialistFood()) ? 1 : 0;
 #endif
 
+#ifdef AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP
+	const CvReligion* pReligion = NULL;
+	ReligionTypes eMajority = m_pCity->GetCityReligions()->GetReligiousMajority();
+	if (eMajority != NO_RELIGION && GetTotalSpecialistCount() <= 0)
+	{
+		pReligion = GC.getGame().GetGameReligions()->GetReligion(eMajority, GetPlayer()->GetID());
+	}
+#endif
+
 	// Yield Values
 #ifdef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
 	int iFoodYieldValue = /*12*/ GC.getAI_CITIZEN_VALUE_FOOD();
@@ -1238,6 +1247,21 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 #endif
 	int iCultureYieldValue = (GC.getAI_CITIZEN_VALUE_CULTURE() * m_pCity->GetCultureFromSpecialist(eSpecialist)); 
 	int iFaithYieldValue = (GC.getAI_CITIZEN_VALUE_FAITH() * pPlayer->specialistYield(eSpecialist, YIELD_FAITH));
+#ifdef AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP
+	if (pReligion)
+	{
+		iProductionYieldValue += GC.getAI_CITIZEN_VALUE_PRODUCTION() * pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_PRODUCTION);
+#ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
+		iGoldYieldValue += pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_GOLD);
+		iScienceYieldValue += pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_SCIENCE);
+#else
+		iGoldYieldValue += GC.getAI_CITIZEN_VALUE_GOLD() * pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_GOLD);
+		iScienceYieldValue += GC.getAI_CITIZEN_VALUE_SCIENCE() * pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_SCIENCE);
+#endif
+		iCultureYieldValue += GC.getAI_CITIZEN_VALUE_CULTURE() * pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_CULTURE);
+		iFaithYieldValue += GC.getAI_CITIZEN_VALUE_FAITH() * pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_FAITH);
+	}
+#endif
 	int iGPPYieldValue = pSpecialistInfo->getGreatPeopleRateChange() * 3; // TODO: un-hardcode this
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
 #ifndef AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER
@@ -1334,6 +1358,10 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	int iExcessFoodTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100);
 #if defined(AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER) || defined(AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION) || defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS)
 	int iExcessFoodWithPlotTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100) + (pPlayer->specialistYield(eSpecialist, YIELD_FOOD) + iFoodConsumptionBonus) * m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
+#ifdef AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP
+	if (pReligion)
+		iExcessFoodWithPlotTimes100 += pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_FOOD) * 100;
+#endif
 #endif
 #ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
 	// Excess Food bit is to make sure we don't starve to death trying to allocate specialists when we're unhappy

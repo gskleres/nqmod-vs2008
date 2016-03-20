@@ -1904,6 +1904,12 @@ void CvCity::DoUpdateIndustrialRouteToCapital()
 	// Capital - what do we want to do about this?
 	if(isCapital())
 	{
+#ifdef AUI_CITY_FIX_UPDATE_RAILROAD_CONNECTION_ALLOW_REMOVAL
+		if (plot() && plot()->getRouteType() == GC.getGame().GetIndustrialRoute())
+			SetIndustrialRouteToCapital(true);
+		else
+			SetIndustrialRouteToCapital(false);
+#endif
 	}
 	// Non-capital city
 	else
@@ -1912,6 +1918,10 @@ void CvCity::DoUpdateIndustrialRouteToCapital()
 		{
 			SetIndustrialRouteToCapital(true);
 		}
+#ifdef AUI_CITY_FIX_UPDATE_RAILROAD_CONNECTION_ALLOW_REMOVAL
+		else
+			SetIndustrialRouteToCapital(false);
+#endif
 	}
 }
 

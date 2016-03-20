@@ -153,6 +153,8 @@
 #define AUI_UNIT_MOVEMENT_FIX_DELAYED_DEATH_UNITS_GENERATE_ZOC
 /// Fixed the fact that some player-based modifiers to research costs are all only aesthetic, i.e. their only effect before would be to increase the number the UI displays for tech cost (they didn't actually modify tech cost)
 #define AUI_TECH_FIX_PLAYER_BASED_RESEARCH_COST_ONLY_AESTHETIC
+/// Fixed the bug where the production bonus from having a railroad connecting a city to the capital is not removed if the railroad connection is broken (credits to Wr4ith pointing this out after having researched the "weirdness" behind harbors, railroads, and the railroad bonus)
+#define AUI_CITY_FIX_UPDATE_RAILROAD_CONNECTION_ALLOW_REMOVAL
 
 // Deliberate AI hindrances
 /// AI players will no longer spread their religion to other human players' cities
@@ -335,7 +337,7 @@
 /// The function that removes the worst specialist from their slot actually removes the worst one instead of just the first specialist encountered
 #define AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
 /// Adds a self-consistency check function to citizen manager, which constantly shifts the worst scoring citizen to the best scoring spot until it's not actually shifting the citizen or it keeps shifting back and forth between the same spots.
-#define AUI_CITIZENS_SELF_CONSISTENCY_CHECK (0) // This is the score difference threshold below which the SC loop will terminate
+#define AUI_CITIZENS_SELF_CONSISTENCY_CHECK (1) // This is the score difference threshold below which the SC loop will terminate
 #ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
 /// Reallocate citizens runs a self-consistency check after it reallocates everyone
 #define AUI_CITIZENS_REALLOCATE_CITIZENS_USES_SELF_CONSISTENCY
@@ -344,6 +346,8 @@
 #define AUI_PLAYER_SELF_CONSISTENCY_SWEEP_AFTER_INITIAL_REALLOCATE
 #endif
 #endif
+/// If a city's religion has the Guruship belief, the citizen manager will account for the extra production gained from the first citizen slot
+#define AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix
