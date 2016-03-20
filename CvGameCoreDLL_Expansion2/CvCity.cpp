@@ -9010,17 +9010,19 @@ void CvCity::SetPuppet(bool bValue)
 	{
 		m_bPuppet = bValue;
 #ifdef AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
-		if (bValue)
+		if (GetCityCitizens())
 		{
-			GetCityCitizens()->SetFocusType(CITY_AI_FOCUS_TYPE_GOLD);
-			GetCityCitizens()->SetNoAutoAssignSpecialists(false);
-			GetCityCitizens()->SetForcedAvoidGrowth(false);
+			if (bValue)
+			{
+				GetCityCitizens()->SetFocusType(CITY_AI_FOCUS_TYPE_GOLD);
+				GetCityCitizens()->SetNoAutoAssignSpecialists(false);
+				GetCityCitizens()->SetForcedAvoidGrowth(false);
+			}
+			else
+			{
+				GetCityCitizens()->SetFocusType(NO_CITY_AI_FOCUS_TYPE);
+			}
 		}
-		else
-		{
-			GetCityCitizens()->SetFocusType(NO_CITY_AI_FOCUS_TYPE);
-		}
-		GetCityCitizens()->DoReallocateCitizens();
 #endif
 	}
 }
