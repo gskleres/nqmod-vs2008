@@ -3914,8 +3914,12 @@ int CvPlayerTrade::GetNumDifferentTradingPartners (void)
 {
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 
+#ifdef AUI_TRADE_FIX_GET_NUM_DIFFERENT_TRADING_PARTNERS_USES_ARRAY
+	bool abConnections[MAX_CIV_PLAYERS] = {};
+#else
 	std::vector<bool> abConnections;
 	abConnections.resize(MAX_CIV_PLAYERS, false);
+#endif
 
 	int iResult = 0;
 

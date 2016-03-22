@@ -263,18 +263,10 @@ bool CvAStar::GeneratePath(int iXstart, int iYstart, int iXdest, int iYdest, int
 	{
 		// XXX should we just be doing a memset here?
 #ifdef AUI_ASTAR_MINOR_OPTIMIZATION
-		while (m_pOpen)
-		{
-			temp = m_pOpen->m_pNext;
-			m_pOpen->clear();
-			m_pOpen = temp;
-		}
-		while (m_pClosed)
-		{
-			temp = m_pClosed->m_pNext;
-			m_pClosed->clear();
-			m_pClosed = temp;
-		}
+		for (int iI = 0; iI < m_iColumns; iI++)
+			for (int iJ = 0; iJ < m_iRows; iJ++)
+				m_ppaaNodes[iI][iJ].clear();
+		m_pClosed = NULL;
 #else
 		if(m_pOpen)
 		{

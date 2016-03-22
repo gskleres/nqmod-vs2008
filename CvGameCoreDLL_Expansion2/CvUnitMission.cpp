@@ -435,7 +435,7 @@ void CvUnitMission::ContinueMission(UnitHandle hUnit, int iSteps, int iETA)
 		if(pkMissionData->iPushTurn == GC.getGame().getGameTurn() || (pkMissionData->iFlags & MOVE_UNITS_THROUGH_ENEMY))
 		{
 #ifdef AUI_UNIT_MISSION_FIX_CONTINUE_MISSION_CIVILIANS_DONT_ATTEMPT_ATTACK
-			if (pkMissionData->eMissionType == CvTypes::getMISSION_MOVE_TO() && !hUnit->IsDoingPartialMove() && hUnit->canMove() && hUnit->IsCanDefend() && hUnit->m_unitMoveLocs.size() == 0)
+			if (pkMissionData->eMissionType == CvTypes::getMISSION_MOVE_TO() && !hUnit->IsDoingPartialMove() && hUnit->canMove() && hUnit->IsCanAttack() && hUnit->m_unitMoveLocs.size() == 0)
 #else
 			if(pkMissionData->eMissionType == CvTypes::getMISSION_MOVE_TO() && !hUnit->IsDoingPartialMove() && hUnit->canMove() && hUnit->m_unitMoveLocs.size() == 0)
 #endif

@@ -75,6 +75,8 @@
 #define AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_NO_COSTLY_PLOT_REMOVAL
 /// Fixes a few possible cases of null pointer dereferences in FindTacticalTargets()
 #define AUI_TACTICAL_FIX_FIND_TACTICAL_TARGETS_NULL_POINTER
+/// The function that gets the amount of different trading partners a player has will now use an array instead of a vector to avoid crash possibilities
+#define AUI_TRADE_FIX_GET_NUM_DIFFERENT_TRADING_PARTNERS_USES_ARRAY
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
