@@ -37,10 +37,17 @@ public:
 
 	int ModifyDangerByRelationship(PlayerTypes ePlayer, CvPlot* pPlot, int iDanger);
 
+#ifdef AUI_CONSTIFY
+	bool ShouldIgnorePlayer(PlayerTypes ePlayer) const;
+	bool ShouldIgnoreUnit(const CvUnit* pUnit, bool bIgnoreVisibility = false) const;
+	bool ShouldIgnoreCity(const CvCity* pCity, bool bIgnoreVisibility = false) const;
+	bool ShouldIgnoreCitadel(const CvPlot* pCitadelPlot, bool bIgnoreVisibility = false) const;
+#else
 	bool ShouldIgnorePlayer(PlayerTypes ePlayer);
 	bool ShouldIgnoreUnit(CvUnit* pUnit, bool bIgnoreVisibility = false);
 	bool ShouldIgnoreCity(CvCity* pCity, bool bIgnoreVisibility = false);
 	bool ShouldIgnoreCitadel(CvPlot* pCitadelPlot, bool bIgnoreVisibility = false);
+#endif
 	void AssignUnitDangerValue(CvUnit* pUnit, CvPlot* pPlot);
 	void AssignCityDangerValue(CvCity* pCity, CvPlot* pPlot);
 
@@ -60,7 +67,9 @@ protected:
 	int GetDangerValueOfCitadel() const;
 
 	PlayerTypes m_ePlayer;
+#ifndef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
 	bool m_bArrayAllocated;
+#endif
 	bool m_bDirty;
 	double m_fMajorWarMod;
 	double m_fMajorHostileMod;
@@ -74,7 +83,11 @@ protected:
 	double m_fMinorBullyMod;
 	double m_fMinorConquestMod;
 
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	uint* m_DangerPlots;
+#else
 	FFastVector<uint, true, c_eCiv5GameplayDLL, 0> m_DangerPlots;
+#endif
 };
 
 #endif //CIV5_PROJECT_CLASSES_H

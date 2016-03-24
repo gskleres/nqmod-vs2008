@@ -30,6 +30,11 @@ public:
 	void Read(FDataStream& kStream);
 	void Write(FDataStream& kStream);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int getGoldT100ForThisTurn() const;
+	int getGrossGoldForThisTurn() const;
+	void cacheGoldT100ForThisTurn();
+#endif
 	void DoGold();
 
 	// Methods to add or subtract gold
@@ -119,6 +124,10 @@ protected:
 	int m_iBaseImprovementGoldMaintenance;
 
 	int m_iLifetimeGrossGoldIncome;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int m_iCurrentGoldChange;
+	int m_iCurrentGrossGoldChange;
+#endif
 
 	std::vector<int> m_GoldBalanceForTurnTimes100;
 	std::vector<int> m_GoldChangeForTurnTimes100;

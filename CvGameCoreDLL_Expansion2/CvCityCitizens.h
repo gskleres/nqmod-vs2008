@@ -29,8 +29,13 @@ public:
 	void Read(FDataStream& kStream);
 	void Write(FDataStream& kStream);
 
+#ifdef AUI_CONSTIFY
+	CvCity* GetCity() const;
+	CvPlayer* GetPlayer() const;
+#else
 	CvCity* GetCity();
 	CvPlayer* GetPlayer();
+#endif
 	PlayerTypes GetOwner() const;
 	TeamTypes GetTeam() const;
 
@@ -46,17 +51,35 @@ public:
 	bool IsNoAutoAssignSpecialists() const;
 	void SetNoAutoAssignSpecialists(bool bValue);
 
+#ifdef AUI_CONSTIFY
+	bool IsAvoidGrowth() const;
+	bool IsForcedAvoidGrowth() const;
+#else
 	bool IsAvoidGrowth();
 	bool IsForcedAvoidGrowth();
+#endif
 	void SetForcedAvoidGrowth(bool bAvoidGrowth);
 	CityAIFocusTypes GetFocusType() const;
 	void SetFocusType(CityAIFocusTypes eFocus);
 
 	// Specialist AI
+#ifndef NQM_PRUNING
 	bool IsAIWantSpecialistRightNow();
+#endif
+#ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
+	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue, bool bGetWorst = false, SpecialistTypes eIgnoreSpecialist = NO_SPECIALIST) const;
+#elif defined(AUI_CONSTIFY)
+	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue) const;
+#else
 	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
+#endif
+#ifdef AUI_CONSTIFY
+	int GetSpecialistValue(SpecialistTypes eSpecialist) const;
+	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const;
+#else
 	int GetSpecialistValue(SpecialistTypes eSpecialist);
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist);
+#endif
 
 	// Citizen Assignment
 	int GetNumUnassignedCitizens() const;
@@ -64,10 +87,17 @@ public:
 	int GetNumCitizensWorkingPlots() const;
 	void ChangeNumCitizensWorkingPlots(int iChange);
 
+#ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
+	bool DoAddBestCitizenFromUnassigned(int* piBestScore = NULL);
+#else
 	bool DoAddBestCitizenFromUnassigned();
+#endif
 	bool DoRemoveWorstCitizen(bool bRemoveForcedStatus = false, SpecialistTypes eDontChangeSpecialist = NO_SPECIALIST, int iCurrentCityPopulation = -1);
 
 	void DoReallocateCitizens();
+#ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
+	void DoSelfConsistencyCheck(int iMaxIterations = -1);
+#endif
 
 	CvPlot* GetBestCityPlotWithValue(int& iValue, bool bWantBest, bool bWantWorked);
 
@@ -98,9 +128,17 @@ public:
 	CvPlot* GetCityPlotFromIndex(int iIndex) const;
 
 	// Specialists
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int getCachedGPChangeT100ForThisTurn(SpecialistTypes eGPSpecialistType) const;
+	void cacheGPChangesT100ForThisTurn();
+#endif
 	void DoSpecialists();
 
+#ifdef AUI_CONSTIFY
+	bool IsCanAddSpecialistToBuilding(BuildingTypes eBuilding) const;
+#else
 	bool IsCanAddSpecialistToBuilding(BuildingTypes eBuilding);
+#endif
 	void DoAddSpecialistToBuilding(BuildingTypes eBuilding, bool bForced);
 	void DoRemoveSpecialistFromBuilding(BuildingTypes eBuilding, bool bForced, bool bEliminatePopulation = false);
 	void DoRemoveAllSpecialistsFromBuilding(BuildingTypes eBuilding, bool bEliminatePopulation = false);
@@ -127,9 +165,15 @@ public:
 
 	void DoClearForcedSpecialists();
 
+#ifdef AUI_CONSTIFY
+	int GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding) const;
+
+	int GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass) const;
+#else
 	int GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding);
 
 	int GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass);
+#endif
 	void DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet);
 
 private:
@@ -156,6 +200,9 @@ private:
 	int* m_aiNumSpecialistsInBuilding;
 	int* m_aiNumForcedSpecialistsInBuilding;
 	int* m_piBuildingGreatPeopleRateChanges;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int* m_aiCachedGPChangeT100ForThisTurn;
+#endif
 
 	bool m_bInited;
 

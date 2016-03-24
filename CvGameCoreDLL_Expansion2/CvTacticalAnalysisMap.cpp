@@ -227,7 +227,11 @@ void CvTacticalAnalysisMap::RefreshDataForNextPlayer(CvPlayer* pPlayer)
 			m_iTacticalRange = ((GC.getAI_TACTICAL_RECRUIT_RANGE() + GC.getGame().getCurrentEra()) * 2) / 3;  // Have this increase as game goes on
 			m_iUnitStrengthMultiplier = GC.getAI_TACTICAL_MAP_UNIT_STRENGTH_MULTIPLIER() * m_iTacticalRange;
 
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+			AI_PERF_FORMAT("AI-perf.csv", ("Tactical Analysis Map, Turn %03d, %s", GC.getGame().getGameTurn(), m_pPlayer->getCivilizationShortDescription()));
+#else
 			AI_PERF_FORMAT("AI-perf.csv", ("Tactical Analysis Map, Turn %d, %s", GC.getGame().getGameTurn(), m_pPlayer->getCivilizationShortDescription()) );
+#endif
 
 			m_bIsBuilt = false;
 
@@ -239,7 +243,11 @@ void CvTacticalAnalysisMap::RefreshDataForNextPlayer(CvPlayer* pPlayer)
 
 				AddTemporaryZones();
 
+#ifdef AUI_WARNING_FIXES
+				for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 				for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 				{
 					CvAssertMsg((iI < m_iNumPlots), "Plot to be accessed exceeds allocation!");
 
@@ -305,7 +313,11 @@ void CvTacticalAnalysisMap::MarkCellsNearEnemy()
 	int iDistance;
 
 	// Look at every cell on the map
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 	for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 	{
 		bool bMarkedIt = false;   // Set true once we've found one that enemy can move past (worst case)
 
@@ -383,7 +395,11 @@ void CvTacticalAnalysisMap::MarkCellsNearEnemy()
 // Clear all dynamic data flags from the map
 void CvTacticalAnalysisMap::ClearDynamicFlags()
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 	for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 	{
 		// Erase this cell
 		m_pPlots[iI].SetWithinRangeOfTarget(false);
@@ -399,17 +415,40 @@ void CvTacticalAnalysisMap::SetTargetBombardCells(CvPlot* pTarget, int iRange, b
 	int iDX, iDY;
 	CvPlot* pLoopPlot;
 	int iPlotIndex;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iRange; iDY <= iRange; iDY++)
+	{
+#ifdef AUI_FAST_COMP
+		iMaxDX = iRange - FASTMAX(0, iDY);
+		for (iDX = -iRange - FASTMIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#endif
+#else
 	int iPlotDistance;
 
 	for(iDX = -(iRange); iDX <= iRange; iDX++)
 	{
 		for(iDY = -(iRange); iDY <= iRange; iDY++)
+#endif
 		{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			if (iDX == 0 && iDY == 0)
+				continue;
+#endif
 			pLoopPlot = plotXY(pTarget->getX(), pTarget->getY(), iDX, iDY);
 			if(pLoopPlot != NULL)
 			{
+#ifndef AUI_HEXSPACE_DX_LOOPS
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+				iPlotDistance = hexDistance(iDX, iDY);
+#else
 				iPlotDistance = plotDistance(pLoopPlot->getX(), pLoopPlot->getY(), pTarget->getX(), pTarget->getY());
+#endif
 				if(iPlotDistance > 0 && iPlotDistance <= iRange)
+#endif
 				{
 					iPlotIndex = GC.getMap().plotNum(pLoopPlot->getX(), pLoopPlot->getY());
 					if(m_pPlots[iPlotIndex].IsRevealed() && !m_pPlots[iPlotIndex].IsImpassableTerrain() && !m_pPlots[iPlotIndex].IsImpassableTerritory())
@@ -502,7 +541,11 @@ void CvTacticalAnalysisMap::AddTemporaryZones()
 bool CvTacticalAnalysisMap::PopulateCell(int iIndex, CvPlot* pPlot)
 {
 	CvUnit* pLoopUnit;
+#ifdef AUI_WARNING_FIXES
+	uint iUnitLoop;
+#else
 	int iUnitLoop;
+#endif
 	CvTacticalAnalysisCell& cell = m_pPlots[iIndex];
 
 	cell.Clear();

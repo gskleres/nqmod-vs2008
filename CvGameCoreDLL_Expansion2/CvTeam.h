@@ -239,7 +239,11 @@ public:
 	void ChangeNumNaturalWondersDiscovered(int iChange);
 
 	bool isHasMet(TeamTypes eIndex) const;
+#ifdef AUI_GAME_OBSERVER_MEET_ALL_TEAMS
+	void makeHasMet(TeamTypes eIndex, bool bSuppressMessages, bool bForObserver = false);
+#else
 	void makeHasMet(TeamTypes eIndex, bool bSuppressMessages);
+#endif
 
 	int GetTurnsSinceMeetingTeam(TeamTypes eTeam) const;
 	int GetTurnTeamMet(TeamTypes eTeam) const;
@@ -301,6 +305,9 @@ public:
 	RouteTypes GetBestPossibleRoute();
 	void SetBestPossibleRoute(RouteTypes eRoute);
 	void DoUpdateBestRoute();
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	int GetBestRoadMovementMultiplier(const CvUnit* pUnit) const;
+#endif
 
 	int getProjectCount(ProjectTypes eIndex) const;
 	int getProjectDefaultArtType(ProjectTypes eIndex) const;
@@ -346,8 +353,10 @@ public:
 	void changeImprovementFreshWaterYieldChange(ImprovementTypes eIndex1, YieldTypes eIndex2, int iChange);
 
 	bool isFriendlyTerritory(TeamTypes eTeam) const;
+#ifndef AUI_GAME_BETTER_HYBRID_MODE
 	bool isAtWarWithHumans() const;
 	bool isSimultaneousTurns() const;
+#endif
 
 	// DEPRECATED
 	bool IsHomeOfUnitedNations() const;
@@ -395,7 +404,12 @@ public:
 	void PopIgnoreWarning (TeamTypes eTeam);
 	int GetIgnoreWarningCount (TeamTypes eTeam);
 
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	int getTurnOrder() const;
+	void setTurnOrder(int iTurnOrder);
+#else
 	void setDynamicTurnsSimultMode(bool simultaneousTurns);
+#endif
 
 	// Wrapper for giving Players on this Team a notification message
 	void AddNotification(NotificationTypes eNotificationType, const char* strMessage, const char* strSummary, int iX = -1, int iY = -1, int iGameDataIndex = -1, int iExtraGameData = -1);
@@ -438,6 +452,11 @@ protected:
 	int m_iNumNaturalWondersDiscovered;
 	int m_iBestPossibleRoute;
 	int m_iNumMinorCivsAttacked;
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	int m_iBestRouteNormalCostMultiplier;
+	int m_iBestRouteFlatCostMultiplier;
+	int m_iUseFlatCostIfBelowThis;
+#endif
 
 	bool m_bMapCentering;
 	bool m_bHasBrokenPeaceTreaty;

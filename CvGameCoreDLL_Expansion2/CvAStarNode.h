@@ -53,6 +53,9 @@ enum CvAStarListType
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 struct CvPathNodeCacheData
 {
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+	bool bIsCalculated : 1;
+#endif
 	bool bPlotVisibleToTeam:1;
 	bool bIsMountain:1;
 	bool bIsWater:1;
@@ -79,6 +82,12 @@ public:
 	{
 		m_iX = -1;
 		m_iY = -1;
+#ifdef AUI_ASTAR_CACHE_PLOTS_AT_NODES
+		m_pPlot = NULL;
+#endif
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		clear();
+#else
 		m_iTotalCost = 0;
 		m_iKnownCost = 0;
 		m_iHeuristicCost = 0;
@@ -94,6 +103,13 @@ public:
 		m_pNext = NULL;
 		m_pPrev = NULL;
 		m_pStack = NULL;
+#endif
+#ifdef AUI_ASTAR_PRECALCULATE_NEIGHBORS_ON_INITIALIZE
+		for (int iI = 0; iI < NUM_DIRECTION_TYPES; iI++)
+		{
+			m_apNeighbors[iI] = NULL;
+		}
+#endif
 	}
 
 	void clear()
@@ -101,7 +117,9 @@ public:
 		m_iTotalCost = 0;
 		m_iKnownCost = 0;
 		m_iHeuristicCost = 0;
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 		m_iNumChildren = 0;
+#endif
 		m_iData1 = 0;
 		m_iData2 = 0;
 
@@ -113,6 +131,10 @@ public:
 		m_pNext = NULL;
 		m_pPrev = NULL;
 		m_pStack = NULL;
+
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+		m_kCostCacheData.bIsCalculated = false;
+#endif
 
 		m_apChildren.clear();
 	}
@@ -130,11 +152,29 @@ public:
 	CvAStarNode* m_pPrev;					// For Open and Closed lists
 	CvAStarNode* m_pStack;					// For Push/Pop Stack
 
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	FStaticVector<CvAStarNode*, NUM_DIRECTION_TYPES, true, c_eCiv5GameplayDLL, 0> m_apChildren;
+#else
 	FStaticVector<CvAStarNode*, 6, true, c_eCiv5GameplayDLL, 0> m_apChildren;
+#endif
 
+#ifdef AUI_WARNING_FIXES
+	int m_iX, m_iY;         // Coordinate position
+#else
 	short m_iX, m_iY;         // Coordinate position
+#endif
+#ifdef AUI_ASTAR_CACHE_PLOTS_AT_NODES
+	CvPlot* m_pPlot;
+#endif
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 	short m_iNumChildren;
+#endif
 	bool m_bOnStack;
+
+#ifdef AUI_ASTAR_PRECALCULATE_NEIGHBORS_ON_INITIALIZE
+	// for faster neighbor lookup (potential children)
+	CvAStarNode* m_apNeighbors[NUM_DIRECTION_TYPES];
+#endif
 
 	CvPathNodeCacheData m_kCostCacheData;
 };
@@ -177,7 +217,11 @@ public:
 	int m_iData1;
 	int m_iData2;
 	int m_iFlags;
+#ifdef AUI_WARNING_FIXES
+	int m_iX, m_iY;         // Coordinate position
+#else
 	short m_iX, m_iY;         // Coordinate position
+#endif
 
 	bool GetFlag(int eFlag) const { return (m_iFlags & eFlag) != 0; }
 	void SetFlag(int eFlag) { m_iFlags |= eFlag; }

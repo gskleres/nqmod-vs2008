@@ -62,7 +62,11 @@ void CvAdvisorRecommender::UpdateCityRecommendations(CvCity* pCity)
 	int iWeight;
 
 	// buildings
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.GetGameBuildings()->GetNumBuildings(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.GetGameBuildings()->GetNumBuildings(); iBuildingLoop++)
+#endif
 	{
 		BuildingTypes eBuilding = (BuildingTypes)iBuildingLoop;
 		if(!pCity->canConstruct(eBuilding))
@@ -79,7 +83,11 @@ void CvAdvisorRecommender::UpdateCityRecommendations(CvCity* pCity)
 	}
 
 	// units
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < GC.GetGameUnits()->GetNumUnits(); iUnitLoop++)
+#else
 	for(int iUnitLoop = 0; iUnitLoop < GC.GetGameUnits()->GetNumUnits(); iUnitLoop++)
+#endif
 	{
 		UnitTypes eUnit = (UnitTypes)iUnitLoop;
 		if(!pCity->canTrain(eUnit))
@@ -95,7 +103,11 @@ void CvAdvisorRecommender::UpdateCityRecommendations(CvCity* pCity)
 	}
 
 	// projects
+#ifdef AUI_WARNING_FIXES
+	for (uint iProjectLoop = 0; iProjectLoop < GC.GetGameProjects()->GetNumProjects(); iProjectLoop++)
+#else
 	for(int iProjectLoop = 0; iProjectLoop < GC.GetGameProjects()->GetNumProjects(); iProjectLoop++)
+#endif
 	{
 		ProjectTypes eProject = (ProjectTypes)iProjectLoop;
 		if(!pCity->canCreate(eProject))
@@ -141,7 +153,11 @@ void CvAdvisorRecommender::UpdateCityRecommendations(CvCity* pCity)
 		buildable = m_aFinalRoundBuildables.GetElement(0);
 		int iScore = m_aFinalRoundBuildables.GetWeight(0);
 
+#if defined(AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS) || defined(AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS)
+		AdvisorTypes eAvailableAdvisor = FindUnassignedAdvisorForBuildable(pCity, buildable);
+#else
 		AdvisorTypes eAvailableAdvisor = FindUnassignedAdvisorForBuildable(pCity->getOwner(), buildable);
+#endif
 		if(eAvailableAdvisor != NO_ADVISOR_TYPE)
 		{
 			m_aRecommendedBuilds[eAvailableAdvisor] = buildable;
@@ -205,7 +221,11 @@ void CvAdvisorRecommender::UpdateTechRecommendations(PlayerTypes ePlayer)
 	CvTechAI* pPlayerTechAI = pPlayerTechs->GetTechAI();
 
 	RandomNumberDelegate fcn;
+#ifdef AUI_WARNING_FIXES
+	uint iTechLoop;
+#else
 	int iTechLoop;
+#endif
 
 	// Use the synchronous random number generate
 	// Asynchronous one would be:
@@ -532,7 +552,11 @@ AdvisorTypes CvAdvisorRecommender::FindUnassignedAdvisorForTech(PlayerTypes ePla
 	return eWinningAdvisor;
 }
 
+#if defined(AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS) || defined(AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS)
+AdvisorTypes CvAdvisorRecommender::FindUnassignedAdvisorForBuildable(const CvCity* pCity, CvCityBuildable& buildable)
+#else
 AdvisorTypes CvAdvisorRecommender::FindUnassignedAdvisorForBuildable(PlayerTypes /*ePlayer*/, CvCityBuildable& buildable)
+#endif
 {
 	int aiAdvisorValues[NUM_ADVISOR_TYPES];
 	for(uint ui = 0; ui < NUM_ADVISOR_TYPES; ui++)
@@ -563,6 +587,31 @@ AdvisorTypes CvAdvisorRecommender::FindUnassignedAdvisorForBuildable(PlayerTypes
 		if(pBuilding)
 		{
 			iFlavorValue = pBuilding->GetFlavorValue(eFlavor);
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+			CvPlayer* pPlayer = pCity->GetPlayer();
+			CvPlayerPolicies* pPlayerPolicies = NULL;
+			if (pPlayer)
+				pPlayerPolicies = pPlayer->GetPlayerPolicies();
+			if (pPlayerPolicies)
+			{
+				for (int iI = 0; iI < GC.getNumPolicyInfos(); iI++)
+				{
+					PolicyTypes ePolicy = static_cast<PolicyTypes>(iI);
+					CvPolicyEntry* pPolicy = GC.getPolicyInfo(ePolicy);
+					if (pPolicy && pPlayerPolicies->HasPolicy(ePolicy))
+					{
+						iFlavorValue += pPolicy->GetBuildingClassFlavorChanges(pBuilding->GetBuildingClassType(), eFlavor);
+					}
+				}
+			}
+#endif
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+			const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(pCity->GetCityReligions()->GetReligiousMajority(), pCity->getOwner());
+			if (pReligion)
+			{
+				pReligion->m_Beliefs.GetBuildingClassFlavorChange(static_cast<BuildingClassTypes>(pBuilding->GetBuildingClassType()), eFlavor);
+			}
+#endif
 		}
 		else if(pUnit)
 		{

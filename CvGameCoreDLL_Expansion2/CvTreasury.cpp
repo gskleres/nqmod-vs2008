@@ -28,6 +28,10 @@ CvTreasury::CvTreasury():
 	m_iBaseBuildingGoldMaintenance(0),
 	m_iBaseImprovementGoldMaintenance(0),
 	m_iLifetimeGrossGoldIncome(0),
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	m_iCurrentGoldChange(0),
+	m_iCurrentGrossGoldChange(0),
+#endif
 	m_pPlayer(NULL)
 {
 
@@ -53,6 +57,10 @@ void CvTreasury::Init(CvPlayer* pPlayer)
 	m_iBaseBuildingGoldMaintenance = 0;
 	m_iBaseImprovementGoldMaintenance = 0;
 	m_iLifetimeGrossGoldIncome = 0;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	m_iCurrentGoldChange = 0;
+	m_iCurrentGrossGoldChange = 0;
+#endif
 
 	m_GoldBalanceForTurnTimes100.clear();
 	m_GoldBalanceForTurnTimes100.reserve(750);
@@ -66,12 +74,34 @@ void CvTreasury::Uninit()
 
 }
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+int CvTreasury::getGoldT100ForThisTurn() const
+{
+	return m_iCurrentGoldChange;
+}
+
+int CvTreasury::getGrossGoldForThisTurn() const
+{
+	return m_iCurrentGrossGoldChange;
+}
+
+void CvTreasury::cacheGoldT100ForThisTurn()
+{
+	m_iCurrentGoldChange = m_pPlayer->calculateGoldRateTimes100();
+	m_iCurrentGrossGoldChange = CalculateGrossGold();
+}
+#endif
+
 /// Update treasury for a turn
 void CvTreasury::DoGold()
 {
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int iGoldChange = getGoldT100ForThisTurn();
+#else
 	int iGoldChange;
 
 	iGoldChange = m_pPlayer->calculateGoldRateTimes100();
+#endif
 
 	int iGoldAfterThisTurn = iGoldChange + GetGoldTimes100();
 	if(iGoldAfterThisTurn < 0)
@@ -87,7 +117,11 @@ void CvTreasury::DoGold()
 	}
 
 	// Update the amount of gold grossed across lifetime of game
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int iGrossGoldChange = getGrossGoldForThisTurn();
+#else
 	int iGrossGoldChange = CalculateGrossGold();
+#endif
 	if(iGrossGoldChange > 0)
 	{
 		m_iLifetimeGrossGoldIncome += iGrossGoldChange;
@@ -537,7 +571,11 @@ int CvTreasury::CalculateUnitCost(int& iFreeUnits, int& iPaidUnits, int& iBaseUn
 	}
 
 	// Discounts for units of certain UnitCombat classes
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumUnitCombatClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumUnitCombatClassInfos(); iI++)
+#endif
 	{
 		const UnitCombatTypes eUnitCombatClass = static_cast<UnitCombatTypes>(iI);
 		CvBaseInfo* pkUnitCombatClassInfo = GC.getUnitCombatClassInfo(eUnitCombatClass);

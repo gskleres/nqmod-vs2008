@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by HellBlazer on 7/18/2015 9:53:11 PM -->
+<GameData>
+	<Civilization_Start_Region_Priority>
+		<Update>
+			<Where CivilizationType="CIVILIZATION_NETHERLANDS"/>
+			<Set RegionType="REGION_WETLANDS"/>
+		</Update>
+	</Civilization_Start_Region_Priority>
+</GameData>

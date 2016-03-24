@@ -105,7 +105,11 @@ public:
 	int GetSpecialistExtraCulture() const;
 	int GetGreatPeopleRateChange() const;
 	GreatWorkSlotType GetGreatWorkSlotType() const;
+#ifdef AUI_WARNING_FIXES
+	uint GetGreatWorkCount() const;
+#else
 	int GetGreatWorkCount() const;
+#endif
 	GreatWorkType GetFreeGreatWork() const;
 	int GetFreeBuildingClass() const;
 	int GetFreeBuildingThisCity() const;
@@ -287,7 +291,11 @@ public:
 	int* GetResourceYieldChangeArray(int i) const;
 	int GetFeatureYieldChange(int i, int j) const;
 	int* GetFeatureYieldChangeArray(int i) const;
+#ifdef AUI_WARNING_FIXES
+	int GetSpecialistYieldChange(uint i, int j) const;
+#else
 	int GetSpecialistYieldChange(int i, int j) const;
+#endif
 	int* GetSpecialistYieldChangeArray(int i) const;
 	int GetResourceYieldModifier(int i, int j) const;
 	int* GetResourceYieldModifierArray(int i) const;
@@ -321,7 +329,11 @@ private:
 	int m_iSpecialistExtraCulture;
 	int m_iGreatPeopleRateChange;
 	GreatWorkSlotType m_eGreatWorkSlotType;
+#ifdef AUI_WARNING_FIXES
+	uint m_iGreatWorkCount;
+#else
 	int m_iGreatWorkCount;
+#endif
 	GreatWorkType m_eFreeGreatWork;
 	int m_iFreeBuildingClass;
 	int m_iFreeBuildingThisCity;
@@ -518,8 +530,13 @@ public:
 
 	// Accessor functions
 	std::vector<CvBuildingEntry*>& GetBuildingEntries();
+#ifdef AUI_WARNING_FIXES
+	uint GetNumBuildings() const;
+	_Ret_maybenull_ CvBuildingEntry* GetEntry(uint index);
+#else
 	int GetNumBuildings();
 	_Ret_maybenull_ CvBuildingEntry* GetEntry(int index);
+#endif
 
 	void DeleteArray();
 
@@ -592,22 +609,43 @@ public:
 	void SetBuildingYieldChange(BuildingClassTypes eBuildingClass, YieldTypes eYield, int iChange);
 	void ChangeBuildingYieldChange(BuildingClassTypes eBuildingClass, YieldTypes eYield, int iChange);
 
+#ifdef AUI_WARNING_FIXES
+	int GetBuildingGreatWork(BuildingClassTypes eBuildingClass, uint iSlot) const;
+	void SetBuildingGreatWork(BuildingClassTypes eBuildingClass, uint iSlot, int iGreatWorkIndex);
+#else
 	int GetBuildingGreatWork(BuildingClassTypes eBuildingClass, int iSlot) const;
 	void SetBuildingGreatWork(BuildingClassTypes eBuildingClass, int iSlot, int iGreatWorkIndex);
+#endif
 	bool IsHoldingGreatWork(BuildingClassTypes eBuildingClass) const;
+#ifdef AUI_WARNING_FIXES
+	uint GetNumGreatWorksInBuilding(BuildingClassTypes eBuildingClass) const;
+#else
 	int GetNumGreatWorksInBuilding(BuildingClassTypes eBuildingClass) const;
+#endif
   
 	bool HasAnyAvailableGreatWorkSlot() const;
 	bool HasAvailableGreatWorkSlot(GreatWorkSlotType eGreatWorkSlot) const;
+#ifdef AUI_WARNING_FIXES
+	uint GetNumAvailableGreatWorkSlots() const;
+	uint GetNumAvailableGreatWorkSlots(GreatWorkSlotType eGreatWorkSlot) const;
+	bool GetNextAvailableGreatWorkSlot(BuildingClassTypes *eBuildingClass, uint *iSlot) const;
+	bool GetNextAvailableGreatWorkSlot(GreatWorkSlotType eGreatWorkSlot, BuildingClassTypes *eBuildingClass, uint *iSlot) const;
+#else
 	int GetNumAvailableGreatWorkSlots() const;
 	int GetNumAvailableGreatWorkSlots(GreatWorkSlotType eGreatWorkSlot) const;
 	bool GetNextAvailableGreatWorkSlot(BuildingClassTypes *eBuildingClass, int *iSlot) const;
 	bool GetNextAvailableGreatWorkSlot(GreatWorkSlotType eGreatWorkSlot, BuildingClassTypes *eBuildingClass, int *iSlot) const;
+#endif
 
 	int GetYieldFromGreatWorks(YieldTypes eIndex) const; // NQMP GJS - Artistic Genius fix to add science to Great Works
 	int GetCultureFromGreatWorks() const;
+#ifdef AUI_WARNING_FIXES
+	uint GetNumGreatWorks() const;
+	uint GetNumGreatWorks(GreatWorkSlotType eGreatWorkSlot) const;
+#else
 	int GetNumGreatWorks() const;
 	int GetNumGreatWorks(GreatWorkSlotType eGreatWorkSlot) const;
+#endif
 
 	int GetLandmarksTourismPercent() const;
 	void ChangeLandmarksTourismPercent(int iChange);

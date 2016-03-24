@@ -1129,7 +1129,11 @@ int CvUnitEntry::GetCargoSpace() const
 {
 	int rtnValue = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#else
 	for(int iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#endif
 	{
 		const PromotionTypes ePromotion = static_cast<PromotionTypes>(iLoop);
 		CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -1203,9 +1207,15 @@ void CvUnitEntry::DoUpdatePower()
 // ***************
 
 	int iTemp;
+#ifdef AUI_WARNING_FIXES
+	uint iLoop;
+
+	for (uint iPromotionLoop = 0; iPromotionLoop < GC.getNumPromotionInfos(); iPromotionLoop++)
+#else
 	int iLoop;
 
 	for(int iPromotionLoop = 0; iPromotionLoop < GC.getNumPromotionInfos(); iPromotionLoop++)
+#endif
 	{
 		CvPromotionEntry* kPromotion = GC.getPromotionInfo((PromotionTypes)iPromotionLoop);
 		if(kPromotion == NULL)
@@ -1394,7 +1404,11 @@ std::vector<CvUnitEntry*>& CvUnitXMLEntries::GetUnitEntries()
 }
 
 /// Number of defined policies
+#ifdef AUI_WARNING_FIXES
+uint CvUnitXMLEntries::GetNumUnits() const
+#else
 int CvUnitXMLEntries::GetNumUnits()
+#endif
 {
 	return m_paUnitEntries.size();
 }
@@ -1412,7 +1426,11 @@ void CvUnitXMLEntries::DeleteArray()
 }
 
 /// Get a specific entry
+#ifdef AUI_WARNING_FIXES
+_Ret_maybenull_ CvUnitEntry* CvUnitXMLEntries::GetEntry(uint index)
+#else
 CvUnitEntry* CvUnitXMLEntries::GetEntry(int index)
+#endif
 {
 	return m_paUnitEntries[index];
 }

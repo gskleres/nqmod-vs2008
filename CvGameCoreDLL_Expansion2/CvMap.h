@@ -44,8 +44,13 @@ public:
 	bool isWater() const;
 	bool isLake() const;
 
+#ifdef AUI_WARNING_FIXES
+	int GetContinentType() const;
+	void SetContinentType(const int iContinent);
+#else
 	char GetContinentType() const;
 	void SetContinentType(const char cContinent);
+#endif
 
 	void ChangeCentroidX(int iDelta);
 	void ChangeCentroidY(int iDelta);
@@ -60,7 +65,11 @@ protected:
 
 	int m_iID;
 	int m_iNumTiles;
+#ifdef AUI_WARNING_FIXES
+	int m_cContinentType;
+#else
 	char m_cContinentType;
+#endif
 	bool m_bWater;
 	int m_iCentroidX;
 	int m_iCentroidY;
@@ -145,17 +154,34 @@ public:
 
 	inline int isPlot(int iX, int iY) const
 	{
+#ifdef AUI_WARNING_FIXES
+		return ((iX >= 0) && (uint(iX) < getGridWidth()) && (iY >= 0) && (uint(iY) < getGridHeight()));
+#else
 		return ((iX >= 0) && (iX < getGridWidth()) && (iY >= 0) && (iY < getGridHeight()));
+#endif
 	}
 
+#ifdef AUI_WARNING_FIXES
+	inline uint numPlots() const
+#else
 	inline int numPlots() const
+#endif
 	{
 		return m_iGridSize;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	inline uint plotNum(int iX, int iY) const
+	{
+		if (isPlot(iX, iY))
+			return ((uint(iY) * getGridWidth()) + uint(iX));
+		else
+			return MAX_UNSIGNED_INT;
+#else
 	inline int plotNum(int iX, int iY) const
 	{
 		return ((iY * getGridWidth()) + iX);
+#endif
 	}
 
 	int plotX(int iIndex) const;
@@ -163,20 +189,36 @@ public:
 
 	int maxPlotDistance();
 
+#ifdef AUI_WARNING_FIXES
+	inline uint getGridWidth() const
+#else
 	inline int getGridWidth() const
+#endif
 	{
 		return m_iGridWidth;
 	}
+#ifdef AUI_WARNING_FIXES
+	inline uint getGridHeight() const
+#else
 	inline int getGridHeight() const
+#endif
 	{
 		return m_iGridHeight;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	uint getLandPlots() const;
+	void changeLandPlots(int iChange);
+
+	uint getOwnedPlots() const;
+	void changeOwnedPlots(int iChange);
+#else
 	int getLandPlots();
 	void changeLandPlots(int iChange);
 
 	int getOwnedPlots();
 	void changeOwnedPlots(int iChange);
+#endif
 
 	int getTopLatitude();
 	int getBottomLatitude();
@@ -209,11 +251,19 @@ public:
 	void changeNumResourcesOnLand(ResourceTypes eIndex, int iChange);
 
 	/// Plot accessors
+#ifdef AUI_WARNING_FIXES
+	__forceinline CvPlot* plotByIndex(uint iIndex) const
+	{
+		return (iIndex < numPlots() ? &(m_pMapPlots[iIndex]) : NULL);
+	}
+	__forceinline CvPlot* plotByIndexUnchecked(uint iIndex) const
+#else
 	__forceinline CvPlot* plotByIndex(int iIndex) const
 	{
 		return (((iIndex >= 0) && (iIndex < (numPlots()))) ? &(m_pMapPlots[iIndex]) : NULL);
 	}
 	__forceinline CvPlot* plotByIndexUnchecked(int iIndex) const
+#endif
 	{
 		return &m_pMapPlots[iIndex];
 	}
@@ -300,11 +350,19 @@ public:
 
 protected:
 
+#ifdef AUI_WARNING_FIXES
+	uint m_iGridWidth;
+	uint m_iGridHeight;
+	uint m_iGridSize; // not serialized as it is always w*h
+	uint m_iLandPlots;
+	uint m_iOwnedPlots;
+#else
 	int m_iGridWidth;
 	int m_iGridHeight;
 	int m_iGridSize; // not serialized as it is always w*h
 	int m_iLandPlots;
 	int m_iOwnedPlots;
+#endif
 	int m_iTopLatitude;
 	int m_iBottomLatitude;
 	int m_iNumNaturalWonders;
@@ -323,6 +381,16 @@ protected:
 
 	CvPlot* m_pMapPlots;
 
+#ifdef AUI_WARNING_FIXES
+	int* m_pYields;
+	int*   m_pFoundValue;
+	int*  m_pPlayerCityRadiusCount;
+	int* m_pVisibilityCount;
+	int*  m_pRevealedOwner;
+	bool*  m_pRevealed;
+	int* m_pRevealedImprovementType;
+	int* m_pRevealedRouteType;
+#else
 	short* m_pYields;
 	int*   m_pFoundValue;
 	char*  m_pPlayerCityRadiusCount;
@@ -331,6 +399,7 @@ protected:
 	bool*  m_pRevealed;
 	short* m_pRevealedImprovementType;
 	short* m_pRevealedRouteType;
+#endif
 	bool*  m_pNoSettling;
 	bool* m_pResourceForceReveal;
 
@@ -340,6 +409,10 @@ protected:
 	GUID m_guid;
 
 	CvPlotManager	m_kPlotManager;
+
+#ifdef AUI_MAP_FIX_CALCULATE_INFLUENCE_DISTANCE_REUSE_PATHFINDER
+	CvPlot* m_pLastInfluenceSourcePlot;
+#endif
 };
 
 #endif

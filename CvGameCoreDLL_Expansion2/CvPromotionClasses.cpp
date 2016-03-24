@@ -1437,12 +1437,20 @@ void CvPromotionEntry::SetSound(const char* szVal)
 // ARRAYS
 
 /// Returns an array of bonuses when attacking a tile of a given terrain
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetTerrainAttackPercent(uint i) const
+{
+	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
+
+	if (i < GC.getNumTerrainInfos() && m_piTerrainAttackPercent)
+#else
 int CvPromotionEntry::GetTerrainAttackPercent(int i) const
 {
 	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumTerrainInfos() && m_piTerrainAttackPercent)
+#endif
 	{
 		return m_piTerrainAttackPercent[i];
 	}
@@ -1451,12 +1459,20 @@ int CvPromotionEntry::GetTerrainAttackPercent(int i) const
 }
 
 /// Returns an array of bonuses when defending a tile of a given terrain
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetTerrainDefensePercent(uint i) const
+{
+	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
+
+	if (i < GC.getNumTerrainInfos() && m_piTerrainDefensePercent)
+#else
 int CvPromotionEntry::GetTerrainDefensePercent(int i) const
 {
 	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumTerrainInfos() && m_piTerrainDefensePercent)
+#endif
 	{
 		return m_piTerrainDefensePercent[i];
 	}
@@ -1465,12 +1481,20 @@ int CvPromotionEntry::GetTerrainDefensePercent(int i) const
 }
 
 /// Returns an array of bonuses when attacking a tile with a terrain feature
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetFeatureAttackPercent(uint i) const
+{
+	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
+
+	if (i < GC.getNumFeatureInfos() && m_piFeatureAttackPercent)
+#else
 int CvPromotionEntry::GetFeatureAttackPercent(int i) const
 {
 	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumFeatureInfos() && m_piFeatureAttackPercent)
+#endif
 	{
 		return m_piFeatureAttackPercent[i];
 	}
@@ -1479,12 +1503,20 @@ int CvPromotionEntry::GetFeatureAttackPercent(int i) const
 }
 
 /// Returns an array of bonuses when defending a tile with a terrain feature
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetFeatureDefensePercent(uint i) const
+{
+	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
+
+	if (i < GC.getNumFeatureInfos() && m_piFeatureDefensePercent)
+#else
 int CvPromotionEntry::GetFeatureDefensePercent(int i) const
 {
 	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumFeatureInfos() && m_piFeatureDefensePercent)
+#endif
 	{
 		return m_piFeatureDefensePercent[i];
 	}
@@ -1493,12 +1525,20 @@ int CvPromotionEntry::GetFeatureDefensePercent(int i) const
 }
 
 /// Returns an array of bonuses when fighting against a certain unit
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetUnitCombatModifierPercent(uint i) const
+{
+	CvAssertMsg(i < GC.getNumUnitCombatClassInfos(), "Index out of bounds");
+
+	if (i < GC.getNumUnitCombatClassInfos() && m_piUnitCombatModifierPercent)
+#else
 int CvPromotionEntry::GetUnitCombatModifierPercent(int i) const
 {
 	CvAssertMsg(i < GC.getNumUnitCombatClassInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumUnitCombatClassInfos() && m_piUnitCombatModifierPercent)
+#endif
 	{
 		return m_piUnitCombatModifierPercent[i];
 	}
@@ -1507,12 +1547,20 @@ int CvPromotionEntry::GetUnitCombatModifierPercent(int i) const
 }
 
 /// Returns an array of bonuses when fighting against a type of unit
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetUnitClassModifierPercent(uint i) const
+{
+	CvAssertMsg(i < GC.getNumUnitClassInfos(), "Index out of bounds");
+
+	if (i < GC.getNumUnitClassInfos() && m_piUnitClassModifierPercent)
+#else
 int CvPromotionEntry::GetUnitClassModifierPercent(int i) const
 {
 	CvAssertMsg(i < GC.getNumUnitClassInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumUnitClassInfos() && m_piUnitClassModifierPercent)
+#endif
 	{
 		return m_piUnitClassModifierPercent[i];
 	}
@@ -1521,12 +1569,20 @@ int CvPromotionEntry::GetUnitClassModifierPercent(int i) const
 }
 
 /// Returns an array of bonuses when I have no idea
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetDomainModifierPercent(uint i) const
+{
+	CvAssertMsg(i < NUM_DOMAIN_TYPES, "Index out of bounds");
+
+	if (i < NUM_DOMAIN_TYPES && m_piDomainModifierPercent)
+#else
 int CvPromotionEntry::GetDomainModifierPercent(int i) const
 {
 	CvAssertMsg(i < NUM_DOMAIN_TYPES, "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < NUM_DOMAIN_TYPES && m_piDomainModifierPercent)
+#endif
 	{
 		return m_piDomainModifierPercent[i];
 	}
@@ -1535,12 +1591,20 @@ int CvPromotionEntry::GetDomainModifierPercent(int i) const
 }
 
 /// Percentage bonus when attacking a specific unit class
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetUnitClassAttackModifier(uint i) const
+{
+	CvAssertMsg(i < GC.getNumUnitClassInfos(), "Index out of bounds");
+
+	if (i < GC.getNumUnitClassInfos() && m_piUnitClassAttackModifier)
+#else
 int CvPromotionEntry::GetUnitClassAttackModifier(int i) const
 {
 	CvAssertMsg(i < GC.getNumUnitClassInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumUnitClassInfos() && m_piUnitClassAttackModifier)
+#endif
 	{
 		return m_piUnitClassAttackModifier[i];
 	}
@@ -1549,12 +1613,20 @@ int CvPromotionEntry::GetUnitClassAttackModifier(int i) const
 }
 
 /// Percentage bonus when defending against a specific unit class
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetUnitClassDefenseModifier(uint i) const
+{
+	CvAssertMsg(i < GC.getNumUnitClassInfos(), "Index out of bounds");
+
+	if (i < GC.getNumUnitClassInfos() && m_piUnitClassDefenseModifier)
+#else
 int CvPromotionEntry::GetUnitClassDefenseModifier(int i) const
 {
 	CvAssertMsg(i < GC.getNumUnitClassInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumUnitClassInfos() && m_piUnitClassDefenseModifier)
+#endif
 	{
 		return m_piUnitClassDefenseModifier[i];
 	}
@@ -1563,12 +1635,20 @@ int CvPromotionEntry::GetUnitClassDefenseModifier(int i) const
 }
 
 /// Returns an array that indicates if a feature type is traversable by the unit
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetFeaturePassableTech(uint i) const
+{
+	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
+
+	if (i < GC.getNumFeatureInfos() && m_piFeaturePassableTech)
+#else
 int CvPromotionEntry::GetFeaturePassableTech(int i) const
 {
 	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumFeatureInfos() && m_piFeaturePassableTech)
+#endif
 	{
 		return m_piFeaturePassableTech[i];
 	}
@@ -1577,12 +1657,20 @@ int CvPromotionEntry::GetFeaturePassableTech(int i) const
 }
 
 /// Returns an array that indicates if a unit can move twice in a type of terrain
+#ifdef AUI_WARNING_FIXES
+bool CvPromotionEntry::GetTerrainDoubleMove(uint i) const
+{
+	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
+
+	if (i < GC.getNumTerrainInfos() && m_pbTerrainDoubleMove)
+#else
 bool CvPromotionEntry::GetTerrainDoubleMove(int i) const
 {
 	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumTerrainInfos() && m_pbTerrainDoubleMove)
+#endif
 	{
 		return m_pbTerrainDoubleMove[i];
 	}
@@ -1591,12 +1679,20 @@ bool CvPromotionEntry::GetTerrainDoubleMove(int i) const
 }
 
 /// Returns an array that indicates if a unit can move twice in a type of terrain feature
+#ifdef AUI_WARNING_FIXES
+bool CvPromotionEntry::GetFeatureDoubleMove(uint i) const
+{
+	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
+
+	if (i < GC.getNumFeatureInfos() && m_pbFeatureDoubleMove)
+#else
 bool CvPromotionEntry::GetFeatureDoubleMove(int i) const
 {
 	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumFeatureInfos() && m_pbFeatureDoubleMove)
+#endif
 	{
 		return m_pbFeatureDoubleMove[i];
 	}
@@ -1605,12 +1701,20 @@ bool CvPromotionEntry::GetFeatureDoubleMove(int i) const
 }
 
 /// Returns an array that indicates if a terrain type is impassable
+#ifdef AUI_WARNING_FIXES
+bool CvPromotionEntry::GetTerrainImpassable(uint i) const
+{
+	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
+
+	if (i < GC.getNumTerrainInfos() && m_pbTerrainImpassable)
+#else
 bool CvPromotionEntry::GetTerrainImpassable(int i) const
 {
 	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumTerrainInfos() && m_pbTerrainImpassable)
+#endif
 	{
 		return m_pbTerrainImpassable[i];
 	}
@@ -1619,12 +1723,20 @@ bool CvPromotionEntry::GetTerrainImpassable(int i) const
 }
 
 /// Returns an array that indicates what tech is needed to pass through a terrain type
+#ifdef AUI_WARNING_FIXES
+int CvPromotionEntry::GetTerrainPassableTech(uint i) const
+{
+	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
+
+	if (i < GC.getNumTerrainInfos() && m_piTerrainPassableTech)
+#else
 int CvPromotionEntry::GetTerrainPassableTech(int i) const
 {
 	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumTerrainInfos() && m_piTerrainPassableTech)
+#endif
 	{
 		return m_piTerrainPassableTech[i];
 	}
@@ -1633,12 +1745,20 @@ int CvPromotionEntry::GetTerrainPassableTech(int i) const
 }
 
 /// Returns an array that indicates what tech is needed to pass through a terrain feature type
+#ifdef AUI_WARNING_FIXES
+bool CvPromotionEntry::GetFeatureImpassable(uint i) const
+{
+	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
+
+	if (i < GC.getNumFeatureInfos() && m_pbFeatureImpassable)
+#else
 bool CvPromotionEntry::GetFeatureImpassable(int i) const
 {
 	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumFeatureInfos() && m_pbFeatureImpassable)
+#endif
 	{
 		return m_pbFeatureImpassable[i];
 	}
@@ -1647,12 +1767,20 @@ bool CvPromotionEntry::GetFeatureImpassable(int i) const
 }
 
 /// Returns the combat classes that this promotion is available for
+#ifdef AUI_WARNING_FIXES
+bool CvPromotionEntry::GetUnitCombatClass(uint i) const
+{
+	CvAssertMsg(i < GC.getNumUnitCombatClassInfos(), "Index out of bounds");
+
+	if (i < GC.getNumUnitCombatClassInfos() && m_pbUnitCombat)
+#else
 bool CvPromotionEntry::GetUnitCombatClass(int i) const
 {
 	CvAssertMsg(i < GC.getNumUnitCombatClassInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumUnitCombatClassInfos() && m_pbUnitCombat)
+#endif
 	{
 		return m_pbUnitCombat[i];
 	}
@@ -1661,12 +1789,20 @@ bool CvPromotionEntry::GetUnitCombatClass(int i) const
 }
 
 /// Returns the civilian unit type that this promotion is available for
+#ifdef AUI_WARNING_FIXES
+bool CvPromotionEntry::GetCivilianUnitType(uint i) const
+{
+	CvAssertMsg(i < GC.getNumUnitInfos(), "Index out of bounds");
+
+	if (i < GC.getNumUnitInfos() && m_pbCivilianUnitType)
+#else
 bool CvPromotionEntry::GetCivilianUnitType(int i) const
 {
 	CvAssertMsg(i < GC.getNumUnitInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 
 	if(i > -1 && i < GC.getNumUnitInfos() && m_pbCivilianUnitType)
+#endif
 	{
 		return m_pbCivilianUnitType[i];
 	}
@@ -1675,11 +1811,22 @@ bool CvPromotionEntry::GetCivilianUnitType(int i) const
 }
 
 /// If this a promotion that can randomly turn into other c
+#ifdef AUI_WARNING_FIXES
+bool CvPromotionEntry::IsPostCombatRandomPromotion(uint i) const
+{
+	CvAssertMsg(i < GC.getNumPromotionInfos(), "Index out of bounds");
+
+	if (i < GC.getNumPromotionInfos() && m_pbPostCombatRandomPromotion)
+		return m_pbPostCombatRandomPromotion[i];
+
+	return false;
+#else
 bool CvPromotionEntry::IsPostCombatRandomPromotion(int i) const
 {
 	CvAssertMsg(i < GC.getNumPromotionInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
 	return m_pbPostCombatRandomPromotion ? m_pbPostCombatRandomPromotion[i] : false;
+#endif
 }
 
 //=====================================
@@ -1704,13 +1851,21 @@ std::vector<CvPromotionEntry*>& CvPromotionXMLEntries::GetPromotionEntries()
 }
 
 /// Number of defined projects
+#ifdef AUI_WARNING_FIXES
+uint CvPromotionXMLEntries::GetNumPromotions() const
+#else
 int CvPromotionXMLEntries::GetNumPromotions()
+#endif
 {
 	return m_paPromotionEntries.size();
 }
 
 /// Get a specific entry
+#ifdef AUI_WARNING_FIXES
+_Ret_maybenull_ CvPromotionEntry* CvPromotionXMLEntries::GetEntry(uint index)
+#else
 CvPromotionEntry* CvPromotionXMLEntries::GetEntry(int index)
+#endif
 {
 	return m_paPromotionEntries[index];
 }
@@ -1814,7 +1969,11 @@ bool CvUnitPromotions::HasPromotion(PromotionTypes eIndex) const
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumPromotionInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
 
+#ifdef AUI_WARNING_FIXES
+	if (uint(eIndex) < GC.getNumPromotionInfos())
+#else
 	if(eIndex >= 0 && eIndex < GC.getNumPromotionInfos())
+#endif
 	{
 		return m_kHasPromotion.GetBit(eIndex);
 	}
@@ -1828,7 +1987,11 @@ void CvUnitPromotions::SetPromotion(PromotionTypes eIndex, bool bValue)
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumPromotionInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
 
+#ifdef AUI_WARNING_FIXES
+	if (uint(eIndex) < GC.getNumPromotionInfos())
+#else
 	if(eIndex >= 0 && eIndex < GC.getNumPromotionInfos())
+#endif
 	{
 		m_kHasPromotion.SetBit(eIndex, bValue);
 	}
@@ -1841,8 +2004,12 @@ bool CvUnitPromotions::GetAllowFeaturePassable(FeatureTypes eFeatureType) const
 	CvAssert(teamTechs);
 	if(!teamTechs) return false;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#else
 	int iNumPromos = GC.getNumPromotionInfos();
 	for(int iLoop = 0; iLoop < iNumPromos; iLoop++)
+#endif
 	{
 		PromotionTypes ePromotion = (PromotionTypes) iLoop;
 		if(m_kHasPromotion.GetBit(ePromotion))
@@ -1869,8 +2036,12 @@ bool CvUnitPromotions::GetAllowTerrainPassable(TerrainTypes eTerrainType) const
 	CvAssert(teamTechs);
 	if(!teamTechs) return false;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#else
 	int iNumPromos = GC.getNumPromotionInfos();
 	for(int iLoop = 0; iLoop < iNumPromos; iLoop++)
+#endif
 	{
 		PromotionTypes ePromotion = (PromotionTypes) iLoop;
 		if(m_kHasPromotion.GetBit(ePromotion))
@@ -1894,7 +2065,11 @@ bool CvUnitPromotions::GetAllowTerrainPassable(TerrainTypes eTerrainType) const
 int CvUnitPromotions::GetUnitClassAttackMod(UnitClassTypes eUnitClass) const
 {
 	int iSum = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#else
 	for(int iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#endif
 	{
 		PromotionTypes ePromotion = (PromotionTypes)iLoop;
 		CvPromotionEntry* promotion = GC.getPromotionInfo(ePromotion);
@@ -1910,7 +2085,11 @@ int CvUnitPromotions::GetUnitClassAttackMod(UnitClassTypes eUnitClass) const
 int CvUnitPromotions::GetUnitClassDefenseMod(UnitClassTypes eUnitClass) const
 {
 	int iSum = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#else
 	for(int iLoop = 0; iLoop < GC.getNumPromotionInfos(); iLoop++)
+#endif
 	{
 		PromotionTypes ePromotion = (PromotionTypes)iLoop;
 		CvPromotionEntry* promotion = GC.getPromotionInfo(ePromotion);
@@ -1927,7 +2106,11 @@ PromotionTypes CvUnitPromotions::ChangePromotionAfterCombat(PromotionTypes eInde
 {
 	std::vector<int> aPossiblePromotions;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < m_pPromotions->GetNumPromotions(); iI++)
+#else
 	for (int iI = 0; iI < m_pPromotions->GetNumPromotions(); iI++)
+#endif
 	{
 		CvPromotionEntry *pkEntry = m_pPromotions->GetEntry(eIndex);
 		if (pkEntry && pkEntry->IsPostCombatRandomPromotion(iI))

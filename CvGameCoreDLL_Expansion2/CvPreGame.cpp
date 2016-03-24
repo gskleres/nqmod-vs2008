@@ -169,7 +169,11 @@ FDataStream& operator<<(FDataStream& stream, const CustomOption& option)
 }
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void StringToBools(const char* szString, uint* iNumBools, bool** ppBools);
+#else
 void StringToBools(const char* szString, int* iNumBools, bool** ppBools);
+#endif
 
 struct Phony
 {
@@ -1390,7 +1394,11 @@ void loadFromIni(FIGameIniParser& iniParser)
 	setGameSpeed(tempString);
 	// Quick Handicap
 
+#ifdef AUI_WARNING_FIXES
+	uint iNumBools;
+#else
 	int iNumBools;
+#endif
 	bool* pbBools;
 
 	// Victory Conditions
@@ -1398,10 +1406,19 @@ void loadFromIni(FIGameIniParser& iniParser)
 	if(szHolder != "EMPTY")
 	{
 		StringToBools(szHolder, &iNumBools, &pbBools);
+#if defined(NQM_FAST_COMP) || defined(AUI_WARNING_FIXES)
+		iNumBools = MIN(iNumBools, GC.getNumVictoryInfos());
+#else
 		iNumBools = std::min(iNumBools, GC.getNumVictoryInfos());
+#endif
+#ifdef AUI_WARNING_FIXES
+		std::vector<bool> tempVBool;
+		for (uint i = 0; i < iNumBools; i++)
+#else
 		int i;
 		std::vector<bool> tempVBool;
 		for(i = 0; i < iNumBools; i++)
+#endif
 		{
 			tempVBool.push_back(pbBools[i]);
 		}
@@ -1416,9 +1433,19 @@ void loadFromIni(FIGameIniParser& iniParser)
 		if(szHolder != "EMPTY")
 		{
 			StringToBools(szHolder, &iNumBools, &pbBools);
+#ifdef AUI_WARNING_FIXES
+			iNumBools = MIN(iNumBools, static_cast<uint>(NUM_GAMEOPTION_TYPES));
+
+			for (uint i = 0; i < iNumBools; i++)
+#else
+#ifdef NQM_FAST_COMP
+			iNumBools = MIN(iNumBools, static_cast<int>(NUM_GAMEOPTION_TYPES));
+#else
 			iNumBools = std::min(iNumBools, static_cast<int>(NUM_GAMEOPTION_TYPES));
+#endif
 			int i;
 			for(i = 0; i < iNumBools; i++)
+#endif
 			{
 				SetGameOption(((GameOptionTypes)i), pbBools[i]);
 			}
@@ -2434,7 +2461,11 @@ void setEra(EraTypes e)
 
 void setEra(const CvString& e)
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumEraInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumEraInfos(); i++)
+#endif
 	{
 		const EraTypes eEra = static_cast<EraTypes>(i);
 		CvEraInfo* pkEraInfo = GC.getEraInfo(eEra);
@@ -2458,7 +2489,11 @@ void setGameSpeed(GameSpeedTypes g)
 {
 	s_gameSpeed = g;
 
+#ifdef AUI_WARNING_FIXES
+	switch (static_cast<int>(s_gameSpeed))
+#else
 	switch(s_gameSpeed)
+#endif
 	{
 	case 0: // GAMESPEED_MARATHON
 	{
@@ -2490,7 +2525,11 @@ void setGameSpeed(GameSpeedTypes g)
 
 void setGameSpeed(const CvString& g)
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumGameSpeedInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumGameSpeedInfos(); i++)
+#endif
 	{
 		const GameSpeedTypes eGameSpeed = static_cast<GameSpeedTypes>(i);
 		CvGameSpeedInfo* pkGameSpeedInfo = GC.getGameSpeedInfo(eGameSpeed);
@@ -2834,7 +2873,11 @@ void setQuickHandicap(HandicapTypes h)
 
 void setQuickHandicap(const CvString& h)
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumHandicapInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumHandicapInfos(); i++)
+#endif
 	{
 		const HandicapTypes eHandicap = static_cast<HandicapTypes>(i);
 		CvHandicapInfo* pkHandicapInfo = GC.getHandicapInfo(eHandicap);
@@ -3086,15 +3129,23 @@ const std::vector<SlotStatus>& GetSlotStatus()
 	return s_slotStatus;
 }
 
+#ifdef AUI_WARNING_FIXES
+void StringToBools(const char* szString, uint* iNumBools, bool** ppBools)
+#else
 void StringToBools(const char* szString, int* iNumBools, bool** ppBools)
+#endif
 {
 	FAssertMsg(szString, "null string");
 	if(szString)
 	{
 		*iNumBools = strlen(szString);
 		*ppBools = FNEW(bool[*iNumBools], c_eCiv5GameplayDLL, 0);
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i<*iNumBools; i++)
+#else
 		int i;
 		for(i=0; i<*iNumBools; i++)
+#endif
 		{
 			(*ppBools)[i] = (szString[i]=='1');
 		}

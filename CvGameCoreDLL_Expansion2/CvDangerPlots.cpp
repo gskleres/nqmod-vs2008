@@ -26,7 +26,11 @@ REMARK_GROUP("CvDangerPlots");
 /// Constructor
 CvDangerPlots::CvDangerPlots(void)
 	: m_ePlayer(NO_PLAYER)
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	, m_DangerPlots(NULL)
+#else
 	, m_bArrayAllocated(false)
+#endif
 	, m_bDirty(false)
 {
 	m_fMajorWarMod = GC.getAI_DANGER_MAJOR_APPROACH_WAR();
@@ -58,12 +62,17 @@ void CvDangerPlots::Init(PlayerTypes ePlayer, bool bAllocate)
 	{
 		int iGridSize = GC.getMap().numPlots();
 		CvAssertMsg(iGridSize > 0, "iGridSize is zero");
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+		m_DangerPlots = FNEW(uint[iGridSize], c_eCiv5GameplayDLL, 0);
+		fill(m_DangerPlots, &m_DangerPlots[iGridSize - 1], 0);
+#else
 		m_DangerPlots.resize(iGridSize);
 		m_bArrayAllocated = true;
 		for(int i = 0; i < iGridSize; i++)
 		{
 			m_DangerPlots[i] = 0;
 		}
+#endif
 	}
 }
 
@@ -71,8 +80,13 @@ void CvDangerPlots::Init(PlayerTypes ePlayer, bool bAllocate)
 void CvDangerPlots::Uninit()
 {
 	m_ePlayer = NO_PLAYER;
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	if (m_DangerPlots)
+		SAFE_DELETE_ARRAY(m_DangerPlots);
+#else
 	m_DangerPlots.clear();
 	m_bArrayAllocated = false;
+#endif
 	m_bDirty = false;
 }
 
@@ -80,7 +94,11 @@ void CvDangerPlots::Uninit()
 void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibility)
 {
 	// danger plots have not been initialized yet, so no need to update
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	if (!m_DangerPlots)
+#else
 	if(!m_bArrayAllocated)
+#endif
 	{
 		return;
 	}
@@ -88,10 +106,14 @@ void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibi
 	// wipe out values
 	int iGridSize = GC.getMap().numPlots();
 	CvAssertMsg(iGridSize == m_DangerPlots.size(), "iGridSize does not match number of DangerPlots");
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	fill(m_DangerPlots, &m_DangerPlots[iGridSize - 1], 0);
+#else
 	for(int i = 0; i < iGridSize; i++)
 	{
 		m_DangerPlots[i] = 0;
 	}
+#endif
 
 	CvPlayer& thisPlayer = GET_PLAYER(m_ePlayer);
 	TeamTypes thisTeam = thisPlayer.getTeam();
@@ -138,11 +160,21 @@ void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibi
 			AssignUnitDangerValue(pLoopUnit, pUnitPlot);
 			CvPlot* pLoopPlot = NULL;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			for (int iDY = -iRange; iDY <= iRange; iDY++)
+			{
+				int iMaxDX = iRange - MAX(0, iDY);
+				for (int iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+				{
+					// No need for range check because loops are set up properly
+					pLoopPlot = plotXY(pUnitPlot->getX(), pUnitPlot->getY(), iDX, iDY);
+#else
 			for(int iDX = -(iRange); iDX <= iRange; iDX++)
 			{
 				for(int iDY = -(iRange); iDY <= iRange; iDY++)
 				{
 					pLoopPlot = plotXYWithRangeCheck(pUnitPlot->getX(), pUnitPlot->getY(), iDX, iDY, iRange);
+#endif
 					if(!pLoopPlot || pLoopPlot == pUnitPlot)
 					{
 						continue;
@@ -172,11 +204,22 @@ void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibi
 			AssignCityDangerValue(pLoopCity, pCityPlot);
 			CvPlot* pLoopPlot = NULL;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			int iMaxDX, iDX;
+			for (int iDY = -iRange; iDY <= iRange; iDY++)
+			{
+				iMaxDX = iRange - MAX(0, iDY);
+				for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+				{
+					// No need for range check because loops are set up properly
+					pLoopPlot = plotXY(pCityPlot->getX(), pCityPlot->getY(), iDX, iDY);
+#else
 			for(int iDX = -(iRange); iDX <= iRange; iDX++)
 			{
 				for(int iDY = -(iRange); iDY <= iRange; iDY++)
 				{
 					pLoopPlot = plotXYWithRangeCheck(pCityPlot->getX(), pCityPlot->getY(), iDX, iDY, iRange);
+#endif
 					if(!pLoopPlot)
 					{
 						continue;
@@ -190,7 +233,11 @@ void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibi
 
 	// Citadels
 	int iCitadelValue = GetDangerValueOfCitadel();
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvPlot* pPlot, *pAdjacentPlot;
 	for(iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
 	{
@@ -233,6 +280,9 @@ void CvDangerPlots::UpdateDanger(bool bPretendWarWithAllCivs, bool bIgnoreVisibi
 void CvDangerPlots::AddDanger(int iPlotX, int iPlotY, int iValue, bool bWithinOneMove)
 {
 	const int idx = iPlotX + iPlotY * GC.getMap().getGridWidth();
+#ifdef AUI_DANGER_PLOTS_FIX_ADD_DANGER_WITHIN_ONE_MOVE
+	iValue &= ~0x1;
+#else
 	if (iValue > 0)
 	{
 		if (bWithinOneMove)
@@ -244,8 +294,15 @@ void CvDangerPlots::AddDanger(int iPlotX, int iPlotY, int iValue, bool bWithinOn
 			iValue &= ~0x1;
 		}
 	}
+#endif
 
 	m_DangerPlots[idx] += iValue;
+#ifdef AUI_DANGER_PLOTS_FIX_ADD_DANGER_WITHIN_ONE_MOVE
+	if (bWithinOneMove)
+	{
+		m_DangerPlots[idx] |= 0x1;
+	}
+#endif
 }
 
 /// Return the danger value of a given plot
@@ -274,11 +331,22 @@ int CvDangerPlots::GetCityDanger(CvCity* pCity)
 
 	int iDangerValue = 0;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	CvPlot* pEvalPlot;
+	for (int iDY = -iEvalRange; iDY <= iEvalRange; iDY++)
+	{
+		int iMaxDX = iEvalRange - MAX(0, iDY);
+		for (int iDX = -iEvalRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pEvalPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
+#else
 	for(int iX = -iEvalRange; iX <= iEvalRange; iX++)
 	{
 		for(int iY = -iEvalRange; iY <= iEvalRange; iY++)
 		{
 			CvPlot* pEvalPlot = plotXYWithRangeCheck(pPlot->getX(), pPlot->getY(), iX, iY, iEvalRange);
+#endif
 			if(!pEvalPlot)
 			{
 				continue;
@@ -388,6 +456,9 @@ bool CvDangerPlots::IsDangerByRelationshipZero(PlayerTypes ePlayer, CvPlot* pPlo
 {
 	CvAssertMsg(pPlot, "No plot passed in?");
 	bool bIgnoreInFriendlyTerritory = false;
+#ifdef AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
+	bool bConsiderInFriendlyTerritory = false;
+#endif
 
 	// Full value if a player we're at war with
 	if(GET_TEAM(GET_PLAYER(m_ePlayer).getTeam()).isAtWar(GET_PLAYER(ePlayer).getTeam()))
@@ -406,7 +477,16 @@ bool CvDangerPlots::IsDangerByRelationshipZero(PlayerTypes ePlayer, CvPlot* pPlo
 	{
 		if(!GET_TEAM(GET_PLAYER(m_ePlayer).getTeam()).isAtWar(GET_PLAYER(ePlayer).getTeam()))  // and they're not at war with the other player
 		{
+#ifdef AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
+			bConsiderInFriendlyTerritory = true;
+#ifndef AUI_DANGER_PLOTS_FIX_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_IGNORE_ALL_NONWARRED
 			bIgnoreInFriendlyTerritory = true; // ignore friendly territory
+#endif
+#elif defined(AUI_DANGER_PLOTS_FIX_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_IGNORE_ALL_NONWARRED)
+			return true;
+#else
+			bIgnoreInFriendlyTerritory = true; // ignore friendly territory
+#endif
 		}
 	}
 	else if(!GET_PLAYER(ePlayer).isMinorCiv())
@@ -466,17 +546,31 @@ bool CvDangerPlots::IsDangerByRelationshipZero(PlayerTypes ePlayer, CvPlot* pPlo
 
 	// if the plot is in our own territory and, with the current approach, we should ignore danger values in our own territory
 	// zero out the value
+#ifdef AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
+	if (pPlot && pPlot->getOwner() == m_ePlayer)
+	{
+		if (bConsiderInFriendlyTerritory)
+			return false;
+		if (bIgnoreInFriendlyTerritory)
+			return true;
+	}
+#else
 	if(pPlot && pPlot->getOwner() == m_ePlayer && bIgnoreInFriendlyTerritory)
 	{
 		return true;
 	}
+#endif
 
 	return bResultMultiplierIsZero;
 }
 
 
 /// Should this player be ignored when creating the danger plots?
+#ifdef AUI_CONSTIFY
+bool CvDangerPlots::ShouldIgnorePlayer(PlayerTypes ePlayer) const
+#else
 bool CvDangerPlots::ShouldIgnorePlayer(PlayerTypes ePlayer)
+#endif
 {
 	if(GET_PLAYER(m_ePlayer).isMinorCiv() != GET_PLAYER(ePlayer).isMinorCiv() && !GET_PLAYER(ePlayer).isBarbarian() && !GET_PLAYER(m_ePlayer).isBarbarian())
 	{
@@ -515,22 +609,43 @@ bool CvDangerPlots::ShouldIgnorePlayer(PlayerTypes ePlayer)
 }
 
 /// Should this unit be ignored when creating the danger plots?
+#ifdef AUI_CONSTIFY
+bool CvDangerPlots::ShouldIgnoreUnit(const CvUnit* pUnit, bool bIgnoreVisibility) const
+#else
 bool CvDangerPlots::ShouldIgnoreUnit(CvUnit* pUnit, bool bIgnoreVisibility)
+#endif
 {
 	if(!pUnit->IsCanAttack())
 	{
 		return true;
 	}
 
-	if(!pUnit->plot()->isVisible(GET_PLAYER(m_ePlayer).getTeam()))
+#if defined(AUI_DANGER_PLOTS_SHOULD_IGNORE_UNIT_MINORS_SEE_MAJORS)
+	if (pUnit->isInvisible(GET_PLAYER(m_ePlayer).getTeam(), false))
 	{
 		return true;
 	}
 
+	if (GET_PLAYER(m_ePlayer).isMinorCiv() && !GET_PLAYER(pUnit->getOwner()).isMinorCiv() && !pUnit->isBarbarian() &&
+		GET_PLAYER(m_ePlayer).GetClosestFriendlyCity(*pUnit->plot(), AUI_DANGER_PLOTS_SHOULD_IGNORE_UNIT_MINORS_SEE_MAJORS))
+		bIgnoreVisibility = true;
+#endif
+
+#ifdef AUI_DANGER_PLOTS_FIX_SHOULD_IGNORE_UNIT_IGNORE_VISIBILITY_PLOT
+	if (!pUnit->plot()->isVisible(GET_PLAYER(m_ePlayer).getTeam()) && !bIgnoreVisibility)
+#else
+	if(!pUnit->plot()->isVisible(GET_PLAYER(m_ePlayer).getTeam()))
+#endif
+	{
+		return true;
+	}
+
+#if !defined(AUI_DANGER_PLOTS_SHOULD_IGNORE_UNIT_MINORS_SEE_MAJORS)
 	if(pUnit->isInvisible(GET_PLAYER(m_ePlayer).getTeam(), false))
 	{
 		return true;
 	}
+#endif
 
 	CvPlot* pPlot = pUnit->plot();
 	CvAssertMsg(pPlot, "Plot is null?")
@@ -550,7 +665,11 @@ bool CvDangerPlots::ShouldIgnoreUnit(CvUnit* pUnit, bool bIgnoreVisibility)
 }
 
 /// Should this city be ignored when creating the danger plots?
+#ifdef AUI_CONSTIFY
+bool CvDangerPlots::ShouldIgnoreCity(const CvCity* pCity, bool bIgnoreVisibility) const
+#else
 bool CvDangerPlots::ShouldIgnoreCity(CvCity* pCity, bool bIgnoreVisibility)
+#endif
 {
 	// ignore unseen cities
 	if(!pCity->isRevealed(GET_PLAYER(m_ePlayer).getTeam(), false)  && !bIgnoreVisibility)
@@ -562,7 +681,11 @@ bool CvDangerPlots::ShouldIgnoreCity(CvCity* pCity, bool bIgnoreVisibility)
 }
 
 /// Should this city be ignored when creating the danger plots?
+#ifdef AUI_CONSTIFY
+bool CvDangerPlots::ShouldIgnoreCitadel(const CvPlot* pCitadelPlot, bool bIgnoreVisibility) const
+#else
 bool CvDangerPlots::ShouldIgnoreCitadel(CvPlot* pCitadelPlot, bool bIgnoreVisibility)
+#endif
 {
 	// ignore unseen cities
 	if(!pCitadelPlot->isRevealed(GET_PLAYER(m_ePlayer).getTeam())  && !bIgnoreVisibility)
@@ -655,16 +778,32 @@ void CvDangerPlots::Read(FDataStream& kStream)
 	kStream >> uiVersion;
 
 	kStream >> m_ePlayer;
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	bool bArrayAllocated = false;
+	kStream >> bArrayAllocated;
+#else
 	kStream >> m_bArrayAllocated;
+#endif
 
 	int iGridSize;
 	kStream >> iGridSize;
 
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	if (m_DangerPlots)
+		SAFE_DELETE_ARRAY(m_DangerPlots);
+	if (bArrayAllocated)
+	{
+		m_DangerPlots = FNEW(uint[iGridSize], c_eCiv5GameplayDLL, 0);
+#else
 	m_DangerPlots.resize(iGridSize);
+#endif
 	for(int i = 0; i < iGridSize; i++)
 	{
 		kStream >> m_DangerPlots[i];
 	}
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	}
+#endif
 
 	m_bDirty = false;
 }
@@ -677,14 +816,35 @@ void CvDangerPlots::Write(FDataStream& kStream) const
 	kStream << uiVersion;
 
 	kStream << m_ePlayer;
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	kStream << (m_DangerPlots != NULL);
+#else
 	kStream << m_bArrayAllocated;
+#endif
 
 	int iGridSize = GC.getMap().getGridWidth() * GC.getMap().getGridHeight();
 	kStream << iGridSize;
+#ifdef AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+	if (m_DangerPlots)
+	{
+		for (int i = 0; i < iGridSize; i++)
+		{
+			kStream << m_DangerPlots[i];
+		}
+	}
+	else
+	{
+		for (int i = 0; i < iGridSize; i++)
+		{
+			kStream << (uint)0;
+		}
+	}
+#else
 	for(int i = 0; i < iGridSize; i++)
 	{
 		kStream << m_DangerPlots[i];
 	}
+#endif
 }
 
 //	-----------------------------------------------------------------------------------------------

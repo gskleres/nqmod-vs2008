@@ -283,6 +283,20 @@ CvPlot* CvArmyAI::GetCenterOfMass(DomainTypes eDomainRequired)
 			}
 
 			// Try two plots out if really having problems
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			int iMaxDX, iDX;
+			CvPlot* pLoopPlot;
+			for (int iDY = -2; iDY <= 2; iDY++)
+			{
+				iMaxDX = 2 - MAX(0, iDY);
+				for (iDX = -2 - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+				{
+					// No need for range check because loops are set up properly
+					pLoopPlot = plotXY(pRtnValue->getX(), pRtnValue->getY(), iDX, iDY);
+					if (pLoopPlot)
+					{
+						if (hexDistance(iDX, iDY) == 2)
+#else
 			for (int iDX = -2; iDX <= 2; iDX++)
 			{
 				for (int iDY = -2; iDY <= 2; iDY++)
@@ -290,7 +304,12 @@ CvPlot* CvArmyAI::GetCenterOfMass(DomainTypes eDomainRequired)
 					CvPlot *pLoopPlot = plotXYWithRangeCheck(pRtnValue->getX(), pRtnValue->getY(), iDX, iDY, 2);
 					if (pLoopPlot)
 					{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+						if (hexDistance(iDX, iDY) == 2)
+#else
 						if (plotDistance(pRtnValue->getX(), pRtnValue->getY(), pLoopPlot->getX(), pLoopPlot->getY()) == 2)
+#endif
+#endif
 						{
 							if (pLoopPlot->isWater() && eDomainRequired == DOMAIN_SEA || !pLoopPlot->isWater() && eDomainRequired == DOMAIN_LAND)
 							{

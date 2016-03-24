@@ -211,7 +211,11 @@ void CvAdvisorCounsel::BuildCounselList(PlayerTypes ePlayer)
 	TechTypes eMilitaryBuildingTech = NO_TECH;
 	BuildingTypes eRecommendedBuilding = NO_BUILDING;
 	CvPlayerTechs* pPlayerTechs = GET_PLAYER(ePlayer).GetPlayerTechs();
+#ifdef AUI_WARNING_FIXES
+	for (uint iTechLoop = 0; iTechLoop < pPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+#else
 	for(int iTechLoop = 0; iTechLoop < pPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+#endif
 	{
 		TechTypes eTech = (TechTypes)iTechLoop;
 		if(pPlayerTechs->CanResearch(eTech) && pPlayerTechs->GetCurrentResearch() != eTech)
@@ -363,7 +367,11 @@ void CvAdvisorCounsel::BuildCounselList(PlayerTypes ePlayer)
 				uiCounselIndex++;
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint i = 0; i < GC.getNumUnitInfos(); i++)
+#else
 			for(int i = 0; i < GC.getNumUnitInfos(); i++)
+#endif
 			{
 				UnitTypes eUnitType = (UnitTypes)i;
 				CvUnitEntry* pUnitEntry = GC.getUnitInfo(eUnitType);
@@ -390,7 +398,11 @@ void CvAdvisorCounsel::BuildCounselList(PlayerTypes ePlayer)
 				}
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint i = 0; i < GC.getNumBuildingInfos(); i++)
+#else
 			for(int i = 0; i < GC.getNumBuildingInfos(); i++)
+#endif
 			{
 				BuildingTypes eBuildingType = (BuildingTypes)i;
 				CvBuildingEntry* pBuildingEntry = GC.getBuildingInfo(eBuildingType);
@@ -1670,7 +1682,11 @@ void CvAdvisorCounsel::BuildCounselList(PlayerTypes ePlayer)
 			}
 
 			BuildingClassTypes eScienceBuildingClass = NO_BUILDINGCLASS;
+#ifdef AUI_WARNING_FIXES
+			for (uint i = 0; i < GC.getNumBuildingClassInfos(); i++)
+#else
 			for(int i = 0; i < GC.getNumBuildingClassInfos(); i++)
+#endif
 			{
 				BuildingClassTypes eBuildingClass = (BuildingClassTypes)i;
 
@@ -1693,7 +1709,11 @@ void CvAdvisorCounsel::BuildCounselList(PlayerTypes ePlayer)
 			}
 
 			BuildingTypes eRecommendedResearchBuilding = NO_BUILDING;
+#ifdef AUI_WARNING_FIXES
+			for (uint i = 0; i < GC.getNumBuildingInfos(); i++)
+#else
 			for(int i = 0; i < GC.getNumBuildingInfos(); i++)
+#endif
 			{
 				BuildingTypes eBuildingType = (BuildingTypes)i;
 				CvBuildingEntry* pkEntry = GC.getBuildingInfo(eBuildingType);
@@ -1760,7 +1780,11 @@ void CvAdvisorCounsel::BuildCounselList(PlayerTypes ePlayer)
 			// if we don't have any of this resource
 			if(GET_PLAYER(ePlayer).getNumResourceTotal(eResource) < iNumOfResource)
 			{
+#ifdef AUI_WARNING_FIXES
+				for (uint iBuild = 0; iBuild < GC.getNumBuildInfos(); iBuild++)
+#else
 				for(int iBuild = 0; iBuild < GC.getNumBuildInfos(); iBuild++)
+#endif
 				{
 					BuildTypes eBuild = (BuildTypes)iBuild;
 					CvBuildInfo* pkBuild = GC.getBuildInfo(eBuild);
@@ -1853,7 +1877,11 @@ void CvAdvisorCounsel::BuildCounselList(PlayerTypes ePlayer)
 	ResourceTypes eTradableResource = NO_RESOURCE;
 	PlayerTypes eTargetPlayer = NO_PLAYER;
 	TeamTypes ePlayerTeam = GET_PLAYER(ePlayer).getTeam();
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumResourceInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumResourceInfos(); i++)
+#endif
 	{
 		ResourceTypes eResource = (ResourceTypes)i;
 		CvResourceInfo* pResourceInfo = GC.getResourceInfo(eResource);
@@ -1894,7 +1922,11 @@ void CvAdvisorCounsel::BuildCounselList(PlayerTypes ePlayer)
 				continue;
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint k = 0; k < GC.getNumResourceInfos(); k++)
+#else
 			for(int k = 0; k < GC.getNumResourceInfos(); k++)
+#endif
 			{
 				ResourceTypes eTradebackResource = (ResourceTypes)k;
 				const CvResourceInfo* pkTradeResourceInfo = GC.getResourceInfo(eTradebackResource);

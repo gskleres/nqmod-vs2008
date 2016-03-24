@@ -305,8 +305,13 @@ public:
 
 	// Accessor functions
 	std::vector<CvUnitEntry*>& GetUnitEntries();
+#ifdef AUI_WARNING_FIXES
+	uint GetNumUnits() const;
+	_Ret_maybenull_ CvUnitEntry* GetEntry(uint index);
+#else
 	int GetNumUnits();
 	_Ret_maybenull_ CvUnitEntry* GetEntry(int index);
+#endif
 
 	void DeleteArray();
 

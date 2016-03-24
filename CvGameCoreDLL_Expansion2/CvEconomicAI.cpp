@@ -274,7 +274,11 @@ void CvEconomicAI::Init(CvEconomicAIStrategyXMLEntries* pAIStrategies, CvPlayer*
 	m_aiTempFlavors = FNEW(int[GC.getNumFlavorTypes()], c_eCiv5GameplayDLL, 0);
 
 	m_auiYields.clear();
+#ifdef AUI_WARNING_FIXES
+	m_auiYields.push_back_copy(0, uint(NUM_YIELD_TYPES));
+#else
 	m_auiYields.push_back_copy(-1, NUM_YIELD_TYPES);
+#endif
 	m_RequestedSavings.clear();
 
 	Reset();
@@ -965,11 +969,22 @@ int CvEconomicAI::ScoreExplorePlot(CvPlot* pPlot, TeamTypes eTeam, int iRange, D
 
 	FAssertMsg(pPlot->isRevealed(eTeam), "Plot isn't revealed. This isn't good.");
 	CvPlot* pEvalPlot = NULL;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iX;
+	for (int iY = -iRange; iY <= iRange; iY++)
+	{
+		iMaxDX = iRange - MAX(0, iY);
+		for (iX = -iRange - MIN(0, iY); iX <= iMaxDX; iX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pEvalPlot = plotXY(iPlotX, iPlotY, iX, iY);
+#else
 	for(int iX = -iRange; iX <= iRange; iX++)
 	{
 		for(int iY = -iRange; iY <= iRange; iY++)
 		{
 			pEvalPlot = plotXYWithRangeCheck(iPlotX, iPlotY, iX, iY, iRange);
+#endif
 			if(!pEvalPlot)
 			{
 				continue;
@@ -985,9 +1000,16 @@ int CvEconomicAI::ScoreExplorePlot(CvPlot* pPlot, TeamTypes eTeam, int iRange, D
 				continue;
 			}
 
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+			int iMainDistance = hexDistance(iX, iY);
+#endif
 			if(pEvalPlot->isAdjacentRevealed(eTeam))
 			{
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+				if (iMainDistance > 1)
+#else
 				if(plotDistance(iPlotX, iPlotY, pEvalPlot->getX(), pEvalPlot->getY()) > 1)
+#endif
 				{
 					CvPlot* pAdjacentPlot;
 					bool bViewBlocked = true;
@@ -1066,8 +1088,12 @@ int CvEconomicAI::ScoreExplorePlot(CvPlot* pPlot, TeamTypes eTeam, int iRange, D
 				iResultValue += iGoodScore;
 			}
 
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+			iResultValue += (iRange - iMainDistance) * iAdjacencyBonus;
+#else
 			int iDistance = plotDistance(iPlotX, iPlotY, pEvalPlot->getX(), pEvalPlot->getY());
 			iResultValue += (iRange - iDistance) * iAdjacencyBonus;
+#endif
 		}
 	}
 
@@ -1717,7 +1743,11 @@ void CvEconomicAI::DoHurry()
 	int iTurnsSaved = 0;
 	int iHurryAmount = 0;
 	int iHurryAmountAvailable = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iI = 0;
+#else
 	int iI = 0;
+#endif
 
 	CvCity* pBestHurryCity = NULL;
 	int iBestHurryTurnsSaved = 0;
@@ -1869,7 +1899,12 @@ void CvEconomicAI::DoPlotPurchases()
 /// Determine how our recon efforts are going
 void CvEconomicAI::DoReconState()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+	int iDirectionLoop, iUnitLoop;
+#else
 	int iPlotLoop, iDirectionLoop, iUnitLoop;
+#endif
 	CvPlot* pPlot;
 	CvPlot* pAdjacentPlot;
 	CvUnit* pLoopUnit;
@@ -2090,7 +2125,11 @@ void CvEconomicAI::DoReconState()
 void CvEconomicAI::DoAntiquitySites()
 {
 	int iNumSites = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvPlot *pPlot;
 	ResourceTypes eArtifactResourceType = static_cast<ResourceTypes>(GC.getARTIFACT_RESOURCE());
 	ResourceTypes eHiddenArtifactResourceType = static_cast<ResourceTypes>(GC.getHIDDEN_ARTIFACT_RESOURCE());
@@ -2299,7 +2338,11 @@ void CvEconomicAI::UpdatePlots()
 	TeamTypes ePlayerTeam = m_pPlayer->getTeam();
 
 	CvPlot* pPlot;
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getMap().numPlots(); i++)
+#else
 	for(int i = 0; i < GC.getMap().numPlots(); i++)
+#endif
 	{
 		pPlot = GC.getMap().plotByIndexUnchecked(i);
 		if(pPlot == NULL)
@@ -2827,7 +2870,11 @@ bool EconomicAIHelpers::IsTestStrategy_ReallyNeedReconSea(CvPlayer* pPlayer)
 
 			// Figure out which Promotion is the one which makes a unit not cross oceans
 			PromotionTypes eOceanImpassablePromotion = NO_PROMOTION;
+#ifdef AUI_WARNING_FIXES
+			for (uint iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#else
 			for(int iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#endif
 			{
 				const PromotionTypes eLoopPromotion = static_cast<PromotionTypes>(iI);
 				CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(eLoopPromotion);
@@ -3572,8 +3619,12 @@ bool EconomicAIHelpers::IsTestStrategy_NeedImprovement(CvPlayer* pPlayer, YieldT
 
 	// loop through the build types to find one that we can use
 	BuildTypes eBuild;
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 	int iBuildIndex;
 	for(iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 	{
 		eBuild = (BuildTypes)iBuildIndex;
 		CvBuildInfo* pkBuildInfo = GC.getBuildInfo(eBuild);
@@ -3722,7 +3773,11 @@ bool EconomicAIHelpers::IsTestStrategy_IslandStart(EconomicAIStrategyTypes eStra
 			iStartArea = pPlayer->getStartingPlot()->getArea();
 
 			// Have we revealed a high enough percentage of the coast of our landmass?
+#ifdef AUI_WARNING_FIXES
+			for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 			for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 			{
 				pLoopPlot = GC.getMap().plotByIndexUnchecked(iI);
 				if(pLoopPlot->getArea() == iStartArea)

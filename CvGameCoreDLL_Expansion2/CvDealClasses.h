@@ -55,7 +55,11 @@ struct CvTradedItem
 
 	TradeableItems m_eItemType;		// What type of item is this
 	int m_iDuration;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int m_iTurnsRemaining;
+#else
 	int m_iFinalTurn;
+#endif
 	int m_iData1;					// Any additional data?
 	int m_iData2;
 	int m_iData3;
@@ -247,9 +251,15 @@ public:
 
 	void AddProposedDeal(CvDeal kDeal);
 	bool FinalizeDeal(PlayerTypes eFromPlayer, PlayerTypes eToPlayer, bool bAccepted);
-	void DoTurn();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void DoTurn(PlayerTypes eForPlayer);
+
+	void DoUpdateCurrentDealsList(PlayerTypes eForPlayer);
+#else
+	void DoTurn();	
 
 	void DoUpdateCurrentDealsList();
+#endif
 
 	CvDeal* GetTempDeal();
 	void SetTempDeal(CvDeal* pDeal);
@@ -281,6 +291,9 @@ public:
 	DealList m_ProposedDeals;
 	DealList m_CurrentDeals;
 	DealList m_HistoricalDeals;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	DealList m_CurrentlyEndingDeals;
+#endif
 
 protected:
 	void LogDealComplete(CvDeal* pDeal);

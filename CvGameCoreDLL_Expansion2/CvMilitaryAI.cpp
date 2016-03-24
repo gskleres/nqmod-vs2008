@@ -928,7 +928,11 @@ CvUnit* CvMilitaryAI::BuyEmergencyUnit(UnitAITypes eUnitType, CvCity* pCity)
 bool CvMilitaryAI::BuyEmergencyBuilding(CvCity* pCity)
 {
 	// Loop through adding the available buildings
+#ifdef AUI_WARNING_FIXES
+	for (uint iBldgLoop = 0; iBldgLoop < GC.GetGameBuildings()->GetNumBuildings(); iBldgLoop++)
+#else
 	for(int iBldgLoop = 0; iBldgLoop < GC.GetGameBuildings()->GetNumBuildings(); iBldgLoop++)
+#endif
 	{
 		const BuildingTypes eBldg = static_cast<BuildingTypes>(iBldgLoop);
 		CvBuildingEntry* pkBuildingInfo = GC.GetGameBuildings()->GetEntry(eBldg);
@@ -1562,7 +1566,11 @@ int CvMilitaryAI::GetBarbarianThreatTotal()
 	iRtnValue += GC.getAI_MILITARY_THREAT_WEIGHT_MAJOR() * m_iBarbarianCampCount;
 
 	// One minor threat for every X barbarians
+#ifdef AUI_MILITARY_FIX_BARBARIAN_THREAT
+	iRtnValue += m_iVisibleBarbarianCount * GC.getAI_MILITARY_BARBARIANS_FOR_MINOR_THREAT();
+#else
 	iRtnValue += m_iVisibleBarbarianCount / GC.getAI_MILITARY_BARBARIANS_FOR_MINOR_THREAT();
+#endif
 
 	return iRtnValue;
 }
@@ -2249,7 +2257,11 @@ void CvMilitaryAI::ScanForBarbarians()
 {
 	AI_PERF_FORMAT("Military-AI-perf.csv", ("ScanForBarbarians, Turn %03d, %s", GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()) );
 
+#ifdef AUI_WARNING_FIXES
+	uint iPlotLoop;
+#else
 	int iPlotLoop;
+#endif
 	CvPlot* pPlot;
 
 	m_iBarbarianCampCount = 0;
@@ -3560,7 +3572,11 @@ UnitHandle CvMilitaryAI::FindBestUnitToScrap(bool bLand, bool bDeficitForcedDisb
 				CvUnitEntry* pUpgradeUnitInfo = GC.GetGameUnits()->GetEntry(eUpgradeUnit);
 				if(pUpgradeUnitInfo != NULL)
 				{
+#ifdef AUI_WARNING_FIXES
+					for(uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos() && !bSkipThisOne; iResourceLoop++)
+#else
 					for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos() && !bSkipThisOne; iResourceLoop++)
+#endif
 					{
 						ResourceTypes eResource = (ResourceTypes) iResourceLoop;
 						int iNumResourceNeeded = pUpgradeUnitInfo->GetResourceQuantityRequirement(eResource);
@@ -3848,7 +3864,11 @@ CvPlot *CvMilitaryAI::GetBestAirSweepTarget(CvUnit* pFighter) const
 						{
 							int iCountFighters = 0;
 
+#ifdef AUI_WARNING_FIXES
+							for (uint iUnitLoop = 0; iUnitLoop < pCityPlot->getNumUnits(); iUnitLoop++)
+#else
 							for (int iUnitLoop = 0; iUnitLoop < pCityPlot->getNumUnits(); iUnitLoop++)
+#endif
 							{
 								CvUnit *pUnit = pCityPlot->getUnitByIndex(iUnitLoop);
 								{
@@ -3881,7 +3901,11 @@ CvPlot *CvMilitaryAI::GetBestAirSweepTarget(CvUnit* pFighter) const
 int CvMilitaryAI::GetPowerOfStrongestBuildableUnit(DomainTypes eDomain)
 {
 	int iRtnValue = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumUnitInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumUnitInfos(); iI++)
+#endif
 	{
 		const UnitTypes eUnit = static_cast<UnitTypes>(iI);
 		CvUnitEntry* pkUnitEntry = GC.getUnitInfo(eUnit);
@@ -4846,7 +4870,11 @@ int MilitaryAIHelpers::NumberOfFillableSlots(CvPlayer* pPlayer, MultiunitFormati
 						{
 							if (!bMustBeDeepWaterNaval || pLoopUnit->getDomainType() != DOMAIN_SEA || !pLoopUnit->isTerrainImpassable(TERRAIN_OCEAN))
 							{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+								for (it = slotsToFill.begin(); it != slotsToFill.end(); ++it)
+#else
 								for(it = slotsToFill.begin(); it != slotsToFill.end(); it++)
+#endif
 								{
 									CvFormationSlotEntry slotEntry = *it;
 									CvUnitEntry& kUnitInfo = pLoopUnit->getUnitInfo();
@@ -4924,7 +4952,11 @@ UnitAITypes MilitaryAIHelpers::FirstSlotCityCanFill(CvPlayer* pPlayer, Multiunit
 						{
 							if (!bMustBeDeepWaterNaval || pLoopUnit->getDomainType() != DOMAIN_SEA || !pLoopUnit->isTerrainImpassable(TERRAIN_OCEAN))
 							{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+								for (it = slotsToFill.begin(); it != slotsToFill.end(); ++it)
+#else
 								for(it = slotsToFill.begin(); it != slotsToFill.end(); it++)
+#endif
 								{
 									CvFormationSlotEntry slotEntry = *it;
 									CvUnitEntry& kUnitInfo = pLoopUnit->getUnitInfo();

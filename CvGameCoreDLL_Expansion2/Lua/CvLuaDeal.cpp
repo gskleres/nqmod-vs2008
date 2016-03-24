@@ -166,7 +166,11 @@ int CvLuaDeal::lGetNextItem(lua_State* L)
 	const CvTradedItem& item = (*m_iterator);
 	lua_pushinteger(L, item.m_eItemType);
 	lua_pushinteger(L, item.m_iDuration);
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	lua_pushinteger(L, item.m_iTurnsRemaining + GC.getGame().getGameTurn());
+#else
 	lua_pushinteger(L, item.m_iFinalTurn);
+#endif
 	lua_pushinteger(L, item.m_iData1);
 	lua_pushinteger(L, item.m_iData2);
 	lua_pushinteger(L, item.m_iData3);

@@ -30,7 +30,11 @@ struct BuilderDirective
 	    CHOP,						   // remove a feature to improve production
 	    REMOVE_ROAD,				   // remove a road from a plot
 	    NUM_DIRECTIVES
+#ifdef AUI_VC120_FORMALITIES
+	} _BuilderDirectiveType;
+#else
 	};
+#endif
 
 	BuilderDirective() :
 		m_eDirective(NUM_DIRECTIVES)
@@ -46,10 +50,19 @@ struct BuilderDirective
 
 	BuildTypes m_eBuild;
 	ResourceTypes m_eResource;
+#ifdef AUI_WARNING_FIXES
+	int m_sX;
+	int m_sY;
+#else
 	short m_sX;
 	short m_sY;
+#endif
 	//int m_iGoldCost;
+#ifdef AUI_WARNING_FIXES
+	int m_sMoveTurnsAway;
+#else
 	short m_sMoveTurnsAway;
+#endif
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -78,6 +91,9 @@ public:
 
 	void AddImprovingResourcesDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
 	void AddImprovingPlotsDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
+#ifdef AUI_WORKER_ADD_IMPROVING_MINOR_PLOTS_DIRECTIVES
+	void AddImprovingMinorPlotsDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
+#endif
 	void AddRouteDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
 	void AddRepairDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
 	void AddChopDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway);
@@ -90,18 +106,33 @@ public:
 	int GetBuildCostWeight(int iWeight, CvPlot* pPlot, BuildTypes eBuild);
 	int GetBuildTimeWeight(CvUnit* pUnit, CvPlot* pPlot, BuildTypes eBuild, bool bIgnoreFeatureTime = false, int iAdditionalTime = 0);
 	int GetResourceWeight(ResourceTypes eResource, ImprovementTypes eImprovement, int iQuantity);
+#ifndef NQM_PRUNING
 	bool IsImprovementBeneficial(CvPlot* pPlot, const CvBuildInfo& kBuild, YieldTypes eYield, bool bIsBreakEvenOK = false);
+#endif
 
 	CvCity* GetWorkingCity(CvPlot* pPlot);
 	bool DoesBuildHelpRush(CvUnit* pUnit, CvPlot* pPlot, BuildTypes eBuild);
 
+#ifdef AUI_WORKER_SCORE_PLOT_CHOP
+	int ScorePlot(BuildTypes eBuild) const;
+#elif defined(AUI_CONSTIFY)
+	int ScorePlot() const;
+#else
 	int ScorePlot();
+#endif
 
+#ifdef AUI_CONSTIFY
+	BuildTypes GetBuildTypeFromImprovement(ImprovementTypes eImprovement) const;
+	BuildTypes GetRepairBuild() const;
+	FeatureTypes GetFalloutFeature() const;
+	BuildTypes GetFalloutRemove() const;
+#else
 	BuildTypes GetBuildTypeFromImprovement(ImprovementTypes eImprovement);
 	//static YieldTypes GetDeficientYield (CvCity* pCity, bool bIgnoreHappiness = false); // this is different from the CityStrategy one because it checks unhappiness before declaring a food emergency
 	BuildTypes GetRepairBuild(void);
 	FeatureTypes GetFalloutFeature(void);
 	BuildTypes GetFalloutRemove(void);
+#endif
 
 	static void LogInfo(CvString str, CvPlayer* pPlayer, bool bWriteToOutput = false);
 	static void LogYieldInfo(CvString strNewLogStr, CvPlayer* pPlayer); //Log yield related info to BuilderTaskingYieldLog.csv.
@@ -135,8 +166,10 @@ protected:
 	FeatureTypes m_eFalloutFeature;
 	BuildTypes m_eFalloutRemove;
 
+#ifndef AUI_WORKER_UNHARDCODE_NO_REMOVE_FEATURE_THAT_IS_REQUIRED_FOR_UNIQUE_IMPROVEMENT
 	bool m_bKeepMarshes;
 	bool m_bKeepJungle;
+#endif
 };
 
 #endif //CIV5_BUILDER_TASKING_AI_H

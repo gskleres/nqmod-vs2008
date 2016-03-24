@@ -722,7 +722,11 @@ void CvPlayerEspionage::ProcessSpy(uint uiSpyIndex)
 	}
 
 	// if we just established surveillance in the city, turn the lights on
+#ifdef AUI_WARNING_FIXES
+	if (HasEstablishedSurveillance(uiSpyIndex) && !bHadSurveillance && pCity)
+#else
 	if(HasEstablishedSurveillance(uiSpyIndex) && !bHadSurveillance)
+#endif
 	{
 		pCity->plot()->changeAdjacentSight(m_pPlayer->getTeam(), GC.getESPIONAGE_SURVEILLANCE_SIGHT_RANGE(), true, NO_INVISIBLE, NO_DIRECTION, false);
 	}
@@ -1843,7 +1847,11 @@ bool CvPlayerEspionage::AttemptCoup(uint uiSpyIndex)
 		aiNewInfluenceValueTimes100[m_pPlayer->GetID()] = iInfluenceTemp;
 
 		// reduce the influence of all the other players
+#ifdef AUI_WARNING_FIXES
+		for (int ui = 0; ui < MAX_MAJOR_CIVS; ui++)
+#else
 		for(uint ui = 0; ui < MAX_MAJOR_CIVS; ui++)
+#endif
 		{
 			if(ui == m_pPlayer->GetID())
 			{
@@ -2174,7 +2182,11 @@ void CvPlayerEspionage::BuildStealableTechList(PlayerTypes ePlayer)
 
 	CvPlayerTechs* pMyPlayerTechs = m_pPlayer->GetPlayerTechs();
 	CvPlayerTechs* pOtherPlayerTechs = GET_PLAYER(ePlayer).GetPlayerTechs();
+#ifdef AUI_WARNING_FIXES
+	for (uint iTechLoop = 0; iTechLoop < pOtherPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+#else
 	for(int iTechLoop = 0; iTechLoop < pOtherPlayerTechs->GetTechs()->GetNumTechs(); iTechLoop++)
+#endif
 	{
 		TechTypes eTech = (TechTypes)iTechLoop;
 
@@ -4889,7 +4901,11 @@ void CvEspionageAI::BuildOffenseCityList(EspionageCityList& aOffenseCityList)
 	int iMaxTechCost = -1;
 	CvPlayerTechs* pMyPlayerTechs = m_pPlayer->GetPlayerTechs();
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iTechLoop = 0; iTechLoop < GC.getNumTechInfos(); iTechLoop++)
+#else
 	for(int iTechLoop = 0; iTechLoop < GC.getNumTechInfos(); iTechLoop++)
+#endif
 	{
 		const TechTypes eTech = static_cast<TechTypes>(iTechLoop);
 		CvTechEntry* pkTechInfo = GC.getTechInfo(eTech);

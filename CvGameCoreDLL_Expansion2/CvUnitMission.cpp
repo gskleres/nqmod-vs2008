@@ -185,7 +185,11 @@ void CvUnitMission::PushMission(UnitHandle hUnit, MissionTypes eMission, int iDa
 				int iNumResource = 0;
 
 				// Update the amount of a Resource used up by popped Build
+#ifdef AUI_WARNING_FIXES
+				for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 				for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 				{
 					iNumResource = 0;
 
@@ -275,7 +279,11 @@ void CvUnitMission::PopMission(UnitHandle hUnit)
 		int iNumResource;
 
 		// Update the amount of a Resource used up by popped Build
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			iNumResource = 0;
 
@@ -426,7 +434,11 @@ void CvUnitMission::ContinueMission(UnitHandle hUnit, int iSteps, int iETA)
 
 		if(pkMissionData->iPushTurn == GC.getGame().getGameTurn() || (pkMissionData->iFlags & MOVE_UNITS_THROUGH_ENEMY))
 		{
+#ifdef AUI_UNIT_MISSION_FIX_CONTINUE_MISSION_CIVILIANS_DONT_ATTEMPT_ATTACK
+			if (pkMissionData->eMissionType == CvTypes::getMISSION_MOVE_TO() && !hUnit->IsDoingPartialMove() && hUnit->canMove() && hUnit->IsCanAttack() && hUnit->m_unitMoveLocs.size() == 0)
+#else
 			if(pkMissionData->eMissionType == CvTypes::getMISSION_MOVE_TO() && !hUnit->IsDoingPartialMove() && hUnit->canMove() && hUnit->m_unitMoveLocs.size() == 0)
+#endif
 			{
 				CvPlot* pPlot = GC.getMap().plot(pkMissionData->iData1, pkMissionData->iData2);
 				if(hUnit->IsAutomated() && pPlot->isVisible(hUnit->getTeam()) && hUnit->canMoveInto(*pPlot, CvUnit::MOVEFLAG_ATTACK))
@@ -574,7 +586,11 @@ void CvUnitMission::ContinueMission(UnitHandle hUnit, int iSteps, int iETA)
 					}
 
 					// Find unit to move out
+#ifdef AUI_WARNING_FIXES
+					for (uint iI = 0; iI < pTargetPlot->getNumUnits(); iI++)
+#else
 					for(int iI = 0; iI < pTargetPlot->getNumUnits(); iI++)
+#endif
 					{
 						CvUnit* pUnit2 = pTargetPlot->getUnitByIndex(iI);
 

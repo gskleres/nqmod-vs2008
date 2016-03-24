@@ -261,7 +261,14 @@ public:
 
 	bool isUnit() const;
 	bool isVisibleEnemyDefender(const CvUnit* pUnit) const;
+#ifdef AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
+	CvUnit* getVisibleEnemyDefender(const CvUnit* pUnit) const;
+#endif
+#ifdef AUI_CONSTIFY
+	CvUnit* getVisibleEnemyDefender(PlayerTypes ePlayer) const;
+#else
 	CvUnit* getVisibleEnemyDefender(PlayerTypes ePlayer);
+#endif
 	int getNumDefenders(PlayerTypes ePlayer) const;
 	int getNumVisibleEnemyDefenders(const CvUnit* pUnit) const;
 	int getNumVisiblePotentialEnemyDefenders(const CvUnit* pUnit) const;
@@ -376,8 +383,13 @@ public:
 
 	void setOwner(PlayerTypes eNewValue, int iAcquiringCityID, bool bCheckUnits = true, bool bUpdateResources = true);
 	void ClearCityPurchaseInfo(void);
+#ifdef AUI_CONSTIFY
+	PlayerTypes GetCityPurchaseOwner() const;
+	int GetCityPurchaseID() const;
+#else
 	PlayerTypes GetCityPurchaseOwner(void);
 	int GetCityPurchaseID(void);
+#endif
 	void SetCityPurchaseID(int iAcquiringCityID);
 
 	bool IsHomeFrontForPlayer(PlayerTypes ePlayer) const;
@@ -414,7 +426,11 @@ public:
 	}
 	FeatureTypes getFeatureType() const
 	{
+#ifdef AUI_WARNING_FIXES
+		int f = m_eFeatureType;
+#else
 		char f = m_eFeatureType;
+#endif
 		return (FeatureTypes)f;
 	}
 	bool isImpassable()     const
@@ -526,7 +542,11 @@ public:
 	int getRiverCrossingCount() const;
 	void changeRiverCrossingCount(int iChange);
 
+#ifdef AUI_WARNING_FIXES
+	int* getYield();
+#else
 	short* getYield();
+#endif
 	int getYield(YieldTypes eIndex) const;
 	int calculateNatureYield(YieldTypes eIndex, TeamTypes eTeam, bool bIgnoreFeature = false) const;
 	int calculateBestNatureYield(YieldTypes eIndex, TeamTypes eTeam) const;
@@ -591,7 +611,11 @@ public:
 	bool setRevealed(TeamTypes eTeam, bool bNewValue, bool bTerrainOnly = false, TeamTypes eFromTeam = NO_TEAM);
 	bool isAdjacentRevealed(TeamTypes eTeam) const;
 	bool isAdjacentNonrevealed(TeamTypes eTeam) const;
+#ifdef AUI_ASTAR_FIX_MAXIMIZE_EXPLORE_CONSIDER_2ND_RING_NONREVEALED
+	int getNumNonrevealedInRange(TeamTypes eTeam, int iRange = 0) const;
+#else
 	int getNumAdjacentNonrevealed(TeamTypes eTeam) const;
+#endif
 	bool IsResourceForceReveal(TeamTypes eTeam) const;
 	void SetResourceForceReveal(TeamTypes eTeam, bool bValue);
 
@@ -626,9 +650,15 @@ public:
 	bool isInvisibleVisible(TeamTypes eTeam, InvisibleTypes eInvisible) const;
 	void changeInvisibleVisibilityCount(TeamTypes eTeam, InvisibleTypes eInvisible, int iChange);
 
+#ifdef AUI_WARNING_FIXES
+	uint getNumUnits() const;
+	uint GetNumCombatUnits() const;
+	CvUnit* getUnitByIndex(uint iIndex) const;
+#else
 	int getNumUnits() const;
 	int GetNumCombatUnits();
 	CvUnit* getUnitByIndex(int iIndex) const;
+#endif
 	int getUnitIndex(CvUnit* pUnit) const;
 	void addUnit(CvUnit* pUnit, bool bUpdate = true);
 	void removeUnit(CvUnit* pUnit, bool bUpdate = true);
@@ -665,12 +695,26 @@ public:
 	PlayerTypes GetBuilderAIScratchPadPlayer() const;
 	void SetBuilderAIScratchPadPlayer(PlayerTypes ePlayer);
 
+#ifdef AUI_WARNING_FIXES
+	int GetBuilderAIScratchPadTurn() const;
+	void SetBuilderAIScratchPadTurn(int iNewValue);
+#else
 	short GetBuilderAIScratchPadTurn() const;
 	void SetBuilderAIScratchPadTurn(short sNewValue);
+#endif
 
 	RouteTypes GetBuilderAIScratchPadRoute() const;
 	void SetBuilderAIScratchPadRoute(RouteTypes eRoute);
 
+#ifdef AUI_WARNING_FIXES
+	int GetBuilderAIScratchPadValue() const;
+	void SetBuilderAIScratchPadValue(int iNewValue);
+
+	uint GetPlotIndex() const;
+
+	int GetContinentType() const;
+	void SetContinentType(const int cContinent);
+#else
 	short GetBuilderAIScratchPadValue() const;
 	void SetBuilderAIScratchPadValue(short sNewValue);
 
@@ -678,6 +722,7 @@ public:
 
 	char GetContinentType() const;
 	void SetContinentType(const char cContinent);
+#endif
 
 	const FAutoArchive& getSyncArchive() const;
 	FAutoArchive& getSyncArchive();
@@ -746,11 +791,19 @@ protected:
 		}
 	};
 
+#ifdef AUI_WARNING_FIXES
+	int m_iX;
+	int m_iY;
+	int m_eOwner;
+	int m_ePlotType;
+	int m_eTerrainType;
+#else
 	short m_iX;
 	short m_iY;
 	char /*PlayerTypes*/  m_eOwner;
 	char /*PlotTypes*/    m_ePlotType;
 	char /*TerrainTypes*/ m_eTerrainType;
+#endif
 
 	PlotBoolField m_bfRevealed;
 
@@ -763,6 +816,17 @@ protected:
 	IDInfo m_purchaseCity;
 
 	friend class CvMap;
+#ifdef AUI_WARNING_FIXES
+	int* m_aiYield;
+	int* m_aiFoundValue;
+	int* m_aiPlayerCityRadiusCount;
+	int* m_aiVisibilityCount;
+	int* m_aiRevealedOwner;
+	//bool *m_abRevealed;
+
+	int /*ImprovementTypes*/ *m_aeRevealedImprovementType;
+	int /*RouteTypes*/ *m_aeRevealedRouteType;
+#else
 	short* m_aiYield;
 	int* m_aiFoundValue;
 	char* m_aiPlayerCityRadiusCount;
@@ -772,17 +836,26 @@ protected:
 
 	short /*ImprovementTypes*/ *m_aeRevealedImprovementType;
 	short /*RouteTypes*/ *m_aeRevealedRouteType;
+#endif
 	bool* m_abNoSettling;
 
 	bool* m_abResourceForceReveal;
 
 
 	char* m_szScriptData;
+#ifdef AUI_WARNING_FIXES
+	int* m_paiBuildProgress;
+#else
 	short* m_paiBuildProgress;
+#endif
 
 	UnitHandle m_pCenterUnit;
 
+#ifdef AUI_WARNING_FIXES
+	int m_apaiInvisibleVisibilityCount[REALLY_MAX_TEAMS][NUM_INVISIBLE_TYPES];
+#else
 	short m_apaiInvisibleVisibilityCount[REALLY_MAX_TEAMS][NUM_INVISIBLE_TYPES];
+#endif
 
 	int m_iArea;
 	int m_iLandmass;
@@ -791,21 +864,59 @@ protected:
 	// it will not be saved or loaded - you should assume that it is filled with garbage
 	// when you get it
 	int m_iScratchPad;
+#ifdef AUI_WARNING_FIXES
+	int m_cBuilderAIScratchPadPlayer;
+	int m_sBuilderAIScratchPadTurn;
+	int m_sBuilderAIScratchPadValue;
+#else
 	char m_cBuilderAIScratchPadPlayer;
 	short m_sBuilderAIScratchPadTurn;
 	short m_sBuilderAIScratchPadValue;
+#endif
 	RouteTypes m_eBuilderAIScratchPadRoute;
 
+#ifdef AUI_WARNING_FIXES
+	int m_iOwnershipDuration;
+	int m_iImprovementDuration;
+	int m_iUpgradeProgress;
+
+	int m_iCulture;
+#else
 	short m_iOwnershipDuration;
 	short m_iImprovementDuration;
 	short m_iUpgradeProgress;
 
 	short m_iCulture;
+#endif
 
 	uint m_uiTradeRouteBitFlags;
 
 
 	FAutoArchiveClassContainer<CvPlot> m_syncArchive; // this must appear before the first auto variable in the class
+#ifdef AUI_WARNING_FIXES
+	FAutoVariable<int, CvPlot> m_eFeatureType;
+	int m_eResourceType;
+	int m_eImprovementType;
+	int m_eImprovementTypeUnderConstruction;
+	int m_ePlayerBuiltImprovement;
+	int m_ePlayerResponsibleForImprovement;
+	int m_ePlayerResponsibleForRoute;
+	int m_ePlayerThatClearedBarbCampHere;
+	int m_eRouteType;
+	int m_eWorldAnchor;
+	int m_cWorldAnchorData;
+	int m_eRiverEFlowDirection; // flow direction on the E edge (isWofRiver)
+	int m_eRiverSEFlowDirection; // flow direction on the SE edge (isNWofRiver)
+	int m_eRiverSWFlowDirection; // flow direction on the SW edge (isNEofRiver)
+	int m_iFeatureVariety;
+	int m_iNumMajorCivsRevealed;
+	int m_iCityRadiusCount;
+	int m_iReconCount;
+	int m_iRiverCrossingCount;
+	int m_iResourceNum;
+	int m_cContinentType;
+	int m_cRiverCrossing;	// bit field
+#else
 	FAutoVariable<char, CvPlot> /*FeatureTypes*/ m_eFeatureType;
 	char /*ResourceTypes*/ m_eResourceType;
 	char /*ImprovementTypes*/ m_eImprovementType;
@@ -828,6 +939,7 @@ protected:
 	char m_iResourceNum;
 	char m_cContinentType;
 	char m_cRiverCrossing;	// bit field
+#endif
 
 	bool m_bImprovementPillaged:1;
 	bool m_bRoutePillaged:1;

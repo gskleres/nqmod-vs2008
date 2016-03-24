@@ -289,6 +289,15 @@ void CvFlavorManager::AddFlavorRecipient(CvFlavorRecipient* pTargetObject, bool 
 /// Remove the recipient
 void CvFlavorManager::RemoveFlavorRecipient(CvFlavorRecipient* pTargetObject)
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (Flavor_List::iterator iter = m_FlavorTargetList.begin(); iter != m_FlavorTargetList.end(); ++iter)
+	{
+		if (*iter == pTargetObject)
+		{
+			m_FlavorTargetList.erase(iter);
+			return;
+		}
+#else
 	Flavor_List::iterator iter = m_FlavorTargetList.begin();
 	Flavor_List::iterator end  = m_FlavorTargetList.end();
 
@@ -300,6 +309,7 @@ void CvFlavorManager::RemoveFlavorRecipient(CvFlavorRecipient* pTargetObject)
 			return;
 		}
 		iter++;
+#endif
 	}
 }
 
@@ -454,26 +464,64 @@ void CvFlavorManager::RandomizeWeights()
 	for(iI = 0; iI < GC.getNumFlavorTypes(); iI++)
 	{
 		// Don't modify it if it's zero-ed out in the XML
+#ifdef AUI_FLAVOR_MANAGER_FIX_RANDOMIZE_WEIGHTS_ZEROED_OUT_FLAVOR
+		if (m_piPersonalityFlavor[iI] >= 0)
+#else
 		if(m_piPersonalityFlavor[iI] != 0)
+#endif
 		{
 			m_piPersonalityFlavor[iI] = GetAdjustedValue(m_piPersonalityFlavor[iI], iPlusMinus, iMin, iMax);
 		}
 	}
 }
 
+#ifdef AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USES_BINOM_RNG
+/// Add a random plus/minus to an integer (but keep it in range); distribution remains normal
+#else
 /// Add a random plus/minus to an integer (but keep it in range)
+#endif
 int CvFlavorManager::GetAdjustedValue(int iOriginalValue, int iPlusMinus, int iMin, int iMax)
 {
 	int iAdjust;
 	int iRtnValue;
 
+#ifdef AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USE_REROLLS
+	int iReroll = 0;
+#endif
+#ifdef AUI_FLAVOR_MANAGER_FIX_GET_ADJUSTED_VALUE_NEGATIVE_PLUSMINUS
+	iPlusMinus = abs(iPlusMinus);
+#endif
+
+#ifdef AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USES_BINOM_RNG
+	iAdjust = GC.getGame().getJonRandNumBinom((iPlusMinus * 2 + 1), "Adjusting Personality Flavor");
+#else
 	iAdjust = GC.getGame().getJonRandNum((iPlusMinus * 2 + 1), "Adjusting Personality Flavor");
+#endif
 	iRtnValue = iOriginalValue + iAdjust - iPlusMinus;
 
 	if(iRtnValue < iMin)
+#ifdef AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USE_REROLLS
+	{
+		iReroll = iMin - iRtnValue;
+#endif
 		iRtnValue = iMin;
+#ifdef AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USE_REROLLS
+}
+#endif
 	else if(iRtnValue > iMax)
+#ifdef AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USE_REROLLS
+	{
+		iReroll = iMax - iRtnValue;
+#endif
 		iRtnValue = iMax;
+#ifdef AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USE_REROLLS
+	}
+
+	if (iReroll != 0)
+	{
+		iRtnValue = GetAdjustedValue(iRtnValue, iReroll, iMin, iMax);
+	}
+#endif
 
 	return iRtnValue;
 }
@@ -483,7 +531,11 @@ void CvFlavorManager::BroadcastFlavors(int* piDeltaFlavorValues, bool bPlayerLev
 {
 	Flavor_List::iterator it;
 
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = m_FlavorTargetList.begin(); it != m_FlavorTargetList.end(); ++it)
+#else
 	for(it = m_FlavorTargetList.begin(); it != m_FlavorTargetList.end(); it++)
+#endif
 	{
 		if(bPlayerLevelUpdate && !(*it)->IsCity())
 		{
@@ -501,7 +553,11 @@ void CvFlavorManager::BroadcastBaseFlavors()
 {
 	Flavor_List::iterator it;
 
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = m_FlavorTargetList.begin(); it != m_FlavorTargetList.end(); ++it)
+#else
 	for(it = m_FlavorTargetList.begin(); it != m_FlavorTargetList.end(); it++)
+#endif
 	{
 		(*it)->SetFlavors(m_piPersonalityFlavor);
 	}

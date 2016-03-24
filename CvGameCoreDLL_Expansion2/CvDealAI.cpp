@@ -2442,7 +2442,11 @@ void CvDealAI::DoAddResourceToThem(CvDeal* pDeal, PlayerTypes eThem, bool bDontC
 
 			int iItemValue;
 
+#ifdef AUI_WARNING_FIXES
+			uint iResourceLoop;
+#else
 			int iResourceLoop;
+#endif
 			ResourceTypes eResource;
 			int iResourceQuantity;
 
@@ -2542,7 +2546,11 @@ void CvDealAI::DoAddResourceToUs(CvDeal* pDeal, PlayerTypes eThem, bool bDontCha
 
 			ResourceTypes eResource;
 			int iResourceQuantity;
+#ifdef AUI_WARNING_FIXES
+			for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 			for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 			{
 				eResource = (ResourceTypes) iResourceLoop;
 				iResourceQuantity = GET_PLAYER(eMyPlayer).getNumResourceAvailable(eResource, false);
@@ -3399,7 +3407,11 @@ void CvDealAI::DoAddItemsToDealForPeaceTreaty(PlayerTypes eOtherPlayer, CvDeal* 
 	ResourceUsageTypes eUsage;
 	ResourceTypes eResource;
 	int iResourceQuantity;
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		eResource = (ResourceTypes) iResourceLoop;
 
@@ -3661,7 +3673,11 @@ bool CvDealAI::IsMakeOfferForLuxuryResource(PlayerTypes eOtherPlayer, CvDeal* pD
 		return false;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	uint iResourceLoop;
+#else
 	int iResourceLoop;
+#endif
 	ResourceTypes eResource;
 
 	// See if the other player has a Resource to trade

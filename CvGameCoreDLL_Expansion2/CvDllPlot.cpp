@@ -12,7 +12,11 @@
 #include "CvDllCity.h"
 #include "CvDllUnit.h"
 
+#ifdef AUI_WARNING_FIXES
+CvDllPlot::CvDllPlot(_In_ CvPlot* pPlot)
+#else
 CvDllPlot::CvDllPlot(CvPlot* pPlot)
+#endif
 	: m_pPlot(pPlot)
 	, m_uiRefCount(1)
 {
@@ -312,7 +316,11 @@ ICvUnit1* CvDllPlot::GetCenterUnit()
 //------------------------------------------------------------------------------
 int CvDllPlot::GetNumUnits() const
 {
+#ifdef AUI_WARNING_FIXES
+	return static_cast<const int>(m_pPlot->getNumUnits());
+#else
 	return m_pPlot->getNumUnits();
+#endif
 }
 //------------------------------------------------------------------------------
 ICvUnit1* CvDllPlot::GetUnitByIndex(int iIndex) const
@@ -355,7 +363,11 @@ int CvDllPlot::GetPlotIndex() const
 //------------------------------------------------------------------------------
 char CvDllPlot::GetContinentType() const
 {
+#ifdef AUI_WARNING_FIXES
+	return char(m_pPlot->GetContinentType());
+#else
 	return m_pPlot->GetContinentType();
+#endif
 }
 //------------------------------------------------------------------------------
 FAutoArchive& CvDllPlot::GetSyncArchive()

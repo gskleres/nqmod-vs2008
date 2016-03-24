@@ -53,7 +53,11 @@ void CvCityConnections::Init(CvPlayer* pPlayer)
 	ResizeRouteInfo(m_uiRouteInfosDimension);
 
 	m_aBuildingsAllowWaterRoutes.clear();
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.GetGameBuildings()->GetNumBuildings(); i++)
+#else
 	for(int i = 0; i < GC.GetGameBuildings()->GetNumBuildings(); i++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(i);
 		CvBuildingEntry* pkBuildingInfo = pkBuildingEntries->GetEntry(eBuilding);
@@ -279,7 +283,11 @@ void CvCityConnections::UpdateRouteInfo(void)
 
 	// pass 0 = can cities connect via water routes
 	// pass 1 = can cities connect via land and water routes
+#ifdef AUI_WARNING_FIXES
+	for (char iPass = 0; iPass < 2; iPass++)
+#else
 	for(int iPass = 0; iPass < 2; iPass++)
+#endif
 	{
 		if(iPass == 0 && !bAllowWaterRoutes)  // if in the first pass, we can't embark, skip
 		{

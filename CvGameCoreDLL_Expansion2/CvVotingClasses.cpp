@@ -159,7 +159,11 @@ EraTypes LeagueHelpers::GetNextGameEraForTrigger(EraTypes eThisEra)
 {
 	EraTypes eNextEra = (EraTypes) ((int)eThisEra + 1);
 
+#ifdef AUI_WARNING_FIXES
+	if (uint(eNextEra) >= GC.getNumEraInfos())
+#else
 	if (eNextEra >= GC.getNumEraInfos())
+#endif
 	{
 		eNextEra = NO_ERA;
 	}
@@ -626,7 +630,11 @@ CvVoterDecision::~CvVoterDecision(void)
 int CvVoterDecision::GetDecision()
 {
 	CvWeightedVector<int, 64, true> vChoices;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
+#else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); it++)
+#endif
 	{
 		bool bFirst = true;
 		
@@ -711,7 +719,11 @@ bool CvVoterDecision::IsTie()
 std::vector<int> CvVoterDecision::GetTopVotedChoices(int iNumTopChoices)
 {
 	CvWeightedVector<int, 64, true> vChoices;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
+#else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); it++)
+#endif
 	{
 		bool bFirst = true;
 
@@ -763,7 +775,11 @@ std::vector<int> CvVoterDecision::GetTopVotedChoices(int iNumTopChoices)
 int CvVoterDecision::GetVotesCast()
 {
 	int iCount = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
+#else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); it++)
+#endif
 	{
 		iCount += it->iNumVotes;
 	}
@@ -853,7 +869,11 @@ CvString CvVoterDecision::GetVotesAsText(CvLeague* pLeague)
 	CvString s = "";
 
 	std::vector<LeagueHelpers::VoteTextSortElement> vVoteText;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
+#else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); it++)
+#endif
 	{
 		Localization::String sTemp = Localization::Lookup("TXT_KEY_NOTIFICATION_LEAGUE_VOTING_RESULT_MEMBER_VOTE");
 		sTemp << it->iNumVotes << pLeague->GetTextForChoice(GetType(), it->iChoice) << GET_PLAYER(it->ePlayer).getCivilizationShortDescriptionKey();
@@ -911,7 +931,11 @@ FDataStream& operator<<(FDataStream& saveTo, const CvVoterDecision& readFrom)
 
 	saveTo << uiVersion;
 	saveTo << readFrom.m_vVotes.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (CvResolutionDecision::PlayerVoteList::const_iterator it = readFrom.m_vVotes.begin(); it != readFrom.m_vVotes.end(); ++it)
+#else
 	for (CvResolutionDecision::PlayerVoteList::const_iterator it = readFrom.m_vVotes.begin(); it != readFrom.m_vVotes.end(); it++)
+#endif
 	{
 		saveTo << *it;
 	}
@@ -1422,7 +1446,11 @@ void CvActiveResolution::DoEffects(PlayerTypes ePlayer)
 	if (GetEffects()->iGreatPersonTileImprovementCulture != 0)
 	{
 		// Loop through all Great Person tile improvements
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumImprovementInfos(); i++)
+#else
 		for (int i = 0; i < GC.getNumImprovementInfos(); i++)
+#endif
 		{
 			CvImprovementEntry* pInfo = GC.getImprovementInfo((ImprovementTypes)i);
 			if (pInfo != NULL && pInfo->IsCreatedByGreatPerson())
@@ -1598,7 +1626,11 @@ void CvActiveResolution::RemoveEffects(PlayerTypes ePlayer)
 	if (GetEffects()->iGreatPersonTileImprovementCulture != 0)
 	{
 		// Loop through all Great Person tile improvements
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumImprovementInfos(); i++)
+#else
 		for (int i = 0; i < GC.getNumImprovementInfos(); i++)
+#endif
 		{
 			CvImprovementEntry* pInfo = GC.getImprovementInfo((ImprovementTypes)i);
 			if (pInfo != NULL && pInfo->IsCreatedByGreatPerson())
@@ -2206,7 +2238,11 @@ void CvLeague::DoVoteEnact(int iID, PlayerTypes eVoter, int iNumVotes, int iChoi
 	bool bProcessed = false;
 	if (CanVote(eVoter) && GetRemainingVotesForMember(eVoter) >= iNumVotes)
 	{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (EnactProposalList::iterator it = m_vEnactProposals.begin(); it != m_vEnactProposals.end(); ++it)
+#else
 		for (EnactProposalList::iterator it = m_vEnactProposals.begin(); it != m_vEnactProposals.end(); it++)
+#endif
 		{
 			if (it->GetID() == iID)
 			{
@@ -2229,7 +2265,11 @@ void CvLeague::DoVoteRepeal(int iResolutionID, PlayerTypes eVoter, int iNumVotes
 	{
 		if (IsRepealProposed(iResolutionID))
 		{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			for (RepealProposalList::iterator it = m_vRepealProposals.begin(); it != m_vRepealProposals.end(); ++it)
+#else
 			for (RepealProposalList::iterator it = m_vRepealProposals.begin(); it != m_vRepealProposals.end(); it++)
+#endif
 			{
 				if (it->GetTargetResolutionID() == iResolutionID)
 				{
@@ -2312,7 +2352,11 @@ void CvLeague::DoProposeRepeal(int iResolutionID, PlayerTypes eProposer)
 	}
 	
 	int iFound = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 	{
 		if (it->GetID() == iResolutionID)
 		{
@@ -2500,7 +2544,11 @@ bool CvLeague::CanProposeEnact(ResolutionTypes eResolution, PlayerTypes ePropose
 	if (pInfo->GetTechPrereqAnyMember() != NO_TECH)
 	{
 		bool bMemberHasTech = false;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 		for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 		{
 			if (GET_TEAM(GET_PLAYER(it->ePlayer).getTeam()).GetTeamTechs()->HasTech(pInfo->GetTechPrereqAnyMember()))
 			{
@@ -2871,7 +2919,11 @@ std::vector<int> CvLeague::GetChoicesForDecision(ResolutionDecisionTypes eDecisi
 	case RESOLUTION_DECISION_CITY:
 		break;
 	case RESOLUTION_DECISION_ANY_LUXURY_RESOURCE:
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumResourceInfos(); i++)
+#else
 		for (int i = 0; i < GC.getNumResourceInfos(); i++)
+#endif
 		{
 			CvResourceInfo* pInfo = GC.getResourceInfo((ResourceTypes)i);
 			if (pInfo && pInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY)
@@ -2912,7 +2964,11 @@ std::vector<int> CvLeague::GetChoicesForDecision(ResolutionDecisionTypes eDecisi
 		}
 		break;
 	case RESOLUTION_DECISION_IDEOLOGY:
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumPolicyBranchInfos(); i++)
+#else
 		for (int i = 0; i < GC.getNumPolicyBranchInfos(); i++)
+#endif
 		{
 			CvPolicyBranchEntry* pInfo = GC.getPolicyBranchInfo((PolicyBranchTypes)i);
 			if (pInfo != NULL)
@@ -2939,7 +2995,11 @@ CvString CvLeague::GetTextForChoice(ResolutionDecisionTypes eDecision, int iChoi
 std::vector<ResolutionTypes> CvLeague::GetInactiveResolutions() const
 {
 	std::vector<ResolutionTypes> v;
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumResolutionInfos(); i++)
+#else
 	for (int i = 0; i < GC.getNumResolutionInfos(); i++)
+#endif
 	{
 		ResolutionTypes e = (ResolutionTypes)i;
 		CvResolutionEntry* pInfo = GC.getResolutionInfo(e);
@@ -3071,7 +3131,11 @@ void CvLeague::AddMember(PlayerTypes ePlayer)
 	}
 
 	// Apply effects of any existing active resolutions
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 	{
 		it->DoEffects(ePlayer);
 	}
@@ -3087,7 +3151,11 @@ void CvLeague::RemoveMember(PlayerTypes ePlayer)
 		return;
 	}
 
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		if (it->ePlayer == ePlayer)
 		{
@@ -3097,7 +3165,11 @@ void CvLeague::RemoveMember(PlayerTypes ePlayer)
 	}
 
 	// Remove effects of any existing active resolutions
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 	{
 		it->RemoveEffects(ePlayer);
 	}
@@ -3582,7 +3654,11 @@ bool CvLeague::HasMemberAlwaysBeenHost(PlayerTypes ePlayer)
 // Is the project underway, but not yet completed?
 bool CvLeague::IsProjectActive(LeagueProjectTypes eLeagueProject) const
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ProjectList::const_iterator it = m_vProjects.begin(); it != m_vProjects.end(); ++it)
+#else
 	for (ProjectList::const_iterator it = m_vProjects.begin(); it != m_vProjects.end(); it++)
+#endif
 	{
 		if (it->eType == eLeagueProject)
 		{
@@ -3598,7 +3674,11 @@ bool CvLeague::IsProjectActive(LeagueProjectTypes eLeagueProject) const
 // Is the project completed?
 bool CvLeague::IsProjectComplete(LeagueProjectTypes eLeagueProject) const
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ProjectList::const_iterator it = m_vProjects.begin(); it != m_vProjects.end(); ++it)
+#else
 	for (ProjectList::const_iterator it = m_vProjects.begin(); it != m_vProjects.end(); it++)
+#endif
 	{
 		if (it->eType == eLeagueProject)
 		{
@@ -3636,7 +3716,11 @@ int CvLeague::GetProjectBuildingCostPerPlayer(BuildingTypes eRewardBuilding) con
 	int iCost = 0;
 
 	// Is it part of an international project?
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumLeagueProjectInfos(); i++)
+#else
 	for (int i = 0; i < GC.getNumLeagueProjectInfos(); i++)
+#endif
 	{
 		LeagueProjectTypes eProject = (LeagueProjectTypes)i;
 		CvLeagueProjectEntry* pProjectInfo = GC.getLeagueProjectInfo(eProject);
@@ -3709,7 +3793,11 @@ int CvLeague::GetMemberContribution(PlayerTypes ePlayer, LeagueProjectTypes eLea
 	int iValue = 0;
 	if (ePlayer >= 0 && ePlayer < MAX_MAJOR_CIVS)
 	{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (ProjectList::const_iterator it = m_vProjects.begin(); it != m_vProjects.end(); ++it)
+#else
 		for (ProjectList::const_iterator it = m_vProjects.begin(); it != m_vProjects.end(); it++)
+#endif
 		{
 			if (it->eType == eLeagueProject)
 			{
@@ -3728,7 +3816,11 @@ void CvLeague::SetMemberContribution(PlayerTypes ePlayer, LeagueProjectTypes eLe
 	if (!bCanContribute) return;
 
 	int iMatches = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ProjectList::iterator it = m_vProjects.begin(); it != m_vProjects.end(); ++it)
+#else
 	for (ProjectList::iterator it = m_vProjects.begin(); it != m_vProjects.end(); it++)
+#endif
 	{
 		if (it->eType == eLeagueProject)
 		{
@@ -3813,7 +3905,11 @@ bool CvLeague::IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient)
 	if (eTrader < 0 || eTrader >= MAX_CIV_PLAYERS) return false;
 	CvAssertMsg(eRecipient >= 0 && eRecipient < MAX_CIV_PLAYERS, "Invalid index for eRecipient. Please send Anton your save file and version.");
 	if (eRecipient < 0 || eRecipient >= MAX_CIV_PLAYERS) return false;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 	{
 		// Trade route involving a minor civ
 		if (GET_PLAYER(eTrader).isMinorCiv() || GET_PLAYER(eRecipient).isMinorCiv())
@@ -3842,7 +3938,11 @@ bool CvLeague::IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient)
 
 bool CvLeague::IsLuxuryHappinessBanned(ResourceTypes eResource)
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 	{
 		if (it->GetEffects()->bNoResourceHappiness && it->GetProposerDecision()->GetDecision() == eResource)
 		{
@@ -3857,7 +3957,11 @@ int CvLeague::GetResearchMod(TechTypes eTech)
 	int iValue = 0;
 
 	int iKnownByMemberMod = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 	{
 		if (it->GetEffects()->iMemberDiscoveredTechMod != 0)
 		{
@@ -3895,7 +3999,11 @@ int CvLeague::GetFeatureYieldChange(FeatureTypes eFeature, YieldTypes eYield)
 			int iNaturalWonderMod = 0;
 			if (eYield == YIELD_CULTURE)
 			{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+				for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 				for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 				{
 					if (it->GetEffects()->iCulturePerNaturalWonder != 0)
 					{
@@ -3916,7 +4024,11 @@ int CvLeague::GetWorldWonderYieldChange(YieldTypes eYield)
 
 	if (eYield == YIELD_CULTURE)
 	{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 		for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 		{
 			if (it->GetEffects()->iCulturePerWonder != 0)
 			{
@@ -3930,7 +4042,11 @@ int CvLeague::GetWorldWonderYieldChange(YieldTypes eYield)
 
 bool CvLeague::IsNoTrainingNuclearWeapons()
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 	{
 		if (it->GetEffects()->bNoTrainingNuclearWeapons)
 		{
@@ -5114,7 +5230,11 @@ CvString CvLeague::GetLeagueSplashNextEraDetails(LeagueSpecialSessionTypes eGove
 	if (pThisSessionInfo != NULL)
 	{
 		EraTypes eNextEra = LeagueHelpers::GetNextGameEraForTrigger(pThisSessionInfo->GetEraTrigger());
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#else
 		for (int i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#endif
 		{
 			LeagueSpecialSessionTypes e = (LeagueSpecialSessionTypes)i;
 			CvLeagueSpecialSessionEntry* p = GC.getLeagueSpecialSessionInfo(e);
@@ -5200,7 +5320,11 @@ void CvLeague::CheckProjectAchievements()
 	{
 		if (member->ePlayer != NO_PLAYER && GET_PLAYER(member->ePlayer).isAlive() && GET_PLAYER(member->ePlayer).isHuman() && GET_PLAYER(member->ePlayer).isLocalPlayer())
 		{
+#ifdef AUI_WARNING_FIXES
+			uint iHighestContributorProjects = 0;
+#else
 			int iHighestContributorProjects = 0;
+#endif
 
 			for (ProjectList::const_iterator project = m_vProjects.begin(); project != m_vProjects.end(); ++project)
 			{
@@ -5226,7 +5350,11 @@ void CvLeague::CheckStartSession()
 	if (!IsInSession())
 	{
 		bool bCanStart = true;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 		for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 		{
 			if (CanPropose(it->ePlayer))
 			{
@@ -5320,7 +5448,11 @@ void CvLeague::CheckFinishSession()
 	if (IsInSession())
 	{
 		bool bFinished = true;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 		for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 		{
 			if (CanVote(it->ePlayer))
 			{
@@ -5358,7 +5490,11 @@ void CvLeague::FinishSession()
 	NotifySessionDone();
 
 	// Resolve Proposals on table
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (RepealProposalList::iterator it = m_vRepealProposals.begin(); it != m_vRepealProposals.end(); ++it)
+#else
 	for (RepealProposalList::iterator it = m_vRepealProposals.begin(); it != m_vRepealProposals.end(); it++)
+#endif
 	{
 		if (eRecurringProposal != NO_RESOLUTION && eRecurringProposal == it->GetType())
 		{
@@ -5394,7 +5530,11 @@ void CvLeague::FinishSession()
 
 		LogProposalResolved(it);
 	}
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (EnactProposalList::iterator it = m_vEnactProposals.begin(); it != m_vEnactProposals.end(); ++it)
+#else
 	for (EnactProposalList::iterator it = m_vEnactProposals.begin(); it != m_vEnactProposals.end(); it++)
+#endif
 	{
 		if (eRecurringProposal != NO_RESOLUTION && eRecurringProposal == it->GetType())
 		{
@@ -5513,7 +5653,11 @@ void CvLeague::FinishSession()
 
 void CvLeague::AssignStartingVotes()
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		if (CanEverVote(it->ePlayer))
 		{
@@ -5525,7 +5669,11 @@ void CvLeague::AssignStartingVotes()
 
 void CvLeague::ClearProposalPrivileges()
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		it->bMayPropose = false;
 		it->iProposals = 0;
@@ -5535,7 +5683,11 @@ void CvLeague::ClearProposalPrivileges()
 void CvLeague::AssignProposalPrivileges()
 {
 	CvWeightedVector<Member*, MAX_CIV_PLAYERS, false> vpPossibleProposers;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		if (CanEverPropose(it->ePlayer))
 		{
@@ -5680,7 +5832,11 @@ void CvLeague::DoRepealResolution(CvRepealProposal* pProposal)
 	CvAssertMsg(pProposal->IsPassed(GetVotesSpentThisSession()), "Doing a proposal that has not been passed. Please send Anton your save file and version.");
 
 	int iFound = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
+#endif
 	{
 		if (it->GetID() == pProposal->GetTargetResolutionID())
 		{
@@ -5760,11 +5916,19 @@ bool CvLeague::HasProposalsOnHold()
 // Should be called before the list of proposals is resolved and cleared
 void CvLeague::NotifySessionDone()
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (EnactProposalList::iterator it = m_vEnactProposals.begin(); it != m_vEnactProposals.end(); ++it)
+#else
 	for (EnactProposalList::iterator it = m_vEnactProposals.begin(); it != m_vEnactProposals.end(); it++)
+#endif
 	{
 		NotifyProposalResult(it);
 	}
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (RepealProposalList::iterator it = m_vRepealProposals.begin(); it != m_vRepealProposals.end(); ++it)
+#else
 	for (RepealProposalList::iterator it = m_vRepealProposals.begin(); it != m_vRepealProposals.end(); it++)
+#endif
 	{
 		NotifyProposalResult(it);
 	}
@@ -5859,7 +6023,11 @@ void CvLeague::NotifyProposalResult(CvEnactProposal* pProposal)
 		sMessage += "[NEWLINE]" + pProposal->GetVoterDecision()->GetVotesAsText(this);
 	}
 
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		PlayerTypes eMember = it->ePlayer;
 		if (GET_PLAYER(eMember).isHuman())
@@ -5893,7 +6061,11 @@ void CvLeague::NotifyProposalResult(CvRepealProposal* pProposal)
 	CvString sMessage = sMessageTemp.toUTF8();
 	sMessage += "[NEWLINE]" + pProposal->GetRepealDecision()->GetVotesAsText(this);
 
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		PlayerTypes eMember = it->ePlayer;
 		if (GET_PLAYER(eMember).isHuman())
@@ -5909,7 +6081,11 @@ void CvLeague::NotifyProposalResult(CvRepealProposal* pProposal)
 
 void CvLeague::NotifySessionSoon(int iTurnsLeft)
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		PlayerTypes eMember = it->ePlayer;
 		if (GET_PLAYER(eMember).isHuman())
@@ -6018,7 +6194,11 @@ void CvLeague::StartProject(LeagueProjectTypes eLeagueProject)
 
 void CvLeague::CheckProjectsProgress()
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ProjectList::iterator it = m_vProjects.begin(); it != m_vProjects.end(); ++it)
+#else
 	for (ProjectList::iterator it = m_vProjects.begin(); it != m_vProjects.end(); it++)
+#endif
 	{
 		if (IsProjectActive(it->eType) && !IsProjectComplete(it->eType))
 		{
@@ -6077,7 +6257,11 @@ void CvLeague::DoProjectRewards(LeagueProjectTypes eLeagueProject)
 	if (!pProjectInfo) return;
 
 	int iTopTierRecipients = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		PlayerTypes eMember = it->ePlayer;
 		if (GET_PLAYER(eMember).isAlive() && !GET_PLAYER(eMember).isMinorCiv())
@@ -6331,11 +6515,18 @@ void CvLeague::LogProposalResolved(CvRepealProposal* pProposal)
 CvLeague::Member* CvLeague::GetMember(PlayerTypes ePlayer)
 {
 	Member* pFound = NULL;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); ++it)
+#else
 	for (MemberList::iterator it = m_vMembers.begin(); it != m_vMembers.end(); it++)
+#endif
 	{
 		if (it->ePlayer == ePlayer)
 		{
 			pFound = it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			break;
+#endif
 		}
 	}
 	CvAssertMsg(pFound != NULL, "Could not retrieve member based on player ID. Please send Anton your save file and version.");
@@ -6345,11 +6536,18 @@ CvLeague::Member* CvLeague::GetMember(PlayerTypes ePlayer)
 CvLeague::Project* CvLeague::GetProject(LeagueProjectTypes eLeagueProject)
 {
 	Project* pFound = NULL;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ProjectList::iterator it = m_vProjects.begin(); it != m_vProjects.end(); ++it)
+#else
 	for (ProjectList::iterator it = m_vProjects.begin(); it != m_vProjects.end(); it++)
+#endif
 	{
 		if (it->eType == eLeagueProject)
 		{
 			pFound = it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			break;
+#endif
 		}
 	}
 	CvAssertMsg(pFound != NULL, "Could not retrieve project based on project type. Please send Anton your save file and version.");
@@ -6568,22 +6766,38 @@ FDataStream& operator<<(FDataStream& saveTo, const CvLeague& readFrom)
 	saveTo << readFrom.m_iTurnsUntilSession;
 	saveTo << readFrom.m_iNumResolutionsEverEnacted;
 	saveTo << readFrom.m_vEnactProposals.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (EnactProposalList::const_iterator it = readFrom.m_vEnactProposals.begin(); it != readFrom.m_vEnactProposals.end(); ++it)
+#else
 	for (EnactProposalList::const_iterator it = readFrom.m_vEnactProposals.begin(); it != readFrom.m_vEnactProposals.end(); it++)
+#endif
 	{
 		saveTo << *it;
 	}
 	saveTo << readFrom.m_vRepealProposals.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (RepealProposalList::const_iterator it = readFrom.m_vRepealProposals.begin(); it != readFrom.m_vRepealProposals.end(); ++it)
+#else
 	for (RepealProposalList::const_iterator it = readFrom.m_vRepealProposals.begin(); it != readFrom.m_vRepealProposals.end(); it++)
+#endif
 	{
 		saveTo << *it;
 	}
 	saveTo << readFrom.m_vActiveResolutions.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ActiveResolutionList::const_iterator it = readFrom.m_vActiveResolutions.begin(); it != readFrom.m_vActiveResolutions.end(); ++it)
+#else
 	for (ActiveResolutionList::const_iterator it = readFrom.m_vActiveResolutions.begin(); it != readFrom.m_vActiveResolutions.end(); it++)
+#endif
 	{
 		saveTo << *it;
 	}
 	saveTo << readFrom.m_vMembers.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (CvLeague::MemberList::const_iterator it = readFrom.m_vMembers.begin(); it != readFrom.m_vMembers.end(); ++it)
+#else
 	for (CvLeague::MemberList::const_iterator it = readFrom.m_vMembers.begin(); it != readFrom.m_vMembers.end(); it++)
+#endif
 	{
 		saveTo << it->ePlayer;
 		saveTo << it->iExtraVotes;
@@ -6597,11 +6811,19 @@ FDataStream& operator<<(FDataStream& saveTo, const CvLeague& readFrom)
 	}
 	saveTo << readFrom.m_eHost;
 	saveTo << readFrom.m_vProjects.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (CvLeague::ProjectList::const_iterator it = readFrom.m_vProjects.begin(); it != readFrom.m_vProjects.end(); ++it)
+#else
 	for (CvLeague::ProjectList::const_iterator it = readFrom.m_vProjects.begin(); it != readFrom.m_vProjects.end(); it++)
+#endif
 	{
 		saveTo << it->eType;
 		saveTo << it->vProductionList.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (CvLeague::ProjectProductionList::const_iterator innerIt = it->vProductionList.begin(); innerIt != it->vProductionList.end(); ++innerIt)
+#else
 		for (CvLeague::ProjectProductionList::const_iterator innerIt = it->vProductionList.begin(); innerIt != it->vProductionList.end(); innerIt++)
+#endif
 		{
 			saveTo << *innerIt;
 		}
@@ -6614,12 +6836,20 @@ FDataStream& operator<<(FDataStream& saveTo, const CvLeague& readFrom)
 	saveTo << readFrom.m_eLastSpecialSession;
 	saveTo << readFrom.m_eCurrentSpecialSession;
 	saveTo << readFrom.m_vEnactProposalsOnHold.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (EnactProposalList::const_iterator it = readFrom.m_vEnactProposalsOnHold.begin(); it != readFrom.m_vEnactProposalsOnHold.end(); it++)
+#else
 	for (EnactProposalList::const_iterator it = readFrom.m_vEnactProposalsOnHold.begin(); it != readFrom.m_vEnactProposalsOnHold.end(); ++it)
+#endif
 	{
 		saveTo << *it;
 	}
 	saveTo << readFrom.m_vRepealProposalsOnHold.size();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (RepealProposalList::const_iterator it = readFrom.m_vRepealProposalsOnHold.begin(); it != readFrom.m_vRepealProposalsOnHold.end(); it++)
+#else
 	for (RepealProposalList::const_iterator it = readFrom.m_vRepealProposalsOnHold.begin(); it != readFrom.m_vRepealProposalsOnHold.end(); ++it)
+#endif
 	{
 		saveTo << *it;
 	}
@@ -6657,6 +6887,9 @@ void CvGameLeagues::DoTurn()
 		// Not yet founded - is it time to start?
 		if (GetNumActiveLeagues() == 0)
 		{
+#ifdef AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+			FStaticVector<PlayerTypes, MAX_MAJOR_CIVS, true> vePossibleFounders;
+#endif
 			// Has any living major civ met every other living major civ?
 			for (int iCiv = 0; iCiv < MAX_MAJOR_CIVS; iCiv++)
 			{
@@ -6683,12 +6916,22 @@ void CvGameLeagues::DoTurn()
 
 						if (bMetEveryone && GC.getGame().countMajorCivsAlive() > 1)
 						{
+#ifdef AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+							vePossibleFounders.push_back(eCiv);
+#else
 							FoundLeague(eCiv);
 							break;
+#endif
 						}
 					}
 				}
 			}
+#ifdef AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+			if (vePossibleFounders.size() > 0)
+			{
+				FoundLeague(vePossibleFounders.at(uint(GC.getGame().getJonRandNum(int(vePossibleFounders.size()), NULL))));
+			}
+#endif
 		}
 		// Already founded - do we want to trigger a special session, or just a normal turn?
 		else
@@ -6697,7 +6940,11 @@ void CvGameLeagues::DoTurn()
 			LeagueSpecialSessionTypes eSpecialSession = NO_LEAGUE_SPECIAL_SESSION;
 			if (eGameEra > GetLastEraTrigger())
 			{
+#ifdef AUI_WARNING_FIXES
+				for (uint i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#else
 				for (int i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#endif
 				{
 					CvLeagueSpecialSessionEntry* pInfo = GC.getLeagueSpecialSessionInfo((LeagueSpecialSessionTypes)i);
 					if (pInfo != NULL)
@@ -6762,7 +7009,11 @@ void CvGameLeagues::DoPlayerTurn(CvPlayer& kPlayer)
 	if (!GC.getGame().isOption(GAMEOPTION_NO_LEAGUES))
 	{
 		AI_PERF_FORMAT("AI-perf.csv", ("CvGameLeagues::DoPlayerTurn, Turn %03d, %s", GC.getGame().getElapsedGameTurns(), kPlayer.getCivilizationShortDescription()) );
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 		for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 		{
 			if (it->IsMember(kPlayer.GetID()))
 			{
@@ -6857,7 +7108,11 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 			// Find which game era trigger this league begins at (must match with a special session)
 			EraTypes eEarliestEraTrigger = NO_ERA;
 			EraTypes eLatestEraTrigger = NO_ERA;
+#ifdef AUI_WARNING_FIXES
+			for (uint i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#else
 			for (int i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#endif
 			{
 				CvLeagueSpecialSessionEntry* pInfo = GC.getLeagueSpecialSessionInfo((LeagueSpecialSessionTypes)i);
 				if (pInfo != NULL)
@@ -6879,7 +7134,11 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 			// Find which special session info this league begins at
 			LeagueSpecialSessionTypes eGoverningSpecialSession = NO_LEAGUE_SPECIAL_SESSION;
 			bool bBeginAsUnitedNations = false;
+#ifdef AUI_WARNING_FIXES
+			for (uint i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#else
 			for (int i = 0; i < GC.getNumLeagueSpecialSessionInfos(); i++)
+#endif
 			{
 				LeagueSpecialSessionTypes e = (LeagueSpecialSessionTypes)i;
 				CvLeagueSpecialSessionEntry* pInfo = GC.getLeagueSpecialSessionInfo(e);
@@ -6926,7 +7185,11 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 void CvGameLeagues::DoPlayerAliveStatusChanged(PlayerTypes ePlayer)
 {
 	bool bAlive = GET_PLAYER(ePlayer).isAlive();
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (!bAlive && it->IsMember(ePlayer))
 		{
@@ -6968,11 +7231,18 @@ void CvGameLeagues::SetLastEraTrigger(EraTypes eEraTrigger)
 CvLeague* CvGameLeagues::GetLeague(LeagueTypes eLeague)
 {
 	CvLeague* pLeague = NULL;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->GetID() == eLeague)
 		{
 			pLeague = it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			break;
+#endif
 		}
 	}
 	CvAssertMsg(pLeague != NULL, "CvLeague is NULL. Please send Anton your save file and version.");
@@ -6982,9 +7252,16 @@ CvLeague* CvGameLeagues::GetLeague(LeagueTypes eLeague)
 CvLeague* CvGameLeagues::GetActiveLeague()
 {
 	CvLeague* pLeague = NULL;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		pLeague = it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		break;
+#endif
 	}
 	CvAssertMsg(GetNumActiveLeagues() == 0 || GetNumActiveLeagues() == 1, "Unexpected number of active leagues. Please send Anton your save file and version.");
 	return pLeague;
@@ -6997,7 +7274,11 @@ int CvGameLeagues::GenerateResolutionUniqueID()
 
 bool CvGameLeagues::CanContributeToLeagueProject(PlayerTypes ePlayer, LeagueProjectTypes eLeagueProject)
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->CanMemberContribute(ePlayer, eLeagueProject))
 		{
@@ -7010,7 +7291,11 @@ bool CvGameLeagues::CanContributeToLeagueProject(PlayerTypes ePlayer, LeagueProj
 void CvGameLeagues::DoLeagueProjectContribution(PlayerTypes ePlayer, LeagueProjectTypes eLeagueProject, int iValue)
 {
 	int iMatches = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->CanMemberContribute(ePlayer, eLeagueProject))
 		{
@@ -7039,7 +7324,11 @@ void CvGameLeagues::SetDiplomaticVictor(PlayerTypes ePlayer)
 
 bool CvGameLeagues::IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient)
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->IsMember(eTrader))
 		{
@@ -7054,7 +7343,11 @@ bool CvGameLeagues::IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient
 
 bool CvGameLeagues::IsLuxuryHappinessBanned(PlayerTypes ePlayer, ResourceTypes eLuxury)
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7070,7 +7363,11 @@ bool CvGameLeagues::IsLuxuryHappinessBanned(PlayerTypes ePlayer, ResourceTypes e
 int CvGameLeagues::GetResearchMod(PlayerTypes ePlayer, TechTypes eTech)
 {
 	int iValue = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7087,7 +7384,11 @@ int CvGameLeagues::GetResearchMod(PlayerTypes ePlayer, TechTypes eTech)
 int CvGameLeagues::GetFeatureYieldChange(PlayerTypes ePlayer, FeatureTypes eFeature, YieldTypes eYield)
 {
 	int iValue = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7104,7 +7405,11 @@ int CvGameLeagues::GetFeatureYieldChange(PlayerTypes ePlayer, FeatureTypes eFeat
 int CvGameLeagues::GetWorldWonderYieldChange(PlayerTypes ePlayer, YieldTypes eYield)
 {
 	int iValue = 0;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7120,7 +7425,11 @@ int CvGameLeagues::GetWorldWonderYieldChange(PlayerTypes ePlayer, YieldTypes eYi
 
 bool CvGameLeagues::IsNoTrainingNuclearWeapons(PlayerTypes ePlayer)
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7766,7 +8075,11 @@ void CvLeagueAI::CancelVoteCommitmentsToPlayer(PlayerTypes eToPlayer)
 		if (it->eToPlayer == eToPlayer)
 		{
 			m_vVoteCommitmentList.erase(it);
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			--it;
+#else
 			it--;
+#endif
 		}
 	}
 }
@@ -7810,7 +8123,11 @@ void CvLeagueAI::DoVoteCommitments(CvLeague* pLeague)
 		if (bProcessed)
 		{
 			m_vVoteCommitmentList.erase(it);
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+			--it;
+#else
 			it--;
+#endif
 		}
 	}
 }
@@ -7864,20 +8181,32 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int
 }
 
 // How much do we like an enact proposal, so that we can give a hint to the player making proposals?
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes eProposer, ResolutionTypes eResolution, int iProposerChoice)
+#else
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes /*eProposer*/, ResolutionTypes eResolution, int iProposerChoice)
+#endif
 {
 	CvAssert(pLeague);
 	if (!pLeague)
 	{
 		return DESIRE_NEUTRAL;
 	}
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+	DesireLevels eDesire = EvaluateDesire(ScoreProposal(pLeague, eResolution, iProposerChoice, eProposer));
+#else
 	DesireLevels eDesire = EvaluateDesire(ScoreProposal(pLeague, eResolution, iProposerChoice));
+#endif
 
 	return eDesire;
 }
 
 // How much do we like a repeal proposal, so that we can give a hint to the player making proposals?
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes eProposer, int iTargetResolutionID)
+#else
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes /*eProposer*/, int iTargetResolutionID)
+#endif
 {
 	CvAssert(pLeague);
 	if (!pLeague)
@@ -7892,7 +8221,11 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeag
 	{
 		if (it->GetID() == iTargetResolutionID)
 		{
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+			eDesire = EvaluateDesire(ScoreProposal(pLeague, it, eProposer));
+#else
 			eDesire = EvaluateDesire(ScoreProposal(pLeague, it));
+#endif
 			bFound = true;
 			break;
 		}
@@ -8743,6 +9076,13 @@ int CvLeagueAI::ScoreVoteChoice(CvRepealProposal* pProposal, int iChoice)
 	{
 	case RESOLUTION_DECISION_REPEAL:
 		{
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+			if (pProposal->GetType() == RESOLUTION_DECISION_ANY_MEMBER ||
+				pProposal->GetType() == RESOLUTION_DECISION_MAJOR_CIV_MEMBER ||
+				pProposal->GetType() == RESOLUTION_DECISION_OTHER_MAJOR_CIV_MEMBER)
+				iScore = ScoreVoteChoicePlayer(pProposal, iChoice, /*bEnact*/ false);
+			else
+#endif
 			iScore = ScoreVoteChoiceYesNo(pProposal, iChoice, /*bEnact*/ false);
 			break;
 		}
@@ -9236,6 +9576,7 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 		CvAssertMsg(eTargetReligion != NO_RELIGION, "Evaluating World Religion for NO_RELIGION. Please send Anton your save file and version.");
 		bool bFoundedReligion = GetPlayer()->GetReligions()->GetReligionCreatedByPlayer() == eTargetReligion;
 		bool bMajorityReligion = GetPlayer()->GetReligions()->HasReligionInMostCities(eTargetReligion);
+#ifndef AUI_VOTING_TWEAKED_WORLD_RELIGION
 		if (bMajorityReligion)
 		{
 			iScore += 40;
@@ -9248,6 +9589,7 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 		{
 			iScore += -30;
 		}
+#endif
 
 		const CvReligion* pkTargetReligion = GC.getGame().GetGameReligions()->GetReligion(eTargetReligion, GetPlayer()->GetID());
 		CvAssertMsg(pkTargetReligion, "Evaluating World Religion for an invalid religion. Please send Anton your save file and version.");
@@ -9265,6 +9607,20 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 						iScore += 30;
 					}
 				}
+#ifdef AUI_VOTING_TWEAKED_WORLD_RELIGION
+				else
+				{
+					// Don't let someone going for culture or diplomacy get away with a world religion easily
+					if (GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategyConfidence(pHolyCity->getOwner()) > GUESS_CONFIDENCE_UNSURE &&
+						GC.getInfoTypeForString("AIGRANDSTRATEGY_CULTURE") == GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategy(pHolyCity->getOwner()))
+					{
+						iScore -= 40;
+					}
+					if (pHolyCity && GC.getGame().GetGameLeagues()->GetActiveLeague()->CalculateStartingVotesForMember(pHolyCity->getOwner()) >
+						GC.getGame().GetGameLeagues()->GetActiveLeague()->CalculateStartingVotesForMember(GetPlayer()->GetID()))
+						bMajorityReligion = false;
+				}
+#endif
 			}
 		}
 
@@ -9274,8 +9630,30 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 		}
 		else if (GetPlayer()->GetReligions()->GetReligionCreatedByPlayer() != NO_RELIGION && GetPlayer()->GetReligions()->GetReligionCreatedByPlayer() != eTargetReligion)
 		{
+#ifdef AUI_VOTING_TWEAKED_WORLD_RELIGION
+			bMajorityReligion = false;
+#endif
 			iScore += -20;
 		}
+
+#ifdef AUI_VOTING_TWEAKED_WORLD_RELIGION
+		if (bMajorityReligion)
+		{
+#ifdef AUI_GS_PRIORITY_RATIO
+			dScore += 40 + 20 * dDiploVictoryRatio;
+#else
+			iScore += 40;
+			if (bSeekingDiploVictory)
+			{
+				iScore += 20;
+			}
+#endif
+		}
+		else
+		{
+			iScore += -30;
+		}
+#endif
 	}
 	// World Ideology
 	if (pProposal->GetEffects()->iVotesForFollowingIdeology != 0 ||
@@ -9283,6 +9661,72 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 	{
 		CvAssertMsg(eTargetIdeology != NO_POLICY_BRANCH_TYPE, "Evaluating World Ideology for NO_POLICY_BRANCH_TYPE. Please send Anton your save file and version.");
 		PolicyBranchTypes eOurIdeology = GetPlayer()->GetPlayerPolicies()->GetLateGamePolicyTree();
+#ifdef AUI_VOTING_TWEAKED_WORLD_IDEOLOGY
+		int iPublicOpinionUnhappiness = GetPlayer()->GetCulture()->GetPublicOpinionType();
+		if (eOurIdeology != NO_POLICY_BRANCH_TYPE)
+		{
+			if (eOurIdeology == eTargetIdeology)
+			{
+#ifdef AUI_GS_PRIORITY_RATIO
+				dScore += 50 + 25 * dDiploVictoryRatio + 25 * iPublicOpinionUnhappiness;
+#else
+				iScore += 50 + 25 * iPublicOpinionUnhappiness;
+				if (bSeekingDiploVictory)
+				{
+					iScore += 25;
+				}
+#endif
+			}
+			else
+			{
+#ifdef AUI_GS_PRIORITY_RATIO
+				dScore += -50 - 25 * dDiploVictoryRatio - 25 * (iPublicOpinionUnhappiness + 1);
+#else
+				iScore += -50 - 25 * (iPublicOpinionUnhappiness + 1);
+				if (bSeekingDiploVictory)
+				{
+					iScore += -25;
+				}
+#endif
+			}
+		}
+		else
+		{
+			int iPressure = 0;
+			int iCivCount = 1;
+			int iWithoutIdeologyCount = 1;
+			// Look at each civ
+			for (int iLoopPlayer = 0; iLoopPlayer < MAX_MAJOR_CIVS; iLoopPlayer++)
+			{
+				CvPlayer &kPlayer = GET_PLAYER((PlayerTypes)iLoopPlayer);
+				if (iLoopPlayer != m_pPlayer->GetID() && kPlayer.isAlive() && !kPlayer.isMinorCiv())
+				{
+					iCivCount++;
+					PolicyBranchTypes eOtherCivIdeology = kPlayer.GetPlayerPolicies()->GetLateGamePolicyTree();
+					if (eOtherCivIdeology != NO_POLICY_BRANCH_TYPE)
+					{
+						int iCulturalDominanceOverUs = kPlayer.GetCulture()->GetInfluenceLevel(m_pPlayer->GetID()) - m_pPlayer->GetCulture()->GetInfluenceLevel((PlayerTypes)iLoopPlayer);
+						if (iCulturalDominanceOverUs > 0)
+						{
+							if (eOtherCivIdeology == eTargetIdeology)
+							{
+								iPressure += iCulturalDominanceOverUs;
+							}
+							else
+							{
+								iPressure -= iCulturalDominanceOverUs;
+							}
+						}
+					}
+					else
+					{
+						iWithoutIdeologyCount++;
+					}
+				}
+			}
+			iScore += MAX(-50, MIN(50, 10 * iPressure * iWithoutIdeologyCount / iCivCount));
+		}
+#else
 		bool bPublicOpinionUnhappiness = GetPlayer()->GetCulture()->GetPublicOpinionUnhappiness() > 0;
 		if (eOurIdeology != NO_POLICY_BRANCH_TYPE)
 		{
@@ -9311,6 +9755,7 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 				}
 			}
 		}
+#endif
 	}
 	// Arts Funding
 	if (pProposal->GetEffects()->iArtsyGreatPersonRateMod > 0 ||
@@ -9410,13 +9855,42 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 
 	// == Alignment with Proposer ==
 	PlayerTypes eProposer = pProposal->GetProposalPlayer();
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+	if (eProposer != NO_PLAYER)
+	{
+		int iProposerBoost = 0;
+#else
 	if (iScore > -20 || eProposer == GetPlayer()->GetID())
 	{
 		if (eProposer != NO_PLAYER)
+#endif
 		{
 			AlignmentLevels eAlignment = EvaluateAlignment(eProposer);
 			switch (eAlignment)
 			{
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+				// Note: ALIGNMENT_SELF stays 0
+			case ALIGNMENT_LIBERATOR:
+			case ALIGNMENT_LEADER:
+			case ALIGNMENT_ALLY:
+				iProposerBoost = 40;
+				break;
+			case ALIGNMENT_CONFIDANT:
+				iProposerBoost = 20;
+				break;
+			case ALIGNMENT_FRIEND:
+				iProposerBoost = 10;
+				break;
+			case ALIGNMENT_RIVAL:
+				iProposerBoost = -10;
+				break;
+			case ALIGNMENT_HATRED:
+				iProposerBoost = -20;
+				break;
+			case ALIGNMENT_ENEMY:
+			case ALIGNMENT_WAR:
+				iProposerBoost = -40;
+#else
 			case ALIGNMENT_SELF:
 				iScore += 40;
 				break;
@@ -9440,14 +9914,26 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 			case ALIGNMENT_ENEMY:
 			case ALIGNMENT_WAR:
 				iScore += -30;
+#endif
 				break;
 			default:
 				break;
 			}
 		}
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+		if (iScore + iProposerBoost > 20)
+			iProposerBoost = 20 - iScore;
+		else if (iScore + iProposerBoost < -20)
+			iProposerBoost = -20 - iScore;
+		iScore += iProposerBoost;
+#endif
 	}
 
 	// == Post-Processing ==
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+	if ((iChoice == LeagueHelpers::CHOICE_NO) == bEnact)
+		iScore *= -1;
+#else
 	if (iChoice == LeagueHelpers::CHOICE_NO)
 	{
 		iScore *= -1; // Flip the score when we are considering NO for these effects
@@ -9456,6 +9942,7 @@ int CvLeagueAI::ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bE
 	{
 		iScore *= -1; // Flip the score when the proposal is to repeal these effects
 	}
+#endif
 
 	return iScore;
 }
@@ -9465,8 +9952,10 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 {
 	CvAssert(pProposal != NULL);
 	if (!(pProposal != NULL)) return 0;
+#ifndef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
 	CvAssertMsg(bEnact, "Unexpected case when evaluating vote choices for AI. Please send Anton your save file and version.");
 	if (!bEnact) return 0;
+#endif
 	PlayerTypes eChoicePlayer = (PlayerTypes) iChoice;
 	CvAssert(eChoicePlayer != NO_PLAYER);
 	if (!(eChoicePlayer != NO_PLAYER)) return 0;
@@ -9478,8 +9967,31 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 	int iScore = 0;
 
 	// == Grand Strategy and other factors ==
+#ifndef AUI_GS_PRIORITY_RATIO
 	AIGrandStrategyTypes eGrandStrategy = GetPlayer()->GetGrandStrategyAI()->GetActiveGrandStrategy();
 	bool bSeekingDiploVictory = eGrandStrategy == GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS");
+#endif
+
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+	CvWeightedVector<PlayerTypes, MAX_MAJOR_CIVS, true> vLeagueVoteCounts;
+	for (int iLoopPlayer = 0; iLoopPlayer < MAX_MAJOR_CIVS; iLoopPlayer++)
+	{
+		if (pLeague->CanEverVote((PlayerTypes)iLoopPlayer))
+		{
+			vLeagueVoteCounts.push_back((PlayerTypes)iLoopPlayer, pLeague->CalculateStartingVotesForMember((PlayerTypes)iLoopPlayer));
+		}
+	}
+	vLeagueVoteCounts.SortItems();
+	int iVotesGainedOnFail = 0;
+	CvResolutionEntry* pInfo = GC.getResolutionInfo(pProposal->GetType());
+	if (pInfo)
+		iVotesGainedOnFail = pInfo->GetLeadersVoteBonusOnFail();
+	int iScoreForWinner = 0;
+	if (vLeagueVoteCounts.GetElement(0) != eChoicePlayer)
+	{
+		iScoreForWinner = MIN(0, ScoreVoteChoicePlayer(pProposal, vLeagueVoteCounts.GetElement(0), bEnact));
+	}
+#endif
 
 	// == Diplomatic Victory ==
 	if (pProposal->GetEffects()->bDiplomaticVictory)
@@ -9488,14 +10000,44 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 		if (eAlignment == ALIGNMENT_LIBERATOR)
 		{
 			iScore += 200;
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			iScore += -iScoreForWinner;
+			if (GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategy(eChoicePlayer) == (AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS"))
+			{
+				iScore += 100 * (1 + GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategyConfidence(eChoicePlayer)) / (1 + GUESS_CONFIDENCE_POSITIVE);
+			}
+#endif
 		}
 		else if (eAlignment == ALIGNMENT_LEADER)
 		{
 			iScore += 150;
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			iScore += -iScoreForWinner;
+#ifdef AUI_GS_PRIORITY_RATIO
+			iScore += int(100 * GetPlayer()->GetGrandStrategyAI()->GetGrandStrategyPriorityRatio((AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS")) + 0.5);
+#else
+			if (bSeekingDiploVictory)
+			{
+				iScore += 100;
+			}
+#endif
+#endif
 		}
 		else if (eAlignment == ALIGNMENT_SELF)
 		{
 			iScore += 100;
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			iScore += -iScoreForWinner;
+#ifdef AUI_GS_PRIORITY_RATIO
+			iScore += int(100 * GetPlayer()->GetGrandStrategyAI()->GetGrandStrategyPriorityRatio((AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS")) + 0.5);
+#else
+			if (bSeekingDiploVictory)
+			{
+				iScore += 100;
+			}
+#endif
+			iScore = iScore * (pLeague->CalculateStartingVotesForMember(eChoicePlayer) + iVotesGainedOnFail) / (vLeagueVoteCounts.GetWeight(1) + iVotesGainedOnFail);
+#endif
 		}
 		else if (eAlignment == ALIGNMENT_WAR)
 		{
@@ -9503,6 +10045,9 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 		}
 		else
 		{
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			iScore += -iScoreForWinner;
+#else
 			iScore += -50;
 
 			if (bSeekingDiploVictory)
@@ -9516,6 +10061,7 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 			{
 				iScore += -150;
 			}
+#endif
 			
 			switch (eAlignment)
 			{
@@ -9540,6 +10086,26 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 			default:
 				break;
 			}
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			if (GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategy(eChoicePlayer) == (AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS"))
+			{
+#ifdef AUI_GS_PRIORITY_RATIO
+				iScore -= int(100 * (1.0 + GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategyConfidence(eChoicePlayer)) / (1 + GUESS_CONFIDENCE_POSITIVE)
+					* GetPlayer()->GetGrandStrategyAI()->GetGrandStrategyPriorityRatio((AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS")) + 0.5);
+#else
+				iScore -= 100 * (1 + GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategyConfidence(eChoicePlayer)) / (1 + GUESS_CONFIDENCE_POSITIVE)
+					/ (bSeekingDiploVictory ? 1 : 10);
+#endif
+			}
+			if (pLeague->CalculateStartingVotesForMember(GetPlayer()->GetID()) >= vLeagueVoteCounts.GetWeight(0))
+			{
+				iScore = MIN(0, iScore);
+			}
+			iScore = int(iScore * (vLeagueVoteCounts.GetWeight(1) + iVotesGainedOnFail) / double(pLeague->CalculateStartingVotesForMember(eChoicePlayer) + iVotesGainedOnFail) *
+				pow(3.0, 1.0 - double(pLeague->CalculateStartingVotesForMember(GetPlayer()->GetID()) + pLeague->CalculateStartingVotesForMember(GetPlayer()->GetID())) /
+				double(pLeague->CalculateStartingVotesForMember(eChoicePlayer) + pLeague->CalculateStartingVotesForMember(GetPlayer()->GetID()))) + 0.5);
+			iScore = MIN(MAX(iScore, -500), 300);
+#endif
 		}
 	}
 
@@ -9551,14 +10117,47 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 		if (eAlignment == ALIGNMENT_LIBERATOR)
 		{
 			iScore += 200;
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			iScore += -iScoreForWinner;
+			if (GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategy(eChoicePlayer) == (AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS"))
+			{
+				iScore += 100 * (1 + GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategyConfidence(eChoicePlayer)) / (1 + GUESS_CONFIDENCE_POSITIVE);
+			}
+#endif
 		}
 		else if (eAlignment == ALIGNMENT_SELF)
 		{
 			iScore += 100;
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			iScore += -iScoreForWinner;
+			if (pLeague->IsUnitedNations())
+			{
+#ifdef AUI_GS_PRIORITY_RATIO
+				iScore += int(100 * GetPlayer()->GetGrandStrategyAI()->GetGrandStrategyPriorityRatio((AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS")) + 0.5);
+#else
+				if (bSeekingDiploVictory)
+				{
+					iScore += 100;
+				}
+#endif
+			}
+			iScore = iScore * (pLeague->CalculateStartingVotesForMember(eChoicePlayer) + iVotesGainedOnFail) / (vLeagueVoteCounts.GetWeight(0) + iVotesGainedOnFail);
+#endif
 		}
 		else if (eAlignment == ALIGNMENT_LEADER)
 		{
 			iScore += 50;
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			iScore += -iScoreForWinner;
+#ifdef AUI_GS_PRIORITY_RATIO
+			iScore += int(100 * GetPlayer()->GetGrandStrategyAI()->GetGrandStrategyPriorityRatio((AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS")) + 0.5);
+#else
+			if (bSeekingDiploVictory)
+			{
+				iScore += 100;
+			}
+#endif
+#endif
 		}
 		else if (eAlignment == ALIGNMENT_WAR)
 		{
@@ -9566,10 +10165,16 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 		}
 		else
 		{
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			iScore += -iScoreForWinner;
+#elif defined(AUI_GS_PRIORITY_RATIO)
+			iScore += -int(150 * GetPlayer()->GetGrandStrategyAI()->GetGrandStrategyPriorityRatio((AIGrandStrategyTypes)GC.getInfoTypeForString("AIGRANDSTRATEGY_UNITED_NATIONS")) + 0.5);
+#else
 			if (bSeekingDiploVictory)
 			{
 				iScore += -150;
 			}
+#endif
 
 			switch (eAlignment)
 			{
@@ -9594,8 +10199,23 @@ int CvLeagueAI::ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool b
 			default:
 				break;
 			}
+#ifdef AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+			if (pLeague->CalculateStartingVotesForMember(GetPlayer()->GetID()) >= vLeagueVoteCounts.GetWeight(0))
+			{
+				iScore = MIN(0, iScore);
+			}
+			iScore = int(iScore * (vLeagueVoteCounts.GetWeight(0) + iVotesGainedOnFail) / double(pLeague->CalculateStartingVotesForMember(eChoicePlayer) + iVotesGainedOnFail) *
+				pow(3.0, 1.0 - double(pLeague->CalculateStartingVotesForMember(GetPlayer()->GetID()) + pLeague->CalculateStartingVotesForMember(GetPlayer()->GetID())) /
+					double(pLeague->CalculateStartingVotesForMember(eChoicePlayer) + pLeague->CalculateStartingVotesForMember(GetPlayer()->GetID()))) + 0.5);
+			iScore = MIN(MAX(iScore, -500), 300);
+#endif
 		}
 	}
+
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+	if (!bEnact)
+		iScore *= -1;
+#endif
 
 	return iScore;
 }
@@ -9615,7 +10235,11 @@ void CvLeagueAI::AllocateProposals(CvLeague* pLeague)
 			if (pLeague->CanProposeRepeal(iID, GetPlayer()->GetID()))
 			{
 				ProposalConsideration consideration(/*bEnact*/ false, iResolutionIndex, LeagueHelpers::CHOICE_NONE);
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+				int iScore = ScoreProposal(pLeague, &vActive[iResolutionIndex], GetPlayer()->GetID());
+#else
 				int iScore = ScoreProposal(pLeague, &vActive[iResolutionIndex]);
+#endif
 				vConsiderations.push_back(consideration, iScore);
 			}
 		}
@@ -9635,7 +10259,11 @@ void CvLeagueAI::AllocateProposals(CvLeague* pLeague)
 					if (pLeague->CanProposeEnact(eResolution, GetPlayer()->GetID(), LeagueHelpers::CHOICE_NONE))
 					{
 						ProposalConsideration consideration(/*bEnact*/ true, iResolutionIndex, LeagueHelpers::CHOICE_NONE);
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+						int iScore = ScoreProposal(pLeague, eResolution, LeagueHelpers::CHOICE_NONE, GetPlayer()->GetID());
+#else
 						int iScore = ScoreProposal(pLeague, eResolution, LeagueHelpers::CHOICE_NONE);
+#endif
 						vConsiderations.push_back(consideration, iScore);
 					}
 				}
@@ -9647,7 +10275,11 @@ void CvLeagueAI::AllocateProposals(CvLeague* pLeague)
 						if (pLeague->CanProposeEnact(eResolution, GetPlayer()->GetID(), iChoice))
 						{
 							ProposalConsideration consideration(/*bEnact*/ true, iResolutionIndex, iChoice);
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+							int iScore = ScoreProposal(pLeague, eResolution, iChoice, GetPlayer()->GetID());
+#else
 							int iScore = ScoreProposal(pLeague, eResolution, iChoice);
+#endif
 							vConsiderations.push_back(consideration, iScore);
 						}
 					}
@@ -9686,9 +10318,15 @@ void CvLeagueAI::AllocateProposals(CvLeague* pLeague)
 	}
 }
 
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+int CvLeagueAI::ScoreProposal(CvLeague* pLeague, ResolutionTypes eResolution, int iChoice, PlayerTypes eProposalPlayer)
+{
+	CvEnactProposal fakeProposal(/*iID*/-1, eResolution, pLeague->GetID(), eProposalPlayer, iChoice);
+#else
 int CvLeagueAI::ScoreProposal(CvLeague* pLeague, ResolutionTypes eResolution, int iChoice)
 {
 	CvEnactProposal fakeProposal(/*iID*/-1, eResolution, pLeague->GetID(), /*eProposalPlayer*/NO_PLAYER, iChoice);
+#endif
 
 	// How much do we like our YES vote on this proposal?
 	int iYesScore = 0;
@@ -9708,14 +10346,27 @@ int CvLeagueAI::ScoreProposal(CvLeague* pLeague, ResolutionTypes eResolution, in
 			}
 		}
 	}
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+	else if (eVoteDecision == RESOLUTION_DECISION_ANY_MEMBER || eVoteDecision == RESOLUTION_DECISION_MAJOR_CIV_MEMBER || eVoteDecision == RESOLUTION_DECISION_OTHER_MAJOR_CIV_MEMBER)
+	{
+		bFoundYes = true;
+		iYesScore = ScoreVoteChoice(&fakeProposal, iChoice);
+	}
+#endif
 	CvAssert(bFoundYes);
 
 	return iYesScore;
 }
 
+#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
+int CvLeagueAI::ScoreProposal(CvLeague* pLeague, CvActiveResolution* pResolution, PlayerTypes eProposalPlayer)
+{
+	CvRepealProposal fakeProposal(pResolution, eProposalPlayer);
+#else
 int CvLeagueAI::ScoreProposal(CvLeague* pLeague, CvActiveResolution* pResolution)
 {
 	CvRepealProposal fakeProposal(pResolution, /*eProposalPlayer*/NO_PLAYER);
+#endif
 
 	// How much do we like our YES vote on this proposal?
 	int iYesScore = 0;

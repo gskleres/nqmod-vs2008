@@ -225,6 +225,9 @@ public:
 	int GetImprovementYieldChanges(int i, int j) const;
 	int GetBuildingClassYieldModifiers(int i, int j) const;
 	int GetBuildingClassYieldChanges(int i, int j) const;
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+	int GetBuildingClassFlavorChanges(int i, int j) const;
+#endif
 	int GetFlavorValue(int i) const;
 
 	bool IsOneShot() const;
@@ -421,6 +424,9 @@ private:
 //	bool* m_pabHurry;
 	bool* m_pabSpecialistValid;
 	int** m_ppiImprovementYieldChanges;
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+	int** m_ppiBuildingClassFlavorChanges;
+#endif
 	int** m_ppiBuildingClassYieldModifiers;
 	int** m_ppiBuildingClassYieldChanges;
 	int* m_piFlavorValue;
@@ -493,15 +499,25 @@ public:
 
 	// Policy functions
 	std::vector<CvPolicyEntry*>& GetPolicyEntries();
+#ifdef AUI_WARNING_FIXES
+	uint GetNumPolicies() const;
+	CvPolicyEntry* GetPolicyEntry(uint index);
+#else
 	int GetNumPolicies();
 	CvPolicyEntry* GetPolicyEntry(int index);
+#endif
 
 	void DeletePoliciesArray();
 
 	// Policy Branch functions
 	std::vector<CvPolicyBranchEntry*>& GetPolicyBranchEntries();
+#ifdef AUI_WARNING_FIXES
+	uint GetNumPolicyBranches() const;
+	_Ret_maybenull_ CvPolicyBranchEntry* GetPolicyBranchEntry(uint index);
+#else
 	int GetNumPolicyBranches();
 	_Ret_maybenull_ CvPolicyBranchEntry* GetPolicyBranchEntry(int index);
+#endif
 
 	void DeletePolicyBranchesArray();
 

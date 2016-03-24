@@ -100,9 +100,13 @@ public:
 
 	DestructionNotification<UnitHandle>& getDestructionNotification();
 
+#ifdef AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
+	void init(int iID, UnitTypes eUnit, UnitAITypes eUnitAI, PlayerTypes eOwner, int iX, int iY, DirectionTypes eFacingDirection, bool bNoMove, bool bSetupGraphical = true, int iMapLayer = DEFAULT_UNIT_MAP_LAYER, int iNumGoodyHutsPopped = 0, bool bIsGifted = false);
+	void initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitAITypes eUnitAI, PlayerTypes eOwner, int iX, int iY, DirectionTypes eFacingDirection, bool bNoMove, bool bSetupGraphical = true, int iMapLayer = DEFAULT_UNIT_MAP_LAYER, int iNumGoodyHutsPopped = 0, bool bIsGifted = false);
+#else
 	void init(int iID, UnitTypes eUnit, UnitAITypes eUnitAI, PlayerTypes eOwner, int iX, int iY, DirectionTypes eFacingDirection, bool bNoMove, bool bSetupGraphical=true, int iMapLayer = DEFAULT_UNIT_MAP_LAYER, int iNumGoodyHutsPopped = 0);
 	void initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitAITypes eUnitAI, PlayerTypes eOwner, int iX, int iY, DirectionTypes eFacingDirection, bool bNoMove, bool bSetupGraphical=true, int iMapLayer = DEFAULT_UNIT_MAP_LAYER, int iNumGoodyHutsPopped = 0);
-
+#endif
 	
 	void uninit();
 
@@ -159,9 +163,23 @@ public:
 	TeamTypes GetDeclareWarMove(const CvPlot& pPlot) const;
 	PlayerTypes GetBullyMinorMove(const CvPlot* pPlot) const;
 	TeamTypes GetDeclareWarRangeStrike(const CvPlot& pPlot) const;
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+	bool canMoveInto(const CvPlot& pPlot, byte bMoveFlags = 0, bool bCanEnterTerrain = false, bool bIsPrecalcCanEnterTerrain = false) const;
+	bool canMoveOrAttackInto(const CvPlot& pPlot, byte bMoveFlags = 0, bool bCanEnterTerrain = false, bool bIsPrecalcCanEnterTerrain = false) const;
+	bool canMoveThrough(const CvPlot& pPlot, byte bMoveFlags = 0, bool bCanEnterTerrain = false, bool bIsPrecalcCanEnterTerrain = false) const;
+#else
 	bool canMoveInto(const CvPlot& pPlot, byte bMoveFlags = 0) const;
 	bool canMoveOrAttackInto(const CvPlot& pPlot, byte bMoveFlags = 0) const;
 	bool canMoveThrough(const CvPlot& pPlot, byte bMoveFlags = 0) const;
+#endif
+#ifdef AUI_UNIT_FIX_CAN_MOVE_OR_ATTACK_INTO_NO_DUPLICATE_CALLS
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+	bool canMoveOrAttackIntoCommon(const CvPlot& plot, byte bMoveFlags = 0, bool bCanEnterTerrain = false, bool bIsPrecalcCanEnterTerrain = false) const;
+#else
+	bool canMoveOrAttackIntoCommon(const CvPlot& plot, byte bMoveFlags = 0) const;
+#endif
+	bool canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags = 0) const;
+#endif
 
 	bool IsAngerFreeUnit() const;
 
@@ -1148,7 +1166,11 @@ public:
 	void ClearMissionQueue(int iUnitCycleTimer = 1);
 	int GetLengthMissionQueue() const;
 	const MissionData* GetHeadMissionData();
+#ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+	const MissionData* GetMissionData(unsigned int iIndex);
+#else
 	const MissionData* GetMissionData(int iIndex);
+#endif
 	CvPlot* GetMissionAIPlot();
 	MissionAITypes GetMissionAIType();
 	void SetMissionAI(MissionAITypes eNewMissionAI, CvPlot* pNewPlot, CvUnit* pNewUnit);
@@ -1236,6 +1258,23 @@ public:
 	std::string debugDump(const FAutoVariableBase&) const;
 	std::string stackTraceRemark(const FAutoVariableBase&) const;
 
+#ifdef AUI_SCOPE_FIXES
+#ifdef AUI_CONSTIFY
+	bool CanWithdrawFromMelee(const CvUnit& pAttacker) const;
+#else
+	bool CanWithdrawFromMelee(CvUnit& pAttacker);
+#endif
+	bool DoWithdrawFromMelee(CvUnit& pAttacker);
+
+	// these are do to a unit using Heavy Charge against you
+#ifdef AUI_CONSTIFY
+	bool CanFallBackFromMelee(const CvUnit& pAttacker) const;
+#else
+	bool CanFallBackFromMelee(CvUnit& pAttacker);
+#endif
+	bool DoFallBackFromMelee(CvUnit& pAttacker);
+#endif
+
 protected:
 	const MissionQueueNode* HeadMissionQueueNode() const;
 	MissionQueueNode* HeadMissionQueueNode();
@@ -1253,7 +1292,11 @@ protected:
 	{
 	    UNITFLAG_EVALUATING_MISSION = 0x1,
 	    UNITFLAG_ALREADY_GOT_GOODY_UPGRADE = 0x2
+#ifdef AUI_VC120_FORMALITIES
+	} _Flags;
+#else
 	};
+#endif
 
 	FAutoArchiveClassContainer<CvUnit> m_syncArchive;
 
@@ -1267,7 +1310,11 @@ protected:
 	FAutoVariable<int, CvUnit> m_iHotKeyNumber;
 	FAutoVariable<int, CvUnit> m_iDeployFromOperationTurn;
 	int m_iLastMoveTurn;
+#ifdef AUI_WARNING_FIXES
+	int m_iCycleOrder;
+#else
 	short m_iCycleOrder;
+#endif
 	FAutoVariable<int, CvUnit> m_iReconX;
 	FAutoVariable<int, CvUnit> m_iReconY;
 	FAutoVariable<int, CvUnit> m_iReconCount;
@@ -1480,12 +1527,22 @@ protected:
 
 	CvUnit* airStrikeTarget(CvPlot& pPlot, bool bNoncombatAllowed) const;
 
+#ifndef AUI_SCOPE_FIXES
+#ifdef AUI_CONSTIFY
+	bool CanWithdrawFromMelee(const CvUnit& pAttacker) const;
+#else
 	bool CanWithdrawFromMelee(CvUnit& pAttacker);
+#endif
 	bool DoWithdrawFromMelee(CvUnit& pAttacker);
 
 	// these are do to a unit using Heavy Charge against you
+#ifdef AUI_CONSTIFY
+	bool CanFallBackFromMelee(const CvUnit& pAttacker) const;
+#else
 	bool CanFallBackFromMelee(CvUnit& pAttacker);
+#endif
 	bool DoFallBackFromMelee(CvUnit& pAttacker);
+#endif
 
 private:
 

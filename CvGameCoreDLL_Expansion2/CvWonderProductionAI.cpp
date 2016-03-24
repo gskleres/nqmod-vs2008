@@ -55,7 +55,11 @@ void CvWonderProductionAI::Reset()
 	// Loop through reading each one and adding it to our vector
 	if(m_pBuildings)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < m_pBuildings->GetNumBuildings(); i++)
+#else
 		for(int i = 0; i < m_pBuildings->GetNumBuildings(); i++)
+#endif
 		{
 			m_WonderAIWeights.push_back(i, 0);
 		}
@@ -87,7 +91,11 @@ void CvWonderProductionAI::Read(FDataStream& kStream)
 	// Loop through reading each one and adding it to our vector
 	if(m_pBuildings)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < m_pBuildings->GetNumBuildings(); i++)
+#else
 		for(int i = 0; i < m_pBuildings->GetNumBuildings(); i++)
+#endif
 		{
 			m_WonderAIWeights.push_back(i, 0);
 		}
@@ -172,8 +180,36 @@ void CvWonderProductionAI::FlavorUpdate()
 /// Establish weights for one flavor; can be called multiple times to layer strategies
 void CvWonderProductionAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight)
 {
+#ifdef AUI_PER_CITY_WONDER_PRODUCTION_AI
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+	CvPlayer* pPlayer = m_pCity->GetPlayer();
+	CvPlayerPolicies* pPlayerPolicies = NULL;
+	if (pPlayer)
+		pPlayerPolicies = pPlayer->GetPlayerPolicies();
+#endif
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+	const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(m_pCity->GetCityReligions()->GetReligiousMajority(), m_pCity->getOwner());
+#endif
+#else
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+	CvPlayer* pPlayer = m_pPlayer;
+	CvPlayerPolicies* pPlayerPolicies = NULL;
+	if (pPlayer)
+		pPlayerPolicies = pPlayer->GetPlayerPolicies();
+#endif
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+	CvCity* pCapitol = m_pPlayer->getCapitalCity();
+	const CvReligion* pReligion = NULL;
+	if (pCapitol)
+		pReligion = GC.getGame().GetGameReligions()->GetReligion(pCapitol->GetCityReligions()->GetReligiousMajority(), m_pPlayer->GetID());
+#endif
+#endif
 	// Loop through all buildings (even though we're only go to do anything on wonders)
+#ifdef AUI_WARNING_FIXES
+	for (uint iBldg = 0; iBldg < m_pBuildings->GetNumBuildings(); iBldg++)
+#else
 	for(int iBldg = 0; iBldg < m_pBuildings->GetNumBuildings(); iBldg++)
+#endif
 	{
 		CvBuildingEntry* entry = m_pBuildings->GetEntry(iBldg);
 		if(entry)
@@ -182,7 +218,48 @@ void CvWonderProductionAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight)
 			if(IsWonder(kBuilding))
 			{
 				// Set its weight by looking at wonder's weight for this flavor and using iWeight multiplier passed in
+#if defined(AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS) || defined(AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS) || defined(AUI_BUILDING_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS) || (defined(AUI_BUILDING_PRODUCTION_AI_CONSIDER_FREE_STUFF) && defined(AUI_PER_CITY_WONDER_PRODUCTION_AI))
+				int iFlavorValue = entry->GetFlavorValue(eFlavor);
+#endif
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+				if (pPlayerPolicies)
+				{
+					for (int iI = 0; iI < GC.getNumPolicyInfos(); iI++)
+					{
+						PolicyTypes ePolicy = static_cast<PolicyTypes>(iI);
+						CvPolicyEntry* pPolicy = GC.getPolicyInfo(ePolicy);
+						if (pPolicy && pPlayerPolicies->HasPolicy(ePolicy))
+						{
+							iFlavorValue += pPolicy->GetBuildingClassFlavorChanges(entry->GetBuildingClassType(), eFlavor);
+						}
+					}
+				}
+#endif
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+				if (pReligion)
+				{
+					pReligion->m_Beliefs.GetBuildingClassFlavorChange(static_cast<BuildingClassTypes>(entry->GetBuildingClassType()), eFlavor);
+				}
+#endif
+#if defined(AUI_BUILDING_PRODUCTION_AI_CONSIDER_FREE_STUFF) && defined(AUI_PER_CITY_WONDER_PRODUCTION_AI)
+#ifdef AUI_WARNING_FIXES
+				for (uint iI = 0; iI < GC.getNumUnitInfos(); iI++)
+#else
+				for (int iI = 0; iI < GC.getNumUnitInfos(); iI++)
+#endif
+				{
+					int iNumFreeUnits = entry->GetNumFreeUnits(iI);
+					if (iNumFreeUnits > 0)
+					{
+						iWeight += iNumFreeUnits * m_pCity->GetCityStrategyAI()->GetUnitProductionAI()->GetWeight((UnitTypes)iI);
+					}
+				}
+#endif
+#if defined(AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS) || defined(AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS) || defined(AUI_BUILDING_PRODUCTION_AI_LUA_FLAVOR_WEIGHTS) || (defined(AUI_BUILDING_PRODUCTION_AI_CONSIDER_FREE_STUFF) && defined(AUI_PER_CITY_WONDER_PRODUCTION_AI))
+				m_WonderAIWeights.IncreaseWeight(iBldg, iFlavorValue * iWeight);
+#else
 				m_WonderAIWeights.IncreaseWeight(iBldg, kBuilding.GetFlavorValue(eFlavor) * iWeight);
+#endif
 			}
 		}
 	}
@@ -191,13 +268,77 @@ void CvWonderProductionAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight)
 /// Retrieve sum of weights on one item
 int CvWonderProductionAI::GetWeight(BuildingTypes eBldg)
 {
+#if defined(AUI_BUILDING_PRODUCTION_AI_CONSIDER_FREE_STUFF) && defined(AUI_PER_CITY_WONDER_PRODUCTION_AI)
+	int iWeight = m_WonderAIWeights.GetWeight(eBldg);
+	CvBuildingEntry* entry = m_pBuildings->GetEntry(eBldg);
+	if (entry)
+	{
+		CvPlayer* pPlayer = m_pCity->GetPlayer();
+		int iLoop = 0;
+
+		BuildingTypes eFreeBuildingThisCity = static_cast<BuildingTypes>(entry->GetFreeBuildingThisCity());
+		if (eFreeBuildingThisCity != NO_BUILDING)
+		{
+			if (m_pCity->GetCityBuildings()->GetNumBuilding(eFreeBuildingThisCity) == 0)
+				iWeight += m_pCity->GetCityStrategyAI()->GetBuildingProductionAI()->GetWeight(eFreeBuildingThisCity);
+		}
+
+		BuildingClassTypes eFreeBuildingClassAllCities = static_cast<BuildingClassTypes>(entry->GetFreeBuildingClass());
+		if (eFreeBuildingClassAllCities != NO_BUILDINGCLASS)
+		{
+			BuildingTypes eFreeBuilding = static_cast<BuildingTypes>(m_pCity->getCivilizationInfo().getCivilizationBuildings(eFreeBuildingClassAllCities));
+			for (CvCity* pLoopCity = pPlayer->firstCity(&iLoop); pLoopCity != NULL; pLoopCity = pPlayer->nextCity(&iLoop))
+			{
+				if (pLoopCity->GetCityBuildings()->GetNumBuilding(eFreeBuilding) == 0)
+					iWeight += pLoopCity->GetCityStrategyAI()->GetBuildingProductionAI()->GetWeight(eFreeBuilding);
+			}
+		}
+
+		if (entry->GetInstantMilitaryIncrease())
+		{
+			FFastVector<UnitTypes, true, c_eCiv5GameplayDLL> aExtraUnits;
+			for (CvUnit* pLoopUnit = pPlayer->firstUnit(&iLoop); pLoopUnit != NULL; pLoopUnit = pPlayer->nextUnit(&iLoop))
+			{
+				if (pLoopUnit->getDomainType() == DOMAIN_LAND && pLoopUnit->IsCombatUnit())
+				{
+					UnitTypes eCurrentUnitType = pLoopUnit->getUnitType();
+
+					// check for duplicate unit
+					bool bAddUnit = true;
+					for (uint ui = 0; ui < aExtraUnits.size(); ui++)
+					{
+						if (aExtraUnits[ui] == eCurrentUnitType)
+						{
+							bAddUnit = false;
+							break;
+						}
+					}
+					if (bAddUnit)
+					{
+						aExtraUnits.push_back(eCurrentUnitType);
+					}
+				}
+			}
+			for (uint ui = 0; ui < aExtraUnits.size(); ui++)
+			{
+				iWeight += m_pCity->GetCityStrategyAI()->GetUnitProductionAI()->GetWeight(aExtraUnits[ui]);
+			}
+		}
+	}
+	return iWeight;
+#else
 	return m_WonderAIWeights.GetWeight(eBldg);
+#endif
 }
 
 /// Recommend highest-weighted wonder, also return total weight of all buildable wonders
 BuildingTypes CvWonderProductionAI::ChooseWonder(bool bUseAsyncRandom, bool bAdjustForOtherPlayers, int& iWonderWeight)
 {
+#ifdef AUI_WARNING_FIXES
+	uint iBldgLoop;
+#else
 	int iBldgLoop;
+#endif
 	int iWeight;
 	int iTurnsRequired;
 	int iEstimatedProductionPerTurn;
@@ -244,6 +385,12 @@ BuildingTypes CvWonderProductionAI::ChooseWonder(bool bUseAsyncRandom, bool bAdj
 		{
 			CvBuildingEntry& kBuilding = *pkBuildingInfo;
 			const CvBuildingClassInfo& kBuildingClassInfo = kBuilding.GetBuildingClassInfo();
+#ifdef NQM_AI_GIMP_NO_WORLD_WONDERS
+			if (GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_WORLD_WONDER") && isWorldWonderClass(kBuildingClassInfo))
+			{
+				continue;
+			}
+#endif
 
 			// Make sure this wonder can be built now
 			if(IsWonder(kBuilding) && HaveCityToBuild((BuildingTypes)iBldgLoop))
@@ -353,7 +500,11 @@ BuildingTypes CvWonderProductionAI::ChooseWonder(bool bUseAsyncRandom, bool bAdj
 /// Recommend highest-weighted wonder and what city to build it at
 BuildingTypes CvWonderProductionAI::ChooseWonderForGreatEngineer(bool bUseAsyncRandom, int& iWonderWeight, CvCity*& pCityToBuildAt)
 {
+#ifdef AUI_WARNING_FIXES
+	uint iBldgLoop;
+#else
 	int iBldgLoop;
+#endif
 	int iWeight;
 	int iCityLoop;
 	RandomNumberDelegate fcn;
@@ -394,6 +545,12 @@ BuildingTypes CvWonderProductionAI::ChooseWonderForGreatEngineer(bool bUseAsyncR
 		if (pkBuildingInfo)
 		{
 			CvBuildingEntry& kBuilding = *pkBuildingInfo;
+#ifdef NQM_AI_GIMP_NO_WORLD_WONDERS
+			if (GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_WORLD_WONDER") && isWorldWonderClass(kBuilding.GetBuildingClassInfo()))
+			{
+				continue;
+			}
+#endif
 			// Make sure this wonder can be built now
 			if (IsWonder(kBuilding) && HaveCityToBuild((BuildingTypes)iBldgLoop))
 			{

@@ -73,25 +73,62 @@ void CvUnitMovement::GetCostsForMove(const CvUnit* pUnit, const CvPlot* pFromPlo
 
 	if(pFromPlot->isValidRoute(pUnit) && pToPlot->isValidRoute(pUnit) && ((kUnitTeam.isBridgeBuilding() || !(pFromPlot->isRiverCrossing(directionXY(pFromPlot, pToPlot))))))
 	{
+#ifdef AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
+		RouteTypes eFromPlotRoute = pFromPlot->getRouteType();
+		RouteTypes eToPlotRoute = pToPlot->getRouteType();
+		if (pTraits->IsMoveFriendlyWoodsAsRoad())
+		{
+			if (eFromPlotRoute == NO_ROUTE)
+				eFromPlotRoute = ROUTE_ROAD;
+			if (eToPlotRoute == NO_ROUTE)
+				eToPlotRoute = ROUTE_ROAD;
+		}
+		CvRouteInfo* pFromRouteInfo = GC.getRouteInfo(eFromPlotRoute);
+#else
 		CvRouteInfo* pFromRouteInfo = GC.getRouteInfo(pFromPlot->getRouteType());
+#endif
 		CvAssert(pFromRouteInfo != NULL);
 
 		int iFromMovementCost = (pFromRouteInfo != NULL)? pFromRouteInfo->getMovementCost() : 0;
 		int iFromFlatMovementCost = (pFromRouteInfo != NULL)? pFromRouteInfo->getFlatMovementCost() : 0;
 
+#ifdef AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
+		CvRouteInfo* pRouteInfo = GC.getRouteInfo(eToPlotRoute);
+#else
 		CvRouteInfo* pRouteInfo = GC.getRouteInfo(pToPlot->getRouteType());
+#endif
 		CvAssert(pRouteInfo != NULL);
 
 		int iMovementCost = (pRouteInfo != NULL)? pRouteInfo->getMovementCost() : 0;
 		int iFlatMovementCost = (pRouteInfo != NULL)? pRouteInfo->getFlatMovementCost() : 0;
 
+#ifdef NQM_FAST_COMP
+#ifdef AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
+		iRouteCost = MAX(iFromMovementCost + kUnitTeam.getRouteChange(eFromPlotRoute), iMovementCost + kUnitTeam.getRouteChange(eToPlotRoute));
+#else
+		iRouteCost = MAX(iFromMovementCost + kUnitTeam.getRouteChange(pFromPlot->getRouteType()), iMovementCost + kUnitTeam.getRouteChange(pToPlot->getRouteType()));
+#endif
+		iRouteFlatCost = MAX(iFromFlatMovementCost * iBaseMoves, iFlatMovementCost * iBaseMoves);
+#else
+#ifdef AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
+		iRouteCost = std::max(iFromMovementCost + kUnitTeam.getRouteChange(eFromPlotRoute), iMovementCost + kUnitTeam.getRouteChange(eToPlotRoute));
+#else
 		iRouteCost = std::max(iFromMovementCost + kUnitTeam.getRouteChange(pFromPlot->getRouteType()), iMovementCost + kUnitTeam.getRouteChange(pToPlot->getRouteType()));
+#endif
 		iRouteFlatCost = std::max(iFromFlatMovementCost * iBaseMoves, iFlatMovementCost * iBaseMoves);
+#endif
 	}
+#ifdef AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
+	else if (pTraits->IsMoveFriendlyWoodsAsRoad() && pUnit->getOwner() == pToPlot->getOwner() && (eFeature == FEATURE_FOREST || eFeature == FEATURE_JUNGLE))
+	{
+		CvRouteInfo* pRoadInfo = GC.getRouteInfo(ROUTE_ROAD);
+		iRouteCost = pRoadInfo->getMovementCost() + kUnitTeam.getRouteChange(ROUTE_ROAD);
+#else
 	else if(pUnit->getOwner() == pToPlot->getOwner() && (eFeature == FEATURE_FOREST || eFeature == FEATURE_JUNGLE) && pTraits->IsMoveFriendlyWoodsAsRoad())
 	{
 		CvRouteInfo* pRoadInfo = GC.getRouteInfo(ROUTE_ROAD);
 		iRouteCost = pRoadInfo->getMovementCost();
+#endif
 		iRouteFlatCost = pRoadInfo->getFlatMovementCost() * iBaseMoves;
 	}
 	else
@@ -191,10 +228,12 @@ bool CvUnitMovement::ConsumesAllMoves(const CvUnit* pUnit, const CvPlot* pFromPl
 		return true;
 	}
 
+#ifndef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
 	if (!pUnit->isEmbarked() && (pToPlot->IsAllowsWalkWater() || pFromPlot->IsAllowsWalkWater()))
 	{
 		return false;
 	}
+#endif
 
 	if(!pFromPlot->isValidDomainForLocation(*pUnit))
 	{
@@ -204,10 +243,18 @@ bool CvUnitMovement::ConsumesAllMoves(const CvUnit* pUnit, const CvPlot* pFromPl
 	}
 
 	// if the unit can embark and we are transitioning from land to water or vice versa
+#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
+	if ((pToPlot->isWater() && !pToPlot->IsAllowsWalkWater()) != (pFromPlot->isWater() && !pFromPlot->IsAllowsWalkWater()) && pUnit->CanEverEmbark())
+#else
 	if(pToPlot->isWater() != pFromPlot->isWater() && pUnit->CanEverEmbark())
+#endif
 	{
 		// Is the unit from a civ that can disembark for just 1 MP?
+#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW
+		if (!pToPlot->isWater() && pFromPlot->isWater() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#else
 		if(!pToPlot->isWater() && pFromPlot->isWater() && pUnit->isEmbarked() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#endif
 		{
 			return false;	// Then no, it does not.
 		}
@@ -239,7 +286,11 @@ bool CvUnitMovement::CostsOnlyOne(const CvUnit* pUnit, const CvPlot* pFromPlot, 
 	}
 
 	// Is the unit from a civ that can disembark for just 1 MP?
+#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW
+	if (!pToPlot->isWater() && pFromPlot->isWater() && pUnit->CanEverEmbark() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#else
 	if(!pToPlot->isWater() && pFromPlot->isWater() && pUnit->isEmbarked() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#endif
 	{
 		return true;
 	}
@@ -276,7 +327,11 @@ bool CvUnitMovement::IsSlowedByZOC(const CvUnit* pUnit, const CvPlot* pFromPlot,
 			if(NULL != pAdjPlot)
 			{
 				// check city zone of control
+#ifdef AUI_UNIT_MOVEMENT_FIX_RADAR_ZOC
+				if (pAdjPlot->isEnemyCity(*pUnit) && (pAdjPlot->isRevealed(pUnit->getTeam()) || pUnit->plot() == pFromPlot))
+#else
 				if(pAdjPlot->isEnemyCity(*pUnit))
+#endif
 				{
 					// Loop through plots adjacent to the enemy city and see if it's the same as our unit's Destination Plot
 					for(int iDirection = 0; iDirection < NUM_DIRECTION_TYPES; iDirection++)
@@ -293,6 +348,10 @@ bool CvUnitMovement::IsSlowedByZOC(const CvUnit* pUnit, const CvPlot* pFromPlot,
 					}
 				}
 
+#ifdef AUI_UNIT_MOVEMENT_FIX_RADAR_ZOC
+				if (!pAdjPlot->isVisible(pUnit->getTeam()) && pUnit->plot() != pFromPlot)
+					continue;
+#endif
 				pAdjUnitNode = pAdjPlot->headUnitNode();
 				// Loop through all units to see if there's an enemy unit here
 				while(pAdjUnitNode != NULL)
@@ -309,6 +368,11 @@ bool CvUnitMovement::IsSlowedByZOC(const CvUnit* pUnit, const CvPlot* pFromPlot,
 					pAdjUnitNode = pAdjPlot->nextUnitNode(pAdjUnitNode);
 
 					if(!pLoopUnit) continue;
+
+#ifdef AUI_UNIT_MOVEMENT_FIX_DELAYED_DEATH_UNITS_GENERATE_ZOC
+					if (pLoopUnit->isDelayedDeath())
+						continue;
+#endif
 
 					TeamTypes unit_loop_team_type = pLoopUnit->getTeam();
 

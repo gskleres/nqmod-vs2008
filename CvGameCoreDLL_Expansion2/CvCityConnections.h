@@ -54,7 +54,11 @@ public:
 	    HAS_ANY_ROUTE   = 0x1,
 	    HAS_WATER_ROUTE = 0x2,
 	    HAS_BEST_ROUTE  = 0x4,
+#ifdef AUI_VC120_FORMALITIES
+	} _RouteState;
+#else
 	};
+#endif
 
 	struct RouteInfo
 	{
@@ -75,7 +79,11 @@ public:
 
 	//typedef FStaticVector< RouteInfo, SAFE_ESTIMATE_NUM_CITIES, true, c_eCiv5GameplayDLL, 0 > RouteInfosRow;
 	//FFastVector< RouteInfosRow, false, c_eCiv5GameplayDLL, 0 > m_aaRouteInfos;
+#ifdef AUI_WARNING_FIXES
+	FStaticVector<uint, SAFE_ESTIMATE_NUM_CITIES, true, c_eCiv5GameplayDLL, 0> m_aiCityPlotIDs;
+#else
 	FStaticVector<int, SAFE_ESTIMATE_NUM_CITIES, true, c_eCiv5GameplayDLL, 0> m_aiCityPlotIDs;
+#endif
 	FStaticVector<BuildingTypes, 10, true, c_eCiv5GameplayDLL, 0> m_aBuildingsAllowWaterRoutes;
 
 	//---------------------------------------PROTECTED MEMBER VARIABLES---------------------------------
@@ -93,7 +101,11 @@ protected:
 	    NO_CONNECTION = 0x0,
 	    CONNECTION = 0x1,
 	    CONNECTION_LAST_TURN = 0x2
+#ifdef AUI_VC120_FORMALITIES
+	} _PlotRouteState;
+#else
 	};
+#endif
 
 	struct PlotRouteInfo
 	{

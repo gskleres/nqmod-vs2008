@@ -95,16 +95,26 @@ void CvStartPositioner::ComputeFoundValues()
 	CvPlot* pLoopPlot(NULL);
 
 	// Progress through entire map
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 	for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 	{
+#ifdef AUI_STARTPOSITIONER_FLAVORED_STARTS
+		// Since found values are now computed for each player when they're being positioned, there's no point in storing stuff in CvPlot
+#else
 		// Store in player 1 slot for now
 		//   (Normally shouldn't be using a hard-coded player reference, but here in the pre-game initialization it is safe to do so.
 		//    Allows us to reuse this data storage instead of jamming even more data into the CvPlot class that will never be used at run-time).
+#endif
 		pLoopPlot = GC.getMap().plotByIndexUnchecked(iI);
 		CvAssert(pLoopPlot);
 		if(!pLoopPlot) continue;
 		int iValue = m_pSiteEvaluator->PlotFoundValue(pLoopPlot, NULL);
+#ifndef AUI_STARTPOSITIONER_FLAVORED_STARTS
 		pLoopPlot->setFoundValue((PlayerTypes)1, iValue);
+#endif
 
 		if(iValue > m_iBestFoundValueOnMap)
 		{
@@ -328,7 +338,11 @@ void CvStartPositioner::ComputeTileFertilityValues()
 	CvArea* pLoopArea(NULL);
 	int iLoop;
 	CvPlot* pLoopPlot(NULL);
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 	int uiFertility;
 
 	// Set all area fertilities to 0
@@ -599,9 +613,15 @@ bool CvStartPositioner::AddCivToRegion(int iPlayerIndex, CvStartRegion region, b
 	int iPercentOfBest = GC.getMIN_START_FOUND_VALUE_AS_PERCENT_OF_BEST();
 
 	MinorCivTypes eMinorCivType = NO_MINORCIV;
+#ifdef AUI_STARTPOSITIONER_COASTAL_CIV_WATER_BIAS
+	CvMinorCivInfo* pMinorCivInfo = NULL;
+#endif
 	if(bIsMinorCiv)
 	{
 		eMinorCivType =GET_PLAYER((PlayerTypes) iPlayerIndex).GetMinorCivAI()->GetMinorCivType();
+#ifdef AUI_STARTPOSITIONER_COASTAL_CIV_WATER_BIAS
+		pMinorCivInfo = GC.getMinorCivInfo(eMinorCivType);
+#endif
 	}
 
 	bool bDebugMap = GC.getMap().getWorldSize() == WORLDSIZE_DEBUG;
@@ -612,6 +632,10 @@ bool CvStartPositioner::AddCivToRegion(int iPlayerIndex, CvStartRegion region, b
 		iMinorFoodReq = 0;
 		iMajorFoodReq = 0;
 	}
+
+#ifdef AUI_STARTPOSITIONER_COASTAL_CIV_WATER_BIAS
+	CvCivilizationInfo* pCivInfo = GC.getCivilizationInfo(GET_PLAYER((PlayerTypes)iPlayerIndex).getCivilizationType());
+#endif
 
 	// Find best found value in region
 	for(int iRow = region.m_Boundaries.m_iSouthEdge; iRow <= region.m_Boundaries.m_iNorthEdge; iRow++)
@@ -628,15 +652,26 @@ bool CvStartPositioner::AddCivToRegion(int iPlayerIndex, CvStartRegion region, b
 				        || (bIsMinorCiv && MeetsFoodRequirement(pLoopPlot, eTeam, iMinorFoodReq))
 				        || MeetsFoodRequirement(pLoopPlot, eTeam, iMajorFoodReq))
 				{
+#ifdef AUI_STARTPOSITIONER_FLAVORED_STARTS
+					// Plot found values are now calculated for each player to account for flavoring
+					uiPlotFoundValue = m_pSiteEvaluator->PlotFoundValue(pLoopPlot, &(GET_PLAYER((PlayerTypes)iPlayerIndex)));
+#else
 					// Retrieve from player 1's found value slot
 					//   (Normally shouldn't be using a hard-coded player reference, but here in the pre-game initialization it is safe to do so.
 					//    Allows us to reuse this data storage instead of jamming even more data into the CvPlot class that will never be used at run-time).
 					uiPlotFoundValue = pLoopPlot->getFoundValue((PlayerTypes)1);
+#endif
 
 					// If we're a Maritime Minor Civ then decrease the value of non-coastal starts
+#ifdef AUI_STARTPOSITIONER_COASTAL_CIV_WATER_BIAS
+					if ((pMinorCivInfo && pMinorCivInfo->GetMinorCivTrait() == MINOR_CIV_TRAIT_MARITIME) ||
+						(!pMinorCivInfo && pCivInfo && pCivInfo->isCoastalCiv()))
+					{
+#else
 					if(bIsMinorCiv)
 					{
 						if(GC.getMinorCivInfo(eMinorCivType)->GetMinorCivTrait() == MINOR_CIV_TRAIT_MARITIME)
+#endif
 						{
 							if(!pLoopPlot->isCoastalLand(GC.getLAKE_MAX_AREA_SIZE()))
 							{

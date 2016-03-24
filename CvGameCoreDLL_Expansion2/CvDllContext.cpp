@@ -170,12 +170,20 @@ HANDLE CvDllGameContext::Debug_GetHeap() const
 	return s_hHeap;
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+_Check_return_ void* CvDllGameContext::Allocate(size_t bytes)
+#else
 void* CvDllGameContext::Allocate(size_t bytes)
+#endif
 {
 	return HeapAlloc(s_hHeap, 0, bytes);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvDllGameContext::Free(_In_ void* p)
+#else
 void CvDllGameContext::Free(void* p)
+#endif
 {
 	HeapFree(s_hHeap, 0, p);
 }
@@ -868,7 +876,11 @@ void CvDllGameContext::SetOutOfSyncDebuggingEnabled(bool isEnabled)
 	GC.setOutOfSyncDebuggingEnabled(isEnabled);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes, ICvRandom1* pRandom, bool)
+#else
 bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRandom1* pRandom, bool bIsHost)
+#endif
 {
 	// uh oh! Check the Random number generator!
 	const CvRandom& localSimRandomNumberGenerator = GC.getGame().getJonRand();
@@ -880,6 +892,32 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 
 		char formatBuf[128] = {"\0"};
 		std::string rngLogMessage = "Game Random Number Generators are out of sync : local.seed=";
+#ifdef AUI_WARNING_FIXES
+#ifdef AUI_USE_SFMT_RNG
+		_itoa_s(localSimRandomNumberGenerator.getSeed().first, formatBuf, 128, 10);
+		rngLogMessage += formatBuf;
+		rngLogMessage += ", remote.seed=";
+		_itoa_s(pkRandom->getSeed().first, formatBuf, 128, 10);
+#else
+		_itoa_s(localSimRandomNumberGenerator.getSeed(), formatBuf, 128, 10);
+		rngLogMessage += formatBuf;
+		rngLogMessage += ", remote.seed=";
+		_itoa_s(pkRandom->getSeed(), formatBuf, 128, 10);
+#endif
+		rngLogMessage += formatBuf;
+		rngLogMessage += "\n\tlocal.callCount=";
+		_itoa_s(localSimRandomNumberGenerator.getCallCount(), formatBuf, 128, 10);
+		rngLogMessage += formatBuf;
+		rngLogMessage += ", remote.callCount=";
+		_itoa_s(pkRandom->getCallCount(), formatBuf, 128, 10);
+		rngLogMessage += formatBuf;
+		rngLogMessage += "\n\tlocal.resetCount=";
+		_itoa_s(localSimRandomNumberGenerator.getResetCount(), formatBuf, 128, 10);
+		rngLogMessage += formatBuf;
+		rngLogMessage += ", remote.resetCount=";
+		_itoa_s(pkRandom->getResetCount(), formatBuf, 128, 10);
+		rngLogMessage += formatBuf;
+#else
 		rngLogMessage += _itoa_s(localSimRandomNumberGenerator.getSeed(), formatBuf, 10);
 		rngLogMessage += ", remote.seed=";
 		rngLogMessage += _itoa_s(pkRandom->getSeed(), formatBuf, 10);
@@ -891,6 +929,7 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 		rngLogMessage += _itoa_s(localSimRandomNumberGenerator.getResetCount(), formatBuf, 10);
 		rngLogMessage += ", remote.resetCount=";
 		rngLogMessage += _itoa_s(pkRandom->getResetCount(), formatBuf, 10);
+#endif
 		rngLogMessage += "\n";
 
 		if(localSimRandomNumberGenerator.callStackDebuggingEnabled() && pkRandom->callStackDebuggingEnabled())
@@ -912,6 +951,24 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 					if(callNumber < localCallStacks.size() && callNumber < remoteCallStacks.size())
 					{
 						rngLogMessage += "At Call #";
+#ifdef AUI_WARNING_FIXES
+						_itoa_s(callNumber, formatBuf, 128, 10);
+						rngLogMessage += formatBuf;
+						rngLogMessage += " random number seeds are different.\n";
+						if (callNumber > 0)
+						{
+							rngLogMessage += "Call #";
+							_itoa_s(callNumber - 1, formatBuf, 128, 10);
+							rngLogMessage += formatBuf;
+							rngLogMessage += "\nLocal:\n";
+							rngLogMessage += localCallStacks[callNumber - 1];
+							rngLogMessage += "\nRemote:\n";
+							rngLogMessage += remoteCallStacks[callNumber - 1];
+						}
+						rngLogMessage += "Call #";
+						_itoa_s(callNumber, formatBuf, 128, 10);
+						rngLogMessage += formatBuf;
+#else
 						rngLogMessage += _itoa_s(callNumber, formatBuf, 10);
 						rngLogMessage += " random number seeds are different.\n";
 						if(callNumber > 0)
@@ -925,6 +982,7 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 						}
 						rngLogMessage += "Call #";
 						rngLogMessage += _itoa_s(callNumber, formatBuf, 10);
+#endif
 						rngLogMessage += "\nLocal:\n";
 						rngLogMessage += localCallStacks[callNumber];
 						rngLogMessage += "\nRemote:\n";
@@ -936,7 +994,12 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 			if(localSeedIterator != localSeedHistory.end() && remoteSeedIterator == remoteSeedHistory.end())
 			{
 				rngLogMessage += "\nLocal random number generator called more than remote at call #";
+#ifdef AUI_WARNING_FIXES
+				_itoa_s(callNumber, formatBuf, 128, 10);
+				rngLogMessage += formatBuf;
+#else
 				rngLogMessage += _itoa_s(callNumber, formatBuf, 10);
+#endif
 				rngLogMessage += "\n";
 				if(callNumber < localSeedHistory.size())
 				{
@@ -947,7 +1010,12 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 			else if(remoteSeedIterator != remoteSeedHistory.end() && localSeedIterator == localSeedHistory.end())
 			{
 				rngLogMessage += "\nremote random number generator called more than local at call #";
+#ifdef AUI_WARNING_FIXES
+				_itoa_s(callNumber, formatBuf, 128, 10);
+				rngLogMessage += formatBuf;
+#else
 				rngLogMessage += _itoa_s(callNumber, formatBuf, 10);
+#endif
 				rngLogMessage += "\n";
 				if(callNumber < remoteSeedHistory.size())
 				{
@@ -964,7 +1032,12 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 				if(*localCallStackIterator != *remoteCallStackIterator)
 				{
 					rngLogMessage += "\nFirst different callstack at call #";
+#ifdef AUI_WARNING_FIXES
+					_itoa_s(callNumber, formatBuf, 128, 10);
+					rngLogMessage += formatBuf;
+#else
 					rngLogMessage += _itoa_s(callNumber, formatBuf, 10);
+#endif
 					rngLogMessage += "\n";
 					rngLogMessage += "Local :\n";
 					rngLogMessage += *localCallStackIterator;
@@ -995,17 +1068,32 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 				{
 					++callNumber;
 					rngLogMessage += "\t Call #";
+#ifdef AUI_WARNING_FIXES
+					_itoa_s(callNumber, formatBuf, 128, 10);
+					rngLogMessage += formatBuf;
+#else
 					rngLogMessage += _itoa_s(callNumber, formatBuf, 10);
+#endif
 					rngLogMessage += " LOCAL=";
 					if(localSeedIterator != localSeedHistory.end())
 					{
+#ifdef AUI_WARNING_FIXES
+						_itoa_s(*localSeedIterator, formatBuf, 128, 10);
+						rngLogMessage += formatBuf;
+#else
 						rngLogMessage += _itoa_s(*localSeedIterator, formatBuf, 10);
+#endif
 						++localSeedIterator;
 					}
 					rngLogMessage += "\tREMOTE=";
 					if(remoteSeedIterator != remoteSeedHistory.end())
 					{
+#ifdef AUI_WARNING_FIXES
+						_itoa_s(*remoteSeedIterator, formatBuf, 128, 10);
+						rngLogMessage += formatBuf;
+#else
 						rngLogMessage += _itoa_s(*remoteSeedIterator, formatBuf, 10);
+#endif
 						++remoteSeedIterator;
 					}
 					rngLogMessage += "\n";
@@ -1023,11 +1111,21 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 						if(repeatCount > 0)
 						{
 							rngLogMessage += "Last message repeated ";
+#ifdef AUI_WARNING_FIXES
+							_itoa_s(repeatCount, formatBuf, 128, 10);
+							rngLogMessage += formatBuf;
+#else
 							rngLogMessage += _itoa_s(repeatCount, formatBuf, 10);
+#endif
 							rngLogMessage += " times\n";
 						}
 						rngLogMessage += "Call #";
+#ifdef AUI_WARNING_FIXES
+						_itoa_s(callNumber, formatBuf, 128, 10);
+						rngLogMessage += formatBuf;
+#else
 						rngLogMessage += _itoa_s(callNumber, formatBuf, 10);
+#endif
 						rngLogMessage += "\n";
 						rngLogMessage += *i;
 						lastCallStackLogged = *i;
@@ -1050,11 +1148,21 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 						if(repeatCount > 0)
 						{
 							rngLogMessage += "Last message repeated ";
+#ifdef AUI_WARNING_FIXES
+							_itoa_s(repeatCount, formatBuf, 128, 10);
+							rngLogMessage += formatBuf;
+#else
 							rngLogMessage += _itoa_s(repeatCount, formatBuf, 10);
+#endif
 							rngLogMessage += " times\n";
 						}
 						rngLogMessage += "Call #";
+#ifdef AUI_WARNING_FIXES
+						_itoa_s(callNumber, formatBuf, 128, 10);
+						rngLogMessage += formatBuf;
+#else
 						rngLogMessage += _itoa_s(callNumber, formatBuf, 10);
+#endif
 						rngLogMessage += "\n";
 						rngLogMessage += *i;
 						lastCallStackLogged = *i;
@@ -1100,7 +1208,11 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 unsigned int CvDllGameContext::CreateRandomNumberGenerator()
 {
 	uint index = m_uiRngCounter++;
+#ifdef AUI_WARNING_FIXES
+	std::pair<uint, CvRandom*> entry(index, new(_aligned_malloc(sizeof(CvRandom), 16)) CvRandom());
+#else
 	std::pair<uint, CvRandom*> entry(index, FNEW(CvRandom, c_eCiv5GameplayDLL, 0));
+#endif
 
 	m_RandomNumberGenerators.push_back(entry);
 	return index;
@@ -1130,7 +1242,12 @@ void CvDllGameContext::DestroyRandomNumberGenerator(unsigned int index)
 
 	if(it != m_RandomNumberGenerators.end())
 	{
+#ifdef AUI_WARNING_FIXES
+		it->second->~CvRandom();
+		_aligned_free(it->second);
+#else
 		delete(*it).second;
+#endif
 		m_RandomNumberGenerators.erase(it);
 	}
 }
@@ -1229,7 +1346,11 @@ void CvDllGameContext::TEMPOnHexUnitChanged(ICvUnit1* pUnit)
 
 	// call the pathfinder
 	thePathfinder.SetData(pkUnit);
+#ifdef AUI_WARNING_FIXES
+	thePathfinder.GeneratePath(pkUnit->getX(), pkUnit->getY(), -1, -1, MOVE_DECLARE_WAR, false);
+#else
 	bool bCanFindPath = thePathfinder.GeneratePath(pkUnit->getX(), pkUnit->getY(), -1, -1, MOVE_DECLARE_WAR, false);
+#endif
 
 	// change the unit pathfinder back
 	thePathfinder.SetDestValidFunc(PathDestValid);
@@ -1251,7 +1372,11 @@ void CvDllGameContext::TEMPOnHexUnitChangedAttack(ICvUnit1* pUnit)
 
 	// call the pathfinder
 	thePathfinder.SetData(pkUnit);
+#ifdef AUI_WARNING_FIXES
+	thePathfinder.GeneratePath(pkUnit->getX(), pkUnit->getY(), -1, -1, MOVE_DECLARE_WAR, false);
+#else
 	bool bCanFindPath = thePathfinder.GeneratePath(pkUnit->getX(), pkUnit->getY(), -1, -1, MOVE_DECLARE_WAR, false);
+#endif
 
 	// change the unit pathfinder back
 	thePathfinder.SetDestValidFunc(PathDestValid);

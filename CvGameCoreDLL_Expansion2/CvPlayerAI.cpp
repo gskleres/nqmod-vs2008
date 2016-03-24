@@ -120,7 +120,11 @@ void CvPlayerAI::AI_doTurnPost()
 		return;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumVictoryInfos(); ++i)
+#else
 	for(int i = 0; i < GC.getNumVictoryInfos(); ++i)
+#endif
 	{
 		AI_launch((VictoryTypes)i);
 	}
@@ -480,7 +484,11 @@ void CvPlayerAI::AI_chooseFreeTech()
 
 void CvPlayerAI::AI_chooseResearch()
 {
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+	AI_PERF_FORMAT("AI-perf.csv", ("AI_chooseResearch, Turn %03d, %s", GC.getGame().getGameTurn(), getCivilizationShortDescription()));
+#else
 	AI_PERF("AI-perf.csv", "AI_chooseResearch");
+#endif
 
 	TechTypes eBestTech = NO_TECH;
 	int iI;
@@ -540,7 +548,11 @@ struct CityAndProductionEval
 
 void CvPlayerAI::AI_considerAnnex()
 {
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+	AI_PERF_FORMAT("AI-perf.csv", ("AI_considerAnnex, Turn %03d, %s", GC.getGame().getGameTurn(), getCivilizationShortDescription()));
+#else
 	AI_PERF("AI-perf.csv", "AI_ considerAnnex");
+#endif
 
 	// if the empire is unhappy, don't consider annexing
 	if (IsEmpireUnhappy())
@@ -588,7 +600,11 @@ void CvPlayerAI::AI_considerAnnex()
 	float fCutoffValue = GC.getNORMAL_ANNEX();
 	BuildingClassTypes eCourthouseType = NO_BUILDINGCLASS;
 	// find courthouse
+#ifdef AUI_WARNING_FIXES
+	for (uint eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#else
 	for(int eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(eBuildingType);
 		CvBuildingEntry* buildingInfo = GC.getBuildingInfo(eBuilding);
@@ -1415,7 +1431,9 @@ CvPlot* CvPlayerAI::FindBestArtistTargetPlot(CvUnit* pGreatArtist, int& iResultS
 
 	iResultScore = 0;
 
+#ifndef AUI_WARNING_FIXES
 	CvPlotsVector& m_aiPlots = GetPlots();
+#endif
 
 	CvPlot* pBestPlot = NULL;
 	int iBestScore = 0;

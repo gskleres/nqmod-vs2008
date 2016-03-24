@@ -170,6 +170,11 @@ void CvTeam::uninit()
 	m_iNumNaturalWondersDiscovered = 0;
 	m_iBestPossibleRoute = NO_ROUTE;
 	m_iNumMinorCivsAttacked = 0;
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	m_iBestRouteFlatCostMultiplier = 0;
+	m_iBestRouteNormalCostMultiplier = 1;
+	m_iUseFlatCostIfBelowThis = -1;
+#endif
 
 	m_bMapCentering = false;
 	m_bHasBrokenPeaceTreaty = false;
@@ -230,6 +235,19 @@ void CvTeam::reset(TeamTypes eID, bool bConstructorCall)
 	if(!bConstructorCall)
 	{
 		//Collect sizes
+#ifdef AUI_WARNING_FIXES
+		uint numVoteSourceInfos = GC.getNumVoteSourceInfos();
+		uint numVictoryInfos = GC.getNumVictoryInfos();
+		uint numSmallAwardInfos = GC.getNumSmallAwardInfos();
+		uint numRouteInfos = GC.getNumRouteInfos();
+		uint numBuildInfos = GC.getNumBuildInfos();
+		uint numProjectInfos = GC.getNumProjectInfos();
+		uint numUnitClassInfos = GC.getNumUnitClassInfos();
+		uint numBuildingClassInfos = GC.getNumBuildingClassInfos();
+		uint numBuildingInfos = GC.getNumBuildingInfos();
+		uint numTerrainInfos = GC.getNumTerrainInfos();
+		uint numImprovementInfos = GC.getNumImprovementInfos();
+#else
 		int numVoteSourceInfos = GC.getNumVoteSourceInfos();
 		int numVictoryInfos = GC.getNumVictoryInfos();
 		int numSmallAwardInfos = GC.getNumSmallAwardInfos();
@@ -241,6 +259,7 @@ void CvTeam::reset(TeamTypes eID, bool bConstructorCall)
 		int numBuildingInfos = GC.getNumBuildingInfos();
 		int numTerrainInfos = GC.getNumTerrainInfos();
 		int numImprovementInfos = GC.getNumImprovementInfos();
+#endif
 
 		//Perform batch allocation
 		AllocData aData[] =
@@ -271,47 +290,87 @@ void CvTeam::reset(TeamTypes eID, bool bConstructorCall)
 		m_BatchData.Alloc(aData);
 
 		//Init the data - it is valid now
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numVoteSourceInfos; i++)
+#else
 		for(int i = 0; i < numVoteSourceInfos; i++)
+#endif
 		{
 			m_aiForceTeamVoteEligibilityCount[i] = 0;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numVictoryInfos; i++)
+#else
 		for(int i = 0; i < numVictoryInfos; i++)
+#endif
 		{
 			m_abCanLaunch[i] = false;
 			m_abVictoryAchieved[i] = false;
 			m_aiVictoryCountdown[i] = -1;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numSmallAwardInfos; i++)
+#else
 		for(int i = 0; i < numSmallAwardInfos; i++)
+#endif
 		{
 			m_abSmallAwardAchieved[i] = false;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numRouteInfos; i++)
+#else
 		for(int i = 0; i < numRouteInfos; i++)
+#endif
 		{
 			m_paiRouteChange[i] = 0;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numBuildInfos; i++)
+#else
 		for (int i = 0; i < numBuildInfos; i++)
+#endif
 		{
 			m_paiBuildTimeChange[i] = 0;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numProjectInfos; i++)
+#else
 		for(int i = 0; i < numProjectInfos; i++)
+#endif
 		{
 			m_paiProjectCount[i] = 0;
 			m_paiProjectDefaultArtTypes[i] = 0;
 			m_paiProjectMaking[i] = 0;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numUnitClassInfos; i++)
+#else
 		for(int i = 0; i < numUnitClassInfos; i++)
+#endif
 		{
 			m_paiUnitClassCount[i] = 0;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numBuildingClassInfos; i++)
+#else
 		for(int i = 0; i < numBuildingClassInfos; i++)
+#endif
 		{
 			m_paiBuildingClassCount[i] = 0;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numBuildingInfos; i++)
+#else
 		for(int i = 0; i < numBuildingInfos; i++)
+#endif
 		{
 			m_paiObsoleteBuildingCount[i] = 0;
 		}
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numTerrainInfos; i++)
+#else
 		for(int i = 0; i < numTerrainInfos; i++)
+#endif
 		{
 			m_paiTerrainTradeCount[i] = 0;
 		}
@@ -323,7 +382,11 @@ void CvTeam::reset(TeamTypes eID, bool bConstructorCall)
 			m_aiNumTurnsLockedIntoWar[i] = 0;
 		}
 
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < numImprovementInfos; i++)
+#else
 		for(int i = 0; i < numImprovementInfos; i++)
+#endif
 		{
 			for(int j = 0; j < NUM_YIELD_TYPES; j++)
 			{
@@ -345,7 +408,12 @@ void CvTeam::addTeam(TeamTypes eTeam)
 {
 	CvPlot* pLoopPlot;
 	CvString strBuffer;
+#ifdef AUI_WARNING_FIXES
+	int iI;
+	uint iJ;
+#else
 	int iI, iJ;
+#endif
 
 	CvAssert(eTeam != NO_TEAM);
 	CvAssert(eTeam != GetID());
@@ -520,15 +588,27 @@ void CvTeam::addTeam(TeamTypes eTeam)
 	}
 
 	const int iNumInvisibleInfos = NUM_INVISIBLE_TYPES;
+#ifdef AUI_WARNING_FIXES
+	for (iJ = 0; iJ < GC.getMap().numPlots(); iJ++)
+	{
+		pLoopPlot = GC.getMap().plotByIndexUnchecked(iJ);
+#else
 	for(iI = 0; iI < GC.getMap().numPlots(); iI++)
 	{
 		pLoopPlot = GC.getMap().plotByIndexUnchecked(iI);
+#endif
 
 		pLoopPlot->changeVisibilityCount(GetID(), pLoopPlot->getVisibilityCount(eTeam), NO_INVISIBLE, true, false);
 
+#ifdef AUI_WARNING_FIXES
+		for (iI = 0; iI < iNumInvisibleInfos; iI++)
+		{
+			pLoopPlot->changeInvisibleVisibilityCount(GetID(), ((InvisibleTypes)iI), pLoopPlot->getInvisibleVisibilityCount(eTeam, ((InvisibleTypes)iI)));
+#else
 		for(iJ = 0; iJ < iNumInvisibleInfos; iJ++)
 		{
 			pLoopPlot->changeInvisibleVisibilityCount(GetID(), ((InvisibleTypes)iJ), pLoopPlot->getInvisibleVisibilityCount(eTeam, ((InvisibleTypes)iJ)));
+#endif
 		}
 
 		if(pLoopPlot->isRevealed(eTeam))
@@ -546,7 +626,12 @@ void CvTeam::shareItems(TeamTypes eTeam)
 {
 	CvCity* pLoopCity;
 	int iLoop;
+#ifdef AUI_WARNING_FIXES
+	uint iI, iJ;
+	int iK;
+#else
 	int iI, iJ, iK;
+#endif
 
 	CvAssert(eTeam != NO_TEAM);
 	CvAssert(eTeam != GetID());
@@ -616,7 +701,11 @@ void CvTeam::shareItems(TeamTypes eTeam)
 //	--------------------------------------------------------------------------------
 void CvTeam::shareCounters(TeamTypes eTeam)
 {
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	for(iI = 0; iI < GC.getNumProjectInfos(); iI++)
 	{
@@ -726,7 +815,11 @@ void CvTeam::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst)
 //	--------------------------------------------------------------------------------
 void CvTeam::doTurn()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	CvAssertMsg(isAlive(), "isAlive is expected to be true");
 
@@ -816,7 +909,11 @@ void CvTeam::DoBarbarianTech()
 	int iTechPercent = /*75*/ GC.getBARBARIAN_TECH_PERCENT();
 	int iTeamsNeeded = max(1, iPossibleCount * iTechPercent / 100);
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iTechLoop = 0; iTechLoop < GC.getNumTechInfos(); iTechLoop++)
+#else
 	for(int iTechLoop = 0; iTechLoop < GC.getNumTechInfos(); iTechLoop++)
+#endif
 	{
 		eTech = (TechTypes) iTechLoop;
 
@@ -882,7 +979,11 @@ void CvTeam::DoMinorCivTech()
 	int iTechPercent = /*40*/ GC.getMINOR_CIV_TECH_PERCENT();
 	int iTeamsNeeded = max(1, iPossibleCount * iTechPercent / 100);
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iTechLoop = 0; iTechLoop < GC.getNumTechInfos(); iTechLoop++)
+#else
 	for(int iTechLoop = 0; iTechLoop < GC.getNumTechInfos(); iTechLoop++)
+#endif
 	{
 		eTech = (TechTypes) iTechLoop;
 
@@ -1098,7 +1199,12 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 	// Cancel Trade Deals, RAs, diplomats
 	if(!isBarbarian())
 	{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		// Because second team is the "to" team, so cancel all of their deals to this team first
+		GC.getGame().GetGameDeals()->DoCancelDealsBetweenTeams(eTeam, GetID());
+#else
 		GC.getGame().GetGameDeals()->DoCancelDealsBetweenTeams(GetID(), eTeam);
+#endif
 		CloseEmbassyAtTeam(eTeam);
 		GET_TEAM(eTeam).CloseEmbassyAtTeam(m_eID);
 		CancelResearchAgreement(eTeam);
@@ -2217,7 +2323,11 @@ int CvTeam::countEnemyDangerByArea(CvArea* pArea) const
 {
 	CvPlot* pLoopPlot;
 	int iCount;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	iCount = 0;
 
@@ -3338,7 +3448,11 @@ bool CvTeam::isHasMet(TeamTypes eIndex)	const
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_GAME_OBSERVER_MEET_ALL_TEAMS
+void CvTeam::makeHasMet(TeamTypes eIndex, bool bSuppressMessages, bool bForObserver)
+#else
 void CvTeam::makeHasMet(TeamTypes eIndex, bool bSuppressMessages)
+#endif
 {
 	int iI;
 
@@ -3352,6 +3466,19 @@ void CvTeam::makeHasMet(TeamTypes eIndex, bool bSuppressMessages)
 		SetTurnTeamMet(eIndex, GC.getGame().getGameTurn());
 
 		updateTechShare();
+
+#ifdef AUI_GAME_OBSERVER_MEET_ALL_TEAMS
+		if (bForObserver)
+		{
+			if ((GetID() == GC.getGame().getActiveTeam()) || (eIndex == GC.getGame().getActiveTeam()))
+			{
+				DLLUI->setDirty(Score_DIRTY_BIT, true);
+			}
+			// Report event
+			gDLL->GameplayMetTeam(GetID(), eIndex);
+			return;
+		}
+#endif
 
 		if(GC.getGame().isOption(GAMEOPTION_ALWAYS_WAR))
 		{
@@ -3784,11 +3911,23 @@ void CvTeam::SetHasEmbassyAtTeam(TeamTypes eIndex, bool bNewValue)
 					if(pPlot)
 					{
 						const int iPopRange = 2;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+						int iMaxDX, iDX;
+						CvPlot* pLoopPlot;
+						for (int iDY = -iPopRange; iDY <= iPopRange; iDY++)
+						{
+							iMaxDX = iPopRange - MAX(0, iDY);
+							for (iDX = -iPopRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+							{
+								// No need for range check because loops are set up properly
+								pLoopPlot = plotXY(pPlot->getX(), pPlot->getY(), iDX, iDY);
+#else
 						for(int iDX = -(iPopRange); iDX <= iPopRange; iDX++)
 						{
 							for(int iDY = -(iPopRange); iDY <= iPopRange; iDY++)
 							{
 								CvPlot* pLoopPlot = plotXYWithRangeCheck(pPlot->getX(), pPlot->getY(), iDX, iDY, iPopRange);
+#endif
 								if(pLoopPlot == NULL)
 								{
 									continue;
@@ -4131,7 +4270,11 @@ void CvTeam::DoUpdateBestRoute()
 	int iBestRouteValue = 0;
 
 	// Loop through all builds to see if it allows us to build a Route
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildLoop = 0; iBuildLoop < GC.getNumBuildInfos(); iBuildLoop++)
+#else
 	for(int iBuildLoop = 0; iBuildLoop < GC.getNumBuildInfos(); iBuildLoop++)
+#endif
 	{
 		const BuildTypes eBuild = static_cast<BuildTypes>(iBuildLoop);
 		CvBuildInfo* pkBuildInfo = GC.getBuildInfo(eBuild);
@@ -4168,11 +4311,53 @@ void CvTeam::DoUpdateBestRoute()
 		}
 	}
 
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	CvRouteInfo* pRouteInfo = NULL;
+	if (eBestRoute > NO_ROUTE)
+#else
 	if(iBestRouteValue > -1)
+#endif
 	{
 		SetBestPossibleRoute(eBestRoute);
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+		pRouteInfo = GC.getRouteInfo(eBestRoute);
+#endif
 	}
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	if (pRouteInfo)
+	{
+		m_iBestRouteNormalCostMultiplier = GC.getMOVE_DENOMINATOR() / (pRouteInfo->getMovementCost() + getRouteChange(eBestRoute));
+		m_iBestRouteFlatCostMultiplier = GC.getMOVE_DENOMINATOR() / pRouteInfo->getFlatMovementCost();
+		// Extra pRouteInfo->getFlatMovementCost() - 1 is to make sure value is always rounded up
+		m_iUseFlatCostIfBelowThis = (pRouteInfo->getMovementCost() + getRouteChange(eBestRoute) + pRouteInfo->getFlatMovementCost() - 1) / pRouteInfo->getFlatMovementCost();
+	}
+	else
+	{
+		m_iBestRouteFlatCostMultiplier = 0;
+		m_iBestRouteNormalCostMultiplier = 1;
+		m_iUseFlatCostIfBelowThis = -1;
+	}
+#endif
 }
+
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+int CvTeam::GetBestRoadMovementMultiplier(const CvUnit* pUnit) const
+{
+	int iRtnValue = m_iBestRouteNormalCostMultiplier;
+	if (pUnit)
+	{
+		if (pUnit->baseMoves(DOMAIN_LAND) < m_iUseFlatCostIfBelowThis)
+		{
+			iRtnValue = m_iBestRouteFlatCostMultiplier / pUnit->baseMoves(DOMAIN_LAND);
+		}
+	}
+
+	if (iRtnValue < 1)
+		iRtnValue = 1;
+
+	return iRtnValue;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 int CvTeam::getProjectCount(ProjectTypes eIndex) const
@@ -4261,7 +4446,11 @@ bool CvTeam::isProjectAndArtMaxedOut(ProjectTypes eIndex) const
 void CvTeam::finalizeProjectArtTypes()
 {
 	//loop through each project and fill in default art values
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i<GC.getNumProjectInfos(); i++)
+#else
 	for(int i=0; i<GC.getNumProjectInfos(); i++)
+#endif
 	{
 		ProjectTypes projectType = (ProjectTypes) i;
 		int projectCount = getProjectCount(projectType);
@@ -4283,7 +4472,12 @@ void CvTeam::changeProjectCount(ProjectTypes eIndex, int iChange)
 {
 	bool bChangeProduction;
 	int iOldProjectCount;
+#ifdef AUI_WARNING_FIXES
+	int iI;
+	uint iJ;
+#else
 	int iI, iJ;
+#endif
 
 	CvAssertMsg(eIndex >= 0, "eIndex is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eIndex < GC.getNumProjectInfos(), "eIndex is expected to be within maximum bounds (invalid Index)");
@@ -4324,7 +4518,11 @@ void CvTeam::changeProjectCount(ProjectTypes eIndex, int iChange)
 			changeTechShareCount((pkProject->GetTechShare() - 1), iChange);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		for (uint iVictory = 0; iVictory < GC.getNumVictoryInfos(); ++iVictory)
+#else
 		for(int iVictory = 0; iVictory < GC.getNumVictoryInfos(); ++iVictory)
+#endif
 		{
 			if(pkProject->GetVictoryThreshold(iVictory) > 0)
 			{
@@ -4419,7 +4617,11 @@ void CvTeam::changeProjectCount(ProjectTypes eIndex, int iChange)
 	}
 
 	// Update the amount of a Resource used up by this Project
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		if(GC.getProjectInfo(eIndex)->GetResourceQuantityRequirement(iResourceLoop) > 0)
 		{
@@ -4728,7 +4930,11 @@ void CvTeam::changeVictoryCountdown(VictoryTypes eIndex, int iChange)
 int CvTeam::getVictoryDelay(VictoryTypes eVictory) const
 {
 	int iExtraDelayPercent = 0;
+#ifdef AUI_WARNING_FIXES
+	for (uint iProject = 0; iProject < GC.getNumProjectInfos(); ++iProject)
+#else
 	for(int iProject = 0; iProject < GC.getNumProjectInfos(); ++iProject)
+#endif
 	{
 		CvProjectEntry* pkProject = GC.getProjectInfo((ProjectTypes)iProject);
 		int iCount = getProjectCount((ProjectTypes)iProject);
@@ -4763,7 +4969,11 @@ bool CvTeam::canLaunch(VictoryTypes eVictory) const
 //	--------------------------------------------------------------------------------
 void CvTeam::resetVictoryProgress()
 {
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumVictoryInfos(); ++iI)
+#else
 	for(int iI = 0; iI < GC.getNumVictoryInfos(); ++iI)
+#endif
 	{
 		VictoryTypes eVictory = static_cast<VictoryTypes>(iI);
 		CvVictoryInfo* pkVictoryInfo = GC.getVictoryInfo((VictoryTypes)iI);
@@ -4773,7 +4983,11 @@ void CvTeam::resetVictoryProgress()
 			{
 				setVictoryCountdown(eVictory, -1);
 
+#ifdef AUI_WARNING_FIXES
+				for (uint iK = 0; iK < GC.getNumProjectInfos(); iK++)
+#else
 				for(int iK = 0; iK < GC.getNumProjectInfos(); iK++)
+#endif
 				{
 					ProjectTypes eProject = static_cast<ProjectTypes>(iK);
 					CvProjectEntry* pkProjectInfo = GC.getProjectInfo(eProject);
@@ -4877,7 +5091,11 @@ void CvTeam::DoTestSmallAwards()
 	int iNotificationData;
 	int iNotificationX, iNotificationY;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iSmallAwardLoop = 0; iSmallAwardLoop < GC.getNumSmallAwardInfos(); iSmallAwardLoop++)
+#else
 	for(int iSmallAwardLoop = 0; iSmallAwardLoop < GC.getNumSmallAwardInfos(); iSmallAwardLoop++)
+#endif
 	{
 		SmallAwardTypes eAward = static_cast<SmallAwardTypes>(iSmallAwardLoop);
 		CvSmallAwardInfo* pkSmallAwardInfo = GC.getSmallAwardInfo(eAward);
@@ -4890,7 +5108,11 @@ void CvTeam::DoTestSmallAwards()
 			if(!IsSmallAwardAchieved(eAward))
 			{
 				// Cities
+#ifdef AUI_WARNING_FIXES
+				iAwardRequirement = pkSmallAwardInfo->GetNumCities();
+#else
 				iAwardRequirement = GC.getSmallAwardInfo(eAward)->GetNumCities();
+#endif
 				if(iAwardRequirement > 0)
 				{
 					for(iPlayerLoop = 0; iPlayerLoop < MAX_MAJOR_CIVS; iPlayerLoop++)
@@ -4902,7 +5124,11 @@ void CvTeam::DoTestSmallAwards()
 							if(GET_PLAYER(ePlayer).getNumCities() >= iAwardRequirement)
 							{
 								SetSmallAwardAchieved(eAward, true);
+#ifdef AUI_WARNING_FIXES
+								changeVictoryPoints(pkSmallAwardInfo->GetNumVictoryPoints());
+#else
 								changeVictoryPoints(GC.getSmallAwardInfo(eAward)->GetNumVictoryPoints());
+#endif
 
 								bShouldShowNotification = true;
 								iNotificationData = iAwardRequirement;
@@ -5081,6 +5307,10 @@ void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, b
 
 			// Repeating techs are good for score!
 			int iScoreChange = /*10*/ GC.getSCORE_FUTURE_TECH_MULTIPLIER();
+#ifdef NQM_OPTIONAL_SCORING_TWEAKS
+			if (GC.getGame().isOption("GAMEOPTION_TWEAKED_SCORING"))
+				iScoreChange = GC.getNEW_SCORE_FUTURE_TECH_MULTIPLIER();
+#endif
 			for(int iI = 0; iI < MAX_PLAYERS; iI++)
 			{
 				const PlayerTypes eLoopPlayer = static_cast<PlayerTypes>(iI);
@@ -5281,8 +5511,12 @@ void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, b
 			if(bTechRevealsArtifacts | bTechRevealsHiddenArtifacts)
 			{
 				const PlayerTypes eActivePlayer = GC.getGame().getActivePlayer();
+#ifdef AUI_WARNING_FIXES
+				for (uint iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
+#else
 				const int iNumPlots = GC.getMap().numPlots();
 				for(int iPlotLoop = 0; iPlotLoop < iNumPlots; iPlotLoop++)
+#endif
 				{
 					CvPlot* pLoopPlot = GC.getMap().plotByIndexUnchecked(iPlotLoop);
 
@@ -5359,7 +5593,11 @@ void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, b
 			{
 				// If we have all the techs in the earlier eras, then we're in that era
 				bool bHasAllEarlierTechs = true;
+#ifdef AUI_WARNING_FIXES
+				for (uint iTechLoop = 0; iTechLoop < GC.getNumTechInfos(); iTechLoop++)
+#else
 				for(int iTechLoop = 0; iTechLoop < GC.getNumTechInfos(); iTechLoop++)
+#endif
 				{
 					const TechTypes eLoopTech = static_cast<TechTypes>(iTechLoop);
 					CvTechEntry* pkLoopTech = GC.getTechInfo(eLoopTech);
@@ -5379,8 +5617,12 @@ void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, b
 
 				if(bHasAllEarlierTechs)
 				{
+#ifdef AUI_WARNING_FIXES
+					const uint iNextEra = static_cast<uint>(GetCurrentEra()) + 1;
+#else
 					const EraTypes currentEra = GetCurrentEra();
 					const int iNextEra = static_cast<int>(currentEra) + 1;
+#endif
 					if(iNextEra < GC.getNumEraInfos())
 					{
 						const EraTypes nextEra = static_cast<EraTypes>(iNextEra);
@@ -5513,7 +5755,11 @@ void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, b
 					announceTechToPlayers(eIndex);
 
 					// Resources discovered in a player's territory
+#ifdef AUI_WARNING_FIXES
+					for (uint iI = 0; iI < GC.getMap().numPlots(); iI++)
+#else
 					for(int iI = 0; iI < GC.getMap().numPlots(); iI++)
+#endif
 					{
 						CvPlot* pLoopPlot = GC.getMap().plotByIndexUnchecked(iI);
 
@@ -5811,13 +6057,21 @@ void CvTeam::updateTechShare(TechTypes eTech)
 		return;
 	}
 
+#ifdef AUI_FAST_COMP
+	iBestShare = MAX_INT;
+#else
 	iBestShare = numeric_limits<int>::max();
+#endif
 
 	for(iI = 0; iI < MAX_TEAMS; iI++)
 	{
 		if(isTechShare(iI))
 		{
+#ifdef AUI_FAST_COMP
+			iBestShare = MIN(iBestShare, (iI + 1));
+#else
 			iBestShare = std::min(iBestShare, (iI + 1));
+#endif
 		}
 	}
 
@@ -5851,7 +6105,11 @@ void CvTeam::updateTechShare(TechTypes eTech)
 //	--------------------------------------------------------------------------------
 void CvTeam::updateTechShare()
 {
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	for(iI = 0; iI < GC.getNumTechInfos(); iI++)
 	{
@@ -5998,7 +6256,12 @@ void CvTeam::processTech(TechTypes eTech, int iChange)
 	CvCity* pCity;
 	CvPlot* pLoopPlot;
 	ResourceTypes eResource;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+	int iJ;
+#else
 	int iI, iJ;
+#endif
 
 	CvTechEntry* pTech = GC.getTechInfo(eTech);
 
@@ -6105,7 +6368,11 @@ void CvTeam::processTech(TechTypes eTech, int iChange)
 		changeRouteChange(((RouteTypes)iI), (GC.getRouteInfo((RouteTypes) iI)->getTechMovementChange(eTech) * iChange));
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumBuildInfos(); i++)
+#else
 	for (int i = 0; i < GC.getNumBuildInfos(); i++)
+#endif
 	{
 		CvBuildInfo* pkBuildInfo = GC.getBuildInfo((BuildTypes)i);
 		if (pkBuildInfo != NULL)
@@ -6161,7 +6428,11 @@ void CvTeam::processTech(TechTypes eTech, int iChange)
 			kPlayer.ChangeExtraVotesPerDiplomat(pTech->GetExtraVotesPerDiplomat() * iChange);
 
 			// Free promotion from this tech?
+#ifdef AUI_WARNING_FIXES
+			for (uint iPromotion = 0; iPromotion < GC.getNumPromotionInfos(); iPromotion++)
+#else
 			for(int iPromotion = 0; iPromotion < GC.getNumPromotionInfos(); iPromotion++)
+#endif
 			{
 				PromotionTypes ePromotion = (PromotionTypes) iPromotion;
 				if(pTech->IsFreePromotion(ePromotion))
@@ -6226,9 +6497,15 @@ void CvTeam::processTech(TechTypes eTech, int iChange)
 		{
 			if(pBuildInfo->getRoute() != NO_ROUTE)
 			{
+#ifdef AUI_WARNING_FIXES
+				for (uint iK = 0; iK < GC.getMap().numPlots(); iK++)
+				{
+					pLoopPlot = GC.getMap().plotByIndexUnchecked(iK);
+#else
 				for(iJ = 0; iJ < GC.getMap().numPlots(); iJ++)
 				{
 					pLoopPlot = GC.getMap().plotByIndexUnchecked(iJ);
+#endif
 
 					pCity = pLoopPlot->getPlotCity();
 
@@ -6305,6 +6582,7 @@ bool CvTeam::isFriendlyTerritory(TeamTypes eTeam) const
 	return false;
 }
 
+#ifndef AUI_GAME_BETTER_HYBRID_MODE
 //	--------------------------------------------------------------------------------
 bool CvTeam::isAtWarWithHumans() const
 {//are we currently fighting a war with a human controlled civ?
@@ -6334,6 +6612,7 @@ bool CvTeam::isSimultaneousTurns() const
 
 	return false;
 }
+#endif
 
 //	--------------------------------------------------------------------------------
 void CvTeam::setForceRevealedResource(ResourceTypes eResource, bool bRevealed)
@@ -6361,7 +6640,11 @@ void CvTeam::setForceRevealedResource(ResourceTypes eResource, bool bRevealed)
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getMap().numPlots(); ++iI)
+#else
 	for(int iI = 0; iI < GC.getMap().numPlots(); ++iI)
+#endif
 	{
 		CvPlot* pLoopPlot = GC.getMap().plotByIndexUnchecked(iI);
 
@@ -6440,7 +6723,11 @@ EraTypes CvTeam::GetCurrentEra() const
 void CvTeam::SetCurrentEra(EraTypes eNewValue)
 {
 	CvPlot* pLoopPlot;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	if(GetCurrentEra() != eNewValue)
 	{
@@ -6787,6 +7074,35 @@ int CvTeam::GetIgnoreWarningCount (TeamTypes eTeam)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+int CvTeam::getTurnOrder() const
+{
+	for (int iPlayer = 0; iPlayer < MAX_PLAYERS; ++iPlayer)
+	{
+		CvPlayer& kPlayer = GET_PLAYER((PlayerTypes)iPlayer);
+		if (kPlayer.isAlive() && kPlayer.getTeam() == GetID())
+		{
+			return kPlayer.getTurnOrder();
+		}
+	}
+
+	return MAX_TEAMS;
+}
+
+
+//	----------------------------------------------------------------------------
+void CvTeam::setTurnOrder(int iTurnOrder)
+{
+	for (int iPlayer = 0; iPlayer < MAX_PLAYERS; ++iPlayer)
+	{
+		CvPlayer& kPlayer = GET_PLAYER((PlayerTypes)iPlayer);
+		if (kPlayer.isAlive() && kPlayer.getTeam() == GetID())
+		{
+			kPlayer.setTurnOrder(iTurnOrder);
+		}
+	}
+}
+#else
 void CvTeam::setDynamicTurnsSimultMode(bool simultaneousTurns)
 {//set DynamicTurnsSimultMode for every player on this team.
 	for(int iPlayer = 0; iPlayer < MAX_PLAYERS; ++iPlayer)
@@ -6798,6 +7114,7 @@ void CvTeam::setDynamicTurnsSimultMode(bool simultaneousTurns)
 		}
 	}
 }
+#endif
 
 
 //	--------------------------------------------------------------------------------
@@ -6839,6 +7156,11 @@ void CvTeam::Read(FDataStream& kStream)
 	kStream >> m_iNumNaturalWondersDiscovered;
 	kStream >> m_iBestPossibleRoute;
 	kStream >> m_iNumMinorCivsAttacked;
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	kStream >> m_iBestRouteFlatCostMultiplier;
+	kStream >> m_iBestRouteNormalCostMultiplier;
+	kStream >> m_iUseFlatCostIfBelowThis;
+#endif
 
 	kStream >> m_bMapCentering;
 	kStream >> m_bHasBrokenPeaceTreaty;
@@ -6917,9 +7239,15 @@ void CvTeam::Read(FDataStream& kStream)
 
 	//project art types
 
+#ifdef AUI_WARNING_FIXES
+	uint iNumProjects;
+	kStream >> iNumProjects;
+	for (uint i = 0; i<iNumProjects; i++)
+#else
 	int iNumProjects;
 	kStream >> iNumProjects;
 	for(int i=0; i<iNumProjects; i++)
+#endif
 	{
 		int iType = CvInfosSerializationHelper::ReadHashed(kStream);
 		if (iType != -1)
@@ -7008,6 +7336,11 @@ void CvTeam::Write(FDataStream& kStream) const
 	kStream << m_iNumNaturalWondersDiscovered;
 	kStream << m_iBestPossibleRoute;
 	kStream << m_iNumMinorCivsAttacked;
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+	kStream << m_iBestRouteFlatCostMultiplier;
+	kStream << m_iBestRouteNormalCostMultiplier;
+	kStream << m_iUseFlatCostIfBelowThis;
+#endif
 
 	kStream << m_bMapCentering;
 	kStream << m_bHasBrokenPeaceTreaty;
@@ -7057,7 +7390,11 @@ void CvTeam::Write(FDataStream& kStream) const
 	//project art types
 	kStream << GC.getNumProjectInfos();
 
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i<GC.getNumProjectInfos(); i++)
+#else
 	for(int i=0; i<GC.getNumProjectInfos(); i++)
+#endif
 	{
 		CvInfosSerializationHelper::WriteHashed(kStream, GC.getProjectInfo((ProjectTypes)i));
 		for(int j=0; j<m_paiProjectCount[i]; j++)

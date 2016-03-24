@@ -559,7 +559,11 @@ void CvHomelandAI::FindHomelandTargets()
 					{
 						// Find proper improvement
 						BuildTypes eBuild;
+#ifdef AUI_WARNING_FIXES
+						for (uint iJ = 0; iJ < GC.getNumBuildInfos(); iJ++)
+#else
 						for(int iJ = 0; iJ < GC.getNumBuildInfos(); iJ++)
+#endif
 						{
 							eBuild = ((BuildTypes)iJ);
 							CvBuildInfo* pkBuildInfo = GC.getBuildInfo(eBuild);
@@ -691,7 +695,44 @@ void CvHomelandAI::AssignHomelandMoves()
 	{
 		CvHomelandMove move = *it;
 
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+		static const char* aHomelandMoves[] = { "AI_HOMELAND_MOVE_UNASSIGNED",
+			"AI_HOMELAND_MOVE_EXPLORE",
+			"AI_HOMELAND_MOVE_EXPLORE_SEA",
+			"AI_HOMELAND_MOVE_SETTLE",
+			"AI_HOMELAND_MOVE_GARRISON",
+			"AI_HOMELAND_MOVE_HEAL",
+			"AI_HOMELAND_MOVE_TO_SAFETY",
+			"AI_HOMELAND_MOVE_MOBILE_RESERVE",
+			"AI_HOMELAND_MOVE_SENTRY",
+			"AI_HOMELAND_MOVE_WORKER",
+			"AI_HOMELAND_MOVE_WORKER_SEA",
+			"AI_HOMELAND_MOVE_PATROL",
+			"AI_HOMELAND_MOVE_UPGRADE",
+			"AI_HOMELAND_MOVE_ANCIENT_RUINS",
+			"AI_HOMELAND_MOVE_GARRISON_CITY_STATE",
+			"AI_HOMELAND_MOVE_WRITER",
+			"AI_HOMELAND_MOVE_ARTIST_GOLDEN_AGE",
+			"AI_HOMELAND_MOVE_MUSICIAN",
+			"AI_HOMELAND_MOVE_SCIENTIST_FREE_TECH",
+			"AI_HOMELAND_MOVE_MERCHANT_TRADE",
+			"AI_HOMELAND_MOVE_ENGINEER_HURRY",
+			"AI_HOMELAND_MOVE_GENERAL_GARRISON",
+			"AI_HOMELAND_MOVE_ADMIRAL_GARRISON",
+			"AI_HOMELAND_MOVE_SPACESHIP_PART",
+			"AI_HOMELAND_MOVE_AIRCRAFT_TO_THE_FRONT",
+			"AI_HOMELAND_MOVE_TREASURE",
+			"AI_HOMELAND_MOVE_PROPHET_RELIGION",
+			"AI_HOMELAND_MOVE_MISSIONARY",
+			"AI_HOMELAND_MOVE_INQUISITOR",
+			"AI_HOMELAND_MOVE_TRADE_UNIT",
+			"AI_HOMELAND_MOVE_ARCHAEOLOGIST",
+			"AI_HOMELAND_MOVE_ADD_SPACESHIP_PART",
+			"AI_HOMELAND_MOVE_AIRLIFT" };
+		AI_PERF_FORMAT("AI-perf-home.csv", ("Move Type: %s (%d), Turn %03d, %s", (move.m_eMoveType > 0 && move.m_eMoveType < 33 ? aHomelandMoves[move.m_eMoveType] : "AI_HOMELAND_MOVE_NONE"), (int)move.m_eMoveType, GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()));
+#else
 		AI_PERF_FORMAT("AI-perf-tact.csv", ("Homeland Move: %d, Turn %03d, %s", (int)move.m_eMoveType, GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()) );
+#endif
 
 		switch(move.m_eMoveType)
 		{
@@ -948,7 +989,14 @@ void CvHomelandAI::PlotHealMoves()
 		if(pUnit && !pUnit->isHuman())
 		{
 			// Am I under 100% health and not at sea or already in a city?
+#ifdef AUI_HOMELAND_TWEAKED_HEAL_MOVES
+			if (pUnit->healRate(pUnit->plot()) <= 0 || pUnit->isAlwaysHeal() || pUnit->isEmbarked())
+				continue;
+			if (((m_pPlayer->GetPlotDanger(*(pUnit->plot())) <= 0 && pUnit->GetCurrHitPoints() < pUnit->GetMaxHitPoints()) ||
+				(m_pPlayer->GetPlotDanger(*(pUnit->plot())) > 0 && pUnit->GetCurrHitPoints() + pUnit->healRate(pUnit->plot()) < pUnit->GetMaxHitPoints())))
+#else
 			if(pUnit->GetCurrHitPoints() < pUnit->GetMaxHitPoints() && !pUnit->isEmbarked() && !pUnit->plot()->isCity())
+#endif
 			{
 				// If I'm a naval unit I need to be in friendly territory
 				if(pUnit->getDomainType() != DOMAIN_SEA || pUnit->plot()->IsFriendlyTerritory(m_pPlayer->GetID()))
@@ -1036,7 +1084,12 @@ void CvHomelandAI::PlotMovesToSafety()
 				else if(!pUnit->isBarbarian())
 				{
 					int iAcceptableDanger;
+#ifdef AUI_HOMELAND_TWEAKED_ACCEPTABLE_DANGER
+					iAcceptableDanger = pUnit->GetBaseCombatStrengthConsideringDamage() * (int)(AUI_HOMELAND_TWEAKED_ACCEPTABLE_DANGER + 0.5 +
+						(100.0 - AUI_HOMELAND_TWEAKED_ACCEPTABLE_DANGER) * pow((double)pUnit->GetCurrHitPoints() / (double)pUnit->GetMaxHitPoints(), 2.0));
+#else
 					iAcceptableDanger = pUnit->GetBaseCombatStrengthConsideringDamage() * 100;
+#endif
 					if(iDangerLevel > iAcceptableDanger)
 					{
 						bAddUnit = true;
@@ -1104,7 +1157,9 @@ void CvHomelandAI::PlotSentryMoves()
 		// See how many moves of this type we can execute
 		for(unsigned int iI = 0; iI < m_TargetedSentryPoints.size(); iI++)
 		{
+#ifndef AUI_PERF_LOGGING_FORMATTING_TWEAKS // Not needed because it's already covered by the general move performance log
 			AI_PERF_FORMAT("Homeland-perf.csv", ("PlotSentryMoves, Turn %03d, %s", GC.getGame().getElapsedGameTurns(), m_pPlayer->getCivilizationShortDescription()) );
+#endif
 
 			CvPlot* pTarget = GC.getMap().plot(m_TargetedSentryPoints[iI].GetTargetX(), m_TargetedSentryPoints[iI].GetTargetY());
 
@@ -1267,6 +1322,13 @@ void CvHomelandAI::PlotPatrolMoves()
 		UnitHandle pUnit = m_pPlayer->getUnit(*it);
 		if(pUnit && !pUnit->isHuman() && pUnit->getDomainType() != DOMAIN_AIR && !pUnit->isTrade())
 		{
+#ifdef AUI_HOMELAND_FIND_PATROL_MOVES_CIVILIANS_PATROL_TO_SAFETY
+			if (!pUnit->IsCombatUnit())
+			{
+				MoveCivilianToSafety(pUnit.pointer());
+				continue;
+			}
+#endif
 			CvPlot* pTarget = FindPatrolTarget(pUnit.pointer());
 			if(pTarget)
 			{
@@ -1319,7 +1381,11 @@ void CvHomelandAI::PlotUpgradeMoves()
 				{
 					// Resource requirement
 					bMissingResource = false;
+#ifdef AUI_WARNING_FIXES
+					for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos() && !bMissingResource; iResourceLoop++)
+#else
 					for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos() && !bMissingResource; iResourceLoop++)
+#endif
 					{
 						eResource = (ResourceTypes) iResourceLoop;
 						iNumResource = GC.getUnitInfo(eUpgradeUnitType)->GetResourceQuantityRequirement(eResource);
@@ -1402,9 +1468,14 @@ void CvHomelandAI::PlotUpgradeMoves()
 				if(GC.getLogging() && GC.getAILogging())
 				{
 					CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+					CvString strTemp1 = pUnit->getUnitInfo().GetDescription();
+					CvString strTemp2 = pNewUnit->getUnitInfo().GetDescription();
+#else
 					CvString strTemp1, strTemp2;
 					strTemp1 = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
 					strTemp2 = GC.getUnitInfo(pNewUnit->getUnitType())->GetDescription();
+#endif
 					strLogString.Format("Upgrading unit from type %s to type %s, X: %d, Y: %d", strTemp1.GetCString(), strTemp2.GetCString(), pNewUnit->getX(), pNewUnit->getY());
 					LogHomelandMessage(strLogString);
 				}
@@ -1457,9 +1528,13 @@ void CvHomelandAI::PlotUpgradeMoves()
 			if(GC.getLogging() && GC.getAILogging())
 			{
 				CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+				CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 				CvString strTemp;
 
 				strTemp = pUnit->getUnitInfo().GetDescription();
+#endif
 				strLogString.Format("Need gold for %s upgrade, GOLD: Available = %d, Needed = %d, Priority = %d",
 				                    strTemp.GetCString(), m_pPlayer->GetTreasury()->GetGold(), iAmountRequired, iGoldPriority);
 				LogHomelandMessage(strLogString);
@@ -2014,7 +2089,11 @@ void CvHomelandAI::PlotAirliftMoves()
 	CvTacticalAnalysisMap* pMap = GC.getGame().GetTacticalAnalysisMap();
 	CvTacticalDominanceZone *pZone;
 	vector<CvCity *>::const_iterator it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = aAirliftCities.begin(); it != aAirliftCities.end(); ++it)
+#else
 	for (it = aAirliftCities.begin(); it != aAirliftCities.end(); it++)
+#endif
 	{
 		pZone = pMap->GetZoneByCity(*it, false);
 		if (pZone && (pZone->GetDominanceFlag() == TACTICAL_DOMINANCE_FRIENDLY || pZone->GetDominanceFlag() == TACTICAL_DOMINANCE_NO_UNITS_VISIBLE))
@@ -2049,7 +2128,11 @@ void CvHomelandAI::PlotAirliftMoves()
 	}
 
 	vector<CvPlot *>::const_iterator plotIt;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (plotIt = aAirliftPlots.begin(); plotIt != aAirliftPlots.end(); ++plotIt)
+#else
 	for (plotIt = aAirliftPlots.begin(); plotIt != aAirliftPlots.end(); plotIt++)
+#endif
 	{
 		FindUnitsForThisMove(AI_HOMELAND_MOVE_MOBILE_RESERVE, true);
 
@@ -2224,8 +2307,10 @@ void CvHomelandAI::ExecuteExplorerMoves()
 						LogHomelandMessage(strLogString);
 					}
 					pUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), pkStepPlot->getX(), pkStepPlot->getY(), MOVE_TERRITORY_NO_ENEMY | MOVE_MAXIMIZE_EXPLORE | MOVE_UNITS_IGNORE_DANGER, false, false, MISSIONAI_EXPLORE, pkStepPlot);
+#ifndef AUI_HOMELAND_FIX_EXECUTE_EXPLORER_MOVES_MOVE_AFTER_GOODY
 					pUnit->finishMoves();
 					UnitProcessed(pUnit->GetID());
+#endif
 				}
 				else
 				{
@@ -2269,11 +2354,23 @@ void CvHomelandAI::ExecuteExplorerMoves()
 			iMovementRange = 1;
 		}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		int iMaxDX, iDX;
+		CvPlot* pEvalPlot;
+		for (int iDY = -iMovementRange; iDY <= iMovementRange; iDY++)
+		{
+			iMaxDX = iMovementRange - MAX(0, iDY);
+			for (iDX = -iMovementRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				// No need for range check because loops are set up properly
+				pEvalPlot = plotXY(iUnitX, iUnitY, iDX, iDY);
+#else
 		for(int iX = -iMovementRange; iX <= iMovementRange; iX++)
 		{
 			for(int iY = -iMovementRange; iY <= iMovementRange; iY++)
 			{
 				CvPlot* pEvalPlot = plotXYWithRangeCheck(iUnitX, iUnitY, iX, iY, iMovementRange);
+#endif
 				if(!pEvalPlot)
 				{
 					continue;
@@ -2396,7 +2493,11 @@ void CvHomelandAI::ExecuteExplorerMoves()
 						continue;
 					}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+					pEvalPlot = GC.getMap().plotByIndex(iPlot);
+#else
 					CvPlot* pEvalPlot = GC.getMap().plotByIndex(iPlot);
+#endif
 					if(!pEvalPlot)
 					{
 						continue;
@@ -2554,7 +2655,11 @@ void CvHomelandAI::ExecuteExplorerMoves()
 					bool bFoundPath = false;
 					for(pLoopCity = m_pPlayer->firstCity(&iLoop); pLoopCity != NULL; pLoopCity = m_pPlayer->nextCity(&iLoop))
 					{
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+						if (GC.getIgnoreUnitsPathFinder().DoesPathExist(pUnit.pointer(), pUnit->plot(), pLoopCity->plot()))
+#else
 						if(GC.getIgnoreUnitsPathFinder().DoesPathExist(*(pUnit), pUnit->plot(), pLoopCity->plot()))
+#endif
 						{
 							bFoundPath = true;
 							break;
@@ -2567,7 +2672,11 @@ void CvHomelandAI::ExecuteExplorerMoves()
 						LogHomelandMessage(strLogString);
 
 						UnitProcessed(pUnit->GetID());
+#ifdef AUI_HOMELAND_FIX_EXECUTE_EXPLORER_MOVES_DISBAND
+						pUnit->scrap();
+#else
 						pUnit->kill(true);
+#endif
 						m_pPlayer->GetEconomicAI()->IncrementExplorersDisbanded();
 					}
 				}
@@ -2757,23 +2866,44 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 		{
 			CvPlot* pBestPlot = NULL;
 
+#ifdef AUI_HOMELAND_FIX_EXECUTE_MOVES_TO_SAFEST_PLOT_USE_GAME_MOVEMENT_RANGE
+			int iRange = pUnit->baseMoves();
+#else
 			int iRange = pUnit->getUnitInfo().GetMoves();
+#endif
+#ifdef AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+			IncreaseMoveRangeForRoads(pUnit.pointer(), iRange);
+#endif
 
 			// For each plot within movement range of the fleeing unit
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			int iMaxDX, iX;
+			CvPlot* pPlot;
+			for (int iY = -iRange; iY <= iRange; iY++)
+			{
+				iMaxDX = iRange - MAX(0, iY);
+				for (iX = -iRange - MIN(0, iY); iX <= iMaxDX; iX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+				{
+					// No need for range check because loops are set up properly
+					pPlot = plotXY(pUnit->getX(), pUnit->getY(), iX, iY);
+#else
 			for(int iX = -iRange; iX <= iRange; iX++)
 			{
 				for(int iY = -iRange; iY <= iRange; iY++)
 				{
 					CvPlot* pPlot = GC.getMap().plot(pUnit->getX() + iX, pUnit->getY() + iY);
+#endif
 					if(pPlot == NULL)
 					{
 						continue;
 					}
 
+#ifndef AUI_HEXSPACE_DX_LOOPS
 					if (plotDistance(pPlot->getX(), pPlot->getY(), pUnit->getX(), pUnit->getY()) > iRange)
 					{
 						continue;
 					}
+#endif
 
 					//   prefer being in a city with the lowest danger value
 					//   prefer being in a plot with no danger value
@@ -2786,6 +2916,9 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 					bool bIsInCity = pPlot->isFriendlyCity(*pUnit, false);
 					bool bIsInCover = (pPlot->getNumDefenders(m_pPlayer->GetID()) > 0) && !pUnit->IsCanDefend();
 					bool bIsInTerritory = (pPlot->getTeam() == m_pPlayer->getTeam());
+#ifdef AUI_HOMELAND_FIX_EXECUTE_MOVES_TO_SAFEST_PLOT_NO_EMBARK_SUICIDE
+					bool bNeedEmbark = ((pUnit->getDomainType() == DOMAIN_LAND) && (!pUnit->plot()->isWater()) && (pPlot->isWater()));
+#endif
 
 					#define MAX_DANGER_VALUE	100000
 					#define PREFERENCE_LEVEL(x, y) (x * MAX_DANGER_VALUE) + ((MAX_DANGER_VALUE - 1) - y)
@@ -2818,6 +2951,14 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 						iScore = PREFERENCE_LEVEL(0, iDanger);
 					}
 
+#ifdef AUI_HOMELAND_FIX_EXECUTE_MOVES_TO_SAFEST_PLOT_NO_EMBARK_SUICIDE
+					// makes sure the AI doesn't suicide units via embarking onto a tile that can be attacked
+					if (bNeedEmbark && !bIsInCover)
+					{
+						iScore = PREFERENCE_LEVEL(0, iDanger);
+					}
+#endif
+
 					aBestPlotList.push_back(pPlot, iScore);
 				}
 			}
@@ -2835,7 +2976,11 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 				aBestPlotList.SortItems();	// highest score will be first.
 				for (uint i = 0; i < uiListSize; ++i )	
 				{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+					pPlot = aBestPlotList.GetElement(i);
+#else
 					CvPlot* pPlot = aBestPlotList.GetElement(i);
+#endif
 
 					if(CanReachInXTurns(pUnit, pPlot, 1))
 					{
@@ -3660,7 +3805,13 @@ void CvHomelandAI::ExecuteProphetMoves()
 					bool bSkipCity = false;
 
 					CvPlot* pTarget = pLoopCity->plot();
+#ifdef AUI_WARNING_FIXES
+					if (!pTarget)
+						continue;
+					for (uint iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#else
 					for(int iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#endif
 					{
 						// Don't go here if a civilian is already present
 						if(!pTarget->getUnitByIndex(iUnitLoop)->IsCombatUnit())
@@ -3825,8 +3976,12 @@ void CvHomelandAI::ExecuteGeneralMoves()
 					// find the great general improvement
 					BuildTypes eSelectedBuildType = NO_BUILD;
 					BuildTypes eBuild;
+#ifdef AUI_WARNING_FIXES
+					for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 					int iBuildIndex;
 					for(iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 					{
 						eBuild = (BuildTypes)iBuildIndex;
 						CvBuildInfo* pkBuild = GC.getBuildInfo(eBuild);
@@ -3915,7 +4070,13 @@ void CvHomelandAI::ExecuteGeneralMoves()
 				bool bSkipCity = false;
 
 				CvPlot* pTarget = pLoopCity->plot();
+#ifdef AUI_WARNING_FIXES
+				if (!pTarget)
+					continue;
+				for (uint iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#else
 				for(int iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#endif
 				{
 					// Don't go here if a general or admiral is already present
 					if(pTarget->getUnitByIndex(iUnitLoop)->AI_getUnitAIType() == UNITAI_GENERAL)
@@ -4040,7 +4201,11 @@ void CvHomelandAI::ExecuteAdmiralMoves()
 			// Don't go here if a different general or admiral is already present
 			bool bSkipCity = false;
 			CvPlot* pTarget = pLoopCity->plot();
+#ifdef AUI_WARNING_FIXES
+			for (uint iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#else
 			for(int iUnitLoop = 0; iUnitLoop < pTarget->getNumUnits(); iUnitLoop++)
+#endif
 			{
 				CvUnit *pLoopUnit = pTarget->getUnitByIndex(iUnitLoop);
 				if(pLoopUnit->AI_getUnitAIType() == UNITAI_GENERAL && pLoopUnit->GetID() != pUnit->GetID())
@@ -4521,10 +4686,17 @@ void CvHomelandAI::ExecuteAircraftMoves()
 			{
 				CvString strLogString;
 				CvString strTemp, strTemp2;
+#ifdef AUI_WARNING_FIXES
+				strTemp = pUnit->getUnitInfo().GetDescription();
+				if (pTransportUnit)
+				{
+					strTemp2 = pTransportUnit->getUnitInfo().GetDescription();
+#else
 				strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
 				if (pTransportUnit)
 				{
 					strTemp2 = GC.getUnitInfo(pTransportUnit->getUnitType())->GetDescription();
+#endif
 				}
 
 				if (pBestPlot->getPlotCity())
@@ -4545,8 +4717,12 @@ void CvHomelandAI::ExecuteAircraftMoves()
 
 			if(GC.getLogging() && GC.getAILogging())
 			{
+#ifdef AUI_WARNING_FIXES
+				CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 				CvString strTemp;
 				strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 				CvString strLogString;
 				strLogString.Format("No better place to move %s at, X: %d, Y: %d", strTemp.GetCString(), pUnit->getX(), pUnit->getY());
 				LogHomelandMessage(strLogString);
@@ -4565,11 +4741,23 @@ bool CvHomelandAI::MoveCivilianToSafety(CvUnit* pUnit, bool bIgnoreUnits)
 	WeightedPlotVector aBestPlotList;
 	aBestPlotList.reserve( ((iSearchRange * 2) + 1) * 2 );
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iSearchRange; iDY <= iSearchRange; iDY++)
+	{
+		iMaxDX = iSearchRange - MAX(0, iDY);
+		for (iDX = -iSearchRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(pUnit->getX(), pUnit->getY(), iDX, iDY);
+#else
 	for(int iDX = -(iSearchRange); iDX <= iSearchRange; iDX++)
 	{
 		for(int iDY = -(iSearchRange); iDY <= iSearchRange; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(pUnit->getX(), pUnit->getY(), iDX, iDY, iSearchRange);
+#endif
 			if(!pLoopPlot)
 			{
 				continue;
@@ -4663,8 +4851,12 @@ bool CvHomelandAI::MoveCivilianToSafety(CvUnit* pUnit, bool bIgnoreUnits)
 				if(GC.getLogging() && GC.getAILogging())
 				{
 					CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+					CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 					CvString strTemp;
 					strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 					strLogString.Format("%s (%d) tried to move to safety but is at the best spot, X: %d, Y: %d", strTemp.GetCString(), pUnit->GetID(), pBestPlot->getX(), pBestPlot->getY());
 					LogHomelandMessage(strLogString);
 				}
@@ -4677,8 +4869,12 @@ bool CvHomelandAI::MoveCivilianToSafety(CvUnit* pUnit, bool bIgnoreUnits)
 				if(GC.getLogging() && GC.getAILogging())
 				{
 					CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+					CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 					CvString strTemp;
 					strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 					strLogString.Format("%s (%d) tried to move to safety but cannot hold in current location, X: %d, Y: %d", strTemp.GetCString(), pUnit->GetID(), pBestPlot->getX(), pBestPlot->getY());
 					LogHomelandMessage(strLogString);
 				}
@@ -4690,8 +4886,12 @@ bool CvHomelandAI::MoveCivilianToSafety(CvUnit* pUnit, bool bIgnoreUnits)
 			if(GC.getLogging() && GC.getAILogging())
 			{
 				CvString strLogString;
+#ifdef AUI_WARNING_FIXES
+				CvString strTemp = pUnit->getUnitInfo().GetDescription();
+#else
 				CvString strTemp;
 				strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 				strLogString.Format("%s (%d) moving to safety, X: %d, Y: %d", strTemp.GetCString(), pUnit->GetID(), pBestPlot->getX(), pBestPlot->getY());
 				LogHomelandMessage(strLogString);
 			}
@@ -4983,11 +5183,13 @@ bool CvHomelandAI::FindUnitsForThisMove(AIHomelandMove eMove, bool bFirstTime)
 					continue;
 				}
 
+#ifndef AUI_HOMELAND_ALWAYS_MOVE_SCOUTS
 				// Scouts aren't useful unless recon is entirely shut off
 				if(pLoopUnit->AI_getUnitAIType() == UNITAI_EXPLORE && m_pPlayer->GetEconomicAI()->GetReconState() != RECON_STATE_ENOUGH)
 				{
 					continue;
 				}
+#endif
 
 				bool bSuitableUnit = false;
 				bool bHighPriority = false;
@@ -5131,6 +5333,36 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 	iBestValue = 0;
 	pBestPlot = NULL;
 
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
+	int iValueBonus;
+	if (pUnit->IsCombatUnit())
+	{
+		pBestPlot = pUnit->plot();
+		const IDInfo* pUnitNode = pBestPlot->headUnitNode();
+		const UnitHandle pLoopUnit;
+
+		while (pUnitNode != NULL)
+		{
+			pLoopUnit = GetPlayerUnit(*pUnitNode);
+			if (pLoopUnit && !pLoopUnit->IsCombatUnit())
+			{
+				if (!pLoopUnit->canMove())
+					return pBestPlot;
+				else
+				{
+					iBestValue = 20001;
+					break;
+				}
+			}
+			pUnitNode = pBestPlot->nextUnitNode(pUnitNode);
+		}
+	}
+#endif
+
+#if defined(AUI_HOMELAND_TWEAKED_FIND_PATROL_TARGET_CIVILIAN_NO_DANGER)
+	int iMyDanger = m_pPlayer->GetPlotDanger(*(pUnit->plot()));
+#endif
+
 	for(iI = 0; iI < NUM_DIRECTION_TYPES; iI++)
 	{
 		pAdjacentPlot = plotDirection(pUnit->getX(), pUnit->getY(), ((DirectionTypes)iI));
@@ -5143,13 +5375,78 @@ CvPlot* CvHomelandAI::FindPatrolTarget(CvUnit* pUnit)
 				{
 					if(pUnit->GeneratePath(pAdjacentPlot, 0, true))
 					{
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
+						iValueBonus = 0;
+#endif
 						iValue = (1 + GC.getGame().getJonRandNum(10000, "AI Patrol"));
 
 						// Prefer wandering in our own territory
 						if(pAdjacentPlot->getOwner() == pUnit->getOwner())
 						{
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
+							iValueBonus = 5000;
+#ifdef AUI_HOMELAND_FIND_PATROL_MOVES_CIVILIANS_PATROL_TO_SAFETY
+							if (pAdjacentPlot->isAdjacentPlayer(NO_PLAYER) || pAdjacentPlot->IsAdjacentOwnedByOtherTeam(m_pPlayer->getTeam()) || pAdjacentPlot->isValidRoute(pUnit))
+#else
+							if ((pUnit->IsCombatUnit() && (pAdjacentPlot->isAdjacentPlayer(NO_PLAYER) || pAdjacentPlot->IsAdjacentOwnedByOtherTeam(m_pPlayer->getTeam()))) ||
+								(pAdjacentPlot->isValidRoute(pUnit) && (!pAdjacentPlot->isCity() || !pUnit->IsCombatUnit())))
+#endif
+							{
+								iValueBonus += 5000;
+							}
+#else
 							iValue += 10000;
+#endif
 						}
+
+#if defined(AUI_HOMELAND_TWEAKED_FIND_PATROL_TARGET_CIVILIAN_NO_DANGER)
+						if (!pUnit->IsCombatUnit())
+						{
+							int iDanger = m_pPlayer->GetPlotDanger(*pAdjacentPlot);
+							if (iDanger > 0)
+							{
+								if (iMyDanger > 0)
+								{
+									iValue -= iDanger;
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
+									iValueBonus = 0;
+#else
+									// Almost nullifies the value bonus from being in our own territory
+									if (pAdjacentPlot->getOwner() == pUnit->getOwner())
+									{
+										iValue -= 9999;
+									}
+#endif
+								}
+								else
+								{
+									iValue = -1;
+								}
+							}
+						}
+						else
+						{
+							const IDInfo* pUnitNode = pAdjacentPlot->headUnitNode();
+							const UnitHandle pLoopUnit;
+
+							while (pUnitNode != NULL)
+							{
+								pLoopUnit = GetPlayerUnit(*pUnitNode);
+								if (pLoopUnit && !pLoopUnit->IsCombatUnit())
+								{
+									if (!pLoopUnit->canMove())
+										iValueBonus += 100000;
+									else
+										iValueBonus += 10000;
+									break;
+								}
+								pUnitNode = pAdjacentPlot->nextUnitNode(pUnitNode);
+							}
+						}
+#endif
+#ifdef AUI_HOMELAND_FIND_PATROL_TARGET_DESIRES_BORDER_AND_ROUTE_AND_CIVILIAN_GUARD
+						iValue += iValueBonus;
+#endif
 
 						if(GC.getLogging() && GC.getAILogging()){
 							CvString strLogString;
@@ -5426,7 +5723,11 @@ CvPlot* CvHomelandAI::FindArchaeologistTarget(CvUnit *pUnit)
 
 	// Reverse the logic from most of the Homeland moves; for this we'll loop through units and find the best targets for them (instead of vice versa)
 	std::vector<CvHomelandTarget>::iterator it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (it = m_TargetedAntiquitySites.begin(); it != m_TargetedAntiquitySites.end(); ++it)
+#else
 	for (it = m_TargetedAntiquitySites.begin(); it != m_TargetedAntiquitySites.end(); it++)
+#endif
 	{
 		CvPlot* pTarget = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
 		if (m_pPlayer->GetPlotDanger(*pTarget) == 0)
@@ -5444,7 +5745,11 @@ CvPlot* CvHomelandAI::FindArchaeologistTarget(CvUnit *pUnit)
 	// Erase this site from future contention
 	if (pBestTarget)
 	{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (it = m_TargetedAntiquitySites.begin(); it != m_TargetedAntiquitySites.end(); ++it)
+#else
 		for (it = m_TargetedAntiquitySites.begin(); it != m_TargetedAntiquitySites.end(); it++)
+#endif
 		{
 			if (it->GetTargetX() == pBestTarget->getX() && it->GetTargetY() == pBestTarget->getY())
 			{
@@ -5549,7 +5854,21 @@ bool CvHomelandAI::ExecuteWorkerMove(CvUnit* pUnit)
 			}
 			else
 			{
+#ifdef AUI_HOMELAND_FIX_EXECUTE_WORKER_MOVE_MOVE_AND_BUILD
+				pUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), aDirective[0].m_sX, aDirective[0].m_sY, 0, false, false, MISSIONAI_BUILD, pPlot);
+				if (pUnit->canMove())
+				{
+					eMission = CvTypes::getMISSION_BUILD();
+				}
+				else
+				{
+					eMission = CvTypes::getMISSION_MOVE_TO();
+					pUnit->finishMoves();
+					UnitProcessed(pUnit->GetID());
+				}
+#else
 				eMission = CvTypes::getMISSION_MOVE_TO();
+#endif
 			}
 
 			if(GC.getLogging() && GC.GetBuilderAILogging())
@@ -5659,12 +5978,14 @@ bool CvHomelandAI::ExecuteWorkerMove(CvUnit* pUnit)
 				}
 				UnitProcessed(pUnit->GetID());
 			}
+#ifndef AUI_HOMELAND_FIX_EXECUTE_WORKER_MOVE_MOVE_AND_BUILD
 			else
 			{
 				pUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), aDirective[0].m_sX, aDirective[0].m_sY, 0, false, false, MISSIONAI_BUILD, pPlot);
 				pUnit->finishMoves();
 				UnitProcessed(pUnit->GetID());
 			}
+#endif
 
 			return true;
 		}

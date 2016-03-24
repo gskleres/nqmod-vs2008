@@ -97,7 +97,11 @@ void CvPolicyAI::Write(FDataStream& kStream)
 	uint uiPolicyCount = m_pCurrentPolicies->GetPolicies()->GetNumPolicies();
 	kStream << uiPolicyCount;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < m_pCurrentPolicies->GetPolicies()->GetNumPolicies(); i++)
+#else
 	for(int i = 0; i < m_pCurrentPolicies->GetPolicies()->GetNumPolicies(); i++)
+#endif
 	{
 		CvInfosSerializationHelper::WriteHashed(kStream, static_cast<const PolicyTypes>(i));
 		kStream << m_PolicyAIWeights.GetWeight(i);
@@ -107,7 +111,11 @@ void CvPolicyAI::Write(FDataStream& kStream)
 /// Establish weights for one flavor; can be called multiple times to layer strategies
 void CvPolicyAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropagationPercent)
 {
+#ifdef AUI_WARNING_FIXES
+	uint iPolicy;
+#else
 	int iPolicy;
+#endif
 	CvPolicyEntry* entry;
 	int* paiTempWeights;
 
@@ -141,12 +149,21 @@ void CvPolicyAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropaga
 }
 
 /// Choose a player's next policy purchase (could be opening a branch)
+#ifdef AUI_WARNING_FIXES
+uint CvPolicyAI::ChooseNextPolicy(CvPlayer* pPlayer)
+#else
 int CvPolicyAI::ChooseNextPolicy(CvPlayer* pPlayer)
+#endif
 {
 	RandomNumberDelegate fcn;
 	fcn = MakeDelegate(&GC.getGame(), &CvGame::getJonRandNum);
+#ifdef AUI_WARNING_FIXES
+	uint iRtnValue = (uint)NO_POLICY;
+	uint iPolicyLoop;
+#else
 	int iRtnValue = (int)NO_POLICY;
 	int iPolicyLoop;
+#endif
 	vector<int> aLevel3Tenets;
 
 	bool bMustChooseTenet = (pPlayer->GetNumFreeTenets() > 0);
@@ -187,7 +204,11 @@ int CvPolicyAI::ChooseNextPolicy(CvPlayer* pPlayer)
 
 	// Did we already start a branch in the set that is mutually exclusive?
 	bool bStartedAMutuallyExclusiveBranch = false;
+#ifdef AUI_WARNING_FIXES
+	for (uint iBranchLoop = 0; iBranchLoop < GC.getNumPolicyBranchInfos(); iBranchLoop++)
+#else
 	for(int iBranchLoop = 0; iBranchLoop < GC.getNumPolicyBranchInfos(); iBranchLoop++)
+#endif
 	{
 		const PolicyBranchTypes ePolicyBranch = static_cast<PolicyBranchTypes>(iBranchLoop);
 		CvPolicyBranchEntry* pkPolicyBranchInfo = GC.getPolicyBranchInfo(ePolicyBranch);
@@ -209,7 +230,11 @@ int CvPolicyAI::ChooseNextPolicy(CvPlayer* pPlayer)
 	// Loop though the branches adding each as another possibility
 	if (!bMustChooseTenet)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iBranchLoop = 0; iBranchLoop < GC.getNumPolicyBranchInfos(); iBranchLoop++)
+#else
 		for(int iBranchLoop = 0; iBranchLoop < GC.getNumPolicyBranchInfos(); iBranchLoop++)
+#endif
 		{
 			const PolicyBranchTypes ePolicyBranch = static_cast<PolicyBranchTypes>(iBranchLoop);
 			CvPolicyBranchEntry* pkPolicyBranchInfo = GC.getPolicyBranchInfo(ePolicyBranch);
@@ -250,7 +275,11 @@ int CvPolicyAI::ChooseNextPolicy(CvPlayer* pPlayer)
 	if (aLevel3Tenets.size() > 0)
 	{
 		vector<int>::const_iterator it;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		for (it = aLevel3Tenets.begin(); it != aLevel3Tenets.end(); ++it)
+#else
 		for (it = aLevel3Tenets.begin(); it != aLevel3Tenets.end(); it++)
+#endif
 		{
 			CvPolicyEntry *pEntry;
 			pEntry = m_pCurrentPolicies->GetPolicies()->GetPolicyEntry(*it);
@@ -308,7 +337,11 @@ int CvPolicyAI::ChooseNextPolicy(CvPlayer* pPlayer)
 	}
 
 	// Log our choice
+#ifdef AUI_WARNING_FIXES
+	if (iRtnValue != (uint)NO_POLICY)
+#else
 	if(iRtnValue != (int)NO_POLICY)
+#endif
 	{
 		if(iRtnValue >= GC.getNumPolicyBranchInfos())
 		{
@@ -629,9 +662,17 @@ int CvPolicyAI::GetBranchBuildingHappiness(CvPlayer* pPlayer, PolicyBranchTypes 
 {
 	// Policy Building Mods
 	int iSpecialPolicyBuildingHappiness = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iBuildingClassLoop;
+#else
 	int iBuildingClassLoop;
+#endif
 	BuildingClassTypes eBuildingClass;
+#ifdef AUI_WARNING_FIXES
+	for (uint iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#else
 	for(int iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#endif
 	{
 		PolicyTypes ePolicy = (PolicyTypes)iPolicyLoop;
 		CvPolicyEntry* pkPolicyInfo = GC.getPolicyInfo(ePolicy);
@@ -676,9 +717,15 @@ int CvPolicyAI::GetBranchBuildingHappiness(CvPlayer* pPlayer, PolicyBranchTypes 
 int CvPolicyAI::GetNumHappinessPolicies(CvPlayer* pPlayer, PolicyBranchTypes eBranch)
 {
 	int iRtnValue = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iBuildingClassLoop;
+	BuildingClassTypes eBuildingClass;
+	for (uint iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#else
 	int iBuildingClassLoop;
 	BuildingClassTypes eBuildingClass;
 	for(int iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#endif
 	{
 		PolicyTypes ePolicy = (PolicyTypes)iPolicyLoop;
 		CvPolicyEntry* pkPolicyInfo = GC.getPolicyInfo(ePolicy);
@@ -725,7 +772,11 @@ int CvPolicyAI::GetNumHappinessPolicies(CvPlayer* pPlayer, PolicyBranchTypes eBr
 /// Add weights to policies that are prereqs for the ones already weighted in this strategy
 void CvPolicyAI::WeightPrereqs(int* paiTempWeights, int iPropagationPercent)
 {
+#ifdef AUI_WARNING_FIXES
+	uint iPolicyLoop;
+#else
 	int iPolicyLoop;
+#endif
 
 	// Loop through policies looking for ones that are just getting some new weight
 	for(iPolicyLoop = 0; iPolicyLoop < m_pCurrentPolicies->GetPolicies()->GetNumPolicies(); iPolicyLoop++)
@@ -779,7 +830,11 @@ int CvPolicyAI::WeighBranch(PolicyBranchTypes eBranch)
 	CvPolicyBranchEntry* pkPolicyBranchInfo = GC.getPolicyBranchInfo(eBranch);
 	if(pkPolicyBranchInfo)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iPolicyLoop = 0; iPolicyLoop < m_pCurrentPolicies->GetPolicies()->GetNumPolicies(); iPolicyLoop++)
+#else
 		for(int iPolicyLoop = 0; iPolicyLoop < m_pCurrentPolicies->GetPolicies()->GetNumPolicies(); iPolicyLoop++)
+#endif
 		{
 			const PolicyTypes ePolicyLoop = static_cast<PolicyTypes>(iPolicyLoop);
 			CvPolicyEntry* pkLoopPolicyInfo = GC.getPolicyInfo(ePolicyLoop);
@@ -855,7 +910,11 @@ void CvPolicyAI::LogPossiblePolicies()
 		strBaseString.Format("%03d, ", GC.getGame().getElapsedGameTurns());
 		strBaseString += playerName + ", ";
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumBranches = GC.getNumPolicyBranchInfos();
+#else
 		int iNumBranches = GC.getNumPolicyBranchInfos();
+#endif
 
 		// Dump out the weight of each possible policy
 		for(int iI = 0; iI < m_AdoptablePolicies.size(); iI++)

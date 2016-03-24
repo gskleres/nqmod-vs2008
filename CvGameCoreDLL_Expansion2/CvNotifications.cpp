@@ -19,7 +19,11 @@
 
 #define MAX_NOTIFICATIONS 100
 
+#ifdef AUI_WARNING_FIXES
+static int V1_IndexToHash[] =
+#else
 static uint V1_IndexToHash[] = 
+#endif
 {
 	NOTIFICATION_GENERIC,
 	NOTIFICATION_TECH,
@@ -279,7 +283,11 @@ void CvNotifications::Read(FDataStream& kStream)
 		{
 			// Translate the old index the hash ID.
 			int iIndex = (int)(m_aNotifications[ui].m_eNotificationType);
+#ifdef AUI_WARNING_FIXES
+			if (iIndex >= 0 && iIndex < sizeof(V1_IndexToHash) / sizeof(int))
+#else
 			if (iIndex >= 0 && iIndex < sizeof(V1_IndexToHash)/sizeof(uint))
+#endif
 				m_aNotifications[ui].m_eNotificationType = (NotificationTypes)V1_IndexToHash[iIndex];
 		}
 	}
@@ -1092,6 +1100,7 @@ void CvNotifications::Activate(Notification& notification)
 		}
 		break;
 
+#ifndef AUI_WARNING_FIXES
 	case NOTIFICATION_LEAGUE_PROJECT_COMPLETE:
 		CvAssertMsg(notification.m_iGameDataIndex >= 0, "notification.m_iGameDataIndex is out of bounds");
 		if (notification.m_iGameDataIndex >= 0)
@@ -1102,6 +1111,7 @@ void CvNotifications::Activate(Notification& notification)
 			GC.GetEngineUserInterface()->AddPopup(kPopup);
 		}
 		break;
+#endif
 
 	default:	// Default behavior is to move the camera to the X,Y passed in
 	{
@@ -1407,6 +1417,7 @@ bool CvNotifications::IsNotificationRedundant(Notification& notification)
 	}
 	break;
 
+#ifndef AUI_WARNING_FIXES
 	case NOTIFICATION_LEAGUE_PROJECT_COMPLETE:
 	case NOTIFICATION_LEAGUE_PROJECT_PROGRESS:
 		{
@@ -1439,6 +1450,7 @@ bool CvNotifications::IsNotificationRedundant(Notification& notification)
 			return false;
 		}
 		break;
+#endif
 
 	default:
 		return false;
@@ -1857,7 +1869,9 @@ bool CvNotifications::IsNotificationTypeEndOfTurnExpired(NotificationTypes eNoti
 	case NOTIFICATION_RESURRECTED_MAJOR_CIV:
 	case NOTIFICATION_TURN_MODE_SEQUENTIAL:
 	case NOTIFICATION_TURN_MODE_SIMULTANEOUS:
+#ifndef AUI_WARNING_FIXES
 	case NOTIFICATION_PLAYER_KICKED:
+#endif
 
 	//XP1
 	case NOTIFICATION_RELIGION_FOUNDED_ACTIVE_PLAYER:

@@ -96,8 +96,13 @@ public:
 	bool CanLiberatePlayer(PlayerTypes ePlayer);
 	bool CanLiberatePlayerCity(PlayerTypes ePlayer);
 
+#ifdef AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
+	CvUnit* initUnit(UnitTypes eUnit, int iX, int iY, UnitAITypes eUnitAI = NO_UNITAI, DirectionTypes eFacingDirection = NO_DIRECTION, bool bNoMove = false, bool bSetupGraphical = true, int iMapLayer = 0, int iNumGoodyHutsPopped = 0, bool bIsGifted = false);
+	CvUnit* initUnitWithNameOffset(UnitTypes eUnit, int nameOffset, int iX, int iY, UnitAITypes eUnitAI = NO_UNITAI, DirectionTypes eFacingDirection = NO_DIRECTION, bool bNoMove = false, bool bSetupGraphical = true, int iMapLayer = 0, int iNumGoodyHutsPopped = 0, bool bIsGifted = false);
+#else
 	CvUnit* initUnit(UnitTypes eUnit, int iX, int iY, UnitAITypes eUnitAI = NO_UNITAI, DirectionTypes eFacingDirection = NO_DIRECTION, bool bNoMove=false, bool bSetupGraphical=true, int iMapLayer = 0, int iNumGoodyHutsPopped = 0);
 	CvUnit* initUnitWithNameOffset(UnitTypes eUnit, int nameOffset, int iX, int iY, UnitAITypes eUnitAI = NO_UNITAI, DirectionTypes eFacingDirection = NO_DIRECTION, bool bNoMove = false, bool bSetupGraphical = true, int iMapLayer = 0, int iNumGoodyHutsPopped = 0);
+#endif
 
 	void disbandUnit(bool bAnnounce);
 	void killUnits();
@@ -143,8 +148,18 @@ public:
 	const CvString getWorstEnemyName() const;
 	ArtStyleTypes getArtStyleType() const;
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int getCachedJONSCultureForThisTurn() const;
+	int getCachedScienceT100ForThisTurn() const;
+	int getCachedFaithForThisTurn() const;
+	int getCachedExcessHappinessForThisTurn() const;
+#endif
+
 	void doTurn();
 	void doTurnPostDiplomacy();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void cacheYields();
+#endif
 	void doTurnUnits();
 	void SetAllUnitsUnprocessed();
 	void DoUnitReset();
@@ -452,10 +467,18 @@ public:
 
 	int GetUnhappinessFromCityCount(CvCity* pAssumeCityAnnexed = NULL, CvCity* pAssumeCityPuppeted = NULL) const;
 	int GetUnhappinessFromCapturedCityCount(CvCity* pAssumeCityAnnexed = NULL, CvCity* pAssumeCityPuppeted = NULL) const;
+#if defined(AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS) || defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS)
+	int GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed = NULL, CvCity* pAssumeCityPuppeted = NULL, const CvCity* pAssumeCityGrows = NULL, const CvCity* pAssumeCityExtraSpecialist = NULL) const;
+#else
 	int GetUnhappinessFromCityPopulation(CvCity* pAssumeCityAnnexed = NULL, CvCity* pAssumeCityPuppeted = NULL) const;
+#endif
 	int GetUnhappinessFromCitySpecialists(CvCity* pAssumeCityAnnexed, CvCity* pAssumeCityPuppeted) const;
 	int GetUnhappinessFromPuppetCityPopulation() const;
+#if defined(AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS) || defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS)
+	int GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed = NULL, CvCity* pAssumeCityPuppeted = NULL, const CvCity* pAssumeCityGrows = NULL, const CvCity* pAssumeCityExtraSpecialist = NULL) const;
+#else
 	int GetUnhappinessFromOccupiedCities(CvCity* pAssumeCityAnnexed = NULL, CvCity* pAssumeCityPuppeted = NULL) const;
+#endif
 
 	int GetUnhappinessFromUnits() const;
 	void ChangeUnhappinessFromUnits(int iChange);
@@ -961,7 +984,12 @@ public:
 	bool isTurnActive() const;
 	void setTurnActive(bool bNewValue, bool bDoTurn = true);
 	bool isSimultaneousTurns() const;
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	int getTurnOrder() const;
+	void setTurnOrder(int iTurnOrder);
+#else
 	void setDynamicTurnsSimultMode(bool simultaneousTurns);
+#endif
 
 	bool isAutoMoves() const;
 	void setAutoMoves(bool bNewValue);
@@ -1131,7 +1159,11 @@ public:
 	int getResourceSiphoned(ResourceTypes eIndex) const;
 	void changeResourceSiphoned(ResourceTypes eIndex, int iChange);
 
+#ifdef AUI_CONSTIFY
+	int getResourceInOwnedPlots(ResourceTypes eIndex) const;
+#else
 	int getResourceInOwnedPlots(ResourceTypes eIndex);
+#endif
 
 	int getTotalImprovementsBuilt() const;
 	void changeTotalImprovementsBuilt(int iChange);
@@ -1577,6 +1609,13 @@ protected:
 	FAutoVariable<PlayerTypes, CvPlayer> m_eID;
 	FAutoVariable<LeaderHeadTypes, CvPlayer> m_ePersonalityType;
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int m_iCachedJONSCultureForThisTurn;
+	int m_iCachedScienceT100ForThisTurn;
+	int m_iCachedFaithForThisTurn;
+	int m_iCachedExcessHappinessForThisTurn;
+#endif
+
 	FAutoVariable<int, CvPlayer> m_iStartingX;
 	FAutoVariable<int, CvPlayer> m_iStartingY;
 	FAutoVariable<int, CvPlayer> m_iTotalPopulation;
@@ -1804,7 +1843,11 @@ protected:
 	FAutoVariable<bool, CvPlayer> m_bAutoMoves;					// Signal that we can process the auto moves when ready.
 	bool						  m_bProcessedAutoMoves;		// Signal that we have processed the auto moves
 	FAutoVariable<bool, CvPlayer> m_bEndTurn;					// Signal that the player has completed their turn.  The turn will still be active until the auto-moves have been processed.
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	int							  m_iTurnOrder;
+#else
 	bool						  m_bDynamicTurnsSimultMode;
+#endif
 	FAutoVariable<bool, CvPlayer> m_bPbemNewTurn;
 	FAutoVariable<bool, CvPlayer> m_bExtendedGame;
 	FAutoVariable<bool, CvPlayer> m_bFoundedFirstCity;
@@ -1833,7 +1876,11 @@ protected:
 	std::vector<int> m_aiSiphonLuxuryCount;
 	std::vector<int> m_aiGreatWorkYieldChange;
 
+#ifdef AUI_WARNING_FIXES
+	typedef std::pair<int, int> PlayerOptionEntry;
+#else
 	typedef std::pair<uint, int> PlayerOptionEntry;
+#endif
 	typedef std::vector< PlayerOptionEntry > PlayerOptionsVector;
 	FAutoVariable<PlayerOptionsVector, CvPlayer> m_aOptions;
 

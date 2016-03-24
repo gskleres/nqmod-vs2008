@@ -78,6 +78,9 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_piResourceQuantityModifiers(NULL),
 	m_ppiImprovementYieldChanges(NULL),
 	m_ppiBuildingClassYieldChanges(NULL),
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+	m_ppiBuildingClassFlavorChanges(NULL),
+#endif
 	m_paiBuildingClassHappiness(NULL),
 	m_paiBuildingClassTourism(NULL),
 	m_ppaiFeatureYieldChange(NULL),
@@ -100,6 +103,9 @@ CvBeliefEntry::~CvBeliefEntry()
 {
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiImprovementYieldChanges);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldChanges);
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassFlavorChanges);
+#endif
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiFeatureYieldChange);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiResourceYieldChange);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiTerrainYieldChange);
@@ -463,6 +469,19 @@ int CvBeliefEntry::GetBuildingClassYieldChange(int i, int j) const
 	return m_ppiBuildingClassYieldChanges[i][j];
 }
 
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+/// Yield change for a specific BuildingClass by yield type
+int CvBeliefEntry::GetBuildingClassFlavorChange(int i, int j) const
+{
+	CvAssertMsg(i < GC.getNumBuildingClassInfos(), "Index out of bounds");
+	CvAssertMsg(i > -1, "Index out of bounds");
+	CvAssertMsg(j < GC.getNumFlavorTypes(), "Index out of bounds");
+	CvAssertMsg(j > -1, "Index out of bounds");
+	return m_ppiBuildingClassFlavorChanges[i][j];
+}
+#endif
+
+
 /// Amount of extra Happiness per turn a BuildingClass provides
 int CvBeliefEntry::GetBuildingClassHappiness(int i) const
 {
@@ -714,6 +733,31 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 		}
 	}
 
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+	//BuildingClassFlavorChanges
+	{
+		kUtility.Initialize2DArray(m_ppiBuildingClassFlavorChanges, "BuildingClasses", "Flavors");
+
+		std::string strKey("Belief_BuildingClassFlavorChanges");
+		Database::Results* pResults = kUtility.GetResults(strKey);
+		if (pResults == NULL)
+		{
+			pResults = kUtility.PrepareResults(strKey, "select BuildingClasses.ID as BuildingClassID, Flavors.ID as FlavorID, FlavorChange from Belief_BuildingClassFlavorChanges inner join BuildingClasses on BuildingClasses.Type = BuildingClassType inner join Flavors on Flavors.Type = FlavorType where BeliefType = ?");
+		}
+
+		pResults->Bind(1, szBeliefType);
+
+		while (pResults->Step())
+		{
+			const int BuildingClassID = pResults->GetInt(0);
+			const int iFlavorID = pResults->GetInt(1);
+			const int iFlavorChange = pResults->GetInt(2);
+
+			m_ppiBuildingClassFlavorChanges[BuildingClassID][iFlavorID] = iFlavorChange;
+		}
+	}
+#endif
+
 	//FeatureYieldChanges
 	{
 		kUtility.Initialize2DArray(m_ppaiFeatureYieldChange, "Features", "Yields");
@@ -880,7 +924,11 @@ CvReligionBeliefs::CvReligionBeliefs(const CvReligionBeliefs& source)
 	m_ReligionBeliefs = source.m_ReligionBeliefs;
 
 	m_paiBuildingClassEnabled = FNEW(int[GC.getNumBuildingClassInfos()], c_eCiv5GameplayDLL, 0);
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo((BuildingClassTypes)iI);
 		if(!pkBuildingClassInfo)
@@ -932,7 +980,11 @@ void CvReligionBeliefs::Reset()
 	m_ReligionBeliefs.clear();
 
 	m_paiBuildingClassEnabled = FNEW(int[GC.getNumBuildingClassInfos()], c_eCiv5GameplayDLL, 0);
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo((BuildingClassTypes)iI);
 		if(!pkBuildingClassInfo)
@@ -983,7 +1035,11 @@ void CvReligionBeliefs::AddBelief(BeliefTypes eBelief)
 	m_eObsoleteEra = belief->GetObsoleteEra();
 	m_eResourceRevealed = belief->GetResourceRevealed();
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 	for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		if (belief->IsBuildingClassEnabled(iI))
 		{
@@ -1366,6 +1422,24 @@ int CvReligionBeliefs::GetBuildingClassYieldChange(BuildingClassTypes eBuildingC
 	return rtnValue;
 }
 
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+int CvReligionBeliefs::GetBuildingClassFlavorChange(BuildingClassTypes eBuildingClass, FlavorTypes eFlavorType) const
+{
+	CvBeliefXMLEntries* pBeliefs = GC.GetGameBeliefs();
+	int rtnValue = 0;
+
+	for (int i = 0; i < pBeliefs->GetNumBeliefs(); i++)
+	{
+		if (HasBelief((BeliefTypes)i))
+		{
+			rtnValue += pBeliefs->GetEntry(i)->GetBuildingClassFlavorChange(eBuildingClass, eFlavorType);
+		}
+	}
+
+	return rtnValue;
+}
+#endif
+
 /// Get Happiness from beliefs for a specific building class
 int CvReligionBeliefs::GetBuildingClassHappiness(BuildingClassTypes eBuildingClass, int iFollowers) const
 {
@@ -1744,7 +1818,11 @@ bool CvBeliefHelpers::ConvertBarbarianUnit(CvPlayer *pPlayer, UnitHandle pUnit)
 	CvPlot *pPlot = pUnit->plot();
 
 	// Convert the barbarian into our unit
+#ifdef AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
+	pNewUnit = pPlayer->initUnit(pUnit->getUnitType(), pUnit->getX(), pUnit->getY(), pUnit->AI_getUnitAIType(), NO_DIRECTION, true /*bNoMove*/, false, DEFAULT_UNIT_MAP_LAYER, 0, true);
+#else
 	pNewUnit = pPlayer->initUnit(pUnit->getUnitType(), pUnit->getX(), pUnit->getY(), pUnit->AI_getUnitAIType(), NO_DIRECTION, true /*bNoMove*/, false);
+#endif
 	CvAssertMsg(pNewUnit, "pNewUnit is not assigned a valid value");
 	pNewUnit->convert(pUnit.pointer(), false);
 	pNewUnit->setupGraphical();

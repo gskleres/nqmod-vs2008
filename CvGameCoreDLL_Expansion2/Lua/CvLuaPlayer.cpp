@@ -1279,7 +1279,11 @@ int CvLuaPlayer::lGetNumWorldWonders(lua_State* L)
 
 	int iWonderCount = 0;
 
+#ifdef AUI_WARNING_FIXES
+	uint iBuildingLoop;
+#else
 	int iBuildingLoop;
+#endif
 	BuildingTypes eBuilding;
 
 	// Loop through all buildings, see if they're a world wonder
@@ -2505,7 +2509,11 @@ int CvLuaPlayer::lGetCityOfClosestGreatWorkSlot(lua_State* L)
 	int iY = lua_tointeger(L, 3);
 	GreatWorkSlotType eGreatWorkSlot = static_cast<GreatWorkSlotType>(lua_tointeger(L, 4));
 	BuildingClassTypes eBuildingClass;
+#ifdef AUI_WARNING_FIXES
+	uint iSlot = MAX_UNSIGNED_INT; // Passed by reference below
+#else
 	int iSlot;
+#endif
 	CvCity* pkCity = pkPlayer->GetCulture()->GetClosestAvailableGreatWorkSlot(iX, iY, eGreatWorkSlot, &eBuildingClass, &iSlot);
 	if (pkCity)
 	{
@@ -2526,7 +2534,11 @@ int CvLuaPlayer::lGetBuildingOfClosestGreatWorkSlot(lua_State* L)
 	int iY = lua_tointeger(L, 3);
 	GreatWorkSlotType eGreatWorkSlot = static_cast<GreatWorkSlotType>(lua_tointeger(L, 4));
 	BuildingClassTypes eBuildingClass;
+#ifdef AUI_WARNING_FIXES
+	uint iSlot = MAX_UNSIGNED_INT; // Passed by reference below
+#else
 	int iSlot;
+#endif
 	CvCity* pkCity = pkPlayer->GetCulture()->GetClosestAvailableGreatWorkSlot(iX, iY, eGreatWorkSlot, &eBuildingClass, &iSlot);
 	CvCivilizationInfo *pkCivInfo = GC.getCivilizationInfo(pkPlayer->getCivilizationType());
 	if (pkCity && pkCivInfo)
@@ -4418,7 +4430,11 @@ int CvLuaPlayer::lGetGreatWorks(lua_State* L)
 	CvCity* pCity = NULL;
 	for (pCity = pkPlayer->firstCity(&iCityLoop); pCity != NULL; pCity = pkPlayer->nextCity(&iCityLoop))
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#else
 		for(int iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#endif
 		{
 			CvCivilizationInfo& playerCivilizationInfo = pkPlayer->getCivilizationInfo();
 			BuildingTypes eBuilding = (BuildingTypes)playerCivilizationInfo.getCivilizationBuildings((BuildingClassTypes)iBuildingClassLoop);
@@ -6701,7 +6717,11 @@ int CvLuaPlayer::lGetCurrentEra(lua_State* L)
 //int getTeam();
 int CvLuaPlayer::lGetTeam(lua_State* L)
 {
+#ifdef AUI_VC120_FORMALITIES
+	return BasicLuaMethod<TeamTypes>(L, (&CvPlayerAI::getTeam));
+#else
 	return BasicLuaMethod(L, &CvPlayerAI::getTeam);
+#endif
 }
 //------------------------------------------------------------------------------
 //ColorTypes GetPlayerColor();
@@ -8541,12 +8561,14 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 
 	int iEvalDistance = GC.getSETTLER_EVALUATION_DISTANCE();
 	int iDistanceDropoffMod = GC.getSETTLER_DISTANCE_DROPOFF_MODIFIER();
+#ifndef AUI_HEXSPACE_DX_LOOPS
 	int iBeginSearchX = iSettlerX - iEvalDistance;
 	int iBeginSearchY = iSettlerY - iEvalDistance;
 	int iEndSearchX   = iSettlerX + iEvalDistance;
 	int iEndSearchY   = iSettlerY + iEvalDistance;
 
 	CvMap& kMap = GC.getMap();
+#endif
 
 	TeamTypes eUnitTeam = pFoundingUnit->getTeam();
 
@@ -8560,11 +8582,23 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 	WeightedPlotVector aBestPlots;
 	aBestPlots.reserve((iEvalDistance+1) * 2);
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pPlot;
+	for (int iDY = -iEvalDistance; iDY <= iEvalDistance; iDY++)
+	{
+		iMaxDX = iEvalDistance - MAX(0, iDY);
+		for (iDX = -iEvalDistance - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pPlot = plotXY(iSettlerX, iSettlerY, iDX, iDY);
+#else
 	for(int iPlotX = iBeginSearchX; iPlotX != iEndSearchX; iPlotX++)
 	{
 		for(int iPlotY = iBeginSearchY; iPlotY != iEndSearchY; iPlotY++)
 		{
 			CvPlot* pPlot = kMap.plot(iPlotX, iPlotY);
+#endif
 			if(!pPlot)
 			{
 				continue;
@@ -8577,7 +8611,11 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 			}
 
 			// Can't actually found here!
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			if (!pkPlayer->canFound(pPlot->getX(), pPlot->getY()))
+#else
 			if(!pkPlayer->canFound(iPlotX, iPlotY))
+#endif
 			{
 				continue;
 			}
@@ -8591,10 +8629,18 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 			// Do we have to check if this is a safe place to go?
 			if(!pPlot->isVisibleEnemyUnit(pkPlayer->GetID()))
 			{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+				iSettlerDistance = hexDistance(iDX, iDY);
+#else
 				iSettlerDistance = plotDistance(iPlotX, iPlotY, iSettlerX, iSettlerY);
+#endif
 
 				//iValue = pPlot->getFoundValue(pkPlayer->GetID());
+#ifdef AUI_HEXSPACE_DX_LOOPS
+				iValue = pkPlayer->AI_foundValue(pPlot->getX(), pPlot->getY(), -1, false);
+#else
 				iValue = pkPlayer->AI_foundValue(iPlotX, iPlotY, -1, false);
+#endif
 
 				iDistanceDropoff = (iDistanceDropoffMod * iSettlerDistance) / iEvalDistance;
 				iValue = iValue * (100 - iDistanceDropoff) / 100;
@@ -8620,7 +8666,11 @@ int CvLuaPlayer::lGetRecommendedFoundCityPlots(lua_State* L)
 		aBestPlots.SortItems();	// highest score will be first.
 		for (uint i = 0; i < uiListSize; ++i )	
 		{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+			pPlot = aBestPlots.GetElement(i);
+#else
 			CvPlot* pPlot = aBestPlots.GetElement(i);
+#endif
 			bool bCanFindPath = pFoundingUnit->GeneratePath(pPlot, MOVE_TERRITORY_NO_UNEXPLORED, true, &iPathTurns);
 			if(bCanFindPath)
 			{
@@ -8670,6 +8720,10 @@ int CvLuaPlayer::lGetUnimprovedAvailableLuxuryResource(lua_State* L)
 		}
 
 		CvPlot* pPlot = GC.getMap().plotByIndex(aiPlots[uiPlotIndex]);
+#ifdef AUI_WARNING_FIXES
+		if (!pPlot)
+			continue;
+#endif
 
 		// check to see if a resource is here. If not, bail out!
 		ResourceTypes eResource = pPlot->getResourceType(pkPlayer->getTeam());
@@ -8710,7 +8764,11 @@ int CvLuaPlayer::lGetUnimprovedAvailableLuxuryResource(lua_State* L)
 		}
 
 		// see if we can improve the resource
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 		for(int iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#endif
 		{
 			BuildTypes eBuild = (BuildTypes)iBuildIndex;
 			CvBuildInfo* buildInfo = GC.getBuildInfo(eBuild);
@@ -9198,7 +9256,11 @@ int CvLuaPlayer::lGetExtraBuildingHappinessFromPolicies(lua_State* L)
 
 			int iExtraHappiness = 0;
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#else
 			for(int iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#endif
 			{
 				const PolicyTypes ePolicy = static_cast<PolicyTypes>(iPolicyLoop);
 				CvPolicyEntry* pkPolicyInfo = GC.getPolicyInfo(ePolicy);
@@ -9464,7 +9526,11 @@ int CvLuaPlayer::lGetPlayerBuildingClassHappiness(lua_State* L)
 	{
 		int iChange = 0;
 
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingClassTypes eParentBuildingClass = (BuildingClassTypes) iI;
 

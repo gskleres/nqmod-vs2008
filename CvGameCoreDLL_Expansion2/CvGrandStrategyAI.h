@@ -32,17 +32,31 @@ public:
 	void Read(FDataStream& kStream);
 	void Write(FDataStream& kStream);
 
+#ifdef AUI_CONSTIFY
+	CvPlayer* GetPlayer() const;
+	CvAIGrandStrategyXMLEntries* GetAIGrandStrategies() const;
+#else
 	CvPlayer* GetPlayer();
 	CvAIGrandStrategyXMLEntries* GetAIGrandStrategies();
+#endif
 
 	void DoTurn();
 
+#ifdef AUI_CONSTIFY
+	int GetConquestPriority() const;
+	int GetCulturePriority() const;
+	int GetUnitedNationsPriority() const;
+	int GetSpaceshipPriority() const;
+
+	int GetBaseGrandStrategyPriority(AIGrandStrategyTypes eGrandStrategy) const;
+#else
 	int GetConquestPriority();
 	int GetCulturePriority();
 	int GetUnitedNationsPriority();
 	int GetSpaceshipPriority();
 
 	int GetBaseGrandStrategyPriority(AIGrandStrategyTypes eGrandStrategy);
+#endif
 
 	AIGrandStrategyTypes GetActiveGrandStrategy() const;
 	void SetActiveGrandStrategy(AIGrandStrategyTypes eGrandStrategy);
@@ -54,7 +68,11 @@ public:
 	void SetGrandStrategyPriority(AIGrandStrategyTypes eGrandStrategy, int iValue);
 	void ChangeGrandStrategyPriority(AIGrandStrategyTypes eGrandStrategy, int iChange);
 
+#ifdef AUI_CONSTIFY
+	int GetPersonalityAndGrandStrategy(FlavorTypes eFlavorType) const;
+#else
 	int GetPersonalityAndGrandStrategy(FlavorTypes eFlavorType);
+#endif
 
 	// **********
 	// Stuff relating to guessing what other Players are up to
@@ -110,8 +128,13 @@ public:
 	virtual bool CacheResults(Database::Results& kResults, CvDatabaseUtility& kUtility);
 
 	// Accessor Functions
+#ifdef AUI_WARNING_FIXES
+	int GetFlavorValue(uint i) const;
+	int GetFlavorModValue(uint i) const;
+#else
 	int GetFlavorValue(int i) const;
 	int GetFlavorModValue(int i) const;
+#endif
 	int GetSpecializationBoost(YieldTypes eYield) const;
 
 private:
@@ -139,8 +162,13 @@ public:
 
 	// Accessor functions
 	std::vector<CvAIGrandStrategyXMLEntry*>& GetAIGrandStrategyEntries();
+#ifdef AUI_WARNING_FIXES
+	uint GetNumAIGrandStrategies() const;
+	CvAIGrandStrategyXMLEntry* GetEntry(uint index) const;
+#else
 	int GetNumAIGrandStrategies();
 	CvAIGrandStrategyXMLEntry* GetEntry(int index);
+#endif
 
 	void DeleteArray();
 

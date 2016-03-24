@@ -287,7 +287,11 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	//CvPlot* pAdjacentPlot;
 	CvPlot* pPlot;
 	BuildingTypes eLoopBuilding;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	pPlot = GC.getMap().plot(iX, iY);
 
@@ -322,11 +326,23 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	pPlot->SetCityPurchaseID(m_iID);
 
 	int iRange = 1;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iDX = -iRange; iDX <= iRange; iDX++)
 	{
 		for(int iDY = -iRange; iDY <= iRange; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iRange);
+#endif
 			if(pLoopPlot != NULL)
 			{
 				if(pLoopPlot != NULL)
@@ -377,8 +393,12 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	int iNumBuildingInfos = GC.getNumBuildingInfos();
 	for(iI = 0; iI < iNumBuildingInfos; iI++)
+#endif
 	{
 		if(owningPlayer.isBuildingFree((BuildingTypes)iI))
 		{
@@ -420,7 +440,11 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		owningPlayer.ChangeNumCitiesFounded(1);
 
 		// Free resources under city?
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumResourceInfos(); i++)
+#else
 		for(int i = 0; i < GC.getNumResourceInfos(); i++)
+#endif
 		{
 			ResourceTypes eResource = (ResourceTypes)i;
 			FreeResourceXCities freeResource = owningPlayer.GetPlayerTraits()->GetFreeResourceXCities(eResource);
@@ -455,7 +479,11 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 
 	// Policy changes
 	PolicyTypes ePolicy;
+#ifdef AUI_WARNING_FIXES
+	for (uint iPoliciesLoop = 0; iPoliciesLoop < GC.getNumPolicyInfos(); iPoliciesLoop++)
+#else
 	for(int iPoliciesLoop = 0; iPoliciesLoop < GC.getNumPolicyInfos(); iPoliciesLoop++)
+#endif
 	{
 		ePolicy = (PolicyTypes) iPoliciesLoop;
 
@@ -475,7 +503,9 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		}
 	}
 
+#ifndef AUI_HEXSPACE_DX_LOOPS
 	CvPlot* pLoopPlot;
+#endif
 
 	// We may need to link Resources to this City if it's constructed within previous borders and the Resources were too far away for another City to link to
 	for(int iJ = 0; iJ < NUM_CITY_PLOTS; iJ++)
@@ -591,7 +621,11 @@ void CvCity::uninit()
 
 	if(m_aaiBuildingSpecialistUpgradeProgresses)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumBuildingInfos(); i++)
+#else
 		for(int i=0; i < GC.getNumBuildingInfos(); i++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_aaiBuildingSpecialistUpgradeProgresses[i]);
 		}
@@ -600,7 +634,11 @@ void CvCity::uninit()
 
 	if(m_ppaiResourceYieldChange)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumResourceInfos(); i++)
+#else
 		for(int i=0; i < GC.getNumResourceInfos(); i++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_ppaiResourceYieldChange[i]);
 		}
@@ -609,7 +647,11 @@ void CvCity::uninit()
 
 	if(m_ppaiFeatureYieldChange)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumFeatureInfos(); i++)
+#else
 		for(int i=0; i < GC.getNumFeatureInfos(); i++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_ppaiFeatureYieldChange[i]);
 		}
@@ -618,7 +660,11 @@ void CvCity::uninit()
 
 	if(m_ppaiTerrainYieldChange)
 	{
+#ifdef AUI_WARNING_FIXES
+		for (uint i = 0; i < GC.getNumTerrainInfos(); i++)
+#else
 		for(int i=0; i < GC.getNumTerrainInfos(); i++)
+#endif
 		{
 			SAFE_DELETE_ARRAY(m_ppaiTerrainYieldChange[i]);
 		}
@@ -643,7 +689,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	VALIDATE_OBJECT
 	m_syncArchive.reset();
 
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	//--------------------------------
 	// Uninit class
@@ -791,6 +841,9 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	{
 		m_abRevealed.setAt(iI, false);
 	}
+#ifdef AUI_CITY_OBSERVER_REVEALS_ALL_CITIES
+	m_abRevealed.setAt(OBSERVER_TEAM, true);
+#endif
 
 	m_strName = "";
 	m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility = "";
@@ -813,7 +866,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 
 	if(!bConstructorCall)
 	{
+#ifdef AUI_WARNING_FIXES
+		uint iNumResources = GC.getNumResourceInfos();
+#else
 		int iNumResources = GC.getNumResourceInfos();
+#endif
 		CvAssertMsg((0 < iNumResources),  "GC.getNumResourceInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiNoResource.clear();
 		m_paiNoResource.resize(iNumResources);
@@ -828,7 +885,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiNumResourcesLocal.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumProjectInfos = GC.getNumProjectInfos();
+#else
 		int iNumProjectInfos = GC.getNumProjectInfos();
+#endif
 		m_paiProjectProduction.clear();
 		m_paiProjectProduction.resize(iNumProjectInfos);
 		for(iI = 0; iI < iNumProjectInfos; iI++)
@@ -836,17 +897,28 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiProjectProduction.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumSpecialistInfos = GC.getNumSpecialistInfos();
+		m_paiSpecialistProduction.clear();
+		m_paiSpecialistProduction.resize(iNumSpecialistInfos);
+		for (iI = 0; iI < iNumSpecialistInfos; iI++)
+#else
 		int iNumSpecialistInfos = GC.getNumSpecialistInfos();
 		m_paiSpecialistProduction.clear();
 		m_paiSpecialistProduction.resize(iNumSpecialistInfos);
 		for(iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
+#endif
 		{
 			m_paiSpecialistProduction.setAt(iI, 0);
 		}
 
 		m_pCityBuildings->Init(GC.GetGameBuildings(), this);
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumUnitInfos = GC.getNumUnitInfos();
+#else
 		int iNumUnitInfos = GC.getNumUnitInfos();
+#endif
 		CvAssertMsg((0 < iNumUnitInfos),  "GC.getNumUnitInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiUnitProduction.clear();
 		m_paiUnitProduction.resize(iNumUnitInfos);
@@ -876,7 +948,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiFreeSpecialistCount.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumImprovementInfos = GC.getNumImprovementInfos();
+#else
 		int iNumImprovementInfos = GC.getNumImprovementInfos();
+#endif
 		CvAssertMsg((0 < iNumImprovementInfos),  "GC.getNumImprovementInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiImprovementFreeSpecialists.clear();
 		m_paiImprovementFreeSpecialists.resize(iNumImprovementInfos);
@@ -885,7 +961,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiImprovementFreeSpecialists.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumUnitCombatClassInfos = GC.getNumUnitCombatClassInfos();
+#else
 		int iNumUnitCombatClassInfos = GC.getNumUnitCombatClassInfos();
+#endif
 		CvAssertMsg((0 < iNumUnitCombatClassInfos),  "GC.getNumUnitCombatClassInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiUnitCombatFreeExperience.clear();
 		m_paiUnitCombatFreeExperience.resize(iNumUnitCombatClassInfos);
@@ -897,7 +977,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			m_paiUnitCombatProductionModifier.setAt(iI, 0);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumPromotionInfos = GC.getNumPromotionInfos();
+#else
 		int iNumPromotionInfos = GC.getNumPromotionInfos();
+#endif
 		CvAssertMsg((0 < iNumPromotionInfos),  "GC.getNumPromotionInfos() is not greater than zero but an array is being allocated in CvCity::reset");
 		m_paiFreePromotionCount.clear();
 		m_paiFreePromotionCount.resize(iNumPromotionInfos);
@@ -908,7 +992,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 
 		int iJ;
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumBuildingInfos = GC.getNumBuildingInfos();
+#else
 		int iNumBuildingInfos = GC.getNumBuildingInfos();
+#endif
 		int iMAX_SPECIALISTS_FROM_BUILDING = GC.getMAX_SPECIALISTS_FROM_BUILDING();
 		CvAssertMsg(m_aaiBuildingSpecialistUpgradeProgresses==NULL, "about to leak memory, CvCity::m_aaiBuildingSpecialistUpgradeProgresses");
 		m_aaiBuildingSpecialistUpgradeProgresses = FNEW(int*[iNumBuildingInfos], c_eCiv5GameplayDLL, 0);
@@ -921,7 +1009,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumResourceInfos = GC.getNumResourceInfos();
+#else
 		int iNumResourceInfos = GC.getNumResourceInfos();
+#endif
 		CvAssertMsg(m_ppaiResourceYieldChange==NULL, "about to leak memory, CvCity::m_ppaiResourceYieldChange");
 		m_ppaiResourceYieldChange = FNEW(int*[iNumResourceInfos], c_eCiv5GameplayDLL, 0);
 		for(iI = 0; iI < iNumResourceInfos; iI++)
@@ -933,7 +1025,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumFeatureInfos = GC.getNumFeatureInfos();
+#else
 		int iNumFeatureInfos = GC.getNumFeatureInfos();
+#endif
 		CvAssertMsg(m_ppaiFeatureYieldChange==NULL, "about to leak memory, CvCity::m_ppaiFeatureYieldChange");
 		m_ppaiFeatureYieldChange = FNEW(int*[iNumFeatureInfos], c_eCiv5GameplayDLL, 0);
 		for(iI = 0; iI < iNumFeatureInfos; iI++)
@@ -945,7 +1041,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		uint iNumTerrainInfos = GC.getNumTerrainInfos();
+#else
 		int iNumTerrainInfos = GC.getNumTerrainInfos();
+#endif
 		CvAssertMsg(m_ppaiTerrainYieldChange==NULL, "about to leak memory, CvCity::m_ppaiTerrainYieldChange");
 		m_ppaiTerrainYieldChange = FNEW(int*[iNumTerrainInfos], c_eCiv5GameplayDLL, 0);
 		for(iI = 0; iI < iNumTerrainInfos; iI++)
@@ -1014,7 +1114,11 @@ void CvCity::setupWonderGraphics()
 {
 	VALIDATE_OBJECT
 	PlayerTypes ePlayerID = getOwner();
+#ifdef AUI_WARNING_FIXES
+	for (uint eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#else
 	for(int eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(eBuildingType);
 		CvBuildingEntry* buildingInfo = GC.getBuildingInfo(eBuilding);
@@ -1048,7 +1152,11 @@ void CvCity::setupWonderGraphics()
 					{
 						// Is it part of an international project?
 						LeagueProjectTypes eThisBuildingProject = NO_LEAGUE_PROJECT;
+#ifdef AUI_WARNING_FIXES
+						for (uint i = 0; i < GC.getNumLeagueProjectInfos(); i++)
+#else
 						for (int i = 0; i < GC.getNumLeagueProjectInfos(); i++)
+#endif
 						{
 							LeagueProjectTypes eProject = (LeagueProjectTypes)i;
 							CvLeagueProjectEntry* pProjectInfo = GC.getLeagueProjectInfo(eProject);
@@ -1100,7 +1208,11 @@ void CvCity::setupWonderGraphics()
 void CvCity::setupBuildingGraphics()
 {
 	VALIDATE_OBJECT
+#ifdef AUI_WARNING_FIXES
+	for (uint eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#else
 	for(int eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(eBuildingType);
 		CvBuildingEntry* buildingInfo = GC.getBuildingInfo(eBuilding);
@@ -1247,7 +1359,11 @@ void CvCity::PreKill()
 		GET_PLAYER(getOwner()).GetMinorCivAI()->DoRemoveStartingResources(plot());
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		CvBuildingEntry* pkBuilding = GC.getBuildingInfo((BuildingTypes)iI);
 		if(pkBuilding)
@@ -1267,7 +1383,11 @@ void CvCity::PreKill()
 
 	// Could also be non-garrisoned units here that we need to show
 	CvUnit* pLoopUnit;
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < pPlot->getNumUnits(); iUnitLoop++)
+#else
 	for(int iUnitLoop = 0; iUnitLoop < pPlot->getNumUnits(); iUnitLoop++)
+#endif
 	{
 		pLoopUnit = pPlot->getUnitByIndex(iUnitLoop);
 
@@ -1279,7 +1399,11 @@ void CvCity::PreKill()
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
+#else
 	for(int iPlotLoop = 0; iPlotLoop < GC.getMap().numPlots(); iPlotLoop++)
+#endif
 	{
 		CvPlot* pLoopPlot = GC.getMap().plotByIndexUnchecked(iPlotLoop);
 		if(NULL != pLoopPlot && pLoopPlot->GetCityPurchaseOwner() == getOwner() && pLoopPlot->GetCityPurchaseID() == GetID())
@@ -1433,16 +1557,54 @@ void CvCity::kill()
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+CvPlayer* CvCity::GetPlayer() const
+#else
 CvPlayer* CvCity::GetPlayer()
+#endif
 {
 	VALIDATE_OBJECT
 	return &GET_PLAYER(getOwner());
 }
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvCity::cacheYieldsForTurn()
+{
+	DoUpdateFeatureSurrounded();
+
+	DoUpdateIndustrialRouteToCapital();
+
+	// GPP
+	GetCityCitizens()->cacheGPChangesT100ForThisTurn();
+
+	// Food
+	setCachedYieldT100ForThisTurn(YIELD_FOOD, foodDifferenceTimes100());
+
+	// Production
+	setCachedYieldT100ForThisTurn(YIELD_PRODUCTION, getCurrentProductionDifferenceTimes100(false, isProduction()));
+
+	// Gold
+	//setCachedYieldT100ForThisTurn(YIELD_GOLD, getYieldRateTimes100(YIELD_GOLD, false));
+
+	// Science
+	//setCachedYieldT100ForThisTurn(YIELD_SCIENCE, getYieldRateTimes100(YIELD_GOLD, false));
+
+	// Culture
+	setCachedYieldT100ForThisTurn(YIELD_CULTURE, MAX(getJONSCulturePerTurn(), 0));
+
+	// Faith
+	//setCachedYieldT100ForThisTurn(YIELD_FAITH, GetFaithPerTurn());
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 void CvCity::doTurn()
 {
+#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+	AI_PERF_FORMAT("City-AI-perf.csv", ("CvCity::doTurn, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()));
+#else
 	AI_PERF_FORMAT("City-AI-perf.csv", ("CvCity::doTurn, Turn %03d, %s, %s,", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
+#endif
 
 	VALIDATE_OBJECT
 	CvPlot* pLoopPlot;
@@ -1476,7 +1638,9 @@ void CvCity::doTurn()
 
 	GetCityStrategyAI()->DoTurn();
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	GetCityCitizens()->DoTurn();
+#endif
 
 	AI_doTurn();
 
@@ -1486,6 +1650,15 @@ void CvCity::doTurn()
 	{
 		DoResistanceTurn();
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		if(!isHuman() || isProductionAutomated())
+		{
+			if(!isProduction() || isProductionProcess() || AI_isChooseProductionDirty())
+			{
+				AI_chooseProduction(false /*bInterruptWonders*/);
+			}
+		}
+#endif
 		bool bAllowNoProduction = !doCheckProduction();
 
 		doGrowth();
@@ -1523,7 +1696,11 @@ void CvCity::doTurn()
 		// Culture accumulation
 		if(getJONSCulturePerTurn() > 0)
 		{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			ChangeJONSCultureStored(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
+#else
 			ChangeJONSCultureStored(getJONSCulturePerTurn());
+#endif
 		}
 
 		// Enough Culture to acquire a new Plot?
@@ -1531,6 +1708,10 @@ void CvCity::doTurn()
 		{
 			DoJONSCultureLevelIncrease();
 		}
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		GetCityCitizens()->DoTurn();
+#endif
 
 		// Resource Demanded Counter
 		if(GetResourceDemandedCountdown() > 0)
@@ -1723,6 +1904,12 @@ void CvCity::DoUpdateIndustrialRouteToCapital()
 	// Capital - what do we want to do about this?
 	if(isCapital())
 	{
+#ifdef AUI_CITY_FIX_UPDATE_RAILROAD_CONNECTION_ALLOW_REMOVAL
+		if (plot() && plot()->getRouteType() == GC.getGame().GetIndustrialRoute())
+			SetIndustrialRouteToCapital(true);
+		else
+			SetIndustrialRouteToCapital(false);
+#endif
 	}
 	// Non-capital city
 	else
@@ -1731,6 +1918,10 @@ void CvCity::DoUpdateIndustrialRouteToCapital()
 		{
 			SetIndustrialRouteToCapital(true);
 		}
+#ifdef AUI_CITY_FIX_UPDATE_RAILROAD_CONNECTION_ALLOW_REMOVAL
+		else
+			SetIndustrialRouteToCapital(false);
+#endif
 	}
 }
 
@@ -1758,7 +1949,11 @@ void CvCity::SetRouteToCapitalConnected(bool bValue)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvCity::IsRouteToCapitalConnected() const
+#else
 bool CvCity::IsRouteToCapitalConnected(void)
+#endif
 {
 	return m_bRouteToCapitalConnectedThisTurn;
 }
@@ -2140,7 +2335,11 @@ int CvCity::findYieldRateRank(YieldTypes eYield)
 
 //	--------------------------------------------------------------------------------
 // Returns one of the upgrades...
+#ifdef AUI_WARNING_FIXES
+UnitTypes CvCity::allUpgradesAvailable(UnitTypes eUnit, uint iUpgradeCount) const
+#else
 UnitTypes CvCity::allUpgradesAvailable(UnitTypes eUnit, int iUpgradeCount) const
+#endif
 {
 	VALIDATE_OBJECT
 	UnitTypes eUpgradeUnit;
@@ -2167,7 +2366,11 @@ UnitTypes CvCity::allUpgradesAvailable(UnitTypes eUnit, int iUpgradeCount) const
 
 	CvCivilizationInfo& thisCiv = getCivilizationInfo();
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#endif
 	{
 		const UnitClassTypes eUnitClass = static_cast<UnitClassTypes>(iI);
 		CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo(eUnitClass);
@@ -2352,9 +2555,15 @@ bool CvCity::canTrain(UnitTypes eUnit, bool bContinue, bool bTestVisible, bool b
 		}
 
 		// See if there are any BuildingClass requirements
+#ifndef AUI_WARNING_FIXES
 		const int iNumBuildingClassInfos = GC.getNumBuildingClassInfos();
+#endif
 		CvCivilizationInfo& thisCivilization = getCivilizationInfo();
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildingClassLoop = 0; iBuildingClassLoop < GC.getNumBuildingClassInfos(); iBuildingClassLoop++)
+#else
 		for(int iBuildingClassLoop = 0; iBuildingClassLoop < iNumBuildingClassInfos; iBuildingClassLoop++)
+#endif
 		{
 			const BuildingClassTypes eBuildingClass = (BuildingClassTypes) iBuildingClassLoop;
 			CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo(eBuildingClass);
@@ -2427,7 +2636,11 @@ bool CvCity::canTrain(UnitTypes eUnit, bool bContinue, bool bTestVisible, bool b
 bool CvCity::canTrain(UnitCombatTypes eUnitCombat) const
 {
 	VALIDATE_OBJECT
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.getNumUnitInfos(); i++)
+#else
 	for(int i = 0; i < GC.getNumUnitInfos(); i++)
+#endif
 	{
 		const UnitTypes eUnit = static_cast<UnitTypes>(i);
 		CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
@@ -2775,11 +2988,23 @@ void CvCity::DoUpdateFeatureSurrounded()
 	// Look two tiles around this city in every direction to see if at least half the plots are covered in a removable feature
 	const int iRange = 2;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iDX = -iRange; iDX <= iRange; iDX++)
 	{
 		for(int iDY = -iRange; iDY <= iRange; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iRange);
+#endif
 
 			// Increase total plot count
 			iTotalPlots++;
@@ -2977,7 +3202,11 @@ void CvCity::ChangeNumResourceLocal(ResourceTypes eResource, int iChange)
 		}
 
 		// Building Culture change for a local resource
+#ifdef AUI_WARNING_FIXES
+		for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 		for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 		{
 			const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
 			CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -3119,7 +3348,11 @@ void CvCity::DoPickResourceDemanded(bool bCurrentResourceInvalid)
 	ResourceTypes eResource;
 
 	// Loop through all resource infos and invalidate resources that only come from minor civs
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		eResource = (ResourceTypes) iResourceLoop;
 		CvResourceInfo* pkResource = GC.getResourceInfo(eResource);
@@ -3160,7 +3393,11 @@ void CvCity::DoPickResourceDemanded(bool bCurrentResourceInvalid)
 
 	// Create list of valid Luxuries
 	FStaticVector<ResourceTypes, 64, true, c_eCiv5GameplayDLL, 0> veValidLuxuryResources;
+#ifdef AUI_WARNING_FIXES
+	for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 	for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 	{
 		eResource = (ResourceTypes) iResourceLoop;
 
@@ -3501,7 +3738,11 @@ bool CvCity::isProductionProcess() const
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvCity::canContinueProduction(OrderData order) const
+#else
 bool CvCity::canContinueProduction(OrderData order)
+#endif
 {
 	VALIDATE_OBJECT
 	switch(order.eOrderType)
@@ -3536,7 +3777,11 @@ bool CvCity::canContinueProduction(OrderData order)
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvCity::getProductionExperience(UnitTypes eUnit) const
+#else
 int CvCity::getProductionExperience(UnitTypes eUnit)
+#endif
 {
 	VALIDATE_OBJECT
 	int iExperience;
@@ -3596,7 +3841,11 @@ void CvCity::addProductionExperience(CvUnit* pUnit, bool bConscript)
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumPromotionInfos(); iI++)
+#endif
 	{
 		const PromotionTypes ePromotion = static_cast<PromotionTypes>(iI);
 		CvPromotionEntry* pkPromotionInfo = GC.getPromotionInfo(ePromotion);
@@ -4485,7 +4734,11 @@ int CvCity::getProductionTurnsLeft(int iProductionNeeded, int iProduction, int i
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvCity::GetPurchaseCost(UnitTypes eUnit) const
+#else
 int CvCity::GetPurchaseCost(UnitTypes eUnit)
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -4522,7 +4775,11 @@ int CvCity::GetPurchaseCost(UnitTypes eUnit)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvCity::GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts) const
+#else
 int CvCity::GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts)
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -4685,7 +4942,11 @@ int CvCity::GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvCity::GetPurchaseCost(BuildingTypes eBuilding) const
+#else
 int CvCity::GetPurchaseCost(BuildingTypes eBuilding)
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -4715,7 +4976,11 @@ int CvCity::GetPurchaseCost(BuildingTypes eBuilding)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvCity::GetFaithPurchaseCost(BuildingTypes eBuilding) const
+#else
 int CvCity::GetFaithPurchaseCost(BuildingTypes eBuilding)
+#endif
 {
 	int iCost;
 
@@ -4754,7 +5019,11 @@ int CvCity::GetFaithPurchaseCost(BuildingTypes eBuilding)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+int CvCity::GetPurchaseCost(ProjectTypes eProject) const
+#else
 int CvCity::GetPurchaseCost(ProjectTypes eProject)
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -4770,7 +5039,11 @@ int CvCity::GetPurchaseCost(ProjectTypes eProject)
 
 //	--------------------------------------------------------------------------------
 /// Cost of Purchasing something based on the amount of Production it requires to construct
+#ifdef AUI_CONSTIFY
+int CvCity::GetPurchaseCostFromProduction(int iProduction) const
+#else
 int CvCity::GetPurchaseCostFromProduction(int iProduction)
+#endif
 {
 	VALIDATE_OBJECT
 	int iPurchaseCost;
@@ -4898,7 +5171,11 @@ void CvCity::changeProductionTimes100(int iChange)
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(_In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	const OrderData* pOrderNode = headOrderQueueNode();
@@ -4939,7 +5216,11 @@ int CvCity::getProductionModifier(CvString* toolTipSink) const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getGeneralProductionModifiers(_In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getGeneralProductionModifiers(CvString* toolTipSink) const
+#endif
 {
 	int iMultiplier = 0;
 
@@ -4958,7 +5239,11 @@ int CvCity::getGeneralProductionModifiers(CvString* toolTipSink) const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(UnitTypes eUnit, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(UnitTypes eUnit, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -5038,7 +5323,11 @@ int CvCity::getProductionModifier(UnitTypes eUnit, CvString* toolTipSink) const
 	iTempMod = 0;
 	int iBuildingMod = 0;
 	BuildingTypes eBuilding;
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		eBuilding = (BuildingTypes) iI;
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -5069,7 +5358,11 @@ int CvCity::getProductionModifier(UnitTypes eUnit, CvString* toolTipSink) const
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(BuildingTypes eBuilding, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(BuildingTypes eBuilding, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iMultiplier = getGeneralProductionModifiers(toolTipSink);
@@ -5179,7 +5472,11 @@ int CvCity::getProductionModifier(BuildingTypes eBuilding, CvString* toolTipSink
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(ProjectTypes eProject, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(ProjectTypes eProject, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iMultiplier = getGeneralProductionModifiers(toolTipSink);
@@ -5200,7 +5497,11 @@ int CvCity::getProductionModifier(ProjectTypes eProject, CvString* toolTipSink) 
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(SpecialistTypes eSpecialist, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(SpecialistTypes eSpecialist, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iMultiplier = getGeneralProductionModifiers(toolTipSink);
@@ -5210,7 +5511,11 @@ int CvCity::getProductionModifier(SpecialistTypes eSpecialist, CvString* toolTip
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::getProductionModifier(ProcessTypes eProcess, _In_opt_ CvString* toolTipSink) const
+#else
 int CvCity::getProductionModifier(ProcessTypes eProcess, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iMultiplier = getGeneralProductionModifiers(toolTipSink);
@@ -5220,7 +5525,11 @@ int CvCity::getProductionModifier(ProcessTypes eProcess, CvString* toolTipSink) 
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+int CvCity::getProductionDifference(int iProductionNeeded, int iProductionT100, int iProductionModifier, bool bFoodProduction, bool bOverflow) const
+#else
 int CvCity::getProductionDifference(int /*iProductionNeeded*/, int /*iProduction*/, int iProductionModifier, bool bFoodProduction, bool bOverflow) const
+#endif
 {
 	VALIDATE_OBJECT
 	// If we're in anarchy, then no Production is done!
@@ -5242,7 +5551,17 @@ int CvCity::getProductionDifference(int /*iProductionNeeded*/, int /*iProduction
 	int iBaseProduction = getBaseYieldRate(YIELD_PRODUCTION) * 100;
 	iBaseProduction += (GetYieldPerPopTimes100(YIELD_PRODUCTION) * getPopulation());
 
+#ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+	const int iProductionNeededT100 = iProductionNeeded * 100;
+	const int iGenericModifier = getGeneralProductionModifiers();
+	int iModifiedProduction = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iGenericModifier);
+	int iExtraProductionT100 = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iProductionModifier) - iModifiedProduction;
+	if (iProductionT100 + iExtraProductionT100 > iProductionNeededT100)
+		iExtraProductionT100 = iProductionNeededT100 - iProductionT100;
+	iModifiedProduction += iExtraProductionT100;
+#else
 	int iModifiedProduction = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iProductionModifier);
+#endif
 	iModifiedProduction /= 10000;
 
 	iModifiedProduction += iOverflow;
@@ -5270,7 +5589,11 @@ int CvCity::getRawProductionDifference(bool bIgnoreFood, bool bOverflow) const
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+int CvCity::getProductionDifferenceTimes100(int iProductionNeeded, int iProductionT100, int iProductionModifier, bool bFoodProduction, bool bOverflow) const
+#else
 int CvCity::getProductionDifferenceTimes100(int /*iProductionNeeded*/, int /*iProduction*/, int iProductionModifier, bool bFoodProduction, bool bOverflow) const
+#endif
 {
 	VALIDATE_OBJECT
 	// If we're in anarchy, then no Production is done!
@@ -5293,7 +5616,17 @@ int CvCity::getProductionDifferenceTimes100(int /*iProductionNeeded*/, int /*iPr
 	int iBaseProduction = getBaseYieldRate(YIELD_PRODUCTION) * 100;
 	iBaseProduction += (GetYieldPerPopTimes100(YIELD_PRODUCTION) * getPopulation());
 
+#ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+	const int iProductionNeededT100 = iProductionNeeded * 100;
+	const int iGenericModifier = getGeneralProductionModifiers();
+	int iModifiedProduction = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iGenericModifier);
+	int iExtraProductionT100 = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iProductionModifier) - iModifiedProduction;
+	if (iProductionT100 + iExtraProductionT100 > iProductionNeededT100)
+		iExtraProductionT100 = iProductionNeededT100 - iProductionT100;
+	iModifiedProduction += iExtraProductionT100;
+#else
 	int iModifiedProduction = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iProductionModifier);
+#endif
 	iModifiedProduction /= 100;
 
 	iModifiedProduction += iOverflow;
@@ -5525,7 +5858,11 @@ UnitTypes CvCity::getConscriptUnit() const
 	UnitTypes eBestUnit = NO_UNIT;
 	int iBestValue = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumUnitClassInfos(); iI++)
+#endif
 	{
 		const UnitClassTypes eUnitClass = static_cast<UnitClassTypes>(iI);
 		CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo(eUnitClass);
@@ -5686,7 +6023,11 @@ int CvCity::getResourceYieldRateModifier(YieldTypes eIndex, ResourceTypes eResou
 	VALIDATE_OBJECT
 	int iModifier = 0;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iI);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -5747,23 +6088,23 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			// NQMP GJS - New France UA begin
 			if(pBuildingInfo->IsGrantsFreeCulturalGreatPersonWithTrait() && isCapital() && owningPlayer.GetPlayerTraits()->IsEarnsGreatPersonOnSlotOrGuild())
 			{
-				bool getWriter = false;
-				bool getArtist = false;
-				bool getMusician = false;
+				bool bGetWriter = false;
+				bool bGetArtist = false;
+				bool bGetMusician = false;
 				if (pBuildingInfo->GetGreatWorkCount() > 0) // it has great work slots and is marked as something that gives France the bonus
 				{
 					GreatWorkSlotType slotType = pBuildingInfo->GetGreatWorkSlotType();
 					if (slotType == CvTypes::getGREAT_WORK_SLOT_LITERATURE())
 					{
-						getWriter = true;
+						bGetWriter = true;
 					}
 					else if (slotType == CvTypes::getGREAT_WORK_SLOT_ART_ARTIFACT())
 					{
-						getArtist = true;
+						bGetArtist = true;
 					}
 					else if (slotType == CvTypes::getGREAT_WORK_SLOT_MUSIC())
 					{
-						getMusician = true;
+						bGetMusician = true;
 					}
 				}
 				else // check for guilds, they also give France the bonus
@@ -5772,34 +6113,41 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 					if (buildingType == GC.getInfoTypeForString("BUILDINGCLASS_WRITERS_GUILD") && !owningPlayer.GetPlayerTraits()->IsHasBuiltWritersGuild())
 					{
 						owningPlayer.GetPlayerTraits()->SetHasBuiltWritersGuild(true);
-						getWriter = true;
+						bGetWriter = true;
 					}
 					else if (buildingType == GC.getInfoTypeForString("BUILDINGCLASS_ARTISTS_GUILD") && !owningPlayer.GetPlayerTraits()->IsHasBuiltArtistsGuild())
 					{
 						owningPlayer.GetPlayerTraits()->SetHasBuiltArtistsGuild(true);
-						getArtist = true;
+						bGetArtist = true;
 					}
 					else if (buildingType == GC.getInfoTypeForString("BUILDINGCLASS_MUSICIANS_GUILD") && !owningPlayer.GetPlayerTraits()->IsHasBuiltMusiciansGuild())
 					{
 						owningPlayer.GetPlayerTraits()->SetHasBuiltMusiciansGuild(true);
-						getMusician = true;
+						bGetMusician = true;
 					}
 				}
 
-				for(int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+				if (bGetWriter || bGetArtist || bGetMusician)
 				{
-					const UnitTypes eUnit = static_cast<UnitTypes>(iUnitLoop);
-					CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
-					if (pkUnitInfo)
+#ifdef AUI_WARNING_FIXES
+					for (uint iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#else
+					for (int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#endif
 					{
-						const UnitTypes eFreeUnitType = (UnitTypes)thisCiv.getCivilizationUnits((UnitClassTypes)pkUnitInfo->GetUnitClassType());
-						if ((getWriter && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_WRITER")) ||
-							(getArtist && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_ARTIST")) ||
-							(getMusician && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_MUSICIAN")))
+						const UnitTypes eUnit = static_cast<UnitTypes>(iUnitLoop);
+						CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
+						if (pkUnitInfo)
 						{
-							pFreeUnit = owningPlayer.initUnit(eFreeUnitType, getX(), getY());
-							if (!pFreeUnit->jumpToNearestValidPlot())
-								pFreeUnit->kill(false);	// Could not find a valid spot!
+							const UnitTypes eFreeUnitType = (UnitTypes)thisCiv.getCivilizationUnits((UnitClassTypes)pkUnitInfo->GetUnitClassType());
+							if ((bGetWriter && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_WRITER")) ||
+								(bGetArtist && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_ARTIST")) ||
+								(bGetMusician && pkUnitInfo->GetUnitClassType() == GC.getInfoTypeForString("UNITCLASS_MUSICIAN")))
+							{
+								pFreeUnit = owningPlayer.initUnit(eFreeUnitType, getX(), getY());
+								if (!pFreeUnit->jumpToNearestValidPlot())
+									pFreeUnit->kill(false);	// Could not find a valid spot!
+							}
 						}
 					}
 				}
@@ -5807,7 +6155,11 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			// NQMP GJS - New France UA end
 
 			// regular free units
+#ifdef AUI_WARNING_FIXES
+			for (uint iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#else
 			for(int iUnitLoop = 0; iUnitLoop < GC.getNumUnitInfos(); iUnitLoop++)
+#endif
 			{
 				const UnitTypes eUnit = static_cast<UnitTypes>(iUnitLoop);
 				CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eUnit);
@@ -6043,7 +6395,11 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 		m_pCityReligions->ChangeReligiousPressureModifier(pBuildingInfo->GetReligiousPressureModifier() * iChange);
 
 		PolicyTypes ePolicy;
+#ifdef AUI_WARNING_FIXES
+		for (uint iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#else
 		for(int iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#endif
 		{
 			ePolicy = (PolicyTypes) iPolicyLoop;
 
@@ -6081,7 +6437,11 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 		// Resource loop
 		int iCulture, iFaith;
 		ResourceTypes eResource;
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			eResource = (ResourceTypes) iResourceLoop;
 
@@ -6189,17 +6549,29 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			changeYieldRateModifier(eYield, pPolicies->GetBuildingClassYieldModifier(eBuildingClass, eYield) * iChange);
 			ChangeBaseYieldRateFromBuildings(eYield, pPolicies->GetBuildingClassYieldChange(eBuildingClass, eYield) * iChange);
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iJ = 0; iJ < GC.getNumResourceInfos(); iJ++)
+#else
 			for(int iJ = 0; iJ < GC.getNumResourceInfos(); iJ++)
+#endif
 			{
 				ChangeResourceExtraYield(((ResourceTypes)iJ), eYield, (GC.getBuildingInfo(eBuilding)->GetResourceYieldChange(iJ, eYield) * iChange));
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iJ = 0; iJ < GC.getNumFeatureInfos(); iJ++)
+#else
 			for(int iJ = 0; iJ < GC.getNumFeatureInfos(); iJ++)
+#endif
 			{
 				ChangeFeatureExtraYield(((FeatureTypes)iJ), eYield, (GC.getBuildingInfo(eBuilding)->GetFeatureYieldChange(iJ, eYield) * iChange));
 			}
 
+#ifdef AUI_WARNING_FIXES
+			for (uint iJ = 0; iJ < GC.getNumTerrainInfos(); iJ++)
+#else
 			for(int iJ = 0; iJ < GC.getNumTerrainInfos(); iJ++)
+#endif
 			{
 				ChangeTerrainExtraYield(((TerrainTypes)iJ), eYield, (GC.getBuildingInfo(eBuilding)->GetTerrainYieldChange(iJ, eYield) * iChange));
 			}
@@ -6241,12 +6613,22 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		if (pBuildingInfo->GetSpecialistType() != NO_SPECIALIST)
+		{
+			GetCityCitizens()->ChangeBuildingGreatPeopleRateChanges((SpecialistTypes)pBuildingInfo->GetSpecialistType(), pBuildingInfo->GetGreatPeopleRateChange() * iChange);
+#else
 		if(GC.getBuildingInfo(eBuilding)->GetSpecialistType() != NO_SPECIALIST)
 		{
 			GetCityCitizens()->ChangeBuildingGreatPeopleRateChanges((SpecialistTypes) GC.getBuildingInfo(eBuilding)->GetSpecialistType(), pBuildingInfo->GetGreatPeopleRateChange() * iChange);
+#endif
 		}
 
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumUnitCombatClassInfos(); iI++)
+#else
 		for(int iI = 0; iI < GC.getNumUnitCombatClassInfos(); iI++)
+#endif
 		{
 			const UnitCombatTypes eUnitCombatClass = static_cast<UnitCombatTypes>(iI);
 			CvBaseInfo* pkUnitCombatClassInfo = GC.getUnitCombatClassInfo(eUnitCombatClass);
@@ -6443,7 +6825,11 @@ void CvCity::UpdateReligion(ReligionTypes eNewMajority)
 				}
 
 				// Buildings
+#ifdef AUI_WARNING_FIXES
+				for (uint jJ = 0; jJ < GC.getNumBuildingClassInfos(); jJ++)
+#else
 				for(int jJ = 0; jJ < GC.getNumBuildingClassInfos(); jJ++)
+#endif
 				{
 					BuildingClassTypes eBuildingClass = (BuildingClassTypes)jJ;
 
@@ -6670,19 +7056,39 @@ int CvCity::foodConsumption(bool /*bNoAngry*/, int iExtra) const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+int CvCity::foodDifference(bool bBottom, const int* iValueKnown, int iExtraHappiness) const
+#else
 int CvCity::foodDifference(bool bBottom) const
+#endif
 {
 	VALIDATE_OBJECT
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+	int iToPassValueKnown = 0;
+	if (iValueKnown)
+		iToPassValueKnown = *iValueKnown * 100;
+	return foodDifferenceTimes100(bBottom, NULL, (iValueKnown ? &iToPassValueKnown : NULL), iExtraHappiness) / 100;
+#else
 	return foodDifferenceTimes100(bBottom) / 100;
+#endif
 }
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink, const int* iValueKnown, int iExtraHappiness) const
+#else
 int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iDifference;
 
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+	if (iValueKnown)
+		iDifference = *iValueKnown;
+	else
+#endif
 	if(isFoodProduction())
 	{
 		iDifference = std::min(0, GetFoodProduction(getYieldRate(YIELD_FOOD, false) - foodConsumption()) * 100);
@@ -6745,14 +7151,22 @@ int CvCity::foodDifferenceTimes100(bool bBottom, CvString* toolTipSink) const
 		}
 
 		// Cities stop growing when empire is very unhappy
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		if (!GC.getGame().isOption(GAMEOPTION_NO_HAPPINESS) && GET_PLAYER(getOwner()).GetExcessHappiness() + iExtraHappiness <= /*-10*/ GC.getVERY_UNHAPPY_THRESHOLD())
+#else
 		if(GET_PLAYER(getOwner()).IsEmpireVeryUnhappy())
+#endif
 		{
 			int iMod = /*-100*/ GC.getVERY_UNHAPPY_GROWTH_PENALTY();
 			iTotalMod += iMod;
 			GC.getGame().BuildProdModHelpText(toolTipSink, "TXT_KEY_FOODMOD_UNHAPPY", iMod);
 		}
 		// Cities grow slower if the player is over his Happiness Limit
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		else if (!GC.getGame().isOption(GAMEOPTION_NO_HAPPINESS) && GET_PLAYER(getOwner()).GetExcessHappiness() + iExtraHappiness < 0)
+#else
 		else if(GET_PLAYER(getOwner()).IsEmpireUnhappy())
+#endif
 		{
 			int iMod = /*-75*/ GC.getUNHAPPY_GROWTH_PENALTY();
 			iTotalMod += iMod;
@@ -7008,7 +7422,11 @@ bool CvCity::hasActiveWorldWonder() const
 
 	CvTeam& kTeam = GET_TEAM(getTeam());
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iI);
 
@@ -7986,7 +8404,11 @@ int CvCity::GetLocalResourceWonderProductionMod(BuildingTypes eBuilding, CvStrin
 		}
 
 		// Resource wonder bonus
+#ifdef AUI_WARNING_FIXES
+		for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 		for(int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 		{
 			const ResourceTypes eResource = static_cast<ResourceTypes>(iResourceLoop);
 			CvResourceInfo* pkResource = GC.getResourceInfo(eResource);
@@ -8354,7 +8776,11 @@ void CvCity::changeFreeExperience(int iChange)
 //	--------------------------------------------------------------------------------
 bool CvCity::CanAirlift() const
 {
+#ifdef AUI_WARNING_FIXES
+	uint iBuildingClassLoop;
+#else
 	int iBuildingClassLoop;
+#endif
 	BuildingClassTypes eBuildingClass;
 	CvPlayer &kPlayer = GET_PLAYER(getOwner());
 
@@ -8583,6 +9009,21 @@ void CvCity::SetPuppet(bool bValue)
 	if(IsPuppet() != bValue)
 	{
 		m_bPuppet = bValue;
+#ifdef AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
+		if (GetCityCitizens())
+		{
+			if (bValue)
+			{
+				GetCityCitizens()->SetFocusType(CITY_AI_FOCUS_TYPE_GOLD);
+				GetCityCitizens()->SetNoAutoAssignSpecialists(false);
+				GetCityCitizens()->SetForcedAvoidGrowth(false);
+			}
+			else
+			{
+				GetCityCitizens()->SetFocusType(NO_CITY_AI_FOCUS_TYPE);
+			}
+		}
+#endif
 	}
 }
 
@@ -8595,15 +9036,28 @@ void CvCity::DoCreatePuppet()
 	// Turn this off - used to display info for annex/puppet/raze popup
 	SetIgnoreCityForHappiness(false);
 
+#ifndef AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
 	SetPuppet(true);
 
 	setProductionAutomated(true, true);
+#endif
 
 	int iForceWorkingPuppetRange = 2;
 
 	CvPlot* pLoopPlot;
 
 	// Loop through all plots near this City
+#ifdef AUI_CITY_FIX_PUPPET_WORKED_PLOT_OVERRIDE
+	int iMaxDX;
+	for (int iDY = -iForceWorkingPuppetRange; iDY <= iForceWorkingPuppetRange; iDY++)
+	{
+		iMaxDX = iForceWorkingPuppetRange - MAX(0, iDY);
+		for (int iDX = -iForceWorkingPuppetRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			if (iDX == 0 && iDY == 0)
+				continue;
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iPlotLoop = 0; iPlotLoop < NUM_CITY_PLOTS; iPlotLoop++)
 	{
 		pLoopPlot = plotCity(getX(), getY(), iPlotLoop);
@@ -8612,6 +9066,7 @@ void CvCity::DoCreatePuppet()
 		{
 			// Cut off areas around the city we don't care about
 			pLoopPlot = plotXYWithRangeCheck(pLoopPlot->getX(), pLoopPlot->getY(), getX(), getY(), iForceWorkingPuppetRange);
+#endif
 
 			if(pLoopPlot != NULL)
 			{
@@ -8620,8 +9075,13 @@ void CvCity::DoCreatePuppet()
 		}
 	}
 
+#ifndef AUI_CITY_FIX_DO_CREATE_PUPPET_FREE_COURTHOUSES_KEPT
 	// Remove any buildings that are not applicable to puppets (but might have been earned through traits/policies)
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for (int iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#endif
 	{
 		BuildingTypes eBuilding = (BuildingTypes) iI;
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -8633,6 +9093,13 @@ void CvCity::DoCreatePuppet()
 			}
 		}
 	}
+#endif
+
+#ifdef AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
+	SetPuppet(true);
+
+	setProductionAutomated(true, true);
+#endif
 
 	GET_PLAYER(getOwner()).DoUpdateHappiness();
 	GET_PLAYER(getOwner()).DoUpdateNextPolicyCost();
@@ -8694,7 +9161,7 @@ int CvCity::GetLocalHappiness() const
 	}
 	
 	// NQMP GJS - New Ottoman UA begin
-	iLocalHappiness += (GetCityReligions()->GetNumReligionsWithFollowers() * kPlayer.GetPlayerTraits()->GetHappinessPerReligion());
+	iLocalHappiness += GetCityReligions()->GetNumReligionsWithFollowers() * kPlayer.GetPlayerTraits()->GetHappinessPerReligion();
 	// NQMP GJS - New Ottoman UA end
 
 	// Follower beliefs
@@ -8725,7 +9192,11 @@ int CvCity::GetLocalHappiness() const
 			}
 
 			// Buildings
+#ifdef AUI_WARNING_FIXES
+			for (uint jJ = 0; jJ < GC.getNumBuildingClassInfos(); jJ++)
+#else
 			for(int jJ = 0; jJ < GC.getNumBuildingClassInfos(); jJ++)
+#endif
 			{
 				BuildingClassTypes eBuildingClass = (BuildingClassTypes)jJ;
 
@@ -8752,9 +9223,17 @@ int CvCity::GetLocalHappiness() const
 
 	// Policy Building Mods
 	int iSpecialPolicyBuildingHappiness = 0;
+#ifdef AUI_WARNING_FIXES
+	uint iBuildingClassLoop;
+#else
 	int iBuildingClassLoop;
+#endif
 	BuildingClassTypes eBuildingClass;
+#ifdef AUI_WARNING_FIXES
+	for (uint iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#else
 	for(int iPolicyLoop = 0; iPolicyLoop < GC.getNumPolicyInfos(); iPolicyLoop++)
+#endif
 	{
 		PolicyTypes ePolicy = (PolicyTypes)iPolicyLoop;
 		CvPolicyEntry* pkPolicyInfo = GC.getPolicyInfo(ePolicy);
@@ -8856,8 +9335,11 @@ void CvCity::SetIgnoreCityForHappiness(bool bValue)
 BuildingTypes CvCity::ChooseFreeWallsBuilding() const
 {
 	CvString strWallBuildingClass = "BUILDINGCLASS_WALLS";
-	int iNumBuildingClassInfos = GC.getNumBuildingClassInfos();
-	for(int iI = 0; iI < iNumBuildingClassInfos; iI++)
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
+	for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 	{
 		const BuildingClassTypes eBuildingClass = static_cast<BuildingClassTypes>(iI);
 		CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo(eBuildingClass);
@@ -8875,10 +9357,16 @@ BuildingTypes CvCity::ChooseFreeWallsBuilding() const
 BuildingTypes CvCity::ChooseFreeCultureBuilding() const
 {
 	BuildingTypes eRtnValue = NO_BUILDING;
+#ifndef AUI_WARNING_FIXES
 	int iNumBuildingInfos = GC.getNumBuildingInfos();
+#endif
 	CvWeightedVector<int, SAFE_ESTIMATE_NUM_BUILDINGS, true> buildingChoices;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < iNumBuildingInfos; iI++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iI);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -8919,10 +9407,16 @@ BuildingTypes CvCity::ChooseFreeCultureBuilding() const
 BuildingTypes CvCity::ChooseFreeFoodBuilding() const
 {
 	BuildingTypes eRtnValue = NO_BUILDING;
+#ifndef AUI_WARNING_FIXES
 	int iNumBuildingInfos = GC.getNumBuildingInfos();
+#endif
 	CvWeightedVector<int, SAFE_ESTIMATE_NUM_BUILDINGS, true> buildingChoices;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumBuildingInfos(); iI++)
+#else
 	for(int iI = 0; iI < iNumBuildingInfos; iI++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iI);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -9028,7 +9522,11 @@ bool CvCity::IsBlockaded() const
 	CvBuildingXMLEntries* pkGameBuildings = GC.GetGameBuildings();
 
 	// Loop through adding the available buildings
+#ifdef AUI_WARNING_FIXES
+	for (uint i = 0; i < GC.GetGameBuildings()->GetNumBuildings(); i++)
+#else
 	for(int i = 0; i < GC.GetGameBuildings()->GetNumBuildings(); i++)
+#endif
 	{
 		BuildingTypes eBuilding = (BuildingTypes)i;
 		CvBuildingEntry* pkBuildingInfo = pkGameBuildings->GetEntry(i);
@@ -9052,6 +9550,17 @@ bool CvCity::IsBlockaded() const
 	}
 
 	int iRange = 2;
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	CvPlot* pLoopPlot = NULL;
 
 	for(int iDX = -iRange; iDX <= iRange; iDX++)
@@ -9059,6 +9568,7 @@ bool CvCity::IsBlockaded() const
 		for(int iDY = -iRange; iDY <= iRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iRange);
+#endif
 			if(!pLoopPlot)
 			{
 				continue;
@@ -9216,6 +9726,18 @@ void CvCity::SetPlayersReligion(PlayerTypes eNewValue)
 	VALIDATE_OBJECT
 	m_ePlayersReligion = eNewValue;
 }
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+int CvCity::getCachedYieldT100ForThisTurn(YieldTypes eIndex) const
+{
+	return m_aCachedYieldT100ForThisTurn[eIndex];
+}
+
+void CvCity::setCachedYieldT100ForThisTurn(YieldTypes eIndex, int iAmount)
+{
+	m_aCachedYieldT100ForThisTurn[eIndex] = iAmount;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 TeamTypes CvCity::getTeam() const
@@ -9892,7 +10414,11 @@ void CvCity::updateExtraSpecialistYield(YieldTypes eYield)
 	VALIDATE_OBJECT
 	int iOldYield;
 	int iNewYield;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 
 	CvAssertMsg(eYield >= 0, "eYield expected to be >= 0");
 	CvAssertMsg(eYield < NUM_YIELD_TYPES, "eYield expected to be < NUM_YIELD_TYPES");
@@ -10023,7 +10549,11 @@ int CvCity::getDomainFreeExperienceFromGreatWorks(DomainTypes eIndex) const
 	int iXP = 0;
 
 	CvBuildingXMLEntries* pkBuildings = GetCityBuildings()->GetBuildings();
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuilding = 0; iBuilding < GetCityBuildings()->GetBuildings()->GetNumBuildings(); iBuilding++)
+#else
 	for(int iBuilding = 0; iBuilding < GetCityBuildings()->GetBuildings()->GetNumBuildings(); iBuilding++)
+#endif
 	{
 		CvBuildingEntry* pInfo = pkBuildings->GetEntry(iBuilding);
 		if(pInfo)
@@ -10177,7 +10707,11 @@ void CvCity::doFoundMessage()
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvCity::IsExtraLuxuryResources() const
+#else
 bool CvCity::IsExtraLuxuryResources()
+#endif
 {
 	return (m_iCountExtraLuxuries > 0);
 }
@@ -10708,7 +11242,11 @@ void CvCity::changeDamage(int iChange)
 
 //	--------------------------------------------------------------------------------
 /// Can a specific plot be bought for the city
+#ifdef AUI_CONSTIFY
+bool CvCity::CanBuyPlot(int iPlotX, int iPlotY, bool bIgnoreCost) const
+#else
 bool CvCity::CanBuyPlot(int iPlotX, int iPlotY, bool bIgnoreCost)
+#endif
 {
 	VALIDATE_OBJECT
 	CvPlot* pTargetPlot = NULL;
@@ -10797,7 +11335,11 @@ bool CvCity::CanBuyPlot(int iPlotX, int iPlotY, bool bIgnoreCost)
 
 //	--------------------------------------------------------------------------------
 /// Can this city buy a plot, any plot?
+#ifdef AUI_CONSTIFY
+bool CvCity::CanBuyAnyPlot() const
+#else
 bool CvCity::CanBuyAnyPlot(void)
+#endif
 {
 	VALIDATE_OBJECT
 	CvPlot* pLoopPlot = NULL;
@@ -10825,11 +11367,22 @@ bool CvCity::CanBuyAnyPlot(void)
 		}
 	}
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	for (int iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+	{
+		iMaxDX = iMaxRange - MAX(0, iDY);
+		for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 	{
 		for(int iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMaxRange);
+#endif
 			if(pLoopPlot != NULL)
 			{
 				if(pLoopPlot->getOwner() != NO_PLAYER)
@@ -10857,10 +11410,16 @@ bool CvCity::CanBuyAnyPlot(void)
 CvPlot* CvCity::GetNextBuyablePlot(void)
 {
 	VALIDATE_OBJECT
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+	FFastVector<int, true, c_eCiv5GameplayDLL> aiPlotList;
+	aiPlotList.reserve(NUM_DIRECTION_TYPES * GC.getMAXIMUM_ACQUIRE_PLOT_DISTANCE());
+#else
 	std::vector<int> aiPlotList;
 	aiPlotList.resize(20, -1);
+#endif
 	GetBuyablePlotList(aiPlotList);
 
+#ifndef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
 	// NQMP GJS - Shoshone + Colonialism better extra territory fix begin
 	// get the cheapest tile to currently buy, since that's usually the best one
 	// TODO: better fix?
@@ -10887,8 +11446,11 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 		}
 	}
 	// NQMP GJS - Shoshone + Colonialism better extra territory fix end
+#endif
 
-	/*
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+	int iListLength = aiPlotList.size();
+#else
 	int iListLength = 0;
 	for(uint ui = 0; ui < aiPlotList.size(); ui++)
 	{
@@ -10901,6 +11463,7 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 			break;
 		}
 	}
+#endif
 
 	CvPlot* pPickedPlot = NULL;
 	if(iListLength > 0)
@@ -10908,17 +11471,22 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 		int iPickedIndex = GC.getGame().getJonRandNum(iListLength, "GetNextBuyablePlot picker");
 		pPickedPlot = GC.getMap().plotByIndex(aiPlotList[iPickedIndex]);
 	}
-	*/
 
 	return pPickedPlot;
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+void CvCity::GetBuyablePlotList(FFastVector<int, true, c_eCiv5GameplayDLL>& aiPlotList)
+#else
 void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
+#endif
 {
 	VALIDATE_OBJECT
+#ifndef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
 	aiPlotList.resize(20, -1);
 	int iResultListIndex = 0;
+#endif
 
 	int iLowestCost = INT_MAX;
 	CvPlot* pLoopPlot = NULL;
@@ -10936,7 +11504,19 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 	int iPLOT_INFLUENCE_NW_COST =				/*-105*/ GC.getPLOT_INFLUENCE_NW_COST();
 	int iPLOT_INFLUENCE_YIELD_POINT_COST =		/*-1*/	GC.getPLOT_INFLUENCE_YIELD_POINT_COST();
 
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+	iPLOT_INFLUENCE_DISTANCE_MULTIPLIER *= 10;
+	iPLOT_INFLUENCE_RING_COST *= 10;
+	iPLOT_INFLUENCE_WATER_COST *= 10;
+	iPLOT_INFLUENCE_IMPROVEMENT_COST *= 10;
+	iPLOT_INFLUENCE_ROUTE_COST *= 10;
+	iPLOT_INFLUENCE_RESOURCE_COST *= 10;
+	iPLOT_INFLUENCE_NW_COST *= 10;
+#endif
+
+#ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
 	int iPLOT_INFLUENCE_NO_ADJACENT_OWNED_COST = /*1000*/ GC.getPLOT_INFLUENCE_NO_ADJACENT_OWNED_COST();
+#endif
 
 	int iYieldLoop;
 
@@ -10947,17 +11527,63 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 
 	ImprovementTypes eBarbCamptype = (ImprovementTypes)GC.getBARBARIAN_CAMP_IMPROVEMENT();
 
+#if defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS) || defined(AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS)
+	int iYieldValueSum = GC.getAI_CITIZEN_VALUE_FOOD() + GC.getAI_CITIZEN_VALUE_PRODUCTION() + GC.getAI_CITIZEN_VALUE_GOLD() + GC.getAI_CITIZEN_VALUE_SCIENCE() + GC.getAI_CITIZEN_VALUE_CULTURE() + GC.getAI_CITIZEN_VALUE_FAITH();
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_CONSIDER_CITY_FOCUS
+	CityAIFocusTypes eFocus = GetCityCitizens()->GetFocusType();
+#else
+	CityAIFocusTypes eFocus = NO_CITY_AI_FOCUS_TYPE;
+#endif
+#endif
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+	int iLowestBuyCost = MAX_INT;
+#endif
+
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+	{
+		iMaxDX = iMaxRange - MAX(0, iDY);
+		for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for (iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 	{
 		for (iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMaxRange);
+#endif
 			if (pLoopPlot != NULL)
 			{
 				if (pLoopPlot->getOwner() != NO_PLAYER)
 				{
 					continue;
 				}
+
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
+				// Plots not adjacent to another Plot acquired by this City are pretty much impossible to get
+				bFoundAdjacentOwnedByCity = false;
+				for (iDirectionLoop = 0; iDirectionLoop < NUM_DIRECTION_TYPES; iDirectionLoop++)
+				{
+					CvPlot* pAdjacentPlot = plotDirection(pLoopPlot->getX(), pLoopPlot->getY(), (DirectionTypes)iDirectionLoop);
+
+					if (pAdjacentPlot != NULL)
+					{
+						// Have to check plot ownership first because the City IDs match between different players!!!
+						if (pAdjacentPlot->getOwner() == getOwner() && pAdjacentPlot->GetCityPurchaseID() == GetID())
+						{
+							bFoundAdjacentOwnedByCity = true;
+							break;
+						}
+					}
+				}
+				if (!bFoundAdjacentOwnedByCity)
+				{
+					continue;
+				}
+#endif
 
 				ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 				if (pkScriptSystem) 
@@ -10988,6 +11614,46 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 					ResourceTypes eResource = pLoopPlot->getResourceType(thisTeam);
 					if (eResource != NO_RESOURCE)
 					{
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+						if (GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_BONUS)
+						{
+							if (hexDistance(iDX, iDY) <= NUM_CITY_RINGS)
+							{
+								int* aiYields = GC.getResourceInfo(eResource)->getYieldChangeArray();
+								int iTotal = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD];
+								if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+									iTotal *= 3;
+								else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+									iTotal *= 2;
+								int iTemp = GC.getAI_CITIZEN_VALUE_PRODUCTION() * aiYields[YIELD_PRODUCTION];
+								if (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+									iTemp *= 3;
+								else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+									iTemp *= 2;
+								iTotal += iTemp;
+								iTemp = GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD];
+								if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+									iTemp *= 3;
+								else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+									iTemp *= 2;
+								iTotal += iTemp;
+								iTemp = GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE];
+								if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+									iTemp *= 3;
+								iTotal += iTemp;
+								iTemp = GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE];
+								if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+									iTemp *= 3;
+								iTotal += iTemp;
+								iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
+								if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
+									iTemp *= 3;
+								iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / iYieldValueSum;
+							}
+						}
+						else
+							iInfluenceCost += iPLOT_INFLUENCE_RESOURCE_COST;
+#else
 						iInfluenceCost += iPLOT_INFLUENCE_RESOURCE_COST;
 						bool bBonusResource = GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_BONUS;
 						if (bBonusResource)
@@ -11003,6 +11669,7 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 								++iInfluenceCost;
 							}
 						}
+#endif
 					}
 					else 
 					{
@@ -11014,7 +11681,11 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 						}
 
 						// if we can't work this tile in this city make it much less likely to be picked
+#ifdef AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
+						if (hexDistance(iDX, iDY) > NUM_CITY_RINGS)
+#else
 						if (plotDistance(pLoopPlot->getX(),pLoopPlot->getY(),getX(),getY()) > NUM_CITY_RINGS)
+#endif
 						{
 							iInfluenceCost += iPLOT_INFLUENCE_RING_COST;
 						}
@@ -11048,46 +11719,252 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 					}
 
 					// More Yield == more desirable
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+					int iLoopYield = 0;
+					int iYieldTotal = 0;
+					for (iYieldLoop = 0; iYieldLoop < NUM_YIELD_TYPES; iYieldLoop++)
+					{
+#ifdef AUI_PLOT_CALCULATE_NATURE_YIELD_USE_POTENTIAL_FUTURE_OWNER_IF_UNOWNED
+						iLoopYield = iPLOT_INFLUENCE_YIELD_POINT_COST * pLoopPlot->calculateNatureYield((YieldTypes)iYieldLoop, getTeam(), false, getOwner());
+#else
+						iLoopYield = (iPLOT_INFLUENCE_YIELD_POINT_COST * pLoopPlot->getYield((YieldTypes)iYieldLoop));
+#endif
+						switch ((YieldTypes)iYieldLoop)
+						{
+						case YIELD_FOOD:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_FOOD();
+							if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+								iLoopYield *= 3;
+							else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+								iLoopYield *= 2;
+						}
+						break;
+						case YIELD_PRODUCTION:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_PRODUCTION();
+							if (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+								iLoopYield *= 3;
+							else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+								iLoopYield *= 2;
+						}
+						break;
+						case YIELD_GOLD:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_GOLD();
+							if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+								iLoopYield *= 3;
+							else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+								iLoopYield *= 2;
+						}
+						break;
+						case YIELD_SCIENCE:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_SCIENCE();
+							if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+								iLoopYield *= 3;
+						}
+						break;
+						case YIELD_CULTURE:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_CULTURE();
+							if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+								iLoopYield *= 3;
+						}
+						break;
+						case YIELD_FAITH:
+						{
+							iLoopYield *= GC.getAI_CITIZEN_VALUE_FAITH();
+							if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
+								iLoopYield *= 3;
+						}
+						break;
+						}
+						iYieldTotal += iLoopYield;
+					}
+					iInfluenceCost += iYieldTotal * NUM_YIELD_TYPES / iYieldValueSum;
+#else
 					for (iYieldLoop = 0; iYieldLoop < NUM_YIELD_TYPES; iYieldLoop++)
 					{
 						iInfluenceCost += (iPLOT_INFLUENCE_YIELD_POINT_COST * pLoopPlot->getYield((YieldTypes) iYieldLoop));
 					}
+#endif
 
 					// all other things being equal move towards unclaimed resources
+#ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 					bool bUnownedNaturalWonderAdjacentCount = false;
+#endif
 					for (int iI = 0; iI < NUM_DIRECTION_TYPES; ++iI)
 					{
 						CvPlot* pAdjacentPlot = plotDirection(pLoopPlot->getX(), pLoopPlot->getY(), ((DirectionTypes)iI));
 
 						if (pAdjacentPlot != NULL)
 						{
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+							if (pAdjacentPlot->getOwner() == NO_PLAYER && pAdjacentPlot->isRevealed(getTeam()))
+#else
 							if (pAdjacentPlot->getOwner() == NO_PLAYER)
+#endif
 							{
 								int iPlotDistance = plotDistance(getX(), getY(), pAdjacentPlot->getX(), pAdjacentPlot->getY());
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+								bool bNoExistingAdjacentOwnedPlot = true;
+								for (int iJ = 0; iJ < NUM_DIRECTION_TYPES; ++iJ)
+								{
+									CvPlot* pAdjacentPlot2 = plotDirection(pAdjacentPlot->getX(), pAdjacentPlot->getY(), ((DirectionTypes)iJ));
+									if (pAdjacentPlot2 != NULL && pAdjacentPlot2->getOwner() == getOwner() && pAdjacentPlot2->GetCityPurchaseID() == GetID())
+									{
+										bNoExistingAdjacentOwnedPlot = false;
+										break;
+									}
+								}
+								if (bNoExistingAdjacentOwnedPlot)
+								{
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_WEIGHTED_YIELDS
+									iLoopYield = 0;
+									iYieldTotal = 0;
+									for (iYieldLoop = 0; iYieldLoop < NUM_YIELD_TYPES; iYieldLoop++)
+									{
+#ifdef AUI_PLOT_CALCULATE_NATURE_YIELD_USE_POTENTIAL_FUTURE_OWNER_IF_UNOWNED
+										iLoopYield = iPLOT_INFLUENCE_YIELD_POINT_COST * pAdjacentPlot->calculateNatureYield((YieldTypes)iYieldLoop, getTeam(), false, getOwner());
+#else
+										iLoopYield = (iPLOT_INFLUENCE_YIELD_POINT_COST * pAdjacentPlot->getYield((YieldTypes)iYieldLoop));
+#endif
+										switch ((YieldTypes)iYieldLoop)
+										{
+										case YIELD_FOOD:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_FOOD();
+											if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+												iLoopYield *= 3;
+											else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+												iLoopYield *= 2;
+										}
+										break;
+										case YIELD_PRODUCTION:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_PRODUCTION();
+											if (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+												iLoopYield *= 3;
+											else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+												iLoopYield *= 2;
+										}
+										break;
+										case YIELD_GOLD:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_GOLD();
+											if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+												iLoopYield *= 3;
+											else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+												iLoopYield *= 2;
+										}
+										break;
+										case YIELD_SCIENCE:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_SCIENCE();
+											if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+												iLoopYield *= 3;
+										}
+										break;
+										case YIELD_CULTURE:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_CULTURE();
+											if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+												iLoopYield *= 3;
+										}
+										break;
+										case YIELD_FAITH:
+										{
+											iLoopYield *= GC.getAI_CITIZEN_VALUE_FAITH();
+											if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
+												iLoopYield *= 3;
+										}
+										break;
+										}
+										iYieldTotal += iLoopYield;
+									}
+									iInfluenceCost += iYieldTotal * NUM_YIELD_TYPES / (iYieldValueSum * NUM_DIRECTION_TYPES);
+#else
+									for (iYieldLoop = 0; iYieldLoop < NUM_YIELD_TYPES; iYieldLoop++)
+									{
+										iInfluenceCost += (iPLOT_INFLUENCE_YIELD_POINT_COST * pAdjacentPlot->getYield((YieldTypes)iYieldLoop)) / NUM_DIRECTION_TYPES;
+									}
+#endif
+#endif
 								ResourceTypes eAdjacentResource = pAdjacentPlot->getResourceType(thisTeam);
 								if (eAdjacentResource != NO_RESOURCE)
 								{
 									// if we are close enough to work, or this is not a bonus resource
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+									if (GC.getResourceInfo(eAdjacentResource)->getResourceUsage() != RESOURCEUSAGE_BONUS && !GetPlayer()->isMinorCiv())
+										iInfluenceCost += (iPLOT_INFLUENCE_RESOURCE_COST - NUM_DIRECTION_TYPES / 2) / (NUM_DIRECTION_TYPES);
+									else if (iPlotDistance <= NUM_CITY_RINGS)
+									{
+										int* aiYields = GC.getResourceInfo(eAdjacentResource)->getYieldChangeArray();
+										int iTotal = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD];
+										if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
+											iTotal *= 3;
+										else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+											iTotal *= 2;
+										int iTemp = GC.getAI_CITIZEN_VALUE_PRODUCTION() * aiYields[YIELD_PRODUCTION];
+										if (eFocus == CITY_AI_FOCUS_TYPE_PRODUCTION)
+											iTemp *= 3;
+										else if (eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH)
+											iTemp *= 2;
+										iTotal += iTemp;
+										iTemp = GC.getAI_CITIZEN_VALUE_GOLD() * aiYields[YIELD_GOLD];
+										if (eFocus == CITY_AI_FOCUS_TYPE_GOLD)
+											iTemp *= 3;
+										else if (eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
+											iTemp *= 2;
+										iTotal += iTemp;
+										iTemp = GC.getAI_CITIZEN_VALUE_SCIENCE() * aiYields[YIELD_SCIENCE];
+										if (eFocus == CITY_AI_FOCUS_TYPE_SCIENCE)
+											iTemp *= 3;
+										iTotal += iTemp;
+										iTemp = GC.getAI_CITIZEN_VALUE_CULTURE() * aiYields[YIELD_CULTURE];
+										if (eFocus == CITY_AI_FOCUS_TYPE_CULTURE)
+											iTemp *= 3;
+										iTotal += iTemp;
+										iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
+										if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
+											iTemp *= 3;
+										iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / (iYieldValueSum * NUM_DIRECTION_TYPES);
+									}
+#else
 									if (iPlotDistance <= NUM_CITY_RINGS || GC.getResourceInfo(eAdjacentResource)->getResourceUsage() != RESOURCEUSAGE_BONUS)
 									{
 										--iInfluenceCost;
 									}
+#endif
 								}
 								if (pAdjacentPlot->IsNaturalWonder())
 								{
 									if (iPlotDistance <= NUM_CITY_RINGS) // grab for this city
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+										iInfluenceCost += (iPLOT_INFLUENCE_NW_COST - NUM_DIRECTION_TYPES / 2) / (NUM_DIRECTION_TYPES);
+									else
+										--iInfluenceCost;
+#else
 									{
 										bUnownedNaturalWonderAdjacentCount = true;
 									}
 									--iInfluenceCost; // but we will slightly grow towards it for style in any case
+#endif
 								}
+#ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
+								}
+#endif
 							}
 						}
 					}
 
+#ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 					// move towards unclaimed NW
 					iInfluenceCost += bUnownedNaturalWonderAdjacentCount ? -1 : 0;
+#endif
 
+#ifndef AUI_CITY_GET_BUYABLE_PLOT_LIST_ACTUALLY_IMPOSSIBLE_IF_NOT_ADJACENT_OWNED
 					// Plots not adjacent to another Plot acquired by this City are pretty much impossible to get
 					bFoundAdjacentOwnedByCity = false;
 					for (iDirectionLoop = 0; iDirectionLoop < NUM_DIRECTION_TYPES; iDirectionLoop++)
@@ -11108,30 +11985,50 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 					{
 						iInfluenceCost += iPLOT_INFLUENCE_NO_ADJACENT_OWNED_COST;
 					}
+#endif
 
 					// Are we cheap enough to get picked next?
 					if (iInfluenceCost < iLowestCost)
 					{
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+						aiPlotList.clear();
+#else
 						// clear reset list
 						for(uint ui = 0; ui < aiPlotList.size(); ui++)
 						{
 							aiPlotList[ui] = -1;
 						}
 						iResultListIndex = 0;
+#endif
 						iLowestCost = iInfluenceCost;
 						// this will "fall through" to the next conditional
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+						iLowestBuyCost = MAX_INT;
+#endif
 					}
 
 					if (iInfluenceCost == iLowestCost)
 					{
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+						int iCurBuyCost = GetBuyPlotCost(pLoopPlot->getX(), pLoopPlot->getY());
+						if (iCurBuyCost <= iLowestBuyCost)
+						{
+							iLowestBuyCost = iCurBuyCost;
+#endif
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+						aiPlotList.push_back(pLoopPlot->GetPlotIndex());
+#else
 						aiPlotList[iResultListIndex] = pLoopPlot->GetPlotIndex();
 						iResultListIndex++;
+#endif
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
+						}
+#endif
 					}
 				}
 			}
 		}
 	}
-
 }
 
 //	--------------------------------------------------------------------------------
@@ -11288,7 +12185,11 @@ void CvCity::DoAcquirePlot(int iPlotX, int iPlotY)
 
 //	--------------------------------------------------------------------------------
 /// Compute how valuable buying a plot is to this city
+#ifdef AUI_CONSTIFY
+int CvCity::GetBuyPlotScore(int& iBestX, int& iBestY) const
+#else
 int CvCity::GetBuyPlotScore(int& iBestX, int& iBestY)
+#endif
 {
 	VALIDATE_OBJECT
 	CvPlot* pLoopPlot = NULL;
@@ -11299,11 +12200,22 @@ int CvCity::GetBuyPlotScore(int& iBestX, int& iBestY)
 
 	int iDX, iDY;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+	{
+		iMaxDX = iMaxRange - MAX(0, iDY);
+		for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 	{
 		for(iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMaxRange);
+#endif
 			if(pLoopPlot != NULL)
 			{
 				// Can we actually buy this plot?
@@ -11495,11 +12407,22 @@ void CvCity::DoUpdateCheapestPlotInfluence()
 
 	int iDX, iDY;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX;
+	for (iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
+	{
+		iMaxDX = iMaxRange - MAX(0, iDY);
+		for (iDX = -iMaxRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(iDX = -iMaxRange; iDX <= iMaxRange; iDX++)
 	{
 		for(iDY = -iMaxRange; iDY <= iMaxRange; iDY++)
 		{
 			pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMaxRange);
+#endif
 			if(pLoopPlot != NULL)
 			{
 				// If the plot's not owned by us, it doesn't matter
@@ -11532,7 +12455,11 @@ void CvCity::SetThreatValue(int iThreatValue)
 
 //	--------------------------------------------------------------------------------
 /// Getting the danger value threat amount
+#ifdef AUI_CONSTIFY
+int CvCity::getThreatValue() const
+#else
 int CvCity::getThreatValue(void)
+#endif
 {
 	VALIDATE_OBJECT
 	return m_iThreatValue;
@@ -12053,7 +12980,11 @@ void CvCity::popOrder(int iNum, bool bFinish, bool bChoose)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+void CvCity::swapOrder(uint iNum)
+#else
 void CvCity::swapOrder(int iNum)
+#endif
 {
 	// okay, this only swaps the order with the next one up in the queue
 	VALIDATE_OBJECT
@@ -12117,7 +13048,11 @@ void CvCity::stopHeadOrder()
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+uint CvCity::getOrderQueueLength()
+#else
 int CvCity::getOrderQueueLength()
+#endif
 {
 	VALIDATE_OBJECT
 	return m_orderQueue.getLength();
@@ -12125,9 +13060,16 @@ int CvCity::getOrderQueueLength()
 
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+OrderData* CvCity::getOrderFromQueue(uint iIndex)
+#else
 OrderData* CvCity::getOrderFromQueue(int iIndex)
+#endif
 {
 	VALIDATE_OBJECT
+#ifdef AUI_WARNING_FIXES
+	return m_orderQueue.nodeNum(iIndex);
+#else
 	OrderData* pOrderNode;
 
 	pOrderNode = m_orderQueue.nodeNum(iIndex);
@@ -12140,8 +13082,16 @@ OrderData* CvCity::getOrderFromQueue(int iIndex)
 	{
 		return NULL;
 	}
+#endif
 }
 
+#ifdef AUI_CONSTIFY
+const OrderData* CvCity::getOrderFromQueue(uint iIndex) const
+{
+	VALIDATE_OBJECT
+		return m_orderQueue.nodeNum(iIndex);
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 OrderData* CvCity::nextOrderQueueNode(OrderData* pNode)
@@ -12448,7 +13398,11 @@ bool CvCity::CreateProject(ProjectTypes eProjectType)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CONSTIFY
+bool CvCity::CanPlaceUnitHere(UnitTypes eUnitType) const
+#else
 bool CvCity::CanPlaceUnitHere(UnitTypes eUnitType)
+#endif
 {
 	VALIDATE_OBJECT
 	bool bCombat = false;
@@ -12500,7 +13454,11 @@ bool CvCity::CanPlaceUnitHere(UnitTypes eUnitType)
 
 //	--------------------------------------------------------------------------------
 // Is this city allowed to purchase something right now?
+#ifdef AUI_CONSTIFY
+bool CvCity::IsCanPurchase(bool bTestPurchaseCost, bool bTestTrainable, UnitTypes eUnitType, BuildingTypes eBuildingType, ProjectTypes eProjectType, YieldTypes ePurchaseYield) const
+#else
 bool CvCity::IsCanPurchase(bool bTestPurchaseCost, bool bTestTrainable, UnitTypes eUnitType, BuildingTypes eBuildingType, ProjectTypes eProjectType, YieldTypes ePurchaseYield)
+#endif
 {
 	CvAssertMsg(eUnitType >= 0 || eBuildingType >= 0 || eProjectType >= 0, "No valid passed in");
 	CvAssertMsg(!(eUnitType >= 0 && eBuildingType >= 0) && !(eUnitType >= 0 && eProjectType >= 0) && !(eBuildingType >= 0 && eProjectType >= 0), "Only one being passed");
@@ -13064,7 +14022,11 @@ void CvCity::doGrowth()
 		return;
 	}
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int iDiff = getCachedYieldT100ForThisTurn(YIELD_FOOD);
+#else
 	int iDiff = foodDifferenceTimes100();
+#endif
 
 	if(iDiff < 0)
 	{
@@ -13093,7 +14055,11 @@ void CvCity::doGrowth()
 		}
 		else
 		{
+#ifdef NQM_FAST_COMP
+			changeFood(-MAX(0, growthThreshold() - getFoodKept()));
+#else
 			changeFood(-(std::max(0, (growthThreshold() - getFoodKept()))));
+#endif
 			changePopulation(1);
 
 			// Only show notification if the city is small
@@ -13109,6 +14075,11 @@ void CvCity::doGrowth()
 					pNotifications->Add(NOTIFICATION_CITY_GROWTH, localizedText.toUTF8(), localizedSummary.toUTF8(), getX(), getY(), GetID());
 				}
 			}
+#ifdef AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
+			int iNewDiff = foodDifferenceTimes100() - iDiff;
+			changeFoodTimes100(iNewDiff);
+			changeFoodKept(iNewDiff / 100);
+#endif
 		}
 	}
 	else if(getFood() < 0)
@@ -13118,6 +14089,11 @@ void CvCity::doGrowth()
 		if(getPopulation() > 1)
 		{
 			changePopulation(-1);
+#ifdef AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
+			int iNewDiff = foodDifferenceTimes100() - iDiff;
+			changeFoodTimes100(iNewDiff);
+			changeFoodKept(iNewDiff / 100);
+#endif
 		}
 	}
 }
@@ -13131,7 +14107,11 @@ bool CvCity::doCheckProduction()
 	UnitTypes eUpgradeUnit;
 	int iUpgradeProduction;
 	int iProductionGold;
+#ifdef AUI_WARNING_FIXES
+	uint iI;
+#else
 	int iI;
+#endif
 	bool bOK = true;
 
 	int iMaxedUnitGoldPercent = GC.getMAXED_UNIT_GOLD_PERCENT();
@@ -13140,7 +14120,11 @@ bool CvCity::doCheckProduction()
 
 	CvPlayerAI& thisPlayer = GET_PLAYER(getOwner());
 
+#ifdef AUI_WARNING_FIXES
+	uint iNumUnitInfos = GC.getNumUnitInfos();
+#else
 	int iNumUnitInfos = GC.getNumUnitInfos();
+#endif
 	{
 		AI_PERF_FORMAT_NESTED("City-AI-perf.csv", ("CvCity::doCheckProduction_Unit, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
 		for(iI = 0; iI < iNumUnitInfos; iI++)
@@ -13175,7 +14159,11 @@ bool CvCity::doCheckProduction()
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	uint iNumBuildingInfos = GC.getNumBuildingInfos();
+#else
 	int iNumBuildingInfos = GC.getNumBuildingInfos();
+#endif
 	{
 		AI_PERF_FORMAT_NESTED("City-AI-perf.csv", ("CvCity::doCheckProduction_Building, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
 
@@ -13241,8 +14229,12 @@ bool CvCity::doCheckProduction()
 
 	{
 		AI_PERF_FORMAT_NESTED("City-AI-perf.csv", ("CvCity::doCheckProduction_Project, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
+#ifdef AUI_WARNING_FIXES
+		for (iI = 0; iI < GC.getNumProjectInfos(); iI++)
+#else
 		int iNumProjectInfos = GC.getNumProjectInfos();
 		for(iI = 0; iI < iNumProjectInfos; iI++)
+#endif
 		{
 			int iProjectProduction = getProjectProduction((ProjectTypes)iI);
 			if(iProjectProduction > 0)
@@ -13303,7 +14295,11 @@ bool CvCity::doCheckProduction()
 					{
 						if(pOrderNode->eOrderType == ORDER_TRAIN)
 						{
+#ifdef AUI_WARNING_FIXES
+							if ((uint)pOrderNode->iData1 == iI)
+#else
 							if(pOrderNode->iData1 == iI)
+#endif
 							{
 								thisPlayer.changeUnitClassMaking(((UnitClassTypes)(GC.getUnitInfo((UnitTypes)(pOrderNode->iData1))->GetUnitClassType())), -1);
 								pOrderNode->iData1 = eUpgradeUnit;
@@ -13348,7 +14344,11 @@ bool CvCity::doCheckProduction()
 							{
 								if(pOrderNode->eOrderType == ORDER_CONSTRUCT)
 								{
+#ifdef AUI_WARNING_FIXES
+									if ((uint)pOrderNode->iData1 == iI)
+#else
 									if(pOrderNode->iData1 == iI)
+#endif
 									{
 										CvBuildingEntry* pkOrderBuildingInfo = GC.getBuildingInfo((BuildingTypes)pOrderNode->iData1);
 										CvBuildingEntry* pkUpgradeBuildingInfo = GC.getBuildingInfo(eUpgradeBuilding);
@@ -13390,6 +14390,7 @@ void CvCity::doProduction(bool bAllowNoProduction)
 	VALIDATE_OBJECT
 	AI_PERF_FORMAT("City-AI-perf.csv", ("CvCity::doProduction, Turn %03d, %s, %s", GC.getGame().getElapsedGameTurns(), GetPlayer()->getCivilizationShortDescription(), getName().c_str()) );
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	if(!isHuman() || isProductionAutomated())
 	{
 		if(!isProduction() || isProductionProcess() || AI_isChooseProductionDirty())
@@ -13397,6 +14398,7 @@ void CvCity::doProduction(bool bAllowNoProduction)
 			AI_chooseProduction(false /*bInterruptWonders*/);
 		}
 	}
+#endif
 
 	if(!bAllowNoProduction && !isProduction())
 	{
@@ -13430,19 +14432,43 @@ void CvCity::doProduction(bool bAllowNoProduction)
 			}
 		}
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		changeProductionTimes100(getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+#else
 		changeProductionTimes100(getCurrentProductionDifferenceTimes100(false, true));
+#endif
 
 		setOverflowProduction(0);
 		setFeatureProduction(0);
 
 		if(getProduction() >= getProductionNeeded() && !isProductionProcess())
 		{
+#ifdef AUI_CITY_FIX_DO_PRODUCTION_CONSIDER_FOOD_HAMMERS_FROM_NEW_BUILDING
+			bool bIsFoodProd = isFoodProduction();
+			int iOldFoodDiff = foodDifferenceTimes100();
+			int iOldProdDiff = getRawProductionDifferenceTimes100(bIsFoodProd, false);
+#endif
 			popOrder(0, true, true);
+#ifdef AUI_CITY_FIX_DO_PRODUCTION_CONSIDER_FOOD_HAMMERS_FROM_NEW_BUILDING
+			if (!bIsFoodProd && !isFoodProduction())
+			{
+				int iNewFood = foodDifferenceTimes100() - iOldFoodDiff;
+				changeFoodTimes100(iNewFood);
+				changeFoodKept(iNewFood / 100);
+			}
+
+			int iNewProd = getRawProductionDifferenceTimes100(bIsFoodProd, false) - iOldProdDiff;
+			changeProductionTimes100(iNewProd);
+#endif
 		}
 	}
 	else
 	{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		changeOverflowProductionTimes100(getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+#else
 		changeOverflowProductionTimes100(getCurrentProductionDifferenceTimes100(false, false));
+#endif
 	}
 }
 
@@ -13455,7 +14481,11 @@ void CvCity::doProcess()
 	if (eProcess == NO_PROCESS) return;
 
 	// Contribute production to a League project
+#ifdef AUI_WARNING_FIXES
+	for (uint iI = 0; iI < GC.getNumLeagueProjectInfos(); iI++)
+#else
 	for(int iI = 0; iI < GC.getNumLeagueProjectInfos(); iI++)
+#endif
 	{
 		LeagueProjectTypes eLeagueProject = (LeagueProjectTypes) iI;
 		CvLeagueProjectEntry* pInfo = GC.getLeagueProjectInfo(eLeagueProject);
@@ -13463,7 +14493,11 @@ void CvCity::doProcess()
 		{
 			if (pInfo->GetProcess() == eProcess)
 			{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				GC.getGame().GetGameLeagues()->DoLeagueProjectContribution(getOwner(), eLeagueProject, getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+#else
 				GC.getGame().GetGameLeagues()->DoLeagueProjectContribution(getOwner(), eLeagueProject, getCurrentProductionDifferenceTimes100(false, true));
+#endif
 			}
 		}
 	}
@@ -13788,7 +14822,11 @@ void CvCity::read(FDataStream& kStream)
 	if (uiVersion < 6)
 	{
 		CvCivilizationInfo& thisCivInfo = *GC.getCivilizationInfo(getCivilizationType());
+#ifdef AUI_WARNING_FIXES
+		for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#else
 		for (int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+#endif
 		{
 			BuildingClassTypes eBuildingClass = (BuildingClassTypes)iI;
 			BuildingTypes eBuilding = (BuildingTypes)(thisCivInfo.getCivilizationBuildings(eBuildingClass));
@@ -13950,7 +14988,11 @@ void CvCity::read(FDataStream& kStream)
 	{
 		// Recalculate
 		int iTotalExtraHitPoints = 0;
+#ifdef AUI_WARNING_FIXES
+		for (uint eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#else
 		for(int eBuildingType = 0; eBuildingType < GC.getNumBuildingInfos(); eBuildingType++)
+#endif
 		{
 			const BuildingTypes eBuilding = static_cast<BuildingTypes>(eBuildingType);
 			CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -14253,11 +15295,22 @@ bool CvCity::isValidBuildingLocation(BuildingTypes eBuilding) const
 		const int iMountainRange = 2;
 		CvPlot* pLoopPlot;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+		int iMaxDX, iDX;
+		for (int iDY = -iMountainRange; iDY <= iMountainRange; iDY++)
+		{
+			iMaxDX = iMountainRange - MAX(0, iDY);
+			for (iDX = -iMountainRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+			{
+				// No need for range check because loops are set up properly
+				pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 		for(int iDX = -iMountainRange; iDX <= iMountainRange; iDX++)
 		{
 			for(int iDY = -iMountainRange; iDY <= iMountainRange; iDY++)
 			{
 				pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iMountainRange);
+#endif
 				if(pLoopPlot)
 				{
 					if(pLoopPlot->isMountain() && !pLoopPlot->IsNaturalWonder() && pLoopPlot->getOwner() == getOwner())
@@ -14425,9 +15478,17 @@ bool CvCity::CanRangeStrikeNow() const
 	PlayerTypes eActivePlayer = GC.getGame().getActivePlayer();
 	int iGameTurn = GC.getGame().getGameTurn();
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	for (int iDY = -iRange; iDY <= iRange; iDY++)
+	{
+		iMaxDX = iRange - MAX(0, iDY);
+		for (iDX = -iRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+#else
 	for(int iDX = -iRange; iDX <= iRange; iDX++)
 	{
 		for(int iDY = -iRange; iDY <= iRange; iDY++)
+#endif
 		{
 			CvPlot* pTargetPlot = plotXY(iX, iY, iDX, iDY);
 			bool bCanRangeStrike = true;
@@ -14483,7 +15544,11 @@ bool CvCity::IsHasBuildingThatAllowsRangeStrike() const
 	VALIDATE_OBJECT
 	bool bHasBuildingThatAllowsRangeStrike = false;
 
+#ifdef AUI_WARNING_FIXES
+	for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
 	for(int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
 	{
 		const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
 		CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
@@ -14816,15 +15881,29 @@ void CvCity::DoNearbyEnemy()
 		return;
 
 	int iSearchRange = GC.getCITY_ATTACK_RANGE();
+#ifndef AUI_HEXSPACE_DX_LOOPS
 	CvPlot* pBestPlot = NULL;
+#endif
 
 	bool bFoundEnemy = false;
 
+#ifdef AUI_HEXSPACE_DX_LOOPS
+	int iMaxDX, iDX;
+	CvPlot* pLoopPlot;
+	for (int iDY = -iSearchRange; iDY <= iSearchRange; iDY++)
+	{
+		iMaxDX = iSearchRange - MAX(0, iDY);
+		for (iDX = -iSearchRange - MIN(0, iDY); iDX <= iMaxDX; iDX++) // MIN() and MAX() stuff is to reduce loops (hexspace!)
+		{
+			// No need for range check because loops are set up properly
+			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+#else
 	for(int iDX = -(iSearchRange); iDX <= iSearchRange && !pBestPlot; iDX++)
 	{
 		for(int iDY = -(iSearchRange); iDY <= iSearchRange && !pBestPlot; iDY++)
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iSearchRange);
+#endif
 
 			if(pLoopPlot != NULL)
 			{
@@ -15278,7 +16357,11 @@ void CvCity::IncrementUnitStatCount(CvUnit* pUnit)
 
 //	--------------------------------------------------------------------------------
 // Check to see if all the units have been built
+#ifdef AUI_CONSTIFY
+bool CvCity::AreAllUnitsBuilt() const
+#else
 bool CvCity::AreAllUnitsBuilt()
+#endif
 {
 	int iI;
 	int iUnitStatStart = 1;   //As they're defined on the backend

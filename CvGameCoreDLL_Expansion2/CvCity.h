@@ -57,8 +57,15 @@ public:
 	void PreKill();
 	void PostKill(bool bCapital, CvPlot* pPlot, PlayerTypes eOwner);
 
+#ifdef AUI_CONSTIFY
+	CvPlayer* GetPlayer() const;
+#else
 	CvPlayer* GetPlayer();
+#endif
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void cacheYieldsForTurn();
+#endif
 	void doTurn();
 
 	bool isCitySelected();
@@ -72,7 +79,11 @@ public:
 	void DoUpdateIndustrialRouteToCapital();
 
 	void SetRouteToCapitalConnected(bool bValue);
+#ifdef AUI_CONSTIFY
+	bool IsRouteToCapitalConnected() const;
+#else
 	bool IsRouteToCapitalConnected(void);
+#endif
 
 	void createGreatGeneral(UnitTypes eGreatPersonUnit);
 	void createGreatAdmiral(UnitTypes eGreatPersonUnit);
@@ -91,7 +102,11 @@ public:
 	int findBaseYieldRateRank(YieldTypes eYield);
 	int findYieldRateRank(YieldTypes eYield);
 
+#ifdef AUI_WARNING_FIXES
+	UnitTypes allUpgradesAvailable(UnitTypes eUnit, uint iUpgradeCount = 0) const;
+#else
 	UnitTypes allUpgradesAvailable(UnitTypes eUnit, int iUpgradeCount = 0) const;
+#endif
 	bool isWorldWondersMaxed() const;
 	bool isTeamWondersMaxed() const;
 	bool isNationalWondersMaxed() const;
@@ -146,8 +161,13 @@ public:
 	bool isProductionSpecialist() const;
 	bool isProductionProcess() const;
 
+#ifdef AUI_CONSTIFY
+	bool canContinueProduction(OrderData order) const;
+	int getProductionExperience(UnitTypes eUnit = NO_UNIT) const;
+#else
 	bool canContinueProduction(OrderData order);
 	int getProductionExperience(UnitTypes eUnit = NO_UNIT);
+#endif
 	void addProductionExperience(CvUnit* pUnit, bool bConscript = false);
 
 	UnitTypes getProductionUnit() const;
@@ -180,12 +200,21 @@ public:
 	int getProductionTurnsLeft(BuildingTypes eBuilding, int iNum) const;
 	int getProductionTurnsLeft(ProjectTypes eProject, int iNum) const;
 	int getProductionTurnsLeft(SpecialistTypes eSpecialist, int iNum) const;
+#ifdef AUI_CONSTIFY
+	int GetPurchaseCost(UnitTypes eUnit) const;
+	int GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts) const;
+	int GetPurchaseCost(BuildingTypes eBuilding) const;
+	int GetFaithPurchaseCost(BuildingTypes eBuilding) const;
+	int GetPurchaseCost(ProjectTypes eProject) const;
+	int GetPurchaseCostFromProduction(int iProduction) const;
+#else
 	int GetPurchaseCost(UnitTypes eUnit);
 	int GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts);
 	int GetPurchaseCost(BuildingTypes eBuilding);
 	int GetFaithPurchaseCost(BuildingTypes eBuilding);
 	int GetPurchaseCost(ProjectTypes eProject);
 	int GetPurchaseCostFromProduction(int iProduction);
+#endif
 
 	int getProductionTurnsLeft(int iProductionNeeded, int iProduction, int iFirstProductionDifference, int iProductionDifference) const;
 	void setProduction(int iNewValue);
@@ -201,7 +230,9 @@ public:
 	int getProductionModifier(SpecialistTypes eSpecialist, _In_opt_ CvString* toolTipSink = NULL) const;
 	int getProductionModifier(ProcessTypes eProcess, _In_opt_ CvString* toolTipSink = NULL) const;
 
+#ifndef NQM_PRUNING
 	int getOverflowProductionDifference(int iProductionNeeded, int iProduction, int iProductionModifier, int iDiff, int iModifiedProduction) const;
+#endif
 	int getProductionDifference(int iProductionNeeded, int iProduction, int iProductionModifier, bool bFoodProduction, bool bOverflow) const;
 	int getCurrentProductionDifference(bool bIgnoreFood, bool bOverflow) const;
 	int getRawProductionDifference(bool bIgnoreFood, bool bOverflow) const;
@@ -257,8 +288,13 @@ public:
 	bool isCoastal(int iMinWaterSize = -1) const;
 
 	int foodConsumption(bool bNoAngry = false, int iExtra = 0) const;
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+	int foodDifference(bool bBottom = true, const int* iValueKnown = NULL, int iExtraHappiness = 0) const;
+	int foodDifferenceTimes100(bool bBottom = true, CvString* toolTipSink = NULL, const int* iValueKnown = NULL, int iExtraHappiness = 0) const;
+#else
 	int foodDifference(bool bBottom = true) const;
 	int foodDifferenceTimes100(bool bBottom = true, CvString* toolTipSink = NULL) const;
+#endif
 	int growthThreshold() const;
 
 	int productionLeft() const;
@@ -542,6 +578,11 @@ public:
 	PlayerTypes GetPlayersReligion() const;
 	void SetPlayersReligion(PlayerTypes eNewValue);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int getCachedYieldT100ForThisTurn(YieldTypes eIndex) const;
+	void setCachedYieldT100ForThisTurn(YieldTypes eIndex, int iAmount);
+#endif
+
 	// Yield
 
 	int getSeaPlotYield(YieldTypes eIndex) const;
@@ -632,7 +673,11 @@ public:
 	void setName(const char* szNewValue, bool bFound = false);
 	void doFoundMessage();
 
+#ifdef AUI_CONSTIFY
+	bool IsExtraLuxuryResources() const;
+#else
 	bool IsExtraLuxuryResources();
+#endif
 	void SetExtraLuxuryResources(int iNewValue);
 	void ChangeExtraLuxuryResources(int iChange);
 
@@ -705,18 +750,35 @@ public:
 
 	void IncrementUnitStatCount(CvUnit* pUnit);
 	void CheckForAchievementBuilding(BuildingTypes eBuilding);
+#ifdef AUI_CONSTIFY
+	bool AreAllUnitsBuilt() const;
+#else
 	bool AreAllUnitsBuilt();
+#endif
 
 	// Plot acquisition
 
+#ifdef AUI_CONSTIFY
+	bool CanBuyPlot(int iPlotX = -1, int iPlotY = -1, bool bIgnoreCost = false) const;
+	bool CanBuyAnyPlot() const;
+#else
 	bool CanBuyPlot(int iPlotX = -1, int iPlotY = -1, bool bIgnoreCost = false);
 	bool CanBuyAnyPlot(void);
+#endif
 	CvPlot* GetNextBuyablePlot();
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+	void GetBuyablePlotList(FFastVector<int, true, c_eCiv5GameplayDLL>& aiPlotList);
+#else
 	void GetBuyablePlotList(std::vector<int>& aiPlotList);
+#endif
 	int GetBuyPlotCost(int iPlotX, int iPlotY) const;
 	void BuyPlot(int iPlotX, int iPlotY);
 	void DoAcquirePlot(int iPlotX, int iPlotY);
+#ifdef AUI_CONSTIFY
+	int GetBuyPlotScore(int& iBestX, int& iBestY) const;
+#else
 	int GetBuyPlotScore(int& iBestX, int& iBestY);
+#endif
 	int GetIndividualPlotScore(const CvPlot* pPlot) const;
 
 	int GetCheapestPlotInfluence() const;
@@ -728,16 +790,35 @@ public:
 	bool isValidBuildingLocation(BuildingTypes eIndex) const;
 
 	void SetThreatValue(int iThreatValue);
+#ifdef AUI_CONSTIFY
+	int getThreatValue() const;
+#else
 	int getThreatValue(void);
+#endif
 
 	void clearOrderQueue();
 	void pushOrder(OrderTypes eOrder, int iData1, int iData2, bool bSave, bool bPop, bool bAppend, bool bRush=false);
 	void popOrder(int iNum, bool bFinish = false, bool bChoose = false);
+#ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+	void swapOrder(uint iNum);
+#else
 	void swapOrder(int iNum);
+#endif
 	void startHeadOrder();
 	void stopHeadOrder();
+#ifdef AUI_WARNING_FIXES
+	uint getOrderQueueLength();
+#else
 	int getOrderQueueLength();
+#endif
+#ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+	OrderData* getOrderFromQueue(uint iIndex);
+#else
 	OrderData* getOrderFromQueue(int iIndex);
+#endif
+#ifdef AUI_CONSTIFY
+	const OrderData* getOrderFromQueue(uint iIndex) const;
+#endif
 	const OrderData* nextOrderQueueNode(const OrderData* pNode) const;
 	OrderData* nextOrderQueueNode(OrderData* pNode);
 	const OrderData* headOrderQueueNode() const;
@@ -749,8 +830,13 @@ public:
 	bool CreateBuilding(BuildingTypes eBuildType);
 	bool CreateProject(ProjectTypes eProjectType);
 
+#ifdef AUI_CONSTIFY
+	bool CanPlaceUnitHere(UnitTypes eUnitType) const;
+	bool IsCanPurchase(bool bTestPurchaseCost, bool bTestTrainable, UnitTypes eUnitType, BuildingTypes eBuildingType, ProjectTypes eProjectType, YieldTypes ePurchaseYield) const;
+#else
 	bool CanPlaceUnitHere(UnitTypes eUnitType);
 	bool IsCanPurchase(bool bTestPurchaseCost, bool bTestTrainable, UnitTypes eUnitType, BuildingTypes eBuildingType, ProjectTypes eProjectType, YieldTypes ePurchaseYield);
+#endif
 	void Purchase(UnitTypes eUnitType, BuildingTypes eBuildingType, ProjectTypes eProjectType, YieldTypes ePurchaseYield);
 
 	PlayerTypes getLiberationPlayer() const;
@@ -956,6 +1042,9 @@ protected:
 	int** m_ppaiResourceYieldChange;
 	int** m_ppaiFeatureYieldChange;
 	int** m_ppaiTerrainYieldChange;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int m_aCachedYieldT100ForThisTurn[NUM_YIELD_TYPES];
+#endif
 
 	CvCityBuildings* m_pCityBuildings;
 	CvCityStrategyAI* m_pCityStrategyAI;
