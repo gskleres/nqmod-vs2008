@@ -126,6 +126,9 @@ void ClearPlayerDeltas()
 //	--------------------------------------------------------------------------------
 CvPlayer::CvPlayer() :
 	m_syncArchive(*this)
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+	, m_bIsDisconnected("CvPlayer::m_bIsDisconnected", m_syncArchive)
+#endif
 	, m_iStartingX("CvPlayer::m_iStartingX", m_syncArchive)
 	, m_iStartingY("CvPlayer::m_iStartingY", m_syncArchive)
 	, m_iTotalPopulation("CvPlayer::m_iTotalPopulation", m_syncArchive, true)
@@ -750,6 +753,9 @@ void CvPlayer::uninit()
 	FAutoArchive& archive = getSyncArchive();
 	archive.clearDelta();
 
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+	m_bIsDisconnected = false;
+#endif
 	m_iStartingX = INVALID_PLOT_COORD;
 	m_iStartingY = INVALID_PLOT_COORD;
 	m_iTotalPopulation = 0;
@@ -1244,6 +1250,17 @@ void CvPlayer::reset(PlayerTypes eID, bool bConstructorCall)
 		AI_reset();
 	}
 }
+
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+bool CvPlayer::isDisconnected() const
+{
+	return m_bIsDisconnected;
+}
+void CvPlayer::setIsDisconnected(bool bNewValue)
+{
+	m_bIsDisconnected = bNewValue;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 /// This is called after the map and other game constructs have been setup and just before the game starts.
@@ -25625,8 +25642,18 @@ void CvPlayer::disconnected()
 				}
 			}
 
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+		if (!isObserver())
+		{
+			if (!CvPreGame::isPitBoss() || gDLL->IsPlayerKicked(GetID()))
+			{
+				setIsDisconnected(false); // kicked players should unpause the game
+				if (GC.getGame().getPausePlayer() == GetID())
+					GC.getGame().setPausePlayer(NO_PLAYER);
+#else
 		if(!isObserver() && (!CvPreGame::isPitBoss() || gDLL->IsPlayerKicked(GetID())))
 		{
+#endif
 			// JAR : First pass, automatically fall back to CPU so the
 			// game can continue. Todo : add popup on host asking whether
 			// the AI should take over or everyone should wait for the
@@ -25646,6 +25673,15 @@ void CvPlayer::disconnected()
 				checkRunAutoMovesForEveryone();
 			}
 		}
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+			else if (GC.getGame().isOption("GAMEOPTION_AUTOPAUSE_ON_ACTIVE_DISCONNECT") && isAlive() && isTurnActive() &&
+				(GC.getGame().isOption(GAMEOPTION_DYNAMIC_TURNS) || GC.getGame().isOption(GAMEOPTION_SIMULTANEOUS_TURNS)) && !gDLL->IsPlayerKicked(GetID()))
+			{
+				setIsDisconnected(true);
+				GC.getGame().setPausePlayer(GetID());
+			}
+		}
+#endif
 	}
 }
 //	-----------------------------------------------------------------------------------------------
@@ -25673,6 +25709,10 @@ void CvPlayer::reconnected()
 		{
 			pNotifications->Add(NOTIFICATION_PLAYER_CONNECTING, connectString.toUTF8(), connectString.toUTF8(), -1, -1, GetID());
 		}
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+		setIsDisconnected(false);
+		// Game pauses during a reconnection and will unpause when the reconnect is finished, so there's no need to insert unpause code here
+#endif
 	}
 }
 //	-----------------------------------------------------------------------------------------------

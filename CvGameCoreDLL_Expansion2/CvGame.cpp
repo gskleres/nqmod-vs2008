@@ -6008,6 +6008,20 @@ bool CvGame::isPaused()
 //	-----------------------------------------------------------------------------------------------
 void CvGame::setPausePlayer(PlayerTypes eNewValue)
 {
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+	if (isOption("GAMEOPTION_AUTOPAUSE_ON_ACTIVE_DISCONNECT") && eNewValue == NO_PLAYER)
+	{
+		for (int iI = 0; iI < MAX_MAJOR_CIVS; iI++)
+		{
+			CvPlayer& kPlayer = GET_PLAYER((PlayerTypes)iI);
+			if (kPlayer.isAlive() && kPlayer.isHuman() && kPlayer.isDisconnected())
+			{
+				eNewValue = kPlayer.GetID();
+				break;
+			}
+		}
+	}
+#endif
 #ifndef AUI_GAME_SET_PAUSED_TURN_TIMERS_PAUSE_ON_RECONNECT
 	if(!isNetworkMultiPlayer())
 #endif

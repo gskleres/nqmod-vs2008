@@ -6,6 +6,7 @@
 			<Type>GAMEOPTION_RELATIVE_TURN_TIMERS</Type>
 			<Description>TXT_KEY_GAME_OPTION_RELATIVE_TURN_TIMERS</Description>
 			<Help>TXT_KEY_GAME_OPTION_RELATIVE_TURN_TIMERS_HELP</Help>
+			<SupportsSinglePlayer>false</SupportsSinglePlayer>
 		</Row>
 	</GameOptions>
 	<Language_en_US>

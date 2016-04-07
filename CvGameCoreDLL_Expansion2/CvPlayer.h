@@ -78,6 +78,10 @@ public:
 	void reset(PlayerTypes eID = NO_PLAYER, bool bConstructorCall = false);
 	void gameStartInit();
 	void uninit();
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+	bool isDisconnected() const;
+	void setIsDisconnected(bool bNewValue);
+#endif
 
 	void initFreeState(CvGameInitialItemsOverrides& kOverrides);
 	void initFreeUnits(CvGameInitialItemsOverrides& kOverrides);
@@ -1616,6 +1620,9 @@ protected:
 	int m_iCachedExcessHappinessForThisTurn;
 #endif
 
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+	FAutoVariable<bool, CvPlayer> m_bIsDisconnected;
+#endif
 	FAutoVariable<int, CvPlayer> m_iStartingX;
 	FAutoVariable<int, CvPlayer> m_iStartingY;
 	FAutoVariable<int, CvPlayer> m_iTotalPopulation;

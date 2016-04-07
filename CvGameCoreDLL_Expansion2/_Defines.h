@@ -163,6 +163,8 @@
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
 #define AUI_GAME_RELATIVE_TURN_TIMERS
+/// New option that pauses the game when an active player disconnects and the game is not sequential
+#define AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
 
 // Deliberate AI hindrances
 /// AI players will no longer spread their religion to other human players' cities
