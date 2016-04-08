@@ -4802,7 +4802,11 @@ void CvGame::resetTurnTimer(bool resetGameTurnStart)
 //	--------------------------------------------------------------------------------
 int CvGame::getMaxTurnLen()
 {//returns the amount of time players are being given for this turn.
+#ifdef AUI_GAME_RELATIVE_TURN_TIMERS
+	if (getPitbossTurnTime() != 0 && !isOption("GAMEOPTION_RELATIVE_TURN_TIMER"))
+#else
 	if(getPitbossTurnTime() != 0)
+#endif
 	{//manually set turn time.
 		if(isPitboss())
 		{// Turn time is in hours
@@ -4841,6 +4845,14 @@ int CvGame::getMaxTurnLen()
 		        (kTurnTimer.getCityResource() * iMaxCities) +
 		        (kTurnTimer.getUnitResource() * iMaxUnits));
 		
+#ifdef AUI_GAME_RELATIVE_TURN_TIMERS
+		if (getPitbossTurnTime() != 0 && isOption("GAMEOPTION_RELATIVE_TURN_TIMER"))
+		{
+			baseTurnTime *= getPitbossTurnTime();
+			baseTurnTime /= 100;
+		}
+#endif
+
 		return baseTurnTime;
 	}
 }
@@ -5996,6 +6008,20 @@ bool CvGame::isPaused()
 //	-----------------------------------------------------------------------------------------------
 void CvGame::setPausePlayer(PlayerTypes eNewValue)
 {
+#ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+	if (isOption("GAMEOPTION_AUTOPAUSE_ON_ACTIVE_DISCONNECT") && eNewValue == NO_PLAYER)
+	{
+		for (int iI = 0; iI < MAX_MAJOR_CIVS; iI++)
+		{
+			CvPlayer& kPlayer = GET_PLAYER((PlayerTypes)iI);
+			if (kPlayer.isAlive() && kPlayer.isHuman() && kPlayer.isDisconnected())
+			{
+				eNewValue = kPlayer.GetID();
+				break;
+			}
+		}
+	}
+#endif
 #ifndef AUI_GAME_SET_PAUSED_TURN_TIMERS_PAUSE_ON_RECONNECT
 	if(!isNetworkMultiPlayer())
 #endif
