@@ -4841,16 +4841,19 @@ int CvGame::getMaxTurnLen()
 
 		// Now return turn len based on base len and unit and city resources
 		const CvTurnTimerInfo& kTurnTimer = CvPreGame::turnTimerInfo();
+#ifdef AUI_GAME_RELATIVE_TURN_TIMERS
+		int baseTurnTime = kTurnTimer.getBaseTime();
+		int iExtraTurnTime = (kTurnTimer.getCityResource() * iMaxCities) + (kTurnTimer.getUnitResource() * iMaxUnits);
+		if (getPitbossTurnTime() != 0 && isOption("GAMEOPTION_RELATIVE_TURN_TIMER"))
+		{
+			iExtraTurnTime *= getPitbossTurnTime();
+			iExtraTurnTime /= 100;
+		}
+		baseTurnTime += iExtraTurnTime;
+#else
 		int baseTurnTime = (kTurnTimer.getBaseTime() +
 		        (kTurnTimer.getCityResource() * iMaxCities) +
 		        (kTurnTimer.getUnitResource() * iMaxUnits));
-		
-#ifdef AUI_GAME_RELATIVE_TURN_TIMERS
-		if (getPitbossTurnTime() != 0 && isOption("GAMEOPTION_RELATIVE_TURN_TIMER"))
-		{
-			baseTurnTime *= getPitbossTurnTime();
-			baseTurnTime /= 100;
-		}
 #endif
 
 		return baseTurnTime;
