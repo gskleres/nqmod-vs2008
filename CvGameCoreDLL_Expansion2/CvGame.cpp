@@ -9662,6 +9662,10 @@ int CvGame::calculateSyncChecksum()
 #else
 	uiValue += getMapRand().getSeed();
 	uiValue += getJonRand().getSeed();
+#ifdef AUI_RANDOM_LFSR_RNG
+	uiValue += getMapRand().getSeed2();
+	uiValue += getJonRand().getSeed2();
+#endif
 #endif
 
 	uiValue += getNumCities();

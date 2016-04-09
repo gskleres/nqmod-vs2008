@@ -20,12 +20,18 @@
 #include "LintFree.h"
 
 #ifndef AUI_USE_SFMT_RNG
+#ifdef AUI_RANDOM_LFSR_RNG
+// We're fetching the last 16 bits to reduce predictability and to allow returned number to by 0 (normally an LFSR can 
+#define LFSR_MASK32 (0x40000031u) // 32-bit mask, 1's at bits 31, 6, 5, and 1
+#define LFSR_MASK31 (0x20000002u) // 31-bit mask, 1's at bits 30 and 2
+#else
 #define RANDOM_A      (1103515245)
 #define RANDOM_C      (12345)
 #define RANDOM_SHIFT  (16)
 
 #ifdef AUI_BINOM_RNG
 #define BINOM_SHIFT   (30)
+#endif
 #endif
 #endif
 
@@ -45,7 +51,12 @@ CvRandom::CvRandom() :
 }
 
 CvRandom::CvRandom(bool extendedCallStackDebugging) :
+#ifdef AUI_RANDOM_LFSR_RNG
+	m_ulRandomSeed(1)
+	, m_ulRandomSeed2(1)
+#else
 	m_ulRandomSeed(0)
+#endif
 	, m_ulCallCount(0)
 	, m_ulResetCount(0)
 	, m_bSynchronous(true)
@@ -61,6 +72,9 @@ CvRandom::CvRandom(bool extendedCallStackDebugging) :
 
 CvRandom::CvRandom(const CvRandom& source) :
 	m_ulRandomSeed(source.m_ulRandomSeed)
+#ifdef AUI_RANDOM_LFSR_RNG
+	, m_ulRandomSeed2(source.m_ulRandomSeed2)
+#endif
 	, m_ulCallCount(source.m_ulCallCount)
 	, m_ulResetCount(source.m_ulResetCount)
 	, m_bSynchronous(source.m_bSynchronous)
@@ -80,6 +94,8 @@ bool CvRandom::operator==(const CvRandom& source) const
 {
 #ifdef AUI_USE_SFMT_RNG
 	return (m_MersenneTwister == source.m_MersenneTwister);
+#elif defined(AUI_RANDOM_LFSR_RNG)
+	return (m_ulRandomSeed == source.m_ulRandomSeed) && (m_ulRandomSeed2 == source.m_ulRandomSeed2);
 #else
 	return(m_ulRandomSeed == source.m_ulRandomSeed);
 #endif
@@ -146,6 +162,11 @@ void CvRandom::reset(unsigned long ulSeed)
 	m_ulRandomSeed = uiSeed;
 #else
 	m_ulRandomSeed = ulSeed;
+#ifdef AUI_RANDOM_LFSR_RNG
+	if (m_ulRandomSeed == 0)
+		m_ulRandomSeed++;
+	m_ulRandomSeed2 = m_ulRandomSeed * m_ulRandomSeed + 1;
+#endif
 #endif
 	m_ulResetCount++;
 }
@@ -168,11 +189,16 @@ unsigned short CvRandom::get(unsigned short usNum, const char* pszLog)
 	recordCallStack();
 	m_ulCallCount++;
 
+#ifdef AUI_RANDOM_LFSR_RNG
+	unsigned int uiBitBucket = 0;
+	unsigned short us = (unsigned short)((doLFSR(uiBitBucket) & MAX_UNSIGNED_SHORT) % uiNum);
+#else
 	unsigned long ulNewSeed = ((RANDOM_A * m_ulRandomSeed) + RANDOM_C);
 #ifdef AUI_WARNING_FIXES
 	unsigned short us = ((unsigned short)((((ulNewSeed >> RANDOM_SHIFT) & MAX_UNSIGNED_SHORT) * (uiNum)) / (MAX_UNSIGNED_SHORT + 1)));
 #else
 	unsigned short us = ((unsigned short)((((ulNewSeed >> RANDOM_SHIFT) & MAX_UNSIGNED_SHORT) * ((unsigned long)usNum)) / (MAX_UNSIGNED_SHORT + 1)));
+#endif
 #endif
 #endif
 
@@ -239,8 +265,10 @@ unsigned short CvRandom::get(unsigned short usNum, const char* pszLog)
 #ifdef AUI_USE_SFMT_RNG
 	return uiRtnValue;
 #else
+#ifndef AUI_RANDOM_LFSR_RNG
 	m_ulRandomSeed = ulNewSeed;
-#ifdef AUI_WARNING_FIXES
+#endif
+#if defined(AUI_WARNING_FIXES) || defined(AUI_RANDOM_LFSR_RNG)
 	return (uint)us;
 #else
 	return us;
@@ -264,18 +292,27 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 	}
 #else
 	unsigned short usRet = 0;
+#ifndef AUI_RANDOM_LFSR_RNG
 	unsigned long ulNewSeed = m_ulRandomSeed;
+#endif
 	if (uiNum > 1)
 	{
 		recordCallStack();
 		m_ulCallCount += uiNum;
-		ulNewSeed = (RANDOM_A * m_ulRandomSeed) + RANDOM_C;
+#if defined(AUI_RANDOM_LFSR_RNG)
+		unsigned int uiBitBucket = 0;
+		for (unsigned int uiI = 1; uiI < uiNum; uiI++) // starts at 1 because the generation is not inclusive (so we need one less cycle than normal)
+		{
+			usRet += doLFSR(uiBitBucket) & 1;
+		}
+#else
 		for (unsigned int uiI = 1; uiI < uiNum; uiI++) // starts at 1 because the generation is not inclusive (so we need one less cycle than normal)
 		{
 			// no need to worry about masking with MAX_UNSIGNED_SHORT, max cycle number takes care of it
-			usRet += (ulNewSeed >> BINOM_SHIFT) & 1; // need the shift so results only repeat after 2^BINOM_SHIFT iterations
 			ulNewSeed = (RANDOM_A * ulNewSeed) + RANDOM_C;
+			usRet += (ulNewSeed >> BINOM_SHIFT) & 1; // need the shift so results only repeat after 2^BINOM_SHIFT iterations
 		}
+#endif
 	}
 #endif
 
@@ -340,7 +377,9 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 #ifdef AUI_USE_SFMT_RNG
 	return uiRtnValue;
 #else
+#ifndef AUI_RANDOM_LFSR_RNG
 	m_ulRandomSeed = ulNewSeed;
+#endif
 
 	return (uint)usRet;
 #endif
@@ -371,6 +410,11 @@ void CvRandom::reseed(unsigned long ulNewValue)
 	m_ulRandomSeed = uiNewSeed;
 #else
 	m_ulRandomSeed = ulNewValue;
+#ifdef AUI_RANDOM_LFSR_RNG
+	if (m_ulRandomSeed == 0)
+		m_ulRandomSeed++;
+	m_ulRandomSeed2 = m_ulRandomSeed * m_ulRandomSeed + 1;
+#endif
 #endif
 }
 
@@ -384,6 +428,25 @@ std::pair<unsigned long, unsigned long> CvRandom::getSeed() const
 unsigned long CvRandom::getSeed() const
 {
 	return m_ulRandomSeed;
+}
+#ifdef AUI_RANDOM_LFSR_RNG
+unsigned long CvRandom::getSeed2() const
+{
+	return m_ulRandomSeed2;
+}
+#endif
+
+unsigned long CvRandom::doLFSR(unsigned int& kuiBitBucket)
+{
+	kuiBitBucket = m_ulRandomSeed & 1;
+	m_ulRandomSeed >>= 1;
+	if (kuiBitBucket != 0)
+		m_ulRandomSeed ^= LFSR_MASK32; // if bit bucket is 1, apply the taps
+	kuiBitBucket = m_ulRandomSeed2 & 1;
+	m_ulRandomSeed2 >>= 1;
+	if (kuiBitBucket != 0)
+		m_ulRandomSeed2 ^= LFSR_MASK31; // if bit bucket is 1, apply the taps
+	return (m_ulRandomSeed ^ m_ulRandomSeed2);
 }
 #endif
 
@@ -409,6 +472,9 @@ void CvRandom::read(FDataStream& kStream)
 	kStream >> m_MersenneTwister;
 #endif
 	kStream >> m_ulRandomSeed;
+#ifdef AUI_RANDOM_LFSR_RNG
+	kStream >> m_ulRandomSeed2;
+#endif
 	kStream >> m_ulCallCount;
 	kStream >> m_ulResetCount;
 #ifdef _DEBUG
@@ -435,6 +501,9 @@ void CvRandom::write(FDataStream& kStream) const
 	kStream << m_MersenneTwister;
 #endif
 	kStream << m_ulRandomSeed;
+#ifdef AUI_RANDOM_LFSR_RNG
+	kStream << m_ulRandomSeed2;
+#endif
 	kStream << m_ulCallCount;
 	kStream << m_ulResetCount;
 #ifdef _DEBUG
