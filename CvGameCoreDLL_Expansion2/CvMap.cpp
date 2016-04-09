@@ -520,11 +520,21 @@ void CvMap::reset(CvMapInitData* pInitInfo)
 // Initializes all data that is not serialized but needs to be initialized after loading.
 void CvMap::setup()
 {
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+	GC.getPathFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, PathDestValid, PathHeuristic, PathCost, PathValid, PathAdd, PathNodeAdd, UnitPathInitialize, UnitPathUninitialize, NULL, PathCacheNode);
+	GC.getPathFinder().SetDataChangeInvalidatesCache(true);
+	GC.getInterfacePathFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, PathDestValid, PathHeuristic, PathCost, PathValid, PathAdd, PathNodeAdd, UnitPathInitialize, UnitPathUninitialize, NULL, PathCacheNode);
+#else
 	GC.getPathFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, PathDestValid, PathHeuristic, PathCost, PathValid, PathAdd, PathNodeAdd, UnitPathInitialize, UnitPathUninitialize, NULL);
 	GC.getPathFinder().SetDataChangeInvalidatesCache(true);
 	GC.getInterfacePathFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, PathDestValid, PathHeuristic, PathCost, PathValid, PathAdd, PathNodeAdd, UnitPathInitialize, UnitPathUninitialize, NULL);
+#endif
 	GC.getInterfacePathFinder().SetDataChangeInvalidatesCache(true);
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+	GC.getIgnoreUnitsPathFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, IgnoreUnitsDestValid, PathHeuristic, IgnoreUnitsCost, IgnoreUnitsValid, IgnoreUnitsPathAdd, NULL, NULL, NULL, UnitPathInitialize, UnitPathUninitialize, NULL, IgnoreUnitsCacheNode);
+#else
 	GC.getIgnoreUnitsPathFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest,  IgnoreUnitsDestValid, PathHeuristic, IgnoreUnitsCost, IgnoreUnitsValid, IgnoreUnitsPathAdd, NULL, NULL, NULL, UnitPathInitialize, UnitPathUninitialize, NULL);
+#endif
 	GC.getIgnoreUnitsPathFinder().SetDataChangeInvalidatesCache(true);
 	GC.getStepFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, StepDestValid, StepHeuristic, StepCost, StepValid, StepAdd, NULL, NULL, NULL, NULL, NULL, NULL);
 	GC.getRouteFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, NULL, NULL, NULL, RouteValid, NULL, NULL, RouteGetNumExtraChildren, RouteGetExtraChild, NULL, NULL, NULL);
@@ -534,7 +544,11 @@ void CvMap::setup()
 	GC.GetBuildRouteFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, NULL, NULL, BuildRouteCost, BuildRouteValid, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 	GC.GetInternationalTradeRouteLandFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, NULL,	TradeRouteHeuristic, TradeRouteLandPathCost, TradeRouteLandValid, NULL, NULL, NULL, NULL, TradePathInitialize, TradePathUninitialize, NULL);
 	GC.GetInternationalTradeRouteWaterFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, NULL, TradeRouteHeuristic, TradeRouteWaterPathCost, TradeRouteWaterValid, NULL, NULL, NULL, NULL, TradePathInitialize, TradePathUninitialize, NULL);
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+	GC.GetTacticalAnalysisMapFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, PathDestValid, PathHeuristic, PathCost, TacticalAnalysisMapPathValid, PathAdd, PathNodeAdd, UnitPathInitialize, UnitPathUninitialize, NULL, TacticalAnalysisCacheNode);
+#else
 	GC.GetTacticalAnalysisMapFinder().Initialize(getGridWidth(), getGridHeight(), isWrapX(), isWrapY(), PathDest, PathDestValid, PathHeuristic, PathCost, TacticalAnalysisMapPathValid, PathAdd, PathNodeAdd, UnitPathInitialize, UnitPathUninitialize, NULL);
+#endif
 	GC.GetTacticalAnalysisMapFinder().SetDataChangeInvalidatesCache(true);
 }
 
