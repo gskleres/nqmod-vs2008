@@ -57,10 +57,6 @@ public:
 #else
 	void reseed(unsigned long ulNewValue);
 	unsigned long getSeed() const;
-#ifdef AUI_RANDOM_LFSR_RNG
-	unsigned long getSeed2() const;
-	unsigned long doLFSR(unsigned int& kuiBitBucket);
-#endif
 #endif
 	unsigned long getCallCount() const;
 	unsigned long getResetCount() const;
@@ -92,9 +88,6 @@ protected:
 	SFMersenneTwister m_MersenneTwister;
 #endif
 	unsigned long m_ulRandomSeed;
-#ifdef AUI_RANDOM_LFSR_RNG
-	unsigned long m_ulRandomSeed2;
-#endif
 
 	// for OOS checks/debugging
 	unsigned long m_ulCallCount;
