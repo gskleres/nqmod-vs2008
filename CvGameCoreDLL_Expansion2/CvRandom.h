@@ -59,7 +59,6 @@ public:
 	unsigned long getSeed() const;
 #ifdef AUI_RANDOM_LFSR_RNG
 	unsigned long getSeed2() const;
-	unsigned long doLFSR(unsigned int& kuiBitBucket);
 #endif
 #endif
 	unsigned long getCallCount() const;

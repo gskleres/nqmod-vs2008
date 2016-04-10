@@ -78,7 +78,7 @@
 /// The function that gets the amount of different trading partners a player has will now use an array instead of a vector to avoid crash possibilities
 #define AUI_TRADE_FIX_GET_NUM_DIFFERENT_TRADING_PARTNERS_USES_ARRAY
 /// Replaces the game's Linear Congruential RNG with a higher-quality Linear Feedback Shift Register RNG constructed from 2 Galois LFSR components.
-#define AUI_RANDOM_LFSR_RNG
+//#define AUI_RANDOM_LFSR_RNG
 
 /// Experimental use of OpenMP to introduce multithreading in certain places
 #define AUI_USE_OPENMP

@@ -36,7 +36,12 @@
 #endif
 
 CvRandom::CvRandom() :
+#ifdef AUI_RANDOM_LFSR_RNG
+	m_ulRandomSeed(1)
+	, m_ulRandomSeed2(2)
+#else
 	m_ulRandomSeed(0)
+#endif
 	, m_ulCallCount(0)
 	, m_ulResetCount(0)
 	, m_bSynchronous(false)
@@ -53,7 +58,7 @@ CvRandom::CvRandom() :
 CvRandom::CvRandom(bool extendedCallStackDebugging) :
 #ifdef AUI_RANDOM_LFSR_RNG
 	m_ulRandomSeed(1)
-	, m_ulRandomSeed2(1)
+	, m_ulRandomSeed2(2)
 #else
 	m_ulRandomSeed(0)
 #endif
@@ -190,8 +195,16 @@ unsigned short CvRandom::get(unsigned short usNum, const char* pszLog)
 	m_ulCallCount++;
 
 #ifdef AUI_RANDOM_LFSR_RNG
-	unsigned int uiBitBucket = 0;
-	unsigned short us = (unsigned short)((doLFSR(uiBitBucket) & MAX_UNSIGNED_SHORT) % uiNum);
+	unsigned int uiBitBucket = m_ulRandomSeed & 1;
+	m_ulRandomSeed >>= 1;
+	if (uiBitBucket != 0)
+		m_ulRandomSeed ^= LFSR_MASK32; // if bit bucket is 1, apply the taps
+	//uiBitBucket = m_ulRandomSeed2 & 1;
+	//m_ulRandomSeed2 >>= 1;
+	//if (uiBitBucket != 0)
+	//	m_ulRandomSeed2 ^= LFSR_MASK31; // if bit bucket is 1, apply the taps
+	//unsigned short us = (unsigned short)(((m_ulRandomSeed ^ m_ulRandomSeed2) & MAX_UNSIGNED_SHORT) % uiNum);
+	unsigned short us = (unsigned short)((m_ulRandomSeed & MAX_UNSIGNED_SHORT) % uiNum);
 #else
 	unsigned long ulNewSeed = ((RANDOM_A * m_ulRandomSeed) + RANDOM_C);
 #ifdef AUI_WARNING_FIXES
@@ -303,7 +316,16 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 		unsigned int uiBitBucket = 0;
 		for (unsigned int uiI = 1; uiI < uiNum; uiI++) // starts at 1 because the generation is not inclusive (so we need one less cycle than normal)
 		{
-			usRet += doLFSR(uiBitBucket) & 1;
+			uiBitBucket = m_ulRandomSeed & 1;
+			m_ulRandomSeed >>= 1;
+			if (uiBitBucket != 0)
+				m_ulRandomSeed ^= LFSR_MASK32; // if bit bucket is 1, apply the taps
+			//uiBitBucket = m_ulRandomSeed2 & 1;
+			//m_ulRandomSeed2 >>= 1;
+			//if (uiBitBucket != 0)
+			//	m_ulRandomSeed2 ^= LFSR_MASK31; // if bit bucket is 1, apply the taps
+			//usRet += (m_ulRandomSeed ^ m_ulRandomSeed2) & 1;
+			usRet += m_ulRandomSeed & 1;
 		}
 #else
 		for (unsigned int uiI = 1; uiI < uiNum; uiI++) // starts at 1 because the generation is not inclusive (so we need one less cycle than normal)
@@ -435,19 +457,6 @@ unsigned long CvRandom::getSeed2() const
 	return m_ulRandomSeed2;
 }
 #endif
-
-unsigned long CvRandom::doLFSR(unsigned int& kuiBitBucket)
-{
-	kuiBitBucket = m_ulRandomSeed & 1;
-	m_ulRandomSeed >>= 1;
-	if (kuiBitBucket != 0)
-		m_ulRandomSeed ^= LFSR_MASK32; // if bit bucket is 1, apply the taps
-	kuiBitBucket = m_ulRandomSeed2 & 1;
-	m_ulRandomSeed2 >>= 1;
-	if (kuiBitBucket != 0)
-		m_ulRandomSeed2 ^= LFSR_MASK31; // if bit bucket is 1, apply the taps
-	return (m_ulRandomSeed ^ m_ulRandomSeed2);
-}
 #endif
 
 unsigned long CvRandom::getCallCount() const
