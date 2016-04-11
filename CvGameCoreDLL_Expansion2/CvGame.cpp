@@ -5450,7 +5450,9 @@ bool CvGame::IsUnitedNationsActive()
 {
 	if (!GC.getGame().isOption(GAMEOPTION_NO_LEAGUES))
 	{
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 		if (GetGameLeagues()->GetNumActiveLeagues() > 0)
+#endif
 		{
 			CvLeague* pLeague = GetGameLeagues()->GetActiveLeague();
 			if (pLeague != NULL)
@@ -6509,7 +6511,9 @@ void CvGame::setWinner(TeamTypes eNewWinner, VictoryTypes eNewVictory)
 					}
 
 					// World Congress related Achievements
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 					if (GetGameLeagues()->GetNumActiveLeagues() > 0)
+#endif
 					{
 						CvLeague* pLeague = GetGameLeagues()->GetActiveLeague();
 						if (pLeague)
@@ -7237,7 +7241,9 @@ void CvGame::setGameState(GameStateTypes eNewValue)
 		{
 			if (!isGameMultiPlayer())
 			{
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 				if (GetGameLeagues()->GetNumActiveLeagues() > 0)
+#endif
 				{
 					CvLeague* pLeague = GetGameLeagues()->GetActiveLeague();
 					if (pLeague)

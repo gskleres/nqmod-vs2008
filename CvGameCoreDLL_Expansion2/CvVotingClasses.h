@@ -657,8 +657,9 @@ private:
 FDataStream& operator>>(FDataStream&, CvLeague&);
 FDataStream& operator<<(FDataStream&, const CvLeague&);
 
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 typedef FStaticVector<CvLeague, 2, false, c_eCiv5GameplayDLL> LeagueList;
-
+#endif
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //  CLASS:      CvGameLeagues
@@ -686,12 +687,22 @@ public:
 	void DoPlayerAliveStatusChanged(PlayerTypes ePlayer);
 	void DoUnitedNationsBuilt(PlayerTypes eBuilder);
 	
+#if defined(AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH) && defined(AUI_CONSTIFY)
+	int GetNumActiveLeagues() const;
+#else
 	int GetNumActiveLeagues();
+#endif
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	int GetNumLeaguesEverFounded() const;
+#endif
 	EraTypes GetLastEraTrigger() const;
 	void SetLastEraTrigger(EraTypes eLastEraTrigger);
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* GetActiveLeague() const;
+#else
 	CvLeague* GetLeague(LeagueTypes eLeague);
 	CvLeague* GetActiveLeague();
+#endif
 
 	int GenerateResolutionUniqueID();
 
@@ -719,8 +730,12 @@ public:
 	void LogLeagueMessage(CvString& kMessage);
 
 	int m_iGeneratedIDCount;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* m_ActiveLeague;
+#else
 	LeagueList m_vActiveLeagues;
 	int m_iNumLeaguesEverFounded;
+#endif
 	PlayerTypes m_eDiplomaticVictor;
 	EraTypes m_eLastEraTrigger;
 
@@ -728,6 +743,7 @@ private:
 	// Logging
 	void LogLeagueFounded(PlayerTypes eFounder);
 	void LogSpecialSession(LeagueSpecialSessionTypes eSpecialSession);
+
 };
 
 FDataStream& operator>>(FDataStream&, CvGameLeagues&);

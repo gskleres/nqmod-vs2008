@@ -1173,7 +1173,9 @@ void CvCity::setupWonderGraphics()
 						if (eThisBuildingProject != NO_LEAGUE_PROJECT)
 						{
 							// Have we contributed anything to it?
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 							if (GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)
+#endif
 							{
 								CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 								if (pLeague != NULL)

@@ -2305,7 +2305,9 @@ int CvDealAI::GetVoteCommitmentValue(bool bFromMe, PlayerTypes eOtherPlayer, int
 		}
 
 		// Adjust based on their vote total - Having lots of votes left means they could counter these ones and exploit us
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 		if (GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)
+#endif
 		{
 			CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 			if (pLeague)

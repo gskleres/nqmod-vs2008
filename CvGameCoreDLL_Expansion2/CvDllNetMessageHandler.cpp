@@ -454,36 +454,80 @@ void CvDllNetMessageHandler::ResponseFaithPurchase(PlayerTypes ePlayer, FaithPur
 	kPlayer.SetFaithPurchaseIndex(iFaithPurchaseIndex);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+void CvDllNetMessageHandler::ResponseLeagueVoteEnact(LeagueTypes /*eLeague*/, int iResolutionID, PlayerTypes eVoter, int iNumVotes, int iChoice)
+{
+	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
+	CvAssertMsg(eVoter != NO_PLAYER, "eVoter invalid");
+
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+	if (pLeague == NULL)
+		return;
+#else
 void CvDllNetMessageHandler::ResponseLeagueVoteEnact(LeagueTypes eLeague, int iResolutionID, PlayerTypes eVoter, int iNumVotes, int iChoice)
 {
 	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
 	CvAssertMsg(eVoter != NO_PLAYER, "eVoter invalid");
 
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
+#endif
 	CvAssertMsg(pLeague->CanVote(eVoter), "eVoter not allowed to vote. Please send Anton your save file and version.");
 	pLeague->DoVoteEnact(iResolutionID, eVoter, iNumVotes, iChoice);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+void CvDllNetMessageHandler::ResponseLeagueVoteRepeal(LeagueTypes /*eLeague*/, int iResolutionID, PlayerTypes eVoter, int iNumVotes, int iChoice)
+{
+	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
+	CvAssertMsg(eVoter != NO_PLAYER, "eVoter invalid");
+
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+	if (pLeague == NULL)
+		return;
+#else
 void CvDllNetMessageHandler::ResponseLeagueVoteRepeal(LeagueTypes eLeague, int iResolutionID, PlayerTypes eVoter, int iNumVotes, int iChoice)
 {
 	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
 	CvAssertMsg(eVoter != NO_PLAYER, "eVoter invalid");
 
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
+#endif
 	CvAssertMsg(pLeague->CanVote(eVoter), "eVoter not allowed to vote. Please send Anton your save file and version.");
 	pLeague->DoVoteRepeal(iResolutionID, eVoter, iNumVotes, iChoice);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+void CvDllNetMessageHandler::ResponseLeagueVoteAbstain(LeagueTypes /*eLeague*/, PlayerTypes eVoter, int iNumVotes)
+{
+	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
+	CvAssertMsg(eVoter != NO_PLAYER, "eVoter invalid");
+
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+	if (pLeague == NULL)
+		return;
+#else
 void CvDllNetMessageHandler::ResponseLeagueVoteAbstain(LeagueTypes eLeague, PlayerTypes eVoter, int iNumVotes)
 {
 	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
 	CvAssertMsg(eVoter != NO_PLAYER, "eVoter invalid");
 
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
+#endif
 	CvAssertMsg(pLeague->CanVote(eVoter), "eVoter not allowed to vote. Please send Anton your save file and version.");
 	pLeague->DoVoteAbstain(eVoter, iNumVotes);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+void CvDllNetMessageHandler::ResponseLeagueProposeEnact(LeagueTypes /*eLeague*/, ResolutionTypes eResolution, PlayerTypes eProposer, int iChoice)
+{
+	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
+	CvAssertMsg(eResolution != NO_RESOLUTION, "eResolution invalid");
+	CvAssertMsg(eProposer != NO_PLAYER, "eProposer invalid");
+
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+	if (pLeague == NULL)
+		return;
+#else
 void CvDllNetMessageHandler::ResponseLeagueProposeEnact(LeagueTypes eLeague, ResolutionTypes eResolution, PlayerTypes eProposer, int iChoice)
 {
 	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
@@ -491,25 +535,47 @@ void CvDllNetMessageHandler::ResponseLeagueProposeEnact(LeagueTypes eLeague, Res
 	CvAssertMsg(eProposer != NO_PLAYER, "eProposer invalid");
 
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
+#endif
 	CvAssertMsg(pLeague->CanProposeEnact(eResolution, eProposer, iChoice), "eProposer not allowed to enact Resolution. Please send Anton your save file and version.");
 	pLeague->DoProposeEnact(eResolution, eProposer, iChoice);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+void CvDllNetMessageHandler::ResponseLeagueProposeRepeal(LeagueTypes /*eLeague*/, int iResolutionID, PlayerTypes eProposer)
+{
+	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
+	CvAssertMsg(eProposer != NO_PLAYER, "eProposer invalid");
+
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+	if (pLeague == NULL)
+		return;
+#else
 void CvDllNetMessageHandler::ResponseLeagueProposeRepeal(LeagueTypes eLeague, int iResolutionID, PlayerTypes eProposer)
 {
 	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
 	CvAssertMsg(eProposer != NO_PLAYER, "eProposer invalid");
 
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
+#endif
 	CvAssertMsg(pLeague->CanProposeRepeal(iResolutionID, eProposer), "eProposer not allowed to repeal Resolution. Please send Anton your save file and version.");
 	pLeague->DoProposeRepeal(iResolutionID, eProposer);
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+void CvDllNetMessageHandler::ResponseLeagueEditName(LeagueTypes /*eLeague*/, PlayerTypes ePlayer, const char* szCustomName)
+{
+	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
+
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+	if (pLeague == NULL)
+		return;
+#else
 void CvDllNetMessageHandler::ResponseLeagueEditName(LeagueTypes eLeague, PlayerTypes ePlayer, const char* szCustomName)
 {
 	CvAssertMsg(eLeague != NO_LEAGUE, "eLeague invalid");
 
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
+#endif
 	pLeague->DoChangeCustomName(ePlayer, szCustomName);
 }
 //------------------------------------------------------------------------------

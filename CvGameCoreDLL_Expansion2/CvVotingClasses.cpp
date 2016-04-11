@@ -1249,7 +1249,11 @@ void CvActiveResolution::DoEffects(PlayerTypes ePlayer)
 	CvAssertMsg(pPlayer != NULL, "Player is null when doing effects of an active resolution. Please send Anton your save file and version.");
 	if (pPlayer == NULL) return;
 
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+#else
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(GetLeague());
+#endif
 	CvAssertMsg(pLeague != NULL, "League is null when doing effects of an active resolution. Please send Anton your save file and version.");
 	if (pLeague == NULL) return;
 
@@ -1479,7 +1483,11 @@ void CvActiveResolution::RemoveEffects(PlayerTypes ePlayer)
 	CvAssertMsg(pPlayer != NULL, "Player is null when doing effects of an active resolution. Please send Anton your save file and version.");
 	if (pPlayer == NULL) return;
 
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+#else
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(GetLeague());
+#endif
 	CvAssertMsg(pLeague != NULL, "League is null when doing effects of an active resolution. Please send Anton your save file and version.");
 	if (pLeague == NULL) return;
 
@@ -6863,8 +6871,12 @@ FDataStream& operator<<(FDataStream& saveTo, const CvLeague& readFrom)
 // ================================================================================
 CvGameLeagues::CvGameLeagues(void)
 {
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	m_ActiveLeague = NULL;
+#else
 	m_vActiveLeagues.clear();
 	m_iNumLeaguesEverFounded = 0;
+#endif
 	m_eDiplomaticVictor = NO_PLAYER;
 	m_iGeneratedIDCount = 0;
 	m_eLastEraTrigger = NO_ERA;
@@ -6872,6 +6884,9 @@ CvGameLeagues::CvGameLeagues(void)
 
 CvGameLeagues::~CvGameLeagues(void)
 {
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	SAFE_DELETE(m_ActiveLeague);
+#endif
 }
 
 void CvGameLeagues::Init()
@@ -6885,7 +6900,12 @@ void CvGameLeagues::DoTurn()
 		GC.getGame().DoUpdateDiploVictory();
 
 		// Not yet founded - is it time to start?
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+		CvLeague* pLeague = GetActiveLeague();
+		if (pLeague == NULL)
+#else
 		if (GetNumActiveLeagues() == 0)
+#endif
 		{
 #ifdef AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
 			FStaticVector<PlayerTypes, MAX_MAJOR_CIVS, true> vePossibleFounders;
@@ -6958,9 +6978,11 @@ void CvGameLeagues::DoTurn()
 				}
 			}
 
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 			CvLeague* pLeague = GetActiveLeague();
 			CvAssert(pLeague != NULL);
 			if (pLeague != NULL)
+#endif
 			{
 				// We want to trigger a special session
 				if (eSpecialSession != NO_LEAGUE_SPECIAL_SESSION)
@@ -7009,10 +7031,15 @@ void CvGameLeagues::DoPlayerTurn(CvPlayer& kPlayer)
 	if (!GC.getGame().isOption(GAMEOPTION_NO_LEAGUES))
 	{
 		AI_PERF_FORMAT("AI-perf.csv", ("CvGameLeagues::DoPlayerTurn, Turn %03d, %s", GC.getGame().getElapsedGameTurns(), kPlayer.getCivilizationShortDescription()) );
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+		CvLeague* it = GetActiveLeague();
+		if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 		for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 		for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 		{
 			if (it->IsMember(kPlayer.GetID()))
@@ -7084,10 +7111,16 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 {
 	if (!GC.getGame().isOption(GAMEOPTION_NO_LEAGUES))
 	{
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 		CvAssertMsg(GetNumActiveLeagues() == 0, "Trying to found a second league when one is already active. Please send Anton your save file and version.");
 		if (GetNumActiveLeagues() == 0)
+#endif
 		{
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+			m_ActiveLeague = FNEW(CvLeague, c_eCiv5GameplayDLL, 0);
+#else
 			CvLeague league((LeagueTypes)m_iNumLeaguesEverFounded++);
+#endif
 			
 			// Add all living players as members
 			for (int i = 0; i < MAX_CIV_PLAYERS; i++)
@@ -7095,14 +7128,22 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 				PlayerTypes ePlayer = (PlayerTypes) i;
 				if (GET_PLAYER(ePlayer).isAlive())
 				{
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+					m_ActiveLeague->AddMember(ePlayer);
+#else
 					league.AddMember(ePlayer);
+#endif
 				}
 			}
 			
 			// Optional: Set initial host
 			if (eFounder != NO_PLAYER)
 			{
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+				m_ActiveLeague->SetHostMember(eFounder);
+#else
 				league.SetHostMember(eFounder);
+#endif
 			}
 
 			// Find which game era trigger this league begins at (must match with a special session)
@@ -7154,7 +7195,11 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 			}
 			CvAssertMsg(eGoverningSpecialSession != NO_LEAGUE_SPECIAL_SESSION, "Trying to found a league but could not determine a correct governing special session. Do the World Congress prerequisite tech and the special session era triggers in the database match? Please send Anton your save file and version.");
 			CvAssertMsg(eGoverningEraTrigger != NO_ERA, "Trying to found a league but could not determine a correct governing era trigger. Do the World Congress prerequisite tech and the special session era triggers in the database match? Please send Anton your save file and version.");
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+			m_ActiveLeague->Init(eGoverningSpecialSession);
+#else
 			league.Init(eGoverningSpecialSession);
+#endif
 			SetLastEraTrigger(eGoverningEraTrigger);
 
 			CvGame& kGame = GC.getGame();
@@ -7162,7 +7207,11 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 
 			if(!kGame.isNetworkMultiPlayer() && !kActivePlayer.isObserver()){
 				// Show splash screen
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+				CvPopupInfo kPopup(BUTTONPOPUP_LEAGUE_SPLASH, m_ActiveLeague->GetID(), m_ActiveLeague->GetHostMember(), eGoverningSpecialSession, 0, /*bJustFounded*/ true);
+#else
 				CvPopupInfo kPopup(BUTTONPOPUP_LEAGUE_SPLASH, league.GetID(), league.GetHostMember(), eGoverningSpecialSession, 0, /*bJustFounded*/ true);
+#endif
 				GC.GetEngineUserInterface()->AddPopup(kPopup);
 			}
 
@@ -7172,10 +7221,15 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 			// Begins as United Nations?
 			if (bBeginAsUnitedNations)
 			{
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+				m_ActiveLeague->SetUnitedNations(true);
+			}
+#else
 				league.SetUnitedNations(true);
 			}
 
 			m_vActiveLeagues.push_back(league);
+#endif
 
 			LogLeagueFounded(eFounder);
 		}
@@ -7185,10 +7239,15 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 void CvGameLeagues::DoPlayerAliveStatusChanged(PlayerTypes ePlayer)
 {
 	bool bAlive = GET_PLAYER(ePlayer).isAlive();
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (!bAlive && it->IsMember(ePlayer))
@@ -7208,15 +7267,26 @@ void CvGameLeagues::DoUnitedNationsBuilt(PlayerTypes /*eBuilder*/)
 {
 }
 
+#if defined(AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH) && defined(AUI_CONSTIFY)
+int CvGameLeagues::GetNumActiveLeagues() const
+{
+	if (m_ActiveLeague)
+		return 1;
+	else
+		return 0;
+#else
 int CvGameLeagues::GetNumActiveLeagues()
 {
 	return m_vActiveLeagues.size();
+#endif
 }
 
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 int CvGameLeagues::GetNumLeaguesEverFounded() const
 {
 	return m_iNumLeaguesEverFounded;
 }
+#endif
 
 EraTypes CvGameLeagues::GetLastEraTrigger() const
 {
@@ -7228,6 +7298,11 @@ void CvGameLeagues::SetLastEraTrigger(EraTypes eEraTrigger)
 	m_eLastEraTrigger = eEraTrigger;
 }
 
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+CvLeague* CvGameLeagues::GetActiveLeague() const
+{
+	return m_ActiveLeague;
+#else
 CvLeague* CvGameLeagues::GetLeague(LeagueTypes eLeague)
 {
 	CvLeague* pLeague = NULL;
@@ -7265,6 +7340,7 @@ CvLeague* CvGameLeagues::GetActiveLeague()
 	}
 	CvAssertMsg(GetNumActiveLeagues() == 0 || GetNumActiveLeagues() == 1, "Unexpected number of active leagues. Please send Anton your save file and version.");
 	return pLeague;
+#endif
 }
 
 int CvGameLeagues::GenerateResolutionUniqueID()
@@ -7274,10 +7350,15 @@ int CvGameLeagues::GenerateResolutionUniqueID()
 
 bool CvGameLeagues::CanContributeToLeagueProject(PlayerTypes ePlayer, LeagueProjectTypes eLeagueProject)
 {
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (it->CanMemberContribute(ePlayer, eLeagueProject))
@@ -7291,10 +7372,15 @@ bool CvGameLeagues::CanContributeToLeagueProject(PlayerTypes ePlayer, LeagueProj
 void CvGameLeagues::DoLeagueProjectContribution(PlayerTypes ePlayer, LeagueProjectTypes eLeagueProject, int iValue)
 {
 	int iMatches = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (it->CanMemberContribute(ePlayer, eLeagueProject))
@@ -7324,10 +7410,15 @@ void CvGameLeagues::SetDiplomaticVictor(PlayerTypes ePlayer)
 
 bool CvGameLeagues::IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient)
 {
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (it->IsMember(eTrader))
@@ -7343,10 +7434,15 @@ bool CvGameLeagues::IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient
 
 bool CvGameLeagues::IsLuxuryHappinessBanned(PlayerTypes ePlayer, ResourceTypes eLuxury)
 {
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7363,10 +7459,15 @@ bool CvGameLeagues::IsLuxuryHappinessBanned(PlayerTypes ePlayer, ResourceTypes e
 int CvGameLeagues::GetResearchMod(PlayerTypes ePlayer, TechTypes eTech)
 {
 	int iValue = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7384,10 +7485,15 @@ int CvGameLeagues::GetResearchMod(PlayerTypes ePlayer, TechTypes eTech)
 int CvGameLeagues::GetFeatureYieldChange(PlayerTypes ePlayer, FeatureTypes eFeature, YieldTypes eYield)
 {
 	int iValue = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7405,10 +7511,15 @@ int CvGameLeagues::GetFeatureYieldChange(PlayerTypes ePlayer, FeatureTypes eFeat
 int CvGameLeagues::GetWorldWonderYieldChange(PlayerTypes ePlayer, YieldTypes eYield)
 {
 	int iValue = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7425,10 +7536,15 @@ int CvGameLeagues::GetWorldWonderYieldChange(PlayerTypes ePlayer, YieldTypes eYi
 
 bool CvGameLeagues::IsNoTrainingNuclearWeapons(PlayerTypes ePlayer)
 {
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
+#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7445,7 +7561,12 @@ bool CvGameLeagues::IsNoTrainingNuclearWeapons(PlayerTypes ePlayer)
 int CvGameLeagues::GetCityTourismModifier(PlayerTypes ePlayer, const CvCity* pCity)
 {
 	int iValue = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7462,7 +7583,12 @@ int CvGameLeagues::GetCityTourismModifier(PlayerTypes ePlayer, const CvCity* pCi
 int CvGameLeagues::GetReligionSpreadStrengthModifier(PlayerTypes ePlayer, ReligionTypes eReligion)
 {
 	int iValue = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7479,7 +7605,12 @@ int CvGameLeagues::GetReligionSpreadStrengthModifier(PlayerTypes ePlayer, Religi
 int CvGameLeagues::GetPressureForIdeology(PlayerTypes ePlayer, PolicyBranchTypes eIdeology)
 {
 	int iValue = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7496,7 +7627,12 @@ int CvGameLeagues::GetPressureForIdeology(PlayerTypes ePlayer, PolicyBranchTypes
 int CvGameLeagues::GetArtsyGreatPersonRateModifier(PlayerTypes ePlayer)
 {
 	int iValue = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7513,7 +7649,12 @@ int CvGameLeagues::GetArtsyGreatPersonRateModifier(PlayerTypes ePlayer)
 int CvGameLeagues::GetScienceyGreatPersonRateModifier(PlayerTypes ePlayer)
 {
 	int iValue = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* it = GetActiveLeague();
+	if (it)
+#else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
+#endif
 	{
 		if (it->IsMember(ePlayer))
 		{
@@ -7601,7 +7742,9 @@ void CvGameLeagues::LogSpecialSession(LeagueSpecialSessionTypes eSpecialSession)
 FDataStream& operator>>(FDataStream& loadFrom, CvGameLeagues& writeTo)
 {
 	uint uiVersion;
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	int iNumLeagues;
+#endif
 
 	loadFrom >> uiVersion;
 	if (uiVersion >= 4)
@@ -7612,6 +7755,14 @@ FDataStream& operator>>(FDataStream& loadFrom, CvGameLeagues& writeTo)
 	{
 		writeTo.m_iGeneratedIDCount = 0;
 	}
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	bool bLeagueIsFounded = false;
+	loadFrom >> bLeagueIsFounded;
+	if (bLeagueIsFounded)
+	{
+		loadFrom >> *(writeTo.m_ActiveLeague);
+	}
+#else
 	loadFrom >> iNumLeagues;
 	writeTo.m_vActiveLeagues.clear();
 	for (int iLeague = 0; iLeague < iNumLeagues; iLeague++)
@@ -7628,6 +7779,7 @@ FDataStream& operator>>(FDataStream& loadFrom, CvGameLeagues& writeTo)
 	{
 		writeTo.m_iNumLeaguesEverFounded = 0;
 	}
+#endif
 	if (uiVersion >= 3)
 	{
 		loadFrom >> writeTo.m_eDiplomaticVictor;
@@ -7655,12 +7807,20 @@ FDataStream& operator<<(FDataStream& saveTo, const CvGameLeagues& readFrom)
 	
 	saveTo << uiVersion;
 	saveTo << readFrom.m_iGeneratedIDCount;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	saveTo << (readFrom.m_ActiveLeague != NULL);
+	if (readFrom.m_ActiveLeague)
+	{
+		saveTo << *(readFrom.m_ActiveLeague);
+	}
+#else
 	saveTo << readFrom.m_vActiveLeagues.size();
 	for (uint iLeague = 0; iLeague < readFrom.m_vActiveLeagues.size(); iLeague++)
 	{
 		saveTo << readFrom.m_vActiveLeagues[iLeague];
 	}
 	saveTo << readFrom.m_iNumLeaguesEverFounded;
+#endif
 	saveTo << readFrom.m_eDiplomaticVictor;
 	saveTo << readFrom.m_eLastEraTrigger;
 	
@@ -7798,7 +7958,9 @@ CvLeagueAI::VoteCommitmentList CvLeagueAI::GetDesiredVoteCommitments(PlayerTypes
 {
 	VoteCommitmentList vDesired;
 
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	if (GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)
+#endif
 	{
 		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 		if (pLeague)
@@ -8138,7 +8300,11 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int
 	DEBUG_VARIABLE(iNumVotes);
 	DesireLevels eValue = DESIRE_NEVER;
 	
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	if (GC.getGame().GetGameLeagues()->GetActiveLeague())
+#else
 	if (GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)
+#endif
 	{
 		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 		CvAssert(pLeague != NULL);
@@ -8609,7 +8775,9 @@ int CvLeagueAI::GetExtraVotesPerCityStateAlly()
 {
 	int iVotes = 0;
 
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	if (GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)
+#endif
 	{
 		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 		if (pLeague)
@@ -8929,8 +9097,10 @@ void CvLeagueAI::FindBestVoteChoices(CvEnactProposal* pProposal, VoteConsiderati
 	VoteConsiderationList vScoredChoices;
 	int iMaxChoicesToConsider = 1;
 
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvAssert(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0);
 	if (!(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)) return;
+#endif
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 	CvAssert(pLeague != NULL);
 	if (!(pLeague != NULL)) return;
@@ -8982,8 +9152,10 @@ void CvLeagueAI::FindBestVoteChoices(CvRepealProposal* pProposal, VoteConsiderat
 	VoteConsiderationList vScoredChoices;
 	int iMaxChoicesToConsider = 1;
 
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvAssert(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0);
 	if (!(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)) return;
+#endif
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 	CvAssert(pLeague != NULL);
 	if (!(pLeague != NULL)) return;
@@ -9027,8 +9199,10 @@ int CvLeagueAI::ScoreVoteChoice(CvEnactProposal* pProposal, int iChoice)
 {
 	CvAssert(pProposal != NULL);
 	if (!(pProposal != NULL)) return 0;
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvAssert(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0);
 	if (!(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)) return 0;
+#endif
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 	CvAssert(pLeague != NULL);
 	if (!(pLeague != NULL)) return 0;
@@ -9064,8 +9238,10 @@ int CvLeagueAI::ScoreVoteChoice(CvRepealProposal* pProposal, int iChoice)
 {
 	CvAssert(pProposal != NULL);
 	if (!(pProposal != NULL)) return 0;
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvAssert(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0);
 	if (!(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() > 0)) return 0;
+#endif
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 	CvAssert(pLeague != NULL);
 	if (!(pLeague != NULL)) return 0;

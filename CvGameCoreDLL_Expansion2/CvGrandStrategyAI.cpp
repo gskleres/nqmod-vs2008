@@ -682,7 +682,12 @@ int CvGrandStrategyAI::GetUnitedNationsPriority()
 	int iVotesControlled = 0;
 	int iVotesControlledDelta = 0;
 	int iUnalliedCityStates = 0;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+	if (pLeague == NULL)
+#else
 	if (GC.getGame().GetGameLeagues()->GetNumActiveLeagues() == 0)
+#endif
 	{
 		// Before leagues kick in, add weight based on flavor
 		int iFlavorDiplo =  m_pPlayer->GetFlavorManager()->GetPersonalityIndividualFlavor((FlavorTypes)GC.getInfoTypeForString("FLAVOR_DIPLOMACY"));
@@ -690,9 +695,11 @@ int CvGrandStrategyAI::GetUnitedNationsPriority()
 	}
 	else
 	{
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 		CvAssert(pLeague != NULL);
 		if (pLeague != NULL)
+#endif
 		{
 			// Votes we control
 			iVotesControlled += pLeague->CalculateStartingVotesForMember(ePlayer);

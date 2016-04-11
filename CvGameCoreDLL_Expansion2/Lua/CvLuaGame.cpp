@@ -2465,15 +2465,23 @@ int CvLuaGame::lGetNumActiveLeagues(lua_State* L)
 //------------------------------------------------------------------------------
 int CvLuaGame::lGetNumLeaguesEverFounded(lua_State* L)
 {
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	lua_pushinteger(L, GC.getGame().GetGameLeagues()->GetNumActiveLeagues());
+#else
 	lua_pushinteger(L, GC.getGame().GetGameLeagues()->GetNumLeaguesEverFounded());
+#endif
 	return 1;
 }
 //------------------------------------------------------------------------------
 int CvLuaGame::lGetLeague(lua_State* L)
 {
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+#else
 	const LeagueTypes eLeague = (LeagueTypes) lua_tointeger(L, 1);
 
 	CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
+#endif
 	if (pLeague != NULL)
 	{
 		CvLuaLeague::Push(L, pLeague);
