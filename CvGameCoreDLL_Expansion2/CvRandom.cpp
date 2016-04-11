@@ -20,25 +20,22 @@
 #include "LintFree.h"
 
 #ifndef AUI_USE_SFMT_RNG
-#ifdef AUI_RANDOM_USE_LFSR
-#define LFSR_MASK32 (0x40000031u) // 32-bit mask, 1's at bits 31, 6, 5, and 1
+#ifdef AUI_RANDOM_FIX_CONSTANTS_SET_TO_MODULUS_2_POW_32
+#define RANDOM_A      (214013u)
+#define RANDOM_C      (2531011u)
 #else
 #define RANDOM_A      (1103515245)
 #define RANDOM_C      (12345)
+#endif
 #define RANDOM_SHIFT  (16)
 
 #ifdef AUI_BINOM_RNG
 #define BINOM_SHIFT   (30)
 #endif
 #endif
-#endif
 
 CvRandom::CvRandom() :
-#ifdef AUI_RANDOM_USE_LFSR
-	m_ulRandomSeed(1)
-#else
 	m_ulRandomSeed(0)
-#endif
 	, m_ulCallCount(0)
 	, m_ulResetCount(0)
 	, m_bSynchronous(false)
@@ -53,11 +50,7 @@ CvRandom::CvRandom() :
 }
 
 CvRandom::CvRandom(bool extendedCallStackDebugging) :
-#ifdef AUI_RANDOM_USE_LFSR
-	m_ulRandomSeed(1)
-#else
 	m_ulRandomSeed(0)
-#endif
 	, m_ulCallCount(0)
 	, m_ulResetCount(0)
 	, m_bSynchronous(true)
@@ -158,10 +151,6 @@ void CvRandom::reset(unsigned long ulSeed)
 	m_ulRandomSeed = uiSeed;
 #else
 	m_ulRandomSeed = ulSeed;
-#ifdef AUI_RANDOM_USE_LFSR
-	if (m_ulRandomSeed == 0)
-		m_ulRandomSeed = 1;
-#endif
 #endif
 	m_ulResetCount++;
 }
@@ -184,19 +173,11 @@ unsigned short CvRandom::get(unsigned short usNum, const char* pszLog)
 	recordCallStack();
 	m_ulCallCount++;
 
-#ifdef AUI_RANDOM_USE_LFSR
-	unsigned int uiBitBucket = m_ulRandomSeed & 1;
-	unsigned long ulNewSeed = m_ulRandomSeed >> 1;
-	if (uiBitBucket != 0)
-		ulNewSeed ^= LFSR_MASK32;
-	unsigned short us = (unsigned short)((ulNewSeed & MAX_UNSIGNED_SHORT) % uiNum);
-#else
 	unsigned long ulNewSeed = ((RANDOM_A * m_ulRandomSeed) + RANDOM_C);
 #ifdef AUI_WARNING_FIXES
 	unsigned short us = ((unsigned short)((((ulNewSeed >> RANDOM_SHIFT) & MAX_UNSIGNED_SHORT) * (uiNum)) / (MAX_UNSIGNED_SHORT + 1)));
 #else
 	unsigned short us = ((unsigned short)((((ulNewSeed >> RANDOM_SHIFT) & MAX_UNSIGNED_SHORT) * ((unsigned long)usNum)) / (MAX_UNSIGNED_SHORT + 1)));
-#endif
 #endif
 #endif
 
@@ -293,22 +274,11 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 	{
 		recordCallStack();
 		m_ulCallCount += uiNum;
-#ifdef AUI_RANDOM_USE_LFSR
-		unsigned int uiBitBucket = 0;
-#endif
 		for (unsigned int uiI = 1; uiI < uiNum; uiI++) // starts at 1 because the generation is not inclusive (so we need one less cycle than normal)
 		{
 			// no need to worry about masking with MAX_UNSIGNED_SHORT, max cycle number takes care of it
-#ifdef AUI_RANDOM_USE_LFSR
-			uiBitBucket = ulNewSeed & 1;
-			ulNewSeed >>= 1;
-			if (uiBitBucket != 0)
-				ulNewSeed ^= LFSR_MASK32;
-			usRet += ulNewSeed & 1;
-#else
 			ulNewSeed = (RANDOM_A * ulNewSeed) + RANDOM_C;
 			usRet += (ulNewSeed >> BINOM_SHIFT) & 1; // need the shift so results only repeat after 2^BINOM_SHIFT iterations
-#endif
 		}
 	}
 #endif
@@ -405,10 +375,6 @@ void CvRandom::reseed(unsigned long ulNewValue)
 	m_ulRandomSeed = uiNewSeed;
 #else
 	m_ulRandomSeed = ulNewValue;
-#ifdef AUI_RANDOM_USE_LFSR
-	if (m_ulRandomSeed == 0)
-		m_ulRandomSeed = 1;
-#endif
 #endif
 }
 

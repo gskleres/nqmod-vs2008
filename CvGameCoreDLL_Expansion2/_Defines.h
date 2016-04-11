@@ -77,8 +77,8 @@
 #define AUI_TACTICAL_FIX_FIND_TACTICAL_TARGETS_NULL_POINTER
 /// The function that gets the amount of different trading partners a player has will now use an array instead of a vector to avoid crash possibilities
 #define AUI_TRADE_FIX_GET_NUM_DIFFERENT_TRADING_PARTNERS_USES_ARRAY
-/// Replaces Civ5's Linear Congruential RNG with a Linear Feedback Shift Register one. LFSRs tend to have a better randomness quality than LCs.
-#define AUI_RANDOM_USE_LFSR
+/// Fixes the fact that the game's Linear Congruential RNG is set to use constants that would require a modulus of 2^31 instead of ones that need 2^32 (I couldn't introduce a modulus step because Civ5's engine really dislikes modifications to the RNG system)
+#define AUI_RANDOM_FIX_CONSTANTS_SET_TO_MODULUS_2_POW_32
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
