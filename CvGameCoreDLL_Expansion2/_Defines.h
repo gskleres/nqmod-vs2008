@@ -81,6 +81,8 @@
 #define AUI_RANDOM_FIX_CONSTANTS_SET_TO_MODULUS_2_POW_32
 /// Fixes a possible crash when exiting the game caused by heap corruption when deallocating CvGameLeagues due to misuse of an FStaticVector
 #define AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+/// Fixes the fact that a bunch of FStaticVectors that contain objects with trivial constructors (i.e. they are "Plain Old Data" = POD) are treated as if they aren't POD vectors (improves stability and performance)
+#define AUI_TRADE_FIX_FSTATICVECTOR_CONTENTS_ARE_POD
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
