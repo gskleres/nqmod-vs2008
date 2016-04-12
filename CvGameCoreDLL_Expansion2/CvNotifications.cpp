@@ -1743,9 +1743,14 @@ bool CvNotifications::IsNotificationExpired(int iIndex)
 
 	case NOTIFICATION_LEAGUE_CALL_FOR_PROPOSALS:
 	{
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+		if (pLeague && !pLeague->CanPropose(m_ePlayer))
+#else
 		LeagueTypes eLeague = (LeagueTypes) m_aNotifications[iIndex].m_iGameDataIndex;
 		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
 		if (!pLeague->CanPropose(m_ePlayer))
+#endif
 		{
 			return true;
 		}
@@ -1776,9 +1781,14 @@ bool CvNotifications::IsNotificationExpired(int iIndex)
 
 	case NOTIFICATION_LEAGUE_CALL_FOR_VOTES:
 	{
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
+		if (pLeague && !pLeague->CanVote(m_ePlayer))
+#else
 		LeagueTypes eLeague = (LeagueTypes) m_aNotifications[iIndex].m_iGameDataIndex;
 		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetLeague(eLeague);
 		if (!pLeague->CanVote(m_ePlayer))
+#endif
 		{
 			return true;
 		}

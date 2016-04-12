@@ -809,8 +809,10 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 
 		DEBUG_VARIABLE(iNumVotes);
 
+#ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 		if(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() == 0)
 			return false;
+#endif
 
 		CvLeague* pLeague = GC.getGame().GetGameLeagues()->GetActiveLeague();
 		if(pLeague == NULL)

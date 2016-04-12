@@ -752,8 +752,24 @@ bool CvCityCitizens::IsAvoidGrowth()
 			if (iHappinessPerXPopulation == 0 || m_pCity->IsPuppet() || (iPopulation + 1) / iHappinessPerXPopulation <= iPopulation / iHappinessPerXPopulation)
 			{
 				// Growing would not be covered by reduced unhappiness from population
-				int iDummy = 0;
-				bool bHasSpecialistSlot = GetAIBestSpecialistBuilding(iDummy) != NO_BUILDING;
+				bool bHasSpecialistSlot = false;
+#ifdef AUI_WARNING_FIXES
+				for (uint iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#else
+				for (int iBuildingLoop = 0; iBuildingLoop < GC.getNumBuildingInfos(); iBuildingLoop++)
+#endif
+				{
+					const BuildingTypes eBuilding = static_cast<BuildingTypes>(iBuildingLoop);
+					CvBuildingEntry* pkBuildingInfo = GC.getBuildingInfo(eBuilding);
+					if (pkBuildingInfo)
+					{
+						if (GetCity()->GetCityBuildings()->GetNumBuilding(eBuilding) > 0 && IsCanAddSpecialistToBuilding(eBuilding))
+						{
+							bHasSpecialistSlot = true;
+							break;
+						}
+					}
+				}
 				if ((GetPlayer()->GetUnhappinessFromCityPopulation() + GetPlayer()->GetUnhappinessFromOccupiedCities()) / 100 <
 					(GetPlayer()->GetUnhappinessFromCityPopulation(NULL, NULL, m_pCity, (bHasSpecialistSlot ? m_pCity : NULL)) 
 						+ GetPlayer()->GetUnhappinessFromOccupiedCities(NULL, NULL, m_pCity, (bHasSpecialistSlot ? m_pCity : NULL))) / 100)

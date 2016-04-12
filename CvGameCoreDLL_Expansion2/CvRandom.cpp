@@ -20,8 +20,13 @@
 #include "LintFree.h"
 
 #ifndef AUI_USE_SFMT_RNG
+#ifdef AUI_RANDOM_FIX_CONSTANTS_SET_TO_MODULUS_2_POW_32
+#define RANDOM_A      (214013u)
+#define RANDOM_C      (2531011u)
+#else
 #define RANDOM_A      (1103515245)
 #define RANDOM_C      (12345)
+#endif
 #define RANDOM_SHIFT  (16)
 
 #ifdef AUI_BINOM_RNG
@@ -269,12 +274,11 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 	{
 		recordCallStack();
 		m_ulCallCount += uiNum;
-		ulNewSeed = (RANDOM_A * m_ulRandomSeed) + RANDOM_C;
 		for (unsigned int uiI = 1; uiI < uiNum; uiI++) // starts at 1 because the generation is not inclusive (so we need one less cycle than normal)
 		{
 			// no need to worry about masking with MAX_UNSIGNED_SHORT, max cycle number takes care of it
-			usRet += (ulNewSeed >> BINOM_SHIFT) & 1; // need the shift so results only repeat after 2^BINOM_SHIFT iterations
 			ulNewSeed = (RANDOM_A * ulNewSeed) + RANDOM_C;
+			usRet += (ulNewSeed >> BINOM_SHIFT) & 1; // need the shift so results only repeat after 2^BINOM_SHIFT iterations
 		}
 	}
 #endif
