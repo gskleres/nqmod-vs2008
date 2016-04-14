@@ -7760,6 +7760,8 @@ FDataStream& operator>>(FDataStream& loadFrom, CvGameLeagues& writeTo)
 	loadFrom >> bLeagueIsFounded;
 	if (bLeagueIsFounded)
 	{
+		if (writeTo.m_ActiveLeague == NULL)
+			writeTo.m_ActiveLeague = FNEW(CvLeague, c_eCiv5GameplayDLL, 0);
 		loadFrom >> *(writeTo.m_ActiveLeague);
 	}
 #else
