@@ -66,8 +66,8 @@
 @* checks for initialization code.
 ** CHANGE them if you want different names.
 */
-#define LUA_PATH	"LUA_PATH"
-#define LUA_CPATH	"LUA_CPATH"
+#define LUA_PATH        "LUA_PATH"
+#define LUA_CPATH       "LUA_CPATH"
 #define LUA_INIT	"LUA_INIT"
 
 
@@ -133,9 +133,6 @@
 #define LUA_PATH_MARK	"?"
 #define LUA_EXECDIR	"!"
 #define LUA_IGMARK	"-"
-#define LUA_PATH_CONFIG \
-  LUA_DIRSEP "\n" LUA_PATHSEP "\n" LUA_PATH_MARK "\n" \
-  LUA_EXECDIR "\n" LUA_IGMARK
 
 
 /*
@@ -448,7 +445,6 @@
 */
 #define LUAI_MAXCSTACK	8000
 
-#define LUAI_MAXSTACK	65500	/* Max. # of stack slots for a thread (<64K). */
 
 
 /*
@@ -489,13 +485,7 @@
 /*
 @@ LUAL_BUFFERSIZE is the buffer size used by the lauxlib buffer system.
 */
-//#define LUAL_BUFFERSIZE		BUFSIZ
-/*
-** Size of lauxlib and io.* on-stack buffers. Weird workaround to avoid using
-** unreasonable amounts of stack space, but still retain ABI compatibility.
-** Blame Lua for depending on BUFSIZ in the ABI, blame **** for wrecking it.
-*/
-#define LUAL_BUFFERSIZE	(BUFSIZ > 16384 ? 8192 : BUFSIZ)
+#define LUAL_BUFFERSIZE		BUFSIZ
 
 /* }================================================================== */
 
