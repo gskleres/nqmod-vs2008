@@ -11467,7 +11467,9 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 	}
 #endif
 
+#ifdef NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
 	CvPlot* pPickedPlot = NULL;
+#endif
 	if(iListLength > 0)
 	{
 		int iPickedIndex = GC.getGame().getJonRandNum(iListLength, "GetNextBuyablePlot picker");
