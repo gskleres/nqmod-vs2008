@@ -624,7 +624,9 @@ void CvGameTrade::CopyPathIntoTradeConnection (CvAStarNode* pNode, TradeConnecti
 #endif
 {
 	// beyond the origin player's trade range
+#ifndef AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
 	int iPathSteps = 0;
+#endif
 #ifdef AUI_CONSTIFY
 	const CvAStarNode* pWalkingPath = pNode;
 #else
@@ -632,10 +634,18 @@ void CvGameTrade::CopyPathIntoTradeConnection (CvAStarNode* pNode, TradeConnecti
 #endif
 	while (pWalkingPath)
 	{
+#ifdef AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
+		TradeConnectionPlot kTradeConnectionPlot;
+		pTradeConnection->m_aPlotList.push_back(kTradeConnectionPlot);
+#else
 		iPathSteps++;
+#endif
 		pWalkingPath = pWalkingPath->m_pParent;
 	}
 
+#ifdef AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
+	int iIndex = pTradeConnection->m_aPlotList.size();
+#else
 	pTradeConnection->m_aPlotList.clear();
 	for (int i = 0; i < iPathSteps; i++)
 	{
@@ -644,12 +654,18 @@ void CvGameTrade::CopyPathIntoTradeConnection (CvAStarNode* pNode, TradeConnecti
 	}
 
 	int iIndex = iPathSteps - 1;
+#endif
 	while (pNode != NULL)
 	{
+#ifdef AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
+		iIndex--;
+#endif
 		pTradeConnection->m_aPlotList[iIndex].m_iX = pNode->m_iX;
 		pTradeConnection->m_aPlotList[iIndex].m_iY = pNode->m_iY;
 		pNode = pNode->m_pParent;
+#ifndef AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
 		iIndex--;
+#endif
 	}
 }
 
