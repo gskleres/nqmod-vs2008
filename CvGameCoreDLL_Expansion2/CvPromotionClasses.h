@@ -96,6 +96,7 @@ public:
 	bool IsGreatAdmiral() const;
 	int  GetGreatGeneralModifier() const;
 	bool IsGreatGeneralReceivesMovement() const;
+	bool IsEmbarkedUnitReceivesMovement() const; // NQMP GJS - Danish Longship
 	int  GetGreatGeneralCombatModifier() const;
 	int  GetFriendlyLandsModifier() const;
 	int  GetFriendlyLandsAttackModifier() const;
@@ -276,6 +277,7 @@ protected:
 	bool m_bGreatAdmiral;
 	int m_iGreatGeneralModifier;
 	bool m_bGreatGeneralReceivesMovement;
+	bool m_bEmbarkedUnitReceivesMovement; // NQMP GJS - Danish Longship
 	int m_iGreatGeneralCombatModifier;
 	int m_iFriendlyLandsModifier;
 	int m_iFriendlyLandsAttackModifier;

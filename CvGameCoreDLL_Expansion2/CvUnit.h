@@ -889,6 +889,7 @@ public:
 	bool IsNearGreatGeneral() const;
 	bool IsStackedGreatGeneral() const;
 	int GetGreatGeneralStackMovement() const;
+	int GetEmbarkedUnitStackMovement() const; // NQMP GJS - Danish Longship
 	int GetReverseGreatGeneralModifier() const;
 	int GetNearbyImprovementModifier() const;
 
@@ -904,6 +905,8 @@ public:
 
 	bool IsGreatGeneralReceivesMovement() const;
 	void ChangeGreatGeneralReceivesMovementCount(int iChange);
+	bool IsEmbarkedUnitReceivesMovement() const; // NQMP GJS - Danish Longship
+	void ChangeEmbarkedUnitReceivesMovementCount(int iChange); // NQMP GJS - Danish Longship
 	int GetGreatGeneralCombatModifier() const;
 	void ChangeGreatGeneralCombatModifier(int iChange);
 
@@ -1429,6 +1432,7 @@ protected:
 	int m_iGreatAdmiralCount;
 	FAutoVariable<int, CvUnit> m_iGreatGeneralModifier;
 	int m_iGreatGeneralReceivesMovementCount;
+	int m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Longship
 	int m_iGreatGeneralCombatModifier;
 	int m_iIgnoreGreatGeneralBenefit;
 	int m_iIgnoreZOC;

@@ -105,6 +105,7 @@ public:
 	int GetRazeSpeedModifier() const;
 	int GetDOFGreatPersonModifier() const;
 	int GetLuxuryHappinessRetention() const;
+	int GetExtraHappinessPerLuxury() const; // NQMP GJS - New Netherlands UA
 	int GetExtraSpies() const;
 	int GetHappinessPerReligion() const; // NQMP GJS - New Ottoman UA
 	int GetUnresearchedTechBonusFromKills() const;
@@ -163,6 +164,7 @@ public:
 	int GetExtraYieldThreshold(int i) const;
 	int GetYieldChange(int i) const;
 	int GetYieldChangeStrategicResources(int i) const;
+	int GetYieldChangeLuxuryResources(int i) const; // NQMP GJS - New Netherlands UA
 	int GetYieldChangeNaturalWonder(int i) const;
 	int GetYieldChangePerTradePartner(int i) const;
 	int GetYieldChangeIncomingTradeRoute(int i) const;
@@ -241,6 +243,7 @@ protected:
 	int m_iRazeSpeedModifier;
 	int m_iDOFGreatPersonModifier;
 	int m_iLuxuryHappinessRetention;
+	int m_iExtraHappinessPerLuxury; // NQMP GJS - New Netherlands UA
 	int m_iExtraSpies;
 	int m_iHappinessPerReligion; // NQMP GJS - New Ottoman UA
 	int m_iUnresearchedTechBonusFromKills;
@@ -295,6 +298,7 @@ protected:
 	int* m_paiExtraYieldThreshold;
 	int* m_paiYieldChange;
 	int* m_paiYieldChangeStrategicResources;
+	int* m_paiYieldChangeLuxuryResources; // NQMP GJS - New Netherlands UA
 	int* m_paiYieldChangeNaturalWonder;
 	int* m_paiYieldChangePerTradePartner;
 	int* m_paiYieldChangeIncomingTradeRoute;
@@ -577,6 +581,12 @@ public:
 	{
 		return m_iLuxuryHappinessRetention;
 	};
+	// NQMP GJS - New Netherlands UA gives +1 Happiness per unique Luxury for the empire BEGIN
+	int GetExtraHappinessPerLuxury() const
+	{
+		return m_iExtraHappinessPerLuxury;
+	};
+	// NQMP GJS - New Netherlands UA gives +1 Happiness per unique Luxury for the empire END
 	int GetExtraSpies() const
 	{
 		return m_iExtraSpies;
@@ -755,6 +765,12 @@ public:
 	{
 		return m_iYieldChangeStrategicResources[(int)eYield];
 	};
+	// NQMP GJS - New Netherlands UA BEGIN
+	int GetYieldChangeLuxuryResources(YieldTypes eYield) const
+	{
+		return m_iYieldChangeLuxuryResources[(int)eYield];
+	};
+	// NQMP GJS - New Netherlands UA END
 	int GetYieldChangeNaturalWonder(YieldTypes eYield) const
 	{
 		return m_iYieldChangeNaturalWonder[(int)eYield];
@@ -763,6 +779,12 @@ public:
 	{
 		return m_iYieldChangePerTradePartner[(int)eYield];
 	};
+	// NQMP GJS - Morocco UA Gateway To Africa now scales with era BEGIN
+	int GetTradePartnerYieldFlatBonusPerEra() const
+	{
+		return 1; //m_iYieldChangePerTradePartner[(int)eYield]; // TODO: finish this to get the trait "TradePartnerYieldFlatBonusPerEra" from SQL
+	};
+	// NQMP GJS - Morocco UA Gateway To Africa now scales with era END
 	int GetYieldChangeIncomingTradeRoute(YieldTypes eYield) const
 	{
 		return m_iYieldChangeIncomingTradeRoute[(int)eYield];
@@ -888,6 +910,7 @@ private:
 	int m_iRazeSpeedModifier;
 	int m_iDOFGreatPersonModifier;
 	int m_iLuxuryHappinessRetention;
+	int m_iExtraHappinessPerLuxury; // NQMP GJS - New Netherlands UA
 	int m_iExtraSpies;
 	int m_iHappinessPerReligion; //NQMP GJS - New Ottoman UA
 	int m_iUnresearchedTechBonusFromKills;
@@ -943,6 +966,7 @@ private:
 	int m_iExtraYieldThreshold[NUM_YIELD_TYPES];
 	int m_iFreeCityYield[NUM_YIELD_TYPES];
 	int m_iYieldChangeStrategicResources[NUM_YIELD_TYPES];
+	int m_iYieldChangeLuxuryResources[NUM_YIELD_TYPES]; // NQMP GJS - New Netherlands UA
 	int m_iYieldChangeNaturalWonder[NUM_YIELD_TYPES];
 	int m_iYieldChangePerTradePartner[NUM_YIELD_TYPES];
 	int m_iYieldChangeIncomingTradeRoute[NUM_YIELD_TYPES];
