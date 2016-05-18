@@ -1207,6 +1207,35 @@ void CvHomelandAI::PlotWorkerMoves()
 	if(m_CurrentMoveUnits.size() > 0)
 	{
 		ExecuteWorkerMoves();
+#ifdef AUI_HOMELAND_PLOT_WORKER_MOVES_ALSO_PLOTS_WORKER_DEFENSE
+		FStaticVector< CvHomelandUnit, 64, true, c_eCiv5GameplayDLL > tempList = m_CurrentMoveUnits;
+		for (FStaticVector< CvHomelandUnit, 64, true, c_eCiv5GameplayDLL >::iterator it = tempList.begin(); it != tempList.end(); ++it)
+		{
+			CvUnit* pTargetWorker = m_pPlayer->getUnit(it->GetID());
+
+			if (pTargetWorker && !pTargetWorker->IsCombatUnit() && !pTargetWorker->isDelayedDeath() && !pTargetWorker->IsDead())
+			{
+				CvPlot* pTargetPlot = pTargetWorker->plot();
+				// Grab units that make sense for this move type
+				FindUnitsForThisMove(AI_HOMELAND_MOVE_UNASSIGNED /*Special override for selecting combat units*/, (it == tempList.begin())/*bFirstTime*/);
+
+				if (m_CurrentMoveHighPriorityUnits.size() + m_CurrentMoveUnits.size() > 0)
+				{
+					if (GetBestUnitToReachTarget(pTargetPlot, 1))
+					{
+						ExecuteMoveToTarget(pTargetPlot);
+
+						if (GC.getLogging() && GC.getAILogging())
+						{
+							CvString strLogString;
+							strLogString.Format("Moving to protect worker, X: %d, Y: %d", pTargetPlot->getX(), pTargetPlot->getY());
+							LogHomelandMessage(strLogString);
+						}
+					}
+				}
+			}
+		}
+#endif
 	}
 }
 
@@ -5262,6 +5291,12 @@ bool CvHomelandAI::FindUnitsForThisMove(AIHomelandMove eMove, bool bFirstTime)
 						bSuitableUnit = true;
 					}
 					break;
+#ifdef AUI_HOMELAND_PLOT_WORKER_MOVES_ALSO_PLOTS_WORKER_DEFENSE
+				case AI_HOMELAND_MOVE_UNASSIGNED:
+					// Override for just selecting combat units
+					bSuitableUnit = pLoopUnit->IsCombatUnit();
+					break;
+#endif
 				}
 
 				// If unit was suitable, add it to the proper list
