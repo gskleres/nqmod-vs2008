@@ -528,8 +528,6 @@ int CvBeliefEntry::GetTerrainYieldChange(int i, int j) const // GJS - make a new
 	return m_ppaiTerrainYieldChange ? m_ppaiTerrainYieldChange[i][j] : -1;
 }
 
-/// GJS - Change to yield by terrain AND feature
-
 /// Happiness from a resource
 int CvBeliefEntry::GetResourceHappiness(int i) const
 {

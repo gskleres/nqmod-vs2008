@@ -3962,7 +3962,9 @@ const char* CvPlayer::getName() const
 	{
 		const CvString& szDisplayName = CvPreGame::nicknameDisplayed(GetID());
 		if(szDisplayName.GetLength())
+		{
 			return szDisplayName.c_str();
+		}
 	}
 	
 	const CvString& szPlayerName = CvPreGame::leaderName(GetID());
@@ -4720,8 +4722,25 @@ void CvPlayer::DoUnitReset()
 		pLoopUnit->setMoves(pLoopUnit->maxMoves());
 		if(pLoopUnit->IsGreatGeneral())
 		{
-			pLoopUnit->setMoves(pLoopUnit->GetGreatGeneralStackMovement());
+			// NQMP GJS - fix Hakkapeliitta reducing Great General movement if they would normally have more BEGIN
+			//pLoopUnit->setMoves(pLoopUnit->GetGreatGeneralStackMovement());
+			int newValue = pLoopUnit->GetGreatGeneralStackMovement();
+			if (newValue > pLoopUnit->maxMoves())
+			{
+				pLoopUnit->setMoves(newValue);
+			}
+			// NQMP GJS - fix Hakkapeliitta reducing Great General movement if they would normally have more END
 		}
+		// NQMP GJS - Danish Longship BEGIN
+		if (pLoopUnit->isEmbarked())
+		{
+			int newValue = pLoopUnit->GetEmbarkedUnitStackMovement();
+			if (newValue > pLoopUnit->maxMoves())
+			{
+				pLoopUnit->setMoves(newValue);
+			}
+		}
+		// NQMP GJS - Danish Longship END
 
 		// Archaeologist can't move on turn he finishes a dig (while waiting for user to decide his next action)
 		else if (pLoopUnit->AI_getUnitAIType() == UNITAI_ARCHAEOLOGIST)
@@ -9945,7 +9964,16 @@ int CvPlayer::GetJONSCulturePerTurnFromExcessHappiness() const
 /// Trait bonus which adds Culture for trade partners? 
 int CvPlayer::GetJONSCulturePerTurnFromTraits() const
 {
-	return GetPlayerTraits()->GetYieldChangePerTradePartner(YIELD_CULTURE) * GetTrade()->GetNumDifferentTradingPartners();
+	// NQMP GJS - Morocco UA Gateway To Africa now scales with era BEGIN TradePartnerYieldFlatBonusPerEra
+	int bonus = GetPlayerTraits()->GetYieldChangePerTradePartner(YIELD_CULTURE);
+	if (bonus > 0) // temp fix since the GetTradePartnerYieldFlatBonusPerEra() stat is currently hard-coded to return 1 instead of reading from SQL
+	{
+		bonus += GetPlayerTraits()->GetTradePartnerYieldFlatBonusPerEra() * GetCurrentEra();
+		bonus *= GetTrade()->GetNumDifferentTradingPartners();
+	}
+	return bonus;
+	//return GetPlayerTraits()->GetYieldChangePerTradePartner(YIELD_CULTURE) * GetTrade()->GetNumDifferentTradingPartners();
+	// NQMP GJS - Morocco UA Gateway To Africa now scales with era END
 }
 
 //	--------------------------------------------------------------------------------
@@ -11740,9 +11768,12 @@ int CvPlayer::GetHappinessFromLuxury(ResourceTypes eResource) const
 		// Any extras?
 		else if(getNumResourceAvailable(eResource, /*bIncludeImport*/ true) > 0)
 		{
-			return iBaseHappiness;
+		// NQMP GJS - New Netherlands UA gives +1 Happiness per unique Luxury for the empire BEGIN
+			return iBaseHappiness + GetPlayerTraits()->GetExtraHappinessPerLuxury();
+			//return iBaseHappiness;
 		}
-
+		
+		/*
 		else if(GetPlayerTraits()->GetLuxuryHappinessRetention() > 0)
 		{
 			if(getResourceExport(eResource) > 0)
@@ -11750,6 +11781,8 @@ int CvPlayer::GetHappinessFromLuxury(ResourceTypes eResource) const
 				return ((iBaseHappiness * GetPlayerTraits()->GetLuxuryHappinessRetention()) / 100);
 			}
 		}
+		*/
+		// NQMP GJS - New Netherlands UA gives +1 Happiness per unique Luxury for the empire END
 	}
 
 	return false;

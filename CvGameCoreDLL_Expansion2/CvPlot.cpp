@@ -7714,6 +7714,12 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 					{
 						iYield += GET_PLAYER(ePlayer).GetPlayerTraits()->GetYieldChangeStrategicResources(eYield);
 					}
+					// NQMP GJS - New Netherlands UA BEGIN
+					else if (pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY)
+					{
+						iYield += GET_PLAYER(ePlayer).GetPlayerTraits()->GetYieldChangeLuxuryResources(eYield);
+					}
+					// NQMP GJS - New Netherlands UA END
 				}
 			}
 		}
@@ -10555,6 +10561,12 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 					// Extra yield from Resources with Trait
 					if(pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_STRATEGIC)
 						iYield += GET_PLAYER(ePlayer).GetPlayerTraits()->GetYieldChangeStrategicResources(eYield);
+					// NQMP GJS - New Netherlands UA BEGIN
+					else if (pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY)
+					{
+						iYield += GET_PLAYER(ePlayer).GetPlayerTraits()->GetYieldChangeLuxuryResources(eYield);
+					}
+					// NQMP GJS - New Netherlands UA END
 				}
 			}
 		}

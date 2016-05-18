@@ -74,6 +74,7 @@ CvTraitEntry::CvTraitEntry() :
 	m_iRazeSpeedModifier(0),
 	m_iDOFGreatPersonModifier(0),
 	m_iLuxuryHappinessRetention(0),
+	m_iExtraHappinessPerLuxury(0), // NQMP GJS - New Netherlands UA
 	m_iExtraSpies(0),
 	m_iHappinessPerReligion(0), // NQMP GJS - New Ottoman UA
 	m_iUnresearchedTechBonusFromKills(0),
@@ -117,6 +118,7 @@ CvTraitEntry::CvTraitEntry() :
 	m_paiExtraYieldThreshold(NULL),
 	m_paiYieldChange(NULL),
 	m_paiYieldChangeStrategicResources(NULL),
+	m_paiYieldChangeLuxuryResources(NULL), // NQMP GJS - New Netherlands UA
 	m_paiYieldChangeNaturalWonder(NULL),
 	m_paiYieldChangePerTradePartner(NULL),
 	m_paiYieldChangeIncomingTradeRoute(NULL),
@@ -449,6 +451,15 @@ int CvTraitEntry::GetLuxuryHappinessRetention() const
 	return m_iLuxuryHappinessRetention;
 }
 
+// NQMP GJS - New Netherlands UA BEGIN
+/// Accessor: extra happiness for the empire per unique luxury
+int CvTraitEntry::GetExtraHappinessPerLuxury() const
+{
+	return m_iExtraHappinessPerLuxury;
+}
+
+// NQMP GJS - New Netherlands UA END
+
 /// Accessor: number of extra spies
 int CvTraitEntry::GetExtraSpies() const
 {
@@ -731,6 +742,14 @@ int CvTraitEntry::GetYieldChangeStrategicResources(int i) const
 	return m_paiYieldChangeStrategicResources ? m_paiYieldChangeStrategicResources[i] : -1;
 }
 
+// NQMP GJS - New Netherlands UA BEGIN 
+/// Accessor:: Extra yield from luxury resources
+int CvTraitEntry::GetYieldChangeLuxuryResources(int i) const
+{
+	return m_paiYieldChangeLuxuryResources ? m_paiYieldChangeLuxuryResources[i] : -1;
+}
+// NQMP GJS - New Netherlands UA END
+
 /// Accessor:: Extra yield from natural wonders
 int CvTraitEntry::GetYieldChangeNaturalWonder(int i) const
 {
@@ -959,6 +978,7 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 	m_iRazeSpeedModifier					= kResults.GetInt("RazeSpeedModifier");
 	m_iDOFGreatPersonModifier				= kResults.GetInt("DOFGreatPersonModifier");
 	m_iLuxuryHappinessRetention				= kResults.GetInt("LuxuryHappinessRetention");
+	m_iExtraHappinessPerLuxury				= kResults.GetInt("ExtraHappinessPerLuxury"); // NQMP GJS - New Netherlands UA
 	m_iExtraSpies							= kResults.GetInt("ExtraSpies");
 	m_iHappinessPerReligion					= kResults.GetInt("HappinessPerReligion"); // NQMP GJS - New Ottoman UA
 	m_iUnresearchedTechBonusFromKills		= kResults.GetInt("UnresearchedTechBonusFromKills");
@@ -1044,6 +1064,7 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 
 	kUtility.SetYields(m_paiYieldChange, "Trait_YieldChanges", "TraitType", szTraitType);
 	kUtility.SetYields(m_paiYieldChangeStrategicResources, "Trait_YieldChangesStrategicResources", "TraitType", szTraitType);
+	kUtility.SetYields(m_paiYieldChangeLuxuryResources, "Trait_YieldChangesLuxuryResources", "TraitType", szTraitType); // NQMP GJS - New Netherlands UA
 	kUtility.SetYields(m_paiYieldChangeNaturalWonder, "Trait_YieldChangesNaturalWonder", "TraitType", szTraitType);
 	kUtility.SetYields(m_paiYieldChangePerTradePartner, "Trait_YieldChangesPerTradePartner", "TraitType", szTraitType);
 	kUtility.SetYields(m_paiYieldChangeIncomingTradeRoute, "Trait_YieldChangesIncomingTradeRoute", "TraitType", szTraitType);
@@ -1436,6 +1457,7 @@ void CvPlayerTraits::InitPlayerTraits()
 			m_iRazeSpeedModifier += trait->GetRazeSpeedModifier();
 			m_iDOFGreatPersonModifier += trait->GetDOFGreatPersonModifier();
 			m_iLuxuryHappinessRetention += trait->GetLuxuryHappinessRetention();
+			m_iExtraHappinessPerLuxury += trait->GetExtraHappinessPerLuxury(); // NQMP GJS - New Netherlands UA
 			m_iExtraSpies += trait->GetExtraSpies();
 			m_iHappinessPerReligion += trait->GetHappinessPerReligion(); // NQMP GJS - New Ottoman UA
 			m_iUnresearchedTechBonusFromKills += trait->GetUnresearchedTechBonusFromKills();
@@ -1545,6 +1567,7 @@ void CvPlayerTraits::InitPlayerTraits()
 				}
 				m_iFreeCityYield[iYield] = trait->GetYieldChange(iYield);
 				m_iYieldChangeStrategicResources[iYield] = trait->GetYieldChangeStrategicResources(iYield);
+				m_iYieldChangeLuxuryResources[iYield] = trait->GetYieldChangeLuxuryResources(iYield); // NQMP GJS - New Netherlands UA
 				m_iYieldChangeNaturalWonder[iYield] = trait->GetYieldChangeNaturalWonder(iYield);
 				m_iYieldChangePerTradePartner[iYield] = trait->GetYieldChangePerTradePartner(iYield);
 				m_iYieldChangeIncomingTradeRoute[iYield] = trait->GetYieldChangeIncomingTradeRoute(iYield);
@@ -1729,6 +1752,7 @@ void CvPlayerTraits::Reset()
 	m_iRazeSpeedModifier = 0;
 	m_iDOFGreatPersonModifier = 0;
 	m_iLuxuryHappinessRetention = 0;
+	m_iExtraHappinessPerLuxury = 0; // NQMP GJS - New Netherlands UA
 	m_iExtraSpies = 0;
 	m_iHappinessPerReligion = 0; // NQMP GJS - New Ottoman UA
 	m_iUnresearchedTechBonusFromKills = 0;
@@ -1793,6 +1817,7 @@ void CvPlayerTraits::Reset()
 		m_iExtraYieldThreshold[iYield] = 0;
 		m_iFreeCityYield[iYield] = 0;
 		m_iYieldChangeStrategicResources[iYield] = 0;
+		m_iYieldChangeLuxuryResources[iYield] = 0; // NQMP GJS - New Netherlands UA
 		m_iYieldChangeNaturalWonder[iYield] = 0;
 		m_iYieldChangePerTradePartner[iYield] = 0;
 		m_iYieldChangeIncomingTradeRoute[iYield] = 0;
@@ -1915,16 +1940,25 @@ bool CvPlayerTraits::WillGetUniqueLuxury(CvArea *pArea) const
 	// Still have more of these cities to award?
 	if (m_iUniqueLuxuryCities > m_iUniqueLuxuryCitiesPlaced)
 	{
+		// NQMP GJS - Spice Islanders changed it so this ability will NEVER trigger in the capital, even if it's not requiring a new area BEGIN
+		if (m_pPlayer->GetNumCitiesFounded() == 0)
+		{
+			return false;
+		}
+		// NQMP GJS - Spice Islanders changed it so this ability will NEVER trigger in the capital, even if it's not requiring a new area END
+
 		int iArea = pArea->GetID();
 
 		// If we have to be in a new area, check to see if this area is okay
 		if (m_bUniqueLuxuryRequiresNewArea)
 		{
+			/* NQMP GJS - Spice Islanders changed it so this ability will NEVER trigger in the capital, even if it's not requiring a new area
 			// Can't be the capital itself
 			if (m_pPlayer->GetNumCitiesFounded() == 0)
 			{
 				return false;
 			}
+			*/
 
 			CvPlot *pOriginalCapitalPlot = GC.getMap().plot(m_pPlayer->GetOriginalCapitalX(), m_pPlayer->GetOriginalCapitalY());
 			if (pOriginalCapitalPlot)
@@ -2121,16 +2155,32 @@ void CvPlayerTraits::AddUniqueLuxuries(CvCity *pCity)
 	// Still have more of these cities to award?
 	if (m_iUniqueLuxuryCities > m_iUniqueLuxuryCitiesPlaced)
 	{
+		// NQMP GJS - Spice Islanders changed it so this ability will NEVER trigger in the capital, even if it's not requiring a new area BEGIN
+		if (m_pPlayer->GetNumCitiesFounded() == 1)
+		{
+			return;
+		}
+		// NQMP GJS - Spice Islanders changed it so this ability will NEVER trigger in the capital, even if it's not requiring a new area END
+
+		// NQMP GJS - Spice Islanders must be coastal BEGIN
+		if (!pCity->isCoastal())
+		{
+			return;
+		}
+		// NQMP GJS - Spice Islanders must be coastal END
+
 		int iArea = pCity->getArea();
 
 		// If we have to be in a new area, check to see if this area is okay
 		if (m_bUniqueLuxuryRequiresNewArea)
 		{
+			/* NQMP GJS - Spice Islanders changed it so this ability will NEVER trigger in the capital, even if it's not requiring a new area
 			// Can't be the capital itself of the area where the capital was founded
 			if (m_pPlayer->GetNumCitiesFounded() == 1)
 			{
 				return;
 			}
+			*/
 
 			CvPlot *pOriginalCapitalPlot = GC.getMap().plot(m_pPlayer->GetOriginalCapitalX(), m_pPlayer->GetOriginalCapitalY());
 			if (pOriginalCapitalPlot)
@@ -2753,6 +2803,8 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 
 	kStream >> m_iLuxuryHappinessRetention;
 
+	kStream >> m_iExtraHappinessPerLuxury; // NQMP GJS - New Netherlands UA
+
 	kStream >> m_iExtraSpies;
 
 	kStream >> m_iHappinessPerReligion; // NQMP GJS - New Ottoman UA
@@ -2947,6 +2999,9 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 	ArrayWrapper<int> kYieldChangeResourcesWrapper(NUM_YIELD_TYPES, m_iYieldChangeStrategicResources);
 	kStream >> kYieldChangeResourcesWrapper;
 
+	ArrayWrapper<int> kYieldChangeLuxuryResourcesWrapper(NUM_YIELD_TYPES, m_iYieldChangeLuxuryResources); // NQMP GJS - New Netherlands UA
+	kStream >> kYieldChangeLuxuryResourcesWrapper; // NQMP GJS - New Netherlands UA
+
 	ArrayWrapper<int> kYieldRateModifierWrapper(NUM_YIELD_TYPES, m_iYieldRateModifier);
 	kStream >> kYieldRateModifierWrapper;
 
@@ -3100,6 +3155,7 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << m_iRazeSpeedModifier;
 	kStream << m_iDOFGreatPersonModifier;
 	kStream << m_iLuxuryHappinessRetention;
+	kStream << m_iExtraHappinessPerLuxury; // NQMP GJS - New Netherlands UA
 	kStream << m_iExtraSpies;
 	kStream << m_iHappinessPerReligion; // NQMP GJS - New Ottoman UA
 	kStream << m_iUnresearchedTechBonusFromKills;
@@ -3165,6 +3221,7 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << ArrayWrapper<int>(NUM_YIELD_TYPES, m_iExtraYieldThreshold);
 	kStream << ArrayWrapper<int>(NUM_YIELD_TYPES, m_iFreeCityYield);
 	kStream << ArrayWrapper<int>(NUM_YIELD_TYPES, m_iYieldChangeStrategicResources);
+	kStream << ArrayWrapper<int>(NUM_YIELD_TYPES, m_iYieldChangeLuxuryResources); // NQMP GJS - New Netherlands UA
 	kStream << ArrayWrapper<int>(NUM_YIELD_TYPES, m_iYieldRateModifier);
 	kStream << ArrayWrapper<int>(NUM_YIELD_TYPES, m_iYieldChangeNaturalWonder);
 	kStream << ArrayWrapper<int>(NUM_YIELD_TYPES, m_iYieldChangePerTradePartner);

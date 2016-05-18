@@ -72,6 +72,7 @@ CvPromotionEntry::CvPromotionEntry():
 	m_bGreatAdmiral(false),
 	m_iGreatGeneralModifier(0),
 	m_bGreatGeneralReceivesMovement(false),
+	m_bEmbarkedUnitReceivesMovement(false), // NQMP GJS - Danish Longship
 	m_iGreatGeneralCombatModifier(0),
 	m_iFriendlyLandsModifier(0),
 	m_iFriendlyLandsAttackModifier(0),
@@ -281,6 +282,7 @@ bool CvPromotionEntry::CacheResults(Database::Results& kResults, CvDatabaseUtili
 	m_bGreatAdmiral = kResults.GetBool("GreatAdmiral");
 	m_iGreatGeneralModifier = kResults.GetInt("GreatGeneralModifier");
 	m_bGreatGeneralReceivesMovement = kResults.GetBool("GreatGeneralReceivesMovement");
+	m_bEmbarkedUnitReceivesMovement = kResults.GetBool("EmbarkedUnitReceivesMovement"); // NQMP GJS - Danish Longship
 	m_iGreatGeneralCombatModifier = kResults.GetInt("GreatGeneralCombatModifier");
 	m_iFriendlyLandsModifier = kResults.GetInt("FriendlyLandsModifier");
 	m_iFriendlyLandsAttackModifier = kResults.GetInt("FriendlyLandsAttackModifier");
@@ -1007,6 +1009,14 @@ bool CvPromotionEntry::IsGreatGeneralReceivesMovement() const
 {
 	return m_bGreatGeneralReceivesMovement;
 }
+
+// NQMP GJS - Danish Longship BEGIN
+/// Accessor: Does this Promotion make a Great General move at this unit's rate?
+bool CvPromotionEntry::IsEmbarkedUnitReceivesMovement() const
+{
+	return m_bEmbarkedUnitReceivesMovement;
+}
+// NQMP GJS - Danish Longship END
 
 /// Accessor: Combat bonus when stacked with Great General
 int CvPromotionEntry::GetGreatGeneralCombatModifier() const

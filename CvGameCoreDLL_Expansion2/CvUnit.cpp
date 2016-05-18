@@ -893,6 +893,7 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_iGreatAdmiralCount = 0;
 	m_iGreatGeneralModifier = 0;
 	m_iGreatGeneralReceivesMovementCount = 0;
+	m_iEmbarkedUnitReceivesMovementCount = 0; // NQMP GJS - Danish Longship
 	m_iGreatGeneralCombatModifier = 0;
 	m_iIgnoreGreatGeneralBenefit = 0;
 	m_iIgnoreZOC = 0;
@@ -10321,6 +10322,12 @@ int CvUnit::maxMoves() const
 	{
 		return GetGreatGeneralStackMovement();
 	}
+	// NQMP GJS - Danish Longship BEGIN
+	else if (isEmbarked())
+	{
+		return GetEmbarkedUnitStackMovement();
+	}
+	// NQMP GJS - Danish Longship END
 	else
 	{
 		return (baseMoves() * GC.getMOVE_DENOMINATOR());	// WARNING: Uses the current embark state of the unit!
@@ -16566,6 +16573,49 @@ int CvUnit::GetGreatGeneralStackMovement() const
 	return iRtnValue;
 }
 
+// NQMP GJS - Danish Longship BEGIN
+//	--------------------------------------------------------------------------------
+int CvUnit::GetEmbarkedUnitStackMovement() const
+{
+	int iRtnValue = baseMoves() * GC.getMOVE_DENOMINATOR();
+
+	CvPlot* pLoopPlot = plot();
+	IDInfo* pUnitNode;
+	CvUnit* pLoopUnit;
+
+	if(pLoopPlot != NULL)
+	{
+		// If there are Units here, loop through them
+		if(pLoopPlot->getNumUnits() > 0)
+		{
+			pUnitNode = pLoopPlot->headUnitNode();
+
+			while(pUnitNode != NULL)
+			{
+				pLoopUnit = ::getUnit(*pUnitNode);
+				pUnitNode = pLoopPlot->nextUnitNode(pUnitNode);
+
+				if(pLoopUnit)
+				{
+					// Give movement to embarked unit?
+					if(pLoopUnit->IsEmbarkedUnitReceivesMovement())
+					{
+						// Same domain
+						//if(pLoopUnit->getDomainType() == getDomainType()) // not sure if I need this so commented out for now
+						//{
+							iRtnValue = pLoopUnit->maxMoves();
+							break;
+						//}
+					}
+				}
+			}
+		}
+	}
+
+	return iRtnValue;
+}
+// NQMP GJS - Danish Longship END
+
 //	--------------------------------------------------------------------------------
 int CvUnit::GetReverseGreatGeneralModifier()const
 {
@@ -16762,6 +16812,20 @@ void CvUnit::ChangeGreatGeneralReceivesMovementCount(int iChange)
 {
 	m_iGreatGeneralReceivesMovementCount += iChange;
 }
+
+// NQMP GJS - Danish Longship BEGIN
+//	--------------------------------------------------------------------------------
+bool CvUnit::IsEmbarkedUnitReceivesMovement() const
+{
+	return m_iEmbarkedUnitReceivesMovementCount > 0;
+}
+
+//	--------------------------------------------------------------------------------
+void CvUnit::ChangeEmbarkedUnitReceivesMovementCount(int iChange)
+{
+	m_iEmbarkedUnitReceivesMovementCount += iChange;
+}
+// NQMP GJS - Danish Longship END
 
 //	--------------------------------------------------------------------------------
 int CvUnit::GetGreatGeneralCombatModifier() const
@@ -18468,6 +18532,7 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 		ChangeGreatAdmiralCount(thisPromotion.IsGreatAdmiral() ? iChange: 0);
 		changeGreatGeneralModifier(thisPromotion.GetGreatGeneralModifier() * iChange);
 		ChangeGreatGeneralReceivesMovementCount(thisPromotion.IsGreatGeneralReceivesMovement() ? iChange: 0);
+		ChangeEmbarkedUnitReceivesMovementCount(thisPromotion.IsEmbarkedUnitReceivesMovement() ? iChange: 0); // NQMP GJS - Danish Longship
 		ChangeGreatGeneralCombatModifier(thisPromotion.GetGreatGeneralCombatModifier() * iChange);
 
 		ChangeIgnoreGreatGeneralBenefitCount(thisPromotion.IsIgnoreGreatGeneralBenefit() ? iChange: 0);
@@ -18811,6 +18876,7 @@ void CvUnit::read(FDataStream& kStream)
 	}
 
 	kStream >> m_iGreatGeneralReceivesMovementCount;
+	kStream >> m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Lonship
 	kStream >> m_iGreatGeneralCombatModifier;
 	kStream >> m_iIgnoreGreatGeneralBenefit;
 
@@ -18964,6 +19030,7 @@ void CvUnit::write(FDataStream& kStream) const
 	kStream << m_iGoldenAgeValueFromKills;
 
 	kStream << m_iGreatGeneralReceivesMovementCount;
+	kStream << m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Longship
 	kStream << m_iGreatGeneralCombatModifier;
 	kStream << m_iIgnoreGreatGeneralBenefit;
 	kStream << m_iIgnoreZOC;

@@ -1120,7 +1120,8 @@ int CvSiteEvaluatorForSettler::PlotFoundValue(CvPlot* pPlot, CvPlayer* pPlayer, 
 		// if the civ gets a benefit from settling on a new continent (ie: Indonesia)
 		// double the fertility of that plot
 		int iLuxuryModifier = 0;
-		if (pPlayer->GetPlayerTraits()->WillGetUniqueLuxury(pArea))
+		//if (pPlayer->GetPlayerTraits()->WillGetUniqueLuxury(pArea))
+		if (pPlayer->GetPlayerTraits()->WillGetUniqueLuxury(pArea) && bIsCoastal) // NQMP GJS - Spice Islanders requires coast
 		{
 			iLuxuryModifier = CvCitySiteEvaluator::PlotFoundValue(pPlot, pPlayer, eYield) * 2;
 			return iLuxuryModifier;

@@ -1503,7 +1503,9 @@ int CvPolicyEntry::GetBarbarianCombatBonus() const
 /// Can we now see when and where Barb Camps appear?
 bool CvPolicyEntry::IsAlwaysSeeBarbCamps() const
 {
-	return m_bAlwaysSeeBarbCamps;
+	// NQMP GJS - all players always see barb camps from beginning of game now, do not need to open Honor
+	//return m_bAlwaysSeeBarbCamps;
+	return true;
 }
 
 /// Reveal all Minor Civ capital locations
