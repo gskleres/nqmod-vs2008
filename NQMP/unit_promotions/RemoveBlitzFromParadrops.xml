@@ -2,6 +2,8 @@
 <!-- Created by ModBuddy on 4/8/2015 2:55:29 PM -->
 <GameData>
 	
+	<!-- WARNING: This file needs to come before most of the other civ/unit/promotion changes since it adds a new class of units. -->
+	
 	<!-- Create new unit type -->
 	<UnitCombatInfos>
 		<Row>

@@ -6,25 +6,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians, and notifications will be provided when new Barbarian Encampments spawn in revealed territory. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals have +2 [ICON_MOVES] Movement and can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians, and notifications will be provided when new Barbarian Encampments spawn in revealed territory. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals have +2 [ICON_MOVES] Movement and can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians, and notifications will be provided when new Barbarian Encampments spawn in revealed territory. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals have +2 [ICON_MOVES] Movement and can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians, and notifications will be provided when new Barbarian Encampments spawn in revealed territory. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals have +2 [ICON_MOVES] Movement and can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
 		</Row>
 	</Language_RU_RU>
 	
@@ -113,7 +113,7 @@
 			<Count>1</Count>
 		</Row>
 	</Policy_FreeUnitClasses>
-	<UnitPromotions>
+	<!--UnitPromotions>
 		<Row>
 			<Type>PROMOTION_QUICK_GENERAL</Type>
 			<Description>TXT_KEY_PROMOTION_QUICK_GENERAL</Description>
@@ -174,6 +174,6 @@
 		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+2 [ICON_MOVES] Movement.</Text>
 		</Row>
-	</Language_RU_RU>
+	</Language_RU_RU>-->
 
 </GameData>

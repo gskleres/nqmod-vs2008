@@ -15,6 +15,13 @@
 			<Where BuildingType="BUILDING_OBSERVATORY" YieldType="YIELD_SCIENCE" />
 		</Update>
 	</Building_YieldModifiers>
+	<Building_YieldChanges>
+		<Row>
+			<BuildingType>BUILDING_OBSERVATORY</BuildingType>
+			<YieldType>YIELD_SCIENCE</YieldType>
+			<Yield>5</Yield>
+		</Row>
+	</Building_YieldChanges>
 	<Building_TerrainYieldChanges>
 		<Row>
 			<BuildingType>BUILDING_OBSERVATORY</BuildingType>

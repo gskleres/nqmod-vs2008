@@ -4,7 +4,7 @@
 
 	<Policies>
 		<Update>
-			<Set LessHappyTourismModifier="0" NumCitiesPolicyCostDiscount="-50" NumCitiesResearchCostDiscount="-50" />
+			<Set LessHappyTourismModifier="0" NumCitiesResearchCostDiscount="-50" />
 			<Where Type="POLICY_DICTATORSHIP_PROLETARIAT" />
 		</Update>
 	</Policies>
@@ -15,7 +15,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Increased [ICON_RESEARCH] Science and [ICON_CULTURE] Culture costs for number of cities reduced by half.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Increased [ICON_RESEARCH] Science costs for number of cities reduced by half.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT">
@@ -29,7 +29,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Increased [ICON_RESEARCH] Science and [ICON_CULTURE] Culture costs for number of cities reduced by half.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Increased [ICON_RESEARCH] Science costs for number of cities reduced by half.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT">
@@ -43,7 +43,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Increased [ICON_RESEARCH] Science and [ICON_CULTURE] Culture costs for number of cities reduced by half.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Increased [ICON_RESEARCH] Science costs for number of cities reduced by half.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT">
@@ -57,7 +57,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Increased [ICON_RESEARCH] Science and [ICON_CULTURE] Culture costs for number of cities reduced by half.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Increased [ICON_RESEARCH] Science costs for number of cities reduced by half.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT">

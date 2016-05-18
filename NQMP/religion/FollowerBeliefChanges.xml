@@ -2,6 +2,14 @@
 <!-- Created by ModBuddy on 6/10/2015 6:13:01 AM -->
 <GameData>
 
+	<!-- Move Swords To Plowshares to Reformation belief -->
+	<Beliefs>
+		<Update>
+			<Set Follower="false" Reformation="true" />
+			<Where Type="BELIEF_SWORD_PLOWSHARES" />
+		</Update>
+	</Beliefs>
+
 	<!-- *** CHANGE EXISTING FOLLOWER BELIEFS *** -->
 	
 	<!-- Feed The World: Provides +2 Food from Temples (instead of +1). -->
@@ -103,37 +111,37 @@
 	</Buildings>
 	<Building_YieldChanges>
 		<Update>
-			<Set Yield="1" />
+			<Set Yield="2" />
 			<Where BuildingType="BUILDING_PAGODA" YieldType="YIELD_CULTURE" />
 		</Update>
 		<Row>
 			<BuildingType>BUILDING_PAGODA</BuildingType>
 			<YieldType>YIELD_FOOD</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 	</Building_YieldChanges>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BELIEF_PAGODAS" />
 		<Row Tag="TXT_KEY_BELIEF_PAGODAS">
-			<Text>Use [ICON_PEACE] Faith to purchase Pagodas (+2 [ICON_FOOD] Food, +2 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness)</Text>
+			<Text>Use [ICON_PEACE] Faith to purchase Pagodas (+1 [ICON_FOOD] Food, +2 [ICON_PEACE] Faith, +2 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness)</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BELIEF_PAGODAS" />
 		<Row Tag="TXT_KEY_BELIEF_PAGODAS">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Pagodas (+2 [ICON_FOOD] Food, +2 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness)</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Pagodas (+1 [ICON_FOOD] Food, +2 [ICON_PEACE] Faith, +2 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness)</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BELIEF_PAGODAS" />
 		<Row Tag="TXT_KEY_BELIEF_PAGODAS">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Pagodas (+2 [ICON_FOOD] Food, +2 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness)</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Pagodas (+1 [ICON_FOOD] Food, +2 [ICON_PEACE] Faith, +2 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness)</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BELIEF_PAGODAS" />
 		<Row Tag="TXT_KEY_BELIEF_PAGODAS">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Pagodas (+2 [ICON_FOOD] Food, +2 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness)</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Pagodas (+1 [ICON_FOOD] Food, +2 [ICON_PEACE] Faith, +2 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness)</Text>
 		</Row>
 	</Language_RU_RU>
 

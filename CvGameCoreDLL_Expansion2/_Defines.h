@@ -18,7 +18,6 @@
 #define M_GLDNRT	1.61803398874989484820
 #define fM_GLDNRT	1.618033989f		//!< (1 + sqrt(5))/2 (float), aka The Golden Ratio
 
-/* 
 // Technical Improvements
 /// New GUID for NQMod
 #define NQM_GUID
@@ -120,10 +119,8 @@
 #define AUI_UNIT_MOVEMENT_FIX_RADAR_ZOC
 /// Fixes the influence cost calculator function to only enable the reuse pathfinder flag when it wouldn't result in incorrect data
 #define AUI_MAP_FIX_CALCULATE_INFLUENCE_DISTANCE_REUSE_PATHFINDER
-*/
 /// Fixes Iroquois' UA so friendly forest tiles will now connect with road tiles!
 #define AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
-/*
 /// Fixes base heal mod from players not actually increasing base healing
 #define AUI_UNIT_FIX_BASE_HEAL_MOD
 /// If a plot's feature is ignored when calculating the yield of a tile, this also extends to any yield changes based on the working city
@@ -166,30 +163,24 @@
 #define AUI_CITY_FIX_PUPPET_WORKED_PLOT_OVERRIDE
 /// Units that are marked for death no longer generate a ZoC (from RushSecond)
 #define AUI_UNIT_MOVEMENT_FIX_DELAYED_DEATH_UNITS_GENERATE_ZOC
-*/
 /// Fixed the fact that some player-based modifiers to research costs are all only aesthetic, i.e. their only effect before would be to increase the number the UI displays for tech cost (they didn't actually modify tech cost)
 #define AUI_TECH_FIX_PLAYER_BASED_RESEARCH_COST_ONLY_AESTHETIC
-/*
 /// Fixed the bug where the production bonus from having a railroad connecting a city to the capital is not removed if the railroad connection is broken (credits to Wr4ith pointing this out after having researched the "weirdness" behind harbors, railroads, and the railroad bonus)
 #define AUI_CITY_FIX_UPDATE_RAILROAD_CONNECTION_ALLOW_REMOVAL
 /// Civilian units won't even start attempting to path to attack a tile. This should hopefully also fix the occasional problem of civilian units not wanting to move to a specific tile
 #define AUI_UNIT_MISSION_FIX_CONTINUE_MISSION_CIVILIANS_DONT_ATTEMPT_ATTACK
 
 // Turn timer stuff
-*/
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
 #define AUI_GAME_RELATIVE_TURN_TIMERS
-/*
 /// New option that pauses the game when an active player disconnects and the game is not sequential
 #define AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
 
-*/
 // Deliberate AI hindrances
 /// AI players will no longer spread their religion to other human players' cities
 #define NQM_AI_GIMP_NO_RELIGION_SPREAD
 /// AI players will no longer attempt to build any world wonders or world projects
 #define NQM_AI_GIMP_NO_WORLD_WONDERS
-/*
 
 // Observer mode fixes
 /// Observers will see all resources
@@ -493,7 +484,6 @@
 #define AUI_STARTPOSITIONER_COASTAL_CIV_WATER_BIAS
 /// When calculating the founding value of a tile, tailor the SiteEvaluation function to the current player instead of the first one
 #define AUI_STARTPOSITIONER_FLAVORED_STARTS
-*/
 
 // GlobalDefines (GD) wrappers
 // INT

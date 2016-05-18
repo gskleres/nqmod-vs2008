@@ -2,6 +2,12 @@
 <!-- Created by ModBuddy on 10/2/2015 4:30:51 AM -->
 <GameData>
 
+	<!-- Remove coastal bias. -->
+	<Civilization_Start_Along_Ocean>
+		<Delete CivilizationType="CIVILIZATION_OTTOMAN" />
+	</Civilization_Start_Along_Ocean>
+	
+	<!-- New UA Millets: +1 Happiness in each City for each World Religion with at least 1 follower. -->
 	<Traits>
 		<Update>
 			<Set NavalUnitMaintenanceModifier="0" HappinessPerReligion="1" />
