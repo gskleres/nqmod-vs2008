@@ -6,7 +6,7 @@
 	<Units>
 		<Update>
 			<Set Cost="30" />
-			<Where Type="UNIT_WORKBOAT" />
+			<Where Class="UNITCLASS_WORKBOAT" />
 		</Update>
 	</Units>
 	

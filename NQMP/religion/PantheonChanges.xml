@@ -74,35 +74,35 @@
 		</Row>
 	</Language_RU_RU>
 
-	<!-- Fertility Rites: +20% Growth (up from +10%) and now also provides +1 Happiness in cities with Population 10+ -->
+	<!-- Fertility Rites: Now also provides +1 Happiness in cities with Population 10+ -->
 	<Beliefs>
 		<Update>
-			<Set CityGrowthModifier="20" MinPopulation="10" HappinessPerCity="1" />
+			<Set MinPopulation="10" HappinessPerCity="1" />
 			<Where Type="BELIEF_FERTILITY_RITES" />
 		</Update>
 	</Beliefs>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BELIEF_FERTILITY_RITES" />
 		<Row Tag="TXT_KEY_BELIEF_FERTILITY_RITES">
-			<Text>20% faster [ICON_FOOD] Growth Rate (excess Food) in all cities and +1 [ICON_HAPPINESS_1] Happiness from cities with population of 10+</Text>
+			<Text>10% faster [ICON_FOOD] Growth Rate (excess Food) in all cities and +1 [ICON_HAPPINESS_1] Happiness from cities with population of 10+</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BELIEF_FERTILITY_RITES" />
 		<Row Tag="TXT_KEY_BELIEF_FERTILITY_RITES">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]20% faster [ICON_FOOD] Growth Rate (excess Food) in all cities and +1 [ICON_HAPPINESS_1] Happiness from cities with population of 10+</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]10% faster [ICON_FOOD] Growth Rate (excess Food) in all cities and +1 [ICON_HAPPINESS_1] Happiness from cities with population of 10+</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BELIEF_FERTILITY_RITES" />
 		<Row Tag="TXT_KEY_BELIEF_FERTILITY_RITES">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]20% faster [ICON_FOOD] Growth Rate (excess Food) in all cities and +1 [ICON_HAPPINESS_1] Happiness from cities with population of 10+</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]10% faster [ICON_FOOD] Growth Rate (excess Food) in all cities and +1 [ICON_HAPPINESS_1] Happiness from cities with population of 10+</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BELIEF_FERTILITY_RITES" />
 		<Row Tag="TXT_KEY_BELIEF_FERTILITY_RITES">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]20% faster [ICON_FOOD] Growth Rate (excess Food) in all cities and +1 [ICON_HAPPINESS_1] Happiness from cities with population of 10+</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]10% faster [ICON_FOOD] Growth Rate (excess Food) in all cities and +1 [ICON_HAPPINESS_1] Happiness from cities with population of 10+</Text>
 		</Row>
 	</Language_RU_RU>
 
@@ -524,11 +524,15 @@
 			<YieldType>YIELD_PRODUCTION</YieldType>
 			<Yield>1</Yield>
 		</Row>
+		<Update>
+			<Set Yield="1" />
+			<Where BeliefType="BELIEF_STONE_CIRCLES" YieldType="YIELD_FAITH" />
+		</Update>
 	</Belief_ImprovementYieldChanges>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BELIEF_STONE_CIRCLES" />
 		<Row Tag="TXT_KEY_BELIEF_STONE_CIRCLES">
-			<Text>+1 [ICON_PRODUCTION] Production and +2 [ICON_PEACE] Faith from Quarries</Text>
+			<Text>+1 [ICON_PRODUCTION] Production and +1 [ICON_PEACE] Faith from Quarries</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -785,7 +789,64 @@
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Nature's Blessing</Text>
 		</Row>
 	</Language_RU_RU>
-	
+
+
+	<!-- Ocean's Bounty: +1 Food and +1 Culture from Fishing Boats -->
+	<Beliefs>
+		<Row>
+			<Type>BELIEF_OCEANS_BOUNTY</Type>
+			<Description>TXT_KEY_BELIEF_OCEANS_BOUNTY</Description>
+			<ShortDescription>TXT_KEY_BELIEF_OCEANS_BOUNTY_SHORT</ShortDescription>
+			<Pantheon>true</Pantheon>
+		</Row>
+	</Beliefs>
+	<Belief_ImprovementYieldChanges>
+		<Row>
+			<BeliefType>BELIEF_OCEANS_BOUNTY</BeliefType>
+			<ImprovementType>IMPROVEMENT_FISHING_BOATS</ImprovementType>
+			<YieldType>YIELD_FOOD</YieldType>
+			<Yield>1</Yield>
+		</Row>
+		<Row>
+			<BeliefType>BELIEF_OCEANS_BOUNTY</BeliefType>
+			<ImprovementType>IMPROVEMENT_FISHING_BOATS</ImprovementType>
+			<YieldType>YIELD_CULTURE</YieldType>
+			<Yield>1</Yield>
+		</Row>
+	</Belief_ImprovementYieldChanges>
+	<Language_en_US>
+		<Row Tag="TXT_KEY_BELIEF_OCEANS_BOUNTY">
+			<Text>+1 [ICON_FOOD] Food and +1 [ICON_CULTURE] Culture from Fishing Boats</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_OCEANS_BOUNTY_SHORT">
+			<Text>Ocean's Bounty</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_BELIEF_OCEANS_BOUNTY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_CULTURE] Culture from Fishing Boats</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_OCEANS_BOUNTY_SHORT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Ocean's Bounty</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_BELIEF_OCEANS_BOUNTY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_CULTURE] Culture from Fishing Boats</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_OCEANS_BOUNTY_SHORT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Ocean's Bounty</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_BELIEF_OCEANS_BOUNTY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_FOOD] Food and +1 [ICON_CULTURE] Culture from Fishing Boats</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_OCEANS_BOUNTY_SHORT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Ocean's Bounty</Text>
+		</Row>
+	</Language_RU_RU>
+
 
 	<!-- Rite of Spring: +1 Culture from Deer and Sheep -->
 	<Beliefs>
