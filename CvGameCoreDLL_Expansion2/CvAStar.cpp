@@ -262,12 +262,12 @@ bool CvAStar::GeneratePath(int iXstart, int iYstart, int iXdest, int iYdest, int
 	if(!bReuse)
 	{
 		// XXX should we just be doing a memset here?
-//#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
-//		for (int iI = 0; iI < m_iColumns; iI++)
-//			for (int iJ = 0; iJ < m_iRows; iJ++)
-//				m_ppaaNodes[iI][iJ].clear();
-//		m_pClosed = NULL;
-//#else
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		for (int iI = 0; iI < m_iColumns; iI++)
+			for (int iJ = 0; iJ < m_iRows; iJ++)
+				m_ppaaNodes[iI][iJ].clear();
+		m_pClosed = NULL;
+#else
 #ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 		if(m_pOpen)
 #endif
@@ -278,14 +278,6 @@ bool CvAStar::GeneratePath(int iXstart, int iYstart, int iXdest, int iYdest, int
 				m_pOpen->clear();
 				m_pOpen = temp;
 			}
-#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
-			while (m_pOpenTail)
-			{
-				temp = m_pOpenTail->m_pPrev;
-				m_pOpenTail->clear();
-				m_pOpenTail = temp;
-			}
-#endif
 		}
 
 #ifndef AUI_ASTAR_MINOR_OPTIMIZATION
@@ -301,7 +293,7 @@ bool CvAStar::GeneratePath(int iXstart, int iYstart, int iXdest, int iYdest, int
 		}
 
 		PREFETCH_FASTAR_NODE(&(m_ppaaNodes[iXstart][iYstart]));
-//#endif
+#endif
 
 		m_pBest = NULL;
 		m_pStackHead = NULL;
