@@ -56,11 +56,7 @@ struct TradeConnection
 #define LIKELY_NUM_OF_PLAYERS 12
 #define PROJECTED_MAX_TRADE_CONNECTIONS (PROJECTED_MAX_TRADE_CONNECTIONS_PER_CIV * LIKELY_NUM_OF_PLAYERS)
 
-#ifdef AUI_TRADE_FIX_FSTATICVECTOR_CONTENTS_ARE_POD
-typedef FStaticVector<TradeConnection, PROJECTED_MAX_TRADE_CONNECTIONS, true, c_eCiv5GameplayDLL > TradeConnectionList;
-#else
 typedef FStaticVector<TradeConnection, PROJECTED_MAX_TRADE_CONNECTIONS, false, c_eCiv5GameplayDLL > TradeConnectionList;
-#endif
 
 class CvGameTrade
 {
@@ -215,11 +211,7 @@ struct TradeConnectionWasPlundered
 	int m_iTurnPlundered;
 };
 
-#ifdef AUI_TRADE_FIX_FSTATICVECTOR_CONTENTS_ARE_POD
-typedef FStaticVector<TradeConnectionWasPlundered, PROJECTED_MAX_TRADE_CONNECTIONS, true, c_eCiv5GameplayDLL > TradeConnectionWasPlunderedList;
-#else
 typedef FStaticVector<TradeConnectionWasPlundered, 10, false, c_eCiv5GameplayDLL > TradeConnectionWasPlunderedList;
-#endif
 
 class CvPlayerTrade
 {
