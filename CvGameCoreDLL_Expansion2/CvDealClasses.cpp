@@ -2085,6 +2085,9 @@ CvGameDeals::~CvGameDeals()
 	}
 
 	m_Deals.clear();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	Init(); //clears all the deal lists
+#endif
 }
 
 /// Initialize
