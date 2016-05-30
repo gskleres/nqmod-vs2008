@@ -2817,6 +2817,10 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 	// Be careful below here, pNewCity can be NULL.
 	CheckForMurder(eOldOwner);
 
+#ifdef AUI_CITY_FIX_PUPPET_WORKED_PLOT_OVERRIDE
+	GC.getMap().updateWorkingCity(pCityPlot, NUM_CITY_RINGS * 2);
+#endif
+
 	if(GC.getGame().getActiveTeam() == GET_PLAYER(eOldOwner).getTeam())
 	{
 		CvMap& theMap = GC.getMap();
