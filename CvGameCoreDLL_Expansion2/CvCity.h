@@ -1043,7 +1043,7 @@ protected:
 	int** m_ppaiFeatureYieldChange;
 	int** m_ppaiTerrainYieldChange;
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	int m_aCachedYieldT100ForThisTurn[NUM_YIELD_TYPES];
+	int* m_paCachedYieldT100ForThisTurn;
 #endif
 
 	CvCityBuildings* m_pCityBuildings;

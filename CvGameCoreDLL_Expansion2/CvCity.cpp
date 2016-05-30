@@ -670,6 +670,9 @@ void CvCity::uninit()
 		}
 	}
 	SAFE_DELETE_ARRAY(m_ppaiTerrainYieldChange);
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	SAFE_DELETE_ARRAY(m_paCachedYieldT100ForThisTurn);
+#endif
 
 	m_pCityBuildings->Uninit();
 	m_pCityStrategyAI->Uninit();
@@ -1056,6 +1059,10 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 				m_ppaiTerrainYieldChange[iI][iJ] = 0;
 			}
 		}
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		m_paCachedYieldT100ForThisTurn = FNEW(int[NUM_YIELD_TYPES], c_eCiv5GameplayDLL, 0);
+#endif
 	}
 
 	if(!bConstructorCall)
@@ -5578,7 +5585,11 @@ int CvCity::getProductionDifference(int /*iProductionNeeded*/, int /*iProduction
 int CvCity::getCurrentProductionDifference(bool bIgnoreFood, bool bOverflow) const
 {
 	VALIDATE_OBJECT
+#ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+	return getProductionDifference(getProductionNeeded(), getProductionTimes100(), getProductionModifier(), (!bIgnoreFood && isFoodProduction()), bOverflow);
+#else
 	return getProductionDifference(getProductionNeeded(), getProduction(), getProductionModifier(), (!bIgnoreFood && isFoodProduction()), bOverflow);
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -5586,7 +5597,11 @@ int CvCity::getCurrentProductionDifference(bool bIgnoreFood, bool bOverflow) con
 int CvCity::getRawProductionDifference(bool bIgnoreFood, bool bOverflow) const
 {
 	VALIDATE_OBJECT
+#ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+	return getProductionDifference(getProductionNeeded(), getProductionTimes100(), getGeneralProductionModifiers(), (!bIgnoreFood && isFoodProduction()), bOverflow);
+#else
 	return getProductionDifference(getProductionNeeded(), getProduction(), getGeneralProductionModifiers(), (!bIgnoreFood && isFoodProduction()), bOverflow);
+#endif
 }
 
 
@@ -9732,12 +9747,12 @@ void CvCity::SetPlayersReligion(PlayerTypes eNewValue)
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 int CvCity::getCachedYieldT100ForThisTurn(YieldTypes eIndex) const
 {
-	return m_aCachedYieldT100ForThisTurn[eIndex];
+	return m_paCachedYieldT100ForThisTurn[eIndex];
 }
 
 void CvCity::setCachedYieldT100ForThisTurn(YieldTypes eIndex, int iAmount)
 {
-	m_aCachedYieldT100ForThisTurn[eIndex] = iAmount;
+	m_paCachedYieldT100ForThisTurn[eIndex] = iAmount;
 }
 #endif
 

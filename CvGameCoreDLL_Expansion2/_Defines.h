@@ -27,6 +27,8 @@
 #define NQM_CACHE_DOUBLE
 /// Enables const for functions, variables, and parameters that both allow it and are intended to be const
 #define AUI_CONSTIFY
+/// Replaces instances of vector loops using indeces with ones that use iterators
+#define AUI_ITERATORIZE
 /// Removes unused functions that simply increase file size of the DLL without providing any benefit
 #define NQM_PRUNING
 /// Fixes some sources for level 4 warnings
@@ -81,7 +83,9 @@
 #define AUI_RANDOM_FIX_CONSTANTS_SET_TO_MODULUS_2_POW_32
 /// Fixes a possible crash when exiting the game caused by heap corruption when deallocating CvGameLeagues due to misuse of an FStaticVector
 #define AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
-/// (Causes crash!) Fixes the fact that a bunch of FStaticVectors that contain objects with trivial constructors (i.e. they are "Plain Old Data" = POD) are treated as if they aren't POD vectors (improves stability and performance)
+/// Fixes a possible crash when exiting the game caused by too few items in a FStaticVector
+#define AUI_TRADE_FIX_POSSIBLE_DEALLOCATION_CRASH
+/// Fixes the fact that an FStaticVector type containing objects with trivial constructors (i.e. they are "Plain Old Data" = POD) is treated as the vector type wouldn't be POD (improves stability and performance)
 #define AUI_TRADE_FIX_FSTATICVECTOR_CONTENTS_ARE_POD
 /// Eliminates an unneccessary loop and a few more steps from the function that stores a trade route's path into the trade route's data
 #define AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
@@ -169,6 +173,8 @@
 #define AUI_CITY_FIX_UPDATE_RAILROAD_CONNECTION_ALLOW_REMOVAL
 /// Civilian units won't even start attempting to path to attack a tile. This should hopefully also fix the occasional problem of civilian units not wanting to move to a specific tile
 #define AUI_UNIT_MISSION_FIX_CONTINUE_MISSION_CIVILIANS_DONT_ATTEMPT_ATTACK
+/// Players are allowed to research if they own a city, they no longer need to found one before researching is unlocked (helps with Germany challenge on maps with CS's)
+#define AUI_PLAYERTECH_FIX_CAN_RESEARCH_WITH_NO_FOUNDED_CITY
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
@@ -336,8 +342,10 @@
 #define AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
 /// Games where happiness is disabled no longer cause the citizen manager to always ignore the avoid growth checkbox
 #define AUI_CITIZENS_FIX_AVOID_GROWTH_FLAG_NOT_IGNORED_IF_NO_HAPPINESS
+#ifndef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS // The define below is only useful if growth modifiers aren't considered
 /// The citizen manager only forces avoid growth from low happiness when growing in the city would lower the player's happiness. Also, avoid growth is enabled for cities that would grow next turn to make the empire unhappy.
 #define AUI_CITIZENS_FIX_FORCED_AVOID_GROWTH_ONLY_WHEN_GROWING_LOWERS_HAPPINESS
+#endif
 /// When comparing whether a specialist is better than an unemployed citizen, regular value evaluation is used
 #define AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
 /// The value of food is now properly increased if the city is on food focus with the avoid growth flag set

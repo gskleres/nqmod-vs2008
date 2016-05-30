@@ -3487,6 +3487,28 @@ void CvTacticalAI::PlotExploitFlanksMoves()
 	m_TempTargets.clear();
 
 	// Loop through unit targets finding attack for this turn
+#ifdef AUI_ITERATORIZE
+	for (TacticalList::iterator it = m_ZoneTargets.begin(); it != m_ZoneTargets.end(); ++it)
+	{
+		if (it->GetTargetType() == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT ||
+			it->GetTargetType() == AI_TACTICAL_TARGET_MEDIUM_PRIORITY_UNIT ||
+			it->GetTargetType() == AI_TACTICAL_TARGET_LOW_PRIORITY_UNIT)
+		{
+			m_pMap->ClearDynamicFlags();
+			pTarget = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
+			m_pMap->SetTargetFlankBonusCells(pTarget);
+
+			bAttackMade = ExecuteFlankAttack(*it);
+			if (bAttackMade)
+			{
+				bAttackUnderway = true;
+			}
+
+			// No attack, see if we can set one up on this target later
+			else
+			{
+				m_TempTargets.push_back(*it);
+#else
 	for(unsigned int iI = 0; iI < m_ZoneTargets.size(); iI++)
 	{
 		if(m_ZoneTargets[iI].GetTargetType() == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT ||
@@ -3507,6 +3529,7 @@ void CvTacticalAI::PlotExploitFlanksMoves()
 			else
 			{
 				m_TempTargets.push_back(m_ZoneTargets[iI]);
+#endif
 			}
 		}
 	}
@@ -4945,11 +4968,19 @@ void CvTacticalAI::ExecuteGatherMoves(CvArmyAI* pArmy)
 
 	int iUnitsToPlace = iUnits;
 
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_TempTargets.begin(); it != m_TempTargets.end() && !bDone; ++it)
+	{
+		eTargetType = it->GetTargetType();
+
+		pLoopPlot = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
+#else
 	for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 	{
 		eTargetType = m_TempTargets[iI].GetTargetType();
 
 		pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 		
 		// Don't use if there's already a unit not in the army here
 		UnitHandle pUnitAlreadyThere = pLoopPlot->getBestDefender(NO_PLAYER);
@@ -4957,6 +4988,15 @@ void CvTacticalAI::ExecuteGatherMoves(CvArmyAI* pArmy)
 		{
 			if(FindClosestOperationUnit(pLoopPlot, true /*bSafeForRanged*/, false /*bMustBeRangedUnit*/))
 			{
+#ifdef AUI_ITERATORIZE
+				for (std::vector<CvTacticalUnit>::const_iterator it2 = m_CurrentMoveUnits.begin(); it2 != m_CurrentMoveUnits.end(); ++it2)
+				{
+					CvBlockingUnit block;
+					block.SetUnitID(it2->GetID());
+					block.SetPlot(pLoopPlot);
+					block.SetNumChoices((int)m_CurrentMoveUnits.size());
+					block.SetDistanceToTarget(it2->GetMovesToTarget());
+#else
 				for(unsigned int jJ = 0; jJ < m_CurrentMoveUnits.size(); jJ++)
 				{
 					CvBlockingUnit block;
@@ -4964,6 +5004,7 @@ void CvTacticalAI::ExecuteGatherMoves(CvArmyAI* pArmy)
 					block.SetPlot(pLoopPlot);
 					block.SetNumChoices((int)m_CurrentMoveUnits.size());
 					block.SetDistanceToTarget(m_CurrentMoveUnits[jJ].GetMovesToTarget());
+#endif
 					m_PotentialBlocks.push_back(block);
 				}
 				iUnitsToPlace--;
@@ -5047,18 +5088,30 @@ void CvTacticalAI::ExecuteFormationMoves(CvArmyAI* pArmy, CvPlot *pClosestCurren
 		// First loop for melee units who should be out front
 		int iMeleeUnitsToPlace = iMeleeUnits;
 		bool bDone = false;
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_TempTargets.begin(); it != m_TempTargets.end() && !bDone; ++it)
+		{
+			eTargetType = it->GetTargetType();
+
+			pLoopPlot = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
+#else
 		for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 		{
 			eTargetType = m_TempTargets[iI].GetTargetType();
 
 			pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 
 			// Don't use if there's already someone here
 			if (!pLoopPlot->getBestDefender(NO_PLAYER))
 			{
 				if(FindClosestOperationUnit(pLoopPlot, false /*bSafeForRanged*/, false /*bMustBeRangedUnit*/))
 				{
+#ifdef AUI_ITERATORIZE
+					UnitHandle pInnerUnit = m_pPlayer->getUnit(m_CurrentMoveUnits.begin()->GetID());
+#else
 					UnitHandle pInnerUnit = m_pPlayer->getUnit(m_CurrentMoveUnits[0].GetID());
+#endif
 					bool bMoveWasSafe;
 					MoveToUsingSafeEmbark(pInnerUnit, pLoopPlot, bMoveWasSafe);
 					pInnerUnit->finishMoves();
@@ -5091,11 +5144,19 @@ void CvTacticalAI::ExecuteFormationMoves(CvArmyAI* pArmy, CvPlot *pClosestCurren
 		// Second loop for ranged units
 		int iRangedUnitsToPlace = iRangedUnits;
 		bDone = false;
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_TempTargets.begin(); it != m_TempTargets.end() && !bDone; ++it)
+		{
+			eTargetType = it->GetTargetType();
+
+			pLoopPlot = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
+#else
 		for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 		{
 			eTargetType = m_TempTargets[iI].GetTargetType();
 
 			pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 			if (eTargetType == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
 			{
 				// Don't use if there's already someone here
@@ -5103,7 +5164,11 @@ void CvTacticalAI::ExecuteFormationMoves(CvArmyAI* pArmy, CvPlot *pClosestCurren
 				{
 					if(FindClosestOperationUnit(pLoopPlot, true /*bSafeForRanged*/, true /*bMustBeRangedUnit*/))
 					{
+#ifdef AUI_ITERATORIZE
+						UnitHandle pInnerUnit = m_pPlayer->getUnit(m_CurrentMoveUnits.begin()->GetID());
+#else
 						UnitHandle pInnerUnit = m_pPlayer->getUnit(m_CurrentMoveUnits[0].GetID());
+#endif
 						bool bMoveWasSafe;
 						MoveToUsingSafeEmbark(pInnerUnit, pLoopPlot, bMoveWasSafe);
 						pInnerUnit->finishMoves();
@@ -5124,18 +5189,30 @@ void CvTacticalAI::ExecuteFormationMoves(CvArmyAI* pArmy, CvPlot *pClosestCurren
 		}
 
 		// Third loop for ranged units we couldn't put in an ideal spot
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_TempTargets.begin(); it != m_TempTargets.end() && !bDone; ++it)
+		{
+			eTargetType = it->GetTargetType();
+
+			pLoopPlot = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
+#else
 		for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 		{
 			eTargetType = m_TempTargets[iI].GetTargetType();
 
 			pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 
 			// Don't use if there's already someone here
 			if (!pLoopPlot->getBestDefender(NO_PLAYER))
 			{
 				if(FindClosestOperationUnit(pLoopPlot, true /*bSafeForRanged*/, true /*bMustBeRangedUnit*/))
 				{
+#ifdef AUI_ITERATORIZE
+					UnitHandle pInnerUnit = m_pPlayer->getUnit(m_CurrentMoveUnits.begin()->GetID());
+#else
 					UnitHandle pInnerUnit = m_pPlayer->getUnit(m_CurrentMoveUnits[0].GetID());
+#endif
 					bool bMoveWasSafe;
 					MoveToUsingSafeEmbark(pInnerUnit, pLoopPlot, bMoveWasSafe);
 					pInnerUnit->finishMoves();
@@ -5519,11 +5596,26 @@ void CvTacticalAI::ExecuteNavalFormationMoves(CvArmyAI* pArmy, CvPlot* pTurnTarg
 		bool bDone = false;
 		int iMostUnitsToPlace = iMostUnits;
 
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_TempTargets.begin(); it != m_TempTargets.end() && !bDone; ++it)
+		{
+			pLoopPlot = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
+#else
 		for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 		{
 			pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 			if(FindClosestNavalOperationUnit(pLoopPlot, bMoreEscorted))
 			{
+#ifdef AUI_ITERATORIZE
+				for (std::vector<CvTacticalUnit>::const_iterator it2 = m_CurrentMoveUnits.begin(); it2 != m_CurrentMoveUnits.end(); ++it2)
+				{
+					CvBlockingUnit block;
+					block.SetUnitID(it2->GetID());
+					block.SetPlot(pLoopPlot);
+					block.SetNumChoices((int)m_CurrentMoveUnits.size());
+					block.SetDistanceToTarget(it2->GetMovesToTarget());
+#else
 				for(unsigned int jJ = 0; jJ < m_CurrentMoveUnits.size(); jJ++)
 				{
 					CvBlockingUnit block;
@@ -5531,6 +5623,7 @@ void CvTacticalAI::ExecuteNavalFormationMoves(CvArmyAI* pArmy, CvPlot* pTurnTarg
 					block.SetPlot(pLoopPlot);
 					block.SetNumChoices((int)m_CurrentMoveUnits.size());
 					block.SetDistanceToTarget(m_CurrentMoveUnits[jJ].GetMovesToTarget());
+#endif
 					m_PotentialBlocks.push_back(block);
 				}
 				iMostUnitsToPlace--;
@@ -5562,10 +5655,17 @@ void CvTacticalAI::ExecuteNavalFormationMoves(CvArmyAI* pArmy, CvPlot* pTurnTarg
 			m_TempTargets.clear();
 			CvTacticalTarget temp;
 
+#ifdef AUI_ITERATORIZE
+			for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+			{
+				temp.SetTargetX(it->GetPlot()->getX());
+				temp.SetTargetY(it->GetPlot()->getY());
+#else
 			for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 			{
 				temp.SetTargetX(m_ChosenBlocks[iI].GetPlot()->getX());
 				temp.SetTargetY(m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 				m_TempTargets.push_back(temp);
 			}
 
@@ -5573,11 +5673,26 @@ void CvTacticalAI::ExecuteNavalFormationMoves(CvArmyAI* pArmy, CvPlot* pTurnTarg
 			bDone = false;
 			int iLeastUnitsToPlace = iLeastUnits;
 
+#ifdef AUI_ITERATORIZE
+			for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_TempTargets.begin(); it != m_TempTargets.end() && !bDone; ++it)
+			{
+				pLoopPlot = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
+#else
 			for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 			{
 				pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 				if(FindClosestNavalOperationUnit(pLoopPlot, !bMoreEscorted))
 				{
+#ifdef AUI_ITERATORIZE
+					for (std::vector<CvTacticalUnit>::const_iterator it2 = m_CurrentMoveUnits.begin(); it2 != m_CurrentMoveUnits.end(); ++it2)
+					{
+						CvBlockingUnit block;
+						block.SetUnitID(it2->GetID());
+						block.SetPlot(pLoopPlot);
+						block.SetNumChoices((int)m_CurrentMoveUnits.size());
+						block.SetDistanceToTarget(it2->GetMovesToTarget());
+#else
 					for(unsigned int jJ = 0; jJ < m_CurrentMoveUnits.size(); jJ++)
 					{
 						CvBlockingUnit block;
@@ -5585,6 +5700,7 @@ void CvTacticalAI::ExecuteNavalFormationMoves(CvArmyAI* pArmy, CvPlot* pTurnTarg
 						block.SetPlot(pLoopPlot);
 						block.SetNumChoices((int)m_CurrentMoveUnits.size());
 						block.SetDistanceToTarget(m_CurrentMoveUnits[jJ].GetMovesToTarget());
+#endif
 						m_PotentialBlocks.push_back(block);
 					}
 					iLeastUnitsToPlace--;
@@ -7639,31 +7755,56 @@ bool CvTacticalAI::ExecuteOneProtectedBombard(CvTacticalTarget& kTarget)
 	std::stable_sort(m_TempTargets.begin(), m_TempTargets.end());
 
 	// Have to rebuild blocking position info for this specific spot
+#ifdef AUI_ITERATORIZE
+	pAttackPlot = GC.getMap().plot(m_TempTargets.begin()->GetTargetX(), m_TempTargets.begin()->GetTargetY());
+#else
 	pAttackPlot = GC.getMap().plot(m_TempTargets[0].GetTargetX(), m_TempTargets[0].GetTargetY());
+#endif
 	int iPlotDistance = plotDistance(pAttackPlot->getX(), pAttackPlot->getY(), kTarget.GetTargetX(), kTarget.GetTargetY());
 	bool bHaveLOS = pAttackPlot->canSeePlot(pTargetPlot, m_pPlayer->getTeam(), iRange, NO_DIRECTION);
 	if(FindClosestUnit(pAttackPlot, 0, false/*bMustHaveHalfHP*/, true /*bMustBeRangedUnit*/, iPlotDistance, !bHaveLOS, false/*bMustBeMeleeUnit*/,  false/*bIgnoreUnits*/, pTargetPlot) ||
 	        FindClosestUnit(pAttackPlot, 1, false/*bMustHaveHalfHP*/, true /*bMustBeRangedUnit*/, iPlotDistance, !bHaveLOS, false/*bMustBeMeleeUnit*/,  false/*bIgnoreUnits*/, pTargetPlot))
 	{
+#ifdef AUI_ITERATORIZE
+		int iAttackingUnitID = m_CurrentMoveUnits.begin()->GetID();
+#else
 		int iAttackingUnitID = m_CurrentMoveUnits[0].GetID();
+#endif
 		if(pAttackPlot && CanCoverFromEnemy(pAttackPlot, iNumUnitsRequiredToCover, iAttackingUnitID))
 		{
 			// Make each blocking move
+#ifdef AUI_ITERATORIZE
+			for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+			{
+				CvUnit* pChosenUnit = m_pPlayer->getUnit(it->GetUnitID());
+				if (pChosenUnit)
+				{
+					if (pChosenUnit->plot() != it->GetPlot())
+#else
 			for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 			{
 				CvUnit* pChosenUnit = m_pPlayer->getUnit(m_ChosenBlocks[iI].GetUnitID());
 				if(pChosenUnit)
 				{
 					if (pChosenUnit->plot() != m_ChosenBlocks[iI].GetPlot())
+#endif
 					{
 						if(GC.getLogging() && GC.getAILogging())
 						{
 							CvString strMsg;
 							strMsg.Format("Moving to cover a protected bombard with %s, X: %d, Y: %d", pChosenUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+								it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 								m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 							LogTacticalMessage(strMsg, false);
 						}
+#ifdef AUI_ITERATORIZE
+						pChosenUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 						pChosenUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 					}
 					else if (pChosenUnit->canPillage(pChosenUnit->plot()) && pChosenUnit->getDamage() > 0)
 					{
@@ -7672,7 +7813,11 @@ bool CvTacticalAI::ExecuteOneProtectedBombard(CvTacticalTarget& kTarget)
 						{
 							CvString strMsg;
 							strMsg.Format("Pillaging during a protected bombard with %s, X: %d, Y: %d", pChosenUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+								it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 								m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 							LogTacticalMessage(strMsg, false);
 						}
 					}
@@ -7683,7 +7828,11 @@ bool CvTacticalAI::ExecuteOneProtectedBombard(CvTacticalTarget& kTarget)
 						{
 							CvString strMsg;
 							strMsg.Format("Fortifying during a protected bombard with %s, X: %d, Y: %d", pChosenUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+								it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 								m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 							LogTacticalMessage(strMsg, false);
 						}
 					}
@@ -7693,7 +7842,11 @@ bool CvTacticalAI::ExecuteOneProtectedBombard(CvTacticalTarget& kTarget)
 						{
 							CvString strMsg;
 							strMsg.Format("Sitting during a protected bombard with %s, X: %d, Y: %d", pChosenUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+								it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 								m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 							LogTacticalMessage(strMsg, false);
 						}
 					}
@@ -7824,9 +7977,15 @@ bool CvTacticalAI::ExecuteFlankAttack(CvTacticalTarget& kTarget)
 		{
 			// Compute best way to fill the hexes
 			m_PotentialBlocks.clear();
+#ifdef AUI_ITERATORIZE
+			for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_TempTargets.begin(); it != m_TempTargets.end(); ++it)
+			{
+				pLoopPlot = GC.getMap().plot(it->GetTargetX(), it->GetTargetY());
+#else
 			for(unsigned int iI = 0; iI < m_TempTargets.size(); iI++)
 			{
 				pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 				if(!FindClosestUnit(pLoopPlot, 1, false/*bMustHaveHalfHP*/, false /*bMustBeRangedUnit*/, 0 /*iRangeRequired*/, false /*bNeedsIgnoreLOS*/, true /*bMustBeMeleeUnit*/))
 				{
 					iFillableHexes--;
@@ -7838,6 +7997,15 @@ bool CvTacticalAI::ExecuteFlankAttack(CvTacticalTarget& kTarget)
 				else
 				{
 					// Save off the units that could get here
+#ifdef AUI_ITERATORIZE
+					for (std::vector<CvTacticalUnit>::const_iterator it2 = m_CurrentMoveUnits.begin(); it2 != m_CurrentMoveUnits.end(); ++it2)
+					{
+						CvBlockingUnit block;
+						block.SetUnitID(it2->GetID());
+						block.SetPlot(pLoopPlot);
+						block.SetNumChoices((int)m_CurrentMoveUnits.size());
+						block.SetDistanceToTarget(it2->GetMovesToTarget());
+#else
 					for(unsigned int jJ = 0; jJ < m_CurrentMoveUnits.size(); jJ++)
 					{
 						CvBlockingUnit block;
@@ -7845,6 +8013,7 @@ bool CvTacticalAI::ExecuteFlankAttack(CvTacticalTarget& kTarget)
 						block.SetPlot(pLoopPlot);
 						block.SetNumChoices((int)m_CurrentMoveUnits.size());
 						block.SetDistanceToTarget(m_CurrentMoveUnits[jJ].GetMovesToTarget());
+#endif
 						m_PotentialBlocks.push_back(block);
 					}
 				}
@@ -7853,29 +8022,50 @@ bool CvTacticalAI::ExecuteFlankAttack(CvTacticalTarget& kTarget)
 			if(AssignFlankingUnits(iFillableHexes))
 			{
 				// Make moves up into hexes
+#ifdef AUI_ITERATORIZE
+				for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+				{
+					CvUnit* pUnit = m_pPlayer->getUnit(it->GetUnitID());
+					if (pUnit)
+					{
+						if (pUnit->plot() != it->GetPlot())
+#else
 				for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 				{
 					CvUnit* pUnit = m_pPlayer->getUnit(m_ChosenBlocks[iI].GetUnitID());
 					if(pUnit)
 					{
 						if(pUnit->plot() == m_ChosenBlocks[iI].GetPlot())
+#endif
 						{
 							if(GC.getLogging() && GC.getAILogging())
 							{
 								CvString strMsg;
 								strMsg.Format("Already in a flanking position with %s, X: %d, Y: %d", pUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+											  it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 								              m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 								LogTacticalMessage(strMsg, false);
 							}
 						}
 						else
 						{
+#ifdef AUI_ITERATORIZE
+							pUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 							pUnit->PushMission(CvTypes::getMISSION_MOVE_TO(), m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 							if(GC.getLogging() && GC.getAILogging())
 							{
 								CvString strMsg;
 								strMsg.Format("Moving into a flanking position with %s, X: %d, Y: %d", pUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+											  it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 								              m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 								LogTacticalMessage(strMsg, false);
 							}
 
@@ -7986,14 +8176,32 @@ void CvTacticalAI::ExecuteCloseOnTarget(CvTacticalTarget& kTarget, CvTacticalDom
 
 		// First loop for ranged unit spots
 		bool bDone = false;
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it3 = m_TempTargets.begin(); it3 != m_TempTargets.end(); ++it3)
+		{
+			AITacticalTargetType eTargetType = it3->GetTargetType();
+			if (eTargetType == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
+			{
+				CvPlot* pLoopPlot = GC.getMap().plot(it3->GetTargetX(), it3->GetTargetY());
+#else
 		for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 		{
 			AITacticalTargetType eTargetType = m_TempTargets[iI].GetTargetType();
 			if (eTargetType == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
 			{
 				CvPlot* pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 				if(FindClosestOperationUnit(pLoopPlot, true /*bSafeForRanged*/, true /*bMustBeRangedUnit*/))
 				{
+#ifdef AUI_ITERATORIZE
+					for (std::vector<CvTacticalUnit>::const_iterator it2 = m_CurrentMoveUnits.begin(); it2 != m_CurrentMoveUnits.end(); ++it2)
+					{
+						CvBlockingUnit block;
+						block.SetUnitID(it2->GetID());
+						block.SetPlot(pLoopPlot);
+						block.SetNumChoices((int)m_CurrentMoveUnits.size());
+						block.SetDistanceToTarget(it2->GetMovesToTarget());
+#else
 					for(unsigned int jJ = 0; jJ < m_CurrentMoveUnits.size(); jJ++)
 					{
 						CvBlockingUnit block;
@@ -8001,6 +8209,7 @@ void CvTacticalAI::ExecuteCloseOnTarget(CvTacticalTarget& kTarget, CvTacticalDom
 						block.SetPlot(pLoopPlot);
 						block.SetNumChoices((int)m_CurrentMoveUnits.size());
 						block.SetDistanceToTarget(m_CurrentMoveUnits[jJ].GetMovesToTarget());
+#endif
 						m_PotentialBlocks.push_back(block);
 					}
 
@@ -8020,14 +8229,32 @@ void CvTacticalAI::ExecuteCloseOnTarget(CvTacticalTarget& kTarget, CvTacticalDom
 		iMeleeUnits += iRangedUnitsToPlace;
 		iMeleeUnitsToPlace += iRangedUnitsToPlace;
 		bDone = false;
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it3 = m_TempTargets.begin(); it3 != m_TempTargets.end(); ++it3)
+		{
+			AITacticalTargetType eTargetType = it3->GetTargetType();
+			if (eTargetType == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
+			{
+				CvPlot* pLoopPlot = GC.getMap().plot(it3->GetTargetX(), it3->GetTargetY());
+#else
 		for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 		{
 			AITacticalTargetType eTargetType = m_TempTargets[iI].GetTargetType();
 			if (eTargetType != AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
 			{
 				CvPlot* pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 				if(FindClosestOperationUnit(pLoopPlot, true /*bSafeForRanged*/, false /*bMustBeRangedUnit*/))
 				{
+#ifdef AUI_ITERATORIZE
+					for (std::vector<CvTacticalUnit>::const_iterator it2 = m_CurrentMoveUnits.begin(); it2 != m_CurrentMoveUnits.end(); ++it2)
+					{
+						CvBlockingUnit block;
+						block.SetUnitID(it2->GetID());
+						block.SetPlot(pLoopPlot);
+						block.SetNumChoices((int)m_CurrentMoveUnits.size());
+						block.SetDistanceToTarget(it2->GetMovesToTarget());
+#else
 					for(unsigned int jJ = 0; jJ < m_CurrentMoveUnits.size(); jJ++)
 					{
 						CvBlockingUnit block;
@@ -8035,6 +8262,7 @@ void CvTacticalAI::ExecuteCloseOnTarget(CvTacticalTarget& kTarget, CvTacticalDom
 						block.SetPlot(pLoopPlot);
 						block.SetNumChoices((int)m_CurrentMoveUnits.size());
 						block.SetDistanceToTarget(m_CurrentMoveUnits[jJ].GetMovesToTarget());
+#endif
 						m_PotentialBlocks.push_back(block);
 					}
 
@@ -8130,14 +8358,32 @@ void CvTacticalAI::ExecuteHedgehogDefense(CvTacticalTarget& kTarget, CvTacticalD
 
 		// First loop for ranged unit spots
 		bool bDone = false;
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it3 = m_TempTargets.begin(); it3 != m_TempTargets.end() && !bDone; ++it3)
+		{
+			AITacticalTargetType eTargetType = it3->GetTargetType();
+			if (eTargetType == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
+			{
+				CvPlot* pLoopPlot = GC.getMap().plot(it3->GetTargetX(), it3->GetTargetY());
+#else
 		for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 		{
 			AITacticalTargetType eTargetType = m_TempTargets[iI].GetTargetType();
 			if (eTargetType == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
 			{
 				CvPlot* pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 				if(FindClosestOperationUnit(pLoopPlot, true /*bSafeForRanged*/, true /*bMustBeRangedUnit*/))
 				{
+#ifdef AUI_ITERATORIZE
+					for (std::vector<CvTacticalUnit>::const_iterator it2 = m_CurrentMoveUnits.begin(); it2 != m_CurrentMoveUnits.end(); ++it2)
+					{
+						CvBlockingUnit block;
+						block.SetUnitID(it2->GetID());
+						block.SetPlot(pLoopPlot);
+						block.SetNumChoices((int)m_CurrentMoveUnits.size());
+						block.SetDistanceToTarget(it2->GetMovesToTarget());
+#else
 					for(unsigned int jJ = 0; jJ < m_CurrentMoveUnits.size(); jJ++)
 					{
 						CvBlockingUnit block;
@@ -8145,6 +8391,7 @@ void CvTacticalAI::ExecuteHedgehogDefense(CvTacticalTarget& kTarget, CvTacticalD
 						block.SetPlot(pLoopPlot);
 						block.SetNumChoices((int)m_CurrentMoveUnits.size());
 						block.SetDistanceToTarget(m_CurrentMoveUnits[jJ].GetMovesToTarget());
+#endif
 						m_PotentialBlocks.push_back(block);
 					}
 
@@ -8164,14 +8411,32 @@ void CvTacticalAI::ExecuteHedgehogDefense(CvTacticalTarget& kTarget, CvTacticalD
 		iMeleeUnits += iRangedUnitsToPlace;
 		iMeleeUnitsToPlace += iRangedUnitsToPlace;
 		bDone = false;
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvTacticalTarget, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it3 = m_TempTargets.begin(); it3 != m_TempTargets.end() && !bDone; ++it3)
+		{
+			AITacticalTargetType eTargetType = it3->GetTargetType();
+			if (eTargetType == AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
+			{
+				CvPlot* pLoopPlot = GC.getMap().plot(it3->GetTargetX(), it3->GetTargetY());
+#else
 		for(unsigned int iI = 0; iI < m_TempTargets.size() && !bDone; iI++)
 		{
 			AITacticalTargetType eTargetType = m_TempTargets[iI].GetTargetType();
 			if (eTargetType != AI_TACTICAL_TARGET_HIGH_PRIORITY_UNIT)
 			{
 				CvPlot* pLoopPlot = GC.getMap().plot(m_TempTargets[iI].GetTargetX(), m_TempTargets[iI].GetTargetY());
+#endif
 				if(FindClosestOperationUnit(pLoopPlot, true /*bSafeForRanged*/, false /*bMustBeRangedUnit*/))
 				{
+#ifdef AUI_ITERATORIZE
+					for (std::vector<CvTacticalUnit>::const_iterator it2 = m_CurrentMoveUnits.begin(); it2 != m_CurrentMoveUnits.end(); ++it2)
+					{
+						CvBlockingUnit block;
+						block.SetUnitID(it2->GetID());
+						block.SetPlot(pLoopPlot);
+						block.SetNumChoices((int)m_CurrentMoveUnits.size());
+						block.SetDistanceToTarget(it2->GetMovesToTarget());
+#else
 					for(unsigned int jJ = 0; jJ < m_CurrentMoveUnits.size(); jJ++)
 					{
 						CvBlockingUnit block;
@@ -8179,6 +8444,7 @@ void CvTacticalAI::ExecuteHedgehogDefense(CvTacticalTarget& kTarget, CvTacticalD
 						block.SetPlot(pLoopPlot);
 						block.SetNumChoices((int)m_CurrentMoveUnits.size());
 						block.SetDistanceToTarget(m_CurrentMoveUnits[jJ].GetMovesToTarget());
+#endif
 						m_PotentialBlocks.push_back(block);
 					}
 
@@ -8243,6 +8509,21 @@ void CvTacticalAI::ExecuteWithdrawMoves()
 	CvCity* pNearestCity;
 	int iTurnsToReachTarget;
 
+#ifdef AUI_ITERATORIZE
+	for (std::vector<CvTacticalUnit>::iterator it = m_CurrentMoveUnits.begin(); it != m_CurrentMoveUnits.end(); ++it)
+	{
+		UnitHandle pUnit = m_pPlayer->getUnit(it->GetID());
+		if (pUnit)
+		{
+			// Compute moves to nearest city and use as sort criteria
+			pNearestCity = GC.getMap().findCity(pUnit->getX(), pUnit->getY(), m_pPlayer->GetID(), NO_TEAM, true /* bSameArea */);
+			if (pNearestCity != NULL)
+			{
+				iTurnsToReachTarget = TurnsToReachTarget(pUnit, pNearestCity->plot());
+				it->SetMovesToTarget(iTurnsToReachTarget);
+				it->SetAttackStrength(1000 - iTurnsToReachTarget);
+				it->SetHealthPercent(10, 10);
+#else
 	for(unsigned int iI = 0; iI < m_CurrentMoveUnits.size(); iI++)
 	{
 		UnitHandle pUnit = m_pPlayer->getUnit(m_CurrentMoveUnits[iI].GetID());
@@ -8256,6 +8537,7 @@ void CvTacticalAI::ExecuteWithdrawMoves()
 				m_CurrentMoveUnits[iI].SetMovesToTarget(iTurnsToReachTarget);
 				m_CurrentMoveUnits[iI].SetAttackStrength(1000-iTurnsToReachTarget);
 				m_CurrentMoveUnits[iI].SetHealthPercent(10,10);
+#endif
 			}
 		}
 	}
@@ -8264,9 +8546,15 @@ void CvTacticalAI::ExecuteWithdrawMoves()
 	std::stable_sort(m_CurrentMoveUnits.begin(), m_CurrentMoveUnits.end());
 
 	// Execute the moves
+#ifdef AUI_ITERATORIZE
+	for (std::vector<CvTacticalUnit>::iterator it = m_CurrentMoveUnits.begin(); it != m_CurrentMoveUnits.end(); ++it)
+	{
+		UnitHandle pUnit = m_pPlayer->getUnit(it->GetID());
+#else
 	for(unsigned int iI = 0; iI < m_CurrentMoveUnits.size(); iI++)
 	{
 		UnitHandle pUnit = m_pPlayer->getUnit(m_CurrentMoveUnits[iI].GetID());
+#endif
 		if(pUnit)
 		{
 			// Compute moves to nearest city and use as sort criteria
@@ -8276,7 +8564,11 @@ void CvTacticalAI::ExecuteWithdrawMoves()
 				MoveToEmptySpaceNearTarget(pUnit, pNearestCity->plot(), (pUnit->getDomainType()==DOMAIN_LAND));
 
 				pUnit->finishMoves();
+#ifdef AUI_ITERATORIZE
+				UnitProcessed(it->GetID(), pUnit->IsCombatUnit());
+#else
 				UnitProcessed(m_CurrentMoveUnits[iI].GetID(), pUnit->IsCombatUnit());
+#endif
 
 				if(GC.getLogging() && GC.getAILogging())
 				{
@@ -8293,9 +8585,15 @@ void CvTacticalAI::ExecuteWithdrawMoves()
 /// Move naval units on top of embarked units in danger
 void CvTacticalAI::ExecuteEscortEmbarkedMoves()
 {
+#ifdef AUI_ITERATORIZE
+	for (std::vector<CvTacticalUnit>::iterator it = m_CurrentMoveUnits.begin(); it != m_CurrentMoveUnits.end(); ++it)
+	{
+		UnitHandle pUnit = m_pPlayer->getUnit(it->GetID());
+#else
 	for(unsigned int iI = 0; iI < m_CurrentMoveUnits.size(); iI++)
 	{
 		UnitHandle pUnit = m_pPlayer->getUnit(m_CurrentMoveUnits[iI].GetID());
+#endif
 		if(pUnit)
 		{
 			CvPlot *pBestTarget = NULL;
@@ -8344,7 +8642,11 @@ void CvTacticalAI::ExecuteEscortEmbarkedMoves()
 			if (pBestTarget)
 			{
 				ExecuteMoveToPlot(pUnit, pBestTarget);
+#ifdef AUI_ITERATORIZE
+				UnitProcessed(it->GetID());
+#else
 				UnitProcessed(m_CurrentMoveUnits[iI].GetID());
+#endif
 
 				if(GC.getLogging() && GC.getAILogging())
 				{
@@ -9748,6 +10050,17 @@ bool CvTacticalAI::CanCoverFromEnemy(CvPlot* pPlot, int& iNumUnitsRequiredToCove
 					else
 					{
 						// Save off the units that could get here
+#ifdef AUI_ITERATORIZE
+						for (std::vector<CvTacticalUnit>::const_iterator it = m_CurrentMoveUnits.begin(); it != m_CurrentMoveUnits.end(); ++it)
+						{
+							if (it->GetID() != iAttackingUnitID)
+							{
+								CvBlockingUnit block;
+								block.SetUnitID(it->GetID());
+								block.SetPlot(pLoopPlot);
+								block.SetNumChoices((int)m_CurrentMoveUnits.size());
+								block.SetDistanceToTarget(it->GetMovesToTarget());
+#else
 						for(unsigned int iJ = 0; iJ < m_CurrentMoveUnits.size(); iJ++)
 						{
 							if(m_CurrentMoveUnits[iJ].GetID() != iAttackingUnitID)
@@ -9757,6 +10070,7 @@ bool CvTacticalAI::CanCoverFromEnemy(CvPlot* pPlot, int& iNumUnitsRequiredToCove
 								block.SetPlot(pLoopPlot);
 								block.SetNumChoices((int)m_CurrentMoveUnits.size());
 								block.SetDistanceToTarget(m_CurrentMoveUnits[iJ].GetMovesToTarget());
+#endif
 								m_PotentialBlocks.push_back(block);
 							}
 						}
@@ -9784,9 +10098,15 @@ bool CvTacticalAI::AssignCoveringUnits(int iNumUnitsRequiredToCover)
 		m_NewlyChosen.clear();
 
 		// Loop through potential blocks looking for assignments we MUST make (only one possibility)
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvBlockingUnit, SAFE_ESTIMATE_NUM_BLOCKING_UNITS, true, c_eCiv5GameplayDLL, 0>:: const_iterator it = m_PotentialBlocks.begin(); it != m_PotentialBlocks.end(); ++it)
+		{
+			CvBlockingUnit temp = *it;
+#else
 		for(unsigned int iI = 0; iI < m_PotentialBlocks.size(); iI++)
 		{
 			CvBlockingUnit temp = m_PotentialBlocks[iI];
+#endif
 
 			if(temp.GetNumChoices() == 1)
 			{
@@ -9805,9 +10125,15 @@ bool CvTacticalAI::AssignCoveringUnits(int iNumUnitsRequiredToCover)
 			else
 			{
 				// Copy to final list
+#ifdef AUI_ITERATORIZE
+				for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_NewlyChosen.begin(); it != m_NewlyChosen.end(); ++it)
+				{
+					m_ChosenBlocks.push_back(*it);
+#else
 				for(unsigned int jJ = 0; jJ < m_NewlyChosen.size(); jJ++)
 				{
 					m_ChosenBlocks.push_back(m_NewlyChosen[jJ]);
+#endif
 				}
 
 				RemoveChosenUnits();
@@ -9848,11 +10174,19 @@ bool CvTacticalAI::AssignDeployingUnits(int iNumUnitsRequiredToDeploy)
 		bChoseOne = false;
 		m_NewlyChosen.clear();
 
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvBlockingUnit, SAFE_ESTIMATE_NUM_BLOCKING_UNITS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_PotentialBlocks.begin(); it != m_PotentialBlocks.end(); ++it)
+		{
+			if (it->GetNumChoices() == 1)
+			{
+				m_NewlyChosen.push_back(*it);
+#else
 		for(unsigned int iI = 0; iI < m_PotentialBlocks.size(); iI++)
 		{
 			if(m_PotentialBlocks[iI].GetNumChoices() == 1)
 			{
 				m_NewlyChosen.push_back(m_PotentialBlocks[iI]);
+#endif
 				bChoseOne = true;
 			}
 		}
@@ -9867,9 +10201,15 @@ bool CvTacticalAI::AssignDeployingUnits(int iNumUnitsRequiredToDeploy)
 			else
 			{
 				// Copy to final list
+#ifdef AUI_ITERATORIZE
+				for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_NewlyChosen.begin(); it != m_NewlyChosen.end(); ++it)
+				{
+					m_ChosenBlocks.push_back(*it);
+#else
 				for(unsigned int jJ = 0; jJ < m_NewlyChosen.size(); jJ++)
 				{
 					m_ChosenBlocks.push_back(m_NewlyChosen[jJ]);
+#endif
 				}
 
 				RemoveChosenUnits();
@@ -9889,11 +10229,19 @@ bool CvTacticalAI::AssignDeployingUnits(int iNumUnitsRequiredToDeploy)
 		bChoseOne = false;
 		m_NewlyChosen.clear();
 
+#ifdef AUI_ITERATORIZE
+		m_NewlyChosen.push_back(*m_PotentialBlocks.begin());
+		m_ChosenBlocks.push_back(*m_PotentialBlocks.begin());
+
+		// Don't copy the other entries for this hex so pass in the number of choices here
+		RemoveChosenUnits(m_PotentialBlocks.begin()->GetNumChoices());
+#else
 		m_NewlyChosen.push_back(m_PotentialBlocks[0]);
 		m_ChosenBlocks.push_back(m_PotentialBlocks[0]);
 
 		// Don't copy the other entries for this hex so pass in the number of choices here
 		RemoveChosenUnits(m_PotentialBlocks[0].GetNumChoices());
+#endif
 
 		// Do we have enough units left to cover everything?
 		if(NumUniqueUnitsLeft() < (iNumUnitsRequiredToDeploy - (int)m_ChosenBlocks.size()))
@@ -9913,6 +10261,17 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 	std::stable_sort(m_ChosenBlocks.begin(), m_ChosenBlocks.end(), TacticalAIHelpers::CvBlockingUnitDistanceSort);
 
 	// First loop through is for units that have a unit moving into their hex.  They need to leave first!
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+	{
+		CvUnit* pUnit = m_pPlayer->getUnit(it->GetUnitID());
+		if (pUnit)
+		{
+			if (pUnit->plot() != it->GetPlot() && IsInChosenMoves(pUnit->plot()) && it->GetPlot()->getNumFriendlyUnitsOfType(pUnit) == 0)
+			{
+				bool bMoveWasSafe;
+				MoveToUsingSafeEmbark(pUnit, it->GetPlot(), bMoveWasSafe);
+#else
 	for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 	{
 		CvUnit* pUnit = m_pPlayer->getUnit(m_ChosenBlocks[iI].GetUnitID());
@@ -9922,23 +10281,48 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 			{
 				bool bMoveWasSafe;
 				MoveToUsingSafeEmbark(pUnit, m_ChosenBlocks[iI].GetPlot(), bMoveWasSafe);
+#endif
 
 				if(GC.getLogging() && GC.getAILogging())
 				{
 					CvString strMsg;
 					strMsg.Format("Deploying %s (to get out of way), To X: %d, To Y: %d, At X: %d, At Y: %d, Distance Before Move: %d",
+#ifdef AUI_ITERATORIZE
+						pUnit->getName().GetCString(), it->GetPlot()->getX(), it->GetPlot()->getY(),
+						pUnit->getX(), pUnit->getY(), it->GetDistanceToTarget());
+#else
 					              pUnit->getName().GetCString(), m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY(),
 					              pUnit->getX(), pUnit->getY(), m_ChosenBlocks[iI].GetDistanceToTarget());
+#endif
 					LogTacticalMessage(strMsg);
 				}
 
 				// Use number of choices field to indicate already moved
+#ifdef AUI_ITERATORIZE
+				it->SetNumChoices(-1);
+#else
 				m_ChosenBlocks[iI].SetNumChoices(-1);
+#endif
 			}
 		}
 	}
 
 	// Second loop is for units moving into their chosen spot normally
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+	{
+		CvUnit* pUnit = m_pPlayer->getUnit(it->GetUnitID());
+		if (pUnit)
+		{
+			if (pUnit->plot() == it->GetPlot())
+			{
+				it->SetNumChoices(-1);
+			}
+			else
+			{
+				// Someone we didn't move above?
+				if (it->GetNumChoices() != -1)
+#else
 	for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 	{
 		CvUnit* pUnit = m_pPlayer->getUnit(m_ChosenBlocks[iI].GetUnitID());
@@ -9952,24 +10336,38 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 			{
 				// Someone we didn't move above?
 				if(m_ChosenBlocks[iI].GetNumChoices() != -1)
+#endif
 				{
 					CvPlot* pPlotBeforeMove = pUnit->plot();
 					bool bMoveWasSafe;
+#ifdef AUI_ITERATORIZE
+					MoveToUsingSafeEmbark(pUnit, it->GetPlot(), bMoveWasSafe);
+#else
 					MoveToUsingSafeEmbark(pUnit, m_ChosenBlocks[iI].GetPlot(), bMoveWasSafe);
+#endif
 
 					if(GC.getLogging() && GC.getAILogging())
 					{
 						CvString strMsg;
 						strMsg.Format("Deploying %s, To X: %d, To Y: %d, At X: %d, At Y: %d, Distance Before Move: %d",
+#ifdef AUI_ITERATORIZE
+							pUnit->getName().GetCString(), it->GetPlot()->getX(), it->GetPlot()->getY(),
+							pUnit->getX(), pUnit->getY(), it->GetDistanceToTarget());
+#else
 						              pUnit->getName().GetCString(), m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY(),
 						              pUnit->getX(), pUnit->getY(), m_ChosenBlocks[iI].GetDistanceToTarget());
+#endif
 						LogTacticalMessage(strMsg);
 					}
 
 					// Use number of choices field to indicate already moved
 					if(pPlotBeforeMove != pUnit->plot())
 					{
+#ifdef AUI_ITERATORIZE
+						it->SetNumChoices(-1);
+#else
 						m_ChosenBlocks[iI].SetNumChoices(-1);
+#endif
 					}
 				}
 			}
@@ -9979,6 +10377,18 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 	// Third loop is for units we still haven't been able to move (other units must be blocking their target for this turn)
 	if (iFallbackMoveRange > 0)
 	{
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+		{
+			CvUnit* pUnit = m_pPlayer->getUnit(it->GetUnitID());
+			if (pUnit)
+			{
+				// Someone we didn't move above?
+				if (it->GetNumChoices() != -1)
+				{
+					CvPlot* pPlotBeforeMove = pUnit->plot();
+					if (MoveToEmptySpaceNearTarget(UnitHandle(pUnit), it->GetPlot(), (pUnit->getDomainType() == DOMAIN_LAND)))
+#else
 		for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 		{
 			CvUnit* pUnit = m_pPlayer->getUnit(m_ChosenBlocks[iI].GetUnitID());
@@ -9989,19 +10399,29 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 				{
 					CvPlot* pPlotBeforeMove = pUnit->plot();
 					if(MoveToEmptySpaceNearTarget(UnitHandle(pUnit), m_ChosenBlocks[iI].GetPlot(), (pUnit->getDomainType()==DOMAIN_LAND)))
+#endif
 					{
 						if(GC.getLogging() && GC.getAILogging())
 						{
 							CvString strMsg;
 							strMsg.Format("Deploying %s to space near target, Target X: %d, Target Y: %d, At X: %d, At Y: %d, Distance Before Move: %d",
+#ifdef AUI_ITERATORIZE
+								pUnit->getName().GetCString(), it->GetPlot()->getX(), it->GetPlot()->getY(),
+								pUnit->getX(), pUnit->getY(), it->GetDistanceToTarget());
+#else
 								pUnit->getName().GetCString(), m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY(),
 								pUnit->getX(), pUnit->getY(), m_ChosenBlocks[iI].GetDistanceToTarget());
+#endif
 							LogTacticalMessage(strMsg);
 						}
 
 						if(pPlotBeforeMove != pUnit->plot())
 						{
+#ifdef AUI_ITERATORIZE
+							it->SetNumChoices(-1);
+#else
 							m_ChosenBlocks[iI].SetNumChoices(-1);
+#endif
 						}
 					}
 				}
@@ -10012,6 +10432,17 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 	// Fourth loop let's unit end within 2 of target
 	if (iFallbackMoveRange > 1)
 	{
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+		{
+			CvUnit* pUnit = m_pPlayer->getUnit(it->GetUnitID());
+			if (pUnit)
+			{
+				// Someone we didn't move above?
+				if (it->GetNumChoices() != -1)
+				{
+					if (MoveToEmptySpaceNearTarget(UnitHandle(pUnit), it->GetPlot(), (pUnit->getDomainType() == DOMAIN_LAND)))
+#else
 		for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 		{
 			CvUnit* pUnit = m_pPlayer->getUnit(m_ChosenBlocks[iI].GetUnitID());
@@ -10021,13 +10452,19 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 				if(m_ChosenBlocks[iI].GetNumChoices() != -1)
 				{
 					if (MoveToEmptySpaceTwoFromTarget(UnitHandle(pUnit), m_ChosenBlocks[iI].GetPlot(), (pUnit->getDomainType()==DOMAIN_LAND)))
+#endif
 					{
 						if(GC.getLogging() && GC.getAILogging())
 						{
 							CvString strMsg;
 							strMsg.Format("Deploying %s to space within 2 of target, Target X: %d, Target Y: %d, At X: %d, At Y: %d, Distance Before Move: %d",
+#ifdef AUI_ITERATORIZE
+								pUnit->getName().GetCString(), it->GetPlot()->getX(), it->GetPlot()->getY(),
+								pUnit->getX(), pUnit->getY(), it->GetDistanceToTarget());
+#else
 								pUnit->getName().GetCString(), m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY(),
 								pUnit->getX(), pUnit->getY(), m_ChosenBlocks[iI].GetDistanceToTarget());
+#endif
 							LogTacticalMessage(strMsg);
 						}
 					}
@@ -10037,9 +10474,15 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 	}
 
 	// Finish moves for all units
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+	{
+		CvUnit* pUnit = m_pPlayer->getUnit(it->GetUnitID());
+#else
 	for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 	{
 		CvUnit* pUnit = m_pPlayer->getUnit(m_ChosenBlocks[iI].GetUnitID());
+#endif
 		if(!pUnit->isDelayedDeath())
 		{
 			if (pUnit->getMoves() > 0)
@@ -10051,7 +10494,11 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 					{
 						CvString strMsg;
 						strMsg.Format("Already in position, will pillage with %s, X: %d, Y: %d", pUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+							it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 							m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 						LogTacticalMessage(strMsg);
 					}
 
@@ -10063,7 +10510,11 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 					{
 						CvString strMsg;
 						strMsg.Format("Already in position, will fortify with %s, X: %d, Y: %d", pUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+							it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 							m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 						LogTacticalMessage(strMsg);
 					}
 				}
@@ -10073,7 +10524,11 @@ void CvTacticalAI::PerformChosenMoves(int iFallbackMoveRange)
 					{
 						CvString strMsg;
 						strMsg.Format("Already in position, no move for %s, X: %d, Y: %d", pUnit->getName().GetCString(),
+#ifdef AUI_ITERATORIZE
+							it->GetPlot()->getX(), it->GetPlot()->getY());
+#else
 							m_ChosenBlocks[iI].GetPlot()->getX(), m_ChosenBlocks[iI].GetPlot()->getY());
+#endif
 						LogTacticalMessage(strMsg);
 					}
 				}
@@ -10090,11 +10545,19 @@ void CvTacticalAI::MoveGreatGeneral(CvArmyAI* pArmyAI)
 	UnitHandle pGeneral;
 	int iRange;
 
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvOperationUnit, SAFE_ESTIMATE_NUM_MULTIUNITFORMATION_ENTRIES, true, c_eCiv5GameplayDLL, 0>::iterator it = m_GeneralsToMove.begin(); it != m_GeneralsToMove.end(); ++it)
+	{
+		CvPlot* pBestPlot = NULL;
+		int iBestScore = -1;
+		pGeneral = m_pPlayer->getUnit(it->GetUnitID());
+#else
 	for (unsigned int iI = 0; iI < m_GeneralsToMove.size(); iI++)
 	{
 		CvPlot* pBestPlot = NULL;
 		int iBestScore = -1;
 		pGeneral = m_pPlayer->getUnit(m_GeneralsToMove[iI].GetUnitID());
+#endif
 
 		if(pGeneral)
 		{
@@ -10168,9 +10631,15 @@ void CvTacticalAI::MoveGreatGeneral(CvArmyAI* pArmyAI)
 // Is one of the chosen moves to this plot?
 bool CvTacticalAI::IsInChosenMoves(CvPlot* pPlot)
 {
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_ChosenBlocks.begin(); it != m_ChosenBlocks.end(); ++it)
+	{
+		if (it->GetPlot() == pPlot)
+#else
 	for(unsigned int iI = 0; iI < m_ChosenBlocks.size(); iI++)
 	{
 		if(m_ChosenBlocks[iI].GetPlot() == pPlot)
+#endif
 		{
 			return true;
 		}
@@ -10182,11 +10651,19 @@ bool CvTacticalAI::IsInChosenMoves(CvPlot* pPlot)
 /// Were we forced to select the same unit to block twice?
 bool CvTacticalAI::HaveDuplicateUnit()
 {
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_NewlyChosen.begin(); it + 1 != m_NewlyChosen.end(); ++it)
+	{
+		for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it2 = it + 1; it2 != m_NewlyChosen.end(); ++it2)
+		{
+			if (it->GetUnitID() == it2->GetUnitID())
+#else
 	for(unsigned int iI = 0; iI < m_NewlyChosen.size()- 1; iI++)
 	{
 		for(unsigned int jJ = iI + 1; jJ < m_NewlyChosen.size(); jJ++)
 		{
 			if(m_NewlyChosen[iI].GetUnitID() == m_NewlyChosen[jJ].GetUnitID())
+#endif
 			{
 				return true;
 			}
@@ -10202,6 +10679,18 @@ void CvTacticalAI::RemoveChosenUnits(int iStartIndex)
 	m_TemporaryBlocks = m_PotentialBlocks;
 	m_PotentialBlocks.clear();
 
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, SAFE_ESTIMATE_NUM_BLOCKING_UNITS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_TemporaryBlocks.begin() + iStartIndex; it != m_TemporaryBlocks.end(); ++it)
+	{
+		bool bCopyIt = true;
+
+		CvBlockingUnit block = *it;
+
+		// Loop through chosen array looking for occurrences of this unit
+		for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::const_iterator it2 = m_NewlyChosen.begin(); it2 != m_NewlyChosen.end(); ++it2)
+		{
+			if (block.GetUnitID() == it2->GetUnitID())
+#else
 	for(unsigned int iI = iStartIndex; iI < m_TemporaryBlocks.size(); iI++)
 	{
 		bool bCopyIt = true;
@@ -10212,6 +10701,7 @@ void CvTacticalAI::RemoveChosenUnits(int iStartIndex)
 		for(unsigned int jJ = 0; jJ < m_NewlyChosen.size() && bCopyIt; jJ++)
 		{
 			if(block.GetUnitID() == m_NewlyChosen[jJ].GetUnitID())
+#endif
 			{
 				bCopyIt = false;
 			}
@@ -10224,6 +10714,21 @@ void CvTacticalAI::RemoveChosenUnits(int iStartIndex)
 	}
 
 	// Rebuild number of choices
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_PotentialBlocks.begin(); it != m_PotentialBlocks.end(); ++it)
+	{
+		int iNumFound = 0;
+		CvPlot* pPlot = it->GetPlot();
+
+		for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it2 = m_PotentialBlocks.begin(); it2 != m_PotentialBlocks.end(); ++it2)
+		{
+			if (pPlot == it2->GetPlot())
+			{
+				iNumFound++;
+			}
+		}
+		it->SetNumChoices(iNumFound);
+#else
 	for(unsigned int iI = 0; iI < m_PotentialBlocks.size(); iI++)
 	{
 		int iNumFound = 0;
@@ -10237,6 +10742,7 @@ void CvTacticalAI::RemoveChosenUnits(int iStartIndex)
 			}
 		}
 		m_PotentialBlocks[iI].SetNumChoices(iNumFound);
+#endif
 	}
 }
 
@@ -10256,6 +10762,15 @@ int CvTacticalAI::NumUniqueUnitsLeft()
 	m_TemporaryBlocks = m_PotentialBlocks;
 	std::stable_sort(m_TemporaryBlocks.begin(), m_TemporaryBlocks.end());
 
+#ifdef AUI_ITERATORIZE
+	iCurrentID = m_TemporaryBlocks.begin()->GetUnitID();
+	for (FStaticVector<CvBlockingUnit, SAFE_ESTIMATE_NUM_BLOCKING_UNITS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_TemporaryBlocks.begin() + 1; it != m_TemporaryBlocks.end(); ++it)
+	{
+		if (it->GetUnitID() != iCurrentID)
+		{
+			iRtnValue++;
+			iCurrentID = it->GetUnitID();
+#else
 	iCurrentID = m_TemporaryBlocks[0].GetUnitID();
 	for(unsigned int iI = 1; iI < m_TemporaryBlocks.size(); iI++)
 	{
@@ -10263,6 +10778,7 @@ int CvTacticalAI::NumUniqueUnitsLeft()
 		{
 			iRtnValue++;
 			iCurrentID = m_TemporaryBlocks[iI].GetUnitID();
+#endif
 		}
 	}
 
@@ -10334,11 +10850,19 @@ bool CvTacticalAI::ChooseRemainingAssignments(int iNumUnitsDesired, int iNumUnit
 			if(iScore > iBestScore)
 			{
 				m_NewlyChosen.clear();
+#ifdef AUI_ITERATORIZE
+				for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_TemporaryBlocks.begin(); it != m_TemporaryBlocks.end(); ++it)
+				{
+					if (it->GetDistanceToTarget() != MAX_INT)
+					{
+						m_NewlyChosen.push_back(*it);
+#else
 				for(unsigned int iI = 0; iI < m_TemporaryBlocks.size(); iI++)
 				{
 					if(m_TemporaryBlocks[iI].GetDistanceToTarget() != MAX_INT)
 					{
 						m_NewlyChosen.push_back(m_TemporaryBlocks[iI]);
+#endif
 					}
 				}
 				iBestScore = iScore;
@@ -10369,9 +10893,15 @@ bool CvTacticalAI::ChooseRemainingAssignments(int iNumUnitsDesired, int iNumUnit
 		}
 
 		// Copy final choices into output
+#ifdef AUI_ITERATORIZE
+		for (FStaticVector<CvBlockingUnit, NUM_CITY_PLOTS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_NewlyChosen.begin(); it != m_NewlyChosen.end(); ++it)
+		{
+			m_ChosenBlocks.push_back(*it);
+#else
 		for(unsigned int iI = 0; iI < m_NewlyChosen.size(); iI++)
 		{
 			m_ChosenBlocks.push_back(m_NewlyChosen[iI]);
+#endif
 		}
 
 		return (int)m_ChosenBlocks.size() >= iNumUnitsAcceptable;
@@ -10386,11 +10916,19 @@ int CvTacticalAI::ScoreAssignments(bool bCanLeaveOpenings)
 	int iScore = 0;
 
 	// Any assignment appear twice?
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, SAFE_ESTIMATE_NUM_BLOCKING_UNITS, true, c_eCiv5GameplayDLL, 0>::iterator it = m_TemporaryBlocks.begin(); it + 1 != m_TemporaryBlocks.end(); ++it)
+	{
+		for (FStaticVector<CvBlockingUnit, SAFE_ESTIMATE_NUM_BLOCKING_UNITS, true, c_eCiv5GameplayDLL, 0>::iterator it2 = it + 1; it2 != m_TemporaryBlocks.end(); ++it2)
+		{
+			if (it->GetUnitID() == it2->GetUnitID())
+#else
 	for(unsigned int iI = 0; iI < m_TemporaryBlocks.size(); iI++)
 	{
 		for(unsigned int jJ = iI + 1; jJ < m_TemporaryBlocks.size(); jJ++)
 		{
 			if(m_TemporaryBlocks[iI].GetUnitID() == m_TemporaryBlocks[jJ].GetUnitID())
+#endif
 			{
 				if(!bCanLeaveOpenings)
 				{
@@ -10399,6 +10937,15 @@ int CvTacticalAI::ScoreAssignments(bool bCanLeaveOpenings)
 				else
 				{
 					// "Clear" the move with greater distance by setting it to MAX_INT distance
+#ifdef AUI_ITERATORIZE
+					if (it->GetDistanceToTarget() < it2->GetDistanceToTarget())
+					{
+						it2->SetDistanceToTarget(MAX_INT);
+					}
+					else
+					{
+						it->SetDistanceToTarget(MAX_INT);
+#else
 					if(m_TemporaryBlocks[iI].GetDistanceToTarget() < m_TemporaryBlocks[jJ].GetDistanceToTarget())
 					{
 						m_TemporaryBlocks[jJ].SetDistanceToTarget(MAX_INT);
@@ -10406,6 +10953,7 @@ int CvTacticalAI::ScoreAssignments(bool bCanLeaveOpenings)
 					else
 					{
 						m_TemporaryBlocks[iI].SetDistanceToTarget(MAX_INT);
+#endif
 					}
 				}
 			}
@@ -10413,12 +10961,21 @@ int CvTacticalAI::ScoreAssignments(bool bCanLeaveOpenings)
 	}
 
 	// Legal, so let's score it
+#ifdef AUI_ITERATORIZE
+	for (FStaticVector<CvBlockingUnit, SAFE_ESTIMATE_NUM_BLOCKING_UNITS, true, c_eCiv5GameplayDLL, 0>::const_iterator it = m_TemporaryBlocks.begin(); it != m_TemporaryBlocks.end(); ++it)
+	{
+		if (it->GetDistanceToTarget() != MAX_INT)
+		{
+			iScore += (10000 - (it->GetDistanceToTarget() * 1000));
+			iScore += m_pPlayer->getUnit(it->GetUnitID())->GetPower();
+#else
 	for(unsigned int iI = 0; iI < m_TemporaryBlocks.size(); iI++)
 	{
 		if(m_TemporaryBlocks[iI].GetDistanceToTarget() != MAX_INT)
 		{
 			iScore += (10000 - (m_TemporaryBlocks[iI].GetDistanceToTarget() * 1000));
 			iScore += m_pPlayer->getUnit(m_TemporaryBlocks[iI].GetUnitID())->GetPower();
+#endif
 		}
 	}
 

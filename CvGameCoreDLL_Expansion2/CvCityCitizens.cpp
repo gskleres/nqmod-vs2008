@@ -574,7 +574,7 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 		else
 		{
 			iNonExcessFoodPlotYieldT100 = iTargetFoodT100 - iExcessFoodTimes100;
-			iExcessFoodPlotYieldT100 -= iTargetFoodT100;
+			iExcessFoodPlotYieldT100 = iExcessFoodWithPlotTimes100 - iTargetFoodT100;
 		}
 
 		iFoodYieldValue *= iNonExcessFoodPlotYieldT100;
@@ -1139,7 +1139,7 @@ bool CvCityCitizens::IsAIWantSpecialistRightNow()
 
 /// What is the Building Type the AI likes the Specialist of most right now?
 #ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
-BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue, bool bGetWorst, SpecialistTypes eIgnoreSpecialist) const
+BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int* iSpecialistValue, bool bGetWorst, bool bIsWorked, SpecialistTypes eIgnoreSpecialist) const
 #elif defined(AUI_CONSTIFY)
 BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue) const
 #else
@@ -1175,7 +1175,11 @@ BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 			if(GetCity()->GetCityBuildings()->GetNumBuilding(eBuilding) > 0)
 			{
 				// Can't add more than the max
+#ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
+				if ((!bIsWorked && IsCanAddSpecialistToBuilding(eBuilding)) || (bIsWorked &&  GetNumSpecialistsInBuilding(eBuilding) > 0))
+#else
 				if(IsCanAddSpecialistToBuilding(eBuilding))
+#endif
 				{
 					eSpecialist = (SpecialistTypes) pkBuildingInfo->GetSpecialistType();
 #ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
@@ -1209,7 +1213,13 @@ BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 		}
 	}
 
-#ifdef NQM_PRUNING
+#if defined(NQM_PRUNING) && defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
+	if (iSpecialistValue)
+		*iSpecialistValue = iBestSpecialistValue;
+#elif defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
+	if (iSpecialistValue)
+		*iSpecialistValue = iBestUnmodifiedSpecialistValue;
+#elif defined(NQM_PRUNING)
 	iSpecialistValue = iBestSpecialistValue;
 #else
 	iSpecialistValue = iBestUnmodifiedSpecialistValue;
@@ -1542,7 +1552,7 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 		else
 		{
 			iNonExcessFoodPlotYieldT100 = iTargetFoodT100 - iExcessFoodTimes100;
-			iExcessFoodPlotYieldT100 -= iTargetFoodT100;
+			iExcessFoodPlotYieldT100 = iExcessFoodWithPlotTimes100 - iTargetFoodT100;
 		}
 
 		iFoodYieldValue *= iNonExcessFoodPlotYieldT100;
@@ -1659,15 +1669,13 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 }
 
 /// Determine if eSpecialist is preferable to a default specialist, based on our focus
+#ifndef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
 #ifdef AUI_CONSTIFY
 bool CvCityCitizens::IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const
 #else
 bool CvCityCitizens::IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist)
 #endif
 {
-#ifdef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
-	return GetSpecialistValue(eSpecialist) >= GetSpecialistValue((SpecialistTypes)GC.getDEFAULT_SPECIALIST());
-#else
 	CvSpecialistInfo* pSpecialistInfo = GC.getSpecialistInfo(eSpecialist);
 	CvAssertMsg(pSpecialistInfo, "Invalid specialist type when assigning citizens. Please send Anton your save file and version.");
 	if(!pSpecialistInfo) return false; // Assumes that default specialist will work out
@@ -1725,8 +1733,8 @@ bool CvCityCitizens::IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist)
 	}
 
 	return (iSpecialistYield >= iDefaultSpecialistYield); // Unless default Specialist has strictly more, this Specialist is better
-#endif
 }
+#endif
 
 /// How many Citizens need to be given a job?
 int CvCityCitizens::GetNumUnassignedCitizens() const
@@ -1771,9 +1779,20 @@ bool CvCityCitizens::DoAddBestCitizenFromUnassigned()
 	BuildingTypes eBestSpecialistBuilding = NO_BUILDING;
 	if (!IsNoAutoAssignSpecialists())
 	{
+#ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
+		eBestSpecialistBuilding = GetAIBestSpecialistBuilding(&iSpecialistValue);
+#else
 		eBestSpecialistBuilding = GetAIBestSpecialistBuilding(iSpecialistValue);
+#endif
 	}
 
+#if defined(AUI_CITIZENS_IS_PLOT_BETTER_THAN_DEFAULT_SPECIALIST) || defined(AUI_CITIZENS_SELF_CONSISTENCY_CHECK)
+	int iDefaultSpecialistValue = GetSpecialistValue((SpecialistTypes)GC.getDEFAULT_SPECIALIST());
+#endif
+
+#ifdef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
+	bool bBetterThanSlacker = eBestSpecialistBuilding != NO_BUILDING && iSpecialistValue >= iDefaultSpecialistValue;
+#else
 	bool bBetterThanSlacker = false;
 	if (eBestSpecialistBuilding != NO_BUILDING)
 	{
@@ -1788,15 +1807,12 @@ bool CvCityCitizens::DoAddBestCitizenFromUnassigned()
 			}
 		}
 	}
+#endif
 
 	int iBestPlotValue = 0;
 	CvPlot* pBestPlot = GetBestCityPlotWithValue(iBestPlotValue, /*bBest*/ true, /*bWorked*/ false);
 
 	bool bSpecialistBetterThanPlot = (eBestSpecialistBuilding != NO_BUILDING && iSpecialistValue >= iBestPlotValue);
-
-#if defined(AUI_CITIZENS_IS_PLOT_BETTER_THAN_DEFAULT_SPECIALIST) || defined(AUI_CITIZENS_SELF_CONSISTENCY_CHECK)
-	int iDefaultSpecialistValue = GetSpecialistValue((SpecialistTypes)GC.getDEFAULT_SPECIALIST());
-#endif
 
 	// Is there a Specialist we can assign?
 	if (bSpecialistBetterThanPlot && bBetterThanSlacker)
@@ -1903,7 +1919,7 @@ bool CvCityCitizens::DoRemoveWorstCitizen(bool bRemoveForcedStatus, SpecialistTy
 
 #ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
 	int iWorstSpecialistValue = 0;
-	BuildingTypes eWorstSpecialistBuilding = GetAIBestSpecialistBuilding(iWorstSpecialistValue, true, eDontChangeSpecialist);
+	BuildingTypes eWorstSpecialistBuilding = GetAIBestSpecialistBuilding(&iWorstSpecialistValue, true, true, eDontChangeSpecialist);
 	
 
 	// Find default Specialist to pull off, if there is one

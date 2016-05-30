@@ -1083,6 +1083,9 @@ void CvPlayerTechs::SetLocalePriorities()
 /// Accessor: Can we start research?
 bool CvPlayerTechs::IsResearch() const
 {
+#ifdef AUI_PLAYERTECH_FIX_CAN_RESEARCH_WITH_NO_FOUNDED_CITY
+	return (m_pPlayer->getNumCities() > 0);
+#else
 	// Have we founded a city?
 	if(!m_pPlayer->isFoundedFirstCity())
 	{
@@ -1090,6 +1093,7 @@ bool CvPlayerTechs::IsResearch() const
 	}
 
 	return true;
+#endif
 }
 
 /// Accessor: Is this tech disabled?
