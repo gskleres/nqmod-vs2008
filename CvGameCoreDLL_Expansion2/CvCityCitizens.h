@@ -67,7 +67,7 @@ public:
 	bool IsAIWantSpecialistRightNow();
 #endif
 #ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
-	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue, bool bGetWorst = false, SpecialistTypes eIgnoreSpecialist = NO_SPECIALIST) const;
+	BuildingTypes GetAIBestSpecialistBuilding(int* iSpecialistValue = NULL, bool bGetWorst = false, bool bIsWorked = false, SpecialistTypes eIgnoreSpecialist = NO_SPECIALIST) const;
 #elif defined(AUI_CONSTIFY)
 	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue) const;
 #else
@@ -75,10 +75,14 @@ public:
 #endif
 #ifdef AUI_CONSTIFY
 	int GetSpecialistValue(SpecialistTypes eSpecialist) const;
+#ifndef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const;
+#endif
 #else
 	int GetSpecialistValue(SpecialistTypes eSpecialist);
+#ifndef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist);
+#endif
 #endif
 
 	// Citizen Assignment
