@@ -5561,7 +5561,7 @@ int CvCity::getProductionDifference(int /*iProductionNeeded*/, int /*iProduction
 	iBaseProduction += (GetYieldPerPopTimes100(YIELD_PRODUCTION) * getPopulation());
 
 #ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
-	const int iProductionNeededT100 = iProductionNeeded * 100;
+	const int iProductionNeededT100 = iProductionNeeded * 10000;
 	const int iGenericModifier = getGeneralProductionModifiers();
 	int iModifiedProduction = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iGenericModifier);
 	int iExtraProductionT100 = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iProductionModifier) - iModifiedProduction;
@@ -5634,7 +5634,7 @@ int CvCity::getProductionDifferenceTimes100(int /*iProductionNeeded*/, int /*iPr
 	iBaseProduction += (GetYieldPerPopTimes100(YIELD_PRODUCTION) * getPopulation());
 
 #ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
-	const int iProductionNeededT100 = iProductionNeeded * 100;
+	const int iProductionNeededT100 = iProductionNeeded * 10000;
 	const int iGenericModifier = getGeneralProductionModifiers();
 	int iModifiedProduction = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iGenericModifier);
 	int iExtraProductionT100 = iBaseProduction * getBaseYieldRateModifier(YIELD_PRODUCTION, iProductionModifier) - iModifiedProduction;
