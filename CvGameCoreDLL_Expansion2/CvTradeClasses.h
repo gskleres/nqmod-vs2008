@@ -131,6 +131,12 @@ public:
 	bool IsTradeRouteIndexEmpty (int iIndex);
 #endif
 	bool EmptyTradeRoute (int iIndex);
+#ifdef AUI_ITERATORIZE
+	TradeConnectionList::iterator GetEmptyTradeRouteIter();
+	TradeConnectionList::const_iterator GetEmptyTradeRouteIter() const;
+	bool IsTradeRouteIndexEmpty(const TradeConnectionList::iterator it) const;
+	bool IsTradeRouteIndexEmpty(const TradeConnectionList::const_iterator it) const;
+#endif
 
 	void ClearAllCityTradeRoutes (CvPlot* pPlot); // called when a city is captured or traded
 	void ClearAllCivTradeRoutes (PlayerTypes ePlayer); // called from world congress code
@@ -184,6 +190,10 @@ public:
 	// trade unit movement
 	bool MoveUnit (int iIndex); // move a trade unit along its path for all its movement points
 	bool StepUnit (int iIndex); // move a trade unit a single step along its path (called by MoveUnit)
+#ifdef AUI_ITERATORIZE
+	bool MoveUnit(TradeConnectionList::iterator it); // move a trade unit along its path for all its movement points
+	bool StepUnit(TradeConnectionList::iterator it); // move a trade unit a single step along its path (called by MoveUnit)
+#endif
 
 	void DisplayTemporaryPopupTradeRoute(int iPlotX, int iPlotY, TradeConnectionType type, DomainTypes eDomain);
 	void HideTemporaryPopupTradeRoute(int iPlotX, int iPlotY, TradeConnectionType type);
@@ -211,7 +221,11 @@ struct TradeConnectionWasPlundered
 	int m_iTurnPlundered;
 };
 
+#ifdef AUI_TRADE_FIX_POSSIBLE_DEALLOCATION_CRASH
+typedef FStaticVector<TradeConnectionWasPlundered, PROJECTED_MAX_TRADE_CONNECTIONS_PER_CIV, false, c_eCiv5GameplayDLL> TradeConnectionWasPlunderedList;
+#else
 typedef FStaticVector<TradeConnectionWasPlundered, 10, false, c_eCiv5GameplayDLL > TradeConnectionWasPlunderedList;
+#endif
 
 class CvPlayerTrade
 {
@@ -341,7 +355,11 @@ public:
 
 	void UpdateTradeConnectionWasPlundered();
 	void AddTradeConnectionWasPlundered(const TradeConnection kTradeConnection);
+#ifdef AUI_CONSTIFY
+	bool CheckTradeConnectionWasPlundered(const TradeConnection& kTradeConnection) const;
+#else
 	bool CheckTradeConnectionWasPlundered(const TradeConnection& kTradeConnection);
+#endif
 
 	static UnitTypes GetTradeUnit (DomainTypes eDomain);
 
@@ -379,13 +397,15 @@ public:
 	int	ScoreInternationalTR(const TradeConnection& kTradeConnection) const;
 	int ScoreFoodTR(const TradeConnection& kTradeConnection, const CvCity* pSmallestCity) const;
 	int ScoreProductionTR(const TradeConnection& kTradeConnection, std::vector<const CvCity*>& aTargetCityList) const;
+
+	bool ChooseTradeUnitTargetPlot(CvUnit* pUnit, int& iOriginPlotIndex, int& iDestPlotIndex, TradeConnectionType& eTradeConnectionType, bool& bDisband, const TradeConnectionList& aTradeConnections) const;
 #else
 	int	ScoreInternationalTR (const TradeConnection& kTradeConnection);
 	int ScoreFoodTR(const TradeConnection& kTradeConnection, CvCity* pSmallestCity);
 	int ScoreProductionTR (const TradeConnection& kTradeConnection, std::vector<CvCity*> aTargetCityList);
-#endif
 
 	bool ChooseTradeUnitTargetPlot(CvUnit* pUnit, int& iOriginPlotIndex, int& iDestPlotIndex, TradeConnectionType& eTradeConnectionType, bool& bDisband, const TradeConnectionList& aTradeConnections);
+#endif
 
 	int m_iRemovableValue;
 
