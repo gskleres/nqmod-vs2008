@@ -175,6 +175,8 @@
 #define AUI_UNIT_MISSION_FIX_CONTINUE_MISSION_CIVILIANS_DONT_ATTEMPT_ATTACK
 /// Players are allowed to research if they own a city, they no longer need to found one before researching is unlocked (helps with Germany challenge on maps with CS's)
 #define AUI_PLAYERTECH_FIX_CAN_RESEARCH_WITH_NO_FOUNDED_CITY
+/// Fixes the bug where building a new improvement on a tile with a pillaged improvement keeps the tile marked as pillaged
+#define AUI_PLOT_FIX_PILLAGED_PLOT_ON_NEW_IMPROVEMENT
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
