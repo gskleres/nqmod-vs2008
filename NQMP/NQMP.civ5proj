@@ -5,7 +5,7 @@
     <ProjectGuid>{b41da1e7-5bd5-4efb-a580-8dec19fd7525}</ProjectGuid>
     <Name>No Quitters Mod</Name>
     <Guid>917a39f3-57f0-4b18-b3cb-c4b7dbfbb41e</Guid>
-    <ModVersion>101</ModVersion>
+    <ModVersion>11</ModVersion>
     <Stability>Alpha</Stability>
     <Teaser>Optional balance mod for NQ multiplayer games.</Teaser>
     <Description>Optional balance mod for NQ multiplayer games.</Description>
@@ -1075,7 +1075,7 @@
     <ModProperties />
     <Homepage>http://www.reddit.com/r/nqmod</Homepage>
     <ModDependencies>
-     <Association>
+      <Association>
         <Type>Dlc</Type>
         <Name>Expansion 1 - Gods and Kings</Name>
         <Id>0E3751A1-F840-4e1b-9706-519BF484E59D</Id>
