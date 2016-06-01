@@ -6089,6 +6089,9 @@ void CvPlot::setImprovementType(ImprovementTypes eNewValue, PlayerTypes eBuilder
 
 	if(eOldImprovement != eNewValue)
 	{
+#ifdef AUI_PLOT_FIX_PILLAGED_PLOT_ON_NEW_IMPROVEMENT
+		SetImprovementPillaged(false);
+#endif
 		PlayerTypes owningPlayerID = getOwner();
 		if(eOldImprovement != NO_IMPROVEMENT)
 		{
@@ -6180,8 +6183,10 @@ void CvPlot::setImprovementType(ImprovementTypes eNewValue, PlayerTypes eBuilder
 
 		setUpgradeProgress(0);
 
+#ifndef AUI_PLOT_FIX_PILLAGED_PLOT_ON_NEW_IMPROVEMENT
 		// make sure this plot is not disabled
 		SetImprovementPillaged(false);
+#endif
 
 		for(iI = 0; iI < MAX_TEAMS; ++iI)
 		{
