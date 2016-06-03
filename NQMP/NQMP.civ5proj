@@ -12,7 +12,7 @@
     <Authors>Fruitstrike</Authors>
     <SpecialThanks>Hellblazer, NotQ, Delnar_Ersike, Uncanny Luck, and all the wonderful testers!!</SpecialThanks>
     <AffectsSavedGames>true</AffectsSavedGames>
-    <MinCompatibleSaveVersion>101</MinCompatibleSaveVersion>
+    <MinCompatibleSaveVersion>11</MinCompatibleSaveVersion>
     <SupportsSinglePlayer>true</SupportsSinglePlayer>
     <SupportsMultiplayer>true</SupportsMultiplayer>
     <SupportsHotSeat>true</SupportsHotSeat>

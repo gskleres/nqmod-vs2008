@@ -2143,11 +2143,11 @@ int PathAdd(CvAStarNode* parent, CvAStarNode* node, int data, const void* pointe
 	}
 	else
 	{
-		CvMap& kMap = GC.getMap();
 #ifdef AUI_ASTAR_CACHE_PLOTS_AT_NODES
 		const CvPlot* pFromPlot = parent->m_pPlot;
 		const CvPlot* pToPlot = node->m_pPlot;
 #else
+		CvMap& kMap = GC.getMap();
 		CvPlot* pFromPlot = kMap.plotUnchecked(parent->m_iX, parent->m_iY);
 		CvPlot* pToPlot = kMap.plotUnchecked(node->m_iX, node->m_iY);
 #endif

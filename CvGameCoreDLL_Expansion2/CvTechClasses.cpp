@@ -2215,7 +2215,7 @@ int CvTeamTechs::ChangeResearchProgressPercent(TechTypes eIndex, int iPercent, P
 		else
 		{
 #ifdef AUI_TECH_FIX_PLAYER_BASED_RESEARCH_COST_ONLY_AESTHETIC
-			iBeakers = std::min(GetResearchLeft(eIndex) - GET_PLAYER(ePlayer).GetPlayerTechs()->GetResearchCost(eIndex), (GET_PLAYER(ePlayer).GetPlayerTechs()->GetResearchCost(eIndex) * iPercent) / 100);
+			iBeakers = std::max(GetResearchLeft(eIndex) - GET_PLAYER(ePlayer).GetPlayerTechs()->GetResearchCost(eIndex), (GET_PLAYER(ePlayer).GetPlayerTechs()->GetResearchCost(eIndex) * iPercent) / 100);
 #else
 			iBeakers = std::max(GetResearchLeft(eIndex) - GetResearchCost(eIndex), (GetResearchCost(eIndex) * iPercent) / 100);
 #endif
