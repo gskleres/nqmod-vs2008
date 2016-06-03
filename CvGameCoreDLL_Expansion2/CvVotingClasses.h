@@ -453,6 +453,9 @@ public:
 
 	void DoTurn(LeagueSpecialSessionTypes eTriggeredSpecialSession = NO_LEAGUE_SPECIAL_SESSION);
 	LeagueTypes GetID() const;
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+	void SetID(LeagueTypes eNewID);
+#endif
 	Localization::String GetName();
 	bool CanChangeCustomName(PlayerTypes ePlayer);
 	void DoChangeCustomName(PlayerTypes ePlayer, const char* szCustomName);

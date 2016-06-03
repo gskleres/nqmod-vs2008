@@ -1945,6 +1945,13 @@ LeagueTypes CvLeague::GetID() const
 	return m_eID;
 }
 
+#ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
+void CvLeague::SetID(LeagueTypes eNewID)
+{
+	m_eID = eNewID;
+}
+#endif
+
 Localization::String CvLeague::GetName()
 {
 	Localization::String sName = Localization::Lookup("TXT_KEY_LEAGUE_WORLD_CONGRESS_GENERIC");
@@ -7118,6 +7125,7 @@ void CvGameLeagues::FoundLeague(PlayerTypes eFounder)
 		{
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 			m_ActiveLeague = FNEW(CvLeague, c_eCiv5GameplayDLL, 0);
+			m_ActiveLeague->SetID((LeagueTypes)0);
 #else
 			CvLeague league((LeagueTypes)m_iNumLeaguesEverFounded++);
 #endif
