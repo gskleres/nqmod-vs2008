@@ -264,6 +264,9 @@ CvUnit::CvUnit() :
 	, m_eGreatWork(NO_GREAT_WORK)
 	, m_iTourismBlastStrength(0) // GJS - new research bulb amount value
 	, m_iResearchBulbAmount(0)
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+	, m_bCanInstahealThisTurn(true)
+#endif
 	, m_bPromotionReady("CvUnit::m_bPromotionReady", m_syncArchive)
 	, m_bDeathDelay("CvUnit::m_bDeathDelay", m_syncArchive)
 	, m_bCombatFocus("CvUnit::m_bCombatFocus", m_syncArchive)
@@ -387,6 +390,7 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 
 	// If this is a hovering unit, we must add that promotion before setting XY, or else it'll get the embark promotion (which we don't want)
 	PromotionTypes ePromotion;
+#ifndef AUI_UNIT_FIX_HOVERING_EMBARK
 	for(iI = 0; iI < GC.getNumPromotionInfos(); iI++)
 	{
 		if(getUnitInfo().GetFreePromotions(iI))
@@ -397,6 +401,7 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 				setHasPromotion(ePromotion, true);
 		}
 	}
+#endif
 
 	// Set the layer of the map the unit resides
 	m_iMapLayer = iMapLayer;
@@ -434,11 +439,13 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 	
 #ifdef AUI_WARNING_FIXES
 		for (iJ = 0; iJ < iNumNames; iJ++)
+		{
+			int iIndex = (iNameOffset + iJ) % iNumNames;
 #else
 		for(iI = 0; iI < iNumNames; iI++)
-#endif
 		{
 			int iIndex = (iNameOffset + iI) % iNumNames;
+#endif
 			CvString strName = getUnitInfo().GetUnitNames(iIndex);
 			if(!GC.getGame().isGreatPersonBorn(strName))
 			{
@@ -507,7 +514,9 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 		{
 			ePromotion = (PromotionTypes) iI;
 
+#ifndef AUI_UNIT_FIX_HOVERING_EMBARK
 			if(!GC.getPromotionInfo(ePromotion)->IsHoveringUnit())	// Hovering units handled above
+#endif
 				setHasPromotion(ePromotion, true);
 		}
 	}
@@ -736,6 +745,10 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 			}
 		}
 	}
+
+#ifdef NQM_UNIT_FIX_NO_INSTAHEAL_ON_CREATION_TURN
+	setCanInstahealThisTurn(false);
+#endif
 
 	if(bSetupGraphical)
 		setupGraphical();
@@ -1210,6 +1223,9 @@ void CvUnit::convert(CvUnit* pUnit, bool bIsUpgrade)
 	GetReligionData()->SetReligion(pUnit->GetReligionData()->GetReligion());
 	GetReligionData()->SetSpreadsLeft(pUnit->GetReligionData()->GetSpreadsLeft());
 	GetReligionData()->SetReligiousStrength(pUnit->GetReligionData()->GetReligiousStrength());
+#endif
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+	setCanInstahealThisTurn(pUnit->canInstahealThisTurn());
 #endif
 
 	if (pUnit->getUnitInfo().GetNumExoticGoods() > 0)
@@ -1779,11 +1795,13 @@ void CvUnit::doTurn()
 		}
 	}
 
+#ifndef NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY // Moved to CvPlayer::setTurnActive()'s "false" section so that it happens when the player ends their turn
 	// Only increase our Fortification level if we've actually been told to Fortify
 	if(IsFortifiedThisTurn())
 	{
 		changeFortifyTurns(1);
 	}
+#endif
 
 	// Recon unit? If so, he sees what's around him
 	if(IsRecon())
@@ -2297,6 +2315,9 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 	}
 
 	bool bAllowsWalkWater = enterPlot.IsAllowsWalkWater();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	bAllowsWalkWater = bAllowsWalkWater || (IsHoveringUnit() && enterPlot.getFeatureType() == GC.getDEEP_WATER_TERRAIN());
+#endif
 	if (enterPlot.isWater() && (bMoveFlags & CvUnit::MOVEFLAG_STAY_ON_LAND) && !bAllowsWalkWater)
 	{
 		return false;
@@ -2409,7 +2430,11 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 
 			if(bEmbarked)
 			{
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+				if ((!enterPlot.isWater() && !IsHoveringUnit()) || (enterPlot.getFeatureType() == GC.getDEEP_WATER_TERRAIN() && IsHoveringUnit()))
+#else
 				if(!enterPlot.isWater())
+#endif
 				{
 					return false;
 				}
@@ -2750,7 +2775,11 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 				return false;
 			}
 
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			if (getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && !IsHoveringUnit() && !plot.IsAllowsWalkWater())
+#else
 			if(getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && !plot.IsAllowsWalkWater())
+#endif
 			{
 				return false;
 			}
@@ -3121,7 +3150,11 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 				return false;
 			}
 
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			if (getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && !IsHoveringUnit() && !plot.IsAllowsWalkWater())
+#else
 			if (getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && !plot.IsAllowsWalkWater())
+#endif
 			{
 				return false;
 			}
@@ -3442,12 +3475,37 @@ void CvUnit::move(CvPlot& targetPlot, bool bShow)
 
 	bool bShouldDeductCost = true;
 	int iMoveCost = targetPlot.movementCost(this, plot());
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	bool bTemp = false;
+	bool* pbHoverUnitNeedsToEmbark = NULL; // false = needs to disembark
+	if (IsHoveringUnit() && pOldPlot && CanEverEmbark())
+	{
+		bool bTargetIsDeepWater = (targetPlot.getTerrainType() == GC.getDEEP_WATER_TERRAIN() && !targetPlot.IsAllowsWalkWater());
+		bool bOldIsDeepWater = (pOldPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN() && pOldPlot->IsAllowsWalkWater());
+		if (bTargetIsDeepWater != bOldIsDeepWater)
+		{
+			if (bOldIsDeepWater)
+			{
+				bTemp = true;
+			}
+			pbHoverUnitNeedsToEmbark = &bTemp;
+		}
+	}
+#endif
 
 	// we need to get our dis/embarking on
 	if (pOldPlot && CanEverEmbark() && (targetPlot.isWater() != pOldPlot->isWater() || targetPlot.IsAllowsWalkWater() && pOldPlot->isWater() ||
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+		targetPlot.isWater() && pOldPlot->IsAllowsWalkWater() || pbHoverUnitNeedsToEmbark))
+#else
 		targetPlot.isWater() && pOldPlot->IsAllowsWalkWater()))
+#endif
 	{
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+		if ((pbHoverUnitNeedsToEmbark && *pbHoverUnitNeedsToEmbark == false) || (pOldPlot->isWater() && !pOldPlot->IsAllowsWalkWater()))  // moving from water to the land
+#else
 		if(pOldPlot->isWater() && !pOldPlot->IsAllowsWalkWater())  // moving from water to the land
+#endif
 		{
 			if(isEmbarked())
 			{
@@ -3459,7 +3517,11 @@ void CvUnit::move(CvPlot& targetPlot, bool bShow)
 		}
 		else
 		{
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			if ((pbHoverUnitNeedsToEmbark && *pbHoverUnitNeedsToEmbark == true) || (!isEmbarked() && canEmbarkOnto(*pOldPlot, targetPlot)))  // moving from land to the water
+#else
 			if(!isEmbarked() && canEmbarkOnto(*pOldPlot, targetPlot))  // moving from land to the water
+#endif
 			{
 				if (m_unitMoveLocs.size())	// If we have some queued moves, execute them now, so that the embark is done at the proper location visually
 					PublishQueuedVisualizationMoves();
@@ -6079,6 +6141,9 @@ bool CvUnit::paradrop(int iX, int iY)
 
 	changeMoves(-(GC.getMOVE_DENOMINATOR() / 2));
 	setMadeAttack(true);
+#ifdef NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP
+	setCanInstahealThisTurn(false);
+#endif
 
 	CvPlot* fromPlot = plot();
 	//JON: CHECK FOR INTERCEPTION HERE
@@ -9590,6 +9655,9 @@ void CvUnit::promote(PromotionTypes ePromotion, int iLeaderUnitId)
 	if(pkPromotionInfo->IsInstaHeal())
 	{
 		changeDamage(-GC.getINSTA_HEAL_RATE());
+#ifdef NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN
+		setCanInstahealThisTurn(false);
+#endif
 	}
 	// Set that we have this Promotion
 	else
@@ -14929,6 +14997,17 @@ void CvUnit::finishMoves()
 	setMoves(0);
 }
 
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+bool CvUnit::canInstahealThisTurn() const
+{
+	return m_bCanInstahealThisTurn;
+}
+void CvUnit::setCanInstahealThisTurn(bool bNewValue)
+{
+	m_bCanInstahealThisTurn = bNewValue;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 /// Is this unit capable of moving on its own?
 bool CvUnit::IsImmobile() const
@@ -15462,6 +15541,16 @@ void CvUnit::SetFortifiedThisTurn(bool bValue)
 		return;
 	}
 
+#ifdef NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY
+	// This is all the graphical stuff (i.e. player sees unit icon turn into a shield and unit graphics change to fortified
+	if (m_bFortifiedThisTurn != bValue)
+	{
+		auto_ptr<ICvUnit1> pDllUnit(new CvDllUnit(this));
+		gDLL->GameplayUnitFortify(pDllUnit.get(), bValue);
+	}
+
+	m_bFortifiedThisTurn = bValue;
+#else
 	if(IsFortifiedThisTurn() != bValue)
 	{
 		m_bFortifiedThisTurn = bValue;
@@ -15484,6 +15573,7 @@ void CvUnit::SetFortifiedThisTurn(bool bValue)
 			}
 		}
 	}
+#endif
 }
 
 
@@ -18319,6 +18409,10 @@ bool CvUnit::isPromotionValid(PromotionTypes ePromotion) const
 	// Insta-heal - must be damaged
 	if(promotionInfo->IsInstaHeal())
 	{
+#ifdef NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN
+		if (!canInstahealThisTurn())
+			return false;
+#endif
 		if(getDamage() == 0)
 			return false;
 	}
@@ -18367,9 +18461,11 @@ bool CvUnit::isPromotionValid(PromotionTypes ePromotion) const
 			return false;
 	}
 
+#ifndef AUI_UNIT_FIX_HOVERING_EMBARK
 	// Hovering units (e.g. Helis) cannot embark
 	if(IsHoveringUnit() && promotionInfo->IsAllowsEmbarkation())
 		return false;
+#endif
 
 	return true;
 }
@@ -21337,7 +21433,11 @@ bool CvUnit::PlotValid(CvPlot* pPlot) const
 		break;
 
 	case DOMAIN_LAND:
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+		if (pPlot->getArea() == getArea() || canMoveAllTerrain() || pPlot->IsAllowsWalkWater() || IsHoveringUnit())
+#else
 		if(pPlot->getArea() == getArea() || canMoveAllTerrain() || pPlot->IsAllowsWalkWater())
+#endif
 		{
 			return true;
 		}
