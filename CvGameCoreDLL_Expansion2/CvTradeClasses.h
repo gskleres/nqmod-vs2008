@@ -141,7 +141,12 @@ public:
 	void ClearAllCityTradeRoutes (CvPlot* pPlot); // called when a city is captured or traded
 	void ClearAllCivTradeRoutes (PlayerTypes ePlayer); // called from world congress code
 	void ClearAllCityStateTradeRoutes (void); // called from world congress code
+#ifdef NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
+	void CancelTradeBetweenTeams(TeamTypes eTeam1, TeamTypes eTeam2, bool bReturnUnits = false);
+	void InvalidateTradeBetweenTeams(TeamTypes eOriginTeam, TeamTypes eDestinationTeam);
+#else
 	void CancelTradeBetweenTeams (TeamTypes eTeam1, TeamTypes eTeam2);
+#endif
 
 	void DoAutoWarPlundering(TeamTypes eTeam1, TeamTypes eTeam2); // when war is declared, both sides plunder each others trade routes for cash!
 
