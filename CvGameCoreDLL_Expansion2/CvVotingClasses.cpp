@@ -6892,7 +6892,7 @@ CvGameLeagues::CvGameLeagues(void)
 CvGameLeagues::~CvGameLeagues(void)
 {
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
-	SAFE_DELETE_INTERNAL(m_ActiveLeague);
+	SAFE_DELETE(m_ActiveLeague);
 #endif
 }
 

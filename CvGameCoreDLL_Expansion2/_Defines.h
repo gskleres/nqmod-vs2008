@@ -177,12 +177,20 @@
 #define AUI_PLAYERTECH_FIX_CAN_RESEARCH_WITH_NO_FOUNDED_CITY
 /// Fixes the bug where building a new improvement on a tile with a pillaged improvement keeps the tile marked as pillaged
 #define AUI_PLOT_FIX_PILLAGED_PLOT_ON_NEW_IMPROVEMENT
+/// Hovering units will no longer embark on shallow water, but will embark in deep water
+#define AUI_UNIT_FIX_HOVERING_EMBARK
+/// Research overflow will no longer double-dip with research modifiers (once for the tech that generated it, once for the tech for which it is used). This also stops overflow from multiplying in ways that are exploitable and needed a band-aid fix from Firaxis.
+#define AUI_PLAYER_FIX_NO_RESEARCH_OVERFLOW_DOUBLE_DIP
+/// When war is manually declared by a player against another (i.e. not through a defensive pact), if the defender has any trade routes to the attacker, those trade routes get cancelled instead of destroyed. This applies to both sides of a Defensive Pact DoW.
+#define NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
 #define AUI_GAME_RELATIVE_TURN_TIMERS
 /// New option that pauses the game when an active player disconnects and the game is not sequential
 #define AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+/// Relaxed the limits on the slice limits before turn timers are forced to expire in network multiplayer games (should help stop resyncs due to last-second moves)
+#define NQM_GAME_MORE_RELAXED_TURN_SLICE_LIMIT_FOR_NETWORK_MULTIPLAYER
 
 // Deliberate AI hindrances
 /// AI players will no longer spread their religion to other human players' cities
@@ -206,6 +214,20 @@
 
 // Altered score calculations as an option toggleable in-game
 #define NQM_OPTIONAL_SCORING_TWEAKS
+
+// Fixes specific to simultaneous mode
+/// Units can no longer insta-heal twice in the same turn. This should only affect simultaneous mode and stops a few cheesey strategies
+#define NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN
+/// Units can no longer insta-heal the turn they are created
+#define NQM_UNIT_FIX_NO_INSTAHEAL_ON_CREATION_TURN
+/// Paradroping a unit disqualifies it from insta-healing in the same turn. This should only affect simultaneous mode and stops a few cheesey strategies
+#define NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP
+/// Fortifying a unit will only give it a strength boost at the end of the turn. This should only affect simultaneous mode and stops players from fortifying units at the start of the turn for the defensive bonus, then using those units as normal.
+#define NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY
+/// If the game/player who is in simultaneous mode declares war and the turn timer has less than 60 seconds remaining, it is filled back up to 60 seconds
+//#define NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
+/// Randomizes the order in which player turns activate in simultaneous mode. E.g. this makes it so that the host no longer wins wonder races against all other players if they finish a wonder the same turn as another player.
+#define NQM_GAME_RANDOMIZE_TURN_ACTIVATION_ORDER_IN_SIMULTANEOUS
 
 // New hybrid mode
 /// When in hybrid mode, players who are not at war with each other have their turns happen simultaneously, thus speeding games up significantly

@@ -1021,6 +1021,11 @@
         <Type>UpdateDatabase</Type>
         <FileName>gameplay/CIV5GameOptions_AutoPause_on_Active_Disconnect.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/CIV5GameOptions_Randomized_Turn_Activation.xml</FileName>
+      </Action>
     </ModActions>
     <ModContent>
       <Content>
@@ -1281,6 +1286,10 @@
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
     <Content Include="gameplay\CIV5GameOptions_AutoPause_on_Active_Disconnect.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="gameplay\CIV5GameOptions_Randomized_Turn_Activation.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
