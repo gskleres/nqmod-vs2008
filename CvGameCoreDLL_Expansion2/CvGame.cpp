@@ -2038,7 +2038,11 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 						{
 							gameTurnTimerExpired = true;
 						}
+#ifdef NQM_GAME_MORE_RELAXED_TURN_SLICE_LIMIT_FOR_NETWORK_MULTIPLAYER
+						else if (s_unitMoveTurnSlice + (CvPreGame::isNetworkMultiplayerGame() ? 100 : 10) < getTurnSlice())
+#else
 						else if(s_unitMoveTurnSlice + 10 < getTurnSlice())
+#endif
 						{
 							gameTurnTimerExpired = true;
 						}
@@ -2127,7 +2131,11 @@ void CvGame::updateTestEndTurn()
 	{
 		bool automaticallyEndTurns = (isGameMultiPlayer())? pkIface->IsMPAutoEndTurnEnabled() : pkIface->IsSPAutoEndTurnEnabled();
 		if(automaticallyEndTurns && s_unitMoveTurnSlice != 0)
+#ifdef NQM_GAME_MORE_RELAXED_TURN_SLICE_LIMIT_FOR_NETWORK_MULTIPLAYER
+			automaticallyEndTurns = s_unitMoveTurnSlice + (CvPreGame::isNetworkMultiplayerGame() ? 100 : 10) < getTurnSlice();
+#else
 			automaticallyEndTurns = s_unitMoveTurnSlice + 10 < getTurnSlice();
+#endif
 
 		if(automaticallyEndTurns)
 		{
@@ -8092,6 +8100,7 @@ void CvGame::constructTurnOrders()
 					abIsAliveHumanTeam[iTeamIdx] = true;
 				}
 			}
+
 			for (iTeamIdx = 0; iTeamIdx < MAX_TEAMS - 1; ++iTeamIdx)
 			{
 				if (abIsAliveHumanTeam[iTeamIdx])
@@ -8936,8 +8945,27 @@ void CvGame::updateMoves()
 			CvBarbarians::DoUnits();
 #endif
 			// KWG: This code should go into CheckPlayerTurnDeactivate
+#ifdef NQM_GAME_RANDOMIZE_TURN_ACTIVATION_ORDER_IN_SIMULTANEOUS
+			int aiShuffle[MAX_PLAYERS];
+			if (GC.getGame().isOption("GAMEOPTION_SIMULTANEOUS_PLAYER_TURN_ACTIVATION_ORDER_RANDOMIZED"))
+			{
+				shuffleArray(aiShuffle, MAX_PLAYERS, getJonRand());
+			}
+			else
+			{
+				for (iI = 0; iI < MAX_PLAYERS; iI++)
+				{
+					aiShuffle[iI] = iI;
+				}
+			}
+
+			for (int iJ = 0; iJ < MAX_PLAYERS; iJ++)
+			{
+				iI = aiShuffle[iJ];
+#else
 			for(iI = 0; iI < MAX_PLAYERS; iI++)
 			{
+#endif
 				CvPlayer& player = GET_PLAYER((PlayerTypes)iI);
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 				if (!player.isTurnActive() && player.isHuman() && player.isAlive() && (player.getTurnOrder() == m_iCurrentTurnOrderActive))

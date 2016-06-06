@@ -11639,6 +11639,8 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 #ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 						if (GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_BONUS)
 						{
+							// undo the bonus - bonus resources only increase yields
+							iInfluenceCost -= iPLOT_INFLUENCE_RESOURCE_COST;
 							if (hexDistance(iDX, iDY) <= NUM_CITY_RINGS)
 							{
 								int* aiYields = GC.getResourceInfo(eResource)->getYieldChangeArray();

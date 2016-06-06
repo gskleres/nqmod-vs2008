@@ -1209,7 +1209,11 @@ void CvGameTrade::ClearAllCityStateTradeRoutes (void)
 
 //	--------------------------------------------------------------------------------
 /// Called when war is declared between teams
+#ifdef NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
+void CvGameTrade::CancelTradeBetweenTeams(TeamTypes eTeam1, TeamTypes eTeam2, bool bReturnUnits)
+#else
 void CvGameTrade::CancelTradeBetweenTeams (TeamTypes eTeam1, TeamTypes eTeam2)
+#endif
 {
 	// there shouldn't be trade routes between the same team
 	if (eTeam1 == eTeam2)
@@ -1228,10 +1232,54 @@ void CvGameTrade::CancelTradeBetweenTeams (TeamTypes eTeam1, TeamTypes eTeam2)
 		TeamTypes eDestTeam = GET_PLAYER(m_aTradeConnections[ui].m_eDestOwner).getTeam();
 		if ((eOriginTeam == eTeam1 && eDestTeam == eTeam2) || (eOriginTeam == eTeam2 && eDestTeam == eTeam1)) 
 		{
+#ifdef NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
+			if (bReturnUnits)
+			{
+				UnitTypes eUnitType = GET_PLAYER(m_aTradeConnections[ui].m_eOriginOwner).GetTrade()->GetTradeUnit(m_aTradeConnections[ui].m_eDomain);
+				CvAssertMsg(eUnitType != NO_UNIT, "No trade unit found");
+				if (eUnitType != NO_UNIT)
+				{
+					GET_PLAYER(m_aTradeConnections[ui].m_eOriginOwner).initUnit(eUnitType, m_aTradeConnections[ui].m_iOriginX, m_aTradeConnections[ui].m_iOriginY, UNITAI_TRADE_UNIT);
+				}
+			}
+#endif
 			EmptyTradeRoute(ui);
 		}
 	}
 }
+
+#ifdef NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
+// This invalides trade routes (i.e. cancels them and sends their units back) instead of destroying them
+void CvGameTrade::InvalidateTradeBetweenTeams(TeamTypes eOriginTeam, TeamTypes eDestinationTeam)
+{
+	// there shouldn't be trade routes between the same team
+	if (eOriginTeam == eDestinationTeam)
+	{
+		return;
+	}
+
+	for (uint ui = 0; ui < m_aTradeConnections.size(); ui++)
+	{
+		if (IsTradeRouteIndexEmpty(ui))
+		{
+			continue;
+		}
+
+		TeamTypes eLoopOriginTeam = GET_PLAYER(m_aTradeConnections[ui].m_eOriginOwner).getTeam();
+		TeamTypes eLoopDestTeam = GET_PLAYER(m_aTradeConnections[ui].m_eDestOwner).getTeam();
+		if (eOriginTeam == eLoopOriginTeam && eLoopDestTeam == eLoopDestTeam)
+		{
+			UnitTypes eUnitType = GET_PLAYER(m_aTradeConnections[ui].m_eOriginOwner).GetTrade()->GetTradeUnit(m_aTradeConnections[ui].m_eDomain);
+			CvAssertMsg(eUnitType != NO_UNIT, "No trade unit found");
+			if (eUnitType != NO_UNIT)
+			{
+				GET_PLAYER(m_aTradeConnections[ui].m_eOriginOwner).initUnit(eUnitType, m_aTradeConnections[ui].m_iOriginX, m_aTradeConnections[ui].m_iOriginY, UNITAI_TRADE_UNIT);
+			}
+			EmptyTradeRoute(ui);
+		}
+	}
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 // when war is declared, both sides plunder each others trade routes for cash!

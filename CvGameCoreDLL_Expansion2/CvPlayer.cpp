@@ -4759,6 +4759,9 @@ void CvPlayer::DoUnitReset()
 		pLoopUnit->SetIgnoreDangerWakeup(false);
 		pLoopUnit->setMadeAttack(false);
 		pLoopUnit->setMadeInterception(false);
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_ON_CREATION_TURN)
+		pLoopUnit->setCanInstahealThisTurn(true);
+#endif
 
 		if(!isHuman())
 		{
@@ -16748,6 +16751,18 @@ void CvPlayer::setTurnActive(bool bNewValue, bool bDoTurn)
 				GetDiplomacyRequests()->EndTurn();
 			}
 
+#ifdef NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY
+			int iLoop;
+			for (CvUnit* pLoopUnit = firstUnit(&iLoop); pLoopUnit != NULL; pLoopUnit = nextUnit(&iLoop))
+			{
+				// Only increase our Fortification level if we've actually been told to Fortify
+				if (pLoopUnit->IsFortifiedThisTurn())
+				{
+					pLoopUnit->changeFortifyTurns(1);
+				}
+			}
+#endif
+
 			if(GetID() == kGame.getActivePlayer())
 			{
 				DLLUI->PublishActivePlayerTurnEnd();
@@ -20550,7 +20565,11 @@ void CvPlayer::doResearch()
 		}
 		else
 		{
+#ifdef AUI_PLAYER_FIX_NO_RESEARCH_OVERFLOW_DOUBLE_DIP
+			iOverflowResearch = getOverflowResearchTimes100();
+#else
 			iOverflowResearch = (getOverflowResearchTimes100() * calculateResearchModifier(eCurrentTech)) / 100;
+#endif
 			setOverflowResearch(0);
 			if(GET_TEAM(getTeam()).GetTeamTechs())
 			{

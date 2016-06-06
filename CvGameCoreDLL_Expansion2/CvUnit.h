@@ -695,6 +695,11 @@ public:
 	void changeMoves(int iChange);
 	void finishMoves();
 
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_ON_CREATION_TURN)
+	bool canInstahealThisTurn() const;
+	void setCanInstahealThisTurn(bool bNewValue);
+#endif
+
 	bool IsImmobile() const;
 	void SetImmobile(bool bValue);
 
@@ -1523,6 +1528,10 @@ protected:
 	GreatWorkType m_eGreatWork;
 	int m_iTourismBlastStrength;
 	int m_iResearchBulbAmount; // GJS - new stored bulb amount
+
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_ON_CREATION_TURN)
+	bool m_bCanInstahealThisTurn;
+#endif
 
 	mutable CvPathNodeArray m_kLastPath;
 	mutable uint m_uiLastPathCacheDest;

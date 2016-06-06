@@ -1147,32 +1147,45 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 	CvAssertMsg(eTeam != NO_TEAM, "eTeam is not assigned a valid value");
 	CvAssertMsg(eTeam != GetID(), "eTeam is not expected to be equal with GetID()");
 
-	if(isAtWar(eTeam))
+	if (isAtWar(eTeam))
 	{
 		return;
 	}
 
 	CvAssertMsg(eTeam != GetID(), "eTeam is not expected to be equal with GetID()");
-	if(!isBarbarian())
+	if (!isBarbarian())
 	{
 		// Since we declared war, all of OUR Defensive Pacts are nullified
 		cancelDefensivePacts();
 		GC.getGame().GetGameTrade()->DoAutoWarPlundering(m_eID, eTeam);
+#ifdef NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
+		if (bDefensivePact)
+		{
+			GC.getGame().GetGameTrade()->CancelTradeBetweenTeams(m_eID, eTeam, true);
+		}
+		else
+		{
+			// Returns units for cancelled trade routes to the defender
+			GC.getGame().GetGameTrade()->InvalidateTradeBetweenTeams(eTeam, m_eID);
+			// Destroys attackers' units for cancelled trade routes
+			GC.getGame().GetGameTrade()->CancelTradeBetweenTeams(m_eID, eTeam);
+#else
 		GC.getGame().GetGameTrade()->CancelTradeBetweenTeams(m_eID, eTeam);
 
 		if (!bDefensivePact)
 		{
-			for(int iAttackingPlayer = 0; iAttackingPlayer < MAX_MAJOR_CIVS; iAttackingPlayer++)
+#endif
+			for (int iAttackingPlayer = 0; iAttackingPlayer < MAX_MAJOR_CIVS; iAttackingPlayer++)
 			{
 				PlayerTypes eAttackingPlayer = (PlayerTypes)iAttackingPlayer;
 				CvPlayerAI& kAttackingPlayer = GET_PLAYER(eAttackingPlayer);
-				if(kAttackingPlayer.isAlive() && kAttackingPlayer.getTeam() == GetID())
+				if (kAttackingPlayer.isAlive() && kAttackingPlayer.getTeam() == GetID())
 				{
 					for (int iDefendingPlayer = 0; iDefendingPlayer < MAX_MAJOR_CIVS; iDefendingPlayer++)
 					{
 						PlayerTypes eDefendingPlayer = (PlayerTypes)iDefendingPlayer;
 						CvPlayerAI& kDefendingPlayer = GET_PLAYER(eDefendingPlayer);
-						if(kDefendingPlayer.isAlive() && kDefendingPlayer.getTeam() == eTeam)
+						if (kDefendingPlayer.isAlive() && kDefendingPlayer.getTeam() == eTeam)
 						{
 							// Forget any of that liberation crud!
 							int iNumCitiesLiberated = kDefendingPlayer.GetDiplomacyAI()->GetNumCitiesLiberated(eAttackingPlayer);
@@ -1184,11 +1197,11 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 		}
 
 		// Auto War for Defensive Pacts
-		for(iI = 0; iI < MAX_TEAMS; iI++)
+		for (iI = 0; iI < MAX_TEAMS; iI++)
 		{
-			if(GET_TEAM((TeamTypes)iI).isAlive())
+			if (GET_TEAM((TeamTypes)iI).isAlive())
 			{
-				if(GET_TEAM((TeamTypes)iI).IsHasDefensivePact(eTeam))
+				if (GET_TEAM((TeamTypes)iI).IsHasDefensivePact(eTeam))
 				{
 					GET_TEAM((TeamTypes)iI).DoDeclareWar(GetID(), /*bDefensivePact*/ true);
 				}
@@ -1197,7 +1210,7 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 	}
 
 	// Cancel Trade Deals, RAs, diplomats
-	if(!isBarbarian())
+	if (!isBarbarian())
 	{
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		// Because second team is the "to" team, so cancel all of their deals to this team first
@@ -1238,20 +1251,20 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 	meet(eTeam, false);
 
 	// Update the ATTACKED players' Diplo AI
-	if(!isBarbarian())
+	if (!isBarbarian())
 	{
-		for(iI = 0; iI < MAX_CIV_PLAYERS; iI++)
+		for (iI = 0; iI < MAX_CIV_PLAYERS; iI++)
 		{
 			CvPlayerAI& kPlayer = GET_PLAYER((PlayerTypes)iI);
-			if(kPlayer.isAlive() && kPlayer.getTeam() == eTeam)
+			if (kPlayer.isAlive() && kPlayer.getTeam() == eTeam)
 				kPlayer.GetDiplomacyAI()->DoSomeoneDeclaredWarOnMe(GetID());
 		}
 
 		// If we've made a peace treaty before, this is bad news (no minors though)
-		if(!GET_TEAM(eTeam).isMinorCiv())
+		if (!GET_TEAM(eTeam).isMinorCiv())
 		{
 			int iPeaceTreatyTurn = GetTurnMadePeaceTreatyWithTeam(eTeam);
-			if(iPeaceTreatyTurn != -1)
+			if (iPeaceTreatyTurn != -1)
 			{
 				int iTurnsSincePeace = GC.getGame().getElapsedGameTurns() - iPeaceTreatyTurn;
 				if (iTurnsSincePeace < GC.getPEACE_TREATY_LENGTH())
@@ -1263,32 +1276,32 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 	}
 
 	// Update interface stuff
-	if((GetID() == GC.getGame().getActiveTeam()) || (eTeam == GC.getGame().getActiveTeam()))
+	if ((GetID() == GC.getGame().getActiveTeam()) || (eTeam == GC.getGame().getActiveTeam()))
 	{
 		DLLUI->setDirty(Score_DIRTY_BIT, true);
 		DLLUI->setDirty(CityInfo_DIRTY_BIT, true);
 	}
 
-	if(GC.getGame().isFinalInitialized())
+	if (GC.getGame().isFinalInitialized())
 	{
 		// Message everyone about what happened
-		if(!isBarbarian() && !(GET_TEAM(eTeam).isBarbarian()))
+		if (!isBarbarian() && !(GET_TEAM(eTeam).isBarbarian()))
 		{
 			{
 				PlayerTypes ePlayer;
-				for(iI = 0; iI < MAX_PLAYERS; iI++)
+				for (iI = 0; iI < MAX_PLAYERS; iI++)
 				{
-					ePlayer = (PlayerTypes) iI;
+					ePlayer = (PlayerTypes)iI;
 
-					if(GET_PLAYER(ePlayer).isAlive() && GET_PLAYER(ePlayer).GetNotifications())
+					if (GET_PLAYER(ePlayer).isAlive() && GET_PLAYER(ePlayer).GetNotifications())
 					{
 						// If this declaration is a minor following a major's declaration, don't send out these individual notifications
-						if(!bMinorAllyPact)
+						if (!bMinorAllyPact)
 						{
 							// Players on team that declared
-							if(GET_PLAYER(ePlayer).getTeam() == GetID())
+							if (GET_PLAYER(ePlayer).getTeam() == GetID())
 							{
-								if(ePlayer == GC.getGame().getActivePlayer())
+								if (ePlayer == GC.getGame().getActivePlayer())
 								{
 									locString = Localization::Lookup("TXT_KEY_MISC_YOU_DECLARED_WAR_ON");
 									locString << GET_TEAM(eTeam).getName().GetCString();
@@ -1296,14 +1309,14 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 								}
 							}
 							// Players on team that got declared on
-							else if(GET_PLAYER(ePlayer).getTeam() == eTeam)
+							else if (GET_PLAYER(ePlayer).getTeam() == eTeam)
 							{
 								locString = Localization::Lookup("TXT_KEY_MISC_DECLARED_WAR_ON_YOU");
 								locString << getName().GetCString();
 								GET_PLAYER(ePlayer).GetNotifications()->Add(NOTIFICATION_WAR_ACTIVE_PLAYER, locString.toUTF8(), locString.toUTF8(), -1, -1, this->getLeaderID());
 							}
 							// Players that are on neither team, but know both parties
-							else if(GET_TEAM(GET_PLAYER(ePlayer).getTeam()).isHasMet(GetID()) && GET_TEAM(GET_PLAYER(ePlayer).getTeam()).isHasMet(eTeam))
+							else if (GET_TEAM(GET_PLAYER(ePlayer).getTeam()).isHasMet(GetID()) && GET_TEAM(GET_PLAYER(ePlayer).getTeam()).isHasMet(eTeam))
 							{
 								locString = Localization::Lookup("TXT_KEY_MISC_SOMEONE_DECLARED_WAR");
 								locString << getName().GetCString() << GET_TEAM(eTeam).getName().GetCString();
@@ -1319,6 +1332,60 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 			GC.getGame().addReplayMessage(REPLAY_MESSAGE_MAJOR_EVENT, getLeaderID(), locString.toUTF8(), -1, -1);
 		}
 	}
+
+#ifdef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
+	if (isHuman() && GET_TEAM(eTeam).isHuman())
+	{
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+		if (getTurnOrder() == GET_TEAM(eTeam).getTurnOrder())
+#else
+		if (isSimultaneousTurns() || GET_TEAM(eTeam).isSimultaneousTurns())
+#endif
+		{
+			CvGame& kGame = GC.getGame();
+			if (kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED) && kGame.getElapsedGameTurns() > 0 && 
+#ifdef AUI_GAME_RELATIVE_TURN_TIMERS
+				(kGame.getPitbossTurnTime() == 0 || kGame.isOption("GAMEOPTION_RELATIVE_TURN_TIMER")))
+#else
+				kGame.getPitbossTurnTime() == 0)
+#endif
+			{
+				const CvTurnTimerInfo& kTurnTimer = CvPreGame::turnTimerInfo();
+				float fBaseTurnTime = static_cast<float>(kTurnTimer.getBaseTime());
+
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+				FFastVector<int, true, c_eCiv5GameplayDLL>::const_iterator piCurMaxTurnLength = kGame.m_aiMaxTurnLengths.begin();
+				piCurMaxTurnLength += GET_PLAYER(kGame.getActivePlayer()).getTurnOrder();
+
+				float fGameTurnEnd = static_cast<float>(*piCurMaxTurnLength);
+#else
+				float fGameTurnEnd = static_cast<float>(kGame.getMaxTurnLen());
+
+				//NOTE:  These times exclude the time used for AI processing.
+				//Time since the current player's turn started.  Used for measuring time for players in sequential turn mode.
+				float fTimeSinceCurrentTurnStart = kGame.m_curTurnTimer.Peek() + kGame.m_fCurrentTurnTimerPauseDelta;
+#ifndef AUI_GAME_BETTER_HYBRID_MODE
+				//Time since the game (year) turn started.  Used for measuring time for players in simultaneous turn mode.
+				float fTimeSinceGameTurnStart = kGame.m_timeSinceGameTurnStart.Peek() + kGame.m_fCurrentTurnTimerPauseDelta;
+#endif
+#endif
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+				float fTimeElapsed = kGame.m_curTurnTimer.Peek() + kGame.m_fCurrentTurnTimerPauseDelta;
+#elif defined(AUI_GAME_BETTER_HYBRID_MODE)
+				float fTimeElapsed = timeSinceCurrentTurnStart;
+#else
+				float fTimeElapsed = (GET_PLAYER(kGame.getActivePlayer()).isSimultaneousTurns() ? fTimeSinceGameTurnStart : fTimeSinceCurrentTurnStart);
+#endif
+				float fTimeToAdd = MAX(0.0f, fTimeElapsed - fGameTurnEnd + fBaseTurnTime);
+				if (fTimeToAdd > 0)
+				{
+					kGame.m_curTurnTimer.m_qStart += (__int64)(fTimeToAdd/ kGame.m_curTurnTimer.m_fFreq);
+					kGame.m_timeSinceGameTurnStart.m_qStart += (__int64)(fTimeToAdd / kGame.m_timeSinceGameTurnStart.m_fFreq);
+				}
+			}
+		}
+	}
+#endif
 
 	int iMinorCivLoop;
 	int iMajorCivLoop;

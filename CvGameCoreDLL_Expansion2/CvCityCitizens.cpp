@@ -548,7 +548,7 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 			iExcessFoodYieldValue = iFoodYieldValue / 16;
 #ifdef AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
 			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH
-				|| eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || m_pCity->getPopulation() <= (GC.getUNHAPPINESS_PER_CITY() + 1))
+				|| eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || m_pCity->getPopulation() < 2)
 #else
 			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
 #endif
@@ -1526,7 +1526,7 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 			iExcessFoodYieldValue = iFoodYieldValue / 16;
 #ifdef AUI_CITIZENS_LOW_POPULATION_CITIES_USE_2MIN_NOT_4X_FOOD
 			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH
-				|| eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || m_pCity->getPopulation() <= (GC.getUNHAPPINESS_PER_CITY() + 1))
+				|| eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH || m_pCity->getPopulation() < 2)
 #else
 			if (eFocus == NO_CITY_AI_FOCUS_TYPE || eFocus == CITY_AI_FOCUS_TYPE_FOOD || eFocus == CITY_AI_FOCUS_TYPE_PROD_GROWTH || eFocus == CITY_AI_FOCUS_TYPE_GOLD_GROWTH)
 #endif
@@ -1919,8 +1919,11 @@ bool CvCityCitizens::DoRemoveWorstCitizen(bool bRemoveForcedStatus, SpecialistTy
 
 #ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
 	int iWorstSpecialistValue = 0;
-	BuildingTypes eWorstSpecialistBuilding = GetAIBestSpecialistBuilding(&iWorstSpecialistValue, true, true, eDontChangeSpecialist);
-	
+	BuildingTypes eWorstSpecialistBuilding = NO_BUILDING;
+	if (!IsNoAutoAssignSpecialists())
+	{
+		eWorstSpecialistBuilding = GetAIBestSpecialistBuilding(&iWorstSpecialistValue, true, true, eDontChangeSpecialist);
+	}
 
 	// Find default Specialist to pull off, if there is one
 	if (GetNumDefaultSpecialists() > 0)
