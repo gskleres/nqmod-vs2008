@@ -4,30 +4,27 @@
 	
 	<!--
 			   *** FRUITY TRADITION ***
-			   
 	 ___________      _________      ____________
 	|Aristocracy|    |Oligarchy|    |Landed Elite|
-						  |
-					  ____|____
+                          |
+                      ____|____
 					 |Monarchy |
+	
+	NOTE: Legalism policy recycled -> moved to Rationalism
 	-->
 	
-	<!-- Remove Legalism -->
-	<Policies>
-		<Delete Type="POLICY_LEGALISM" />
-	</Policies>
-	<Policy_Flavors>
-		<Delete PolicyType="POLICY_LEGALISM" />
-	</Policy_Flavors>
 	
-	<!-- Set up new tree prerequisites (eliminating Legalism) -->
+	<!-- Set up new tree prerequisites -->
 	<Policy_PrereqPolicies>
-		<Delete PolicyType="POLICY_LEGALISM" PrereqPolicy="POLICY_OLIGARCHY" />
-		<Delete PolicyType="POLICY_MONARCHY" PrereqPolicy="POLICY_LEGALISM" />
-		<Delete PolicyType="POLICY_LANDED_ELITE" PrereqPolicy="POLICY_LEGALISM" />
-		
+		<Delete PolicyType="POLICY_LEGALISM"		PrereqPolicy="POLICY_OLIGARCHY"	/>
+		<Delete PolicyType="POLICY_MONARCHY"		PrereqPolicy="POLICY_LEGALISM"	/>
+		<Delete PolicyType="POLICY_LANDED_ELITE"	PrereqPolicy="POLICY_LEGALISM"	/>
+		<Row>
+			<PolicyType>POLICY_MONARCHY</PolicyType>
+			<PrereqPolicy>POLICY_OLIGARCHY</PrereqPolicy>
+		</Row>
 	</Policy_PrereqPolicies>
-	
+
 	<!-- New tree structure -->
 	<Policies>
 		<Update>
@@ -46,6 +43,10 @@
 			<Set GridX="3" GridY="2" />
 			<Where Type="POLICY_MONARCHY" />
 		</Update>
+		<Update>
+			<Set GridX="1" GridY="1" PolicyBranchType="POLICY_BRANCH_RATIONALISM" />
+			<Where Type="POLICY_LEGALISM" />
+		</Update>
 	</Policies>
-	
+
 </GameData>

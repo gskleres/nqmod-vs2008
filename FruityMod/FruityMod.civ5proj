@@ -7,8 +7,7 @@
     <Guid>84b0d81d-18a6-4666-adba-f7858221744e</Guid>
     <ModVersion>1</ModVersion>
     <Stability>Alpha</Stability>
-    <Teaser>
-    </Teaser>
+    <Teaser>[COLOR_RED]FR[COLOR_PLAYER_ORANGE]UI[COLOR_YELLOW]TY[COLOR_GREEN]MO[COLOR_PLAYER_LIGHT_BLUE]D![COLOR_PLAYER_PURPLE] :D</Teaser>
     <Description>Optional balance mod for Civ 5 Brave New World.</Description>
     <Authors>Fruitstrike</Authors>
     <SpecialThanks>Hellblazer, NotQ, Delnar_Ersike, Uncanny Luck, and all the wonderful testers!!</SpecialThanks>
@@ -641,6 +640,11 @@
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>social_policies/1_tradition/Tradition1_Oligarchy.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>social_policies/2_liberty/Liberty_Tree.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -1463,6 +1467,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="social_policies\2_liberty\Liberty5_Meritocracy.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="social_policies\2_liberty\Liberty_Tree.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
