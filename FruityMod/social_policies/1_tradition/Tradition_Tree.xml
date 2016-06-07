@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 4/18/2015 1:40:34 PM -->
+<GameData>
+	
+	<!--
+			   *** FRUITY TRADITION ***
+			   
+	 ___________      _________      ____________
+	|Aristocracy|    |Oligarchy|    |Landed Elite|
+						  |
+					  ____|____
+					 |Monarchy |
+	-->
+	
+	<!-- Remove Legalism -->
+	<Policies>
+		<Delete Type="POLICY_LEGALISM" />
+	</Policies>
+	<Policy_Flavors>
+		<Delete PolicyType="POLICY_LEGALISM" />
+	</Policy_Flavors>
+	
+	<!-- Set up new tree prerequisites (eliminating Legalism) -->
+	<Policy_PrereqPolicies>
+		<Delete PolicyType="POLICY_LEGALISM" PrereqPolicy="POLICY_OLIGARCHY" />
+		<Delete PolicyType="POLICY_MONARCHY" PrereqPolicy="POLICY_LEGALISM" />
+		<Delete PolicyType="POLICY_LANDED_ELITE" PrereqPolicy="POLICY_LEGALISM" />
+		
+	</Policy_PrereqPolicies>
+	
+	<!-- New tree structure -->
+	<Policies>
+		<Update>
+			<Set GridX="1" GridY="1" />
+			<Where Type="POLICY_ARISTOCRACY" />
+		</Update>
+		<Update>
+			<Set GridX="3" GridY="1" />
+			<Where Type="POLICY_OLIGARCHY" />
+		</Update>
+		<Update>
+			<Set GridX="5" GridY="1" />
+			<Where Type="POLICY_LANDED_ELITE" />
+		</Update>
+		<Update>
+			<Set GridX="3" GridY="2" />
+			<Where Type="POLICY_MONARCHY" />
+		</Update>
+	</Policies>
+	
+</GameData>
