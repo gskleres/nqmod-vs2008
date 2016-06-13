@@ -50,6 +50,13 @@ struct TradeConnection
 	int m_iTurnRouteComplete;
 	int m_aiOriginYields[NUM_YIELD_TYPES];
 	int m_aiDestYields[NUM_YIELD_TYPES];
+
+#ifdef AUI_TRADE_FIX_POSSIBLE_DEALLOCATION_CRASH
+	~TradeConnection()
+	{
+		m_aPlotList.clear();
+	}
+#endif
 };
 
 #define PROJECTED_MAX_TRADE_CONNECTIONS_PER_CIV 14
