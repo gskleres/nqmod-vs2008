@@ -699,6 +699,10 @@ public:
 	bool canInstahealThisTurn() const;
 	void setCanInstahealThisTurn(bool bNewValue);
 #endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	bool isInterceptBlockedUntilEndTurn() const;
+	void setIsInterceptBlockedUntilEndTurn(bool bNewValue);
+#endif
 
 	bool IsImmobile() const;
 	void SetImmobile(bool bValue);
@@ -1531,6 +1535,9 @@ protected:
 
 #if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_ON_CREATION_TURN)
 	bool m_bCanInstahealThisTurn;
+#endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	FAutoVariable<bool, CvUnit> m_bIsInterceptBlockedUntilEndTurn;
 #endif
 
 	mutable CvPathNodeArray m_kLastPath;

@@ -267,6 +267,9 @@ CvUnit::CvUnit() :
 #if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
 	, m_bCanInstahealThisTurn(true)
 #endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	, m_bIsInterceptBlockedUntilEndTurn("CvUnit::m_bIsInterceptBlockedUntilEndTurn", m_syncArchive)
+#endif
 	, m_bPromotionReady("CvUnit::m_bPromotionReady", m_syncArchive)
 	, m_bDeathDelay("CvUnit::m_bDeathDelay", m_syncArchive)
 	, m_bCombatFocus("CvUnit::m_bCombatFocus", m_syncArchive)
@@ -937,6 +940,9 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_bAITurnProcessed = false;
 	m_bWaitingForMove = false;
 	m_eTacticalMove = NO_TACTICAL_MOVE;
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	m_bIsInterceptBlockedUntilEndTurn = false;
+#endif
 
 	m_eOwner = eOwner;
 	m_eOriginalOwner = eOwner;
@@ -1226,6 +1232,9 @@ void CvUnit::convert(CvUnit* pUnit, bool bIsUpgrade)
 #endif
 #if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
 	setCanInstahealThisTurn(pUnit->canInstahealThisTurn());
+#endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	setIsInterceptBlockedUntilEndTurn(pUnit->isInterceptBlockedUntilEndTurn());
 #endif
 
 	if (pUnit->getUnitInfo().GetNumExoticGoods() > 0)
@@ -1650,10 +1659,24 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 						if (!pkCapturedUnit->jumpToNearestValidPlot())
 						{
 							pkCapturedUnit->kill(true);
+#ifdef AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
 							pkCapturedUnit = NULL;
+#else
+							return NULL;
+#endif
 						}
 					}
 
+#ifdef AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
+					{
+						pkCapturedUnit->finishMoves();
+
+						// Minor civs can't capture settlers, ever!
+						if (GET_PLAYER(pkCapturedUnit->getOwner()).isMinorCiv() && (pkCapturedUnit->isFound() || pkCapturedUnit->IsFoundAbroad()))
+						{
+							pkCapturedUnit->kill(false);
+							return NULL;
+#else
 					bool bDisbanded = false;
 					if (pkCapturedUnit != NULL)
 					{
@@ -1665,6 +1688,7 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 							bDisbanded = true;
 							pkCapturedUnit->kill(false);
 							pkCapturedUnit = NULL;
+#endif
 						}
 					}
 
@@ -1707,7 +1731,11 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 						}
 
 						// Take it automatically!
+#ifdef AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
+						else if (!bShowingHumanPopup && !pkCapturedUnit->isBarbarian())	// Don't process if the AI decided to disband the unit, or the barbs captured something
+#else
 						else if(!bShowingHumanPopup && !bDisbanded && pkCapturedUnit != NULL && !pkCapturedUnit->isBarbarian())	// Don't process if the AI decided to disband the unit, or the barbs captured something
+#endif
 						{
 							// If the unit originally belonged to us, we've already done what we needed to do
 							if(kCaptureDef.eCapturingPlayer != kCaptureDef.eOriginalOwner)
@@ -1724,7 +1752,9 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 					else
 					{
 						// restore combat units at some percentage of their original health
+#ifndef AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
 						if (pkCapturedUnit != NULL)
+#endif
 						{
 							int iCapturedHealth = (pkCapturedUnit->GetMaxHitPoints() * GC.getCOMBAT_CAPTURE_HEALTH()) / 100;
 							pkCapturedUnit->setDamage(iCapturedHealth);
@@ -2431,7 +2461,7 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 			if(bEmbarked)
 			{
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-				if ((!enterPlot.isWater() && !IsHoveringUnit()) || (enterPlot.getFeatureType() == GC.getDEEP_WATER_TERRAIN() && IsHoveringUnit()))
+				if ((!enterPlot.isWater() && !IsHoveringUnit()) || (enterPlot.getFeatureType() != GC.getDEEP_WATER_TERRAIN() && IsHoveringUnit()))
 #else
 				if(!enterPlot.isWater())
 #endif
@@ -3472,6 +3502,10 @@ void CvUnit::move(CvPlot& targetPlot, bool bShow)
 
 	CvPlot* pOldPlot = plot();
 	CvAssertMsg(pOldPlot, "pOldPlot needs to have a value");
+
+#ifdef NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END
+	setIsInterceptBlockedUntilEndTurn(true);
+#endif
 
 	bool bShouldDeductCost = true;
 	int iMoveCost = targetPlot.movementCost(this, plot());
@@ -15008,6 +15042,19 @@ void CvUnit::setCanInstahealThisTurn(bool bNewValue)
 }
 #endif
 
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+bool CvUnit::isInterceptBlockedUntilEndTurn() const
+{
+	return m_bIsInterceptBlockedUntilEndTurn;
+}
+void CvUnit::setIsInterceptBlockedUntilEndTurn(bool bNewValue)
+{
+	// Since this a synced variable, we need to make sure we actually apply new values to it only when necessary
+	if (m_bIsInterceptBlockedUntilEndTurn != bNewValue) 
+		m_bIsInterceptBlockedUntilEndTurn = bNewValue;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 /// Is this unit capable of moving on its own?
 bool CvUnit::IsImmobile() const
@@ -17304,7 +17351,11 @@ void CvUnit::ChangeNumInterceptions(int iChange)
 bool CvUnit::isOutOfInterceptions() const
 {
 	VALIDATE_OBJECT
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	return isInterceptBlockedUntilEndTurn() || getMadeInterceptionCount() >= GetNumInterceptions();
+#else
 	return getMadeInterceptionCount() >= GetNumInterceptions();
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -19721,6 +19772,12 @@ void CvUnit::SetActivityType(ActivityTypes eNewValue)
 		{
 			setFortifyTurns(0);
 		}
+#ifdef NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END
+		if (eNewValue == ACTIVITY_INTERCEPT)
+		{
+			setIsInterceptBlockedUntilEndTurn(true);
+		}
+#endif
 
 		auto_ptr<ICvPlot1> pDllSelectionPlot(DLLUI->getSelectionPlot());
 #ifdef AUI_WARNING_FIXES

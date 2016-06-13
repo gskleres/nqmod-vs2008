@@ -7263,7 +7263,11 @@ bool CvPlayer::canTrain(UnitTypes eUnit, bool bContinue, bool bTestVisible, bool
 	// One City Challenge
 	if(pUnitInfo.IsFound() || pUnitInfo.IsFoundAbroad())
 	{
+#ifdef AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
+		if (isMinorCiv() || (GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && isHuman()))
+#else
 		if(GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && isHuman())
+#endif
 		{
 			return false;
 		}
@@ -16751,15 +16755,20 @@ void CvPlayer::setTurnActive(bool bNewValue, bool bDoTurn)
 				GetDiplomacyRequests()->EndTurn();
 			}
 
-#ifdef NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY
+#if defined(NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY) || defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
 			int iLoop;
 			for (CvUnit* pLoopUnit = firstUnit(&iLoop); pLoopUnit != NULL; pLoopUnit = nextUnit(&iLoop))
 			{
+#ifdef NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY
 				// Only increase our Fortification level if we've actually been told to Fortify
 				if (pLoopUnit->IsFortifiedThisTurn())
 				{
 					pLoopUnit->changeFortifyTurns(1);
 				}
+#endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+				pLoopUnit->setIsInterceptBlockedUntilEndTurn(false);
+#endif
 			}
 #endif
 
