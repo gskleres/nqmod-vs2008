@@ -1815,10 +1815,14 @@ void CvUnitCombat::ResolveAirSweep(const CvCombatInfo& kCombatInfo, uint uiParen
 	{
 		pkDefender->setCombatUnit(NULL);
 		pkDefender->ClearMissionQueue();
-#ifdef NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_HALF_HEALTH
-		if (pkDefender->GetActivityType() == ACTIVITY_INTERCEPT && pkDefender->GetCurrHitPoints() * 2 <= GC.getMAX_HIT_POINTS())
+#ifdef NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH
+		if (pkDefender->GetActivityType() == ACTIVITY_INTERCEPT)
 		{
-			pkDefender->SetActivityType(ACTIVITY_AWAKE);
+			int iEffectiveDefenderHP = pkDefender->GetCurrHitPoints();
+			if (pkDefender->isAlwaysHeal() && pkDefender->isOutOfInterceptions() && !GET_PLAYER(pkDefender->getOwner()).isEndTurn() && pkDefender->canHeal(pkDefender->plot()))
+				iEffectiveDefenderHP += pkDefender->healRate(pkDefender->plot());
+			if (iEffectiveDefenderHP * NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH <= GC.getMAX_HIT_POINTS() * 100)
+				pkDefender->SetActivityType(ACTIVITY_AWAKE);
 		}
 #endif
 	}
