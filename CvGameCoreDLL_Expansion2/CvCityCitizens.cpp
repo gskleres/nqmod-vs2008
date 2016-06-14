@@ -452,9 +452,13 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 	iFaithYieldValue *= m_pCity->getBaseYieldRateModifier(YIELD_FAITH);
 #endif
 #ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
-	int iGoldToScienceT100 = MIN(GetPlayer()->calculateGoldRateTimes100() + GetPlayer()->GetTreasury()->GetGoldTimes100(), 0);
-	iGoldYieldValue += iGoldToScienceT100;
-	iScienceYieldValue -= iGoldToScienceT100;
+	int iCurrentScienceLoss = -GetPlayer()->calculateGoldRateTimes100() - GetPlayer()->GetTreasury()->GetGoldTimes100();
+	if (iCurrentScienceLoss > 0)
+	{
+		int iGoldToScienceT100 = MIN(iGoldYieldValue, iCurrentScienceLoss);
+		iGoldYieldValue -= iGoldToScienceT100;
+		iScienceYieldValue += iGoldToScienceT100;
+	}
 	iGoldYieldValue *= GC.getAI_CITIZEN_VALUE_GOLD();
 	iScienceYieldValue *= GC.getAI_CITIZEN_VALUE_SCIENCE();
 #endif
@@ -497,13 +501,17 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 #ifdef AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION
 	if (m_pCity->isFoodProduction())
 	{
-		iFoodYieldValue = 0;
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
+		iFoodYieldValue = m_pCity->foodDifferenceTimes100(true, NULL, &iExcessFoodWithPlotTimes100) - m_pCity->foodDifferenceTimes100(true, NULL, &iExcessFoodTimes100);
 		int iDummy = m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100);
 		int iCurrProdFromFood = m_pCity->foodDifference(true, &iDummy);
 		iDummy = m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100);
 		int iProdFromFoodWithTile = m_pCity->foodDifference(true, &iDummy);
+#ifndef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+		iFoodYieldValue /= 100;
+#endif
 #else
+		iFoodYieldValue = iExcessFoodWithPlotTimes100 - iExcessFoodTimes100;
 		int iCurrProdFromFood = m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100);
 		int iProdFromFoodWithTile = m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100);
 #endif
@@ -1187,7 +1195,11 @@ BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 						continue;
 #endif
 
+#ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
+					iValue = GetSpecialistValue(eSpecialist, bIsWorked);
+#else
 					iValue = GetSpecialistValue(eSpecialist);
+#endif
 
 #ifndef NQM_PRUNING
 					// Add a bit more weight to a Building if it has more slots (10% per).  This will bias the AI to fill a single building over spreading Specialists out
@@ -1228,7 +1240,9 @@ BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 }
 
 /// How valuable is eSpecialist?
-#ifdef AUI_CONSTIFY
+#ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
+int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist, bool bForRemoval) const
+#elif defined(AUI_CONSTIFY)
 int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist) const
 #else
 int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
@@ -1321,13 +1335,6 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	iScienceYieldValue *= m_pCity->getBaseYieldRateModifier(YIELD_SCIENCE);
 	iCultureYieldValue *= m_pCity->getBaseYieldRateModifier(YIELD_CULTURE);
 	iFaithYieldValue *= m_pCity->getBaseYieldRateModifier(YIELD_FAITH);
-#ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
-	int iGoldToScienceT100 = MIN(GetPlayer()->calculateGoldRateTimes100() + GetPlayer()->GetTreasury()->GetGoldTimes100(), 0);
-	iGoldYieldValue += iGoldToScienceT100;
-	iScienceYieldValue -= iGoldToScienceT100;
-	iGoldYieldValue *= GC.getAI_CITIZEN_VALUE_GOLD();
-	iScienceYieldValue *= GC.getAI_CITIZEN_VALUE_SCIENCE();
-#endif
 
 #ifndef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_GREAT_PERSON_POINTS
 	int iGPPModifier = 100 + pPlayer->getGreatPeopleRateModifier() + GetCity()->getGreatPeopleRateModifier();
@@ -1371,13 +1378,13 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 #endif
 #endif
 #ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
-	int iHappinessYieldValue = AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS;
+	int iHappinessYieldValue = 0;
 	int iExtraUnhappinessT100 = 0;
-	if (pPlayer->isHalfSpecialistUnhappiness())
+	if (pPlayer->isHalfSpecialistUnhappiness() && eSpecialist != (SpecialistTypes)GC.getDEFAULT_SPECIALIST())
 	{
 		iExtraUnhappinessT100 = -GC.getUNHAPPINESS_PER_POPULATION() * 50;
 		// To account for rounding up of halved unhappiness
-		if (GetTotalSpecialistCount() % 2 == 0)
+		if ((GetTotalSpecialistCount() % 2 == 0) != bForRemoval)
 			iExtraUnhappinessT100 *= 2;
 		if (pPlayer->GetCapitalUnhappinessMod() != 0 && m_pCity->isCapital())
 		{
@@ -1393,7 +1400,7 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 		iExtraUnhappinessT100 /= 100;
 
 		// The more happiness we have, the less it's worth
-		iHappinessYieldValue = int(iHappinessYieldValue * pow(2.0, 1.0 - (double)pPlayer->GetExcessHappiness() / 10.0) + 0.5);
+		iHappinessYieldValue = int(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS * pow(2.0, 1.0 - (double)pPlayer->GetExcessHappiness() / 10.0) + 0.5);
 
 		iHappinessYieldValue *= -iExtraUnhappinessT100;
 		iHappinessYieldValue /= 100;
@@ -1402,17 +1409,32 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	int iHappinessYieldValue = (m_pCity->GetPlayer()->isHalfSpecialistUnhappiness()) ? 5 : 0; // TODO: un-hardcode this
 	iHappinessYieldValue = m_pCity->GetPlayer()->IsEmpireUnhappy() ? iHappinessYieldValue * 2 : iHappinessYieldValue; // TODO: un-hardcode this
 #endif
+#ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
+	int iCurrentScienceLoss = -GetPlayer()->calculateGoldRateTimes100() - GetPlayer()->GetTreasury()->GetGoldTimes100();
+	if (iCurrentScienceLoss > 0)
+	{
+		int iGoldToScienceT100 = MIN(iGoldYieldValue, iCurrentScienceLoss);
+		iGoldYieldValue -= iGoldToScienceT100;
+		iScienceYieldValue += iGoldToScienceT100;
+	}
+	iGoldYieldValue *= GC.getAI_CITIZEN_VALUE_GOLD();
+	iScienceYieldValue *= GC.getAI_CITIZEN_VALUE_SCIENCE();
+#endif
 
 	// How much surplus food are we making?
 	int iExcessFoodTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100);
 #if defined(AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER) || defined(AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION) || defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS)
-	int iExcessFoodWithPlotTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100) + (pPlayer->specialistYield(eSpecialist, YIELD_FOOD) + iFoodConsumptionBonus) * m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
+	int iSpecialistBaseFoodYield = pPlayer->specialistYield(eSpecialist, YIELD_FOOD);
 #ifdef AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP
 	if (pReligion)
-		iExcessFoodWithPlotTimes100 += pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_FOOD) * 100;
+		iSpecialistBaseFoodYield += pReligion->m_Beliefs.GetYieldChangeAnySpecialist(YIELD_FOOD) * 100;
 	if (pSecondaryBelief)
-		iExcessFoodWithPlotTimes100 += pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_FOOD) * 100;
+		iSpecialistBaseFoodYield += pSecondaryBelief->GetYieldChangeAnySpecialist(YIELD_FOOD) * 100;
 #endif
+#ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+	iSpecialistBaseFoodYield *= m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
+#endif
+	int iExcessFoodWithPlotTimes100 = iSpecialistBaseFoodYield + iExcessFoodTimes100 + iFoodConsumptionBonus;
 #endif
 #ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
 	// Excess Food bit is to make sure we don't starve to death trying to allocate specialists when we're unhappy
@@ -1458,20 +1480,25 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 #ifdef AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION
 	if (m_pCity->isFoodProduction())
 	{
-		iFoodYieldValue = 0;
 #ifdef AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS
 #ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+		iFoodYieldValue = m_pCity->foodDifferenceTimes100(true, NULL, &iExcessFoodWithPlotTimes100, -iExtraUnhappinessT100 / 100) - m_pCity->foodDifferenceTimes100(true, NULL, &iExcessFoodTimes100, -iExtraUnhappinessT100 / 100);
 		int iDummy = m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100);
 		int iCurrProdFromFood = m_pCity->foodDifference(true, &iDummy, -iExtraUnhappinessT100 / 100);
 		iDummy = m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100);
 		int iProdFromFoodWithTile = m_pCity->foodDifference(true, &iDummy, -iExtraUnhappinessT100 / 100);
 #else
+		iFoodYieldValue = m_pCity->foodDifferenceTimes100(true, NULL, &iExcessFoodWithPlotTimes100) - m_pCity->foodDifferenceTimes100(true, NULL, &iExcessFoodTimes100);
 		int iDummy = m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100);
 		int iCurrProdFromFood = m_pCity->foodDifference(true, &iDummy);
 		iDummy = m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100);
 		int iProdFromFoodWithTile = m_pCity->foodDifference(true, &iDummy);
 #endif
+#ifndef AUI_CITIZENS_GET_VALUE_CONSIDER_YIELD_RATE_MODIFIERS
+		iFoodYieldValue /= 100;
+#endif
 #else
+		iFoodYieldValue = iExcessFoodWithPlotTimes100 - iExcessFoodTimes100;
 		int iCurrProdFromFood = m_pCity->GetFoodProduction(iExcessFoodTimes100 / 100);
 		int iProdFromFoodWithTile = m_pCity->GetFoodProduction(iExcessFoodWithPlotTimes100 / 100);
 #endif
@@ -3121,7 +3148,11 @@ bool CvCityCitizens::DoRemoveWorstSpecialist(SpecialistTypes eDontChangeSpeciali
 		if(GetNumSpecialistsInBuilding(eBuilding) > 0)
 		{
 #ifdef AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
+#ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
+			iLoopSpecialistScore = GetSpecialistValue((SpecialistTypes)pkBuildingInfo->GetSpecialistType(), true);
+#else
 			iLoopSpecialistScore = GetSpecialistValue((SpecialistTypes)pkBuildingInfo->GetSpecialistType());
+#endif
 			if (iLoopSpecialistScore < iWorstSpecialistScore)
 			{
 				iWorstSpecialistScore = iLoopSpecialistScore;

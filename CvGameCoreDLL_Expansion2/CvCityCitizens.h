@@ -73,14 +73,17 @@ public:
 #else
 	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
 #endif
-#ifdef AUI_CONSTIFY
+#ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
+	int GetSpecialistValue(SpecialistTypes eSpecialist, bool bForRemoval = false) const;
+#elif defined(AUI_CONSTIFY)
 	int GetSpecialistValue(SpecialistTypes eSpecialist) const;
-#ifndef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
-	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const;
-#endif
 #else
 	int GetSpecialistValue(SpecialistTypes eSpecialist);
+#endif
 #ifndef AUI_CITIZENS_IS_BETTER_THAN_DEFAULT_SPECIALIST_USE_REGULAR_VALUES
+#ifdef AUI_CONSTIFY
+	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist) const;
+#else
 	bool IsBetterThanDefaultSpecialist(SpecialistTypes eSpecialist);
 #endif
 #endif
