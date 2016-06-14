@@ -412,6 +412,8 @@
 #define AUI_CITIZENS_PUPPET_STILL_WANTS_GROWTH
 /// Puppeting or annexing a city will immediately reallocate citizens and set focuses when the order is given. It also means players don't have to manually remove Gold focus when unpuppeting a city.
 #define AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
+/// The citizen manager will instantly reallocate citizens if it switches onto or off of food production mode (i.e. the mode where excess food contributes toward production instead of growth)
+#define AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix

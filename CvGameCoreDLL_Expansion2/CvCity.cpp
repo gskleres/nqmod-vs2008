@@ -4248,6 +4248,10 @@ bool CvCity::isFoodProduction() const
 	VALIDATE_OBJECT
 	const OrderData* pOrderNode = headOrderQueueNode();
 
+#ifdef AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
+	if (pOrderNode && pOrderNode->eOrderType == ORDER_TRAIN)
+		return isFoodProduction((UnitTypes)(pOrderNode->iData1));
+#else
 	if(pOrderNode != NULL)
 	{
 		switch(pOrderNode->eOrderType)
@@ -4267,6 +4271,7 @@ bool CvCity::isFoodProduction() const
 			break;
 		}
 	}
+#endif
 
 	return false;
 }
@@ -12587,6 +12592,9 @@ void CvCity::pushOrder(OrderTypes eOrder, int iData1, int iData2, bool bSave, bo
 	order.bSave = bSave;
 	order.bRush = bRush;
 
+#ifdef AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
+	bool bOldIsFoodProduction = isFoodProduction();
+#endif
 	if(bAppend)
 	{
 		m_orderQueue.insertAtEnd(&order);
@@ -12616,6 +12624,12 @@ void CvCity::pushOrder(OrderTypes eOrder, int iData1, int iData2, bool bSave, bo
 
 	auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(this);
 	DLLUI->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_PRODUCTION);
+#ifdef AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
+	if (bOldIsFoodProduction != isFoodProduction())
+	{
+		GetCityCitizens()->DoReallocateCitizens();
+	}
+#endif
 }
 
 
@@ -12914,6 +12928,9 @@ void CvCity::popOrder(int iNum, bool bFinish, bool bChoose)
 		bStart = false;
 	}
 
+#ifdef AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
+	bool bOldIsFoodProduction = isFoodProduction();
+#endif
 	m_orderQueue.deleteNode(pOrderNode);
 	pOrderNode = NULL;
 	if(bFinish)
@@ -13001,6 +13018,12 @@ void CvCity::popOrder(int iNum, bool bFinish, bool bChoose)
 		}
 		DLLUI->setDirty(CityInfo_DIRTY_BIT, true);
 	}
+#ifdef AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
+	if (bOldIsFoodProduction != isFoodProduction())
+	{
+		GetCityCitizens()->DoReallocateCitizens();
+	}
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -13018,6 +13041,9 @@ void CvCity::swapOrder(int iNum)
 		stopHeadOrder();
 	}
 
+#ifdef AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
+	bool bOldIsFoodProduction = isFoodProduction();
+#endif
 	m_orderQueue.swapUp(iNum);
 
 	if(iNum == 0)
@@ -13036,6 +13062,12 @@ void CvCity::swapOrder(int iNum)
 		}
 		DLLUI->setDirty(CityInfo_DIRTY_BIT, true);
 	}
+#ifdef AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
+	if (bOldIsFoodProduction != isFoodProduction())
+	{
+		GetCityCitizens()->DoReallocateCitizens();
+	}
+#endif
 }
 
 
