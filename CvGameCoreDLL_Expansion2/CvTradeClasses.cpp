@@ -1267,7 +1267,7 @@ void CvGameTrade::InvalidateTradeBetweenTeams(TeamTypes eOriginTeam, TeamTypes e
 
 		TeamTypes eLoopOriginTeam = GET_PLAYER(m_aTradeConnections[ui].m_eOriginOwner).getTeam();
 		TeamTypes eLoopDestTeam = GET_PLAYER(m_aTradeConnections[ui].m_eDestOwner).getTeam();
-		if (eOriginTeam == eLoopOriginTeam && eLoopDestTeam == eLoopDestTeam)
+		if (eOriginTeam == eLoopOriginTeam && eLoopDestTeam == eDestinationTeam)
 		{
 			UnitTypes eUnitType = GET_PLAYER(m_aTradeConnections[ui].m_eOriginOwner).GetTrade()->GetTradeUnit(m_aTradeConnections[ui].m_eDomain);
 			CvAssertMsg(eUnitType != NO_UNIT, "No trade unit found");

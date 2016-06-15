@@ -215,10 +215,12 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 		pkCombatInfo->setFearDamageInflicted(BATTLE_UNIT_ATTACKER, kAttacker.getCombatDamage(iAttackerStrength, iDefenderStrength, kAttacker.getDamage(), true, false, true));
 		//	pkCombatInfo->setFearDamageInflicted( BATTLE_UNIT_DEFENDER, getCombatDamage(iDefenderStrength, iAttackerStrength, pDefender->getDamage(), true, false, true) );
 
+#ifndef NQM_PRUNING
 		int iAttackerEffectiveStrength = iAttackerStrength * (iMaxHP - range(kAttacker.getDamage(), 0, iMaxHP-1)) / iMaxHP;
 		iAttackerEffectiveStrength = iAttackerEffectiveStrength > 0 ? iAttackerEffectiveStrength : 1;
 		int iDefenderEffectiveStrength = iDefenderStrength * (iMaxHP - range(pkDefender->getDamage(), 0, iMaxHP-1)) / iMaxHP;
 		iDefenderEffectiveStrength = iDefenderEffectiveStrength > 0 ? iDefenderEffectiveStrength : 1;
+#endif
 
 		//int iExperience = kAttacker.defenseXPValue();
 		//iExperience = ((iExperience * iAttackerEffectiveStrength) / iDefenderEffectiveStrength); // is this right? looks like more for less [Jon: Yes, it's XP for the defender]
@@ -1606,10 +1608,12 @@ void CvUnitCombat::GenerateAirSweepCombatInfo(CvUnit& kAttacker, CvUnit* pkDefen
 		//pkCombatInfo->setFearDamageInflicted( BATTLE_UNIT_ATTACKER, kAttacker.getCombatDamage(iAttackerStrength, iDefenderStrength, kAttacker.getDamage(), true, false, true) );
 		//	pkCombatInfo->setFearDamageInflicted( BATTLE_UNIT_DEFENDER, getCombatDamage(iDefenderStrength, iAttackerStrength, pDefender->getDamage(), true, false, true) );
 
+#ifndef NQM_PRUNING
 		int iAttackerEffectiveStrength = iAttackerStrength * (iMaxHP - range(kAttacker.getDamage(), 0, iMaxHP-1)) / iMaxHP;
 		iAttackerEffectiveStrength = iAttackerEffectiveStrength > 0 ? iAttackerEffectiveStrength : 1;
 		int iDefenderEffectiveStrength = iDefenderStrength * (iMaxHP - range(pkDefender->getDamage(), 0, iMaxHP-1)) / iMaxHP;
 		iDefenderEffectiveStrength = iDefenderEffectiveStrength > 0 ? iDefenderEffectiveStrength : 1;
+#endif
 
 		//int iExperience = kAttacker.defenseXPValue();
 		//iExperience = ((iExperience * iAttackerEffectiveStrength) / iDefenderEffectiveStrength); // is this right? looks like more for less [Jon: Yes, it's XP for the defender]
@@ -1811,6 +1815,16 @@ void CvUnitCombat::ResolveAirSweep(const CvCombatInfo& kCombatInfo, uint uiParen
 	{
 		pkDefender->setCombatUnit(NULL);
 		pkDefender->ClearMissionQueue();
+#ifdef NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH
+		if (pkDefender->GetActivityType() == ACTIVITY_INTERCEPT)
+		{
+			int iEffectiveDefenderHP = pkDefender->GetCurrHitPoints();
+			if (pkDefender->isAlwaysHeal() && pkDefender->isOutOfInterceptions() && !GET_PLAYER(pkDefender->getOwner()).isEndTurn() && pkDefender->canHeal(pkDefender->plot()))
+				iEffectiveDefenderHP += pkDefender->healRate(pkDefender->plot());
+			if (iEffectiveDefenderHP * NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH <= GC.getMAX_HIT_POINTS() * 100)
+				pkDefender->SetActivityType(ACTIVITY_AWAKE);
+		}
+#endif
 	}
 
 	if(pkAttacker)

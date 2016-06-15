@@ -183,6 +183,10 @@
 #define AUI_PLAYER_FIX_NO_RESEARCH_OVERFLOW_DOUBLE_DIP
 /// When war is manually declared by a player against another (i.e. not through a defensive pact), if the defender has any trade routes to the attacker, those trade routes get cancelled instead of destroyed. This applies to both sides of a Defensive Pact DoW.
 #define NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
+/// If an air unit on intercept duty falls to at or below (value) HP after suffering an air sweep, it will get "knocked out" of intercept mode. This notifies human players of interceptors on low HP and hopefully stops interceptors with multiple intercepts per turn from getting killed from full health by two air sweeps, which stops increased intercepts per turn from being a death sentence
+#define NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH (55)
+/// City-states are banned from building and capturing settlers outright (latter could previously not work), instead of the game relying on mishmash of flavors
+#define AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
@@ -228,6 +232,10 @@
 //#define NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 /// Randomizes the order in which player turns activate in simultaneous mode. E.g. this makes it so that the host no longer wins wonder races against all other players if they finish a wonder the same turn as another player.
 #define NQM_GAME_RANDOMIZE_TURN_ACTIVATION_ORDER_IN_SIMULTANEOUS
+/// Anti-air ground/sea units can no longer intercept planes after they move until the player ends their turn. This should only affect simultaneous mode and stops players from deliberately moving in AA after another player has done air sweeps.
+#define NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END
+/// Fighters set to intercept duty can only perform interceptions after the player ends their turn. This should only affect simultaneous mode and stops players from turning on intercepts mid-turn to make air sweeps unreliable.
+#define NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END
 
 // New hybrid mode
 /// When in hybrid mode, players who are not at war with each other have their turns happen simultaneously, thus speeding games up significantly
@@ -404,6 +412,8 @@
 #define AUI_CITIZENS_PUPPET_STILL_WANTS_GROWTH
 /// Puppeting or annexing a city will immediately reallocate citizens and set focuses when the order is given. It also means players don't have to manually remove Gold focus when unpuppeting a city.
 #define AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
+/// The citizen manager will instantly reallocate citizens if it switches onto or off of food production mode (i.e. the mode where excess food contributes toward production instead of growth)
+#define AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix

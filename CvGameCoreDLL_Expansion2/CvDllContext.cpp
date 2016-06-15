@@ -1208,11 +1208,7 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 unsigned int CvDllGameContext::CreateRandomNumberGenerator()
 {
 	uint index = m_uiRngCounter++;
-#ifdef AUI_WARNING_FIXES
-	std::pair<uint, CvRandom*> entry(index, new(_aligned_malloc(sizeof(CvRandom), 16)) CvRandom());
-#else
 	std::pair<uint, CvRandom*> entry(index, FNEW(CvRandom, c_eCiv5GameplayDLL, 0));
-#endif
 
 	m_RandomNumberGenerators.push_back(entry);
 	return index;
@@ -1242,12 +1238,7 @@ void CvDllGameContext::DestroyRandomNumberGenerator(unsigned int index)
 
 	if(it != m_RandomNumberGenerators.end())
 	{
-#ifdef AUI_WARNING_FIXES
-		it->second->~CvRandom();
-		_aligned_free(it->second);
-#else
 		delete(*it).second;
-#endif
 		m_RandomNumberGenerators.erase(it);
 	}
 }
