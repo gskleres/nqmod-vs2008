@@ -4540,6 +4540,17 @@ void CvPlayer::cacheYields()
 }
 #endif
 
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+void CvPlayer::doSelfConsistencyCheckAllCities()
+{
+	int iLoop;
+	for (CvCity* pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
+	{
+		pLoopCity->GetCityCitizens()->DoSelfConsistencyCheck();
+	}
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 void CvPlayer::doTurnUnits()
 {
@@ -10351,6 +10362,9 @@ void CvPlayer::ChangeSpecialistCultureChange(int iChange)
 
 			pLoopCity->ChangeJONSCulturePerTurnFromSpecialists(iTotalCulture);
 		}
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		doSelfConsistencyCheckAllCities();
+#endif
 	}
 }
 
@@ -10902,6 +10916,10 @@ void CvPlayer::DoUpdateHappiness()
 	// Increase for each City connected to Capital with a Trade Route
 	DoUpdateCityConnectionHappiness();
 	m_iHappiness += GetHappinessFromTradeRoutes();
+
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	doSelfConsistencyCheckAllCities();
+#endif
 
 	if(isLocalPlayer() && GetExcessHappiness() >= 100)
 	{
@@ -17669,7 +17687,11 @@ int CvPlayer::GetScienceFromOtherPlayersTimes100() const
 
 //	--------------------------------------------------------------------------------
 /// Where is our Science coming from?
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+int CvPlayer::GetScienceFromHappinessTimes100(bool bIgnoreHappinessRequirement) const
+#else
 int CvPlayer::GetScienceFromHappinessTimes100() const
+#endif
 {
 	if(GC.getGame().isOption(GAMEOPTION_NO_HAPPINESS))
 	{
@@ -17680,7 +17702,11 @@ int CvPlayer::GetScienceFromHappinessTimes100() const
 
 	if(getHappinessToScience() != 0)
 	{
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+		if (GetExcessHappiness() >= 0 && !bIgnoreHappinessRequirement)
+#else
 		if(GetExcessHappiness() >= 0)
+#endif
 		{
 			int iFreeScience = GetScienceFromCitiesTimes100(false) * getHappinessToScience();
 			iFreeScience /= 100;

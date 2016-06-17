@@ -2030,6 +2030,9 @@ CityTaskResult CvCity::doTask(TaskTypes eTask, int iData1, int iData2, bool bOpt
 	case TASK_REMOVE_SPECIALIST:
 		GetCityCitizens()->DoRemoveSpecialistFromBuilding(/*eBuilding*/ (BuildingTypes) iData2, true);
 		GetCityCitizens()->DoAddBestCitizenFromUnassigned();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
 		break;
 
 	case TASK_CHANGE_WORKING_PLOT:
@@ -7726,6 +7729,9 @@ void CvCity::setPopulation(int iNewValue, bool bReassignPop /* = true */)
 				{
 					GetCityCitizens()->DoAddBestCitizenFromUnassigned();
 				}
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
 			}
 		}
 
@@ -9895,7 +9901,11 @@ void CvCity::changeSeaResourceYield(YieldTypes eIndex, int iChange)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+int CvCity::getBaseYieldRateModifier(YieldTypes eIndex, int iExtra, CvString* toolTipSink, int iExtraHappiness) const
+#else
 int CvCity::getBaseYieldRateModifier(YieldTypes eIndex, int iExtra, CvString* toolTipSink) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iModifier = 0;
@@ -9914,7 +9924,11 @@ int CvCity::getBaseYieldRateModifier(YieldTypes eIndex, int iExtra, CvString* to
 		GC.getGame().BuildProdModHelpText(toolTipSink, "TXT_KEY_PRODMOD_YIELD_RESOURCES", iTempMod);
 
 	// Happiness Yield Rate Modifier
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+	iTempMod = getHappinessModifier(eIndex, iExtraHappiness);
+#else
 	iTempMod = getHappinessModifier(eIndex);
+#endif
 	iModifier += iTempMod;
 	if(toolTipSink)
 		GC.getGame().BuildProdModHelpText(toolTipSink, "TXT_KEY_PRODMOD_YIELD_HAPPINESS", iTempMod);
@@ -10021,7 +10035,11 @@ int CvCity::getBaseYieldRateModifier(YieldTypes eIndex, int iExtra, CvString* to
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+int CvCity::getHappinessModifier(YieldTypes eIndex, int iExtraHappiness) const
+#else
 int CvCity::getHappinessModifier(YieldTypes eIndex) const
+#endif
 {
 	VALIDATE_OBJECT
 	int iModifier = 0;
@@ -10030,6 +10048,9 @@ int CvCity::getHappinessModifier(YieldTypes eIndex) const
 	if (kPlayer.IsEmpireUnhappy())
 	{
 		int iUnhappy = -1 * kPlayer.GetExcessHappiness();
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+		iUnhappy -= iExtraHappiness;
+#endif
 
 		// Production and Gold slow down when Empire is Unhappy
 		if(eIndex == YIELD_PRODUCTION)
@@ -12627,7 +12648,11 @@ void CvCity::pushOrder(OrderTypes eOrder, int iData1, int iData2, bool bSave, bo
 #ifdef AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
 	if (bOldIsFoodProduction != isFoodProduction())
 	{
+#ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
+		GetCityCitizens()->DoSelfConsistencyCheck();
+#else
 		GetCityCitizens()->DoReallocateCitizens();
+#endif
 	}
 #endif
 }

@@ -7033,6 +7033,9 @@ void CvPlot::updateWorkingCity()
 			{
 				// Re-add citizen somewhere else
 				pOldWorkingCity->GetCityCitizens()->DoAddBestCitizenFromUnassigned();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				pOldWorkingCity->GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
 			}
 		}
 		else
@@ -7835,6 +7838,9 @@ void CvPlot::updateYield()
 				}
 
 				// JON: New City Citizens AI shoulud update here 08/17/09
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				pWorkingCity->GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
 			}
 
 			bChange = true;

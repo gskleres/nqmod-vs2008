@@ -399,14 +399,20 @@
 /// The function that removes the worst specialist from their slot actually removes the worst one instead of just the first specialist encountered
 #define AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
 /// Adds a self-consistency check function to citizen manager, which constantly shifts the worst scoring citizen to the best scoring spot until it's not actually shifting the citizen or it keeps shifting back and forth between the same spots.
-#define AUI_CITIZENS_SELF_CONSISTENCY_CHECK (1) // This is the score difference threshold below which the SC loop will terminate
+#define AUI_CITIZENS_SELF_CONSISTENCY_CHECK (0) // This is the score difference threshold below which the SC loop will terminate
 #ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
 /// Reallocate citizens runs a self-consistency check after it reallocates everyone
 #define AUI_CITIZENS_REALLOCATE_CITIZENS_USES_SELF_CONSISTENCY
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-/// After reallocating citizens in all cities at the beginning of the turn, a self-consistency check is run for all cities (so 
+/// After reallocating citizens in all cities at the beginning of the turn, a self-consistency check is run for all cities (so that empire-specific scoring isn't as highly weighted for older cities)
 #define AUI_PLAYER_SELF_CONSISTENCY_SWEEP_AFTER_INITIAL_REALLOCATE
 #endif
+#ifdef AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION
+/// If a city is in food production mode when it reallocates its citizens, it will perform a mock reallocation first assuming no food production, then run a self-consistency check afterwards
+#define AUI_CITIZENS_FOOD_PRODUCTION_TRIAL_RUN_THEN_SELF_CONSISTENCY
+#endif
+/// Citizen (re)assignments mid-turn and mid-turn global yield changes (e.g. to happiness) instantly run a self-consistency check on all cities
+#define AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
 #endif
 /// If a city's religion has the Guruship belief, the citizen manager will account for the extra production gained from the first citizen slot
 #define AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP

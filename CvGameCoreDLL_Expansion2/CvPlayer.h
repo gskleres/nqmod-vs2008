@@ -164,6 +164,9 @@ public:
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	void cacheYields();
 #endif
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	void doSelfConsistencyCheckAllCities();
+#endif
 	void doTurnUnits();
 	void SetAllUnitsUnprocessed();
 	void DoUnitReset();
@@ -1085,7 +1088,11 @@ public:
 
 	int GetScienceFromCitiesTimes100(bool bIgnoreTrade) const;
 	int GetScienceFromOtherPlayersTimes100() const;
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+	int GetScienceFromHappinessTimes100(bool bIgnoreHappinessRequirement = false) const;
+#else
 	int GetScienceFromHappinessTimes100() const;
+#endif
 	int GetScienceFromResearchAgreementsTimes100() const;
 	int GetScienceFromBudgetDeficitTimes100() const;
 
