@@ -9221,6 +9221,9 @@ bool CvUnit::canBlastTourism(const CvPlot* pPlot, bool bTestVisible) const
 //	--------------------------------------------------------------------------------
 int CvUnit::getBlastTourism()
 {
+#ifdef AUI_UNIT_FIX_NO_DOUBLE_SPEED_MODIFIER_FOR_TOURISM_BLAST
+	return GetTourismBlastStrength();
+#else
 	if (!canBlastTourism(plot()))
 	{
 		return 0;
@@ -9230,6 +9233,7 @@ int CvUnit::getBlastTourism()
 	iTourismBlast = iTourismBlast * GC.getGame().getGameSpeedInfo().getCulturePercent() / 100;
 
 	return iTourismBlast;
+#endif
 }
 
 //	--------------------------------------------------------------------------------
