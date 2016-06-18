@@ -3466,10 +3466,12 @@ void CvDealAI::DoAddItemsToDealForPeaceTreaty(PlayerTypes eOtherPlayer, CvDeal* 
 		// All Cities but the capital
 		for(pLoopCity = pLosingPlayer->firstCity(&iCityLoop); pLoopCity != NULL; pLoopCity = pLosingPlayer->nextCity(&iCityLoop))
 		{
+#ifndef AUI_DEAL_ALLOW_CAPITOL_GIFTING
 			if(pLoopCity->isCapital())
 			{
 				continue;
 			}
+#endif
 
 			if(pDeal->IsPossibleToTradeItem(eLosingPlayer, eWinningPlayer, TRADE_ITEM_CITIES, pLoopCity->getX(), pLoopCity->getY()))
 			{
