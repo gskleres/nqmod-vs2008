@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 3/30/2015 10:09:18 PM -->
+<GameData>
+	<Buildings>
+		<Row>
+			<Type>BUILDING_PALACE_VENICE</Type>
+			<BuildingClass>BUILDINGCLASS_PALACE</BuildingClass>
+			<Cost>0</Cost>
+			<Help>TXT_KEY_BUILDING_PALACE_HELP</Help>
+			<Description>TXT_KEY_BUILDING_PALACE</Description>
+			<Civilopedia>TXT_KEY_CIV5_BUILDINGS_PALACE_TEXT</Civilopedia>
+			<Strategy>TXT_KEY_BUILDING_PALACE_STRATEGY</Strategy>
+			<ArtDefineTag>PALACE</ArtDefineTag>
+			<Capital>true</Capital>
+			<NukeImmune>true</NukeImmune>
+			<SpecialistType>SPECIALIST_MERCHANT</SpecialistType>
+			<SpecialistCount>1</SpecialistCount>
+			<MinAreaSize>-1</MinAreaSize>
+			<Defense>250</Defense>
+			<ArtInfoCulturalVariation>true</ArtInfoCulturalVariation>
+			<DisplayPosition>32</DisplayPosition>
+			<GreatWorkSlotType>GREAT_WORK_SLOT_ART_ARTIFACT</GreatWorkSlotType>
+			<GreatWorkCount>1</GreatWorkCount>
+			<NeverCapture>true</NeverCapture>
+			<IconAtlas>BW_ATLAS_1</IconAtlas>
+			<PortraitIndex>19</PortraitIndex>
+		</Row>
+	</Buildings>
+	<Civilization_BuildingClassOverrides>
+		<Row>
+			<CivilizationType>CIVILIZATION_VENICE</CivilizationType>
+			<BuildingClassType>BUILDINGCLASS_PALACE</BuildingClassType>
+			<BuildingType>BUILDING_PALACE_VENICE</BuildingType>
+		</Row>
+	</Civilization_BuildingClassOverrides>
+	<Language_en_US>
+		<Update>
+			<Set Text="Cannot gain settlers nor annex cities. Double the normal number of trade routes available. A Merchant of Venice appears after researching Optics. May purchase in puppeted cities. Palace starts with a Merchant specialist slot. Puppets do not produce less science, gold, and faith than normal."/>
+			<Where Tag="TXT_KEY_TRAIT_SUPER_CITY_STATE" />
+		</Update>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Update>
+			<Set Text="[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Cannot gain settlers nor annex cities. Double the normal number of trade routes available. A Merchant of Venice appears after researching Optics. May purchase in puppeted cities. Palace starts with a Merchant specialist slot. Puppets do not produce less science, gold, and faith than normal."/>
+			<Where Tag="TXT_KEY_TRAIT_SUPER_CITY_STATE" />
+		</Update>
+	</Language_DE_DE>
+	<Language_ES_ES>
+		<Update>
+			<Set Text="[COLOR_WARNING_TEXT](ES_ES text) [ENDCOLOR]Cannot gain settlers nor annex cities. Double the normal number of trade routes available. A Merchant of Venice appears after researching Optics. May purchase in puppeted cities. Palace starts with a Merchant specialist slot. Puppets do not produce less science, gold, and faith than normal."/>
+			<Where Tag="TXT_KEY_TRAIT_SUPER_CITY_STATE" />
+		</Update>
+	</Language_ES_ES>
+	<Language_FR_FR>
+		<Update>
+			<Set Text="[COLOR_WARNING_TEXT](FR_FR text) [ENDCOLOR]Cannot gain settlers nor annex cities. Double the normal number of trade routes available. A Merchant of Venice appears after researching Optics. May purchase in puppeted cities. Palace starts with a Merchant specialist slot. Puppets do not produce less science, gold, and faith than normal."/>
+			<Where Tag="TXT_KEY_TRAIT_SUPER_CITY_STATE" />
+		</Update>
+	</Language_FR_FR>
+	<Language_PL_PL>
+		<Update>
+			<Set Text="[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Cannot gain settlers nor annex cities. Double the normal number of trade routes available. A Merchant of Venice appears after researching Optics. May purchase in puppeted cities. Palace starts with a Merchant specialist slot. Puppets do not produce less science, gold, and faith than normal."/>
+			<Where Tag="TXT_KEY_TRAIT_SUPER_CITY_STATE" />
+		</Update>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Update>
+			<Set Text="[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Cannot gain settlers nor annex cities. Double the normal number of trade routes available. A Merchant of Venice appears after researching Optics. May purchase in puppeted cities. Palace starts with a Merchant specialist slot. Puppets do not produce less science, gold, and faith than normal."/>
+			<Where Tag="TXT_KEY_TRAIT_SUPER_CITY_STATE" />
+		</Update>
+	</Language_RU_RU>
+</GameData>

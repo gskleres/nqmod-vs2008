@@ -2595,12 +2595,23 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 		const BuildingTypes eCapitalBuilding = (BuildingTypes)(getCivilizationInfo().getCivilizationBuildings(GC.getCAPITAL_BUILDINGCLASS()));
 		if(eCapitalBuilding != NO_BUILDING)
 		{
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+			CvCity* pOldCapital = getCapitalCity();
+			if (pOldCapital != NULL)
+			{
+				pOldCapital->GetCityBuildings()->SetNumRealBuilding(eCapitalBuilding, 0);
+#else
 			if(getCapitalCity() != NULL)
 			{
 				getCapitalCity()->GetCityBuildings()->SetNumRealBuilding(eCapitalBuilding, 0);
+#endif
 			}
 			CvAssertMsg(!(pNewCity->GetCityBuildings()->GetNumRealBuilding(eCapitalBuilding)), "(pBestCity->getNumRealBuilding(eCapitalBuilding)) did not return false as expected");
 			pNewCity->GetCityBuildings()->SetNumRealBuilding(eCapitalBuilding, 1);
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+			if (GetPlayerTraits()->IsNoAnnexing() && pOldCapital && !pOldCapital->IsPuppet())
+				pOldCapital->DoCreatePuppet();
+#endif
 		}
 	}
 
@@ -15362,6 +15373,10 @@ void CvPlayer::setCapitalCity(CvCity* pNewCapitalCity)
 			m_iCapitalCityID = pNewCapitalCity->GetID();
 
 			pNewCapitalCity->SetEverCapital(true);
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+			if(pNewCapitalCity->IsPuppet())
+				pNewCapitalCity->DoAnnex();
+#endif
 		}
 		else
 		{

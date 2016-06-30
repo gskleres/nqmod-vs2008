@@ -625,6 +625,11 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	{
 		chooseProduction();
 	}
+
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+	if (GetPlayer()->GetPlayerTraits()->IsNoAnnexing() && !isCapital())
+		DoCreatePuppet();
+#endif
 }
 
 //	--------------------------------------------------------------------------------
