@@ -34,7 +34,12 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>VenicePalaceHasMerchantSlot.xml</FileName>
+        <FileName>DogesPalace.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>VeniceTraitTextChange.xml</FileName>
       </Action>
     </ModActions>
   </PropertyGroup>
@@ -58,7 +63,11 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="VenicePalaceHasMerchantSlot.xml">
+    <Content Include="DogesPalace.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="VeniceTraitTextChange.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
