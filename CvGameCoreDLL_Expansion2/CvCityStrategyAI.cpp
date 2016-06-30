@@ -234,7 +234,12 @@ unsigned char  CvCityStrategyAI::m_acBestYields[NUM_YIELD_TYPES][NUM_CITY_PLOTS]
 #endif
 
 /// Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityStrategyAI::CvCityStrategyAI(CvCity* pCity):
+	m_pCity(pCity),
+#else
 CvCityStrategyAI::CvCityStrategyAI():
+#endif
 	m_pabUsingCityStrategy(NULL),
 	m_paiTurnCityStrategyAdopted(NULL),
 	m_aiTempFlavors(NULL),

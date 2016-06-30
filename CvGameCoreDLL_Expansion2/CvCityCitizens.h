@@ -20,7 +20,11 @@
 class CvCityCitizens
 {
 public:
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	CvCityCitizens(CvCity* pCity);
+#else
 	CvCityCitizens(void);
+#endif
 	~CvCityCitizens(void);
 
 	void Init(CvCity* pCity);

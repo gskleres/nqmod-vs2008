@@ -24,8 +24,14 @@
 //=====================================
 
 /// Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityCitizens::CvCityCitizens(CvCity* pCity)
+{
+	m_pCity = pCity;
+#else
 CvCityCitizens::CvCityCitizens()
 {
+#endif
 	m_aiSpecialistCounts = NULL;
 	m_aiSpecialistGreatPersonProgressTimes100 = NULL;
 	m_aiNumSpecialistsInBuilding = NULL;

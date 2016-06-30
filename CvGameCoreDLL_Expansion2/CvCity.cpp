@@ -241,6 +241,15 @@ CvCity::CvCity() :
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	, m_paCachedYieldT100ForThisTurn(0)
 #endif
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	, m_pCityBuildings(FNEW(CvCityBuildings, c_eCiv5GameplayDLL, 0) (this))
+	, m_pCityStrategyAI(FNEW(CvCityStrategyAI, c_eCiv5GameplayDLL, 0) (this))
+	, m_pCityCitizens(FNEW(CvCityCitizens, c_eCiv5GameplayDLL, 0) (this))
+	, m_pCityReligions(FNEW(CvCityReligions, c_eCiv5GameplayDLL, 0) (this))
+	, m_pEmphases(FNEW(CvCityEmphases, c_eCiv5GameplayDLL, 0) (this))
+	, m_pCityEspionage(FNEW(CvCityEspionage, c_eCiv5GameplayDLL, 0) (this))
+	, m_pCityCulture(FNEW(CvCityCulture, c_eCiv5GameplayDLL, 0) (this))
+#else
 	, m_pCityBuildings(FNEW(CvCityBuildings, c_eCiv5GameplayDLL, 0))
 	, m_pCityStrategyAI(FNEW(CvCityStrategyAI, c_eCiv5GameplayDLL, 0))
 	, m_pCityCitizens(FNEW(CvCityCitizens, c_eCiv5GameplayDLL, 0))
@@ -248,6 +257,7 @@ CvCity::CvCity() :
 	, m_pEmphases(FNEW(CvCityEmphases, c_eCiv5GameplayDLL, 0))
 	, m_pCityEspionage(FNEW(CvCityEspionage, c_eCiv5GameplayDLL, 0))
 	, m_pCityCulture(FNEW(CvCityCulture, c_eCiv5GameplayDLL, 0))
+#endif
 	, m_bombardCheckTurn(0)
 	, m_iPopulationRank(0)
 	, m_bPopulationRankValid(false)

@@ -235,7 +235,11 @@ typedef Firaxis::Array<int, MAX_MAJOR_CIVS> NumTimesCityRobbedList;
 class CvCityEspionage
 {
 public:
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	CvCityEspionage(CvCity* pCity);
+#else
 	CvCityEspionage(void);
+#endif
 	~CvCityEspionage(void);
 	void Init(CvCity* pCity);
 	void Uninit(void);

@@ -335,7 +335,11 @@ FDataStream& operator<<(FDataStream&, const CvPlayerCulture&);
 class CvCityCulture
 {
 public:
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	CvCityCulture(CvCity* pCity);
+#else
 	CvCityCulture(void);
+#endif
 	~CvCityCulture(void);
 
 	void Init(CvCity* m_pCity);

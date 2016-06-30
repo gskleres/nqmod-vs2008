@@ -91,6 +91,8 @@
 #define AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
 /// Fixes a possible crash that happens when flavors are broadcast
 #define AUI_FLAVORMANAGER_FIX_POSSIBLE_CRASH_ON_FLAVOR_BROADCAST
+/// When CvCity's constructor is called, component objects of CvCity have their parent pointers set immediately when the components are constructed (improves stability)
+#define AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -205,6 +207,8 @@
 #define NQM_AI_GIMP_NO_RELIGION_SPREAD
 /// AI players will no longer attempt to build any world wonders or world projects
 #define NQM_AI_GIMP_NO_WORLD_WONDERS
+/// AI players will always accept white peace offered by human players (this is a lot easier to implement than banning DoWs outright, which would mess with everything that relies on operations and sneak attacks)
+#define NQM_AI_GIMP_ALWAYS_WHITE_PEACE
 
 // Observer mode fixes
 /// Observers will see all resources

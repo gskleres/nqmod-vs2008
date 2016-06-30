@@ -4250,8 +4250,13 @@ FDataStream& operator<<(FDataStream& saveTo, const CvPlayerCulture& readFrom)
 // CvCityCulture
 //=====================================
 /// Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityCulture::CvCityCulture(CvCity* pCity):
+	m_pCity(pCity)
+#else
 CvCityCulture::CvCityCulture(void):
 m_pCity(NULL)
+#endif
 {
 }
 

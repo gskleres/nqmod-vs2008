@@ -2716,7 +2716,12 @@ int CvPlayerReligions::GetNumForeignFollowers(bool bAtPeace) const
 // CvCityReligions
 //=====================================
 /// Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityReligions::CvCityReligions(CvCity* pCity) :
+	m_pCity(pCity),
+#else
 CvCityReligions::CvCityReligions(void):
+#endif
 	m_bHasPaidAdoptionBonus(false),
 	m_iReligiousPressureModifier(0)
 {

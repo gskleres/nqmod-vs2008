@@ -116,7 +116,12 @@ CvEmphasisEntry* CvEmphasisXMLEntries::GetEntry(int index)
 // CvCityEmphases
 //=====================================
 /// Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityEmphases::CvCityEmphases(CvCity* pCity) :
+	m_pCity(pCity)
+#else
 CvCityEmphases::CvCityEmphases()
+#endif
 {
 	m_pbEmphasize = NULL;
 }
