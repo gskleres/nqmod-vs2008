@@ -6211,7 +6211,11 @@ bool CvPlayer::canReceiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit) 
 		}
 
 		// OCC games - no Settlers
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+		if ((GetPlayerTraits()->IsNoAnnexing() && pUnitInfo->GetDefaultUnitAIType() == UNITAI_SETTLE) || (GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && isHuman()))
+#else
 		if(GetPlayerTraits()->IsNoAnnexing() || (GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && isHuman()))
+#endif
 		{
 			if(pUnitInfo->IsFound() || pUnitInfo->IsFoundAbroad())
 			{
@@ -7101,11 +7105,13 @@ bool CvPlayer::canFound(int iX, int iY, bool bTestVisible) const
 			return false;
 	}
 
+#ifndef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
 	// Haxor for Venice to prevent secondary founding
 	if (GetPlayerTraits()->IsNoAnnexing() && getCapitalCity())
 	{
 		return false;
 	}
+#endif
 
 	// Settlers cannot found cities while empire is very unhappy
 	if(!bTestVisible)
@@ -22531,7 +22537,11 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 
 								// slewis
 								// for venice
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+								if (GetPlayerTraits()->IsNoAnnexing() && pUnitEntry->GetDefaultUnitAIType() == UNITAI_SETTLE)
+#else
 								if (pUnitEntry->IsFound() && GetPlayerTraits()->IsNoAnnexing())
+#endif
 								{
 									// drop a merchant of venice instead
 									// find the eUnit replacement that's the merchant of venice

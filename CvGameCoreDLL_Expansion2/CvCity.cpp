@@ -8234,7 +8234,11 @@ int CvCity::GetFaithPerTurn() const
 
 	// Puppet?
 	int iModifier = 0;
+#ifdef AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
+	if (IsPuppet() && !GetPlayer()->GetPlayerTraits()->IsNoAnnexing())
+#else
 	if(IsPuppet())
+#endif
 	{
 		iModifier = GC.getPUPPET_FAITH_MODIFIER();
 		iFaith *= (100 + iModifier);
@@ -10019,7 +10023,11 @@ int CvCity::getBaseYieldRateModifier(YieldTypes eIndex, int iExtra, CvString* to
 	// NQMP GJS - new Economic Union END
 
 	// Puppet
+#ifdef AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
+	if (IsPuppet() && !GetPlayer()->GetPlayerTraits()->IsNoAnnexing())
+#else
 	if(IsPuppet())
+#endif
 	{
 		switch(eIndex)
 		{
@@ -13556,6 +13564,9 @@ bool CvCity::IsCanPurchase(bool bTestPurchaseCost, bool bTestTrainable, UnitType
 
 	// Can't purchase anything in a puppeted city
 	// slewis - The Venetian Exception
+#ifdef AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
+	if (IsPuppet() && !GetPlayer()->GetPlayerTraits()->IsNoAnnexing())
+#else
 	bool bIsPuppet = IsPuppet();
 	bool bVenetianException = false;
 	if (GET_PLAYER(m_eOwner).GetPlayerTraits()->IsNoAnnexing() && bIsPuppet)
@@ -13564,6 +13575,7 @@ bool CvCity::IsCanPurchase(bool bTestPurchaseCost, bool bTestTrainable, UnitType
 	}
 
 	if (bIsPuppet && !bVenetianException)
+#endif
 	{
 		return false;
 	}
