@@ -9107,6 +9107,7 @@ void CvCity::DoCreatePuppet()
 			if (iDX == 0 && iDY == 0)
 				continue;
 			pLoopPlot = plotXY(getX(), getY(), iDX, iDY);
+			if (pLoopPlot != NULL && pLoopPlot->getOwner() == m_eOwner)
 #else
 	for(int iPlotLoop = 0; iPlotLoop < NUM_CITY_PLOTS; iPlotLoop++)
 	{
@@ -9116,9 +9117,9 @@ void CvCity::DoCreatePuppet()
 		{
 			// Cut off areas around the city we don't care about
 			pLoopPlot = plotXYWithRangeCheck(pLoopPlot->getX(), pLoopPlot->getY(), getX(), getY(), iForceWorkingPuppetRange);
-#endif
 
 			if(pLoopPlot != NULL)
+#endif
 			{
 				pLoopPlot->setWorkingCityOverride(this);
 			}
