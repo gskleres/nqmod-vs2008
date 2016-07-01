@@ -21569,6 +21569,11 @@ bool CvUnit::CanWithdrawFromMelee(CvUnit& attacker)
 #endif
 {
 	VALIDATE_OBJECT
+#ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+	int iNumCombatUnitsInMyPlot = plot()->GetNumCombatUnits();
+	if (IsCombatUnit() && iNumCombatUnitsInMyPlot <= 1 && iNumCombatUnitsInMyPlot > plot()->getNumUnits())
+		return false;
+#endif
 	int iWithdrawChance = getExtraWithdrawal();
 
 	// Does attacker have a speed greater than 1?

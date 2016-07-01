@@ -197,6 +197,8 @@
 #define AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
 /// Puppet cities belonging to Venice do not get penalties to science, gold, and faith (they still get penalties to culture to offset the fact that they don't increase policy cost)
 #define AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
+/// Units with the ability to retreat from melee combat will not do so if they are guarding a civilian unit.
+#define AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
