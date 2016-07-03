@@ -93,6 +93,12 @@
 #define AUI_FLAVORMANAGER_FIX_POSSIBLE_CRASH_ON_FLAVOR_BROADCAST
 /// When CvCity's constructor is called, component objects of CvCity have their parent pointers set immediately when the components are constructed (improves stability)
 #define AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+/// Visibility update is always triggered when a plot's visibility changes for a player, thus fixing situations like purchasing a plot not updating sight immediately
+#define AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
+/// Fixes the discrepancy where culture is not stored and calculated with hundredths in mind, which greatly messes up modifiers applied to it
+#define AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+/// Puppet cities and cities with automated production will no longer accidentally trigger the production notification
+#define AUI_CITY_FIX_PUPPET_CHOOSE_PRODUCTION_NOTIFICATION
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -195,6 +201,10 @@
 #define AUI_DEAL_ALLOW_CAPITOL_GIFTING
 /// Changes a few lines of code so that only settlers are banned for Venice, settling as a whole is not banned (so they can have a separate settling unit)
 #define AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+/// If a unit can both found and found abroad, Venice will only be able to use that unit to found abroad; this should allow Venice to not be overpowered with Exploration
+#define NQM_UNIT_LIMIT_VENICE_CONQUISTADOR_SETTLES
+#endif
 /// Puppet cities belonging to Venice do not get penalties to science, gold, and faith (they still get penalties to culture to offset the fact that they don't increase policy cost)
 #define AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
 /// Units with the ability to retreat from melee combat will not do so if they are guarding a civilian unit.
@@ -336,6 +346,10 @@
 #define AUI_GS_FIX_NO_ACTIVE_GS_FOR_HUMANS
 /// Instead of ignoring all military training buildings (eg. stables, kreposts, etc.), puppets will instead nullify the Military Training and Naval flavors
 #define AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_PUPPETS_NULLIFY_BARRACKS
+/// Instead of prefering maintenance-free buildings, puppets will now use a logistic scale to emphasize low-maintenance buildings
+#define AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_SLIDING_LOGISTIC_MAINTENANCE_SCALE
+/// Puppets can now build non-wonder buildings that they would normally have 0 weight for
+#define AUI_CITYSTRATEGY_PUPPETS_ALLOW_BAD_BUILDS_IF_NO_OTHER_CHOICE
 /// Scales the GetLastTurnWorkerDisbanded() computation to game speed
 #define AUI_CITYSTRATEGY_FIX_TILE_IMPROVERS_LAST_DISBAND_WORKER_TURN_SCALE
 /// If a player does not have any non-scouting military units, the "enough workers" city strategy is triggered and the "want workers" and "need workers" city strategies always return false
