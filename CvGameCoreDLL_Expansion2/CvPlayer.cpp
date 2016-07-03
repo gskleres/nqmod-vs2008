@@ -137,8 +137,13 @@ CvPlayer::CvPlayer() :
 	, m_iJONSCulturePerTurnForFree("CvPlayer::m_iJONSCulturePerTurnForFree", m_syncArchive)
 	, m_iJONSCulturePerTurnFromMinorCivs("CvPlayer::m_iJONSCulturePerTurnFromMinorCivs", m_syncArchive)
 	, m_iJONSCultureCityModifier("CvPlayer::m_iJONSCultureCityModifier", m_syncArchive)
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	, m_iJONSCultureT100("CvPlayer::m_iJONSCultureT100", m_syncArchive, true)
+	, m_iJONSCultureEverGeneratedT100("CvPlayer::m_iJONSCultureEverGeneratedT100", m_syncArchive)
+#else
 	, m_iJONSCulture("CvPlayer::m_iJONSCulture", m_syncArchive, true)
 	, m_iJONSCultureEverGenerated("CvPlayer::m_iJONSCulture", m_syncArchive)
+#endif
 	, m_iCulturePerWonder("CvPlayer::m_iCulturePerWonder", m_syncArchive)
 	, m_iCultureWonderMultiplier("CvPlayer::m_iCultureWonderMultiplier", m_syncArchive)
 	, m_iCulturePerTechResearched("CvPlayer::m_iCulturePerTechResearched", m_syncArchive)
@@ -765,8 +770,13 @@ void CvPlayer::uninit()
 	m_iJONSCulturePerTurnForFree = 0;
 	m_iJONSCulturePerTurnFromMinorCivs = 0;
 	m_iJONSCultureCityModifier = 0;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	m_iJONSCultureT100 = 0;
+	m_iJONSCultureEverGeneratedT100 = 0;
+#else
 	m_iJONSCulture = 0;
 	m_iJONSCultureEverGenerated = 0;
+#endif
 	m_iCulturePerWonder = 0;
 	m_iCultureWonderMultiplier = 0;
 	m_iCulturePerTechResearched = 0;
@@ -1360,6 +1370,9 @@ void CvPlayer::initFreeState(CvGameInitialItemsOverrides& kOverrides)
 	}
 
 	DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	doSelfConsistencyCheckAllCities();
+#endif
 
 	clearResearchQueue();
 }
@@ -1914,12 +1927,21 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 
 	if(bConquest)
 	{
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+		iCaptureCulture = pOldCity->getJONSCulturePerTurnTimes100();
+		iCaptureCulture *= GetPlayerPolicies()->GetNumericModifier(POLICYMOD_CULTURAL_PLUNDER_MULTIPLIER);
+
+		if (iCaptureCulture > 0)
+		{
+			changeJONSCultureTimes100(iCaptureCulture);
+#else
 		iCaptureCulture = pOldCity->getJONSCulturePerTurn();
 		iCaptureCulture *= GetPlayerPolicies()->GetNumericModifier(POLICYMOD_CULTURAL_PLUNDER_MULTIPLIER);
 
 		if(iCaptureCulture > 0)
 		{
 			changeJONSCulture(iCaptureCulture);
+#endif
 		}
 	}
 
@@ -2859,6 +2881,12 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 		bool bResult;
 		LuaSupport::CallHook(pkScriptSystem, "CityCaptureComplete", args.get(), bResult);
 	}
+
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	doSelfConsistencyCheckAllCities();
+	GET_PLAYER(eOldOwner).doSelfConsistencyCheckAllCities();
+#endif
+
 #ifdef _MSC_VER
 #pragma warning ( pop ) // restore warning level suppressed for pNewCity null check
 #endif// _MSC_VER
@@ -4412,18 +4440,34 @@ void CvPlayer::doTurnPostDiplomacy()
 	if(kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED))
 	{
 		if(getJONSCulture() < getNextPolicyCost())
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			changeJONSCultureTimes100(getCachedJONSCultureForThisTurn());
+#else
+			changeJONSCultureTimes100(GetTotalJONSCulturePerTurn());
+#endif
+#else
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 			changeJONSCulture(getCachedJONSCultureForThisTurn());
 #else
 			changeJONSCulture(GetTotalJONSCulturePerTurn());
 #endif
+#endif
 	}
 	else
 	{
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		changeJONSCultureTimes100(getCachedJONSCultureForThisTurn());
+#else
+		changeJONSCultureTimes100(GetTotalJONSCulturePerTurnTimes100());
+#endif
+#else
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		changeJONSCulture(getCachedJONSCultureForThisTurn());
 #else
 		changeJONSCulture(GetTotalJONSCulturePerTurn());
+#endif
 #endif
 	}
 
@@ -4545,7 +4589,11 @@ void CvPlayer::cacheYields()
 	m_pTreasury->cacheGoldT100ForThisTurn();
 
 	// Cache Culture
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	m_iCachedJONSCultureForThisTurn = GetTotalJONSCulturePerTurnTimes100();
+#else
 	m_iCachedJONSCultureForThisTurn = GetTotalJONSCulturePerTurn();
+#endif
 
 	// Cache Science
 	m_iCachedScienceT100ForThisTurn = GetScienceTimes100();
@@ -5771,6 +5819,9 @@ void CvPlayer::raze(CvCity* pCity)
 	{
 		GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 	}
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	doSelfConsistencyCheckAllCities();
+#endif
 }
 
 
@@ -9919,6 +9970,13 @@ void CvPlayer::changeTotalLandScored(int iChange)
 //	--------------------------------------------------------------------------------
 /// Total culture per turn
 int CvPlayer::GetTotalJONSCulturePerTurn() const
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+{
+	return GetTotalJONSCulturePerTurnTimes100() / 100;
+}
+
+int CvPlayer::GetTotalJONSCulturePerTurnTimes100() const
+#endif
 {
 	if(GC.getGame().isOption(GAMEOPTION_NO_POLICIES))
 	{
@@ -9934,6 +9992,27 @@ int CvPlayer::GetTotalJONSCulturePerTurn() const
 	int iCulturePerTurn = 0;
 
 	// Culture per turn from Cities
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	iCulturePerTurn += GetJONSCulturePerTurnFromCitiesTimes100();
+
+	// Special bonus which adds excess Happiness to Culture?
+	iCulturePerTurn += GetJONSCulturePerTurnFromExcessHappinessTimes100();
+
+	// Trait bonus which adds Culture for trade partners? 
+	iCulturePerTurn += GetJONSCulturePerTurnFromTraits() * 100;
+
+	// Free culture that's part of the player
+	iCulturePerTurn += GetJONSCulturePerTurnForFree() * 100;
+
+	// Culture from Minor Civs
+	iCulturePerTurn += GetCulturePerTurnFromMinorCivs() * 100;
+
+	// Culture from Religion
+	iCulturePerTurn += GetCulturePerTurnFromReligionTimes100();
+
+	// Temporary boost from bonus turns
+	iCulturePerTurn += GetCulturePerTurnFromBonusTurnsTimes100();
+#else
 	iCulturePerTurn += GetJONSCulturePerTurnFromCities();
 
 	// Special bonus which adds excess Happiness to Culture?
@@ -9953,6 +10032,7 @@ int CvPlayer::GetTotalJONSCulturePerTurn() const
 	
 	// Temporary boost from bonus turns
 	iCulturePerTurn += GetCulturePerTurnFromBonusTurns();
+#endif
 
 	// Golden Age bonus
 	if (isGoldenAge() && !IsGoldenAgeCultureBonusDisabled())
@@ -9966,6 +10046,13 @@ int CvPlayer::GetTotalJONSCulturePerTurn() const
 //	--------------------------------------------------------------------------------
 /// Culture per turn from Cities
 int CvPlayer::GetJONSCulturePerTurnFromCities() const
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+{
+	return GetJONSCulturePerTurnFromCitiesTimes100() / 100;
+}
+
+int CvPlayer::GetJONSCulturePerTurnFromCitiesTimes100() const
+#endif
 {
 	int iCulturePerTurn = 0;
 
@@ -9974,7 +10061,11 @@ int CvPlayer::GetJONSCulturePerTurnFromCities() const
 	int iLoop;
 	for(pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
 	{
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+		iCulturePerTurn += pLoopCity->getJONSCulturePerTurnTimes100();
+#else
 		iCulturePerTurn += pLoopCity->getJONSCulturePerTurn();
+#endif
 	}
 
 	return iCulturePerTurn;
@@ -9983,6 +10074,13 @@ int CvPlayer::GetJONSCulturePerTurnFromCities() const
 //	--------------------------------------------------------------------------------
 /// Special bonus which adds excess Happiness to Culture?
 int CvPlayer::GetJONSCulturePerTurnFromExcessHappiness() const
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+{
+	return GetJONSCulturePerTurnFromExcessHappinessTimes100() / 100;
+}
+
+int CvPlayer::GetJONSCulturePerTurnFromExcessHappinessTimes100() const
+#endif
 {
 	if(GC.getGame().isOption(GAMEOPTION_NO_HAPPINESS))
 	{
@@ -9994,7 +10092,9 @@ int CvPlayer::GetJONSCulturePerTurnFromExcessHappiness() const
 		if(GetExcessHappiness() > 0)
 		{
 			int iFreeCulture = GetExcessHappiness() * getHappinessToCulture();
+#ifndef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
 			iFreeCulture /= 100;
+#endif
 
 			return iFreeCulture;
 		}
@@ -10086,15 +10186,29 @@ int CvPlayer::GetCulturePerTurnFromMinor(PlayerTypes eMinor) const
 //	--------------------------------------------------------------------------------
 /// Culture per turn from religion
 int CvPlayer::GetCulturePerTurnFromReligion() const
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+{
+	return GetCulturePerTurnFromReligionTimes100() / 100;
+}
+
+int CvPlayer::GetCulturePerTurnFromReligionTimes100() const
+#endif
 {
 	int iOtherCulturePerTurn = 0;
 	int iReligionCulturePerTurn = 0;
 
 	// Start by seeing how much the other types are bringing in
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	iOtherCulturePerTurn += GetJONSCulturePerTurnFromCitiesTimes100();
+	iOtherCulturePerTurn += GetJONSCulturePerTurnFromExcessHappinessTimes100();
+	iOtherCulturePerTurn += GetJONSCulturePerTurnForFree() * 100;
+	iOtherCulturePerTurn += GetCulturePerTurnFromMinorCivs() * 100;
+#else
 	iOtherCulturePerTurn += GetJONSCulturePerTurnFromCities();
 	iOtherCulturePerTurn += GetJONSCulturePerTurnFromExcessHappiness();
 	iOtherCulturePerTurn += GetJONSCulturePerTurnForFree();
 	iOtherCulturePerTurn += GetCulturePerTurnFromMinorCivs();
+#endif
 
 	// Founder beliefs
 	CvGameReligions* pReligions = GC.getGame().GetGameReligions();
@@ -10124,6 +10238,9 @@ int CvPlayer::GetCulturePerTurnFromReligion() const
 
 			bool bAtPeace = GET_TEAM(getTeam()).getAtWarCount(false) == 0;
 			int iMod = pReligion->m_Beliefs.GetPlayerCultureModifier(bAtPeace);
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+			iReligionCulturePerTurn *= 100;
+#endif
 
 			if (iMod != 0)
 			{
@@ -10139,12 +10256,29 @@ int CvPlayer::GetCulturePerTurnFromReligion() const
 //	--------------------------------------------------------------------------------
 /// Culture from Bonus Turns
 int CvPlayer::GetCulturePerTurnFromBonusTurns() const
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+{
+	return GetCulturePerTurnFromBonusTurnsTimes100() / 100;
+}
+
+int CvPlayer::GetCulturePerTurnFromBonusTurnsTimes100() const
+#endif
 {
 	int iValue = 0;
 
 	if (GetCultureBonusTurns() > 0)
 	{
 		// Start by seeing how much the other types are bringing in
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+		iValue += GetJONSCulturePerTurnFromCitiesTimes100();
+		iValue += GetJONSCulturePerTurnFromExcessHappinessTimes100();
+		iValue += GetJONSCulturePerTurnForFree() * 100;
+		iValue += GetCulturePerTurnFromMinorCivs() * 100;
+		iValue += GetCulturePerTurnFromReligionTimes100();
+
+		iValue *= GC.getTEMPORARY_CULTURE_BOOST_MOD();
+		iValue /= 100;
+#else
 		int iOtherCulturePerTurn = 0;
 		iOtherCulturePerTurn += GetJONSCulturePerTurnFromCities();
 		iOtherCulturePerTurn += GetJONSCulturePerTurnFromExcessHappiness();
@@ -10153,6 +10287,7 @@ int CvPlayer::GetCulturePerTurnFromBonusTurns() const
 		iOtherCulturePerTurn += GetCulturePerTurnFromReligion();
 
 		iValue += ((iOtherCulturePerTurn * GC.getTEMPORARY_CULTURE_BOOST_MOD()) / 100);
+#endif
 	}
 
 	return iValue;
@@ -10180,7 +10315,91 @@ void CvPlayer::ChangeJONSCultureCityModifier(int iChange)
 	}
 }
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+int CvPlayer::getJONSCultureTimes100() const
+{
+	// City States can't pick Policies, sorry!
+	if (isMinorCiv())
+		return 0;
 
+	if (GC.getGame().isOption(GAMEOPTION_NO_POLICIES))
+	{
+		return 0;
+	}
+
+	return m_iJONSCultureT100;
+}
+
+
+void CvPlayer::setJONSCultureTimes100(int iNewValue)
+{
+	if (getJONSCultureTimes100() != iNewValue)
+	{
+		// Add to the total we've ever had
+		if (iNewValue > getJONSCultureTimes100())
+		{
+			ChangeJONSCultureEverGeneratedTimes100(iNewValue - getJONSCultureTimes100());
+		}
+
+		m_iJONSCultureT100 = iNewValue;
+
+		if (GC.getGame().getActivePlayer() == GetID())
+		{
+			GC.GetEngineUserInterface()->setDirty(GameData_DIRTY_BIT, true);
+		}
+	}
+}
+
+void CvPlayer::changeJONSCultureTimes100(int iChange)
+{
+	setJONSCultureTimes100(getJONSCultureTimes100() + iChange);
+}
+
+int CvPlayer::GetJONSCultureEverGeneratedTimes100() const
+{
+	return m_iJONSCultureEverGeneratedT100;
+}
+
+
+void CvPlayer::SetJONSCultureEverGeneratedTimes100(int iNewValue)
+{
+	if (GetJONSCultureEverGeneratedTimes100() != iNewValue)
+	{
+		m_iJONSCultureEverGeneratedT100 = iNewValue;
+	}
+}
+
+void CvPlayer::ChangeJONSCultureEverGeneratedTimes100(int iChange)
+{
+	SetJONSCultureEverGeneratedTimes100(GetJONSCultureEverGeneratedTimes100() + iChange);
+}
+
+int CvPlayer::getJONSCulture() const
+{
+	return getJONSCultureTimes100() / 100;
+}
+void CvPlayer::setJONSCulture(int iNewValue)
+{
+	setJONSCultureTimes100(iNewValue * 100);
+}
+void CvPlayer::changeJONSCulture(int iChange)
+{
+	changeJONSCultureTimes100(iChange * 100);
+}
+
+int CvPlayer::GetJONSCultureEverGenerated() const
+{
+	return GetJONSCultureEverGeneratedTimes100() / 100;
+}
+void CvPlayer::SetJONSCultureEverGenerated(int iNewValue)
+{
+	SetJONSCultureEverGeneratedTimes100(iNewValue * 100);
+}
+void CvPlayer::ChangeJONSCultureEverGenerated(int iChange)
+{
+	ChangeJONSCultureEverGeneratedTimes100(iChange * 100);
+}
+#else
 //	--------------------------------------------------------------------------------
 int CvPlayer::getJONSCulture() const
 {
@@ -10245,12 +10464,17 @@ void CvPlayer::ChangeJONSCultureEverGenerated(int iChange)
 {
 	SetJONSCultureEverGenerated(GetJONSCultureEverGenerated() + iChange);
 }
+#endif
 
 
 //	--------------------------------------------------------------------------------
 int CvPlayer::GetJONSCulturePerCityPerTurn() const
 {
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int iCulture = GetJONSCultureEverGeneratedTimes100();
+#else
 	int iCulture = GetJONSCultureEverGenerated();
+#endif
 	int iNumCities = getNumCities();
 
 	// Puppet Cities don't count
@@ -10263,7 +10487,11 @@ int CvPlayer::GetJONSCulturePerCityPerTurn() const
 		iNumTurns = 1;
 	}
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int iCulturePerCityPerTurn = iCulture / iNumCities / iNumTurns;
+#else
 	int iCulturePerCityPerTurn = 100 * iCulture / iNumCities / iNumTurns;
+#endif
 	return iCulturePerCityPerTurn;
 }
 
@@ -10937,10 +11165,6 @@ void CvPlayer::DoUpdateHappiness()
 	// Increase for each City connected to Capital with a Trade Route
 	DoUpdateCityConnectionHappiness();
 	m_iHappiness += GetHappinessFromTradeRoutes();
-
-#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
-	doSelfConsistencyCheckAllCities();
-#endif
 
 	if(isLocalPlayer() && GetExcessHappiness() >= 100)
 	{
@@ -18863,6 +19087,9 @@ void CvPlayer::changeResourceExport(ResourceTypes eIndex, int iChange)
 		CvAssert(getResourceExport(eIndex) >= 0);
 
 		DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		doSelfConsistencyCheckAllCities();
+#endif
 	}
 }
 
@@ -18886,6 +19113,9 @@ void CvPlayer::changeResourceImport(ResourceTypes eIndex, int iChange)
 		CvAssert(getResourceImport(eIndex) >= 0);
 
 		DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		doSelfConsistencyCheckAllCities();
+#endif
 	}
 }
 
@@ -18919,6 +19149,9 @@ void CvPlayer::changeResourceFromMinors(ResourceTypes eIndex, int iChange)
 		CvAssert(getResourceFromMinors(eIndex) >= 0);
 
 		DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		doSelfConsistencyCheckAllCities();
+#endif
 	}
 }
 
@@ -18945,6 +19178,9 @@ void CvPlayer::changeResourceSiphoned(ResourceTypes eIndex, int iChange)
 		CvAssert(getResourceSiphoned(eIndex) >= 0);
 
 		DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		doSelfConsistencyCheckAllCities();
+#endif
 	}
 }
 
@@ -19535,14 +19771,22 @@ int CvPlayer::GetHurryGoldCost(HurryTypes eHurry) const
 
 		if(iCurrentPolicyCost > 0)
 		{
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+			int iCultureLeft = iCurrentPolicyCost * 100 - getJONSCultureTimes100();
+#else
 			int iCultureLeft = iCurrentPolicyCost - getJONSCulture();
+#endif
 
 			// Cost of Gold rushing based on the ORIGINAL Culture price
 			int iGoldForFullPrice = iCurrentPolicyCost * pkHurryInfo->getGoldPerCulture();
 			iGoldForFullPrice = (int) pow((double) iGoldForFullPrice, (double) /*1.10f*/ GC.getHURRY_GOLD_CULTURE_EXPONENT());
 
 			// Figure out the actual cost by comparing what's left to the original Culture cost, and multiplying that by the amount to Gold rush the original cost
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+			iGold = (iGoldForFullPrice * iCultureLeft / iCurrentPolicyCost / 100);
+#else
 			iGold = (iGoldForFullPrice * iCultureLeft / iCurrentPolicyCost);
+#endif
 		}
 	}
 
@@ -22737,6 +22981,9 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 	recomputeFreeExperience();
 
 	doUpdateBarbarianCampVisibility();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	doSelfConsistencyCheckAllCities();
+#endif
 
 	GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 	GC.GetEngineUserInterface()->setDirty(GameData_DIRTY_BIT, true);
@@ -22973,8 +23220,13 @@ void CvPlayer::Read(FDataStream& kStream)
 	kStream >> m_iJONSCulturePerTurnForFree;
 	kStream >> m_iJONSCulturePerTurnFromMinorCivs;
 	kStream >> m_iJONSCultureCityModifier;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	kStream >> m_iJONSCultureT100;
+	kStream >> m_iJONSCultureEverGeneratedT100;
+#else
 	kStream >> m_iJONSCulture;
 	kStream >> m_iJONSCultureEverGenerated;
+#endif
 	kStream >> m_iCulturePerWonder;
 	kStream >> m_iCultureWonderMultiplier;
 	kStream >> m_iCulturePerTechResearched;
@@ -23545,8 +23797,13 @@ void CvPlayer::Write(FDataStream& kStream) const
 	kStream << m_iJONSCulturePerTurnForFree;
 	kStream << m_iJONSCulturePerTurnFromMinorCivs;
 	kStream << m_iJONSCultureCityModifier;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	kStream << m_iJONSCultureT100;
+	kStream << m_iJONSCultureEverGeneratedT100;
+#else
 	kStream << m_iJONSCulture;
 	kStream << m_iJONSCultureEverGenerated;
+#endif
 	kStream << m_iCulturePerWonder;
 	kStream << m_iCultureWonderMultiplier;
 	kStream << m_iCulturePerTechResearched;

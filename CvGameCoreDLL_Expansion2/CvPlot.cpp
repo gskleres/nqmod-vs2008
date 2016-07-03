@@ -5328,6 +5328,9 @@ void CvPlot::setOwner(PlayerTypes eNewValue, int iAcquiringCityID, bool bCheckUn
 				if(bShouldUpdateHappiness)
 				{
 					GET_PLAYER(getOwner()).DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+					GET_PLAYER(getOwner()).doSelfConsistencyCheckAllCities();
+#endif
 				}
 			}
 
@@ -6297,6 +6300,9 @@ void CvPlot::setImprovementType(ImprovementTypes eNewValue, PlayerTypes eBuilder
 						if(GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_LUXURY)
 						{
 							owningPlayer.DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+							owningPlayer.doSelfConsistencyCheckAllCities();
+#endif
 						}
 					}
 				}
@@ -6335,6 +6341,9 @@ void CvPlot::setImprovementType(ImprovementTypes eNewValue, PlayerTypes eBuilder
 						if(GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_LUXURY)
 						{
 							owningPlayer.DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+							owningPlayer.doSelfConsistencyCheckAllCities();
+#endif
 						}
 					}
 				}
@@ -7987,7 +7996,9 @@ PlotVisibilityChangeResult CvPlot::changeVisibilityCount(TeamTypes eTeam, int iC
 					{
 						updateSymbols();
 						updateFog(true);
+#ifndef AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
 						updateVisibility();
+#endif
 					}
 				}
 
@@ -8059,6 +8070,9 @@ PlotVisibilityChangeResult CvPlot::changeVisibilityCount(TeamTypes eTeam, int iC
 			if(eTeam == GC.getGame().getActiveTeam())
 			{
 				//updateFog();
+#ifndef AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
+				updateVisibility();
+#endif
 				updateCenterUnit();
 			}
 		}
@@ -8404,6 +8418,9 @@ bool CvPlot::setRevealed(TeamTypes eTeam, bool bNewValue, bool bTerrainOnly, Tea
 								}
 
 								playerI.DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+								playerI.doSelfConsistencyCheckAllCities();
+#endif
 
 								// Add World Anchor
 								if(eTeam == eActiveTeam)

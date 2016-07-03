@@ -369,6 +369,11 @@ public:
 
 	// Culture stuff
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int GetJONSCultureStoredTimes100() const;
+	void SetJONSCultureStoredTimes100(int iValue);
+	void ChangeJONSCultureStoredTimes100(int iChange);
+#endif
 	int GetJONSCultureStored() const;
 	void SetJONSCultureStored(int iValue);
 	void ChangeJONSCultureStored(int iChange);
@@ -380,6 +385,9 @@ public:
 	int GetJONSCultureThreshold() const;
 
 	int getJONSCulturePerTurn() const;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int getJONSCulturePerTurnTimes100() const;
+#endif
 
 	int GetBaseJONSCulturePerTurn() const;
 
@@ -923,7 +931,11 @@ protected:
 	FAutoVariable<int, CvCity> m_iNumGreatPeople;
 	FAutoVariable<int, CvCity> m_iBaseGreatPeopleRate;
 	FAutoVariable<int, CvCity> m_iGreatPeopleRateModifier;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	FAutoVariable<int, CvCity> m_iJONSCultureStoredT100;
+#else
 	FAutoVariable<int, CvCity> m_iJONSCultureStored;
+#endif
 	FAutoVariable<int, CvCity> m_iJONSCultureLevel;
 	FAutoVariable<int, CvCity> m_iJONSCulturePerTurnFromBuildings;
 	FAutoVariable<int, CvCity> m_iJONSCulturePerTurnFromPolicies;

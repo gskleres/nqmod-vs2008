@@ -127,7 +127,11 @@ CvCity::CvCity() :
 	, m_iNumGreatPeople("CvCity::m_iNumGreatPeople", m_syncArchive)
 	, m_iBaseGreatPeopleRate("CvCity::m_iBaseGreatPeopleRate", m_syncArchive)
 	, m_iGreatPeopleRateModifier("CvCity::m_iGreatPeopleRateModifier", m_syncArchive)
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	, m_iJONSCultureStoredT100("CvCity::m_iJONSCultureT100Stored", m_syncArchive, true)
+#else
 	, m_iJONSCultureStored("CvCity::m_iJONSCultureStored", m_syncArchive, true)
+#endif
 	, m_iJONSCultureLevel("CvCity::m_iJONSCultureLevel", m_syncArchive)
 	, m_iJONSCulturePerTurnFromBuildings("CvCity::m_iJONSCulturePerTurnFromBuildings", m_syncArchive)
 	, m_iJONSCulturePerTurnFromPolicies("CvCity::m_iJONSCulturePerTurnFromPolicies", m_syncArchive)
@@ -618,18 +622,21 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	{
 		ChangeJONSCulturePerTurnFromPolicies(GET_PLAYER(getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_CULTURE_FROM_GARRISON));
 	}
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	GetPlayer()->doSelfConsistencyCheckAllCities();
+#endif
 
 	AI_init();
-
-	if (GC.getGame().getGameTurn() == 0)
-	{
-		chooseProduction();
-	}
 
 #ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
 	if (GetPlayer()->GetPlayerTraits()->IsNoAnnexing() && !isCapital())
 		DoCreatePuppet();
+	else
 #endif
+	if (GC.getGame().getGameTurn() == 0)
+	{
+		chooseProduction();
+	}
 }
 
 //	--------------------------------------------------------------------------------
@@ -733,7 +740,11 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	m_iNumGreatPeople = 0;
 	m_iBaseGreatPeopleRate = 0;
 	m_iGreatPeopleRateModifier = 0;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	m_iJONSCultureStoredT100 = 0;
+#else
 	m_iJONSCultureStored = 0;
+#endif
 	m_iJONSCultureLevel = 0;
 	m_iJONSCulturePerTurnFromBuildings = 0;
 	m_iJONSCulturePerTurnFromPolicies = 0;
@@ -1515,6 +1526,9 @@ void CvCity::PostKill(bool bCapital, CvPlot* pPlot, PlayerTypes eOwner)
 		theMap.updateDeferredFog();
 	}
 
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	GetPlayer()->doSelfConsistencyCheckAllCities();
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -1617,7 +1631,11 @@ void CvCity::cacheYieldsForTurn()
 	//setCachedYieldT100ForThisTurn(YIELD_SCIENCE, getYieldRateTimes100(YIELD_GOLD, false));
 
 	// Culture
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	setCachedYieldT100ForThisTurn(YIELD_CULTURE, MAX(getJONSCulturePerTurnTimes100(), 0));
+#else
 	setCachedYieldT100ForThisTurn(YIELD_CULTURE, MAX(getJONSCulturePerTurn(), 0));
+#endif
 
 	// Faith
 	//setCachedYieldT100ForThisTurn(YIELD_FAITH, GetFaithPerTurn());
@@ -1721,17 +1739,33 @@ void CvCity::doTurn()
 		DoTestResourceDemanded();
 
 		// Culture accumulation
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		if (getCachedYieldT100ForThisTurn(YIELD_CULTURE) > 0)
+		{
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+			ChangeJONSCultureStoredTimes100(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
+#else
+			ChangeJONSCultureStored(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
+#endif
+#else
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+		if (getJONSCulturePerTurnTimes100() > 0)
+		{
+			ChangeJONSCultureStoredTimes100(getJONSCulturePerTurnTimes100());
+#else
 		if(getJONSCulturePerTurn() > 0)
 		{
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-			ChangeJONSCultureStored(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
-#else
 			ChangeJONSCultureStored(getJONSCulturePerTurn());
+#endif
 #endif
 		}
 
 		// Enough Culture to acquire a new Plot?
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+		if (GetJONSCultureStoredTimes100() >= GetJONSCultureThreshold() * 100)
+#else
 		if(GetJONSCultureStored() >= GetJONSCultureThreshold())
+#endif
 		{
 			DoJONSCultureLevelIncrease();
 		}
@@ -1967,6 +2001,9 @@ void CvCity::SetRouteToCapitalConnected(bool bValue)
 	if(bUpdateReligion)
 	{
 		UpdateReligion(GetCityReligions()->GetReligiousMajority());
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		GetPlayer()->doSelfConsistencyCheckAllCities();
+#endif
 	}
 
 	if(GC.getGame().getGameTurn() == 0)
@@ -2112,6 +2149,11 @@ void CvCity::chooseProduction(UnitTypes eTrainUnit, BuildingTypes eConstructBuil
 {
 	VALIDATE_OBJECT
 	CvString strTooltip = GetLocalizedText("TXT_KEY_NOTIFICATION_NEW_CONSTRUCTION", getNameKey());
+
+#ifdef AUI_CITY_FIX_PUPPET_CHOOSE_PRODUCTION_NOTIFICATION
+	if (isProductionAutomated() || IsPuppet())
+		return;
+#endif
 
 	CvNotifications* pNotifications = GET_PLAYER(getOwner()).GetNotifications();
 	if(pNotifications)
@@ -6716,6 +6758,9 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 
 	owningPlayer.DoUpdateHappiness();
 
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	GetPlayer()->doSelfConsistencyCheckAllCities();
+#endif
 	setLayoutDirty(true);
 }
 
@@ -7773,6 +7818,9 @@ void CvCity::setPopulation(int iNewValue, bool bReassignPop /* = true */)
 		updateStrengthValue();
 
 		DLLUI->setDirty(CityInfo_DIRTY_BIT, true);
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		GetPlayer()->doSelfConsistencyCheckAllCities();
+#endif
 	}
 
 	ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
@@ -7905,6 +7953,45 @@ void CvCity::changeGreatPeopleRateModifier(int iChange)
 	m_iGreatPeopleRateModifier = (m_iGreatPeopleRateModifier + iChange);
 }
 
+
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+int CvCity::GetJONSCultureStoredTimes100() const
+{
+	VALIDATE_OBJECT
+	return m_iJONSCultureStoredT100;
+}
+
+void CvCity::SetJONSCultureStoredTimes100(int iValue)
+{
+	VALIDATE_OBJECT
+	m_iJONSCultureStoredT100 = iValue;
+}
+
+void CvCity::ChangeJONSCultureStoredTimes100(int iChange)
+{
+	VALIDATE_OBJECT
+	SetJONSCultureStoredTimes100(GetJONSCultureStoredTimes100() + iChange);
+}
+
+int CvCity::GetJONSCultureStored() const
+{
+	VALIDATE_OBJECT
+	return GetJONSCultureStoredTimes100() / 100;
+}
+void CvCity::SetJONSCultureStored(int iValue)
+{
+	VALIDATE_OBJECT
+	SetJONSCultureStoredTimes100(iValue * 100);
+}
+
+//	--------------------------------------------------------------------------------
+/// Changes the amount of Culture in this City
+void CvCity::ChangeJONSCultureStored(int iChange)
+{
+	VALIDATE_OBJECT
+	ChangeJONSCultureStoredTimes100(iChange * 100);
+}
+#else
 //	--------------------------------------------------------------------------------
 /// Amount of Culture in this City
 int CvCity::GetJONSCultureStored() const
@@ -7928,7 +8015,7 @@ void CvCity::ChangeJONSCultureStored(int iChange)
 	VALIDATE_OBJECT
 	SetJONSCultureStored(GetJONSCultureStored() + iChange);
 }
-
+#endif
 
 //	--------------------------------------------------------------------------------
 /// Culture level of this City
@@ -7960,8 +8047,13 @@ void CvCity::DoJONSCultureLevelIncrease()
 {
 	VALIDATE_OBJECT
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int iOverflow = GetJONSCultureStoredTimes100() - GetJONSCultureThreshold() * 100;
+	SetJONSCultureStoredTimes100(iOverflow);
+#else
 	int iOverflow = GetJONSCultureStored() - GetJONSCultureThreshold();
 	SetJONSCultureStored(iOverflow);
+#endif
 	ChangeJONSCultureLevel(1);
 
 	CvPlot* pPlotToAcquire = GetNextBuyablePlot();
@@ -8076,6 +8168,13 @@ int CvCity::GetJONSCultureThreshold() const
 
 //	--------------------------------------------------------------------------------
 int CvCity::getJONSCulturePerTurn() const
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+{
+	return getJONSCulturePerTurnTimes100() / 100;
+}
+
+int CvCity::getJONSCulturePerTurnTimes100() const
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -8105,7 +8204,9 @@ int CvCity::getJONSCulturePerTurn() const
 	}
 
 	iCulture *= iModifier;
+#ifndef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
 	iCulture /= 100;
+#endif
 
 	return iCulture;
 }
@@ -9154,6 +9255,9 @@ void CvCity::DoCreatePuppet()
 
 	GET_PLAYER(getOwner()).DoUpdateHappiness();
 	GET_PLAYER(getOwner()).DoUpdateNextPolicyCost();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	GetPlayer()->doSelfConsistencyCheckAllCities();
+#endif
 
 	DLLUI->setDirty(CityInfo_DIRTY_BIT, true);
 	DLLUI->setDirty(GameData_DIRTY_BIT, true);
@@ -9190,6 +9294,9 @@ void CvCity::DoAnnex()
 	}
 
 	GET_PLAYER(getOwner()).DoUpdateNextPolicyCost();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	GetPlayer()->doSelfConsistencyCheckAllCities();
+#endif
 
 	DLLUI->setDirty(CityInfo_DIRTY_BIT, true);
 	DLLUI->setDirty(GameData_DIRTY_BIT, true);
@@ -11689,8 +11796,6 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 #ifdef AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 						if (GC.getResourceInfo(eResource)->getResourceUsage() == RESOURCEUSAGE_BONUS)
 						{
-							// undo the bonus - bonus resources only increase yields
-							iInfluenceCost -= iPLOT_INFLUENCE_RESOURCE_COST;
 							if (hexDistance(iDX, iDY) <= NUM_CITY_RINGS)
 							{
 								int* aiYields = GC.getResourceInfo(eResource)->getYieldChangeArray();
@@ -14786,7 +14891,11 @@ void CvCity::read(FDataStream& kStream)
 	kStream >> m_iNumGreatPeople;
 	kStream >> m_iBaseGreatPeopleRate;
 	kStream >> m_iGreatPeopleRateModifier;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	kStream >> m_iJONSCultureStoredT100;
+#else
 	kStream >> m_iJONSCultureStored;
+#endif
 	kStream >> m_iJONSCultureLevel;
 	kStream >> m_iJONSCulturePerTurnFromBuildings;
 	kStream >> m_iJONSCulturePerTurnFromPolicies;
@@ -15144,7 +15253,11 @@ void CvCity::write(FDataStream& kStream) const
 	kStream << m_iNumGreatPeople;
 	kStream << m_iBaseGreatPeopleRate;
 	kStream << m_iGreatPeopleRateModifier;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	kStream << m_iJONSCultureStoredT100;
+#else
 	kStream << m_iJONSCultureStored;
+#endif
 	kStream << m_iJONSCultureLevel;
 	kStream << m_iJONSCulturePerTurnFromBuildings;
 	kStream << m_iJONSCulturePerTurnFromPolicies;

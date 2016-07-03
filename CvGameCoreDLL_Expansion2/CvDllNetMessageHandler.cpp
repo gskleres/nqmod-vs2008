@@ -1089,6 +1089,9 @@ void CvDllNetMessageHandler::ResponseUpdatePolicies(PlayerTypes ePlayer, bool bN
 		{
 			kPlayer.setHasPolicy(ePolicy, bValue);
 			kPlayer.DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+			kPlayer.doSelfConsistencyCheckAllCities();
+#endif
 		}
 	}
 	// Policy Branch Update

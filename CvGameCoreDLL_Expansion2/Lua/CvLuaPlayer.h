@@ -194,6 +194,17 @@ protected:
 	static int lGetGoldPerTurnFromTradeRoutesTimes100(lua_State* L);
 	static int lGetGoldPerTurnFromTraits(lua_State* L);
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	static int lGetTotalJONSCulturePerTurnTimes100(lua_State* L);
+	static int lGetJONSCulturePerTurnFromCitiesTimes100(lua_State* L);
+	static int lGetJONSCulturePerTurnFromExcessHappinessTimes100(lua_State* L);
+	static int lGetCulturePerTurnFromReligionTimes100(lua_State* L);
+	static int lGetCulturePerTurnFromBonusTurnsTimes100(lua_State* L);
+	static int lGetJONSCultureTimes100(lua_State* L);
+	static int lSetJONSCultureTimes100(lua_State* L);
+	static int lChangeJONSCultureTimes100(lua_State* L);
+	static int lGetJONSCultureEverGeneratedTimes100(lua_State* L);
+#endif
 	static int lGetTotalJONSCulturePerTurn(lua_State* L);
 
 	static int lGetJONSCulturePerTurnFromCities(lua_State* L);

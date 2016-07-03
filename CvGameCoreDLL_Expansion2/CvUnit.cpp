@@ -7308,7 +7308,11 @@ bool CvUnit::pillage()
 bool CvUnit::canFound(const CvPlot* pPlot, bool bTestVisible) const
 {
 	VALIDATE_OBJECT
+#ifdef NQM_UNIT_LIMIT_VENICE_CONQUISTADOR_SETTLES
+	if (!m_pUnitInfo->IsFound() || (m_pUnitInfo->IsFoundAbroad() && m_pUnitInfo->IsFound() && GET_PLAYER(m_eOwner).GetPlayerTraits()->IsNoAnnexing()))
+#else
 	if(!m_pUnitInfo->IsFound())
+#endif
 	{
 		if(!m_pUnitInfo->IsFoundAbroad())
 		{
@@ -14584,6 +14588,9 @@ void CvUnit::setXY(int iX, int iY, bool bGroup, bool bUpdate, bool bShow, bool b
 	if((pNewPlot && pNewPlot->isCity()) || (pOldPlot && pOldPlot->isCity()))
 	{
 		GET_PLAYER(getOwner()).DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		GET_PLAYER(getOwner()).doSelfConsistencyCheckAllCities();
+#endif
 	}
 
 	ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
@@ -21570,8 +21577,8 @@ bool CvUnit::CanWithdrawFromMelee(CvUnit& attacker)
 {
 	VALIDATE_OBJECT
 #ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
-	int iNumCombatUnitsInMyPlot = plot()->GetNumCombatUnits();
-	if (IsCombatUnit() && iNumCombatUnitsInMyPlot <= 1 && iNumCombatUnitsInMyPlot > plot()->getNumUnits())
+	int iNumDefendersInMyPlot = plot()->getNumDefenders(getOwner());
+	if (IsCanDefend() && iNumDefendersInMyPlot <= 1 && (uint)iNumDefendersInMyPlot > plot()->getNumUnits())
 		return false;
 #endif
 	int iWithdrawChance = getExtraWithdrawal();

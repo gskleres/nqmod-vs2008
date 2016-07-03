@@ -643,6 +643,9 @@ void CvWorldBuilderMapLoader::SetInitialItems(bool bFirstCall)
 			kPlayer.GetTreasury()->DoUpdateCityConnectionGold();
 			kPlayer.GetTreasury()->DoGold();
 			kPlayer.DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+			kPlayer.doSelfConsistencyCheckAllCities();
+#endif
 		}
 	}
 

@@ -218,6 +218,12 @@ protected:
 	static int lGetJONSCultureStored(lua_State* L);
 	static int lSetJONSCultureStored(lua_State* L);
 	static int lChangeJONSCultureStored(lua_State* L);
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	static int lGetJONSCultureStoredTimes100(lua_State* L);
+	static int lSetJONSCultureStoredTimes100(lua_State* L);
+	static int lChangeJONSCultureStoredTimes100(lua_State* L);
+	static int lGetJONSCulturePerTurnTimes100(lua_State* L);
+#endif
 	static int lGetJONSCultureLevel(lua_State* L);
 	static int lSetJONSCultureLevel(lua_State* L);
 	static int lChangeJONSCultureLevel(lua_State* L);

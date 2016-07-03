@@ -347,6 +347,11 @@ public:
 
 	// Culture
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int GetTotalJONSCulturePerTurnTimes100() const;
+	int GetJONSCulturePerTurnFromCitiesTimes100() const;
+	int GetJONSCulturePerTurnFromExcessHappinessTimes100() const;
+#endif
 	int GetTotalJONSCulturePerTurn() const;
 
 	int GetJONSCulturePerTurnFromCities() const;
@@ -362,13 +367,27 @@ public:
 	int GetCulturePerTurnFromMinorCivs() const;
 	int GetCulturePerTurnFromMinor(PlayerTypes eMinor) const;
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int GetCulturePerTurnFromReligionTimes100() const;
+	int GetCulturePerTurnFromBonusTurnsTimes100() const;
+#endif
 	int GetCulturePerTurnFromReligion() const;
 
 	int GetCulturePerTurnFromBonusTurns() const;
 
+
 	int GetJONSCultureCityModifier() const;
 	void ChangeJONSCultureCityModifier(int iChange);
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int getJONSCultureTimes100() const;
+	void setJONSCultureTimes100(int iNewValue);
+	void changeJONSCultureTimes100(int iChange);
+
+	int GetJONSCultureEverGeneratedTimes100() const;
+	void SetJONSCultureEverGeneratedTimes100(int iNewValue);
+	void ChangeJONSCultureEverGeneratedTimes100(int iChange);
+#endif
 	int getJONSCulture() const;
 	void setJONSCulture(int iNewValue);
 	void changeJONSCulture(int iChange);
@@ -1638,8 +1657,13 @@ protected:
 	FAutoVariable<int, CvPlayer> m_iJONSCulturePerTurnForFree;
 	FAutoVariable<int, CvPlayer> m_iJONSCulturePerTurnFromMinorCivs;
 	FAutoVariable<int, CvPlayer> m_iJONSCultureCityModifier;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	FAutoVariable<int, CvPlayer> m_iJONSCultureT100;
+	FAutoVariable<int, CvPlayer> m_iJONSCultureEverGeneratedT100;
+#else
 	FAutoVariable<int, CvPlayer> m_iJONSCulture;
 	FAutoVariable<int, CvPlayer> m_iJONSCultureEverGenerated;
+#endif
 	FAutoVariable<int, CvPlayer> m_iCulturePerWonder;
 	FAutoVariable<int, CvPlayer> m_iCultureWonderMultiplier;
 	FAutoVariable<int, CvPlayer> m_iCulturePerTechResearched;

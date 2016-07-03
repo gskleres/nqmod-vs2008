@@ -755,6 +755,9 @@ void CvGameReligions::FoundPantheon(PlayerTypes ePlayer, BeliefTypes eBelief)
 
 	// Update game systems
 	kPlayer.UpdateReligion();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	kPlayer.doSelfConsistencyCheckAllCities();
+#endif
 	kPlayer.ChangeFaith(-GetMinimumFaithNextPantheon());
 
 	int iIncrement = GC.getRELIGION_GAME_FAITH_DELTA_NEXT_PANTHEON();
@@ -898,6 +901,9 @@ void CvGameReligions::FoundReligion(PlayerTypes ePlayer, ReligionTypes eReligion
 
 	// Update game systems
 	kPlayer.UpdateReligion();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	kPlayer.doSelfConsistencyCheckAllCities();
+#endif
 	kPlayer.GetReligions()->SetFoundingReligion(false);
 
 	// In case we have another prophet sitting around, make sure he's set to this religion
@@ -1097,6 +1103,9 @@ void CvGameReligions::EnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligi
 	// Update game systems
 	UpdateAllCitiesThisReligion(eReligion);
 	kPlayer.UpdateReligion();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	kPlayer.doSelfConsistencyCheckAllCities();
+#endif
 
 	ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 	if(pkScriptSystem) 
@@ -1218,6 +1227,9 @@ void CvGameReligions::AddReformationBelief(PlayerTypes ePlayer, ReligionTypes eR
 	// Update game systems
 	UpdateAllCitiesThisReligion(eReligion);
 	kPlayer.UpdateReligion();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	kPlayer.doSelfConsistencyCheckAllCities();
+#endif
 
 	//Notify the masses
 	for(int iNotifyLoop = 0; iNotifyLoop < MAX_MAJOR_CIVS; ++iNotifyLoop){
@@ -4085,12 +4097,18 @@ void CvCityReligions::CityConvertsReligion(ReligionTypes eMajority, ReligionType
 	{
 		const CvReligion* pOldReligion = pReligions->GetReligion(eOldMajority, NO_PLAYER);
 		GET_PLAYER(pOldReligion->m_eFounder).UpdateReligion();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		GET_PLAYER(pOldReligion->m_eFounder).doSelfConsistencyCheckAllCities();
+#endif
 	}
 
 	if(eMajority > RELIGION_PANTHEON)
 	{
 		const CvReligion* pNewReligion = pReligions->GetReligion(eMajority, NO_PLAYER);
 		GET_PLAYER(pNewReligion->m_eFounder).UpdateReligion();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		GET_PLAYER(pNewReligion->m_eFounder).doSelfConsistencyCheckAllCities();
+#endif
 
 		// Pay adoption bonuses (if any)
 		if(!m_bHasPaidAdoptionBonus)

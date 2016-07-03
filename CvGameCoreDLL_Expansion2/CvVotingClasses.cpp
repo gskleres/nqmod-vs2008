@@ -6357,6 +6357,9 @@ void CvLeague::DoProjectReward(PlayerTypes ePlayer, LeagueProjectTypes eLeaguePr
 		{
 			GET_PLAYER(ePlayer).ChangeHappinessFromLeagues(pRewardInfo->GetHappiness());
 			GET_PLAYER(ePlayer).DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+			GET_PLAYER(ePlayer).doSelfConsistencyCheckAllCities();
+#endif
 		}
 
 		// Free Social Policy
