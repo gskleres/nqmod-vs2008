@@ -41,6 +41,11 @@
         <Type>UpdateDatabase</Type>
         <FileName>VeniceTraitTextChange.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>VeniceConquistador.xml</FileName>
+      </Action>
     </ModActions>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Default' ">
@@ -64,6 +69,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="DogesPalace.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="VeniceConquistador.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
