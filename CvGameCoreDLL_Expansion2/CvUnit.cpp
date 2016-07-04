@@ -2346,7 +2346,7 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 
 	bool bAllowsWalkWater = enterPlot.IsAllowsWalkWater();
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-	bAllowsWalkWater = bAllowsWalkWater || (IsHoveringUnit() && enterPlot.getFeatureType() == GC.getDEEP_WATER_TERRAIN());
+	bAllowsWalkWater = bAllowsWalkWater || (IsHoveringUnit() && enterPlot.getTerrainType() == GC.getSHALLOW_WATER_TERRAIN());
 #endif
 	if (enterPlot.isWater() && (bMoveFlags & CvUnit::MOVEFLAG_STAY_ON_LAND) && !bAllowsWalkWater)
 	{
@@ -2439,6 +2439,7 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 						return false;
 					}
 				}
+#ifndef AUI_UNIT_FIX_HOVERING_EMBARK
 				// Does the unit hover above coast?
 				else if(IsHoveringUnit())
 				{
@@ -2447,6 +2448,7 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 						return false;
 					}
 				}
+#endif
 				else
 				{
 					return false;
@@ -2461,7 +2463,7 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 			if(bEmbarked)
 			{
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-				if ((!enterPlot.isWater() && !IsHoveringUnit()) || (enterPlot.getFeatureType() != GC.getDEEP_WATER_TERRAIN() && IsHoveringUnit()))
+				if ((!enterPlot.isWater() && !IsHoveringUnit()) || (enterPlot.getTerrainType() != GC.getDEEP_WATER_TERRAIN() && IsHoveringUnit()))
 #else
 				if(!enterPlot.isWater())
 #endif
@@ -2806,7 +2808,7 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 			}
 
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-			if (getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && !IsHoveringUnit() && !plot.IsAllowsWalkWater())
+			if (getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && (!IsHoveringUnit() || plot.getTerrainType() == GC.getDEEP_WATER_TERRAIN()) && !plot.IsAllowsWalkWater())
 #else
 			if(getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && !plot.IsAllowsWalkWater())
 #endif
@@ -3181,7 +3183,7 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 			}
 
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-			if (getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && !IsHoveringUnit() && !plot.IsAllowsWalkWater())
+			if (getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && (!IsHoveringUnit() || plot.getTerrainType() == GC.getDEEP_WATER_TERRAIN()) && !plot.IsAllowsWalkWater())
 #else
 			if (getDomainType() == DOMAIN_LAND && plot.isWater() && !canMoveAllTerrain() && !plot.IsAllowsWalkWater())
 #endif
@@ -21502,7 +21504,7 @@ bool CvUnit::PlotValid(CvPlot* pPlot) const
 
 	case DOMAIN_LAND:
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-		if (pPlot->getArea() == getArea() || canMoveAllTerrain() || pPlot->IsAllowsWalkWater() || IsHoveringUnit())
+		if (pPlot->getArea() == getArea() || canMoveAllTerrain() || pPlot->IsAllowsWalkWater() || (IsHoveringUnit() && pPlot->getTerrainType() == GC.getSHALLOW_WATER_TERRAIN()))
 #else
 		if(pPlot->getArea() == getArea() || canMoveAllTerrain() || pPlot->IsAllowsWalkWater())
 #endif

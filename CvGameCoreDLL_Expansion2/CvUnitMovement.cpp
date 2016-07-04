@@ -238,19 +238,40 @@ bool CvUnitMovement::ConsumesAllMoves(const CvUnit* pUnit, const CvPlot* pFromPl
 	if(!pFromPlot->isValidDomainForLocation(*pUnit))
 	{
 		// If we are a land unit that can embark, then do further tests.
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+		if (pUnit->getDomainType() != DOMAIN_LAND || pUnit->canMoveAllTerrain() || !pUnit->CanEverEmbark())
+#else
 		if(pUnit->getDomainType() != DOMAIN_LAND || pUnit->IsHoveringUnit() || pUnit->canMoveAllTerrain() || !pUnit->CanEverEmbark())
+#endif
 			return true;
 	}
 
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	bool bToPlotNeedEmbark = !pToPlot->IsAllowsWalkWater();
+	bool bFromPlotNeedEmbark = !pFromPlot->IsAllowsWalkWater();
+	if (pUnit->IsHoveringUnit())
+	{
+		bToPlotNeedEmbark = bToPlotNeedEmbark && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+		bFromPlotNeedEmbark = bFromPlotNeedEmbark && pFromPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+	}
+	else
+	{
+		bToPlotNeedEmbark = bToPlotNeedEmbark && pToPlot->isWater();
+		bFromPlotNeedEmbark = bFromPlotNeedEmbark && pFromPlot->isWater();
+	}
+
+	if (pUnit->CanEverEmbark() && bToPlotNeedEmbark != bFromPlotNeedEmbark)
+#elif defined(AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK)
 	// if the unit can embark and we are transitioning from land to water or vice versa
-#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
 	if ((pToPlot->isWater() && !pToPlot->IsAllowsWalkWater()) != (pFromPlot->isWater() && !pFromPlot->IsAllowsWalkWater()) && pUnit->CanEverEmbark())
 #else
 	if(pToPlot->isWater() != pFromPlot->isWater() && pUnit->CanEverEmbark())
 #endif
 	{
 		// Is the unit from a civ that can disembark for just 1 MP?
-#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+		if (!bToPlotNeedEmbark && bFromPlotNeedEmbark && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#elif defined(AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW)
 		if (!pToPlot->isWater() && pFromPlot->isWater() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
 #else
 		if(!pToPlot->isWater() && pFromPlot->isWater() && pUnit->isEmbarked() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
@@ -286,7 +307,22 @@ bool CvUnitMovement::CostsOnlyOne(const CvUnit* pUnit, const CvPlot* pFromPlot, 
 	}
 
 	// Is the unit from a civ that can disembark for just 1 MP?
-#ifdef AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	bool bToPlotNeedEmbark = !pToPlot->IsAllowsWalkWater();
+	bool bFromPlotNeedEmbark = !pFromPlot->IsAllowsWalkWater();
+	if (pUnit->IsHoveringUnit())
+	{
+		bToPlotNeedEmbark = bToPlotNeedEmbark && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+		bFromPlotNeedEmbark = bFromPlotNeedEmbark && pFromPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+	}
+	else
+	{
+		bToPlotNeedEmbark = bToPlotNeedEmbark && pToPlot->isWater();
+		bFromPlotNeedEmbark = bFromPlotNeedEmbark && pFromPlot->isWater();
+	}
+
+	if (pUnit->CanEverEmbark() && !bToPlotNeedEmbark && bFromPlotNeedEmbark && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+#elif defined(AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW)
 	if (!pToPlot->isWater() && pFromPlot->isWater() && pUnit->CanEverEmbark() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
 #else
 	if(!pToPlot->isWater() && pFromPlot->isWater() && pUnit->isEmbarked() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
