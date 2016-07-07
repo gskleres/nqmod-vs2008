@@ -852,6 +852,33 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 		}
 	}
 
+#ifdef AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_SLIDING_LOGISTIC_MAINTENANCE_SCALE
+	bool bCapitolConnectedHasHarbor = false;
+	if (GetCity()->IsPuppet() && !GetCity()->IsRouteToCapitalConnected())
+	{
+		int iLoop;
+		const CvPlayer* pPlayer = GetCity()->GetPlayer();
+		const CvCity* pLoopCity;
+		for (uint uiBuildingTypes = 0; uiBuildingTypes < GC.GetGameBuildings()->GetNumBuildings(); uiBuildingTypes++)
+		{
+			const BuildingTypes eHarborBuilding = static_cast<BuildingTypes>(uiBuildingTypes);
+			CvBuildingEntry* pkHarborBuildingInfo = GC.getBuildingInfo(eHarborBuilding);
+			if (pkHarborBuildingInfo && pkHarborBuildingInfo->AllowsWaterRoutes())
+			{
+				for (pLoopCity = pPlayer->firstCity(&iLoop); pLoopCity != NULL; pLoopCity = pPlayer->nextCity(&iLoop))
+				{
+					if (pLoopCity->IsRouteToCapitalConnected() && pLoopCity->GetCityBuildings()->GetNumActiveBuilding(eHarborBuilding) > 0)
+					{
+						bCapitolConnectedHasHarbor = true;
+						goto EndHarborLoop;
+					}
+				}
+			}
+		}
+	}
+EndHarborLoop:;
+#endif
+
 	// Loop through adding the available buildings
 	for(iBldgLoop = 0; iBldgLoop < GC.GetGameBuildings()->GetNumBuildings(); iBldgLoop++)
 	{
@@ -963,8 +990,10 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 				iBonusGoldFromModifier *= pkBuildingInfo->GetYieldModifier(YIELD_GOLD);
 				iEffectiveMaintenanceT100 -= iBonusGoldFromModifier;
 
-				if (pkBuildingInfo->AllowsWaterRoutes() && !GetCity()->IsRouteToCapitalConnected())
+				if (bCapitolConnectedHasHarbor && pkBuildingInfo->AllowsWaterRoutes())
+				{
 					iEffectiveMaintenanceT100 -= GetCity()->GetPlayer()->GetTreasury()->GetCityConnectionRouteGoldTimes100(GetCity());
+				}
 				
 				iTempWeight *= int(2.0 / (1.0 + exp(double(iEffectiveMaintenanceT100) / 200.0)) + 0.5);
 #else
