@@ -2632,7 +2632,11 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 			pNewCity->GetCityBuildings()->SetNumRealBuilding(eCapitalBuilding, 1);
 #ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
 			if (GetPlayerTraits()->IsNoAnnexing() && pOldCapital && !pOldCapital->IsPuppet())
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				pOldCapital->DoCreatePuppet(false);
+#else
 				pOldCapital->DoCreatePuppet();
+#endif
 #endif
 		}
 	}
@@ -2814,7 +2818,11 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 				pNewCity->SetIgnoreCityForHappiness(true);
 				if (GetPlayerTraits()->IsNoAnnexing() && bIsMinorCivBuyout)
 				{
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+					pNewCity->DoCreatePuppet(false);
+#else
 					pNewCity->DoCreatePuppet();
+#endif
 				}
 				else if (pNewCity->getOriginalOwner() != GetID() || GetPlayerTraits()->IsNoAnnexing() || bIsMinorCivBuyout)
 				{
@@ -4610,6 +4618,11 @@ void CvPlayer::doSelfConsistencyCheckAllCities()
 	for (CvCity* pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
 	{
 		pLoopCity->GetCityCitizens()->DoSelfConsistencyCheck();
+	}
+
+	if (GetID() == GC.getGame().getActivePlayer())
+	{
+		GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 	}
 }
 #endif

@@ -622,9 +622,6 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	{
 		ChangeJONSCulturePerTurnFromPolicies(GET_PLAYER(getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_CULTURE_FROM_GARRISON));
 	}
-#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
-	GetPlayer()->doSelfConsistencyCheckAllCities();
-#endif
 
 	AI_init();
 
@@ -632,11 +629,19 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 	if (GetPlayer()->GetPlayerTraits()->IsNoAnnexing() && !isCapital())
 		DoCreatePuppet();
 	else
+	{
+#endif
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	GetPlayer()->doSelfConsistencyCheckAllCities();
 #endif
 	if (GC.getGame().getGameTurn() == 0)
 	{
 		chooseProduction();
 	}
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+	}
+#endif
+
 }
 
 //	--------------------------------------------------------------------------------
@@ -9180,7 +9185,11 @@ void CvCity::SetPuppet(bool bValue)
 
 //	--------------------------------------------------------------------------------
 /// Turn this City into a puppet
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+void CvCity::DoCreatePuppet(bool bRunSelfConsistency)
+#else
 void CvCity::DoCreatePuppet()
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -9256,7 +9265,8 @@ void CvCity::DoCreatePuppet()
 	GET_PLAYER(getOwner()).DoUpdateHappiness();
 	GET_PLAYER(getOwner()).DoUpdateNextPolicyCost();
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
-	GetPlayer()->doSelfConsistencyCheckAllCities();
+	if (bRunSelfConsistency)
+		GetPlayer()->doSelfConsistencyCheckAllCities();
 #endif
 
 	DLLUI->setDirty(CityInfo_DIRTY_BIT, true);
@@ -9265,7 +9275,11 @@ void CvCity::DoCreatePuppet()
 
 //	--------------------------------------------------------------------------------
 /// Un-puppet a City and force it into the empire
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+void CvCity::DoAnnex(bool bRunSelfConsistency)
+#else
 void CvCity::DoAnnex()
+#endif
 {
 	VALIDATE_OBJECT
 
@@ -9295,7 +9309,8 @@ void CvCity::DoAnnex()
 
 	GET_PLAYER(getOwner()).DoUpdateNextPolicyCost();
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
-	GetPlayer()->doSelfConsistencyCheckAllCities();
+	if (bRunSelfConsistency)
+		GetPlayer()->doSelfConsistencyCheckAllCities();
 #endif
 
 	DLLUI->setDirty(CityInfo_DIRTY_BIT, true);

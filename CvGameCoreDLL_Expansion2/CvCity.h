@@ -524,8 +524,13 @@ public:
 
 	bool IsPuppet() const;
 	void SetPuppet(bool bValue);
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	void DoCreatePuppet(bool bRunSelfConsistency = true);
+	void DoAnnex(bool bRunSelfConsistency = true);
+#else
 	void DoCreatePuppet();
 	void DoAnnex();
+#endif
 
 	int GetLocalHappiness() const;
 	int GetHappinessFromBuildings() const;

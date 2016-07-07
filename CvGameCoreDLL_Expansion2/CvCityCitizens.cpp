@@ -1276,7 +1276,7 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 
 	// factor in the fact that specialists may need less food
 #ifdef AUI_CITIZENS_FIX_SPECIALIST_VALUE_HALF_FOOD_CONSUMPTION
-	int iFoodConsumptionBonus = (pPlayer->isHalfSpecialistFood()) ? GC.getFOOD_CONSUMPTION_PER_POPULATION() / 2 : 0;
+	int iFoodConsumptionBonus = (pPlayer->isHalfSpecialistFood() && eSpecialist != (SpecialistTypes)GC.getDEFAULT_SPECIALIST()) ? GC.getFOOD_CONSUMPTION_PER_POPULATION() / 2 : 0;
 #else
 	int iFoodConsumptionBonus = (pPlayer->isHalfSpecialistFood()) ? 1 : 0;
 #endif
@@ -1998,15 +1998,14 @@ bool CvCityCitizens::DoRemoveWorstCitizen(bool bRemoveForcedStatus, SpecialistTy
 	{
 		int iDefaultSpecialistScore = GetSpecialistValue((SpecialistTypes)GC.getDEFAULT_SPECIALIST());
 		// Do we either have unforced default specialists we can remove?
-		if (GetNumDefaultSpecialists() > GetNumForcedDefaultSpecialists() && (eWorstSpecialistBuilding == NO_BUILDING || iDefaultSpecialistScore < iWorstSpecialistValue) 
-			&& (pWorstPlot == NULL || iDefaultSpecialistScore < iWorstPlotValue))
+		if (GetNumDefaultSpecialists() > GetNumForcedDefaultSpecialists() && (eWorstSpecialistBuilding == NO_BUILDING || iDefaultSpecialistScore <= iWorstSpecialistValue) 
+			&& (pWorstPlot == NULL || iDefaultSpecialistScore <= iWorstPlotValue))
 		{
-			if (eWorstSpecialistBuilding != NO_BUILDING)
 			ChangeNumDefaultSpecialists(-1);
 			return true;
 		}
-		if (GetNumDefaultSpecialists() > iCurrentCityPopulation && (eWorstSpecialistBuilding == NO_BUILDING || iDefaultSpecialistScore < iWorstSpecialistValue)
-			&& (pWorstPlot == NULL || iDefaultSpecialistScore < iWorstPlotValue))
+		if (GetNumDefaultSpecialists() > iCurrentCityPopulation && (eWorstSpecialistBuilding == NO_BUILDING || iDefaultSpecialistScore <= iWorstSpecialistValue)
+			&& (pWorstPlot == NULL || iDefaultSpecialistScore <= iWorstPlotValue))
 		{
 			ChangeNumForcedDefaultSpecialists(-1);
 			ChangeNumDefaultSpecialists(-1);
@@ -2162,6 +2161,10 @@ void CvCityCitizens::DoReallocateCitizens()
 
 	int iSpecialistLoop;
 
+#ifdef AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_OBEY_MANUAL_SPECIALIST_CONTROL
+	if (!IsNoAutoAssignSpecialists())
+	{
+#endif
 	// Remove Non-Forced Specialists in Buildings
 	int iNumSpecialistsToRemove;
 	BuildingTypes eBuilding;
@@ -2185,6 +2188,9 @@ void CvCityCitizens::DoReallocateCitizens()
 			}
 		}
 	}
+#ifdef AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_OBEY_MANUAL_SPECIALIST_CONTROL
+	}
+#endif
 
 	// Remove Default Specialists
 	int iNumDefaultsToRemove = GetNumDefaultSpecialists() - GetNumForcedDefaultSpecialists();
@@ -2202,6 +2208,13 @@ void CvCityCitizens::DoReallocateCitizens()
 
 #ifdef AUI_CITIZENS_REALLOCATE_CITIZENS_USES_SELF_CONSISTENCY
 	DoSelfConsistencyCheck();
+#elif defined(AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_NO_COSTLY_PLOT_REMOVAL)
+	ICvUserInterface2* pkIFace = GC.GetEngineUserInterface();
+	pkIFace->setDirty(GameData_DIRTY_BIT, true);
+	pkIFace->setDirty(CityInfo_DIRTY_BIT, true);
+	//pkIFace->setDirty(InfoPane_DIRTY_BIT, true );
+	pkIFace->setDirty(CityScreen_DIRTY_BIT, true);
+	pkIFace->setDirty(ColoredPlots_DIRTY_BIT, true);
 #endif
 }
 
@@ -2214,7 +2227,10 @@ void CvCityCitizens::DoSelfConsistencyCheck(int iMaxIterations)
 	int iLoopScore = 0;
 	int iLastLoopScore = 0;
 	if (iMaxIterations < 1)
-		iMaxIterations = m_pCity->getPopulation() * 2 + 1;
+	{
+		iMaxIterations = m_pCity->getPopulation();
+		iMaxIterations += 1 - iMaxIterations % 2;
+	}
 
 	for (int iI = 0; iI < iMaxIterations; iI++)
 	{
@@ -2230,6 +2246,12 @@ void CvCityCitizens::DoSelfConsistencyCheck(int iMaxIterations)
 #ifdef AUI_CITIZENS_FOOD_PRODUCTION_TRIAL_RUN_THEN_SELF_CONSISTENCY
 	setIgnoreFoodProduction(true);
 #endif
+	ICvUserInterface2* pkIFace = GC.GetEngineUserInterface();
+	pkIFace->setDirty(GameData_DIRTY_BIT, true);
+	pkIFace->setDirty(CityInfo_DIRTY_BIT, true);
+	//pkIFace->setDirty(InfoPane_DIRTY_BIT, true );
+	pkIFace->setDirty(CityScreen_DIRTY_BIT, true);
+	pkIFace->setDirty(ColoredPlots_DIRTY_BIT, true);
 }
 #endif
 
