@@ -189,6 +189,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>civs/VeniceChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>gameplay/GoodyHutChanges.xml</FileName>
       </Action>
       <Action>
@@ -1283,6 +1288,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="civs\SpainChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\VeniceChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
