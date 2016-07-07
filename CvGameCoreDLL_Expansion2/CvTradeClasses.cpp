@@ -312,13 +312,21 @@ bool CvGameTrade::CreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, Domai
 	{
 		if (pOriginCity->isCoastal(0) && pDestCity->isCoastal(0))	// Both must be on the coast (a lake is ok)  A better check would be to see if they are adjacent to the same water body.
 		{
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+			bSuccess = GC.GetInternationalTradeRouteWaterFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer + (eDestPlayer << 8), false);
+#else
 			bSuccess = GC.GetInternationalTradeRouteWaterFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer, false);
+#endif
 			pPathfinderNode = GC.GetInternationalTradeRouteWaterFinder().GetLastNode();
 		}
 	}
 	else if (eDomain == DOMAIN_LAND)
 	{
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+		bSuccess = GC.GetInternationalTradeRouteLandFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer + (eDestPlayer << 8), false);
+#else
 		bSuccess = GC.GetInternationalTradeRouteLandFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer, false);
+#endif
 		pPathfinderNode = GC.GetInternationalTradeRouteLandFinder().GetLastNode();
 	}
 
@@ -454,6 +462,9 @@ bool CvGameTrade::IsValidTradeRoutePath (CvCity* pOriginCity, CvCity* pDestCity,
 	// AI_PERF_FORMAT("Trade-route-perf.csv", ("CvGameTrade::IsValidTradeRoutePath, Turn %03d, %s, %s, %d, %d, %s, %d, %d", GC.getGame().getElapsedGameTurns(), pOriginCity->GetPlayer()->getCivilizationShortDescription(), pOriginCity->getName().c_str(), pOriginCity->getX(), pOriginCity->getY(), pDestCity->getName().c_str(), pDestCity->getX(), pDestCity->getY()) );
 
 	PlayerTypes eOriginPlayer = pOriginCity->getOwner();
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+	PlayerTypes eDestPlayer = pDestCity->getOwner();
+#endif
 
 	int iOriginX = pOriginCity->getX();
 	int iOriginY = pOriginCity->getY();
@@ -466,13 +477,21 @@ bool CvGameTrade::IsValidTradeRoutePath (CvCity* pOriginCity, CvCity* pDestCity,
 	{
 		if (pOriginCity->isCoastal(0) && pDestCity->isCoastal(0))	// Both must be on the coast (a lake is ok)  A better check would be to see if they are adjacent to the same water body.
 		{
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+			bSuccess = GC.GetInternationalTradeRouteWaterFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer + (eDestPlayer << 8), false);
+#else
 			bSuccess = GC.GetInternationalTradeRouteWaterFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer, false);
+#endif
 			pPathfinderNode = GC.GetInternationalTradeRouteWaterFinder().GetLastNode();
 		}
 	}
 	else if (eDomain == DOMAIN_LAND)
 	{
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+		bSuccess = GC.GetInternationalTradeRouteLandFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer + (eDestPlayer << 8), false);
+#else
 		bSuccess = GC.GetInternationalTradeRouteLandFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer, false);
+#endif
 		pPathfinderNode = GC.GetInternationalTradeRouteLandFinder().GetLastNode();
 	}
 
@@ -1905,14 +1924,35 @@ void CvGameTrade::DisplayTemporaryPopupTradeRoute(int iDestX, int iDestY, TradeC
 		}
 	}
 
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+	PlayerTypes eDestPlayer = NO_PLAYER;
+	CvPlot* pDestPlot = GC.getMap().plot(iDestX, iDestY);
+	if (pDestPlot)
+	{
+		CvCity* pDestCity = pDestPlot->getPlotCity();
+		if (pDestCity)
+		{
+			eDestPlayer = pDestCity->getOwner();
+		}
+	}
+#endif
+
 	switch (eDomain)
 	{
 	case DOMAIN_LAND:
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+		bSuccess = GC.GetInternationalTradeRouteLandFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer + (eDestPlayer << 8), false);
+#else
 		bSuccess = GC.GetInternationalTradeRouteLandFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer, false);
+#endif
 		pPathfinderNode = GC.GetInternationalTradeRouteLandFinder().GetLastNode();
 		break;
 	case DOMAIN_SEA:
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+		bSuccess = GC.GetInternationalTradeRouteWaterFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer + (eDestPlayer << 8), false);
+#else
 		bSuccess = GC.GetInternationalTradeRouteWaterFinder().GeneratePath(iOriginX, iOriginY, iDestX, iDestY, eOriginPlayer, false);
+#endif
 		pPathfinderNode = GC.GetInternationalTradeRouteWaterFinder().GetLastNode();
 		break;
 	}

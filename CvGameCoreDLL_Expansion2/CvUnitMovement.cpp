@@ -270,7 +270,7 @@ bool CvUnitMovement::ConsumesAllMoves(const CvUnit* pUnit, const CvPlot* pFromPl
 	{
 		// Is the unit from a civ that can disembark for just 1 MP?
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-		if (!bToPlotNeedEmbark && bFromPlotNeedEmbark && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+		if (bFromPlotNeedEmbark && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
 #elif defined(AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW)
 		if (!pToPlot->isWater() && pFromPlot->isWater() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
 #else
@@ -321,7 +321,7 @@ bool CvUnitMovement::CostsOnlyOne(const CvUnit* pUnit, const CvPlot* pFromPlot, 
 		bFromPlotNeedEmbark = bFromPlotNeedEmbark && pFromPlot->isWater();
 	}
 
-	if (pUnit->CanEverEmbark() && !bToPlotNeedEmbark && bFromPlotNeedEmbark && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
+	if (pUnit->CanEverEmbark() && bFromPlotNeedEmbark && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
 #elif defined(AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW)
 	if (!pToPlot->isWater() && pFromPlot->isWater() && pUnit->CanEverEmbark() && GET_PLAYER(pUnit->getOwner()).GetPlayerTraits()->IsEmbarkedToLandFlatCost())
 #else

@@ -2346,7 +2346,7 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 
 	bool bAllowsWalkWater = enterPlot.IsAllowsWalkWater();
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-	bAllowsWalkWater = bAllowsWalkWater || (IsHoveringUnit() && enterPlot.getTerrainType() == GC.getSHALLOW_WATER_TERRAIN());
+	bAllowsWalkWater = bAllowsWalkWater || (IsHoveringUnit() && enterPlot.isWater() && enterPlot.getTerrainType() != GC.getDEEP_WATER_TERRAIN());
 #endif
 	if (enterPlot.isWater() && (bMoveFlags & CvUnit::MOVEFLAG_STAY_ON_LAND) && !bAllowsWalkWater)
 	{
@@ -2463,7 +2463,7 @@ bool CvUnit::canEnterTerrain(const CvPlot& enterPlot, byte bMoveFlags) const
 			if(bEmbarked)
 			{
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-				if ((!enterPlot.isWater() && !IsHoveringUnit()) || (enterPlot.getTerrainType() != GC.getDEEP_WATER_TERRAIN() && IsHoveringUnit()))
+				if ((!IsHoveringUnit() && !enterPlot.isWater()) || (IsHoveringUnit() && enterPlot.getTerrainType() != GC.getDEEP_WATER_TERRAIN()))
 #else
 				if(!enterPlot.isWater())
 #endif
@@ -3512,36 +3512,51 @@ void CvUnit::move(CvPlot& targetPlot, bool bShow)
 	bool bShouldDeductCost = true;
 	int iMoveCost = targetPlot.movementCost(this, plot());
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-	bool bTemp = false;
-	bool* pbHoverUnitNeedsToEmbark = NULL; // false = needs to disembark
-	if (IsHoveringUnit() && pOldPlot && CanEverEmbark())
+	if (pOldPlot && CanEverEmbark())
 	{
-		bool bTargetIsDeepWater = (targetPlot.getTerrainType() == GC.getDEEP_WATER_TERRAIN() && !targetPlot.IsAllowsWalkWater());
-		bool bOldIsDeepWater = (pOldPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN() && pOldPlot->IsAllowsWalkWater());
-		if (bTargetIsDeepWater != bOldIsDeepWater)
+		bool bToPlotNeedEmbark = !targetPlot.IsAllowsWalkWater();
+		bool bFromPlotNeedEmbark = !pOldPlot->IsAllowsWalkWater();
+		if (IsHoveringUnit())
 		{
-			if (bOldIsDeepWater)
+			bToPlotNeedEmbark = bToPlotNeedEmbark && targetPlot.getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+			bFromPlotNeedEmbark = bFromPlotNeedEmbark && pOldPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+		}
+		else
+		{
+			bToPlotNeedEmbark = bToPlotNeedEmbark && targetPlot.isWater();
+			bFromPlotNeedEmbark = bFromPlotNeedEmbark && pOldPlot->isWater();
+		}
+
+		if (bToPlotNeedEmbark != bFromPlotNeedEmbark)
+		{
+			if (bFromPlotNeedEmbark)  // moving from water to the land
 			{
-				bTemp = true;
+				if (isEmbarked())
+				{
+					if (m_unitMoveLocs.size())	// If we have some queued moves, execute them now, so that the disembark is done at the proper location visually
+						PublishQueuedVisualizationMoves();
+
+					disembark(pOldPlot);
+				}
 			}
-			pbHoverUnitNeedsToEmbark = &bTemp;
+			else if (!isEmbarked() && canEmbarkOnto(*pOldPlot, targetPlot))  // moving from land to the water
+			{
+				if (m_unitMoveLocs.size())	// If we have some queued moves, execute them now, so that the embark is done at the proper location visually
+					PublishQueuedVisualizationMoves();
+
+				embark(pOldPlot);
+				finishMoves();
+				bShouldDeductCost = false;
+			}
 		}
 	}
-#endif
+#else
 
 	// we need to get our dis/embarking on
 	if (pOldPlot && CanEverEmbark() && (targetPlot.isWater() != pOldPlot->isWater() || targetPlot.IsAllowsWalkWater() && pOldPlot->isWater() ||
-#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-		targetPlot.isWater() && pOldPlot->IsAllowsWalkWater() || pbHoverUnitNeedsToEmbark))
-#else
 		targetPlot.isWater() && pOldPlot->IsAllowsWalkWater()))
-#endif
 	{
-#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-		if ((pbHoverUnitNeedsToEmbark && *pbHoverUnitNeedsToEmbark == false) || (pOldPlot->isWater() && !pOldPlot->IsAllowsWalkWater()))  // moving from water to the land
-#else
 		if(pOldPlot->isWater() && !pOldPlot->IsAllowsWalkWater())  // moving from water to the land
-#endif
 		{
 			if(isEmbarked())
 			{
@@ -3553,11 +3568,7 @@ void CvUnit::move(CvPlot& targetPlot, bool bShow)
 		}
 		else
 		{
-#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-			if ((pbHoverUnitNeedsToEmbark && *pbHoverUnitNeedsToEmbark == true) || (!isEmbarked() && canEmbarkOnto(*pOldPlot, targetPlot)))  // moving from land to the water
-#else
 			if(!isEmbarked() && canEmbarkOnto(*pOldPlot, targetPlot))  // moving from land to the water
-#endif
 			{
 				if (m_unitMoveLocs.size())	// If we have some queued moves, execute them now, so that the embark is done at the proper location visually
 					PublishQueuedVisualizationMoves();
@@ -3568,6 +3579,7 @@ void CvUnit::move(CvPlot& targetPlot, bool bShow)
 			}
 		}
 	}
+#endif
 
 	if(bShouldDeductCost)
 		changeMoves(-iMoveCost);
@@ -4697,7 +4709,11 @@ bool CvUnit::canEmbark(const CvPlot* pPlot) const
 		return false;
 	}
 
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	if ((!IsHoveringUnit() && !pPlot->isCoastalLand()) || (IsHoveringUnit() && pPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN()))
+#else
 	if(!pPlot->isCoastalLand())
+#endif
 	{
 		return false;
 	}
@@ -4783,7 +4799,11 @@ bool CvUnit::canDisembark(const CvPlot* pPlot) const
 		return false;
 	}
 
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	if ((!IsHoveringUnit() && !pPlot->isAdjacentToLand()) || (IsHoveringUnit() && pPlot->getTerrainType() != GC.getDEEP_WATER_TERRAIN()))
+#else
 	if(!pPlot->isAdjacentToLand())
+#endif
 	{
 		return false;
 	}
@@ -4873,7 +4893,11 @@ bool CvUnit::canEmbarkOnto(const CvPlot& originPlot, const CvPlot& targetPlot, b
 		return false;
 	}
 
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	if ((!IsHoveringUnit() && !originPlot.isAdjacentToShallowWater()) || (IsHoveringUnit() && targetPlot.getTerrainType() != GC.getDEEP_WATER_TERRAIN()))
+#else
 	if(!originPlot.isAdjacentToShallowWater())
+#endif
 	{
 		return false;
 	}
@@ -4902,7 +4926,11 @@ bool CvUnit::canDisembarkOnto(const CvPlot& originPlot, const CvPlot& targetPlot
 		return false;
 	}
 
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	if ((!IsHoveringUnit() && !originPlot.isAdjacentToLand()) || (IsHoveringUnit() && originPlot.getTerrainType() != GC.getDEEP_WATER_TERRAIN()))
+#else
 	if(!originPlot.isAdjacentToLand())
+#endif
 	{
 		return false;
 	}
@@ -4934,7 +4962,11 @@ bool CvUnit::canDisembarkOnto(const CvPlot& targetPlot, bool bIsDestination /* =
 		return false;
 	}
 
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	if ((!IsHoveringUnit() && !plot()->isAdjacentToLand()) || (IsHoveringUnit() && plot()->getTerrainType() != GC.getDEEP_WATER_TERRAIN()))
+#else
 	if(!plot()->isAdjacentToLand())
+#endif
 	{
 		return false;
 	}
@@ -21504,7 +21536,7 @@ bool CvUnit::PlotValid(CvPlot* pPlot) const
 
 	case DOMAIN_LAND:
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
-		if (pPlot->getArea() == getArea() || canMoveAllTerrain() || pPlot->IsAllowsWalkWater() || (IsHoveringUnit() && pPlot->getTerrainType() == GC.getSHALLOW_WATER_TERRAIN()))
+		if (pPlot->getArea() == getArea() || canMoveAllTerrain() || pPlot->IsAllowsWalkWater() || (IsHoveringUnit() && pPlot->isWater() && pPlot->getTerrainType() != GC.getDEEP_WATER_TERRAIN()))
 #else
 		if(pPlot->getArea() == getArea() || canMoveAllTerrain() || pPlot->IsAllowsWalkWater())
 #endif

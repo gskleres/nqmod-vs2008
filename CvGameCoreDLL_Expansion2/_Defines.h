@@ -75,6 +75,8 @@
 #define AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
 /// When the citizen manager reallocates all citizens, it no longer goes through the costly process of calculating the worst plot multiple times
 #define AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_NO_COSTLY_PLOT_REMOVAL
+/// If a city is on manual specialist control, reallocate citizens will not remove any specialists before reassigning citizens
+#define AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_OBEY_MANUAL_SPECIALIST_CONTROL
 /// Fixes a few possible cases of null pointer dereferences in FindTacticalTargets()
 #define AUI_TACTICAL_FIX_FIND_TACTICAL_TARGETS_NULL_POINTER
 /// The function that gets the amount of different trading partners a player has will now use an array instead of a vector to avoid crash possibilities
@@ -328,6 +330,8 @@
 #define AUI_ASTAR_TWEAKED_PATH_EXPLORE_NON_REVEAL_WEIGHT (50)
 /// Units with the Explore UnitAIType will always move to maximize exploration
 #define AUI_ASTAR_EXPLORE_UNITAITYPE_ALWAYS_MAXIMIZES_EXPLORE
+/// Trade routes will prefer tiles owned by either party over unowned tiles, and will prefer unowned tiles over tiles owned by a third party
+#define AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
 
 // Binomial RNG Stuff (Delnar: the binomial RNG generates numbers in a binomial distribution instead of a flat one like the regular RNG)
 /// Enables the Binomial Random Number Generator (originally from Artificial Unintelligence)
