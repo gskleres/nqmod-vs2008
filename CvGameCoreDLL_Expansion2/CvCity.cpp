@@ -1752,8 +1752,7 @@ void CvCity::doTurn()
 #else
 			ChangeJONSCultureStored(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
 #endif
-#else
-#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+#elif defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100)
 		if (getJONSCulturePerTurnTimes100() > 0)
 		{
 			ChangeJONSCultureStoredTimes100(getJONSCulturePerTurnTimes100());
@@ -1761,7 +1760,6 @@ void CvCity::doTurn()
 		if(getJONSCulturePerTurn() > 0)
 		{
 			ChangeJONSCultureStored(getJONSCulturePerTurn());
-#endif
 #endif
 		}
 

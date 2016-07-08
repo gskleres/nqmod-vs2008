@@ -1285,7 +1285,7 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	const CvReligion* pReligion = NULL;
 	const CvBeliefEntry* pSecondaryBelief = NULL;
 	ReligionTypes eMajority = m_pCity->GetCityReligions()->GetReligiousMajority();
-	if (eMajority != NO_RELIGION && GetTotalSpecialistCount() <= 0)
+	if (eMajority != NO_RELIGION && GetTotalSpecialistCount() == (bForRemoval ? 1 : 0))
 	{
 		pReligion = GC.getGame().GetGameReligions()->GetReligion(eMajority, GetPlayer()->GetID());
 		BeliefTypes eSecondaryPantheon = m_pCity->GetCityReligions()->GetSecondaryReligionPantheonBelief();

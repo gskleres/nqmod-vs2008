@@ -4448,34 +4448,26 @@ void CvPlayer::doTurnPostDiplomacy()
 	if(kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED))
 	{
 		if(getJONSCulture() < getNextPolicyCost())
-#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#if defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100) && defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 			changeJONSCultureTimes100(getCachedJONSCultureForThisTurn());
-#else
+#elif defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100)
 			changeJONSCultureTimes100(GetTotalJONSCulturePerTurn());
-#endif
-#else
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#elif defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 			changeJONSCulture(getCachedJONSCultureForThisTurn());
 #else
 			changeJONSCulture(GetTotalJONSCulturePerTurn());
 #endif
-#endif
 	}
 	else
 	{
-#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#if defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100) && defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 		changeJONSCultureTimes100(getCachedJONSCultureForThisTurn());
-#else
-		changeJONSCultureTimes100(GetTotalJONSCulturePerTurnTimes100());
-#endif
-#else
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#elif defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100)
+		changeJONSCultureTimes100(GetTotalJONSCulturePerTurn());
+#elif defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 		changeJONSCulture(getCachedJONSCultureForThisTurn());
 #else
 		changeJONSCulture(GetTotalJONSCulturePerTurn());
-#endif
 #endif
 	}
 
@@ -17965,7 +17957,7 @@ int CvPlayer::GetScienceFromHappinessTimes100() const
 	if(getHappinessToScience() != 0)
 	{
 #ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
-		if (GetExcessHappiness() >= 0 && !bIgnoreHappinessRequirement)
+		if (!bIgnoreHappinessRequirement && GetExcessHappiness() >= 0)
 #else
 		if(GetExcessHappiness() >= 0)
 #endif

@@ -1660,9 +1660,9 @@ bool CvUnit::getCaptureDefinition(CvUnitCaptureDefinition* pkCaptureDef, PlayerT
 						{
 							pkCapturedUnit->kill(true);
 #ifdef AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
-							pkCapturedUnit = NULL;
-#else
 							return NULL;
+#else
+							pkCapturedUnit = NULL;
 #endif
 						}
 					}
@@ -3030,7 +3030,7 @@ bool CvUnit::canMoveOrAttackIntoCommon(const CvPlot& plot, byte bMoveFlags) cons
 #endif
 {
 	VALIDATE_OBJECT
-		TeamTypes ePlotTeam;
+	TeamTypes ePlotTeam;
 
 #ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
 	if (bIsPrecalcCanEnterTerrain && !bCanEnterTerrain)
@@ -3114,7 +3114,7 @@ bool CvUnit::canMoveOrAttackIntoCommon(const CvPlot& plot, byte bMoveFlags) cons
 bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) const
 {
 	VALIDATE_OBJECT
-		TeamTypes ePlotTeam;
+	TeamTypes ePlotTeam;
 	// This check gets called so many times it's probably faster just to store the result into a bool
 	bool bMoveFlagAttack = (bMoveFlags & MOVEFLAG_ATTACK);
 
@@ -3277,6 +3277,9 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 		else //if !bMoveFlagAttack
 		{
 			bool bEmbarkedAndAdjacent = false;
+#ifndef AUI_UNIT_FIX_RADAR
+			bool bEnemyUnitPresent = false;
+#endif
 
 			// Without this code, Embarked Units can move on top of enemies because they have no visibility
 			if (isEmbarked() || (bMoveFlags & MOVEFLAG_PRETEND_EMBARKED))
@@ -3347,11 +3350,11 @@ bool CvUnit::canMoveOrAttackInto(const CvPlot& plot, byte bMoveFlags) const
 {
 	VALIDATE_OBJECT
 #ifdef AUI_UNIT_FIX_CAN_MOVE_OR_ATTACK_INTO_NO_DUPLICATE_CALLS
-		return ((canMoveOrAttackIntoAttackOnly(plot, bMoveFlags & ~(MOVEFLAG_ATTACK)) || canMoveOrAttackIntoAttackOnly(plot, bMoveFlags | MOVEFLAG_ATTACK)) &&
+	return ((canMoveOrAttackIntoAttackOnly(plot, bMoveFlags & ~(MOVEFLAG_ATTACK)) || canMoveOrAttackIntoAttackOnly(plot, bMoveFlags | MOVEFLAG_ATTACK)) &&
 #ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
-			canMoveOrAttackIntoCommon(plot, bMoveFlags, bCanEnterTerrain, bIsPrecalcCanEnterTerrain));
+		canMoveOrAttackIntoCommon(plot, bMoveFlags, bCanEnterTerrain, bIsPrecalcCanEnterTerrain));
 #else
-			canMoveOrAttackIntoCommon(plot, bMoveFlags));
+		canMoveOrAttackIntoCommon(plot, bMoveFlags));
 #endif
 #else
 	return (canMoveInto(plot, bMoveFlags & ~(MOVEFLAG_ATTACK)) || canMoveInto(plot, bMoveFlags | MOVEFLAG_ATTACK));
