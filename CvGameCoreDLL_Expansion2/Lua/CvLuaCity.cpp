@@ -219,6 +219,12 @@ void CvLuaCity::PushMethods(lua_State* L, int t)
 	Method(GetJONSCultureStored);
 	Method(SetJONSCultureStored);
 	Method(ChangeJONSCultureStored);
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	Method(GetJONSCultureStoredTimes100);
+	Method(SetJONSCultureStoredTimes100);
+	Method(ChangeJONSCultureStoredTimes100);
+	Method(GetJONSCulturePerTurnTimes100);
+#endif
 	Method(GetJONSCultureLevel);
 	Method(SetJONSCultureLevel);
 	Method(ChangeJONSCultureLevel);
@@ -1999,6 +2005,24 @@ int CvLuaCity::lChangeJONSCultureStored(lua_State* L)
 {
 	return BasicLuaMethod(L, &CvCity::ChangeJONSCultureStored);
 }
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+int CvLuaCity::lGetJONSCultureStoredTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvCity::GetJONSCultureStoredTimes100);
+}
+int CvLuaCity::lSetJONSCultureStoredTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvCity::SetJONSCultureStoredTimes100);
+}
+int CvLuaCity::lChangeJONSCultureStoredTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvCity::ChangeJONSCultureStoredTimes100);
+}
+int CvLuaCity::lGetJONSCulturePerTurnTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvCity::getJONSCulturePerTurnTimes100);
+}
+#endif
 //------------------------------------------------------------------------------
 //int GetJONSCultureLevel() const;
 int CvLuaCity::lGetJONSCultureLevel(lua_State* L)

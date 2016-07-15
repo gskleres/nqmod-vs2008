@@ -75,6 +75,8 @@
 #define AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
 /// When the citizen manager reallocates all citizens, it no longer goes through the costly process of calculating the worst plot multiple times
 #define AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_NO_COSTLY_PLOT_REMOVAL
+/// If a city is on manual specialist control, reallocate citizens will not remove any specialists before reassigning citizens
+#define AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_OBEY_MANUAL_SPECIALIST_CONTROL
 /// Fixes a few possible cases of null pointer dereferences in FindTacticalTargets()
 #define AUI_TACTICAL_FIX_FIND_TACTICAL_TARGETS_NULL_POINTER
 /// The function that gets the amount of different trading partners a player has will now use an array instead of a vector to avoid crash possibilities
@@ -91,6 +93,14 @@
 #define AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
 /// Fixes a possible crash that happens when flavors are broadcast
 #define AUI_FLAVORMANAGER_FIX_POSSIBLE_CRASH_ON_FLAVOR_BROADCAST
+/// When CvCity's constructor is called, component objects of CvCity have their parent pointers set immediately when the components are constructed (improves stability)
+#define AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+/// Visibility update is always triggered when a plot's visibility changes for a player, thus fixing situations like purchasing a plot not updating sight immediately
+#define AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
+/// Fixes the discrepancy where culture is not stored and calculated with hundredths in mind, which greatly messes up modifiers applied to it
+#define AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+/// Puppet cities and cities with automated production will no longer accidentally trigger the production notification
+#define AUI_CITY_FIX_PUPPET_CHOOSE_PRODUCTION_NOTIFICATION
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -187,6 +197,20 @@
 #define NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH (55)
 /// City-states are banned from building and capturing settlers outright (latter could previously not work), instead of the game relying on mishmash of flavors
 #define AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
+/// Fixes the fact that game speed modifiers are applied twice to units that can blast tourism, i.e. Great Musicians; also fixes other, more rare bugs related to tourism blast strength (credits to FilthyRobot for finding the bug)
+#define AUI_UNIT_FIX_NO_DOUBLE_SPEED_MODIFIER_FOR_TOURISM_BLAST
+/// Adds an in-game toggleable option that allows players to gift their capitol; this is an alternative to voting someone irrelevant, especially because AIs can also do this, making it easier to conquer a player who already left because they became irrelevant
+#define AUI_DEAL_ALLOW_CAPITOL_GIFTING
+/// Changes a few lines of code so that only settlers are banned for Venice, settling as a whole is not banned (so they can have a separate settling unit)
+#define AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+#ifdef AUI_PLAYER_FIX_VENICE_ONLY_BANS_SETTLERS_NOT_SETTLING
+/// If a unit can both found and found abroad, Venice will only be able to use that unit to found abroad; this should allow Venice to not be overpowered with Exploration
+#define NQM_UNIT_LIMIT_VENICE_CONQUISTADOR_SETTLES
+#endif
+/// Puppet cities belonging to Venice do not get penalties to science, gold, and faith (they still get penalties to culture to offset the fact that they don't increase policy cost)
+#define AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
+/// Units with the ability to retreat from melee combat will not do so if they are guarding a civilian unit.
+#define AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
@@ -201,6 +225,8 @@
 #define NQM_AI_GIMP_NO_RELIGION_SPREAD
 /// AI players will no longer attempt to build any world wonders or world projects
 #define NQM_AI_GIMP_NO_WORLD_WONDERS
+/// AI players will always accept white peace offered by human players (this is a lot easier to implement than banning DoWs outright, which would mess with everything that relies on operations and sneak attacks)
+#define NQM_AI_GIMP_ALWAYS_WHITE_PEACE
 
 // Observer mode fixes
 /// Observers will see all resources
@@ -304,6 +330,8 @@
 #define AUI_ASTAR_TWEAKED_PATH_EXPLORE_NON_REVEAL_WEIGHT (50)
 /// Units with the Explore UnitAIType will always move to maximize exploration
 #define AUI_ASTAR_EXPLORE_UNITAITYPE_ALWAYS_MAXIMIZES_EXPLORE
+/// Trade routes will prefer tiles owned by either party over unowned tiles, and will prefer unowned tiles over tiles owned by a third party
+#define AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
 
 // Binomial RNG Stuff (Delnar: the binomial RNG generates numbers in a binomial distribution instead of a flat one like the regular RNG)
 /// Enables the Binomial Random Number Generator (originally from Artificial Unintelligence)
@@ -322,6 +350,10 @@
 #define AUI_GS_FIX_NO_ACTIVE_GS_FOR_HUMANS
 /// Instead of ignoring all military training buildings (eg. stables, kreposts, etc.), puppets will instead nullify the Military Training and Naval flavors
 #define AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_PUPPETS_NULLIFY_BARRACKS
+/// Instead of prefering maintenance-free buildings, puppets will now use a logistic scale to emphasize low-maintenance buildings
+#define AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_SLIDING_LOGISTIC_MAINTENANCE_SCALE
+/// Puppets can now build non-wonder buildings that they would normally have 0 weight for
+#define AUI_CITYSTRATEGY_PUPPETS_ALLOW_BAD_BUILDS_IF_NO_OTHER_CHOICE
 /// Scales the GetLastTurnWorkerDisbanded() computation to game speed
 #define AUI_CITYSTRATEGY_FIX_TILE_IMPROVERS_LAST_DISBAND_WORKER_TURN_SCALE
 /// If a player does not have any non-scouting military units, the "enough workers" city strategy is triggered and the "want workers" and "need workers" city strategies always return false
@@ -397,14 +429,20 @@
 /// The function that removes the worst specialist from their slot actually removes the worst one instead of just the first specialist encountered
 #define AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST
 /// Adds a self-consistency check function to citizen manager, which constantly shifts the worst scoring citizen to the best scoring spot until it's not actually shifting the citizen or it keeps shifting back and forth between the same spots.
-#define AUI_CITIZENS_SELF_CONSISTENCY_CHECK (1) // This is the score difference threshold below which the SC loop will terminate
+#define AUI_CITIZENS_SELF_CONSISTENCY_CHECK (0) // This is the score difference threshold below which the SC loop will terminate
 #ifdef AUI_CITIZENS_SELF_CONSISTENCY_CHECK
 /// Reallocate citizens runs a self-consistency check after it reallocates everyone
 #define AUI_CITIZENS_REALLOCATE_CITIZENS_USES_SELF_CONSISTENCY
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-/// After reallocating citizens in all cities at the beginning of the turn, a self-consistency check is run for all cities (so 
+/// After reallocating citizens in all cities at the beginning of the turn, a self-consistency check is run for all cities (so that empire-specific scoring isn't as highly weighted for older cities)
 #define AUI_PLAYER_SELF_CONSISTENCY_SWEEP_AFTER_INITIAL_REALLOCATE
 #endif
+#ifdef AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION
+/// If a city is in food production mode when it reallocates its citizens, it will perform a mock reallocation first assuming no food production, then run a self-consistency check afterwards
+#define AUI_CITIZENS_FOOD_PRODUCTION_TRIAL_RUN_THEN_SELF_CONSISTENCY
+#endif
+/// Citizen (re)assignments mid-turn and mid-turn global yield changes (e.g. to happiness) instantly run a self-consistency check on all cities
+#define AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
 #endif
 /// If a city's religion has the Guruship belief, the citizen manager will account for the extra production gained from the first citizen slot
 #define AUI_CITIZENS_GET_SPECIALIST_VALUE_ACCOUNT_FOR_GURUSHIP

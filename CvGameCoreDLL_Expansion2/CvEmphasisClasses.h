@@ -91,7 +91,11 @@ private:
 class CvCityEmphases
 {
 public:
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	CvCityEmphases(CvCity* pCity);
+#else
 	CvCityEmphases(void);
+#endif
 	~CvCityEmphases(void);
 	void Init(CvEmphasisXMLEntries* pEmphases, CvCity* pCity);
 	void Uninit();

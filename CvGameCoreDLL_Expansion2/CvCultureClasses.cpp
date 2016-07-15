@@ -2751,8 +2751,13 @@ int CvPlayerCulture::GetTurnsToInfluential(PlayerTypes ePlayer) const
 	{
 		int iInfluence = GetInfluenceOn(ePlayer);
 		int iInflPerTurn = GetInfluencePerTurn(ePlayer);
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+		int iCulture = kOtherPlayer.GetJONSCultureEverGeneratedTimes100();
+		int iCultPerTurn = kOtherPlayer.GetTotalJONSCulturePerTurnTimes100();
+#else
 		int iCulture = kOtherPlayer.GetJONSCultureEverGenerated();
 		int iCultPerTurn = kOtherPlayer.GetTotalJONSCulturePerTurn();
+#endif
 
 		int iNumerator = (GC.getCULTURE_LEVEL_INFLUENTIAL() * iCulture / 100) -  iInfluence;
 		int iDivisor = iInflPerTurn - (GC.getCULTURE_LEVEL_INFLUENTIAL() * iCultPerTurn / 100);
@@ -4250,8 +4255,13 @@ FDataStream& operator<<(FDataStream& saveTo, const CvPlayerCulture& readFrom)
 // CvCityCulture
 //=====================================
 /// Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityCulture::CvCityCulture(CvCity* pCity):
+	m_pCity(pCity)
+#else
 CvCityCulture::CvCityCulture(void):
 m_pCity(NULL)
+#endif
 {
 }
 

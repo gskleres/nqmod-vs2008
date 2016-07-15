@@ -22,6 +22,7 @@ local table = EUI.table
 local YieldIcons = EUI.YieldIcons
 local YieldNames = EUI.YieldNames
 
+
 --print( "InGame context", ContextPtr:LookUpControl( "/InGame" ) or "NIL" )
 
 -------------------------------
@@ -2140,8 +2141,8 @@ local function getCultureTooltip( city )
 	local culturePerTurn, cultureStored, cultureNeeded, cultureFromBuildings, cultureFromPolicies, cultureFromSpecialists, cultureFromTraits, baseCulturePerTurn
 	-- Thanks fo Firaxis Cleverness...
 	if civ5_mode then
-		culturePerTurn = city:GetJONSCulturePerTurn()
-		cultureStored = city:GetJONSCultureStored()
+		culturePerTurn = city:GetJONSCulturePerTurnTimes100() / 100
+		cultureStored = city:GetJONSCultureStoredTimes100() / 100
 		cultureNeeded = city:GetJONSCultureThreshold()
 		cultureFromBuildings = city:GetJONSCulturePerTurnFromBuildings()
 		cultureFromPolicies = city:GetJONSCulturePerTurnFromPolicies()
@@ -3290,6 +3291,7 @@ if civBE_mode then
 
 		return s;
 	end
+
 
 	function ComposeUnitPerkNumberHelpText(perkIDTable, textKey, numberKey, firstEntry, prefix)
 		local s = "";

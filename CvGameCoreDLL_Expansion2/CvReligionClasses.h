@@ -343,7 +343,11 @@ private:
 class CvCityReligions
 {
 public:
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	CvCityReligions(CvCity* pCity);
+#else
 	CvCityReligions(void);
+#endif
 	~CvCityReligions(void);
 	void Init(CvCity* pCity);
 	void Uninit();

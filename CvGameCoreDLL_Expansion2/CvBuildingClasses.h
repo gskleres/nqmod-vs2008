@@ -556,7 +556,11 @@ private:
 class CvCityBuildings
 {
 public:
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	CvCityBuildings(CvCity* pCity);
+#else
 	CvCityBuildings(void);
+#endif
 	~CvCityBuildings(void);
 	void Init(CvBuildingXMLEntries* pBuildings, CvCity* pCity);
 	void Uninit();

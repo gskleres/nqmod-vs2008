@@ -824,8 +824,11 @@ void CvEconomicAI::DoTurn()
 		DoHurry();
 		DoPlotPurchases();
 		DisbandExtraWorkers();
-		DisbandExtraArchaeologists();
-		m_pPlayer->GetCulture()->DoSwapGreatWorks();
+		if (!m_pPlayer->isMinorCiv() && !m_pPlayer->isBarbarian())
+		{
+			DisbandExtraArchaeologists();
+			m_pPlayer->GetCulture()->DoSwapGreatWorks();
+		}
 	}
 }
 
@@ -1769,7 +1772,7 @@ void CvEconomicAI::DoHurry()
 				iHurryAmount = 0;
 
 				if(pLoopCity->canHurry((HurryTypes)iI) &&
-				        pLoopCity->hurryProduction((HurryTypes)iI) > 0)
+					pLoopCity->hurryProduction((HurryTypes)iI) > 0)
 				{
 					iTurnsSaved = pLoopCity->getProductionTurnsLeft() - 1;
 					if(iTurnsSaved > 0)

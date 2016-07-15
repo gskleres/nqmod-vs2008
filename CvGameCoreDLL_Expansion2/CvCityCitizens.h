@@ -20,7 +20,11 @@
 class CvCityCitizens
 {
 public:
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	CvCityCitizens(CvCity* pCity);
+#else
 	CvCityCitizens(void);
+#endif
 	~CvCityCitizens(void);
 
 	void Init(CvCity* pCity);
@@ -127,7 +131,11 @@ public:
 	bool IsPlotBlockaded(CvPlot* pPlot) const;
 	bool IsAnyPlotBlockaded() const;
 
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	bool DoVerifyWorkingPlot(CvPlot* pPlot);
+#else
 	void DoVerifyWorkingPlot(CvPlot* pPlot);
+#endif
 	void DoVerifyWorkingPlots();
 
 	// Helpful Stuff
@@ -182,6 +190,10 @@ public:
 	int GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass);
 #endif
 	void DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet);
+#ifdef AUI_CITIZENS_FOOD_PRODUCTION_TRIAL_RUN_THEN_SELF_CONSISTENCY
+	bool getIgnoreFoodProduction() const;
+	void setIgnoreFoodProduction(bool bNewValue);
+#endif
 
 private:
 
@@ -196,6 +208,9 @@ private:
 
 	CityAIFocusTypes m_eCityAIFocusTypes;
 	bool m_bForceAvoidGrowth;
+#ifdef AUI_CITIZENS_FOOD_PRODUCTION_TRIAL_RUN_THEN_SELF_CONSISTENCY
+	bool m_bIgnoreFoodProduction;
+#endif
 
 	bool m_pabWorkingPlot[NUM_CITY_PLOTS];
 	bool m_pabForcedWorkingPlot[NUM_CITY_PLOTS];

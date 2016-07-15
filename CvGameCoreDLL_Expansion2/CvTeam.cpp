@@ -1503,6 +1503,9 @@ void CvTeam::DoNowAtWarOrPeace(TeamTypes eTeam, bool bWar)
 
 			GET_PLAYER(ePlayer).SetDangerPlotsDirty();
 			GET_PLAYER(ePlayer).UpdateReligion();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+			GET_PLAYER(ePlayer).doSelfConsistencyCheckAllCities();
+#endif
 
 			// ******************************
 			// Our minor civ allies declare war on eTeam
@@ -5983,6 +5986,9 @@ void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, b
 			if(GET_PLAYER((PlayerTypes)iPlayerLoop).isAlive() && GET_PLAYER((PlayerTypes) iPlayerLoop).getTeam() == GetID())
 			{
 				GET_PLAYER((PlayerTypes) iPlayerLoop).DoUpdateHappiness();
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				GET_PLAYER((PlayerTypes)iPlayerLoop).doSelfConsistencyCheckAllCities();
+#endif
 			}
 		}
 

@@ -547,7 +547,14 @@ bool CvDealAI::IsDealWithHumanAcceptable(CvDeal* pDeal, PlayerTypes eOtherPlayer
 	// Peace deal where we're not surrendering, value must equal cached value
 	else if (pDeal->IsPeaceTreatyTrade(eOtherPlayer))
 	{
+#ifdef NQM_AI_GIMP_ALWAYS_WHITE_PEACE
+		int iPeaceValueRequired = GetCachedValueOfPeaceWithHuman();
+		if (GC.getGame().isOption("GAMEOPTION_AI_GIMP_ALWAYS_WHITE_PEACE") && iPeaceValueRequired > 0 && GET_PLAYER(eOtherPlayer).isHuman())
+			iPeaceValueRequired = 0;
+		if (iTotalValueToMe >= iPeaceValueRequired)
+#else
 		if (iTotalValueToMe >= GetCachedValueOfPeaceWithHuman())
+#endif
 		{
 			return true;
 		}
@@ -3466,10 +3473,12 @@ void CvDealAI::DoAddItemsToDealForPeaceTreaty(PlayerTypes eOtherPlayer, CvDeal* 
 		// All Cities but the capital
 		for(pLoopCity = pLosingPlayer->firstCity(&iCityLoop); pLoopCity != NULL; pLoopCity = pLosingPlayer->nextCity(&iCityLoop))
 		{
+#ifndef AUI_DEAL_ALLOW_CAPITOL_GIFTING
 			if(pLoopCity->isCapital())
 			{
 				continue;
 			}
+#endif
 
 			if(pDeal->IsPossibleToTradeItem(eLosingPlayer, eWinningPlayer, TRADE_ITEM_CITIES, pLoopCity->getX(), pLoopCity->getY()))
 			{

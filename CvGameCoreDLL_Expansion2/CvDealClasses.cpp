@@ -473,7 +473,11 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 				return false;
 
 			// Can't trade one's capital
+#ifdef AUI_DEAL_ALLOW_CAPITOL_GIFTING
+			if (pCity->isCapital() && !GC.getGame().isOption("GAMEOPTION_ALLOW_CAPITOL_GIFTING"))
+#else
 			if(pCity->isCapital())
+#endif
 				return false;
 
 			// Can't trade a city to a human in an OCC game

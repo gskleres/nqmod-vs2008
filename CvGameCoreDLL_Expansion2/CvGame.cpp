@@ -563,7 +563,7 @@ bool CvGame::InitMap(CvGameInitialItemsOverrides& kGameInitialItemsOverrides)
 					pLoopPlot->setRevealed(OBSERVER_TEAM, true, false);
 					pLoopPlot->changeVisibilityCount(OBSERVER_TEAM, pLoopPlot->getVisibilityCount(OBSERVER_TEAM) + 1, NO_INVISIBLE, true, true);
 #else
-					pLoopPlot->changeVisibilityCount(eTeam, 1, NO_INVISIBLE, true, false);
+					pLoopPlot->changeVisibilityCount(eTeam, pLoopPlot->getVisibilityCount(eTeam) + 1, NO_INVISIBLE, true, false);
 
 					for(int iJ = 0; iJ < iNumInvisibleInfos; iJ++)
 					{

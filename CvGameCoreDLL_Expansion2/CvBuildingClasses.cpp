@@ -2095,7 +2095,11 @@ CvBuildingEntry* CvBuildingXMLEntries::GetEntry(int index)
 // CvCityBuildings
 //=====================================
 /// Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityBuildings::CvCityBuildings(CvCity* pCity) :
+#else
 CvCityBuildings::CvCityBuildings():
+#endif
 	m_paiBuildingProduction(NULL),
 	m_paiBuildingProductionTime(NULL),
 	m_paiBuildingOriginalOwner(NULL),
@@ -2111,7 +2115,11 @@ CvCityBuildings::CvCityBuildings():
 	m_iGreatWorksTourismModifier(0),
 	m_bSoldBuildingThisTurn(false),
 	m_pBuildings(NULL),
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	m_pCity(pCity)
+#else
 	m_pCity(NULL)
+#endif
 {
 }
 

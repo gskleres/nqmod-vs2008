@@ -3804,7 +3804,12 @@ FDataStream& operator<<(FDataStream& saveTo, const CvPlayerEspionage& readFrom)
 }
 
 // Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityEspionage::CvCityEspionage(CvCity* pCity) :
+	m_pCity(pCity)
+#else
 CvCityEspionage::CvCityEspionage(void)
+#endif
 {
 	Reset();
 }

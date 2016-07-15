@@ -369,6 +369,11 @@ public:
 
 	// Culture stuff
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int GetJONSCultureStoredTimes100() const;
+	void SetJONSCultureStoredTimes100(int iValue);
+	void ChangeJONSCultureStoredTimes100(int iChange);
+#endif
 	int GetJONSCultureStored() const;
 	void SetJONSCultureStored(int iValue);
 	void ChangeJONSCultureStored(int iChange);
@@ -380,6 +385,9 @@ public:
 	int GetJONSCultureThreshold() const;
 
 	int getJONSCulturePerTurn() const;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	int getJONSCulturePerTurnTimes100() const;
+#endif
 
 	int GetBaseJONSCulturePerTurn() const;
 
@@ -516,8 +524,13 @@ public:
 
 	bool IsPuppet() const;
 	void SetPuppet(bool bValue);
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	void DoCreatePuppet(bool bRunSelfConsistency = true);
+	void DoAnnex(bool bRunSelfConsistency = true);
+#else
 	void DoCreatePuppet();
 	void DoAnnex();
+#endif
 
 	int GetLocalHappiness() const;
 	int GetHappinessFromBuildings() const;
@@ -600,7 +613,11 @@ public:
 	int getSeaResourceYield(YieldTypes eIndex) const;
 	void changeSeaResourceYield(YieldTypes eIndex, int iChange);
 
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+	int getBaseYieldRateModifier(YieldTypes eIndex, int iExtra = 0, CvString* toolTipSink = NULL, int iExtraHappiness = 0) const;
+#else
 	int getBaseYieldRateModifier(YieldTypes eIndex, int iExtra = 0, CvString* toolTipSink = NULL) const;
+#endif
 	int getYieldRate(YieldTypes eIndex, bool bIgnoreTrade) const;
 	int getYieldRateTimes100(YieldTypes eIndex, bool bIgnoreTrade) const;
 
@@ -640,7 +657,11 @@ public:
 	int getResourceYieldRateModifier(YieldTypes eIndex) const;
 	void changeResourceYieldRateModifier(YieldTypes eIndex, int iChange);
 
+#ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
+	int getHappinessModifier(YieldTypes eIndex, int iExtraHappiness = 0) const;
+#else
 	int getHappinessModifier(YieldTypes eIndex) const;
+#endif
 
 	int getExtraSpecialistYield(YieldTypes eIndex) const;
 	int getExtraSpecialistYield(YieldTypes eIndex, SpecialistTypes eSpecialist) const;
@@ -915,7 +936,11 @@ protected:
 	FAutoVariable<int, CvCity> m_iNumGreatPeople;
 	FAutoVariable<int, CvCity> m_iBaseGreatPeopleRate;
 	FAutoVariable<int, CvCity> m_iGreatPeopleRateModifier;
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	FAutoVariable<int, CvCity> m_iJONSCultureStoredT100;
+#else
 	FAutoVariable<int, CvCity> m_iJONSCultureStored;
+#endif
 	FAutoVariable<int, CvCity> m_iJONSCultureLevel;
 	FAutoVariable<int, CvCity> m_iJONSCulturePerTurnFromBuildings;
 	FAutoVariable<int, CvCity> m_iJONSCulturePerTurnFromPolicies;

@@ -203,6 +203,22 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 
 	// Culture
 
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+	Method(GetTotalJONSCulturePerTurnTimes100);
+
+	Method(GetJONSCulturePerTurnFromCitiesTimes100);
+
+	Method(GetJONSCulturePerTurnFromExcessHappinessTimes100);
+	Method(GetCulturePerTurnFromReligionTimes100);
+	Method(GetCulturePerTurnFromBonusTurnsTimes100);
+
+	Method(GetJONSCultureTimes100);
+	Method(SetJONSCultureTimes100);
+	Method(ChangeJONSCultureTimes100);
+
+	Method(GetJONSCultureEverGeneratedTimes100);
+#endif
+
 	Method(GetTotalJONSCulturePerTurn);
 
 	Method(GetJONSCulturePerTurnFromCities);
@@ -2182,6 +2198,44 @@ int CvLuaPlayer::lGetGoldPerTurnFromTraits(lua_State* L)
 	lua_pushinteger(L, pkPlayer->GetTreasury()->GetGoldPerTurnFromTraits());
 	return 1;
 }
+#ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+int CvLuaPlayer::lGetTotalJONSCulturePerTurnTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::GetTotalJONSCulturePerTurnTimes100);
+}
+int CvLuaPlayer::lGetJONSCulturePerTurnFromCitiesTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::GetJONSCulturePerTurnFromCitiesTimes100);
+}
+int CvLuaPlayer::lGetJONSCulturePerTurnFromExcessHappinessTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::GetJONSCulturePerTurnFromExcessHappinessTimes100);
+}
+int CvLuaPlayer::lGetCulturePerTurnFromReligionTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::GetCulturePerTurnFromReligionTimes100);
+}
+int CvLuaPlayer::lGetCulturePerTurnFromBonusTurnsTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::GetCulturePerTurnFromBonusTurnsTimes100);
+}
+int CvLuaPlayer::lGetJONSCultureTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::getJONSCultureTimes100);
+}
+int CvLuaPlayer::lSetJONSCultureTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::setJONSCultureTimes100);
+}
+int CvLuaPlayer::lChangeJONSCultureTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::changeJONSCultureTimes100);
+}
+int CvLuaPlayer::lGetJONSCultureEverGeneratedTimes100(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::GetJONSCultureEverGeneratedTimes100);
+}
+#endif
 //------------------------------------------------------------------------------
 //int GetTotalJONSCulturePerTurn();
 int CvLuaPlayer::lGetTotalJONSCulturePerTurn(lua_State* L)

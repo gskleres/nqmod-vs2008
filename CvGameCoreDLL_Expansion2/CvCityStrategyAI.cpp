@@ -234,7 +234,12 @@ unsigned char  CvCityStrategyAI::m_acBestYields[NUM_YIELD_TYPES][NUM_CITY_PLOTS]
 #endif
 
 /// Constructor
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+CvCityStrategyAI::CvCityStrategyAI(CvCity* pCity):
+	m_pCity(pCity),
+#else
 CvCityStrategyAI::CvCityStrategyAI():
+#endif
 	m_pabUsingCityStrategy(NULL),
 	m_paiTurnCityStrategyAdopted(NULL),
 	m_aiTempFlavors(NULL),
@@ -847,6 +852,33 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 		}
 	}
 
+#ifdef AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_SLIDING_LOGISTIC_MAINTENANCE_SCALE
+	bool bCapitolConnectedHasHarbor = false;
+	if (GetCity()->IsPuppet() && !GetCity()->IsRouteToCapitalConnected())
+	{
+		int iLoop;
+		const CvPlayer* pPlayer = GetCity()->GetPlayer();
+		const CvCity* pLoopCity;
+		for (uint uiBuildingTypes = 0; uiBuildingTypes < GC.GetGameBuildings()->GetNumBuildings(); uiBuildingTypes++)
+		{
+			const BuildingTypes eHarborBuilding = static_cast<BuildingTypes>(uiBuildingTypes);
+			CvBuildingEntry* pkHarborBuildingInfo = GC.getBuildingInfo(eHarborBuilding);
+			if (pkHarborBuildingInfo && pkHarborBuildingInfo->AllowsWaterRoutes())
+			{
+				for (pLoopCity = pPlayer->firstCity(&iLoop); pLoopCity != NULL; pLoopCity = pPlayer->nextCity(&iLoop))
+				{
+					if (pLoopCity->IsRouteToCapitalConnected() && pLoopCity->GetCityBuildings()->GetNumActiveBuilding(eHarborBuilding) > 0)
+					{
+						bCapitolConnectedHasHarbor = true;
+						goto EndHarborLoop;
+					}
+				}
+			}
+		}
+	}
+EndHarborLoop:;
+#endif
+
 	// Loop through adding the available buildings
 	for(iBldgLoop = 0; iBldgLoop < GC.GetGameBuildings()->GetNumBuildings(); iBldgLoop++)
 	{
@@ -912,6 +944,9 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 				if(!pDiploAI  || !pDiploAI->IsGoingForDiploVictory() || kPlayer.GetTreasury()->GetGold() < iNumberOfPlayersWeNeedToBuyOff * 500)
 				{
 					iTempWeight = 0;
+#ifdef AUI_CITYSTRATEGY_PUPPETS_ALLOW_BAD_BUILDS_IF_NO_OTHER_CHOICE
+					continue;
+#endif
 				}
 			}
 
@@ -919,6 +954,7 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 			if (GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_WORLD_WONDER") && isWorldWonderClass(pkBuildingInfo->GetBuildingClassInfo()))
 			{
 				iTempWeight = 0;
+				continue;
 			}
 #endif
 
@@ -930,6 +966,9 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 				if(isWorldWonderClass(kBuildingClassInfo) || isTeamWonderClass(kBuildingClassInfo) || isNationalWonderClass(kBuildingClassInfo) || isLimitedWonderClass(kBuildingClassInfo))
 				{
 					iTempWeight = 0;
+#ifdef AUI_CITYSTRATEGY_PUPPETS_ALLOW_BAD_BUILDS_IF_NO_OTHER_CHOICE
+					continue;
+#endif
 				}
 #ifndef AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_PUPPETS_NULLIFY_BARRACKS
 				// it also avoids military training buildings - since it can't build units
@@ -938,11 +977,32 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 					iTempWeight = 0;
 				}
 #endif
+#ifdef AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_SLIDING_LOGISTIC_MAINTENANCE_SCALE
+				int iEffectiveMaintenanceT100 = pkBuildingInfo->GetGoldMaintenance() * (100 + GetCity()->GetPlayer()->GetBuildingGoldMaintenanceMod());
+				int iBonusGoldFromYield = pkBuildingInfo->GetYieldChange(YIELD_GOLD) + GetCity()->getPopulation() * pkBuildingInfo->GetYieldChangePerPop(YIELD_GOLD);
+				iBonusGoldFromYield += GetCity()->GetCityBuildings()->GetBuildingYieldChange((BuildingClassTypes)pkBuildingInfo->GetBuildingClassType(), YIELD_GOLD);
+				iBonusGoldFromYield *= GetCity()->getYieldRateModifier(YIELD_GOLD) + pkBuildingInfo->GetYieldModifier(YIELD_GOLD);
+				iEffectiveMaintenanceT100 -= iBonusGoldFromYield;
+
+				int iBonusGoldFromModifier = GetCity()->getBaseYieldRate(YIELD_GOLD) * 100;
+				iBonusGoldFromModifier += GetCity()->GetYieldPerPopTimes100(YIELD_GOLD) * GetCity()->getPopulation();
+				iBonusGoldFromModifier += GetCity()->GetYieldPerReligionTimes100(YIELD_GOLD) * GetCity()->GetCityReligions()->GetNumReligionsWithFollowers();
+				iBonusGoldFromModifier *= pkBuildingInfo->GetYieldModifier(YIELD_GOLD);
+				iEffectiveMaintenanceT100 -= iBonusGoldFromModifier;
+
+				if (bCapitolConnectedHasHarbor && pkBuildingInfo->AllowsWaterRoutes())
+				{
+					iEffectiveMaintenanceT100 -= GetCity()->GetPlayer()->GetTreasury()->GetCityConnectionRouteGoldTimes100(GetCity());
+				}
+				
+				iTempWeight *= int(2.0 / (1.0 + exp(double(iEffectiveMaintenanceT100) / 200.0)) + 0.5);
+#else
 				// they also like stuff that won't burden the empire with maintenance costs
 				if(pkBuildingInfo->GetGoldMaintenance() == 0)
 				{
 					iTempWeight *= 2;
 				}
+#endif
 				// and they avoid any buildings that require resources
 				int iNumResources = GC.getNumResourceInfos();
 				for(int iResourceLoop = 0; iResourceLoop < iNumResources; iResourceLoop++)
@@ -950,8 +1010,14 @@ void CvCityStrategyAI::ChooseProduction(bool bUseAsyncRandom, BuildingTypes eIgn
 					if(pkBuildingInfo->GetResourceQuantityRequirement(iResourceLoop) > 0)
 					{
 						iTempWeight = 0;
+#ifdef AUI_CITYSTRATEGY_PUPPETS_ALLOW_BAD_BUILDS_IF_NO_OTHER_CHOICE
+						break;
+#endif
 					}
 				}
+#ifdef AUI_CITYSTRATEGY_PUPPETS_ALLOW_BAD_BUILDS_IF_NO_OTHER_CHOICE
+				iTempWeight += 1;
+#endif
 			}
 			if(iTempWeight > 0)
 				m_Buildables.push_back(buildable, iTempWeight);

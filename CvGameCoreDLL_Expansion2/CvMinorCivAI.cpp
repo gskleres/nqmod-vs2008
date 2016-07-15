@@ -6147,6 +6147,10 @@ void CvMinorCivAI::DoSetBonus(PlayerTypes ePlayer, bool bAdd, bool bFriends, boo
 		AddNotification(notifStrings.first, notifStrings.second, ePlayer);
 	}
 
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	GET_PLAYER(ePlayer).doSelfConsistencyCheckAllCities();
+#endif
+
 	// *******************************************
 	// NOTIFICATIONS FOR OTHER PLAYERS IN THE GAME
 	// *******************************************
@@ -6776,6 +6780,11 @@ bool CvMinorCivAI::DoMajorCivEraChange(PlayerTypes ePlayer, EraTypes eNewEra)
 			}
 		}
 	}
+
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	if(bSomethingChanged)
+		GET_PLAYER(ePlayer).doSelfConsistencyCheckAllCities();
+#endif
 
 	return bSomethingChanged;
 }

@@ -137,7 +137,11 @@ struct CvCityBuildable
 class CvCityStrategyAI: public CvFlavorRecipient
 {
 public:
+#ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+	CvCityStrategyAI(CvCity* pCity);
+#else
 	CvCityStrategyAI(void);
+#endif
 	~CvCityStrategyAI(void);
 
 	void Init(CvAICityStrategies* pAICityStrategies, CvCity* pCity, bool bIsCity);

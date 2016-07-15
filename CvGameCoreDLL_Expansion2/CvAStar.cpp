@@ -1267,10 +1267,25 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 
 	CvAssertMsg(eUnitDomain != DOMAIN_AIR, "pUnit->getDomainType() is not expected to be equal with DOMAIN_AIR");
 
-	bool bToPlotIsWater = pToPlot->isWater() && !pToPlot->IsAllowsWalkWater();
-#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
-	int iBaseMoves = pCacheData->baseMoves((pFromPlot->isWater() && !pFromPlot->IsAllowsWalkWater()) || pCacheData->isEmbarked() ? DOMAIN_SEA : pCacheData->getDomainType());
+#if defined(AUI_ASTAR_MINOR_OPTIMIZATION) || defined (AUI_UNIT_FIX_HOVERING_EMBARK) || defined(AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK)
+	bool bToPlotIsWater = !pToPlot->IsAllowsWalkWater();
+	bool bFromPlotIsWater = !pFromPlot->IsAllowsWalkWater();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	if (pUnit->IsHoveringUnit())
+	{
+		bToPlotIsWater = bToPlotIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+		bFromPlotIsWater = bFromPlotIsWater && pFromPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+	}
+	else
+#endif
+	{
+		bToPlotIsWater = bToPlotIsWater && pToPlot->isWater();
+		bFromPlotIsWater = bFromPlotIsWater && pFromPlot->isWater();
+	}
+	int iBaseMoves = pCacheData->baseMoves(bFromPlotIsWater || pCacheData->isEmbarked() ? DOMAIN_SEA : pCacheData->getDomainType());
 	int iMaxMoves = iBaseMoves * GC.getMOVE_DENOMINATOR();
+#else
+	bool bToPlotIsWater = pToPlot->isWater() && !pToPlot->IsAllowsWalkWater();
 #endif
 	int iMax;
 	if(parent->m_iData1 > 0)
@@ -1325,7 +1340,7 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 		iCost = (PATH_MOVEMENT_WEIGHT * iCost);
 
 #ifdef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
-		if (eUnitDomain == DOMAIN_LAND && (!pFromPlot->isWater() || pFromPlot->IsAllowsWalkWater()) && bToPlotIsWater && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
+		if (eUnitDomain == DOMAIN_LAND && !bFromPlotIsWater && bToPlotIsWater && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
 #else
 		if(eUnitDomain == DOMAIN_LAND && !pFromPlot->isWater() && bToPlotIsWater && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
 #endif
@@ -1697,7 +1712,15 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 			kToNodeCacheData.bPlotVisibleToTeam = true;
 			kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 			kToNodeCacheData.bIsMountain = pToPlot->isMountain();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
+			if (pUnit->IsHoveringUnit())
+				kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+			else
+				kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->isWater();
+#else
 			kToNodeCacheData.bIsWater = (pToPlot->isWater() && !pToPlot->IsAllowsWalkWater());
+#endif
 			kToNodeCacheData.bCanEnterTerrain = true;
 			kToNodeCacheData.bIsRevealedToTeam = true;
 			kToNodeCacheData.bContainsOtherFriendlyTeamCity = false;
@@ -1731,7 +1754,15 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 		kToNodeCacheData.bPlotVisibleToTeam = pToPlot->isVisible(eUnitTeam);
 		kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 		kToNodeCacheData.bIsMountain = pToPlot->isMountain();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+		kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
+		if (pUnit->IsHoveringUnit())
+			kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+		else
+			kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->isWater();
+#else
 		kToNodeCacheData.bIsWater = (pToPlot->isWater() && !pToPlot->IsAllowsWalkWater());
+#endif
 		kToNodeCacheData.bIsRevealedToTeam = pToPlot->isRevealed(eUnitTeam);
 		kToNodeCacheData.bContainsOtherFriendlyTeamCity = false;
 		CvCity* pCity = pToPlot->getPlotCity();
@@ -1757,10 +1788,16 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 	kToNodeCacheData.bPlotVisibleToTeam = pToPlot->isVisible(eUnitTeam);
 	kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 	kToNodeCacheData.bIsMountain = pToPlot->isMountain();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
+	if (pUnit->IsHoveringUnit())
+		kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+	else
+		kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->isWater();
+#else
 	kToNodeCacheData.bIsWater = (pToPlot->isWater() && !pToPlot->IsAllowsWalkWater());
-#ifndef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
-	kToNodeCacheData.bCanEnterTerrain = pUnit->canEnterTerrain(*pToPlot, CvUnit::MOVEFLAG_PRETEND_CORRECT_EMBARK_STATE);
 #endif
+	kToNodeCacheData.bCanEnterTerrain = pUnit->canEnterTerrain(*pToPlot, CvUnit::MOVEFLAG_PRETEND_CORRECT_EMBARK_STATE);
 	kToNodeCacheData.bIsRevealedToTeam = pToPlot->isRevealed(eUnitTeam);
 	kToNodeCacheData.bContainsOtherFriendlyTeamCity = false;
 	CvCity* pCity = pToPlot->getPlotCity();
@@ -1979,7 +2016,11 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 	{
 		if(!kFromNodeCacheData.bIsWater && kToNodeCacheData.bIsWater && kToNodeCacheData.bIsRevealedToTeam && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
 		{
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			if (!pUnit->canMoveAllTerrain())
+#else
 			if(!pUnit->IsHoveringUnit() && !pUnit->canMoveAllTerrain() && !pToPlot->IsAllowsWalkWater())
+#endif
 			{
 				return FALSE;
 			}
@@ -2369,8 +2410,22 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 
 	CvAssertMsg(pUnit->getDomainType() != DOMAIN_AIR, "pUnit->getDomainType() is not expected to be equal with DOMAIN_AIR");
 
-#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
-	int iBaseMoves = pCacheData->baseMoves(((pFromPlot->isWater() && !pFromPlot->IsAllowsWalkWater()) || pCacheData->isEmbarked()) ? DOMAIN_SEA : pCacheData->getDomainType());
+#if defined(AUI_ASTAR_MINOR_OPTIMIZATION) || defined (AUI_UNIT_FIX_HOVERING_EMBARK) || defined(AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK)
+	bool bToPlotIsWater = !pToPlot->IsAllowsWalkWater();
+	bool bFromPlotIsWater = !pFromPlot->IsAllowsWalkWater();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	if (pUnit->IsHoveringUnit())
+	{
+		bToPlotIsWater = bToPlotIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+		bFromPlotIsWater = bFromPlotIsWater && pFromPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+	}
+	else
+#endif
+	{
+		bToPlotIsWater = bToPlotIsWater && pToPlot->isWater();
+		bFromPlotIsWater = bFromPlotIsWater && pFromPlot->isWater();
+	}
+	int iBaseMoves = pCacheData->baseMoves(bFromPlotIsWater || pCacheData->isEmbarked() ? DOMAIN_SEA : pCacheData->getDomainType());
 	int iMaxMoves = iBaseMoves * GC.getMOVE_DENOMINATOR();
 #endif
 
@@ -2413,7 +2468,7 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 		iCost = (PATH_MOVEMENT_WEIGHT * iCost);
 
 #ifdef AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
-		if (pUnit->getDomainType() == DOMAIN_LAND && (!pFromPlot->isWater() || pFromPlot->IsAllowsWalkWater()) && pToPlot->isWater() && !pToPlot->IsAllowsWalkWater() && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
+		if (pUnit->getDomainType() == DOMAIN_LAND && !bFromPlotIsWater && bToPlotIsWater && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
 #else
 		if(!pFromPlot->isWater() && pToPlot->isWater() && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
 #endif
@@ -2698,7 +2753,15 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 		if (!kToNodeCacheData.bIsCalculated)
 		{
 			kToNodeCacheData.bIsCalculated = true;
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
+			if (pUnit->IsHoveringUnit())
+				kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+			else
+				kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->isWater();
+#else
 			kToNodeCacheData.bIsWater = (pToPlot->isWater() && !pToPlot->IsAllowsWalkWater());
+#endif
 			kToNodeCacheData.bIsMountain = true;
 			kToNodeCacheData.bIsRevealedToTeam = true;
 			kToNodeCacheData.bCanEnterTerrain = true;
@@ -2712,7 +2775,15 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 	if (!kToNodeCacheData.bIsCalculated)
 	{
 		kToNodeCacheData.bIsCalculated = true;
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+		kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
+		if (pUnit->IsHoveringUnit())
+			kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+		else
+			kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->isWater();
+#else
 		kToNodeCacheData.bIsWater = (pToPlot->isWater() && !pToPlot->IsAllowsWalkWater());
+#endif
 		// Recycling bIsMountain for Borders check (only for IgnoreUnits Pathfinder!)
 #ifdef AUI_ASTAR_FIX_IGNORE_UNITS_PATHFINDER_TERRITORY_CHECK
 		kToNodeCacheData.bIsMountain = pUnit->canEnterTerritory(pToPlot->getTeam(), false, false, pUnit->IsDeclareWar() || (finder->GetInfo() & MOVE_DECLARE_WAR));
@@ -4492,11 +4563,17 @@ int UIPathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* po
 		int iGroupAreaID = pUnit->getArea();
 		if(pToPlot->getArea() != iGroupAreaID)
 		{
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			if (!pUnit->canMoveAllTerrain() && !pUnit->IsHoveringUnit() && !pToPlot->isAdjacentToArea(iGroupAreaID))
+#else
 			if(!(pToPlot->isAdjacentToArea(iGroupAreaID)))
+#endif
 			{
 				// antonjs: Added for Smoky Skies scenario. Allows move range to show correctly for airships,
 				// which move over land and sea plots equally (canMoveAllTerrain)
+#ifndef AUI_UNIT_FIX_HOVERING_EMBARK		
 				if (!pUnit->canMoveAllTerrain())
+#endif
 				{
 					return FALSE;
 				}
@@ -4704,7 +4781,15 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 			kToNodeCacheData.bPlotVisibleToTeam = true;
 			kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 			kToNodeCacheData.bIsMountain = pToPlot->isMountain();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
+			if (pUnit->IsHoveringUnit())
+				kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+			else
+				kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->isWater();
+#else
 			kToNodeCacheData.bIsWater = pToPlotCell->IsWater();
+#endif
 			kToNodeCacheData.bCanEnterTerrain = true;
 			kToNodeCacheData.bIsRevealedToTeam = true;
 			kToNodeCacheData.bContainsOtherFriendlyTeamCity = false;
@@ -4739,7 +4824,15 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 		kToNodeCacheData.bPlotVisibleToTeam = pToPlotCell->IsVisible();
 		kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 		kToNodeCacheData.bIsMountain = pToPlot->isMountain();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+		kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
+		if (pUnit->IsHoveringUnit())
+			kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+		else
+			kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->isWater();
+#else
 		kToNodeCacheData.bIsWater = pToPlotCell->IsWater();
+#endif
 		kToNodeCacheData.bIsRevealedToTeam = pToPlotCell->IsRevealed();
 		kToNodeCacheData.bContainsOtherFriendlyTeamCity = false;
 		if (pToPlotCell->IsCity())
@@ -4767,7 +4860,15 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 	kToNodeCacheData.bPlotVisibleToTeam = pToPlotCell->IsVisible();
 	kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 	kToNodeCacheData.bIsMountain = pToPlot->isMountain();
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+	kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
+	if (pUnit->IsHoveringUnit())
+		kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->getTerrainType() == GC.getDEEP_WATER_TERRAIN();
+	else
+		kToNodeCacheData.bIsWater = kToNodeCacheData.bIsWater && pToPlot->isWater();
+#else
 	kToNodeCacheData.bIsWater = pToPlotCell->IsWater();
+#endif
 	kToNodeCacheData.bCanEnterTerrain = pUnit->canEnterTerrain(*pToPlot, CvUnit::MOVEFLAG_PRETEND_CORRECT_EMBARK_STATE);
 	kToNodeCacheData.bIsRevealedToTeam = pToPlotCell->IsRevealed();
 	kToNodeCacheData.bContainsOtherFriendlyTeamCity = false;
@@ -4988,7 +5089,11 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 	{
 		if(!kFromNodeCacheData.bIsWater && kToNodeCacheData.bIsWater && kToNodeCacheData.bIsRevealedToTeam && !pUnit->canEmbarkOnto(*pFromPlot, *pToPlot, true))
 		{
+#ifdef AUI_UNIT_FIX_HOVERING_EMBARK
+			if (!pUnit->canMoveAllTerrain())
+#else
 			if(!pUnit->IsHoveringUnit() && !pUnit->canMoveAllTerrain() && !pToPlot->IsAllowsWalkWater())
+#endif
 			{
 				return FALSE;
 			}
@@ -5459,6 +5564,11 @@ struct TradePathCacheData
 	bool m_bCanEmbarkAllWaterPassage;
 	bool m_bIsRiverTradeRoad;
 	bool m_bIsMoveFriendlyWoodsAsRoad;
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+	CvPlayer* m_pToPlayer;
+
+	inline CvPlayer& getToPlayer() const { return *m_pToPlayer; }
+#endif
 
 	inline CvTeam& getTeam() const { return *m_pTeam; }
 	inline bool CanEmbarkAllWaterPassage() const { return m_bCanEmbarkAllWaterPassage; }
@@ -5469,7 +5579,12 @@ struct TradePathCacheData
 //	--------------------------------------------------------------------------------
 void TradePathInitialize(const void* pointer, CvAStar* finder)
 {
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+	PlayerTypes ePlayer = PlayerTypes(finder->GetInfo() & 0x7f);
+	PlayerTypes eToPlayer = (PlayerTypes)(finder->GetInfo() >> 8);
+#else
 	PlayerTypes ePlayer = (PlayerTypes)finder->GetInfo();
+#endif
 
 	TradePathCacheData* pCacheData = reinterpret_cast<TradePathCacheData*>(finder->GetScratchBuffer());
 
@@ -5490,6 +5605,9 @@ void TradePathInitialize(const void* pointer, CvAStar* finder)
 		pCacheData->m_bIsMoveFriendlyWoodsAsRoad = false;
 	}
 
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+	pCacheData->m_pToPlayer = &GET_PLAYER(eToPlayer);
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -5563,6 +5681,21 @@ int TradeRouteLandPathCost(CvAStarNode* parent, CvAStarNode* node, int data, con
 			iCost += 1;
 		}
 	}
+
+#ifdef AUI_ASTAR_TRADE_ROUTE_COST_TILE_OWNERSHIP_PREFS
+	if (pToPlot->isOwned())
+	{
+		if (pToPlot->getTeam() == pCacheData->getToPlayer().getTeam() || pToPlot->getTeam() == pCacheData->getTeam().GetID())
+		{
+			iCost /= 2;
+		}
+		else
+		{
+			iCost *= 2;
+			iCost += 1;
+		}
+	}
+#endif
 
 	if (pToPlot->isWater() && !pToPlot->IsAllowsWalkWater())
 	{
