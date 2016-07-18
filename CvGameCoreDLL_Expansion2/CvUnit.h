@@ -1271,7 +1271,9 @@ public:
 	std::string stackTraceRemark(const FAutoVariableBase&) const;
 
 #ifdef AUI_SCOPE_FIXES
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+	bool CanWithdrawFromMelee(const CvUnit& pAttacker, const CvCombatInfo* pCombatInfo = NULL) const;
+#elif defined(AUI_CONSTIFY)
 	bool CanWithdrawFromMelee(const CvUnit& pAttacker) const;
 #else
 	bool CanWithdrawFromMelee(CvUnit& pAttacker);
@@ -1548,7 +1550,9 @@ protected:
 	CvUnit* airStrikeTarget(CvPlot& pPlot, bool bNoncombatAllowed) const;
 
 #ifndef AUI_SCOPE_FIXES
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+	bool CanWithdrawFromMelee(const CvUnit& pAttacker, const CvCombatInfo* pCombatInfo = NULL) const;
+#elif defined(AUI_CONSTIFY)
 	bool CanWithdrawFromMelee(const CvUnit& pAttacker) const;
 #else
 	bool CanWithdrawFromMelee(CvUnit& pAttacker);

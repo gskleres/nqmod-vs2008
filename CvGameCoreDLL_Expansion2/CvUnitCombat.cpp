@@ -2506,7 +2506,11 @@ CvUnitCombat::ATTACK_RESULT CvUnitCombat::Attack(CvUnit& kAttacker, CvPlot& targ
 
 	CvAssertMsg(!kAttacker.isDelayedDeath() && !pDefender->isDelayedDeath(), "Trying to battle and one of the units is already dead!");
 
+#ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+	if (pDefender->getExtraWithdrawal() > 0 && pDefender->CanWithdrawFromMelee(kAttacker, &kCombatInfo))
+#else
 	if(pDefender->getExtraWithdrawal() > 0 && pDefender->CanWithdrawFromMelee(kAttacker))
+#endif
 	{
 		pDefender->DoWithdrawFromMelee(kAttacker);
 

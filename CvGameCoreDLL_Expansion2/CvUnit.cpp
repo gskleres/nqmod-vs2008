@@ -21606,7 +21606,9 @@ CvUnit* CvUnit::airStrikeTarget(CvPlot& targetPlot, bool bNoncombatAllowed) cons
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+bool CvUnit::CanWithdrawFromMelee(const CvUnit& attacker, const CvCombatInfo* pCombatInfo) const
+#elif defined(AUI_CONSTIFY)
 bool CvUnit::CanWithdrawFromMelee(const CvUnit& attacker) const
 #else
 bool CvUnit::CanWithdrawFromMelee(CvUnit& attacker)
@@ -21615,7 +21617,8 @@ bool CvUnit::CanWithdrawFromMelee(CvUnit& attacker)
 	VALIDATE_OBJECT
 #ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
 	int iNumDefendersInMyPlot = plot()->getNumDefenders(getOwner());
-	if (IsCanDefend() && iNumDefendersInMyPlot <= 1 && (uint)iNumDefendersInMyPlot > plot()->getNumUnits())
+	if (IsCanDefend() && iNumDefendersInMyPlot <= 1 && (uint)iNumDefendersInMyPlot > plot()->getNumUnits() && 
+		(!pCombatInfo || pCombatInfo->getDamageInflicted(BATTLE_UNIT_ATTACKER) < GetCurrHitPoints()))
 		return false;
 #endif
 	int iWithdrawChance = getExtraWithdrawal();
