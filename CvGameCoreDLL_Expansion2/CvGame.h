@@ -593,7 +593,9 @@ public:
 	FTimer  m_endTurnTimer;
 	int     m_endTurnTimerSemaphore;
 	FTimer  m_curTurnTimer;
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	FTimer  m_timeSinceGameTurnStart;		//time since game turn started for human players
+#endif
 	float	m_fCurrentTurnTimerPauseDelta;	//
 #endif
 #if defined(AUI_GAME_BETTER_HYBRID_MODE) && defined(AUI_GAME_PLAYER_BASED_TURN_LENGTH)
@@ -764,7 +766,9 @@ protected:
 	int     m_lastTurnAICivsProcessed;
 #ifndef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 	FTimer  m_curTurnTimer;
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	FTimer  m_timeSinceGameTurnStart;		//time since game turn started for human players
+#endif
 	float	m_fCurrentTurnTimerPauseDelta;	//
 #endif
 	bool    m_sentAutoMoves;

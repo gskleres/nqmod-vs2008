@@ -89,7 +89,9 @@ CvGame::CvGame() :
 	, m_endTurnTimer()
 	, m_endTurnTimerSemaphore(0)
 	, m_curTurnTimer()
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	, m_timeSinceGameTurnStart()
+#endif
 	, m_fCurrentTurnTimerPauseDelta(0.f)
 	, m_sentAutoMoves(false)
 	, m_bForceEndingTurn(false)
@@ -2110,14 +2112,18 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 void CvGame::TurnTimerSync(float fCurTurnTime, float fTurnStartTime)
 {
 	m_curTurnTimer.StartWithOffset(fCurTurnTime);
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	m_timeSinceGameTurnStart.StartWithOffset(fTurnStartTime);
+#endif
 }
 
 //	-----------------------------------------------------------------------------------------------
 void CvGame::GetTurnTimerData(float& fCurTurnTime, float& fTurnStartTime)
 {
 	fCurTurnTime = m_curTurnTimer.Peek();
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	fTurnStartTime = m_timeSinceGameTurnStart.Peek();
+#endif
 }
 
 //	-----------------------------------------------------------------------------------------------
@@ -4796,14 +4802,20 @@ void CvGame::changeTurnSlice(int iChange)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+void CvGame::resetTurnTimer(bool /*resetGameTurnStart*/)
+#else
 void CvGame::resetTurnTimer(bool resetGameTurnStart)
+#endif
 {
 	m_curTurnTimer.Start();
 	m_fCurrentTurnTimerPauseDelta = 0;
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	if(resetGameTurnStart)
 	{
 		m_timeSinceGameTurnStart.Start();
 	}
+#endif
 }
 
 #ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
@@ -6045,11 +6057,15 @@ void CvGame::setPausePlayer(PlayerTypes eNewValue)
 			if(eNewValue != NO_PLAYER && m_ePausePlayer == NO_PLAYER)
 			{
 				m_fCurrentTurnTimerPauseDelta += m_curTurnTimer.Stop();
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 				m_timeSinceGameTurnStart.Stop();
+#endif
 			}
 			else if(eNewValue == NO_PLAYER && m_ePausePlayer != NO_PLAYER)
 			{
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 				m_timeSinceGameTurnStart.Start();
+#endif
 				m_curTurnTimer.Start();
 			}
 		}
