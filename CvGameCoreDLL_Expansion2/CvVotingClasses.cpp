@@ -6896,6 +6896,8 @@ CvGameLeagues::~CvGameLeagues(void)
 {
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	SAFE_DELETE(m_ActiveLeague);
+#elif defined(AUI_EXPLICIT_DESTRUCTION)
+	m_vActiveLeagues.clear();
 #endif
 }
 

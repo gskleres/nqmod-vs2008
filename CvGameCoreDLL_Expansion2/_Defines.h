@@ -87,6 +87,8 @@
 #define AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 /// Fixes a possible crash when exiting the game caused by too few items in a FStaticVector
 #define AUI_TRADE_FIX_POSSIBLE_DEALLOCATION_CRASH
+/// Adds explicit clearing functions to certain destructors to make sure they are executed to avoid memory corruption
+#define AUI_EXPLICIT_DESTRUCTION
 /// Fixes the fact that an FStaticVector type containing objects with trivial constructors (i.e. they are "Plain Old Data" = POD) is treated as the vector type wouldn't be POD (improves stability and performance)
 #define AUI_TRADE_FIX_FSTATICVECTOR_CONTENTS_ARE_POD
 /// Eliminates an unneccessary loop and a few more steps from the function that stores a trade route's path into the trade route's data

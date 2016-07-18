@@ -272,6 +272,10 @@ public:
 	CvDeal* GetHistoricDeal(PlayerTypes ePlayer, uint indx);
 	uint GetNumCurrentDeals(PlayerTypes ePlayer);
 	uint GetNumHistoricDeals(PlayerTypes ePlayer);
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	CvDeal* GetCurrentlyEndingDeal(PlayerTypes eFromPlayer, PlayerTypes eToPlayer, uint indx);
+	uint GetNumCurrentlyEndingDeals(PlayerTypes eFromPlayer, PlayerTypes eToPlayer) const;
+#endif
 
 	uint CreateDeal();
 	CvDeal* GetDeal(uint index);
