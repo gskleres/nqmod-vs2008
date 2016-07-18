@@ -265,7 +265,7 @@
 
 // New hybrid mode
 /// When in hybrid mode, players who are not at war with each other have their turns happen simultaneously, thus speeding games up significantly
-//#define AUI_GAME_BETTER_HYBRID_MODE
+#define AUI_GAME_BETTER_HYBRID_MODE
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 /// Turn lengths are determined for each player at the beginning of the turn and cached, instead of having turn lengths be a global variable whose value can change mid-turn
 #define AUI_GAME_PLAYER_BASED_TURN_LENGTH
