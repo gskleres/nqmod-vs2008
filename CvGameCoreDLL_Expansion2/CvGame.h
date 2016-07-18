@@ -597,9 +597,9 @@ public:
 	FTimer  m_timeSinceGameTurnStart;		//time since game turn started for human players
 #endif
 	float	m_fCurrentTurnTimerPauseDelta;	//
-#endif
 #if defined(AUI_GAME_BETTER_HYBRID_MODE) && defined(AUI_GAME_PLAYER_BASED_TURN_LENGTH)
 	FFastVector<int, true, c_eCiv5GameplayDLL> m_aiMaxTurnLengths;
+#endif
 #endif
 
 public:
@@ -801,7 +801,9 @@ protected:
 	int m_iLastTurnOrderID;
 #ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	void calculateMaxTurnLengths();
+#ifndef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 	FFastVector<int, true, c_eCiv5GameplayDLL> m_aiMaxTurnLengths;
+#endif
 #endif
 #endif
 

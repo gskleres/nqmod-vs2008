@@ -2109,7 +2109,11 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 }
 
 //	-----------------------------------------------------------------------------------------------
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+void CvGame::TurnTimerSync(float fCurTurnTime, float /*fTurnStartTime*/)
+#else
 void CvGame::TurnTimerSync(float fCurTurnTime, float fTurnStartTime)
+#endif
 {
 	m_curTurnTimer.StartWithOffset(fCurTurnTime);
 #ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
@@ -2118,7 +2122,11 @@ void CvGame::TurnTimerSync(float fCurTurnTime, float fTurnStartTime)
 }
 
 //	-----------------------------------------------------------------------------------------------
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
+void CvGame::GetTurnTimerData(float& fCurTurnTime, float& /*fTurnStartTime*/)
+#else
 void CvGame::GetTurnTimerData(float& fCurTurnTime, float& fTurnStartTime)
+#endif
 {
 	fCurTurnTime = m_curTurnTimer.Peek();
 #ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
