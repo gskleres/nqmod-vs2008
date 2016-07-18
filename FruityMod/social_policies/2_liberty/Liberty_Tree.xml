@@ -3,28 +3,20 @@
 <GameData>
 
 	<!--
-	       *** FRUITY LIBERTY ***
-	  ___________       _______________
-	 |Citizenship|     |Collective Rule|
-           |                  |
-     ______|_______        ___|____
-	|Representation|      |Republic|
+	
+	            *** FRUITY LIBERTY ***
+           ___________       _______________
+	      |Citizenship|     |Collective Rule|
+                |                  |
+          ______|_______        ___|____
+	     |Representation|      |Republic|
+	
 	
 	NOTE: Meritocracy policy recycled -> moved to Rationalism
+	
 	-->
 
-
-	<!-- Set up new tree prerequisites -->
-	<Policy_PrereqPolicies>
-		<Delete PolicyType="POLICY_COLLECTIVE_RULE"		PrereqPolicy="POLICY_REPUBLIC"	/>
-		<Delete PolicyType="POLICY_MERITOCRACY"			PrereqPolicy="POLICY_CITIZENSHIP"	/>
-		<Row>
-			<PolicyType>POLICY_REPUBLIC</PolicyType>
-			<PrereqPolicy>POLICY_COLLECTIVE_RULE</PrereqPolicy>
-		</Row>
-	</Policy_PrereqPolicies>
-
-	<!-- New tree structure -->
+	<!-- positions -->
 	<Policies>
 		<Update>
 			<Set GridX="2" GridY="1" />
@@ -42,10 +34,17 @@
 			<Set GridX="4" GridY="2" />
 			<Where Type="POLICY_REPUBLIC" />
 		</Update>
-		<Update>
-			<Set GridX="5" GridY="1" PolicyBranchType="POLICY_BRANCH_RATIONALISM" />
-			<Where Type="POLICY_MERITOCRACY" />
-		</Update>
 	</Policies>
+
+	<!-- prerequisites -->
+	<Policy_PrereqPolicies>
+		<Delete PolicyType="POLICY_COLLECTIVE_RULE"		PrereqPolicy="POLICY_REPUBLIC"		/>
+		<!-- <Delete PolicyType="POLICY_MERITOCRACY"			PrereqPolicy="POLICY_CITIZENSHIP"	/> ...moved to Rationalism -->
+		<!-- <Delete PolicyType="POLICY_REPRESENTATION"			PrereqPolicy="POLICY_CITIZENSHIP"	/> ...Purposely not deleted since it's accurate. -->
+		<Row>
+			<PolicyType>POLICY_REPUBLIC</PolicyType>
+			<PrereqPolicy>POLICY_COLLECTIVE_RULE</PrereqPolicy>
+		</Row>
+	</Policy_PrereqPolicies>
 
 </GameData>
