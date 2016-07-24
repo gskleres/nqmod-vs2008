@@ -2698,6 +2698,16 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 	if(bMoveFlags & MOVEFLAG_DESTINATION)
 	{
 		// Don't let another player's unit inside someone's city
+#ifdef AUI_UNIT_FIX_CAN_MOVE_INTO_CITY_ATTACK_BLOCKER
+		if (plot.isCity() && plot.isRevealed(getTeam()))
+		{
+#ifdef AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
+			if ((bMoveFlagAttack || (bMoveFlags & MOVEFLAG_DECLARE_WAR)) == (plot.getPlotCity()->getOwner() == getOwner()))
+#else
+			if (((bMoveFlags & MOVEFLAG_ATTACK) || (bMoveFlags & MOVEFLAG_DECLARE_WAR)) == (plot.getPlotCity()->getOwner() == getOwner()))
+#endif
+				return false;
+#else
 #ifdef AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
 		if (!bMoveFlagAttack && !(bMoveFlags & MOVEFLAG_DECLARE_WAR))
 #else
@@ -2706,6 +2716,7 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 		{
 			if(plot.isCity() && plot.getPlotCity()->getOwner() != getOwner())
 				return false;
+#endif
 		}
 
 		// Check to see if any units are present at this full-turn move plot (borrowed from CvGameCoreUtils::pathDestValid())
@@ -3122,9 +3133,9 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 	if (bMoveFlags & MOVEFLAG_DESTINATION)
 	{
 		// Don't let another player's unit inside someone's city
-		if (!bMoveFlagAttack && !(bMoveFlags & MOVEFLAG_DECLARE_WAR))
+		if (plot.isCity() && plot.isRevealed(getTeam()))
 		{
-			if (plot.isCity() && plot.getPlotCity()->getOwner() != getOwner())
+			if ((bMoveFlagAttack && (bMoveFlags & MOVEFLAG_DECLARE_WAR)) == (plot.getPlotCity()->getOwner() == getOwner()))
 				return false;
 		}
 	}

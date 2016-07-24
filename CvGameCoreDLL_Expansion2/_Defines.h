@@ -103,6 +103,8 @@
 #define AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
 /// Puppet cities and cities with automated production will no longer accidentally trigger the production notification
 #define AUI_CITY_FIX_PUPPET_CHOOSE_PRODUCTION_NOTIFICATION
+/// Adds a bunch of extra checks to the production notification invalidator so that it gets invalidated properly in more cases (e.g. when the city's owner changes)
+#define AUI_NOFITICATIONS_FIX_PRODUCTION_NOTIFICATION_REMOVAL_EXTRA_CHECKS
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -213,6 +215,8 @@
 #define AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
 /// Units with the ability to retreat from melee combat will not do so if they are guarding a civilian unit.
 #define AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+/// Fixed cases where moving a friendly unit into the owner's city would pop up an attack city dialogue AND where cities could be radared in unrevealed tiles.
+#define AUI_UNIT_FIX_CAN_MOVE_INTO_CITY_ATTACK_BLOCKER
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
