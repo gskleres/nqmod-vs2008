@@ -587,4 +587,8 @@
 #define GD_DOUBLE_GET(name)        GC.get##name()
 #endif
 
+// NQ Changes
+// Always show barb camps to all players instead of locking it to a policy
+#define NQ_ALWAYS_SEE_BARB_CAMPS
+
 #endif
