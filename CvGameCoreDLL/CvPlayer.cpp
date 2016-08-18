@@ -9315,7 +9315,11 @@ void CvPlayer::ChangeBarbarianCombatBonus(int iChange)
 /// Do we always see where Barb Camps appear?
 bool CvPlayer::IsAlwaysSeeBarbCamps() const
 {
+#ifdef NQ_ALWAYS_SEE_BARB_CAMPS
+	return true;
+#else
 	return m_iAlwaysSeeBarbCampsCount > 0;
+#endif
 }
 
 //	--------------------------------------------------------------------------------
