@@ -75,7 +75,11 @@ public:
 	}
 
 	//	Will set the editbox string
+#ifdef AUI_WARNING_FIXES
+	void setEditBoxString(const CvString& strValue, int iGroup = 0)
+#else
 	void setEditBoxString(CvString strValue, int iGroup = 0)
+#endif
 	{
 		//m_aszEditBoxString, iGroup, szValue.c_str() );
 		CvPopup_SetAtGrow(m_aszEditBoxString, iGroup, strValue);

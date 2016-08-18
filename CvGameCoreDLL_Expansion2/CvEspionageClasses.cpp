@@ -984,7 +984,11 @@ CvCity* CvPlayerEspionage::GetCityWithSpy(uint uiSpyIndex)
 	CvAssertMsg(uiSpyIndex < m_aSpyList.size(), "uiSpyIndex is out of bounds");
 	if(uiSpyIndex >= m_aSpyList.size())
 	{
+#ifdef AUI_WARNING_FIXES
+		return NULL;
+#else
 		return false;
+#endif
 	}
 
 	if(m_aSpyList[uiSpyIndex].m_iCityX == -1 && m_aSpyList[uiSpyIndex].m_iCityY == -1)
@@ -1388,11 +1392,16 @@ int CvPlayerEspionage::CalcPerTurn(int iSpyState, CvCity* pCity, int iSpyIndex)
 }
 
 /// CalcRequired - How much the spy is needed to do to accomplish this task
+#ifdef CVASSERT_ENABLE
 int CvPlayerEspionage::CalcRequired(int iSpyState, CvCity* pCity, int iSpyIndex)
 {
 	DEBUG_VARIABLE(iSpyIndex);
 	CvAssertMsg(pCity, "pCity is null");
 	CvAssertMsg(iSpyIndex >= 0, "iSpyIndex is out of bounds");
+#else
+int CvPlayerEspionage::CalcRequired(int iSpyState, CvCity* pCity, int)
+{
+#endif
 
 	switch(iSpyState)
 	{
@@ -1702,7 +1711,11 @@ int CvPlayerEspionage::GetCoupChanceOfSuccess(uint uiSpyIndex)
 	{
 		int iAllySpyIndex = pCityEspionage->m_aiSpyAssignment[eAllyPlayer];
 		iAllySpyRank = GET_PLAYER(eAllyPlayer).GetEspionage()->m_aSpyList[iAllySpyIndex].m_eRank;
+#ifdef AUI_ESPIONAGE_FIX_RESTORE_ENEMY_SPY_COUP_MALUS
+		bNoAllySpy = false;
+#else
 		bNoAllySpy = true;
+#endif
 	}
 
 	int iAllyInfluence = pMinorCivAI->GetEffectiveFriendshipWithMajorTimes100(eAllyPlayer);
@@ -1721,8 +1734,10 @@ int CvPlayerEspionage::GetCoupChanceOfSuccess(uint uiSpyIndex)
 	float fSpyLevelDeltaZero = GC.getESPIONAGE_COUP_SPY_LEVEL_DELTA_ZERO();
 	float fSpyLevelDeltaOne = GC.getESPIONAGE_COUP_SPY_LEVEL_DELTA_ONE();
 	float fSpyLevelDeltaTwo = GC.getESPIONAGE_COUP_SPY_LEVEL_DELTA_TWO();
+#ifndef NQM_PRUNING
 	float fSpyLevelDeltaThree = GC.getESPIONAGE_COUP_SPY_LEVEL_DELTA_THREE();
 	float fSpyLevelDeltaFour = GC.getESPIONAGE_COUP_SPY_LEVEL_DELTA_FOUR();
+#endif
 
 	float fAllySpyValue = 0.0f;
 	float fMySpyValue = 0.0;
@@ -1740,12 +1755,14 @@ int CvPlayerEspionage::GetCoupChanceOfSuccess(uint uiSpyIndex)
 	case 2:
 		fMySpyValue = fSpyLevelDeltaTwo;
 		break;
+#ifndef NQM_PRUNING
 	case 3:
 		fMySpyValue = fSpyLevelDeltaThree;
 		break;
 	case 4:
 		fMySpyValue = fSpyLevelDeltaFour;
 		break;
+#endif
 	}
 
 	switch (iAllySpyRank)
@@ -2068,6 +2085,9 @@ int CvPlayerEspionage::GetPercentOfStateComplete(uint uiSpyIndex)
 	PlayerTypes ePlayer = m_pPlayer->GetID();
 	CvCity* pCity = NULL;
 	CvCityEspionage* pCityEspionage = NULL;
+#ifdef AUI_WARNING_FIXES
+	const CvGame& kGame = GC.getGame();
+#endif
 
 	switch(m_aSpyList[uiSpyIndex].m_eSpyState)
 	{
@@ -2091,9 +2111,15 @@ int CvPlayerEspionage::GetPercentOfStateComplete(uint uiSpyIndex)
 		}
 		return -1;
 	case SPY_STATE_RIG_ELECTION:
+#ifdef AUI_WARNING_FIXES
+		if (kGame.GetTurnsBetweenMinorCivElections() != 0)
+		{
+			return ((kGame.GetTurnsBetweenMinorCivElections() - kGame.GetTurnsUntilMinorCivElection()) * 100) / kGame.GetTurnsBetweenMinorCivElections();
+#else
 		if(GC.getGame().GetTurnsBetweenMinorCivElections() != 0)
 		{
 			return ((GC.getGame().GetTurnsBetweenMinorCivElections() - GC.getGame().GetTurnsUntilMinorCivElection()) * 100) / GC.getGame().GetTurnsBetweenMinorCivElections();
+#endif
 		}
 		else
 		{
@@ -3777,16 +3803,39 @@ FDataStream& operator<<(FDataStream& saveTo, const CvPlayerEspionage& readFrom)
 	saveTo << readFrom.m_aSpyNotificationMessages.size();
 	for(uint ui = 0; ui < readFrom.m_aSpyNotificationMessages.size(); ui++)
 	{
+#ifdef AUI_WARNING_FIXES
+		const SpyNotificationMessage& kSpyNotificationMessage = readFrom.m_aSpyNotificationMessages[ui];
+		saveTo << kSpyNotificationMessage.m_iCityX;
+		saveTo << kSpyNotificationMessage.m_iCityY;
+		saveTo << kSpyNotificationMessage.m_eAttackingPlayer;
+		saveTo << kSpyNotificationMessage.m_iSpyResult;
+		saveTo << kSpyNotificationMessage.m_eStolenTech;
+#else
 		saveTo << readFrom.m_aSpyNotificationMessages[ui].m_iCityX;
 		saveTo << readFrom.m_aSpyNotificationMessages[ui].m_iCityY;
 		saveTo << readFrom.m_aSpyNotificationMessages[ui].m_eAttackingPlayer;
 		saveTo << readFrom.m_aSpyNotificationMessages[ui].m_iSpyResult;
 		saveTo << readFrom.m_aSpyNotificationMessages[ui].m_eStolenTech;
+#endif
 	}
 
 	saveTo << readFrom.m_aIntrigueNotificationMessages.size();
 	for(uint ui = 0; ui < readFrom.m_aIntrigueNotificationMessages.size(); ui++)
 	{
+#ifdef AUI_WARNING_FIXES
+		const IntrigueNotificationMessage& kIntrigueNotificationMessage = readFrom.m_aIntrigueNotificationMessages[ui];
+		saveTo << kIntrigueNotificationMessage.m_eDiscoveringPlayer;
+		saveTo << kIntrigueNotificationMessage.m_eSourcePlayer;
+		saveTo << kIntrigueNotificationMessage.m_eTargetPlayer;
+		saveTo << kIntrigueNotificationMessage.m_eBuilding;
+		saveTo << kIntrigueNotificationMessage.m_eProject;
+		saveTo << kIntrigueNotificationMessage.m_iIntrigueType;
+		saveTo << kIntrigueNotificationMessage.m_iTurnNum;
+		saveTo << kIntrigueNotificationMessage.m_iCityX;
+		saveTo << kIntrigueNotificationMessage.m_iCityY;
+		saveTo << kIntrigueNotificationMessage.m_strSpyName;
+		saveTo << kIntrigueNotificationMessage.m_bShared;
+#else
 		saveTo << readFrom.m_aIntrigueNotificationMessages[ui].m_eDiscoveringPlayer;
 		saveTo << readFrom.m_aIntrigueNotificationMessages[ui].m_eSourcePlayer;
 		saveTo << readFrom.m_aIntrigueNotificationMessages[ui].m_eTargetPlayer;
@@ -3798,6 +3847,7 @@ FDataStream& operator<<(FDataStream& saveTo, const CvPlayerEspionage& readFrom)
 		saveTo << readFrom.m_aIntrigueNotificationMessages[ui].m_iCityY;
 		saveTo << readFrom.m_aIntrigueNotificationMessages[ui].m_strSpyName;
 		saveTo << readFrom.m_aIntrigueNotificationMessages[ui].m_bShared;
+#endif
 	}
 
 	return saveTo;

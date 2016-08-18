@@ -204,9 +204,9 @@ unsigned short CvRandom::get(unsigned short usNum, const char* pszLog)
 				{
 					char szOut[1024] = {0};
 #ifdef AUI_USE_SFMT_RNG
-					sprintf_s(szOut, "%d, %d, %u, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, uiRtnValue, m_ulRandomSeed, m_ulCallCount, (uint)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
+					sprintf_s(szOut, "%d, %d, %u, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, uiRtnValue, m_ulRandomSeed, m_ulCallCount, (intptr_t)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
 #elif defined(AUI_WARNING_FIXES)
-					sprintf_s(szOut, "%d, %d, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, (uint)us, getSeed(), (uint)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
+					sprintf_s(szOut, "%d, %d, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, (uint)us, getSeed(), (intptr_t)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
 #else
 					sprintf_s(szOut, "%d, %d, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), (uint)usNum, (uint)us, getSeed(), (uint)this, m_bSynchronous?"sync":"async", (pszLog != NULL)?pszLog:"Unknown");
 #endif
@@ -306,9 +306,9 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 				{
 					char szOut[1024] = { 0 };
 #ifdef AUI_USE_SFMT_RNG
-					sprintf_s(szOut, "%d, %d, %u, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, uiRtnValue, m_ulRandomSeed, m_ulCallCount, (uint)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
+					sprintf_s(szOut, "%d, %d, %u, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, uiRtnValue, m_ulRandomSeed, m_ulCallCount, (intptr_t)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
 #else
-					sprintf_s(szOut, "%d, %d, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, (uint)usRet, getSeed(), (uint)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
+					sprintf_s(szOut, "%d, %d, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, (uint)usRet, getSeed(), (intptr_t)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
 #endif
 					pLog->Msg(szOut);
 

@@ -180,7 +180,11 @@ CvString CvGameCulture::GetGreatWorkTooltip(int iIndex, PlayerTypes eOwner) cons
 	szTooltip = strGreatWorkName.toUTF8();
 	szTooltip += "[NEWLINE]";
 
+#ifdef AUI_WARNING_FIXES
+	if (pWork->m_szGreatPersonName[0] != '\0')
+#else
 	if (strlen(pWork->m_szGreatPersonName) > 0)
+#endif
 	{
 		szTooltip += pWork->m_szGreatPersonName;
 		szTooltip += "[NEWLINE]";
@@ -702,6 +706,8 @@ CvGreatWorkInMyEmpire::CvGreatWorkInMyEmpire()
 , m_eBuilding(NO_BUILDING)
 #ifdef AUI_WARNING_FIXES
 , m_iSlot(MAX_UNSIGNED_INT)
+, m_ePlayer(NO_PLAYER)
+, m_eEra(NO_ERA)
 #else
 , m_iSlot(-1)
 #endif
@@ -1151,7 +1157,11 @@ void CvPlayerCulture::MoveWorks (GreatWorkSlotType eType, vector<CvGreatWorkBuil
 
 	// First building that are not endangered
 	vector<CvGreatWorkBuildingInMyEmpire>::iterator itBuilding;
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (itBuilding = buildings.begin(); itBuilding != buildings.end(); ++itBuilding)
+#else
 	for (itBuilding = buildings.begin(); itBuilding != buildings.end(); itBuilding++)
+#endif
 	{
 		if (!itBuilding->m_bEndangered)
 		{
@@ -1164,7 +1174,11 @@ void CvPlayerCulture::MoveWorks (GreatWorkSlotType eType, vector<CvGreatWorkBuil
 	}
 
 	// Then endangered ones
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (itBuilding = buildings.begin(); itBuilding != buildings.end(); ++itBuilding)
+#else
 	for (itBuilding = buildings.begin(); itBuilding != buildings.end(); itBuilding++)
+#endif
 	{
 		if (itBuilding->m_bEndangered)
 		{
@@ -1233,14 +1247,22 @@ void CvPlayerCulture::MoveWorks (GreatWorkSlotType eType, vector<CvGreatWorkBuil
 	}
 
 	// Fill unthemed buildings, first those that aren't endangered
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (itBuilding = buildings.begin(); itBuilding != buildings.end(); ++itBuilding)
+#else
 	for (itBuilding = buildings.begin(); itBuilding != buildings.end(); itBuilding++)
+#endif
 	{
 		if (!itBuilding->m_bEndangered && !itBuilding->m_bThemed)
 		{
 			FillBuilding(itBuilding, works1, works2);
 		}
 	}
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (itBuilding = buildings.begin(); itBuilding != buildings.end(); ++itBuilding)
+#else
 	for (itBuilding = buildings.begin(); itBuilding != buildings.end(); itBuilding++)
+#endif
 	{
 		if (itBuilding->m_bEndangered && !itBuilding->m_bThemed)
 		{
@@ -3026,7 +3048,11 @@ CvString CvPlayerCulture::GetInfluenceSpyRankTooltip(CvString szName, CvString s
 }
 
 /// What is my total tourism per turn (before modifiers)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+int CvPlayerCulture::GetTourism() const
+#else
 int CvPlayerCulture::GetTourism()
+#endif
 {
 	int iRtnValue = 0;
 
@@ -3279,11 +3305,13 @@ CvString CvPlayerCulture::GetTourismModifierWithTooltip(PlayerTypes ePlayer) con
 		{
 			szRtnValue += "[COLOR_GREY]" + GetLocalizedText("TXT_KEY_CO_PLAYER_TOURISM_PROPAGANDA", 0) + "[ENDCOLOR]";
 		}
+#ifndef AUI_WARNING_FIXES
 	}
 
 	// NEGATIVE MODIFIERS
 	if (eMyIdeology != NO_POLICY_BRANCH_TYPE && eTheirIdeology != NO_POLICY_BRANCH_TYPE && eMyIdeology != eTheirIdeology)
 	{
+#endif
 		szRtnValue += "[COLOR_NEGATIVE_TEXT]" + GetLocalizedText("TXT_KEY_CO_PLAYER_TOURISM_DIFFERENT_IDEOLOGIES", GC.getTOURISM_MODIFIER_DIFFERENT_IDEOLOGIES()) + "[ENDCOLOR]";
 	}
 
@@ -4381,7 +4409,7 @@ GreatWorkSlotType CvCityCulture::GetSlotTypeFirstAvailableCultureBuilding() cons
 }
 
 /// Compute raw tourism from this city
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_WARNING_FIXES)
 int CvCityCulture::GetBaseTourismBeforeModifiers() const
 #else
 int CvCityCulture::GetBaseTourismBeforeModifiers()
@@ -4488,7 +4516,11 @@ int CvCityCulture::GetBaseTourismBeforeModifiers()
 }
 
 /// What is the tourism output ignoring player-specific modifiers?
+#if defined(AUI_CONSTIFY) || defined(AUI_WARNING_FIXES)
+int CvCityCulture::GetBaseTourism() const
+#else
 int CvCityCulture::GetBaseTourism()
+#endif
 {
 	int iBase = GetBaseTourismBeforeModifiers();
 
@@ -5085,9 +5117,16 @@ CvString CvCityCulture::GetTourismTooltip()
 CvString CvCityCulture::GetFilledSlotsTooltip()
 {
 	CvString szRtnValue = "";
+#ifdef AUI_WARNING_FIXES
+	const CvCityBuildings* pCityBuildings = m_pCity->GetCityBuildings();
+	const int iGWWriting = pCityBuildings->GetNumGreatWorks(CvTypes::getGREAT_WORK_SLOT_LITERATURE());
+	const int iGWArt = pCityBuildings->GetNumGreatWorks(CvTypes::getGREAT_WORK_SLOT_ART_ARTIFACT());
+	const int iGWMusic = pCityBuildings->GetNumGreatWorks(CvTypes::getGREAT_WORK_SLOT_MUSIC());
+#else
 	const int iGWWriting = m_pCity->GetCityBuildings()->GetNumGreatWorks(CvTypes::getGREAT_WORK_SLOT_LITERATURE());
 	const int iGWArt = m_pCity->GetCityBuildings()->GetNumGreatWorks(CvTypes::getGREAT_WORK_SLOT_ART_ARTIFACT());
 	const int iGWMusic = m_pCity->GetCityBuildings()->GetNumGreatWorks(CvTypes::getGREAT_WORK_SLOT_MUSIC());
+#endif
 	szRtnValue = GetLocalizedText("TXT_KEY_CO_GREAT_WORK_TT", iGWWriting, iGWArt, iGWMusic);
 
 	return szRtnValue;
@@ -5100,6 +5139,19 @@ CvString CvCityCulture::GetTotalSlotsTooltip()
 	CvString szTemp1, szTemp2, szTemp3;
 	
 	GreatWorkSlotType eLiteratureSlot = CvTypes::getGREAT_WORK_SLOT_LITERATURE();
+#ifdef AUI_WARNING_FIXES
+	const CvCityBuildings* pCityBuildings = m_pCity->GetCityBuildings();
+	int iFilledWriting = pCityBuildings->GetNumGreatWorks(eLiteratureSlot);
+	int iGWWriting = iFilledWriting + pCityBuildings->GetNumAvailableGreatWorkSlots(eLiteratureSlot);
+
+	GreatWorkSlotType eArtArtifactSlot = CvTypes::getGREAT_WORK_SLOT_ART_ARTIFACT();
+	int iFilledArt = pCityBuildings->GetNumGreatWorks(eArtArtifactSlot);
+	int iGWArt = iFilledArt + pCityBuildings->GetNumAvailableGreatWorkSlots(eArtArtifactSlot);
+
+	GreatWorkSlotType eMusicSlot = CvTypes::getGREAT_WORK_SLOT_MUSIC();
+	int iFilledMusic = pCityBuildings->GetNumGreatWorks(eMusicSlot);
+	int iGWMusic = iFilledMusic + pCityBuildings->GetNumAvailableGreatWorkSlots(eMusicSlot);
+#else
 	int iFilledWriting = m_pCity->GetCityBuildings()->GetNumGreatWorks(eLiteratureSlot);
 	int iGWWriting = iFilledWriting + m_pCity->GetCityBuildings()->GetNumAvailableGreatWorkSlots(eLiteratureSlot);
 
@@ -5110,6 +5162,7 @@ CvString CvCityCulture::GetTotalSlotsTooltip()
 	GreatWorkSlotType eMusicSlot = CvTypes::getGREAT_WORK_SLOT_MUSIC();
 	int iFilledMusic = m_pCity->GetCityBuildings()->GetNumGreatWorks(eMusicSlot);
 	int iGWMusic = iFilledMusic + m_pCity->GetCityBuildings()->GetNumAvailableGreatWorkSlots(eMusicSlot);
+#endif
 
 	szTemp1 = GetLocalizedText("TXT_KEY_CO_GREAT_WORK_SLOTS_TT_ENTRY", iFilledWriting, iGWWriting);
 	szTemp2 = GetLocalizedText("TXT_KEY_CO_GREAT_WORK_SLOTS_TT_ENTRY", iFilledArt, iGWArt);

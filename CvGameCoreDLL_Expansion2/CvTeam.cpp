@@ -2411,7 +2411,11 @@ int CvTeam::countEnemyDangerByArea(CvArea* pArea) const
 			{
 				if(pLoopPlot->getTeam() == GetID())
 				{
+#ifdef AUI_WARNING_FIXES
+					iCount += pLoopPlot->plotCount(PUF_canDefendEnemy, getLeaderID(), -1, NO_PLAYER, NO_TEAM, PUF_isVisible, getLeaderID());
+#else
 					iCount += pLoopPlot->plotCount(PUF_canDefendEnemy, getLeaderID(), false, NO_PLAYER, NO_TEAM, PUF_isVisible, getLeaderID());
+#endif
 				}
 			}
 		}
@@ -7145,6 +7149,86 @@ int CvTeam::GetIgnoreWarningCount (TeamTypes eTeam)
 
 	return m_aiIgnoreWarningCount[eTeam];
 }
+
+#ifdef AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+int CvTeam::calculateResearchModifier(TechTypes eTech) const
+{
+	int iModifier = 100;
+
+	if (NO_TECH == eTech)
+	{
+		return iModifier;
+	}
+
+#ifdef AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
+	if (!GC.getGame().isOption("GAMEOPTION_NO_TECH_COST_TOTAL_KNOWN_TEAM_MODIFIER"))
+	{
+#endif
+	int iKnownCount = 0;
+	int iPossibleKnownCount = 0;
+	for (int iI = 0; iI < MAX_CIV_TEAMS; iI++)
+	{
+		if (GetID() == iI)
+			continue;
+		CvTeam& kLoopTeam = GET_TEAM((TeamTypes)iI);
+		if (kLoopTeam.isAlive() && !kLoopTeam.isMinorCiv())
+		{
+			if (isHasMet((TeamTypes)iI))
+			{
+				if (kLoopTeam.GetTeamTechs()->HasTech(eTech))
+				{
+					iKnownCount++;
+				}
+			}
+			iPossibleKnownCount++;
+		}
+	}
+	if (iPossibleKnownCount > 0)
+	{
+		iModifier += (GC.getTECH_COST_TOTAL_KNOWN_TEAM_MODIFIER() * iKnownCount) / iPossibleKnownCount;
+	}
+#ifdef AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
+	}
+#endif
+
+	int iPossiblePaths = 0;
+	int iUnknownPaths = 0;
+#ifdef AUI_WARNING_FIXES
+	const CvTechEntry* pLoopTechInfo = NULL;
+	for (int iI = 0; iI < GC.getNUM_OR_TECH_PREREQS(); iI++)
+	{
+		pLoopTechInfo = GC.getTechInfo(eTech);
+		if (pLoopTechInfo && pLoopTechInfo->GetPrereqOrTechs(iI) != NO_TECH)
+		{
+			if (!GetTeamTechs()->HasTech(TechTypes(pLoopTechInfo->GetPrereqOrTechs(iI))))
+#else
+	for (int iI = 0; iI < GC.getNUM_OR_TECH_PREREQS(); iI++)
+	{
+		if (GC.getTechInfo(eTech)->GetPrereqOrTechs(iI) != NO_TECH)
+		{
+			if (!GetTeamTechs()->HasTech((TechTypes)(GC.getTechInfo(eTech)->GetPrereqOrTechs(iI))))
+#endif
+			{
+				iUnknownPaths++;
+			}
+
+			iPossiblePaths++;
+		}
+	}
+	CvAssertMsg(iPossiblePaths >= iUnknownPaths, "The number of possible paths is expected to match or exceed the number of unknown ones");
+	iModifier += (iPossiblePaths - iUnknownPaths) * GC.getTECH_COST_KNOWN_PREREQ_MODIFIER();
+
+	// Leagues mod
+	int iLeaguesMod = GC.getGame().GetGameLeagues()->GetResearchMod(GetID(), eTech);
+	if (iLeaguesMod != 0)
+	{
+		iModifier *= (100 + iLeaguesMod);
+		iModifier /= 100;
+	}
+
+	return iModifier;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 #ifdef AUI_GAME_BETTER_HYBRID_MODE

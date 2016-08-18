@@ -35,6 +35,14 @@ CvHomelandUnit::CvHomelandUnit() :
 /// Constructor
 CvHomelandAI::CvHomelandAI(void)
 {
+#ifdef AUI_WARNING_FIXES
+	m_pPlayer = NULL;
+	Reset();
+	m_iRandomRange = 0;
+	m_iDefensiveMoveTurns = 0;
+	m_iUpgradeMoveTurns = 0;
+	m_fFlavorDampening = 0;
+#endif
 }
 
 /// Destructor
@@ -695,7 +703,7 @@ void CvHomelandAI::AssignHomelandMoves()
 	{
 		CvHomelandMove move = *it;
 
-#ifdef AUI_PERF_LOGGING_FORMATTING_TWEAKS
+#if defined(AUI_PERF_LOGGING_FORMATTING_TWEAKS) && !defined(FINAL_RELEASE)
 		static const char* aHomelandMoves[] = { "AI_HOMELAND_MOVE_UNASSIGNED",
 			"AI_HOMELAND_MOVE_EXPLORE",
 			"AI_HOMELAND_MOVE_EXPLORE_SEA",
@@ -850,7 +858,11 @@ void CvHomelandAI::PlotExplorerMoves()
 		if(pUnit)
 		{
 			if(pUnit->AI_getUnitAIType() == UNITAI_EXPLORE ||
+#ifdef AUI_WARNING_FIXES
+					(pUnit->IsAutomated() && pUnit->getDomainType() == DOMAIN_LAND && pUnit->GetAutomateType() == AUTOMATE_EXPLORE))
+#else
 			        pUnit->IsAutomated() && pUnit->getDomainType() == DOMAIN_LAND && pUnit->GetAutomateType() == AUTOMATE_EXPLORE)
+#endif
 			{
 				CvHomelandUnit unit;
 				unit.SetID(pUnit->GetID());
@@ -879,7 +891,11 @@ void CvHomelandAI::PlotExplorerSeaMoves()
 		if(pUnit)
 		{
 			if(pUnit->AI_getUnitAIType() == UNITAI_EXPLORE_SEA ||
+#ifdef AUI_WARNING_FIXES
+					(pUnit->IsAutomated() && pUnit->getDomainType() == DOMAIN_SEA && pUnit->GetAutomateType() == AUTOMATE_EXPLORE))
+#else
 			        pUnit->IsAutomated() && pUnit->getDomainType() == DOMAIN_SEA && pUnit->GetAutomateType() == AUTOMATE_EXPLORE)
+#endif
 			{
 				CvHomelandUnit unit;
 				unit.SetID(pUnit->GetID());
@@ -1195,7 +1211,11 @@ void CvHomelandAI::PlotWorkerMoves()
 		if(pUnit)
 		{
 			if(pUnit->AI_getUnitAIType() == UNITAI_WORKER  ||
+#ifdef AUI_WARNING_FIXES
+				(pUnit->IsAutomated() && pUnit->getDomainType() == DOMAIN_LAND && pUnit->GetAutomateType() == AUTOMATE_BUILD))
+#else
 			        pUnit->IsAutomated() && pUnit->getDomainType() == DOMAIN_LAND && pUnit->GetAutomateType() == AUTOMATE_BUILD)
+#endif
 			{
 				CvHomelandUnit unit;
 				unit.SetID(pUnit->GetID());
@@ -1250,7 +1270,11 @@ void CvHomelandAI::PlotWorkerSeaMoves()
 		if(pUnit)
 		{
 			if(pUnit->AI_getUnitAIType() == UNITAI_WORKER_SEA  ||
+#ifdef AUI_WARNING_FIXES
+				(pUnit->IsAutomated() && pUnit->getDomainType() == DOMAIN_SEA && pUnit->GetAutomateType() == AUTOMATE_BUILD))
+#else
 			   pUnit->IsAutomated() && pUnit->getDomainType() == DOMAIN_SEA && pUnit->GetAutomateType() == AUTOMATE_BUILD)
+#endif
 			{
 				CvHomelandUnit unit;
 				unit.SetID(pUnit->GetID());
@@ -1542,11 +1566,13 @@ void CvHomelandAI::PlotUpgradeMoves()
 			}
 			iGoldPriority = GC.getAI_GOLD_PRIORITY_UPGRADE_BASE();
 			iGoldPriority += GC.getAI_GOLD_PRIORITY_UPGRADE_PER_FLAVOR_POINT() * iCurrentFlavorMilitaryTraining;
+#ifndef AUI_WARNING_FIXES
 		}
 
 		// Start saving
 		if(bRequiresGold)
 		{
+#endif
 			m_pPlayer->GetEconomicAI()->CancelSaveForPurchase(PURCHASE_TYPE_UNIT_UPGRADE);
 			m_pPlayer->GetEconomicAI()->StartSaveForPurchase(PURCHASE_TYPE_UNIT_UPGRADE, iAmountRequired, iGoldPriority);
 		}
@@ -1600,7 +1626,13 @@ void CvHomelandAI::PlotUpgradeMoves()
 					{
 						CvString strLogString;
 						CvString strTemp;
+#ifdef AUI_WARNING_FIXES
+						CvUnitEntry* pTempUnitInfo = GC.getUnitInfo(pUnit->getUnitType());
+						if (pTempUnitInfo)
+							strTemp = pTempUnitInfo->GetDescription();
+#else
 						strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 						strLogString.Format("Moving %s for upgrade at %s, GOLD: Available = %d, Needed = %d, Priority = %d, Dist = %d",
 						                    strTemp.GetCString(), pUpgradeCity->getName().GetCString(),
 						                    m_pPlayer->GetTreasury()->GetGold(), iAmountRequired, iGoldPriority, iBestDistance);
@@ -2303,7 +2335,11 @@ void CvHomelandAI::ExecuteExplorerMoves()
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		if (pGoodyPlot && (pGoodyPlot->isGoody(m_pPlayer->getTeam()) || (pGoodyPlot->HasBarbarianCamp() && !pGoodyPlot->isVisibleEnemyDefender(pUnit.pointer()))))
+#else
 		if(pGoodyPlot && (pGoodyPlot->isGoody(m_pPlayer->getTeam()) || (pGoodyPlot->HasBarbarianCamp()) && !pGoodyPlot->isVisibleEnemyDefender(pUnit.pointer())))
+#endif
 		{
 			bool bCanFindPath = false;
 			if (pkStepPlot)	// Do we already have our first step point?
@@ -3037,7 +3073,13 @@ void CvHomelandAI::ExecuteMovesToSafestPlot()
 				{
 					CvString strLogString;
 					CvString strTemp;
+#ifdef AUI_WARNING_FIXES
+					CvUnitEntry* pTempUnitInfo = GC.getUnitInfo(pUnit->getUnitType());
+					if (pTempUnitInfo)
+						strTemp = pTempUnitInfo->GetDescription();
+#else
 					strTemp = GC.getUnitInfo(pUnit->getUnitType())->GetDescription();
+#endif
 					strLogString.Format("Moving %s to safety, X: %d, Y: %d", strTemp.GetCString(), pBestPlot->getX(), pBestPlot->getY());
 					LogHomelandMessage(strLogString);
 				}

@@ -29,7 +29,11 @@
 /// Constructor
 CvArmyAI::CvArmyAI()
 {
+#ifdef AUI_WARNING_FIXES
+	Reset(0, NO_PLAYER, -1, true);
+#else
 	Reset(0, NO_PLAYER, true);
+#endif
 }
 
 /// Destructor

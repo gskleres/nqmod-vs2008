@@ -205,7 +205,11 @@ public:
 
 	// Public logging functions
 	void LogHurry(HurryTypes iHurryType, int iHurryAmount, int iHurryAmountAvailable, int iTurnsSaved);
+#ifdef AUI_WARNING_FIXES
+	void LogCityProduction(const CvCityBuildable& Buildable, bool bRush);
+#else
 	void LogCityProduction(CvCityBuildable Buildable, bool bRush);
+#endif
 
 private:
 

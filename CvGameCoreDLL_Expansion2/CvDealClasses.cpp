@@ -159,6 +159,10 @@ CvDeal::CvDeal()
 	m_eRequestingPlayer = NO_PLAYER;
 	m_TradedItems.clear();
 	m_iStartTurn = 0;
+#ifdef AUI_WARNING_FIXES
+	m_iFinalTurn = 0;
+	m_iDuration = 0;
+#endif
 	m_bConsideringForRenewal = false;
 	m_bCheckedForRenewal = false;
 	m_bDealCancelled = false;
@@ -933,10 +937,14 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 		int iID = iData1;
 		//antonjs: todo: verify iChoice is valid as well:
 		//int iChoice = iData2;
+#ifdef CVASSERT_ENABLE
 		int iNumVotes = iData3;
+#endif
 		bool bRepeal = bFlag1;
 
+#ifdef CVASSERT_ENABLE
 		DEBUG_VARIABLE(iNumVotes);
+#endif
 
 #ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 		if(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() == 0)
@@ -948,7 +956,9 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 			return false;
 
 		CvAssert(pLeague->IsProposed(iID, bRepeal));
+#ifdef CVASSERT_ENABLE
 		CvAssert(iNumVotes <= pLeague->GetCoreVotesForMember(ePlayer));
+#endif
 		
 		// Can't already have a vote commitment in the deal
 		if(!bFinalizing && IsVoteCommitmentTrade(ePlayer))
@@ -2012,7 +2022,11 @@ void CvDeal::RemoveThirdPartyWar(PlayerTypes eFrom, TeamTypes eThirdPartyTeam)
 	for(it = m_TradedItems.begin(); it != m_TradedItems.end(); ++it)
 	{
 		if(it->m_eItemType == TRADE_ITEM_THIRD_PARTY_WAR &&
+#ifdef AUI_WARNING_FIXES
+				(TeamTypes)it->m_iData1 == eThirdPartyTeam &&
+#else
 		        (PlayerTypes)it->m_iData1 == eThirdPartyTeam &&
+#endif
 		        (PlayerTypes)it->m_eFromPlayer == eFrom)
 		{
 			m_TradedItems.erase(it);
@@ -2062,7 +2076,11 @@ void CvDeal::ChangeThirdPartyWarDuration(PlayerTypes eFrom, TeamTypes eThirdPart
 	for(it = m_TradedItems.begin(); it != m_TradedItems.end(); ++it)
 	{
 		if(it->m_eItemType == TRADE_ITEM_THIRD_PARTY_WAR &&
+#ifdef AUI_WARNING_FIXES
+				(TeamTypes)it->m_iData1 == eThirdPartyTeam &&
+#else
 		        (PlayerTypes)it->m_iData1 == eThirdPartyTeam &&
+#endif
 		        (PlayerTypes)it->m_eFromPlayer == eFrom)
 		{
 			it->m_iDuration = iNewDuration;
@@ -2262,7 +2280,11 @@ void CvGameDeals::Init()
 }
 
 /// Save off a new deal that has been agreed to
+#ifdef AUI_WARNING_FIXES
+void CvGameDeals::AddProposedDeal(const CvDeal& kDeal)
+#else
 void CvGameDeals::AddProposedDeal(CvDeal kDeal)
+#endif
 {
 	// Store Deal away
 	m_ProposedDeals.push_back(kDeal);
@@ -2711,7 +2733,9 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 					if (itemIter->m_iTurnsRemaining != 0)  // if this was the last turn the deal was ending anyways
 					{
 						// check to see if we are negative on resource or gold
+#ifndef AUI_WARNING_FIXES
 						bool bHaveEnoughGold = true;
+#endif
 						bool bHaveEnoughResource = true;
 						//if (itemIter->m_eItemType == TRADE_ITEM_GOLD_PER_TURN)
 						//{
@@ -2732,7 +2756,11 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 							break;
 						}
 
+#ifdef AUI_WARNING_FIXES
+						if (/*!bHaveEnoughGold ||*/ !bHaveEnoughResource)
+#else
 						if (!bHaveEnoughGold || !bHaveEnoughResource)
+#endif
 						{
 							bInvalidDeal = true;
 						}

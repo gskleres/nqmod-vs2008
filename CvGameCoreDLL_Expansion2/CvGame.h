@@ -150,7 +150,11 @@ public:
 #endif
 	int getNumSequentialHumans(PlayerTypes ignorePlayer = NO_PLAYER);
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int getGameTurn() const;
+#else
 	int getGameTurn();
+#endif
 	void setGameTurn(int iNewValue);
 	void incrementGameTurn();
 	int getTurnYear(int iGameTurn);
@@ -560,8 +564,13 @@ public:
 	CvAdvisorCounsel* GetAdvisorCounsel();
 	CvAdvisorRecommender* GetAdvisorRecommender();
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int GetTurnsBetweenMinorCivElections() const;
+	int GetTurnsUntilMinorCivElection() const;
+#else
 	int GetTurnsBetweenMinorCivElections();
 	int GetTurnsUntilMinorCivElection();
+#endif
 
 	void LogGameState(bool bLogHeaders = false);
 	void unitIsMoving();

@@ -35,14 +35,23 @@ public:
 	void InitializeArray(int*& pArray, const size_t count, int iDefault = 0);
 	void InitializeArray(bool*& pArray, const size_t count, bool bDefault = false);
 	void InitializeArray(float*& pArray, const size_t count, float fDefault = 0.0f);
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	bool Initialize2DArray(int**& ppArray, const size_t iCount1, const size_t iCount2, int iDefault = 0);
+#else
 	void Initialize2DArray(int**& ppArray, const size_t iCount1, const size_t iCount2, int iDefault = 0);
+#endif
 
 	//!Allocates an array to Count(szTableName) and zero's memory.
 	template<typename T>
 void InitializeArray(T*& pArray, const char* szTableName, T default = (T)0);
 
 	bool Initialize2DArray(int**& pArray, const char* szTable1Name, const char* szTable2Name, int iDefault = 0);
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	void SafeDelete2DArray(int**& ppArray, const char* szTable1Name);
+	static void SafeDelete2DArray(int**& ppArray, const size_t iRowCount);
+#else
 	static void SafeDelete2DArray(int**& pArray);
+#endif
 
 
 	//!Allocates an array to Count(szTypeTableName) and initializes to false.
@@ -114,6 +123,9 @@ private:
 inline void CvDatabaseUtility::InitializeArray(int*& pArray, const size_t count, int iDefault)
 {
 	CvAssertMsg(count > 0, "Initializing array to 0 or less items.");
+#ifdef AUI_WARNING_FIXES
+	delete[] pArray;
+#endif
 	pArray = FNEW(int[count], c_eCiv5GameplayDLL, 0);
 	if(iDefault == 0)
 	{
@@ -129,8 +141,15 @@ inline void CvDatabaseUtility::InitializeArray(int*& pArray, const size_t count,
 inline void CvDatabaseUtility::InitializeArray(bool*& pArray, const size_t count, bool bDefault)
 {
 	CvAssertMsg(count > 0, "Initializing array to 0 or less items.");
+#ifdef AUI_WARNING_FIXES
+	delete[] pArray;
+#endif
 	pArray = FNEW(bool[count], c_eCiv5GameplayDLL, 0);
+#ifdef AUI_WARNING_FIXES
+	if (bDefault == false)
+#else
 	if(bDefault == 0.0f)
+#endif
 	{
 		ZeroMemory(pArray, sizeof(bool) * count);
 	}
@@ -144,6 +163,9 @@ inline void CvDatabaseUtility::InitializeArray(bool*& pArray, const size_t count
 inline void CvDatabaseUtility::InitializeArray(float*& pArray, const size_t count, float fDefault)
 {
 	CvAssertMsg(count > 0, "Initializing array to 0 or less items.");
+#ifdef AUI_WARNING_FIXES
+	delete[] pArray;
+#endif
 	pArray = FNEW(float[count], c_eCiv5GameplayDLL, 0);
 	if(fDefault == 0.0f)
 	{

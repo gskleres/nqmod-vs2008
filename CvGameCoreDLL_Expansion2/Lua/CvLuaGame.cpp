@@ -1461,7 +1461,11 @@ int CvLuaGame::lSetVictoryValid(lua_State* L)
 	bool bValid = lua_toboolean(L, 2);
 	game.setVictoryValid(eVictoryType, bValid);
 
+#ifdef AUI_WARNING_FIXES
+	return 0;
+#else
 	return true;
+#endif
 }
 //------------------------------------------------------------------------------
 //bool isSpecialUnitValid(SpecialUnitTypes eSpecialUnitType);
@@ -2162,9 +2166,14 @@ int CvLuaGame::lGetAvailablePantheonBeliefs(lua_State* L)
 	const int t = lua_gettop(L);
 	int idx = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = GC.getGame().GetGameReligions()->GetAvailablePantheonBeliefs();
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = GC.getGame().GetGameReligions()->GetAvailablePantheonBeliefs();
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		lua_pushinteger(L, eBelief);
@@ -2180,9 +2189,14 @@ int CvLuaGame::lGetAvailableFounderBeliefs(lua_State* L)
 	const int t = lua_gettop(L);
 	int idx = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableFounderBeliefs();
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableFounderBeliefs();
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		lua_pushinteger(L, eBelief);
@@ -2198,9 +2212,14 @@ int CvLuaGame::lGetAvailableFollowerBeliefs(lua_State* L)
 	const int t = lua_gettop(L);
 	int idx = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableFollowerBeliefs();
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableFollowerBeliefs();
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		lua_pushinteger(L, eBelief);
@@ -2216,9 +2235,14 @@ int CvLuaGame::lGetAvailableEnhancerBeliefs(lua_State* L)
 	const int t = lua_gettop(L);
 	int idx = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableEnhancerBeliefs();
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableEnhancerBeliefs();
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		lua_pushinteger(L, eBelief);
@@ -2234,9 +2258,14 @@ int CvLuaGame::lGetAvailableBonusBeliefs(lua_State* L)
 	const int t = lua_gettop(L);
 	int idx = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableBonusBeliefs();
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableBonusBeliefs();
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		lua_pushinteger(L, eBelief);
@@ -2252,9 +2281,14 @@ int CvLuaGame::lGetAvailableReformationBeliefs(lua_State* L)
 	const int t = lua_gettop(L);
 	int idx = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableReformationBeliefs();
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = GC.getGame().GetGameReligions()->GetAvailableReformationBeliefs();
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		lua_pushinteger(L, eBelief);
@@ -2293,7 +2327,11 @@ int CvLuaGame::lGetBeliefsInReligion(lua_State* L)
 	const int t = lua_gettop(L);
 	int idx = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const CvReligionBeliefs& beliefs = GC.getGame().GetGameReligions()->GetReligion(eReligion, NO_PLAYER)->m_Beliefs;
+#else
 	CvReligionBeliefs beliefs = GC.getGame().GetGameReligions()->GetReligion(eReligion, NO_PLAYER)->m_Beliefs;
+#endif
 	for(int iI = 0; iI < beliefs.GetNumBeliefs(); iI++)
 	{
 		const BeliefTypes eBelief = beliefs.GetBelief(iI);
@@ -2352,7 +2390,11 @@ int CvLuaGame::lGetReligionName(lua_State* L)
 {
 	const ReligionTypes eReligion = static_cast<ReligionTypes>(luaL_checkint(L, 1));
 	const CvReligion* pkReligion = GC.getGame().GetGameReligions()->GetReligion(eReligion, NO_PLAYER);
+#ifdef AUI_WARNING_FIXES
+	if (pkReligion && pkReligion->m_szCustomName[0] != '\0')
+#else
 	if(pkReligion && strlen(pkReligion->m_szCustomName) > 0)
+#endif
 	{
 		lua_pushstring(L, pkReligion->m_szCustomName);
 		return 1;

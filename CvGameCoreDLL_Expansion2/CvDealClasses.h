@@ -63,8 +63,13 @@ struct CvTradedItem
 	int m_iData1;					// Any additional data?
 	int m_iData2;
 	int m_iData3;
+#ifdef AUI_WARNING_FIXES
+	PlayerTypes m_eFromPlayer;      // Which player is giving up this item?
+	bool m_bFlag1;
+#else
 	bool m_bFlag1;
 	PlayerTypes m_eFromPlayer;      // Which player is giving up this item?
+#endif
 	bool m_bFromRenewed;		    // Was this trade item used in a renewal?
 	bool m_bToRenewed;				// Was this trade item
 };
@@ -249,7 +254,11 @@ public:
 	virtual ~CvGameDeals();
 	void Init();
 
+#ifdef AUI_WARNING_FIXES
+	void AddProposedDeal(const CvDeal& kDeal);
+#else
 	void AddProposedDeal(CvDeal kDeal);
+#endif
 	bool FinalizeDeal(PlayerTypes eFromPlayer, PlayerTypes eToPlayer, bool bAccepted);
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	void DoTurn(PlayerTypes eForPlayer);

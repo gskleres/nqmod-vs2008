@@ -128,7 +128,10 @@ bool CvCitySpecializationXMLEntry::IsOperationUnitProvider() const
 /// Constructor
 CvCitySpecializationXMLEntries::CvCitySpecializationXMLEntries(void)
 {
-
+#ifdef AUI_WARNING_FIXES
+	m_CurrentIndex = 0;
+	m_CurrentYield = NO_YIELD;
+#endif
 }
 
 /// Destructor
@@ -172,7 +175,11 @@ CitySpecializationTypes CvCitySpecializationXMLEntries::GetFirstSpecializationFo
 /// Find the next specialization for a yield
 CitySpecializationTypes CvCitySpecializationXMLEntries::GetNextSpecializationForYield()
 {
+#ifdef AUI_WARNING_FIXES
+	for (m_CurrentIndex = m_CurrentIndex + 1; m_CurrentIndex < (int)m_paCitySpecializationEntries.size(); m_CurrentIndex++)
+#else
 	for(m_CurrentIndex = m_CurrentIndex++; m_CurrentIndex < (int)m_paCitySpecializationEntries.size(); m_CurrentIndex++)
+#endif
 	{
 		if(m_paCitySpecializationEntries[m_CurrentIndex]->GetYieldType() == m_CurrentYield)
 		{
@@ -220,6 +227,14 @@ CvCitySpecializationAI::CvCitySpecializationAI():
 	m_eNextWonderDesired(NO_BUILDING),
 	m_iWonderCityID(-1),
 	m_iNextWonderWeight(0),
+#ifdef AUI_WARNING_FIXES
+	m_pPlayer(NULL),
+	m_pSpecializations(NULL),
+	m_bWonderChosen(false),
+	m_iBestValue(),
+	m_iNumSpecializationsForThisYield(),
+	m_iNumSpecializationsForThisSubtype(),
+#endif
 	m_iLastTurnEvaluated(0)
 {
 }
@@ -1660,7 +1675,11 @@ void CvCitySpecializationAI::LogBestSites()
 	}
 }
 
+#ifdef AUI_WARNING_FIXES
+void CvCitySpecializationAI::LogCity(CvCity* pCity, const CitySpecializationData& data)
+#else
 void CvCitySpecializationAI::LogCity(CvCity* pCity, CitySpecializationData data)
+#endif
 {
 	if(GC.getLogging() && GC.getAILogging())
 	{

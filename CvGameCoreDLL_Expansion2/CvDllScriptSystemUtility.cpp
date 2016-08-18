@@ -142,7 +142,9 @@ ICvUnit1* CvDllScriptSystemUtility::GetCvUnitInstance(lua_State* L, int index, b
 void CvDllScriptSystemUtility::PushReplayFromStream(lua_State* L, FDataStream& stream)
 {
 	CvReplayInfo* pkReplay = FNEW(CvReplayInfo(), c_eMPoolTypeGame, 0);
+#ifndef AUI_WARNING_FIXES
 	if(pkReplay)
+#endif
 	{
 		if(!pkReplay->read(stream))
 		{

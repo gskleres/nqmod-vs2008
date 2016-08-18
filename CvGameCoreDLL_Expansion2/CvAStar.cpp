@@ -94,7 +94,12 @@ static void PrefetchRegionCvAStar(const char* pHead, const uint uiSize)
 
 //	--------------------------------------------------------------------------------
 /// Constructor
+#ifdef AUI_WARNING_FIXES
+CvAStar::CvAStar() : m_ScratchBuffer(), m_iColumns(0), m_iRows(0), m_iXstart(0), m_iYstart(0), m_iXdest(0), m_iYdest(0), m_iInfo(0),
+m_bWrapX(false), m_bWrapY(false), m_bForceReset(false)
+#else
 CvAStar::CvAStar()
+#endif
 {
 	udIsPathDest = NULL;
 	udDestValid = NULL;
@@ -120,6 +125,14 @@ CvAStar::CvAStar()
 
 	m_bIsMPCacheSafe = false;
 	m_bDataChangeInvalidatesCache = false;
+#ifdef AUI_WARNING_FIXES
+#ifdef AUI_ASTAR_TURN_LIMITER
+	m_iMaxTurns = 0;
+#endif
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	m_bIsMultiplayer = false;
+#endif
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -1083,11 +1096,19 @@ int PathDest(int iToX, int iToY, const void* pointer, CvAStar* finder)
 {
 	if(iToX == finder->GetDestX() && iToY == finder->GetDestY())
 	{
+#ifdef AUI_WARNING_FIXES
+		return TRUE;
+#else
 		return true;
+#endif
 	}
 	else
 	{
+#ifdef AUI_WARNING_FIXES
+		return FALSE;
+#else
 		return false;
+#endif
 	}
 }
 
@@ -3902,7 +3923,11 @@ int JoinLandmass(CvAStarNode* parent, CvAStarNode* node, int data, const void* p
 /// Constructor
 CvTwoLayerPathFinder::CvTwoLayerPathFinder()
 {
+#ifdef AUI_WARNING_FIXES
+	this->CvAStar::CvAStar();
+#else
 	CvAStar::CvAStar();
+#endif
 	m_ppaaPartialMoveNodes = NULL;
 }
 
@@ -5246,21 +5271,36 @@ int FindValidDestinationDest(int iToX, int iToY, const void* pointer, CvAStar* f
 
 	if(pToPlot->getNumFriendlyUnitsOfType(pUnit) >= GC.getPLOT_UNIT_LIMIT())
 	{
+#ifdef AUI_WARNING_FIXES
+		return FALSE;
+#else
 		return false;
+#endif
 	}
 
 	if(pToPlot->getNumVisibleEnemyDefenders(pUnit) > 0)
 	{
+#ifdef AUI_WARNING_FIXES
+		return FALSE;
+#else
 		return false;
+#endif
 	}
 
 	// can't capture the unit with a non-combat unit
 	if(!pUnit->IsCombatUnit() && pToPlot->isVisibleEnemyUnit(pUnit))
 	{
+#ifdef AUI_WARNING_FIXES
+		return FALSE;
+	}
+
+	return TRUE;
+#else
 		return false;
 	}
 
 	return true;
+#endif
 }
 
 //	--------------------------------------------------------------------------------

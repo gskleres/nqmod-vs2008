@@ -19,6 +19,9 @@
 /// Constructor
 CvStartPositioner::CvStartPositioner(void)
 {
+#ifdef AUI_WARNING_FIXES
+	m_pSiteEvaluator = NULL;
+#endif
 	m_iRequiredSeparation = 0;
 	m_iBestFoundValueOnMap = 0;
 }

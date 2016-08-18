@@ -366,7 +366,11 @@ public:
 #endif
 
 	void UpdateTradeConnectionWasPlundered();
+#ifdef AUI_WARNING_FIXES
+	void AddTradeConnectionWasPlundered(const TradeConnection& kTradeConnection);
+#else
 	void AddTradeConnectionWasPlundered(const TradeConnection kTradeConnection);
+#endif
 #ifdef AUI_CONSTIFY
 	bool CheckTradeConnectionWasPlundered(const TradeConnection& kTradeConnection) const;
 #else

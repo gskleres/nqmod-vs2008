@@ -496,7 +496,11 @@ CvEconomicAIStrategyXMLEntries* CvEconomicAI::GetEconomicAIStrategies()
 }
 
 /// Returns whether or not a player has adopted this Strategy
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+bool CvEconomicAI::IsUsingStrategy(EconomicAIStrategyTypes eStrategy) const
+#else
 bool CvEconomicAI::IsUsingStrategy(EconomicAIStrategyTypes eStrategy)
+#endif
 {
 	return m_pabUsingStrategy[(int) eStrategy];
 }
@@ -522,7 +526,11 @@ void CvEconomicAI::SetUsingStrategy(EconomicAIStrategyTypes eStrategy, bool bVal
 }
 
 /// Returns the turn on which a Strategy was adopted (-1 if it hasn't been)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+int CvEconomicAI::GetTurnStrategyAdopted(EconomicAIStrategyTypes eStrategy) const
+#else
 int CvEconomicAI::GetTurnStrategyAdopted(EconomicAIStrategyTypes eStrategy)
+#endif
 {
 	return m_paiTurnStrategyAdopted[(int) eStrategy];
 }
@@ -861,7 +869,11 @@ CvCity* CvEconomicAI::GetBestGreatWorkCity(CvPlot *pStartPlot, GreatWorkType eGr
 	return pBestCity;
 }
 
+#ifdef AUI_WARNING_FIXES
+void AppendToLog(CvString& strHeader, CvString& strLog, const CvString& strHeaderValue, const CvString& strValue)
+#else
 void AppendToLog(CvString& strHeader, CvString& strLog, CvString strHeaderValue, CvString strValue)
+#endif
 {
 	strHeader += strHeaderValue;
 	strHeader += ",";
@@ -869,7 +881,11 @@ void AppendToLog(CvString& strHeader, CvString& strLog, CvString strHeaderValue,
 	strLog += ",";
 }
 
+#ifdef AUI_WARNING_FIXES
+void AppendToLog(CvString& strHeader, CvString& strLog, const CvString& strHeaderValue, int iValue)
+#else
 void AppendToLog(CvString& strHeader, CvString& strLog, CvString strHeaderValue, int iValue)
+#endif
 {
 	strHeader += strHeaderValue;
 	strHeader += ",";
@@ -878,7 +894,11 @@ void AppendToLog(CvString& strHeader, CvString& strLog, CvString strHeaderValue,
 	strLog += str;
 }
 
+#ifdef AUI_WARNING_FIXES
+void AppendToLog(CvString& strHeader, CvString& strLog, const CvString& strHeaderValue, float fValue)
+#else
 void AppendToLog(CvString& strHeader, CvString& strLog, CvString strHeaderValue, float fValue)
+#endif
 {
 	strHeader += strHeaderValue;
 	strHeader += ",";
@@ -1115,7 +1135,11 @@ void CvEconomicAI::StartSaveForPurchase(PurchaseType ePurchase, int iAmount, int
 }
 
 /// Have we put in a request for this type of purchase?
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+bool CvEconomicAI::IsSavingForThisPurchase(PurchaseType ePurchase) const
+#else
 bool CvEconomicAI::IsSavingForThisPurchase(PurchaseType ePurchase)
+#endif
 {
 	return (m_RequestedSavings[(int)ePurchase].m_iAmount > 0);
 }
@@ -1176,17 +1200,30 @@ bool CvEconomicAI::CanWithdrawMoneyForPurchase(PurchaseType ePurchase, int iAmou
 }
 
 /// Returns amount of gold economic AI is willing to release for this type of purchase. May not be full gold balance if higher priority requests are in. Does not actually spend the gold.
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+int CvEconomicAI::AmountAvailableForPurchase(PurchaseType ePurchase) const
+#else
 int CvEconomicAI::AmountAvailableForPurchase(PurchaseType ePurchase)
+#endif
 {
 	int iBalance = m_pPlayer->GetTreasury()->GetGold();
 
 	// Copy into temp array and sort by priority
+#ifdef AUI_WARNING_FIXES
+	FStaticVector<CvPurchaseRequest, NUM_PURCHASE_TYPES, true, c_eCiv5GameplayDLL, 0> vTempRequestedSavings = m_RequestedSavings;
+	std::stable_sort(vTempRequestedSavings.begin(), vTempRequestedSavings.end());
+
+	for (FStaticVector<CvPurchaseRequest, NUM_PURCHASE_TYPES, true, c_eCiv5GameplayDLL, 0>::iterator it = vTempRequestedSavings.begin(); it != vTempRequestedSavings.end(); ++it)
+	{
+		CvPurchaseRequest request = *it;
+#else
 	m_TempRequestedSavings = m_RequestedSavings;
 	std::stable_sort(m_TempRequestedSavings.begin(), m_TempRequestedSavings.end());
 
 	for(int iI = 0; iI < (int)m_TempRequestedSavings.size(); iI++)
 	{
 		CvPurchaseRequest request = m_TempRequestedSavings[iI];
+#endif
 
 		// Is this higher priority than the request we care about?
 		if(request.m_eType != ePurchase)
@@ -1208,11 +1245,19 @@ int CvEconomicAI::AmountAvailableForPurchase(PurchaseType ePurchase)
 	}
 
 	CvAssert(false);
+#ifdef AUI_WARNING_FIXES
+	return iBalance;
+#else
 	return false;  // Should never reach here
+#endif
 }
 
 /// What is the ratio of workers we have to the number of cities we have?
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+double CvEconomicAI::GetWorkersToCitiesRatio() const
+#else
 double CvEconomicAI::GetWorkersToCitiesRatio()
+#endif
 {
 	int iNumWorkers = m_pPlayer->GetNumUnitsWithUnitAI(UNITAI_WORKER, true, false); // includes workers currently being produced
 	int iNumCities = m_pPlayer->getNumCities();
@@ -1222,7 +1267,11 @@ double CvEconomicAI::GetWorkersToCitiesRatio()
 }
 
 /// What is the ratio of our improved plots to all the plots we are able to improve?
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+double CvEconomicAI::GetImprovedToImprovablePlotsRatio() const
+#else
 double CvEconomicAI::GetImprovedToImprovablePlotsRatio()
+#endif
 {
 	const CvPlotsVector& aiPlots = m_pPlayer->GetPlots();
 	int iNumValidPlots = 0;
@@ -1777,14 +1826,25 @@ void CvEconomicAI::DoHurry()
 					iTurnsSaved = pLoopCity->getProductionTurnsLeft() - 1;
 					if(iTurnsSaved > 0)
 					{
+#ifdef AUI_WARNING_FIXES
+						CvHurryInfo* pHurryInfo = GC.getHurryInfo((HurryTypes)iI);
+						if (!pHurryInfo)
+							continue;
+						if (pHurryInfo->getGoldPerProduction() > 0)
+#else
 						if(GC.getHurryInfo((HurryTypes)iI)->getGoldPerProduction() > 0)
+#endif
 						{
 							// Don't gold rush at all anymore (save gold to buy tiles)
 
 							// iHurryAmount = pLoopCity->hurryGold((HurryTypes)iI);
 							// iHurryAmountAvailable = m_pPlayer->getGold();
 						}
+#ifdef AUI_WARNING_FIXES
+						else if (pHurryInfo->getProductionPerPopulation() > 0)
+#else
 						else if(GC.getHurryInfo((HurryTypes)iI)->getProductionPerPopulation() > 0)
+#endif
 						{
 							// Only pop rush if over our current Happiness limit
 							if(m_pPlayer->IsEmpireUnhappy())

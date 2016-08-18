@@ -23,7 +23,11 @@ CvWeightedVector<BuilderDirective, 100, true> CvBuilderTaskingAI::m_aDirectives;
 FStaticVector<int, SAFE_ESTIMATE_NUM_EXTRA_PLOTS, true, c_eCiv5GameplayDLL, 0> CvBuilderTaskingAI::m_aiNonTerritoryPlots; // plots that we need to evaluate that are outside of our territory
 
 /// Constructor
+#ifdef AUI_WARNING_FIXES
+CvBuilderTaskingAI::CvBuilderTaskingAI() : m_aiCurrentPlotYields(), m_aiProjectedPlotYields()
+#else
 CvBuilderTaskingAI::CvBuilderTaskingAI(void)
+#endif
 {
 	Uninit();
 }
@@ -105,6 +109,14 @@ void CvBuilderTaskingAI::Uninit(void)
 	m_bLogging = false;
 	m_iNumCities = -1;
 	m_pTargetPlot = NULL;
+#ifdef AUI_WARNING_FIXES
+	m_eFalloutFeature = NO_FEATURE;
+	m_eFalloutRemove = NO_BUILD;
+#ifndef AUI_WORKER_UNHARDCODE_NO_REMOVE_FEATURE_THAT_IS_REQUIRED_FOR_UNIQUE_IMPROVEMENT
+	m_bKeepJungle = false;
+	m_bKeepMarshes = false;
+#endif
+#endif
 }
 
 /// Serialization read
@@ -994,6 +1006,11 @@ bool CvBuilderTaskingAI::EvaluateBuilder(CvUnit* pUnit, BuilderDirective* paDire
 /// Evaluating a plot to see if we can build resources there
 void CvBuilderTaskingAI::AddImprovingResourcesDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway)
 {
+#ifdef AUI_WARNING_FIXES
+	if (!pUnit)
+		return;
+#endif
+
 	ImprovementTypes eExistingPlotImprovement = pPlot->getImprovementType();
 
 	// Do we have a special improvement here? (great person improvement, gifted improvement from major civ)
@@ -1857,6 +1874,11 @@ void CvBuilderTaskingAI::AddRouteDirectives(CvUnit* pUnit, CvPlot* pPlot, int iM
 		return;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	if (!pUnit)
+		return;
+#endif
+
 	// the plot was not flagged this turn, so ignore
 	bool bShouldRoadThisTile = (pPlot->GetBuilderAIScratchPadTurn() == GC.getGame().getGameTurn()) && (pPlot->GetBuilderAIScratchPadPlayer() == pUnit->getOwner());
 #ifdef AUI_WORKER_INCA_HILLS
@@ -2011,6 +2033,10 @@ void CvBuilderTaskingAI::AddRouteDirectives(CvUnit* pUnit, CvPlot* pPlot, int iM
 /// Determines if the builder should "chop" the feature in the tile
 void CvBuilderTaskingAI::AddChopDirectives(CvUnit* pUnit, CvPlot* pPlot, int iMoveTurnsAway)
 {
+#ifdef AUI_WARNING_FIXES
+	if (!pUnit || !pPlot)
+		return;
+#endif
 	// if it's not within a city radius
 	if(!pPlot->isWithinTeamCityRadius(pUnit->getTeam()))
 	{
@@ -3147,7 +3173,11 @@ BuildTypes CvBuilderTaskingAI::GetFalloutRemove(void)
 }
 
 /// Central logging repository!
+#ifdef AUI_WARNING_FIXES
+void CvBuilderTaskingAI::LogInfo(const CvString& strNewLogStr, CvPlayer* pPlayer, bool /*bWriteToOutput*/)
+#else
 void CvBuilderTaskingAI::LogInfo(CvString strNewLogStr, CvPlayer* pPlayer, bool /*bWriteToOutput*/)
+#endif
 {
 	if(!(GC.getLogging() && GC.getAILogging() && GC.GetBuilderAILogging()))
 	{
@@ -3172,7 +3202,11 @@ void CvBuilderTaskingAI::LogInfo(CvString strNewLogStr, CvPlayer* pPlayer, bool 
 	pLog->Msg(strLog);
 }
 
+#ifdef AUI_WARNING_FIXES
+void CvBuilderTaskingAI::LogYieldInfo(const CvString& strNewLogStr, CvPlayer* pPlayer)
+#else
 void CvBuilderTaskingAI::LogYieldInfo(CvString strNewLogStr, CvPlayer* pPlayer)
+#endif
 {
 	if(!(GC.getLogging() && GC.getAILogging() && GC.GetBuilderAILogging()))
 	{

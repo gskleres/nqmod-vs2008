@@ -72,7 +72,11 @@ namespace FLua
 			AddGlobalFn *m_pfnAddGlobal;
 		};
 
+#ifdef AUI_WARNING_FIXES
+		GlobalData() : m_uiDataEntryCount(0), m_aDataEntries() {}
+#else
 		GlobalData() : m_uiDataEntryCount(0) {}
+#endif
 		static inline GlobalData &Ref() { static GlobalData kInst; return kInst; }
 
 		DataEntry m_aDataEntries[sm_uiMaxDataEntries];

@@ -63,7 +63,9 @@ Database::Results* CvDatabaseUtility::PrepareResults(const std::string& strKey, 
 	if(DB.Execute(*pResults, szStmt))
 	{
 		Database::Results* pOldResults = GetResults(strKey);
+#ifndef AUI_WARNING_FIXES
 		if(pOldResults)
+#endif
 			delete pOldResults;
 
 		m_storedResults[strKey] = pResults;
@@ -79,6 +81,12 @@ Database::Results* CvDatabaseUtility::PrepareResults(const std::string& strKey, 
 //------------------------------------------------------------------------------
 bool CvDatabaseUtility::Initialize2DArray(int**& ppArray, const char* szTable1Name, const char* szTable2Name, int iDefault /* = 0 */)
 {
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	const size_t iCount1 = MaxRows(szTable1Name);
+	const size_t iCount2 = MaxRows(szTable2Name);
+
+	return Initialize2DArray(ppArray, iCount1, iCount2, iDefault);
+#else
 	const int iCount1 = MaxRows(szTable1Name);
 	const int iCount2 = MaxRows(szTable2Name);
 
@@ -107,13 +115,37 @@ bool CvDatabaseUtility::Initialize2DArray(int**& ppArray, const char* szTable1Na
 	}
 
 	return true;
+#endif
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+bool CvDatabaseUtility::Initialize2DArray(int**& ppArray, const size_t iCount1, const size_t iCount2, int iDefault /*= 0*/)
+#else
 void CvDatabaseUtility::Initialize2DArray(int**& ppArray, const size_t iCount1, const size_t iCount2, int iDefault /*= 0*/)
+#endif
 {
 	if(iCount1 <= 0 || iCount2 <= 0)
 	{
 		CvAssertMsg(false, "Cannot initialize array to 0 size.");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		return false;
+	}
+
+	ppArray = FNEW(int*[iCount1], c_eCiv5GameplayDLL, 0);
+	for (size_t i = 0; i < iCount1; i++)
+	{
+		ppArray[i] = FNEW(int[iCount2], c_eCiv5GameplayDLL, 0);
+	}
+	for (size_t i = 0; i < iCount1; i++)
+	{
+		for (size_t j = 0; j < iCount2; j++)
+		{
+			ppArray[i][j] = iDefault;
+		}
+	}
+
+	return true;
+#else
 		return;
 	}
 
@@ -133,10 +165,28 @@ void CvDatabaseUtility::Initialize2DArray(int**& ppArray, const size_t iCount1, 
 			ppArray[i][j] = iDefault;
 		}
 	}
+#endif
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+void CvDatabaseUtility::SafeDelete2DArray(int**& ppArray, const char* szTable1Name)
+{
+	if (ppArray == NULL)
+		return;
+	const size_t iRowCount = MaxRows(szTable1Name);
+	SafeDelete2DArray(ppArray, iRowCount);
+}
+
+void CvDatabaseUtility::SafeDelete2DArray(int**& ppArray, const size_t iRowCount)
+{
+	for (size_t i = 0; i < iRowCount; i++)
+	{
+		delete[] ppArray[i];
+	}
+#else
 void CvDatabaseUtility::SafeDelete2DArray(int**& ppArray)
 {
+#endif
 	delete[] ppArray;
 	ppArray = NULL;
 }

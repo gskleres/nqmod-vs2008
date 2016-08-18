@@ -360,7 +360,9 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		{
 			CvPlot* pLoopPlot = plotXYWithRangeCheck(getX(), getY(), iDX, iDY, iRange);
 #endif
+#ifndef AUI_WARNING_FIXES
 			if(pLoopPlot != NULL)
+#endif
 			{
 				if(pLoopPlot != NULL)
 				{
@@ -583,7 +585,11 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 
 					if(eLoopBuilding != NO_BUILDING)
 					{
+#ifdef AUI_WARNING_FIXES
+						m_pCityBuildings->SetNumRealBuilding(eLoopBuilding, 1);
+#else
 						m_pCityBuildings->SetNumRealBuilding(eLoopBuilding, true);
+#endif
 					}
 				}
 			}
@@ -2080,6 +2086,9 @@ CityTaskResult CvCity::doTask(TaskTypes eTask, int iData1, int iData2, bool bOpt
 
 	case TASK_ADD_SPECIALIST:
 		GetCityCitizens()->DoAddSpecialistToBuilding(/*eBuilding*/ (BuildingTypes) iData2, true);
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
 		break;
 
 	case TASK_REMOVE_SPECIALIST:
@@ -3813,7 +3822,9 @@ bool CvCity::isProductionProcess() const
 
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#ifdef AUI_WARNING_FIXES
+bool CvCity::canContinueProduction(const OrderData& order) const
+#elif defined(AUI_CONSTIFY)
 bool CvCity::canContinueProduction(OrderData order) const
 #else
 bool CvCity::canContinueProduction(OrderData order)
@@ -11841,8 +11852,11 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 								if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
 									iTemp *= 3;
 								iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / iYieldValueSum;
+								iInfluenceCost += iPLOT_INFLUENCE_RESOURCE_COST / 100;
 							}
 						}
+						else if (GetPlayer()->getNumResourceTotal(eResource, false) > 0)
+							iInfluenceCost += iPLOT_INFLUENCE_RESOURCE_COST / 2;
 						else
 							iInfluenceCost += iPLOT_INFLUENCE_RESOURCE_COST;
 #else
@@ -12092,6 +12106,7 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 										iInfluenceCost += (iPLOT_INFLUENCE_RESOURCE_COST - NUM_DIRECTION_TYPES / 2) / (NUM_DIRECTION_TYPES);
 									else if (iPlotDistance <= NUM_CITY_RINGS)
 									{
+										iInfluenceCost *= NUM_DIRECTION_TYPES;
 										int* aiYields = GC.getResourceInfo(eAdjacentResource)->getYieldChangeArray();
 										int iTotal = GC.getAI_CITIZEN_VALUE_FOOD() * aiYields[YIELD_FOOD];
 										if (eFocus == CITY_AI_FOCUS_TYPE_FOOD)
@@ -12121,7 +12136,9 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 										iTemp = GC.getAI_CITIZEN_VALUE_FAITH() * aiYields[YIELD_FAITH];
 										if (eFocus == CITY_AI_FOCUS_TYPE_FAITH)
 											iTemp *= 3;
-										iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / (iYieldValueSum * NUM_DIRECTION_TYPES);
+										iInfluenceCost += iPLOT_INFLUENCE_YIELD_POINT_COST * iTotal * NUM_YIELD_TYPES / iYieldValueSum;
+										iInfluenceCost += iPLOT_INFLUENCE_RESOURCE_COST / 100;
+										iInfluenceCost /= NUM_DIRECTION_TYPES;
 									}
 #else
 									if (iPlotDistance <= NUM_CITY_RINGS || GC.getResourceInfo(eAdjacentResource)->getResourceUsage() != RESOURCEUSAGE_BONUS)
@@ -12849,7 +12866,11 @@ void CvCity::popOrder(int iNum, bool bFinish, bool bChoose)
 
 	if(bFinish)
 	{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		m_iThingsProduced += 1;
+#else
 		m_iThingsProduced++;
+#endif
 	}
 
 	if(bFinish && pOrderNode->bSave)
@@ -12940,9 +12961,13 @@ void CvCity::popOrder(int iNum, bool bFinish, bool bChoose)
 
 			if(bFinish)
 			{
+#ifndef CVASSERT_ENABLE
+				CreateBuilding(eConstructBuilding);
+#else
 				bool bResult = CreateBuilding(eConstructBuilding);
 				DEBUG_VARIABLE(bResult);
 				CvAssertMsg(bResult, "CreateBuilding failed");
+#endif
 
 				ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 				if (pkScriptSystem) 
@@ -13011,9 +13036,13 @@ void CvCity::popOrder(int iNum, bool bFinish, bool bChoose)
 
 		if(bFinish)
 		{
+#ifndef CVASSERT_ENABLE
+			CreateProject(eCreateProject);
+#else
 			bool bResult = CreateProject(eCreateProject);
 			DEBUG_VARIABLE(bResult);
 			CvAssertMsg(bResult, "Failed to create project");
+#endif
 
 			ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 			if (pkScriptSystem) 
@@ -15947,7 +15976,11 @@ CvUnit* CvCity::rangedStrikeTarget(CvPlot* pPlot)
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvCity::rangeCombatUnitDefense(_In_ const CvUnit* pDefender) const
+#else
 int CvCity::rangeCombatUnitDefense(const CvUnit* pDefender) const
+#endif
 {
 	int iDefenderStrength = 0;
 

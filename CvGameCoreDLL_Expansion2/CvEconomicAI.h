@@ -156,9 +156,15 @@ public:
 	CvPlayer* GetPlayer();
 	CvEconomicAIStrategyXMLEntries* GetEconomicAIStrategies();
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	bool IsUsingStrategy(EconomicAIStrategyTypes eStrategy) const;
+	void SetUsingStrategy(EconomicAIStrategyTypes eStrategy, bool bValue);
+	int GetTurnStrategyAdopted(EconomicAIStrategyTypes eStrategy) const;
+#else
 	bool IsUsingStrategy(EconomicAIStrategyTypes eStrategy);
 	void SetUsingStrategy(EconomicAIStrategyTypes eStrategy, bool bValue);
 	int GetTurnStrategyAdopted(EconomicAIStrategyTypes eStrategy);
+#endif
 	void SetTurnStrategyAdopted(EconomicAIStrategyTypes eStrategy, int iValue);
 
 	void DoTurn();
@@ -174,13 +180,24 @@ public:
 	static int ScoreExplorePlot(CvPlot* pPlot, TeamTypes eTeam, int iRange, DomainTypes eDomainType);
 
 	void StartSaveForPurchase(PurchaseType ePurchase, int iAmount, int iPriority);
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	bool IsSavingForThisPurchase(PurchaseType ePurchase) const;
+#else
 	bool IsSavingForThisPurchase(PurchaseType ePurchase);
+#endif
 	void CancelSaveForPurchase(PurchaseType ePurchase);
 	bool CanWithdrawMoneyForPurchase(PurchaseType ePurchase, int iAmount, int iPriority = -1);
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int AmountAvailableForPurchase(PurchaseType ePurchase) const;
+
+	double GetWorkersToCitiesRatio() const;
+	double GetImprovedToImprovablePlotsRatio() const;
+#else
 	int AmountAvailableForPurchase(PurchaseType ePurchase);
 
 	double GetWorkersToCitiesRatio();
 	double GetImprovedToImprovablePlotsRatio();
+#endif
 
 	void LogMonitor();
 	void LogCityMonitor();

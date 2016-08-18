@@ -89,8 +89,13 @@ protected:
 	static int lGetGreatPersonRateModifierDetails(lua_State* L);
 
 	// Helper functions
+#ifdef AUI_WARNING_FIXES
+	static int lResolutionTableHelper(lua_State* L, const int iTop, const CvResolution& resolution);
+	static int lProposalTableHelper(lua_State* L, const int iTop, const CvProposal& proposal);
+#else
 	static int lResolutionTableHelper(lua_State* L, const int iTop, CvResolution &resolution);
 	static int lProposalTableHelper(lua_State* L, const int iTop, CvProposal &proposal);
+#endif
 };
 
 

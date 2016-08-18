@@ -284,6 +284,10 @@ int CvCitySiteEvaluator::PlotFoundValue(CvPlot* pPlot, CvPlayer* pPlayer, YieldT
 	CvAssert(pPlot);
 	if(!pPlot)
 		return 0;
+#ifdef AUI_WARNING_FIXES
+	if (!pPlayer)
+		return 0;
+#endif
 
 	// Make sure this player can even build a city here
 	if(!CanFound(pPlot, pPlayer, false))
@@ -645,7 +649,11 @@ int CvCitySiteEvaluator::PlotFoundValue(CvPlot* pPlot, CvPlayer* pPlayer, YieldT
 	// Nearby Cities?
 
 	// Human
+#ifdef AUI_WARNING_FIXES
+	if (pPlayer->isHuman())
+#else
 	if (pPlayer != NULL && pPlayer->isHuman())
+#endif
 	{
 		if (iClosestCityOfMine == 3)
 		{

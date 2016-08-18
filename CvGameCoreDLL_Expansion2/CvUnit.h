@@ -1051,7 +1051,11 @@ public:
 
 	// Arbitrary Script Data
 	std::string getScriptData() const;
+#ifdef AUI_WARNING_FIXES
+	void setScriptData(const std::string& szNewValue);
+#else
 	void setScriptData(std::string szNewValue);
+#endif
 	int getScenarioData() const;
 	void setScenarioData(int iNewValue);
 
@@ -1281,7 +1285,9 @@ public:
 	bool DoWithdrawFromMelee(CvUnit& pAttacker);
 
 	// these are do to a unit using Heavy Charge against you
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+	bool CanFallBackFromMelee(const CvUnit& kAttacker, const CvPlot* pFromPlot = NULL) const;
+#elif defined(AUI_CONSTIFY)
 	bool CanFallBackFromMelee(const CvUnit& pAttacker) const;
 #else
 	bool CanFallBackFromMelee(CvUnit& pAttacker);
@@ -1560,7 +1566,9 @@ protected:
 	bool DoWithdrawFromMelee(CvUnit& pAttacker);
 
 	// these are do to a unit using Heavy Charge against you
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+	bool CanFallBackFromMelee(const CvUnit& kAttacker, const CvPlot* pFromPlot = NULL) const;
+#elif defined(AUI_CONSTIFY)
 	bool CanFallBackFromMelee(const CvUnit& pAttacker) const;
 #else
 	bool CanFallBackFromMelee(CvUnit& pAttacker);

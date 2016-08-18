@@ -113,7 +113,11 @@ namespace FLua
 			lua_CFunction m_pfnToString;
 		};
 
+#ifdef AUI_WARNING_FIXES
+		StaticFunctions() : m_uiFuncEntryCount(0), m_uiCustomRegistrationCount(0), m_aFuncEntries(), m_afnCustomRegistrationFunctions() {}
+#else
 		StaticFunctions() : m_uiFuncEntryCount(0), m_uiCustomRegistrationCount(0) {}
+#endif
 		static inline StaticFunctions &Ref() { static StaticFunctions kInst; return kInst; }
 
 		FuncEntry m_aFuncEntries[sm_uiMaxFunctions];

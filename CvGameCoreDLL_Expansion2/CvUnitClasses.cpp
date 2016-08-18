@@ -114,6 +114,15 @@ CvUnitEntry::CvUnitEntry(void) :
 	m_paszMiddleArtDefineTags(NULL),
 	m_paszUnitNames(NULL),
 	m_paeGreatWorks(NULL),
+#ifdef AUI_WARNING_FIXES
+	m_piProductionModifierBuildings(NULL),
+	m_piYieldFromKills(NULL),
+	m_iLeaderExperience(0),
+	m_iProjectPrereq(0),
+	m_iSpaceshipProject(0),
+	m_iLeaderPromotion(0),
+	m_iCachedPower(0),
+#endif
 	m_bUnitArtInfoEraVariation(false),
 	m_bUnitArtInfoCulturalVariation(false),
 	m_iUnitFlagIconOffset(0),
@@ -142,7 +151,10 @@ CvUnitEntry::~CvUnitEntry(void)
 	SAFE_DELETE_ARRAY(m_paszMiddleArtDefineTags);
 	SAFE_DELETE_ARRAY(m_paszUnitNames);
 	SAFE_DELETE_ARRAY(m_paeGreatWorks);
-
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_piProductionModifierBuildings);
+	SAFE_DELETE_ARRAY(m_piYieldFromKills);
+#endif
 }
 
 bool CvUnitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& kUtility)
@@ -341,6 +353,10 @@ bool CvUnitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& k
 	{
 		if(m_iNumUnitNames > 0)
 		{
+#ifdef AUI_WARNING_FIXES
+			SAFE_DELETE_ARRAY(m_paszUnitNames);
+			SAFE_DELETE_ARRAY(m_paeGreatWorks);
+#endif
 			m_paszUnitNames = FNEW(CvString[m_iNumUnitNames], c_eCiv5GameplayDLL, 0);
 			m_paeGreatWorks = FNEW(GreatWorkType[m_iNumUnitNames], c_eCiv5GameplayDLL, 0);
 

@@ -551,6 +551,9 @@ public:
 		m_iY = 0;
 		m_eTargetType = AI_TACTICAL_TARGET_NONE;
 		m_iLastTurn = 0;
+#ifdef AUI_WARNING_FIXES
+		m_bIsNavalInvasion = false;
+#endif
 	};
 
 	int GetX() const

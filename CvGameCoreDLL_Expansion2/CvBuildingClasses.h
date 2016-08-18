@@ -499,12 +499,21 @@ private:
 	bool* m_pbBuildingClassNeededInCity;
 	int* m_piNumFreeUnits;
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	std::pair<int**, size_t> m_ppaiResourceYieldChange;
+	std::pair<int**, size_t> m_ppaiFeatureYieldChange;
+	std::pair<int**, size_t> m_ppaiSpecialistYieldChange;
+	std::pair<int**, size_t> m_ppaiResourceYieldModifier;
+	std::pair<int**, size_t> m_ppaiTerrainYieldChange;
+	std::pair<int**, size_t> m_ppiBuildingClassYieldChanges;
+#else
 	int** m_ppaiResourceYieldChange;
 	int** m_ppaiFeatureYieldChange;
 	int** m_ppaiSpecialistYieldChange;
 	int** m_ppaiResourceYieldModifier;
 	int** m_ppaiTerrainYieldChange;
 	int** m_ppiBuildingClassYieldChanges;
+#endif
 	int* m_paiBuildingClassHappiness;
 
 	CvThemingBonusInfo* m_paThemingBonusInfo;

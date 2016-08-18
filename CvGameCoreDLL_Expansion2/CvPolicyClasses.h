@@ -423,12 +423,21 @@ private:
 
 //	bool* m_pabHurry;
 	bool* m_pabSpecialistValid;
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	std::pair<int**, size_t> m_ppiImprovementYieldChanges;
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+	std::pair<int**, size_t> m_ppiBuildingClassFlavorChanges;
+#endif
+	std::pair<int**, size_t> m_ppiBuildingClassYieldModifiers;
+	std::pair<int**, size_t> m_ppiBuildingClassYieldChanges;
+#else
 	int** m_ppiImprovementYieldChanges;
 #ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
 	int** m_ppiBuildingClassFlavorChanges;
 #endif
 	int** m_ppiBuildingClassYieldModifiers;
 	int** m_ppiBuildingClassYieldChanges;
+#endif
 	int* m_piFlavorValue;
 };
 

@@ -104,6 +104,9 @@ void CvCityCitizens::Reset()
 	m_iNumForcedDefaultSpecialists = 0;
 
 	CvAssertMsg(m_aiSpecialistCounts==NULL, "about to leak memory, CvCityCitizens::m_aiSpecialistCounts");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_aiSpecialistCounts);
+#endif
 	m_aiSpecialistCounts = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 	{
@@ -111,6 +114,9 @@ void CvCityCitizens::Reset()
 	}
 
 	CvAssertMsg(m_aiSpecialistGreatPersonProgressTimes100==NULL, "about to leak memory, CvCityCitizens::m_aiSpecialistGreatPersonProgressTimes100");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_aiSpecialistGreatPersonProgressTimes100);
+#endif
 	m_aiSpecialistGreatPersonProgressTimes100 = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 	{
@@ -118,6 +124,9 @@ void CvCityCitizens::Reset()
 	}
 
 	CvAssertMsg(m_aiNumSpecialistsInBuilding==NULL, "about to leak memory, CvCityCitizens::m_aiNumSpecialistsInBuilding");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_aiNumSpecialistsInBuilding);
+#endif
 	m_aiNumSpecialistsInBuilding = FNEW(int[GC.getNumBuildingInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumBuildingInfos(); iI++)
 	{
@@ -125,6 +134,9 @@ void CvCityCitizens::Reset()
 	}
 
 	CvAssertMsg(m_aiNumForcedSpecialistsInBuilding==NULL, "about to leak memory, CvCityCitizens::m_aiNumForcedSpecialistsInBuilding");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_aiNumForcedSpecialistsInBuilding);
+#endif
 	m_aiNumForcedSpecialistsInBuilding = FNEW(int[GC.getNumBuildingInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumBuildingInfos(); iI++)
 	{
@@ -132,6 +144,9 @@ void CvCityCitizens::Reset()
 	}
 
 	CvAssertMsg(m_piBuildingGreatPeopleRateChanges==NULL, "about to leak memory, CvCityCitizens::m_piBuildingGreatPeopleRateChanges");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_piBuildingGreatPeopleRateChanges);
+#endif
 	m_piBuildingGreatPeopleRateChanges = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 	{
@@ -139,6 +154,7 @@ void CvCityCitizens::Reset()
 	}
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	SAFE_DELETE_ARRAY(m_aiCachedGPChangeT100ForThisTurn);
 	m_aiCachedGPChangeT100ForThisTurn = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
 	for (iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 	{
@@ -798,17 +814,18 @@ bool CvCityCitizens::IsAvoidGrowth()
 					}
 				}
 				if ((GetPlayer()->GetUnhappinessFromCityPopulation() + GetPlayer()->GetUnhappinessFromOccupiedCities()) / 100 <
-					(GetPlayer()->GetUnhappinessFromCityPopulation(NULL, NULL, m_pCity, (bHasSpecialistSlot ? m_pCity : NULL)) 
+					(GetPlayer()->GetUnhappinessFromCityPopulation(NULL, NULL, m_pCity, (bHasSpecialistSlot ? m_pCity : NULL))
 						+ GetPlayer()->GetUnhappinessFromOccupiedCities(NULL, NULL, m_pCity, (bHasSpecialistSlot ? m_pCity : NULL))) / 100)
 					return true;
 			}
 		}
-#else
+	}
+#elif !defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS)
 	if(GetPlayer()->GetExcessHappiness() < 0)
 	{
 		return true;
-#endif
 	}
+#endif
 
 	return IsForcedAvoidGrowth();
 }
@@ -2467,18 +2484,34 @@ void CvCityCitizens::DoAlterWorkingPlot(int iIndex)
 			// JON: Need to update this block to work with new system
 			else if(pPlot->getOwner() == GetOwner())
 			{
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				CvCity* pOldWorkingCityOverride = pPlot->getWorkingCityOverride();
+				if (pOldWorkingCityOverride != NULL)
+				{
+					if (pOldWorkingCityOverride->IsPuppet())
+					{
+						return;
+#else
 				// Can't take away forced plots from puppet Cities
 				if(pPlot->getWorkingCityOverride() != NULL)
 				{
 					if(pPlot->getWorkingCityOverride()->IsPuppet())
 					{
 						return;
+#endif
 					}
 				}
 
 				pPlot->setWorkingCityOverride(GetCity());
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				if (pOldWorkingCityOverride)
+					pOldWorkingCityOverride->GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
 			}
 		}
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		DoSelfConsistencyCheck();
+#endif
 	}
 }
 
@@ -3160,6 +3193,18 @@ void CvCityCitizens::DoRemoveSpecialistFromBuilding(BuildingTypes eBuilding, boo
 			ChangeNumUnassignedCitizens(1);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		ICvUserInterface2* pkIFace = GC.GetEngineUserInterface();
+		pkIFace->setDirty(GameData_DIRTY_BIT, true);
+		pkIFace->setDirty(CityInfo_DIRTY_BIT, true);
+		//pkIFace->setDirty(InfoPane_DIRTY_BIT, true );
+		pkIFace->setDirty(CityScreen_DIRTY_BIT, true);
+		pkIFace->setDirty(ColoredPlots_DIRTY_BIT, true);
+
+		auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(GetCity());
+
+		pkIFace->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_SPECIALISTS);
+#else
 		GC.GetEngineUserInterface()->setDirty(GameData_DIRTY_BIT, true);
 		GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 		//GC.GetEngineUserInterface()->setDirty(InfoPane_DIRTY_BIT, true );
@@ -3169,6 +3214,7 @@ void CvCityCitizens::DoRemoveSpecialistFromBuilding(BuildingTypes eBuilding, boo
 		auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(GetCity());
 
 		GC.GetEngineUserInterface()->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_SPECIALISTS);
+#endif
 	}
 }
 
@@ -3210,6 +3256,16 @@ void CvCityCitizens::DoRemoveAllSpecialistsFromBuilding(BuildingTypes eBuilding,
 			ChangeNumUnassignedCitizens(1);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		ICvUserInterface2* pkIFace = GC.GetEngineUserInterface();
+		pkIFace->setDirty(CityInfo_DIRTY_BIT, true);
+		//pkIFace->setDirty(InfoPane_DIRTY_BIT, true );
+		pkIFace->setDirty(CityScreen_DIRTY_BIT, true);
+		pkIFace->setDirty(ColoredPlots_DIRTY_BIT, true);
+
+		auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(GetCity());
+		pkIFace->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_SPECIALISTS);
+#else
 		GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 		//GC.GetEngineUserInterface()->setDirty(InfoPane_DIRTY_BIT, true );
 		GC.GetEngineUserInterface()->setDirty(CityScreen_DIRTY_BIT, true);
@@ -3217,6 +3273,7 @@ void CvCityCitizens::DoRemoveAllSpecialistsFromBuilding(BuildingTypes eBuilding,
 
 		auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(GetCity());
 		GC.GetEngineUserInterface()->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_SPECIALISTS);
+#endif
 	}
 }
 

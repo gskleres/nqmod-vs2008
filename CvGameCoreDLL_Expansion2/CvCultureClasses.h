@@ -261,7 +261,11 @@ public:
 	int GetInfluenceCityStateSpyRankBonus(PlayerTypes eCityStatePlayer) const;
 	int GetInfluenceMajorCivSpyRankBonus(PlayerTypes ePlayer) const;
 	CvString GetInfluenceSpyRankTooltip (CvString szName, CvString iRank, PlayerTypes ePlayer);
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int GetTourism() const;
+#else
 	int GetTourism();
+#endif
 	int GetTourismModifierWith(PlayerTypes ePlayer) const;
 	CvString GetTourismModifierWithTooltip(PlayerTypes ePlayer) const;
 	int GetTourismModifierSharedReligion() const;
@@ -356,12 +360,13 @@ public:
 	void ClearGreatWorks();
 	GreatWorkSlotType GetSlotTypeFirstAvailableCultureBuilding() const;
 
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_WARNING_FIXES)
 	int GetBaseTourismBeforeModifiers() const;
+	int GetBaseTourism() const;
 #else
 	int GetBaseTourismBeforeModifiers();
-#endif
 	int GetBaseTourism();
+#endif
 	int GetTourismMultiplier(PlayerTypes ePlayer, bool bIgnoreReligion, bool bIgnoreOpenBorders, bool bIgnoreTrade, bool bIgnorePolicies, bool bIgnoreIdeologies) const;
 
 	CvString GetTourismTooltip();

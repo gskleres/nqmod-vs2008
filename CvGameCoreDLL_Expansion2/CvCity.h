@@ -161,11 +161,16 @@ public:
 	bool isProductionSpecialist() const;
 	bool isProductionProcess() const;
 
-#ifdef AUI_CONSTIFY
+#ifdef AUI_WARNING_FIXES
+	bool canContinueProduction(const OrderData& order) const;
+#elif defined(AUI_CONSTIFY)
 	bool canContinueProduction(OrderData order) const;
-	int getProductionExperience(UnitTypes eUnit = NO_UNIT) const;
 #else
 	bool canContinueProduction(OrderData order);
+#endif
+#ifdef AUI_CONSTIFY
+	int getProductionExperience(UnitTypes eUnit = NO_UNIT) const;
+#else
 	int getProductionExperience(UnitTypes eUnit = NO_UNIT);
 #endif
 	void addProductionExperience(CvUnit* pUnit, bool bConscript = false);

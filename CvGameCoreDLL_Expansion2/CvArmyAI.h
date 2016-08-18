@@ -63,7 +63,11 @@ public:
 
 	int m_iUnitID;
 	int m_iEstimatedTurnAtCheckpoint;
+#ifdef AUI_WARNING_FIXES
+	bool m_bStartedOnOperation;
+#else
 	int m_bStartedOnOperation;
+#endif
 };
 
 enum ArmyAIState

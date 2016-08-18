@@ -177,7 +177,11 @@ int CvLuaDeal::lGetNextItem(lua_State* L)
 	lua_pushboolean(L, item.m_bFlag1);
 	lua_pushinteger(L, item.m_eFromPlayer);
 
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	++m_iterator;
+#else
 	m_iterator++;
+#endif
 
 	return 8;
 }

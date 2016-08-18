@@ -85,8 +85,13 @@ public:
 	// this are used by a city AI to signal that it is committing to build a unit for one of my operations
 	virtual OperationSlot PeekAtNextUnitToBuildForOperationSlot(int iAreaID);
 	virtual OperationSlot CityCommitToBuildUnitForOperationSlot(int iAreaID, int iTurns, CvCity* pCity);
+#ifdef AUI_WARNING_FIXES
+	virtual void CityUncommitToBuildUnitForOperationSlot(const OperationSlot& thisSlot);
+	virtual void CityFinishedBuildingUnitForOperationSlot(const OperationSlot& thisSlot, CvUnit* pThisUnit);
+#else
 	virtual void CityUncommitToBuildUnitForOperationSlot(OperationSlot thisSlot);
 	virtual void CityFinishedBuildingUnitForOperationSlot(OperationSlot thisSlot, CvUnit* pThisUnit);
+#endif
 	virtual int GetNumUnitsNeededToBeBuilt();
 
 	// for serialization

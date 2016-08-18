@@ -483,8 +483,13 @@ const char* CvLuaUnit::GetTypeName()
 //bool isNone();
 int CvLuaUnit::lIsNone(lua_State* L)
 {
+#ifdef AUI_WARNING_FIXES
+	const bool bDoesNotExist = (GetInstance(L, 1, false) == NULL);
+	lua_pushboolean(L, bDoesNotExist ? 1 : 0);
+#else
 	const bool bDoesNotExist = (GetInstance(L, false) == NULL);
 	lua_pushboolean(L, bDoesNotExist);
+#endif
 
 	return 1;
 }

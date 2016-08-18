@@ -134,8 +134,13 @@ public:
 	BuildTypes GetFalloutRemove(void);
 #endif
 
+#ifdef AUI_WARNING_FIXES
+	static void LogInfo(const CvString& str, CvPlayer* pPlayer, bool bWriteToOutput = false);
+	static void LogYieldInfo(const CvString& strNewLogStr, CvPlayer* pPlayer); //Log yield related info to BuilderTaskingYieldLog.csv.
+#else
 	static void LogInfo(CvString str, CvPlayer* pPlayer, bool bWriteToOutput = false);
 	static void LogYieldInfo(CvString strNewLogStr, CvPlayer* pPlayer); //Log yield related info to BuilderTaskingYieldLog.csv.
+#endif
 
 	static CvWeightedVector<BuilderDirective, 100, true> m_aDirectives;
 	static FStaticVector<int, SAFE_ESTIMATE_NUM_EXTRA_PLOTS, true, c_eCiv5GameplayDLL, 0> m_aiNonTerritoryPlots; // plots that we need to evaluate that are outside of our territory

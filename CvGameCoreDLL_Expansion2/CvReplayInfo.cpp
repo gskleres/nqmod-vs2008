@@ -37,6 +37,10 @@ int CvReplayInfo::REPLAY_VERSION = 1;
 
 CvReplayInfo::CvReplayInfo() :
 	m_iActivePlayer(0),
+#ifdef AUI_WARNING_FIXES
+	m_eGameType(GAME_TYPE_NONE),
+	m_eCalendar(NO_CALENDAR),
+#endif
 	m_eWorldSize(NO_WORLDSIZE),
 	m_eClimate(NO_CLIMATE),
 	m_eSeaLevel(NO_SEALEVEL),
@@ -118,7 +122,9 @@ void CvReplayInfo::createInfo()
 	m_dataSetMap.clear();
 	m_listPlayerDataSets.clear();
 	m_listPlayerInfo.clear();
+#ifndef AUI_WARNING_FIXES
 	m_listPlots.clear();
+#endif
 
 	std::map<int, int> mapPlayers;
 	mapPlayers[-1] = -1;	//account for NO_PLAYER.

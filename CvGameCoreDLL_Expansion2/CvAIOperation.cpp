@@ -51,7 +51,9 @@ void CvAIOperation::Init(int iID, PlayerTypes eOwner, PlayerTypes eEnemy, int iD
 	m_eOwner = eOwner;
 	m_eEnemy = eEnemy;
 	m_iDefaultArea = iDefaultArea;
+#ifndef AUI_WARNING_FIXES
 	m_bShouldReplaceLossesWithReinforcements = false;
+#endif
 
 	SetStartCityPlot(pMuster->plot());
 
@@ -104,6 +106,9 @@ void CvAIOperation::Reset()
 	m_iStartCityX = -1;
 	m_iStartCityY = -1;
 	m_eMoveType = INVALID_AI_OPERATION_MOVE_TYPE;
+#ifdef AUI_WARNING_FIXES
+	m_bShouldReplaceLossesWithReinforcements = false;
+#endif
 	m_iLastTurnMoved = -1;
 	m_viArmyIDs.clear();
 }
@@ -399,7 +404,11 @@ OperationSlot CvAIOperation::CommitToBuildNextUnit(int iAreaID, int iTurns, CvCi
 }
 
 /// Called by a city when it decides NOT to build a unit (that it had previously committed to)
+#ifdef AUI_WARNING_FIXES
+bool CvAIOperation::UncommitToBuild(const OperationSlot& thisOperationSlot)
+#else
 bool CvAIOperation::UncommitToBuild(OperationSlot thisOperationSlot)
+#endif
 {
 	// find the operation in the list of committed units
 	std::vector<OperationSlot>::iterator iter = find(m_viListOfUnitsCitiesHaveCommittedToBuild.begin(),m_viListOfUnitsCitiesHaveCommittedToBuild.end(),thisOperationSlot);
@@ -416,7 +425,11 @@ bool CvAIOperation::UncommitToBuild(OperationSlot thisOperationSlot)
 }
 
 /// Called by a city after a unit is done training
+#ifdef AUI_WARNING_FIXES
+bool CvAIOperation::FinishedBuilding(const OperationSlot& thisOperationSlot)
+#else
 bool CvAIOperation::FinishedBuilding(OperationSlot thisOperationSlot)
+#endif
 {
 	// find the operation in the list of committed units
 	std::vector<OperationSlot>::iterator iter = find(m_viListOfUnitsCitiesHaveCommittedToBuild.begin(),m_viListOfUnitsCitiesHaveCommittedToBuild.end(),thisOperationSlot);
@@ -1049,6 +1062,18 @@ CvPlot* CvAIOperation::ComputeCenterOfMassForTurn(CvArmyAI* pArmy, CvPlot **ppCl
 			if (pLastTurnArmyPlot && pCenterOfMass && pGoalPlot)
 			{
 				// Push center of mass forward a number of hexes equal to average movement
+#ifdef AUI_WARNING_FIXES
+				CvStepPathFinder& kStepFinder = GC.getStepFinder();
+				kStepFinder.SetData(&m_eEnemy);
+				kStepFinder.SetDestValidFunc(NULL); // remove the area check
+				kStepFinder.SetValidFunc(StepValidAnyArea); // remove the area check
+				bool bFound = kStepFinder.GeneratePath(pCenterOfMass->getX(), pCenterOfMass->getY(), pGoalPlot->getX(), pGoalPlot->getY(), m_eOwner, false);
+				kStepFinder.SetValidFunc(StepValid); // remove the area check
+				kStepFinder.SetDestValidFunc(StepDestValid); // restore the area check
+				if (bFound)
+				{
+					pNode1 = kStepFinder.GetLastNode();
+#else
 				GC.getStepFinder().SetData(&m_eEnemy);
 				GC.getStepFinder().SetDestValidFunc(NULL); // remove the area check
 				GC.getStepFinder().SetValidFunc(StepValidAnyArea); // remove the area check
@@ -1058,6 +1083,7 @@ CvPlot* CvAIOperation::ComputeCenterOfMassForTurn(CvArmyAI* pArmy, CvPlot **ppCl
 				if (bFound)
 				{
 					pNode1 = GC.getStepFinder().GetLastNode();
+#endif
 
 					// Starting at the end, loop through the entire path
 					while (pNode1)
@@ -1660,7 +1686,11 @@ static CvUnit* GetClosestUnit(CvOperationSearchUnitList& kSearchList, CvPlot* pk
 }
 
 /// Find a unit from our reserves that could serve in this operation
+#ifdef AUI_WARNING_FIXES
+bool CvAIOperation::FindBestFitReserveUnit(const OperationSlot& thisOperationSlot, CvPlot* pMusterPlot, CvPlot* pTargetPlot, bool* bRequired)
+#else
 bool CvAIOperation::FindBestFitReserveUnit(OperationSlot thisOperationSlot, CvPlot* pMusterPlot, CvPlot* pTargetPlot, bool* bRequired)
+#endif
 {
 	CvUnit* pBestUnit = NULL;
 	CvPlayerAI& ownerPlayer = GET_PLAYER(m_eOwner);
@@ -2758,6 +2788,9 @@ CvAIEscortedOperation::CvAIEscortedOperation()
 {
 	m_bEscorted = true;
 	m_iTargetArea = -1;
+#ifdef AUI_WARNING_FIXES
+	m_eCivilianType = NO_UNITAI;
+#endif
 }
 
 CvAIEscortedOperation::~CvAIEscortedOperation()
@@ -5797,7 +5830,11 @@ CvPlot* CvAIOperationNukeAttack::FindBestTarget()
 }
 
 /// Find a unit from our reserves that could serve in this operation
+#ifdef AUI_WARNING_FIXES
+bool CvAIOperationNukeAttack::FindBestFitReserveUnit(const OperationSlot& thisOperationSlot, CvPlot* /*pMusterPlot*/, CvPlot* /*pTargetPlot*/, bool* bRequired)
+#else
 bool CvAIOperationNukeAttack::FindBestFitReserveUnit(OperationSlot thisOperationSlot, CvPlot* /*pMusterPlot*/, CvPlot* /*pTargetPlot*/, bool* bRequired)
+#endif
 {
 	// okay, this can be simplified to
 	*bRequired = true;

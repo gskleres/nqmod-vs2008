@@ -118,7 +118,10 @@ CvEmphasisEntry* CvEmphasisXMLEntries::GetEntry(int index)
 /// Constructor
 #ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
 CvCityEmphases::CvCityEmphases(CvCity* pCity) :
-	m_pCity(pCity)
+	m_aiEmphasizeYieldCount(), m_pCity(pCity), m_pEmphases(NULL), m_iEmphasizeAvoidGrowthCount(0), m_iEmphasizeGreatPeopleCount(0)
+#elif defined(AUI_WARNING_FIXES)
+CvCityEmphases::CvCityEmphases(CvCity* pCity) :
+	m_aiEmphasizeYieldCount(), m_pCity(NULL), m_pEmphases(NULL), m_iEmphasizeAvoidGrowthCount(0), m_iEmphasizeGreatPeopleCount(0)
 #else
 CvCityEmphases::CvCityEmphases()
 #endif
@@ -163,6 +166,9 @@ void CvCityEmphases::Reset()
 
 	CvAssertMsg(m_pbEmphasize == NULL, "m_pbEmphasize not NULL!!!");
 	CvAssertMsg(GC.getNumEmphasisInfos() > 0,  "GC.getNumEmphasizeInfos() is not greater than zero but an array is being allocated in CvCityEmphases::Reset");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_pbEmphasize);
+#endif
 	m_pbEmphasize = FNEW(bool[GC.getNumEmphasisInfos()], c_eCiv5GameplayDLL, 0);
 #ifdef AUI_WARNING_FIXES
 	for (uint iI = 0; iI < GC.getNumEmphasisInfos(); iI++)

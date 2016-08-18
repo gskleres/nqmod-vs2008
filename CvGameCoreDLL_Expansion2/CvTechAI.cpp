@@ -102,10 +102,14 @@ void CvTechAI::Write(FDataStream& kStream) const
 /// Establish weights for one flavor; can be called multiple times to layer strategies
 void CvTechAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropagationPercent)
 {
+#ifdef AUI_WARNING_FIXES
+	int* paiTempWeights = FNEW(int[m_pCurrentTechs->GetTechs()->GetNumTechs()], c_eCiv5GameplayDLL, 0);
+#else
 	int* paiTempWeights;
 
 	// Create a temporary array of weights
 	paiTempWeights = (int*)_alloca(sizeof(int) * m_pCurrentTechs->GetTechs()->GetNumTechs());
+#endif
 
 	// Loop through all our techs
 #ifdef AUI_WARNING_FIXES
@@ -145,6 +149,10 @@ void CvTechAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropagati
 			m_TechAIWeights.IncreaseWeight(iTech, paiTempWeights[iTech]);
 		}
 	}
+
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(paiTempWeights);
+#endif
 }
 
 

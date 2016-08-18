@@ -379,10 +379,18 @@ void CvWorldBuilderMapLoader::SetupPlayers()
 		CvPreGame::setTeamType(ePlayer, (TeamTypes)kPlayer.m_byTeam);
 		CvPreGame::setMinorCiv(ePlayer, false);
 
+#ifdef AUI_WARNING_FIXES
+		if (kPlayer.m_szLeaderName[0] != '\0')
+#else
 		if(strlen(kPlayer.m_szLeaderName) > 0)
+#endif
 			CvPreGame::setLeaderName(ePlayer, kPlayer.m_szLeaderName);
 
+#ifdef AUI_WARNING_FIXES
+		if (kPlayer.m_szCivName[0] != '\0')
+#else
 		if(strlen(kPlayer.m_szCivName) > 0)
+#endif
 		{
 			CvPreGame::setCivilizationShortDescription(ePlayer, kPlayer.m_szCivName);
 			CvPreGame::setCivilizationDescription(ePlayer, kPlayer.m_szCivName);
@@ -1763,7 +1771,11 @@ int CvWorldBuilderMapLoader::RunPostProcessScript(lua_State* L)
 				if(kGlobalsDataType.GetFieldType(uiField) == ModType::TYPE_STRING)
 				{
 					const char* szLua = kEntry.GetFieldAsString(uiField);
+#ifdef AUI_WARNING_FIXES
+					if (szLua == NULL || szLua[0] == '\0')
+#else
 					if(szLua == NULL || strlen(szLua) == 0)
+#endif
 					{
 						szLua = kGlobalsDataType.GetFieldDefaultAsString(uiField);
 					}

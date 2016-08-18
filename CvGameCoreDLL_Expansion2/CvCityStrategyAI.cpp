@@ -228,7 +228,7 @@ CvAICityStrategyEntry* CvAICityStrategies::GetEntry(int index)
 
 /// defining static
 #ifdef AUI_WARNING_FIXES
-unsigned int CvCityStrategyAI::m_acBestYields[NUM_YIELD_TYPES][NUM_CITY_PLOTS];
+unsigned int CvCityStrategyAI::m_acBestYields[NUM_YIELD_TYPES][NUM_CITY_PLOTS] = {};
 #else
 unsigned char  CvCityStrategyAI::m_acBestYields[NUM_YIELD_TYPES][NUM_CITY_PLOTS];
 #endif
@@ -247,6 +247,13 @@ CvCityStrategyAI::CvCityStrategyAI():
 	m_pUnitProductionAI(NULL),
 	m_pProjectProductionAI(NULL),
 	m_pProcessProductionAI(NULL),
+#ifdef AUI_WARNING_FIXES
+	m_pAICityStrategies(NULL),
+	m_eSpecialization(NO_CITY_SPECIALIZATION),
+	m_eDefaultSpecialization(NO_CITY_SPECIALIZATION),
+	m_asBestYieldAverageTimes100(),
+	m_asYieldDeltaTimes100(),
+#endif
 	m_eFocusYield((YieldTypes)NO_YIELD)
 {
 }
@@ -1953,7 +1960,11 @@ void CvCityStrategyAI::LogPossibleBuilds()
 }
 
 /// Log the chosen item to build
+#ifdef AUI_WARNING_FIXES
+void CvCityStrategyAI::LogCityProduction(const CvCityBuildable& buildable, bool bRush)
+#else
 void CvCityStrategyAI::LogCityProduction(CvCityBuildable buildable, bool bRush)
+#endif
 {
 	if(GC.getLogging() && GC.getAILogging())
 	{
@@ -2482,7 +2493,11 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_EnoughTileImprovers(AICityStrateg
 
 	AICityStrategyTypes eNeedImproversStrategy = (AICityStrategyTypes) GC.getInfoTypeForString("AICITYSTRATEGY_NEED_TILE_IMPROVERS");
 
+#ifdef AUI_WARNING_FIXES
+	if (eNeedImproversStrategy != NO_AICITYSTRATEGY)
+#else
 	if(eNeedImproversStrategy != NO_ECONOMICAISTRATEGY)
+#endif
 	{
 		if(pCity->GetCityStrategyAI()->IsUsingCityStrategy(eNeedImproversStrategy))
 			return false;
@@ -2609,7 +2624,11 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_EnoughNavalTileImprovement(CvCity
 {
 	AICityStrategyTypes eStrategyNeedNavalTileImprovement = (AICityStrategyTypes) GC.getInfoTypeForString("AICITYSTRATEGY_NEED_NAVAL_TILE_IMPROVEMENT");
 
+#ifdef AUI_WARNING_FIXES
+	if (eStrategyNeedNavalTileImprovement != NO_AICITYSTRATEGY)
+#else
 	if(eStrategyNeedNavalTileImprovement != NO_ECONOMICAISTRATEGY)
+#endif
 	{
 		if(!pCity->GetCityStrategyAI()->IsUsingCityStrategy(eStrategyNeedNavalTileImprovement))
 		{
@@ -3278,10 +3297,18 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_NeedCultureBuilding(CvCity *pCity
 bool CityStrategyAIHelpers::IsTestCityStrategy_NeedTourismBuilding(CvCity *pCity)
 {
 	int iTourismValue = 0;
+#ifdef AUI_WARNING_FIXES
+	const CvCityCulture* pCityCulture = pCity->GetCityCulture();
+	iTourismValue += pCityCulture->GetCultureFromWonders();
+	iTourismValue += pCityCulture->GetCultureFromNaturalWonders();
+	iTourismValue += pCityCulture->GetCultureFromImprovements();
+	iTourismValue += pCityCulture->GetBaseTourism();
+#else
 	iTourismValue += pCity->GetCityCulture()->GetCultureFromWonders();
 	iTourismValue += pCity->GetCityCulture()->GetCultureFromNaturalWonders();
 	iTourismValue += pCity->GetCityCulture()->GetCultureFromImprovements();
 	iTourismValue += pCity->GetCityCulture()->GetBaseTourism();
+#endif
 
 	if (iTourismValue > 10)
 	{
@@ -3305,7 +3332,9 @@ bool CityStrategyAIHelpers::IsTestCityStrategy_GoodAirliftCity(CvCity *pCity)
 	CvPlayer &kPlayer = GET_PLAYER(pCity->getOwner());
 	CvCity *pCapital = kPlayer.getCapitalCity();
 #ifdef AUI_WARNING_FIXES
-	if (pCapital && pCity->getArea() != pCapital->getArea())
+	if (!pCapital)
+		return false;
+	if (pCity->getArea() != pCapital->getArea())
 #else
 	if (pCity && pCity->getArea() != pCapital->getArea())
 #endif

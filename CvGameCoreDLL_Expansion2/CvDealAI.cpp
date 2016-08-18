@@ -24,6 +24,9 @@
 //======================================================================================================
 CvDealAI::CvDealAI()
 {
+#ifdef AUI_WARNING_FIXES
+	Init(NULL);
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -382,7 +385,11 @@ DemandResponseTypes CvDealAI::DoHumanDemand(CvDeal* pDeal)
 	}
 
 	// Possibility exists that the AI will accept
+#ifdef AUI_WARNING_FIXES
+	if (eResponse == NO_DEMAND_RESPONSE_TYPE)
+#else
 	if(eResponse == NO_DEAL_RESPONSE_TYPE)
+#endif
 	{
 		int iValueDemanded = 0;
 
@@ -455,7 +462,11 @@ DemandResponseTypes CvDealAI::DoHumanDemand(CvDeal* pDeal)
 		}
 
 		// No illegal items in the demand
+#ifdef AUI_WARNING_FIXES
+		if (eResponse == NO_DEMAND_RESPONSE_TYPE)
+#else
 		if(eResponse == NO_DEAL_RESPONSE_TYPE)
+#endif
 		{
 			if(iValueDemanded <= iValueWillingToGiveUp)
 				eResponse = DEMAND_RESPONSE_ACCEPT;
@@ -577,12 +588,14 @@ bool CvDealAI::IsDealWithHumanAcceptable(CvDeal* pDeal, PlayerTypes eOtherPlayer
 bool CvDealAI::DoEqualizeDealWithHuman(CvDeal* pDeal, PlayerTypes eOtherPlayer, bool bDontChangeMyExistingItems, bool bDontChangeTheirExistingItems, bool& bDealGoodToBeginWith, bool& bCantMatchOffer)
 {
 	bool bMakeOffer;
+#ifdef CVASSERT_ENABLE
 	PlayerTypes eMyPlayer = GetPlayer()->GetID();
 	DEBUG_VARIABLE(eMyPlayer);
 
 	CvAssert(eOtherPlayer >= 0);
 	CvAssert(eOtherPlayer < MAX_MAJOR_CIVS);
 	CvAssertMsg(eMyPlayer != eOtherPlayer, "DEAL_AI: Trying to equalize human deal, but both players are the same.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
+#endif
 
 	int iDealDuration = GC.getGame().GetDealDuration();
 	bCantMatchOffer = false;
@@ -671,12 +684,14 @@ bool CvDealAI::DoEqualizeDealWithHuman(CvDeal* pDeal, PlayerTypes eOtherPlayer, 
 /// Try to even out the value on both sides.  If bFavorMe is true we'll bias things in our favor if necessary
 bool CvDealAI::DoEqualizeDealWithAI(CvDeal* pDeal, PlayerTypes eOtherPlayer)
 {
+#ifdef CVASSERT_ENABLE
 	PlayerTypes eMyPlayer = GetPlayer()->GetID();
 	DEBUG_VARIABLE(eMyPlayer);
 
 	CvAssert(eOtherPlayer >= 0);
 	CvAssert(eOtherPlayer < MAX_MAJOR_CIVS);
 	CvAssertMsg(eMyPlayer != eOtherPlayer, "DEAL_AI: Trying to equalize AI deal, but both players are the same.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
+#endif
 
 	int iEvenValueImOffering;
 	int iEvenValueTheyreOffering;
@@ -1342,8 +1357,13 @@ int CvDealAI::GetCityValue(int iX, int iY, bool bFromMe, PlayerTypes eOtherPlaye
 						// Luxury Resource
 						if(eUsage == RESOURCEUSAGE_LUXURY)
 						{
+#ifdef AUI_WARNING_FIXES
+							int iNumTurns = MIN(1, GC.getGame().getMaxTurns() - GC.getGame().getGameTurn());
+							iNumTurns = MAX(120, iNumTurns); // let's not go hog wild here
+#else
 							int iNumTurns = min(1,GC.getGame().getMaxTurns() - GC.getGame().getGameTurn());
 							iNumTurns = max(120,iNumTurns); // let's not go hog wild here
+#endif
 							int iHappinessFromResource = pkResourceInfo->getHappiness();
 							iGoldValueOfResourcePlots += (iResourceQuantity * iHappinessFromResource * iNumTurns * 2);	// Ex: 1 Silk for 4 Happiness * 30 turns * 2 = 240
 							// If we only have 1 of a Luxury then we value it much more
@@ -1643,19 +1663,33 @@ int CvDealAI::GetOpenBordersValue(bool bFromMe, PlayerTypes eOtherPlayer, bool b
 		// Boost value greatly if we are going for a culture win
 		// If going for culture win always want open borders against civs we need influence on
 		AIGrandStrategyTypes eCultureStrategy = (AIGrandStrategyTypes) GC.getInfoTypeForString("AIGRANDSTRATEGY_CULTURE");
+#ifdef AUI_WARNING_FIXES
+		const CvPlayerCulture* pPlayerCulture = GetPlayer()->GetCulture();
+		if (eCultureStrategy != NO_AIGRANDSTRATEGY && GetPlayer()->GetGrandStrategyAI()->GetActiveGrandStrategy() == eCultureStrategy && pPlayerCulture->GetTourism() > 0)
+		{
+			// The civ we need influence on the most should ALWAYS be included
+			if (pPlayerCulture->GetCivLowestInfluence(false /*bCheckOpenBorders*/) == eOtherPlayer)
+#else
 		if (eCultureStrategy != NO_AIGRANDSTRATEGY && GetPlayer()->GetGrandStrategyAI()->GetActiveGrandStrategy() == eCultureStrategy && GetPlayer()->GetCulture()->GetTourism() > 0 )
 		{
 			// The civ we need influence on the most should ALWAYS be included
 			if (GetPlayer()->GetCulture()->GetCivLowestInfluence(false /*bCheckOpenBorders*/) == eOtherPlayer)
+#endif
 			{
 				iItemValue *= 1000;
 				iItemValue /= 100;
 			}
 
 			// If have influence over half the civs, want OB with the other half
+#ifdef AUI_WARNING_FIXES
+			else if (pPlayerCulture->GetNumCivsToBeInfluentialOn() <= pPlayerCulture->GetNumCivsInfluentialOn())
+			{
+				if (pPlayerCulture->GetInfluenceLevel(eOtherPlayer) < INFLUENCE_LEVEL_INFLUENTIAL)
+#else
 			else if (GetPlayer()->GetCulture()->GetNumCivsToBeInfluentialOn() <= GetPlayer()->GetCulture()->GetNumCivsInfluentialOn())
 			{
 				if (GetPlayer()->GetCulture()->GetInfluenceLevel(eOtherPlayer) < INFLUENCE_LEVEL_INFLUENTIAL)
+#endif
 				{
 					iItemValue *= 500;
 					iItemValue /= 100;
@@ -1897,12 +1931,16 @@ int CvDealAI::GetTradeAgreementValue(bool bFromMe, PlayerTypes eOtherPlayer, boo
 }
 
 /// How much is a Peace Treaty worth?
+#ifdef CVASSERT_ENABLE
 int CvDealAI::GetPeaceTreatyValue(PlayerTypes eOtherPlayer)
 {
 	DEBUG_VARIABLE(eOtherPlayer);
 
 	CvAssertMsg(GetPlayer()->GetID() != eOtherPlayer, "DEAL_AI: Trying to check value of a Peace Treaty with oneself.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
-
+#else
+int CvDealAI::GetPeaceTreatyValue(PlayerTypes)
+{
+#endif
 	return 0;
 
 	// DEPRECATED
@@ -3488,7 +3526,11 @@ void CvDealAI::DoAddItemsToDealForPeaceTreaty(PlayerTypes eOtherPlayer, CvDeal* 
 	}
 
 	// If the player only has 1 City then we can't get any more from him
+#ifdef AUI_WARNING_FIXES
+	else if (iPercentCitiesGiveUp > 0 || (bGiveOnlyOneCity && pLosingPlayer->getNumCities() > 1))
+#else
 	else if (iPercentCitiesGiveUp > 0 || bGiveOnlyOneCity && pLosingPlayer->getNumCities() > 1)
+#endif
 	{
 		int iCityValue = 0;
 		int iCityDistanceFromWinnersCapital = 0;
@@ -3957,6 +3999,20 @@ void CvDealAI::DoTradeScreenClosed(bool bAIWasMakingOffer)
 	GC.GetEngineUserInterface()->SetAIRequestingConcessions(false);
 	GC.GetEngineUserInterface()->SetHumanMakingDemand(false);
 
+#ifdef AUI_WARNING_FIXES
+	CvDiplomacyAI* pDiplomacyAI = GetPlayer()->GetDiplomacyAI();
+	pDiplomacyAI->ClearDealToRenew();
+
+	if (bAIWasMakingOffer)
+	{
+		// If AI was planning on a mutual Research Agreement, cancel it because the human left :(
+		// May want to do this slightly differently, as we can't be 100% sure this is what the AI was asking about (although if we make it through both of the following if statements there's an awful lot of circumstantial evidence)
+		if (pDiplomacyAI->IsWantsResearchAgreementWithPlayer(eActivePlayer))
+		{
+			if (pDiplomacyAI->IsCanMakeResearchAgreementRightNow(eActivePlayer))
+			{
+				pDiplomacyAI->DoCancelWantsResearchAgreementWithPlayer(eActivePlayer);
+#else
 	GetPlayer()->GetDiplomacyAI()->ClearDealToRenew();
 
 	if(bAIWasMakingOffer)
@@ -3968,6 +4024,7 @@ void CvDealAI::DoTradeScreenClosed(bool bAIWasMakingOffer)
 			if(GetPlayer()->GetDiplomacyAI()->IsCanMakeResearchAgreementRightNow(eActivePlayer))
 			{
 				GetPlayer()->GetDiplomacyAI()->DoCancelWantsResearchAgreementWithPlayer(eActivePlayer);
+#endif
 			}
 		}
 	}

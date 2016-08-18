@@ -1036,6 +1036,16 @@
         <Type>UpdateDatabase</Type>
         <FileName>gameplay/CIV5GameOptions_Capitol_Gifting.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/CIV5GameOptions_No_Tech_Cost_Total_Known_Team_Modifier.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/AdjustKnownTechCostDiscount.xml</FileName>
+      </Action>
     </ModActions>
     <ModContent>
       <Content>
@@ -1299,11 +1309,19 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
+    <Content Include="gameplay\AdjustKnownTechCostDiscount.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="gameplay\CIV5GameOptions_AutoPause_on_Active_Disconnect.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="gameplay\CIV5GameOptions_Capitol_Gifting.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="gameplay\CIV5GameOptions_No_Tech_Cost_Total_Known_Team_Modifier.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

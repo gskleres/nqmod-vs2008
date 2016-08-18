@@ -115,7 +115,11 @@ public:
 	void changeNumImprovements(ImprovementTypes eImprovement, int iChange);
 
 	CvAreaBoundaries getAreaBoundaries() const;
+#ifdef AUI_WARNING_FIXES
+	void setAreaBoundaries(const CvAreaBoundaries& newBoundaries);
+#else
 	void setAreaBoundaries(CvAreaBoundaries newBoundaries);
+#endif
 
 	void GetTopAndBottomLatitudes(int& iTopLatitude, int& iBottomLatitude);
 	int GetAreaMaxLatitude();

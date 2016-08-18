@@ -99,22 +99,30 @@ struct CvResolutionEffects
 	bool HasOngoingEffects() const;
 	void AddOngoingEffects(const CvResolutionEffects* pOtherEffects);
 
+#ifndef AUI_WARNING_FIXES
 	bool bDiplomaticVictory;
 	bool bChangeLeagueHost;
+#endif
 	int iOneTimeGold;
 	int iOneTimeGoldPercent;
+#ifndef AUI_WARNING_FIXES
 	bool bRaiseCityStateInfluenceToNeutral;
+#endif
 	LeagueProjectTypes eLeagueProjectEnabled;
 	int iGoldPerTurn;
 	int iResourceQuantity;
+#ifndef AUI_WARNING_FIXES
 	bool bEmbargoCityStates;
 	bool bEmbargoPlayer;
 	bool bNoResourceHappiness;
+#endif
 	int iUnitMaintenanceGoldPercent;
 	int iMemberDiscoveredTechMod;
 	int iCulturePerWonder;
 	int iCulturePerNaturalWonder;
+#ifndef AUI_WARNING_FIXES
 	bool bNoTrainingNuclearWeapons;
+#endif
 	int iVotesForFollowingReligion;
 	int iHolyCityTourism;
 	int iReligionSpreadStrengthMod;
@@ -124,6 +132,15 @@ struct CvResolutionEffects
 	int iScienceyGreatPersonRateMod;
 	int iGreatPersonTileImprovementCulture;
 	int iLandmarkCulture;
+#ifdef AUI_WARNING_FIXES
+	bool bDiplomaticVictory;
+	bool bChangeLeagueHost;
+	bool bRaiseCityStateInfluenceToNeutral;
+	bool bEmbargoCityStates;
+	bool bEmbargoPlayer;
+	bool bNoResourceHappiness;
+	bool bNoTrainingNuclearWeapons;
+#endif
 };
 
 FDataStream& operator>>(FDataStream&, CvResolutionEffects&);
@@ -155,7 +172,11 @@ public:
 	typedef FStaticVector<PlayerVote, MAX_MAJOR_CIVS, false, c_eCiv5GameplayDLL> PlayerVoteList;
 
 	// Pure virtual functions
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	virtual int GetDecision() const = 0;
+#else
 	virtual int GetDecision() = 0;
+#endif
 	
 	ResolutionDecisionTypes GetType() const;
 
@@ -185,8 +206,13 @@ public:
 	CvProposerDecision(ResolutionDecisionTypes eType, PlayerTypes eProposer, int iChoice);
 	~CvProposerDecision(void);
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int GetDecision() const;
+	PlayerTypes GetProposer() const;
+#else
 	int GetDecision();
 	PlayerTypes GetProposer();
+#endif
 
 	PlayerVote m_sVote;
 
@@ -211,6 +237,16 @@ public:
 	CvVoterDecision(ResolutionDecisionTypes eType);
 	~CvVoterDecision(void);
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int GetDecision() const;
+	bool IsTie() const;
+	std::vector<int> GetTopVotedChoices(int iNumTopChoices) const;
+	int GetVotesCast() const;
+	int GetVotesCastForChoice(int iChoice) const;
+	int GetVotesMarginOfTopChoice() const;
+	int GetVotesCastByPlayer(PlayerTypes ePlayer) const;
+	LeagueHelpers::PlayerList GetPlayersVotingForChoice(int iChoice) const;
+#else
 	int GetDecision();
 	bool IsTie();
 	std::vector<int> GetTopVotedChoices(int iNumTopChoices);
@@ -219,9 +255,15 @@ public:
 	int GetVotesMarginOfTopChoice();
 	int GetVotesCastByPlayer(PlayerTypes ePlayer);
 	LeagueHelpers::PlayerList GetPlayersVotingForChoice(int iChoice);
+#endif
 	void ProcessVote(PlayerTypes eVoter, int iNumVotes, int iChoice);
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	CvString GetVotesAsText(const CvLeague* pLeague) const;
+	static bool ComparePlayerVote(const PlayerVote& lhs, const PlayerVote& rhs);
+#else
 	CvString GetVotesAsText(CvLeague* pLeague);
 	bool ComparePlayerVote(const PlayerVote& lhs, const PlayerVote& rhs);
+#endif
 
 	PlayerVoteList m_vVotes;
 
@@ -256,7 +298,14 @@ public:
 	CvResolutionEffects* GetEffects();
 	CvVoterDecision* GetVoterDecision();
 	CvProposerDecision* GetProposerDecision();
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	const CvResolutionEffects* GetEffects() const;
+	const CvVoterDecision* GetVoterDecision() const;
+	const CvProposerDecision* GetProposerDecision() const;
+	CvString GetName() const;
+#else
 	CvString GetName();
+#endif
 
 	int m_iID;
 	ResolutionTypes m_eType;
@@ -288,8 +337,13 @@ public:
 	~CvProposal(void);
 
 	// Pure virtual functions
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	virtual bool IsPassed(int iTotalSessionVotes) const = 0;
+	virtual CvString GetProposalName(bool bForLogging) const = 0;
+#else
 	virtual bool IsPassed(int iTotalSessionVotes) = 0;
 	virtual CvString GetProposalName(bool bForLogging) = 0;
+#endif
 
 	PlayerTypes GetProposalPlayer() const;
 
@@ -316,8 +370,13 @@ public:
 	~CvEnactProposal(void);
 
 	void Init();
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	bool IsPassed(int iTotalSessionVotes) const;
+	CvString GetProposalName(bool bForLogging = false) const;
+#else
 	bool IsPassed(int iTotalSessionVotes);
 	CvString GetProposalName(bool bForLogging = false);
+#endif
 
 private:
 };
@@ -372,12 +431,22 @@ class CvRepealProposal : public CvProposal
 {
 public:
 	CvRepealProposal(void);
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	CvRepealProposal(const CvActiveResolution* pResolution, PlayerTypes eProposalPlayer);
+#else
 	CvRepealProposal(CvActiveResolution* pResolution, PlayerTypes eProposalPlayer);
+#endif
 	~CvRepealProposal(void);
 
 	void Init();
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	bool IsPassed(int iTotalSessionVotes) const;
+	CvString GetProposalName(bool bForLogging = false) const;
+	const CvVoterDecision* GetRepealDecision() const;
+#else
 	bool IsPassed(int iTotalSessionVotes);
 	CvString GetProposalName(bool bForLogging = false);
+#endif
 
 	int GetTargetResolutionID() const;
 	CvVoterDecision* GetRepealDecision();
@@ -495,8 +564,13 @@ public:
 	bool IsProposed(int iResolutionID, bool bRepeal, bool bCheckOnHold = false);
 	bool IsEnactProposed(ResolutionTypes eResolution, int iProposerChoice);
 	bool IsRepealProposed(int iResolutionID) const;
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	std::vector<int> GetChoicesForDecision(ResolutionDecisionTypes eDecision, PlayerTypes eDecider) const;
+	CvString GetTextForChoice(ResolutionDecisionTypes eDecision, int iChoice) const;
+#else
 	std::vector<int> GetChoicesForDecision(ResolutionDecisionTypes eDecision, PlayerTypes eDecider);
 	CvString GetTextForChoice(ResolutionDecisionTypes eDecision, int iChoice);
+#endif
 	std::vector<ResolutionTypes> GetInactiveResolutions() const;
 	CvEnactProposal* GetEnactProposal(int iResolutionID);
 	EnactProposalList GetEnactProposals() const;
@@ -718,6 +792,9 @@ public:
 	void SetDiplomaticVictor(PlayerTypes ePlayer);
 	bool IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient);
 	bool IsLuxuryHappinessBanned(PlayerTypes ePlayer, ResourceTypes eLuxury);
+#ifdef AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+	int GetResearchMod(TeamTypes eTeam, TechTypes eTech) const;
+#endif
 	int GetResearchMod(PlayerTypes ePlayer, TechTypes eTech);
 	int GetFeatureYieldChange(PlayerTypes ePlayer, FeatureTypes eFeature, YieldTypes eYield);
 	int GetWorldWonderYieldChange(PlayerTypes ePlayer, YieldTypes eYield);
@@ -876,10 +953,17 @@ public:
 	void DoVoteCommitments(CvLeague* pLeague);
 
 	// Naked knowledge for other players
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	DesireLevels EvaluateVoteForTrade(int iResolutionID, int iVoteChoice, int iNumVotes, bool bRepeal) const;
+	DesireLevels EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes eProposer, ResolutionTypes eResolution, int iProposerChoice = LeagueHelpers::CHOICE_NONE) const;
+	DesireLevels EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes eProposer, int iTargetResolutionID) const;
+	AlignmentLevels EvaluateAlignment(PlayerTypes ePlayer) const;
+#else
 	DesireLevels EvaluateVoteForTrade(int iResolutionID, int iVoteChoice, int iNumVotes, bool bRepeal);
 	DesireLevels EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes eProposer, ResolutionTypes eResolution, int iProposerChoice = LeagueHelpers::CHOICE_NONE);
 	DesireLevels EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes eProposer, int iTargetResolutionID);
 	AlignmentLevels EvaluateAlignment(PlayerTypes ePlayer);
+#endif
 
 	// Masked knowledge for other players
 	KnowledgeLevels GetKnowledgeGivenToOtherPlayer(PlayerTypes eToPlayer, CvString* sTooltipSink = NULL);
@@ -895,6 +979,9 @@ public:
 	CvString GetCommitVoteDetails(PlayerTypes eToPlayer);
 
 	CvPlayer* GetPlayer();
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	const CvPlayer* GetPlayer() const;
+#endif
 
 	CvPlayer* m_pPlayer;
 
@@ -902,33 +989,57 @@ public:
 
 private:
 	
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	static CvString GetTextForDesire(DesireLevels eDesire);
+	static DesireLevels EvaluateDesire(int iRawEvaluationScore);
+#else
 	CvString GetTextForDesire(DesireLevels eDesire);
 	DesireLevels EvaluateDesire(int iRawEvaluationScore);
+#endif
 
 	// Voting
 	void AllocateVotes(CvLeague* pLeague);
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
+	void FindBestVoteChoices(const CvEnactProposal* pProposal, VoteConsiderationList& considerations) const;
+	void FindBestVoteChoices(const CvRepealProposal* pProposal, VoteConsiderationList& considerations) const;
+	int ScoreVoteChoice(const CvEnactProposal* pProposal, int iChoice) const;
+	int ScoreVoteChoice(const CvRepealProposal* pProposal, int iChoice) const;
+	int ScoreVoteChoiceYesNo(const CvProposal* pProposal, int iChoice, bool bEnact) const;
+	int ScoreVoteChoicePlayer(const CvProposal* pProposal, int iChoice, bool bEnact) const;
+#else
 	void FindBestVoteChoices(CvEnactProposal* pProposal, VoteConsiderationList& considerations);
 	void FindBestVoteChoices(CvRepealProposal* pProposal, VoteConsiderationList& considerations);
 	int ScoreVoteChoice(CvEnactProposal* pProposal, int iChoice);
 	int ScoreVoteChoice(CvRepealProposal* pProposal, int iChoice);
 	int ScoreVoteChoiceYesNo(CvProposal* pProposal, int iChoice, bool bEnact);
 	int ScoreVoteChoicePlayer(CvProposal* pProposal, int iChoice, bool bEnact);
+#endif
 
 	// Proposing
 	void AllocateProposals(CvLeague* pLeague);
 #ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
-	int ScoreProposal(CvLeague* pLeague, ResolutionTypes eResolution, int iChoice = LeagueHelpers::CHOICE_NONE, PlayerTypes eProposalPlayer = NO_PLAYER);
-	int ScoreProposal(CvLeague* pLeague, CvActiveResolution* pResolution, PlayerTypes eProposalPlayer = NO_PLAYER);
+	int ScoreProposal(const CvLeague* pLeague, ResolutionTypes eResolution, int iChoice = LeagueHelpers::CHOICE_NONE, PlayerTypes eProposalPlayer = NO_PLAYER) const;
+	int ScoreProposal(const CvLeague* pLeague, const CvActiveResolution* pResolution, PlayerTypes eProposalPlayer = NO_PLAYER) const;
+#elif defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int ScoreProposal(const CvLeague* pLeague, ResolutionTypes eResolution, int iChoice = LeagueHelpers::CHOICE_NONE) const;
+	int ScoreProposal(const CvLeague* pLeague, CvActiveResolution* pResolution) const;
 #else
 	int ScoreProposal(CvLeague* pLeague, ResolutionTypes eResolution, int iChoice = LeagueHelpers::CHOICE_NONE);
 	int ScoreProposal(CvLeague* pLeague, CvActiveResolution* pResolution);
 #endif
 
 	// Logging
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	void LogVoteChoiceConsidered(const CvEnactProposal* pProposal, int iChoice, int iScore) const;
+	void LogVoteChoiceConsidered(const CvRepealProposal* pProposal, int iChoice, int iScore) const;
+	void LogVoteChoiceCommitted(const CvEnactProposal* pProposal, int iChoice, int iVotes) const;
+	void LogVoteChoiceCommitted(const CvRepealProposal* pProposal, int iChoice, int iVotes) const;
+#else
 	void LogVoteChoiceConsidered(CvEnactProposal* pProposal, int iChoice, int iScore);
 	void LogVoteChoiceConsidered(CvRepealProposal* pProposal, int iChoice, int iScore);
 	void LogVoteChoiceCommitted(CvEnactProposal* pProposal, int iChoice, int iVotes);
 	void LogVoteChoiceCommitted(CvRepealProposal* pProposal, int iChoice, int iVotes);
+#endif
 };
 
 

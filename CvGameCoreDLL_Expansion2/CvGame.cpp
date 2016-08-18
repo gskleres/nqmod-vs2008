@@ -316,7 +316,11 @@ void CvGame::init(HandicapTypes eHandicap)
 
 		if (kEraInfo.isNoReligion())
 		{
+#ifdef AUI_WARNING_FIXES
+			CvPreGame::SetGameOption(GAMEOPTION_NO_RELIGION, 1);
+#else
 			CvPreGame::SetGameOption(GAMEOPTION_NO_RELIGION, true);
+#endif
 		}
 	}
 
@@ -531,14 +535,22 @@ bool CvGame::InitMap(CvGameInitialItemsOverrides& kGameInitialItemsOverrides)
 		delete pGenerator;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	CvBarbarians::MapInit(kMap.numPlots());
+#else
 	CvBarbarians::MapInit(GC.getMap().numPlots());
+#endif
 
 	// Run this for all maps because a map should never crash the game on
 	// load regardless of where that map came from.  (The map scripts are mod-able after all!!!)
 	CvWorldBuilderMapLoader::ValidateCoast();
 
 	// Update some cached values
+#ifdef AUI_WARNING_FIXES
+	kMap.updateAdjacency();
+#else
 	GC.getMap().updateAdjacency();
+#endif
 
 #ifndef AUI_PLOT_OBSERVER_SEE_ALL_PLOTS
 	// Set all the observer teams to be able to see all the plots
@@ -554,12 +566,14 @@ bool CvGame::InitMap(CvGameInitialItemsOverrides& kGameInitialItemsOverrides)
 				const int iNumInvisibleInfos = NUM_INVISIBLE_TYPES;
 #endif
 #ifdef AUI_WARNING_FIXES
-				for (uint plotID = 0; plotID < GC.getMap().numPlots(); plotID++)
+				for (uint plotID = 0; plotID < kMap.numPlots(); plotID++)
+				{
+					CvPlot* pLoopPlot = kMap.plotByIndexUnchecked(plotID);
 #else
 				for(int plotID = 0; plotID < GC.getMap().numPlots(); plotID++)
-#endif
 				{
 					CvPlot* pLoopPlot = GC.getMap().plotByIndexUnchecked(plotID);
+#endif
 
 #ifdef AUI_PLOT_OBSERVER_SEE_ALL_PLOTS
 					pLoopPlot->setRevealed(OBSERVER_TEAM, true, false);
@@ -1564,7 +1578,7 @@ void CvGame::update()
 				bool bDoAI = true;
 				if (isAnySimultaneousTurns())
 				{
-					while (m_iCurrentTurnOrderActive <= m_iLastTurnOrderID)
+					while (m_iCurrentTurnOrderActive < m_iLastTurnOrderID)
 					{
 						m_iCurrentTurnOrderActive++;
 						// If there's a human player who still needs to go, breaking out of the loop and reseting the turn timer is enough
@@ -1575,12 +1589,13 @@ void CvGame::update()
 							if (!player.isTurnActive() && player.isHuman() && player.isAlive() && (player.getTurnOrder() == m_iCurrentTurnOrderActive))
 							{
 								bDoAI = false;
-								break;
+								goto TurnAdvanceCheck;
 							}
 						}
 					}
 				}
 
+			TurnAdvanceCheck:;
 				if (bDoAI)
 				{
 					if (gDLL->CanAdvanceTurn())
@@ -1923,12 +1938,21 @@ void CvGame::updateCitySight(bool bIncrement)
 //	--------------------------------------------------------------------------------
 void CvGame::updateSelectionList()
 {
+#ifdef AUI_WARNING_FIXES
+	ICvUserInterface2& kEngineUserInterface = *GC.GetEngineUserInterface();
+	if (!kEngineUserInterface.DoAutoUnitCycle())
+#else
 	if(!GC.GetEngineUserInterface()->DoAutoUnitCycle())
+#endif
 	{
 		return;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	auto_ptr<ICvUnit1> pDllHeadSelectedUnit(kEngineUserInterface.GetHeadSelectedUnit());
+#else
 	auto_ptr<ICvUnit1> pDllHeadSelectedUnit(GC.GetEngineUserInterface()->GetHeadSelectedUnit());
+#endif
 	CvUnit* pkHeadSelectedUnit = GC.UnwrapUnitPointer(pDllHeadSelectedUnit.get());
 
 	if((pkHeadSelectedUnit == NULL) || !(pkHeadSelectedUnit->ReadyToSelect()))
@@ -1939,17 +1963,30 @@ void CvGame::updateSelectionList()
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	pDllHeadSelectedUnit.reset(kEngineUserInterface.GetHeadSelectedUnit());
+#else
 	pDllHeadSelectedUnit.reset(GC.GetEngineUserInterface()->GetHeadSelectedUnit());
+#endif
 	pkHeadSelectedUnit = GC.UnwrapUnitPointer(pDllHeadSelectedUnit.get());
 
 	if((pkHeadSelectedUnit == NULL) || !(pkHeadSelectedUnit->ReadyToSelect()))
 	{
+#ifdef AUI_WARNING_FIXES
+		int iOriginalPlotIndex = kEngineUserInterface.getOriginalPlotIndex();
+		CvPlot* pkOriginalPlot = (iOriginalPlotIndex != -1) ? GC.getMap().plotByIndex(iOriginalPlotIndex) : NULL;
+
+		if ((pkOriginalPlot == NULL) || !(cyclePlotUnits(pkOriginalPlot, true, true, kEngineUserInterface.getOriginalPlotCount())))
+		{
+			auto_ptr<ICvPlot1> pSelectionPlot(kEngineUserInterface.getSelectionPlot());
+#else
 		int iOriginalPlotIndex = GC.GetEngineUserInterface()->getOriginalPlotIndex();
 		CvPlot* pkOriginalPlot = (iOriginalPlotIndex != -1)? GC.getMap().plotByIndex(iOriginalPlotIndex) : NULL;
 
 		if((pkOriginalPlot == NULL) || !(cyclePlotUnits(pkOriginalPlot, true, true, GC.GetEngineUserInterface()->getOriginalPlotCount())))
 		{
 			auto_ptr<ICvPlot1> pSelectionPlot(GC.GetEngineUserInterface()->getSelectionPlot());
+#endif
 			CvPlot* pkSelectionPlot = GC.UnwrapPlotPointer(pSelectionPlot.get());
 			if((pkSelectionPlot == NULL) || !(cyclePlotUnits(pkSelectionPlot, true, true)))
 			{
@@ -1957,14 +1994,22 @@ void CvGame::updateSelectionList()
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		pDllHeadSelectedUnit.reset(kEngineUserInterface.GetHeadSelectedUnit());
+#else
 		pDllHeadSelectedUnit.reset(GC.GetEngineUserInterface()->GetHeadSelectedUnit());
+#endif
 		pkHeadSelectedUnit = GC.UnwrapUnitPointer(pDllHeadSelectedUnit.get());
 
 		if(pkHeadSelectedUnit != NULL)
 		{
 			if(!(pkHeadSelectedUnit->ReadyToSelect()))
 			{
+#ifdef AUI_WARNING_FIXES
+				kEngineUserInterface.ClearSelectionList();
+#else
 				GC.GetEngineUserInterface()->ClearSelectionList();
+#endif
 			}
 		}
 	}
@@ -2488,7 +2533,9 @@ void CvGame::cycleCities(bool bForward, bool bAdd)
 void CvGame::cycleUnits(bool bClear, bool bForward, bool bWorkers)
 {
 	CvUnit* pNextUnit;
+#ifndef AUI_WARNING_FIXES
 	CvCity* pCycleCity = NULL;
+#endif
 	bool bWrap = false;
 	bool bProcessed = false;
 	PlayerTypes eActivePlayer = getActivePlayer();
@@ -2527,7 +2574,11 @@ void CvGame::cycleUnits(bool bClear, bool bForward, bool bWorkers)
 		bProcessed = true;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	if (pNextUnit != NULL /*&& bWrap && !pCycleCity */ && !bProcessed)
+#else
 	if(pNextUnit != NULL /*&& bWrap */&& !pCycleCity && !bProcessed)
+#endif
 	{
 		CvAssert(pNextUnit->getOwner() == eActivePlayer);
 		selectUnit(pNextUnit, bClear);
@@ -2541,7 +2592,11 @@ void CvGame::cycleUnits(bool bClear, bool bForward, bool bWorkers)
 
 	pDllSelectedUnit.reset(pUI->GetHeadSelectedUnit());
 	CvUnit* pCurrentSelectedUnit = GC.UnwrapUnitPointer(pDllSelectedUnit.get());
+#ifdef AUI_WARNING_FIXES
+	if ((pCycleUnit != pCurrentSelectedUnit) || ((pCycleUnit != NULL) && pCycleUnit->ReadyToSelect()) /*|| pCycleCity*/)
+#else
 	if((pCycleUnit != pCurrentSelectedUnit) || ((pCycleUnit != NULL) && pCycleUnit->ReadyToSelect()) || pCycleCity)
+#endif
 	{
 		pUI->lookAtSelectionPlot();
 	}
@@ -2948,7 +3003,7 @@ void CvGame::selectGroup(CvUnit* pUnit, bool bShift, bool bCtrl, bool bAlt)
 				{
 					CvPlayerAI* pOwnerPlayer = &(GET_PLAYER(pLoopUnit->getOwner()));
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
-					if (!pOwnerPlayer->isHuman() || !isAnySimultaneousTurns() || pOwnerPlayer->getTurnOrder() != m_iCurrentTurnOrderActive || getTurnSlice() - pLoopUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
+					if (!pOwnerPlayer->isHuman() || !isAnySimultaneousTurns() || !pOwnerPlayer->isTurnActive() || getTurnSlice() - pLoopUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
 #else
 					if( !pOwnerPlayer->isSimultaneousTurns() || getTurnSlice() - pLoopUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
 #endif
@@ -3086,8 +3141,7 @@ bool CvGame::canHandleAction(int iAction, CvPlot* pPlot, bool bTestVisible)
 		if(pkHeadSelectedUnit->getOwner() == getActivePlayer())
 		{
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
-			CvPlayer& kSelectedUnitOwner = GET_PLAYER(pkHeadSelectedUnit->getOwner());
-			if ((isAnySimultaneousTurns() && kSelectedUnitOwner.isHuman() && kSelectedUnitOwner.getTurnOrder() == m_iCurrentTurnOrderActive) || kSelectedUnitOwner.isTurnActive())
+			if (GET_PLAYER(pkHeadSelectedUnit->getOwner()).isTurnActive())
 #else
 			if(GET_PLAYER(pkHeadSelectedUnit->getOwner()).isSimultaneousTurns() || GET_PLAYER(pkHeadSelectedUnit->getOwner()).isTurnActive())
 #endif
@@ -3500,7 +3554,7 @@ void CvGame::doControl(ControlTypes eControl)
 				{
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 					CvPlayer& kUnitOwner = GET_PLAYER(pUnit->getOwner());
-					if (!kUnitOwner.isHuman() || !isAnySimultaneousTurns() || kUnitOwner.getTurnOrder() != m_iCurrentTurnOrderActive || getTurnSlice() - pUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
+					if (!kUnitOwner.isHuman() || !isAnySimultaneousTurns() || !kUnitOwner.isTurnActive() || getTurnSlice() - pUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
 #else
 					if(!GET_PLAYER(pUnit->getOwner()).isSimultaneousTurns() || getTurnSlice() - pUnit->getLastMoveTurn() > GC.getMIN_TIMER_UNIT_DOUBLE_MOVES())
 #endif
@@ -4604,7 +4658,11 @@ int CvGame::getNumSequentialHumans(PlayerTypes ignorePlayer)
 }
 
 //	------------------------------------------------------------------------------------------------
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+int CvGame::getGameTurn() const
+#else
 int CvGame::getGameTurn()
+#endif
 {
 	return CvPreGame::gameTurn();
 }
@@ -5747,16 +5805,29 @@ void CvGame::setDebugMode(bool bDebugMode)
 //	--------------------------------------------------------------------------------
 void CvGame::toggleDebugMode()
 {
+#ifdef AUI_WARNING_FIXES
+	m_bDebugMode = !m_bDebugMode;
+#else
 	m_bDebugMode = ((m_bDebugMode) ? false : true);
+#endif
 	updateDebugModeCache();
 
 	GC.getMap().updateVisibility();
 
+#ifdef AUI_WARNING_FIXES
+	ICvUserInterface2& kEngineUserInterface = *GC.GetEngineUserInterface();
+	kEngineUserInterface.setDirty(GameData_DIRTY_BIT, true);
+	kEngineUserInterface.setDirty(Score_DIRTY_BIT, true);
+	kEngineUserInterface.setDirty(MinimapSection_DIRTY_BIT, true);
+	kEngineUserInterface.setDirty(UnitInfo_DIRTY_BIT, true);
+	kEngineUserInterface.setDirty(CityInfo_DIRTY_BIT, true);
+#else
 	GC.GetEngineUserInterface()->setDirty(GameData_DIRTY_BIT, true);
 	GC.GetEngineUserInterface()->setDirty(Score_DIRTY_BIT, true);
 	GC.GetEngineUserInterface()->setDirty(MinimapSection_DIRTY_BIT, true);
 	GC.GetEngineUserInterface()->setDirty(UnitInfo_DIRTY_BIT, true);
 	GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -7898,7 +7969,12 @@ void CvGame::doTurn()
 	resetTurnTimer(true);
 
 	// If player unit cycling has been canceled for this turn, set it back to normal for the next
+#ifdef AUI_WARNING_FIXES
+	ICvUserInterface2& kEngineUserInterface = *GC.GetEngineUserInterface();
+	kEngineUserInterface.setNoSelectionListCycle(false);
+#else
 	GC.GetEngineUserInterface()->setNoSelectionListCycle(false);
+#endif
 
 	gDLL->DoTurn();
 
@@ -7924,7 +8000,11 @@ void CvGame::doTurn()
 
 	GC.getMap().doTurn();
 
+#ifdef AUI_WARNING_FIXES
+	kEngineUserInterface.doTurn();
+#else
 	GC.GetEngineUserInterface()->doTurn();
+#endif
 
 #ifdef AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
@@ -7950,8 +8030,13 @@ void CvGame::doTurn()
 	GetGameCulture()->DoTurn();
 #endif
 
+#ifdef AUI_WARNING_FIXES
+	kEngineUserInterface.setCanEndTurn(false);
+	kEngineUserInterface.setHasMovedUnit(false);
+#else
 	GC.GetEngineUserInterface()->setCanEndTurn(false);
 	GC.GetEngineUserInterface()->setHasMovedUnit(false);
+#endif
 
 	if(getAIAutoPlay() > 0)
 	{
@@ -8081,7 +8166,11 @@ void CvGame::doTurn()
 			{
 				// This popup his the sync rand, so beware
 				CvPopupInfo kPopupInfo(BUTTONPOPUP_WHOS_WINNING);
+#ifdef AUI_WARNING_FIXES
+				kEngineUserInterface.AddPopup(kPopupInfo);
+#else
 				GC.GetEngineUserInterface()->AddPopup(kPopupInfo);
+#endif
 			}
 		}
 	}
@@ -8166,7 +8255,11 @@ void CvGame::calculateMaxTurnLengths()
 {
 	m_aiMaxTurnLengths.clear();
 
+#ifdef AUI_GAME_RELATIVE_TURN_TIMERS
+	if (getPitbossTurnTime() != 0 && !isOption("GAMEOPTION_RELATIVE_TURN_TIMER"))
+#else
 	if (getPitbossTurnTime() != 0)
+#endif
 	{//manually set turn time.
 		if (isPitboss())
 		{// Turn time is in hours
@@ -8210,7 +8303,18 @@ void CvGame::calculateMaxTurnLengths()
 			}
 
 			// Now set turn length based on base length and unit and city resources
+#ifdef AUI_GAME_RELATIVE_TURN_TIMERS
+			int iBaseTurnTime = kTurnTimer.getBaseTime();
+			int iExtraTurnTime = (kTurnTimer.getCityResource() * iMaxCities) + (kTurnTimer.getUnitResource() * iMaxUnits);
+			if (getPitbossTurnTime() != 0 && isOption("GAMEOPTION_RELATIVE_TURN_TIMER"))
+			{
+				iExtraTurnTime *= getPitbossTurnTime();
+				iExtraTurnTime /= 100;
+			}
+			iBaseTurnTime += iExtraTurnTime;
+#else
 			int iBaseTurnTime = kTurnTimer.getBaseTime() + (kTurnTimer.getCityResource() * iMaxCities) + (kTurnTimer.getUnitResource() * iMaxUnits);
+#endif
 
 			m_aiMaxTurnLengths.push_back(iBaseTurnTime);
 		}
@@ -10385,7 +10489,11 @@ void CvGame::Write(FDataStream& kStream) const
 			ZeroMemory((void*)szBuffer, dwSize);
 
 			DWORD dwBytesRead = 0;
+#ifdef AUI_WARNING_FIXES
+			if (ReadFile(hFile, szBuffer, dwSize, &dwBytesRead, NULL) != FALSE)
+#else
 			if(ReadFile(hFile, szBuffer, dwSize, &dwBytesRead, NULL) == TRUE)
+#endif
 			{
 				//Serialize out the file size first.
 				kStream << dwBytesRead;
@@ -10866,7 +10974,11 @@ CvAdvisorRecommender* CvGame::GetAdvisorRecommender()
 }
 
 //	--------------------------------------------------------------------------------
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+int CvGame::GetTurnsBetweenMinorCivElections() const
+#else
 int CvGame::GetTurnsBetweenMinorCivElections()
+#endif
 {
 	int iTurnsBetweenCityStateElections = GC.getESPIONAGE_TURNS_BETWEEN_CITY_STATE_ELECTIONS();
 	iTurnsBetweenCityStateElections *= GC.getGame().getGameSpeedInfo().getMinorCivElectionFreqMod();
@@ -10875,7 +10987,11 @@ int CvGame::GetTurnsBetweenMinorCivElections()
 }
 
 //	--------------------------------------------------------------------------------
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+int CvGame::GetTurnsUntilMinorCivElection() const
+#else
 int CvGame::GetTurnsUntilMinorCivElection()
+#endif
 {
 	int iMod = 0;
 	int iTurnsBetweenCityStateElections = GetTurnsBetweenMinorCivElections();
@@ -12453,9 +12569,23 @@ CombatPredictionTypes CvGame::GetCombatPrediction(const CvUnit* pAttackingUnit, 
 
 	if(bAttackerDies && bDefenderDies)
 	{
+#ifdef AUI_GAME_FIX_COMBAT_PREDICTION_ACCURATE_PREDICT_TIES
+		// He who hath the least amount of damage survives with 1 HP left
+		if (pAttackingUnit->getDamage() + iDefenderDamageInflicted < pDefendingUnit->getDamage() + iAttackingDamageInflicted)
+		{
+			bAttackerDies = false;
+		}
+		else
+		{
+			bDefenderDies = false;
+		}
+	}
+	if (bAttackerDies)
+#else
 		ePrediction = COMBAT_PREDICTION_STALEMATE;
 	}
 	else if(bAttackerDies)
+#endif
 	{
 		ePrediction = COMBAT_PREDICTION_TOTAL_DEFEAT;
 	}

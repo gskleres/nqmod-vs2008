@@ -1629,7 +1629,11 @@ void CvPlot::changeAdjacentSight(TeamTypes eTeam, int iRange, bool bIncrement, I
 				}
 				else // this is the center point
 				{					
+#ifdef AUI_WARNING_FIXES
+					pPlotToCheck->changeVisibilityCount(eTeam, ((bIncrement) ? 1 : -1), eSeeInvisible, true, bBasedOnUnit ? true : false);
+#else
 					pPlotToCheck->changeVisibilityCount(eTeam, ((bIncrement) ? 1 : -1), eSeeInvisible, true, (bBasedOnUnit && thisRing < 2)?true:false);
+#endif
 					pPlotToCheck->setScratchPad(0);
 				}
 			}
@@ -2323,13 +2327,25 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		const CvImprovementEntry* pkImprovement = GC.getImprovementInfo(eImprovement);
+		if (pkImprovement)
+		{
+#endif
+
 		// Requirements on adjacent plots?
 		if (!bTestVisible)
 		{
+#ifdef AUI_WARNING_FIXES
+			bool bHasLuxuryRequirement = pkImprovement->IsAdjacentLuxury();
+			bool bHasNoAdjacencyRequirement = pkImprovement->IsNoTwoAdjacent();
+			if (bHasLuxuryRequirement || bHasNoAdjacencyRequirement)
+#else
 			CvImprovementEntry *pkImprovement = GC.getImprovementInfo(eImprovement);
 			bool bHasLuxuryRequirement = pkImprovement->IsAdjacentLuxury();
 			bool bHasNoAdjacencyRequirement = pkImprovement->IsNoTwoAdjacent();
 			if (pkImprovement && (bHasLuxuryRequirement || bHasNoAdjacencyRequirement))
+#endif
 			{
 				bool bLuxuryRequirementMet = !bHasLuxuryRequirement;
 				for (int iI = 0; iI < NUM_DIRECTION_TYPES; ++iI)
@@ -2337,7 +2353,11 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 					CvPlot *pAdjacentPlot = plotDirection(getX(), getY(), ((DirectionTypes)iI));
 					if (pAdjacentPlot != NULL)
 					{
+#ifdef AUI_WARNING_FIXES
+						if (!bLuxuryRequirementMet)
+#else
 						if (bHasLuxuryRequirement)
+#endif
 						{
 							ResourceTypes eResource = pAdjacentPlot->getResourceType();
 							if (eResource != NO_RESOURCE)
@@ -2346,6 +2366,10 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 								if (pkResourceInfo && pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY)
 								{
 									bLuxuryRequirementMet = true;
+#ifdef AUI_WARNING_FIXES
+									if (!bHasNoAdjacencyRequirement)
+										break;
+#endif
 								}
 							}
 						}
@@ -2369,17 +2393,25 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 					return false;
 				}
 			}
+#ifdef AUI_WARNING_FIXES
+			if (!pkImprovement->IsIgnoreOwnership())
+#else
 		}
 
 		if(!bTestVisible)
 		{
 			if(!GC.getImprovementInfo(eImprovement)->IsIgnoreOwnership())
+#endif
 			{
 				// Gifts for minors can ignore borders requirements
 				if(bTestPlotOwner)
 				{
 					// Outside Borders - Can be built in or outside our lands, but not in other lands
+#ifdef AUI_WARNING_FIXES
+					if (pkImprovement->IsOutsideBorders())
+#else
 					if(GC.getImprovementInfo(eImprovement)->IsOutsideBorders())
+#endif
 					{
 						if (getTeam() != eTeam && getTeam() != NO_TEAM)
 						{
@@ -2387,7 +2419,11 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 						}
 					}
 					// In Adjacent Friendly - Can be built in or adjacent to our lands
+#ifdef AUI_WARNING_FIXES
+					else if (pkImprovement->IsInAdjacentFriendly())
+#else
 					else if (GC.getImprovementInfo(eImprovement)->IsInAdjacentFriendly())
+#endif
 					{
 						if (getTeam() != eTeam && !isAdjacentTeam(eTeam, false))
 						{
@@ -2395,6 +2431,11 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 						}
 					}
 					// Only City State Territory - Can only be built in City-State territory (not our own lands)
+#ifdef AUI_WARNING_FIXES
+					else if (pkImprovement->IsOnlyCityStateTerritory())
+					{
+						if (!isOwned() || !GET_PLAYER(getOwner()).isMinorCiv())
+#else
 					else if (GC.getImprovementInfo(eImprovement)->IsOnlyCityStateTerritory())
 					{
 						bool bCityStateTerritory = false;
@@ -2407,6 +2448,7 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 						}
 
 						if (!bCityStateTerritory)
+#endif
 						{
 							return false;
 						}
@@ -2420,6 +2462,9 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 		}
 
 		bValid = true;
+#ifdef AUI_WARNING_FIXES
+		}
+#endif
 	}
 
 	eRoute = ((RouteTypes)(GC.getBuildInfo(eBuild)->getRoute()));
@@ -2467,8 +2512,13 @@ bool CvPlot::canBuild(BuildTypes eBuild, PlayerTypes ePlayer, bool bTestVisible,
 					}
 
 					// Some improvements are exceptions
+#ifdef AUI_WARNING_FIXES
+					CvImprovementEntry *pkImprovement = GC.getImprovementInfo(eImprovement);
+					if (pkImprovement && !pkImprovement->IsIgnoreOwnership() && !pkImprovement->IsOnlyCityStateTerritory())
+#else
 					if (!GC.getImprovementInfo(eImprovement)->IsIgnoreOwnership() &&
 						!GC.getImprovementInfo(eImprovement)->IsOnlyCityStateTerritory())
+#endif
 					{
 						return false;
 					}
@@ -4170,7 +4220,7 @@ void CvPlot::SetTradeRoute(PlayerTypes ePlayer, bool bActive)
 		for(int iI = 0; iI < MAX_TEAMS; ++iI)
 		{
 #ifdef AUI_PLOT_OBSERVER_SEE_ALL_PLOTS
-			if (iI == OBSERVER_TEAM || (GET_TEAM((TeamTypes)iI).isAlive()) && GC.getGame().getActiveTeam() == (TeamTypes)iI)
+			if (iI == OBSERVER_TEAM || ((GET_TEAM((TeamTypes)iI).isAlive()) && GC.getGame().getActiveTeam() == (TeamTypes)iI))
 #else
 			if(GET_TEAM((TeamTypes)iI).isAlive() && GC.getGame().getActiveTeam() == (TeamTypes)iI)
 #endif
@@ -5726,7 +5776,9 @@ void CvPlot::setFeatureType(FeatureTypes eNewValue, int iVariety)
 
 	eOldFeature = getFeatureType();
 
+#ifndef AUI_WARNING_FIXES
 	iVariety = 0;
+#endif
 
 	if((eOldFeature != eNewValue) || (m_iFeatureVariety != iVariety))
 	{
@@ -10211,12 +10263,14 @@ void CvPlot::updateLayout(bool bDebug)
 	else
 	{
 		bShowHalfBuilt = false;
+#ifdef AUI_WARNING_FIXES
+		if (getAnyBuildProgress() && eFOWMode == FOGOFWARMODE_OFF)
+		{
+			for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
+#else
 		if(eRoute == NO_ROUTE && getAnyBuildProgress() && eFOWMode == FOGOFWARMODE_OFF)
 		{
 			// see if we are improving the tile
-#ifdef AUI_WARNING_FIXES
-			for (uint iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
-#else
 			for(int iBuildIndex = 0; iBuildIndex < GC.getNumBuildInfos(); iBuildIndex++)
 #endif
 			{

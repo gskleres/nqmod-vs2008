@@ -151,7 +151,11 @@ int Read(FDataStream& kStream, bool* bValid /*= NULL*/)
 		{
 			if(bValid) *bValid = false;
 			CvString szError;
+#ifdef AUI_WARNING_FIXES
+			szError.Format("LOAD ERROR: Type not found: %s", sTemp.GetCString());
+#else
 			szError.Format("LOAD ERROR: Type not found: %s", sTemp);
+#endif
 			GC.LogMessage(szError.GetCString());
 			CvAssertMsg(false, szError);
 		}

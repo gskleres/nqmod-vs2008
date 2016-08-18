@@ -15,6 +15,9 @@
 /// Constructor
 CvFlavorRecipient::CvFlavorRecipient():
 	m_piLatestFlavorValues(NULL)
+#ifdef AUI_WARNING_FIXES
+	, m_bIsCity(false)
+#endif
 {
 
 }
@@ -126,6 +129,9 @@ int CvFlavorRecipient::GetLatestFlavorValue(FlavorTypes eFlavor, bool bAllowNega
 CvFlavorManager::CvFlavorManager(void):
 	m_piPersonalityFlavor(NULL),
 	m_piActiveFlavor(NULL)
+#ifdef AUI_WARNING_FIXES
+	, m_pPlayer(NULL)
+#endif
 {
 
 }
@@ -145,6 +151,10 @@ void CvFlavorManager::Init(CvPlayer* pPlayer)
 	m_pPlayer = pPlayer;
 
 	// Allocate memory
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_piPersonalityFlavor);
+	SAFE_DELETE_ARRAY(m_piActiveFlavor);
+#endif
 	m_piPersonalityFlavor = FNEW(int[GC.getNumFlavorTypes()], c_eCiv5GameplayDLL, 0);
 	m_piActiveFlavor = FNEW(int[GC.getNumFlavorTypes()], c_eCiv5GameplayDLL, 0);
 	m_FlavorTargetList.get_allocator().Reserve((3*64)+100);

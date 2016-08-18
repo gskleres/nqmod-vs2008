@@ -205,7 +205,13 @@ CvUnit *CvUnitCycler::Cycle(CvUnit* pUnit, bool bForward, bool bWorkers, bool* p
 
 		while (true)
 		{
+#ifdef AUI_WARNING_FIXES
+			if (pUnitNode)
+			{
+				pLoopUnit = m_pkPlayer->getUnit(pUnitNode->m_data);
+#else
 			pLoopUnit = m_pkPlayer->getUnit(pUnitNode->m_data);
+#endif
 			CvAssertMsg(pLoopUnit, "LoopUnit is not assigned a valid value");
 
 			if (pLoopUnit && pLoopUnit->ReadyToSelect())
@@ -223,6 +229,9 @@ CvUnit *CvUnitCycler::Cycle(CvUnit* pUnit, bool bForward, bool bWorkers, bool* p
 					return pLoopUnit.pointer();
 				}
 			}
+#ifdef AUI_WARNING_FIXES
+			}
+#endif
 
 			if (bForward)
 			{
