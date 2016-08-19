@@ -26,6 +26,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_iLevel(0),
 	m_iPolicyCostModifier(0),
 	m_iCulturePerCity(0),
+#ifdef FRUITY_TRADITION_ARISTOCRACY
+	m_iCapitalCulturePerUniqueLuxury(0),
+#endif
 	m_iCulturePerWonder(0),
 	m_iCultureWonderMultiplier(0),
 	m_iCulturePerTechResearched(0),
@@ -283,6 +286,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iLevel = kResults.GetInt("Level");
 	m_iPolicyCostModifier = kResults.GetInt("PolicyCostModifier");
 	m_iCulturePerCity = kResults.GetInt("CulturePerCity");
+#ifdef FRUITY_TRADITION_ARISTOCRACY
+	m_iCapitalCulturePerUniqueLuxury = kResults.GetInt("CapitalCulturePerUniqueLuxury");
+#endif
 	m_iCulturePerWonder = kResults.GetInt("CulturePerWonder");
 	m_iCultureWonderMultiplier = kResults.GetInt("CultureWonderMultiplier");
 	m_iCulturePerTechResearched = kResults.GetInt("CulturePerTechResearched");
@@ -745,6 +751,15 @@ int CvPolicyEntry::GetCulturePerCity() const
 {
 	return m_iCulturePerCity;
 }
+
+#ifdef FRUITY_TRADITION_ARISTOCRACY
+/// Culture in capital for each unique luxury in capital
+int CvPolicyEntry::GetCapitalCulturePerUniqueLuxury() const
+{
+	return m_iCapitalCulturePerUniqueLuxury;
+}
+#endif
+
 
 /// Amount of extra Culture each Wonder gets
 int CvPolicyEntry::GetCulturePerWonder() const

@@ -510,6 +510,23 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		{
 			// Free Culture-per-turn in every City from Policies
 			ChangeJONSCulturePerTurnFromPolicies(GC.getPolicyInfo(ePolicy)->GetCulturePerCity());
+#ifdef FRUITY_TRADITION_ARISTOCRACY
+			if (isCapital())
+			{
+				int numLuxuries = 0;
+				ResourceTypes eResource;
+				for (int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+				{
+					eResource = (ResourceTypes) iResourceLoop;
+					CvResourceInfo* pkResourceInfo = GC.getResourceInfo(eResource);
+					if (pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY && owningPlayer.getNumResourceAvailable(eResource, true) > 0)
+					{
+						numLuxuries++;
+					}
+				}
+				ChangeJONSCulturePerTurnFromPolicies(GC.getPolicyInfo(ePolicy)->GetCapitalCulturePerUniqueLuxury() * numLuxuries);
+			}
+#endif
 		}
 	}
 

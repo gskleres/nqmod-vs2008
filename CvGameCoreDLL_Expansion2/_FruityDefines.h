@@ -1,8 +1,7 @@
 // FruityDefines.h
 #pragma once
 
-//#ifndef FRUITY_DEFINES_LIST	// uncomment to use Fruity defines
-#ifdef FRUITY_DEFINES_LIST		// comment to use Fruity defines
+#ifdef FRUITY_DEFINES_LIST	// change this line to #ifndef to enable Fruity defines, #ifdef to disable Fruity defines
 
 // List of defines that are supposed to be for new additions and can be easily toggled on and off (plus they help with merging)
 #define FRUITY_DEFINES_LIST

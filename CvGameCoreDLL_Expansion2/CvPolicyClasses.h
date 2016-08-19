@@ -37,6 +37,9 @@ public:
 	int GetLevel() const;
 	int GetPolicyCostModifier() const;
 	int GetCulturePerCity() const;
+#ifdef FRUITY_TRADITION_ARISTOCRACY
+	int GetCapitalCulturePerUniqueLuxury() const;
+#endif
 	int GetCulturePerWonder() const;
 	int GetCultureWonderMultiplier() const;
 	int GetCulturePerTechResearched() const;
@@ -246,6 +249,9 @@ private:
 	int m_iLevel;
 	int m_iPolicyCostModifier;
 	int m_iCulturePerCity;
+#ifdef FRUITY_TRADITION_ARISTOCRACY
+	int m_iCapitalCulturePerUniqueLuxury;
+#endif
 	int m_iCulturePerWonder;
 	int m_iCultureWonderMultiplier;
 	int m_iCulturePerTechResearched;
