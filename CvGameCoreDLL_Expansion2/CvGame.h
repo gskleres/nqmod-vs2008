@@ -150,7 +150,11 @@ public:
 #endif
 	int getNumSequentialHumans(PlayerTypes ignorePlayer = NO_PLAYER);
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int getGameTurn() const;
+#else
 	int getGameTurn();
+#endif
 	void setGameTurn(int iNewValue);
 	void incrementGameTurn();
 	int getTurnYear(int iGameTurn);
@@ -560,8 +564,13 @@ public:
 	CvAdvisorCounsel* GetAdvisorCounsel();
 	CvAdvisorRecommender* GetAdvisorRecommender();
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int GetTurnsBetweenMinorCivElections() const;
+	int GetTurnsUntilMinorCivElection() const;
+#else
 	int GetTurnsBetweenMinorCivElections();
 	int GetTurnsUntilMinorCivElection();
+#endif
 
 	void LogGameState(bool bLogHeaders = false);
 	void unitIsMoving();
@@ -593,11 +602,13 @@ public:
 	FTimer  m_endTurnTimer;
 	int     m_endTurnTimerSemaphore;
 	FTimer  m_curTurnTimer;
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	FTimer  m_timeSinceGameTurnStart;		//time since game turn started for human players
-	float	m_fCurrentTurnTimerPauseDelta;	//
 #endif
+	float	m_fCurrentTurnTimerPauseDelta;	//
 #if defined(AUI_GAME_BETTER_HYBRID_MODE) && defined(AUI_GAME_PLAYER_BASED_TURN_LENGTH)
 	FFastVector<int, true, c_eCiv5GameplayDLL> m_aiMaxTurnLengths;
+#endif
 #endif
 
 public:
@@ -764,7 +775,9 @@ protected:
 	int     m_lastTurnAICivsProcessed;
 #ifndef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 	FTimer  m_curTurnTimer;
+#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	FTimer  m_timeSinceGameTurnStart;		//time since game turn started for human players
+#endif
 	float	m_fCurrentTurnTimerPauseDelta;	//
 #endif
 	bool    m_sentAutoMoves;
@@ -797,7 +810,9 @@ protected:
 	int m_iLastTurnOrderID;
 #ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	void calculateMaxTurnLengths();
+#ifndef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 	FFastVector<int, true, c_eCiv5GameplayDLL> m_aiMaxTurnLengths;
+#endif
 #endif
 #endif
 

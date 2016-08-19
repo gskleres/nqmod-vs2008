@@ -159,6 +159,10 @@ CvDeal::CvDeal()
 	m_eRequestingPlayer = NO_PLAYER;
 	m_TradedItems.clear();
 	m_iStartTurn = 0;
+#ifdef AUI_WARNING_FIXES
+	m_iFinalTurn = 0;
+	m_iDuration = 0;
+#endif
 	m_bConsideringForRenewal = false;
 	m_bCheckedForRenewal = false;
 	m_bDealCancelled = false;
@@ -201,6 +205,9 @@ CvDeal::CvDeal(const CvDeal& source)
 /// Destructor
 CvDeal::~CvDeal()
 {
+#ifdef AUI_EXPLICIT_DESTRUCTION
+	m_TradedItems.clear();
+#endif
 }
 
 /// Overloaded assignment operator
@@ -339,6 +346,10 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 	{
 		pRenewDeal = pToPlayer->GetDiplomacyAI()->GetDealToRenew();
 	}
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	CvGameDeals* pGameDeals = GC.getGame().GetGameDeals();
+	uint uiCurrentlyEndingDeals = pGameDeals->GetNumCurrentlyEndingDeals(ePlayer, eToPlayer);
+#endif
 
 	int iGoldAvailable = GetGoldAvailable(ePlayer, eItem);
 
@@ -371,6 +382,43 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 	{
 		// Can't trade more GPT than you're making
 		int iGoldPerTurn = iData1;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		if (pRenewDeal || uiCurrentlyEndingDeals > 0)
+		{
+			CvDeal* pLoopDeal = NULL;
+			TradedItemList::iterator it;
+			if (pRenewDeal)
+			{
+				for (it = pRenewDeal->m_TradedItems.begin(); it != pRenewDeal->m_TradedItems.end(); ++it)
+				{
+					if (it->m_eItemType == TRADE_ITEM_GOLD_PER_TURN && it->m_eFromPlayer == ePlayer)
+					{
+						// credit the amount
+						iGoldPerTurn += it->m_iData1;
+					}
+				}
+			}
+			for (uint uiI = 0; uiI < uiCurrentlyEndingDeals; uiI++)
+			{
+				pLoopDeal = pGameDeals->GetCurrentlyEndingDeal(ePlayer, eToPlayer, uiI);
+				for (it = pLoopDeal->m_TradedItems.begin(); it != pLoopDeal->m_TradedItems.end(); ++it)
+				{
+					if (it->m_eItemType == TRADE_ITEM_GOLD_PER_TURN && it->m_eFromPlayer == ePlayer)
+					{
+						iGoldPerTurn += it->m_iData1;
+					}
+				}
+			}
+			// remove any that are in this deal
+			for (it = m_TradedItems.begin(); it != m_TradedItems.end(); ++it)
+			{
+				if (it->m_eItemType == TRADE_ITEM_GOLD_PER_TURN && it->m_eFromPlayer == ePlayer)
+				{
+					iGoldPerTurn -= it->m_iData1;
+				}
+			}
+		}
+#endif
 		if(iGoldPerTurn != -1 && pFromPlayer->calculateGoldRate() < iGoldPerTurn)
 			return false;
 
@@ -406,10 +454,18 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 			int iNumInRenewDeal = 0;
 			int iNumInExistingDeal = 0;
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			if (pRenewDeal || uiCurrentlyEndingDeals > 0)
+#else
 			if (pRenewDeal)
+#endif
 			{
 				// count any that are in the renew deal
 				TradedItemList::iterator it;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				if (pRenewDeal)
+				{
+#endif
 				for(it = pRenewDeal->m_TradedItems.begin(); it != pRenewDeal->m_TradedItems.end(); ++it)
 				{
 					if(it->m_eItemType == TRADE_ITEM_RESOURCES && it->m_eFromPlayer == ePlayer && (ResourceTypes)it->m_iData1 == eResource)
@@ -418,6 +474,23 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 						iNumInRenewDeal += it->m_iData2;
 					}
 				}
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				}
+
+				CvDeal* pLoopDeal = NULL;
+				for (uint uiI = 0; uiI < uiCurrentlyEndingDeals; uiI++)
+				{
+					pLoopDeal = pGameDeals->GetCurrentlyEndingDeal(ePlayer, eToPlayer, uiI);
+					for (it = pLoopDeal->m_TradedItems.begin(); it != pLoopDeal->m_TradedItems.end(); ++it)
+					{
+						if (it->m_eItemType == TRADE_ITEM_RESOURCES && it->m_eFromPlayer == ePlayer && (ResourceTypes)it->m_iData1 == eResource)
+						{
+							// credit the amount
+							iNumInRenewDeal += it->m_iData2;
+						}
+					}
+				}
+#endif
 
 				// remove any that are in this deal
 				for(it = m_TradedItems.begin(); it != m_TradedItems.end(); ++it)
@@ -524,13 +597,16 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 			return false;
 		
 		bool bIgnoreExistingOP = true;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		TradedItemList::iterator it;
+#endif
 		if (pRenewDeal)
 		{
 			// count any that are in the renew deal
 #ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 			int iEndingTurn = -1;
-#endif
 			TradedItemList::iterator it;
+#endif
 			for(it = pRenewDeal->m_TradedItems.begin(); it != pRenewDeal->m_TradedItems.end(); ++it)
 			{
 				if(it->m_eItemType == TRADE_ITEM_OPEN_BORDERS && (it->m_eFromPlayer == ePlayer || it->m_eFromPlayer == eToPlayer == ePlayer))
@@ -539,6 +615,7 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 					if (it->m_iTurnsRemaining == 0)
 					{
 						bIgnoreExistingOP = false;
+						goto EndCheckCurrentlyEndingForOP;
 					}
 #else
 					iEndingTurn = it->m_iFinalTurn;
@@ -553,6 +630,23 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 			}
 #endif
 		}
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		CvDeal* pLoopDeal = NULL;
+		for (uint uiI = 0; uiI < uiCurrentlyEndingDeals; uiI++)
+		{
+			pLoopDeal = pGameDeals->GetCurrentlyEndingDeal(ePlayer, eToPlayer, uiI);
+			for (it = pLoopDeal->m_TradedItems.begin(); it != pLoopDeal->m_TradedItems.end(); ++it)
+			{
+				if (it->m_eItemType == TRADE_ITEM_OPEN_BORDERS && it->m_eFromPlayer == ePlayer)
+				{
+					bIgnoreExistingOP = false;
+					goto EndCheckCurrentlyEndingForOP;
+				}
+			}
+		}
+	EndCheckCurrentlyEndingForOP:;
+#endif
 
 		// Already has OP
 		if(pFromTeam->IsAllowsOpenBordersToTeam(eToTeam) && bIgnoreExistingOP)
@@ -571,7 +665,42 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 		if(!pFromTeam->HasEmbassyAtTeam(eToTeam) || !pToTeam->HasEmbassyAtTeam(eFromTeam))
 			return false;
 		// Already has DP
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		bool bConsiderExistingDefensivePact = true;
+		CvDeal* pLoopDeal = NULL;
+		TradedItemList::iterator it;
+		if (pRenewDeal)
+		{
+			// count any that are in the renew deal
+			for (it = pRenewDeal->m_TradedItems.begin(); it != pRenewDeal->m_TradedItems.end(); ++it)
+			{
+				if (it->m_eItemType == TRADE_ITEM_DEFENSIVE_PACT && it->m_eFromPlayer == ePlayer)
+				{
+					if (it->m_iTurnsRemaining == 0)
+					{
+						bConsiderExistingDefensivePact = false;
+						goto EndCheckCurrentlyEndingForDP;
+					}
+				}
+			}
+		}
+		for (uint uiI = 0; uiI < uiCurrentlyEndingDeals; uiI++)
+		{
+			pLoopDeal = pGameDeals->GetCurrentlyEndingDeal(ePlayer, eToPlayer, uiI);
+			for (it = pLoopDeal->m_TradedItems.begin(); it != pLoopDeal->m_TradedItems.end(); ++it)
+			{
+				if (it->m_eItemType == TRADE_ITEM_DEFENSIVE_PACT && it->m_eFromPlayer == ePlayer)
+				{
+					bConsiderExistingDefensivePact = false;
+					goto EndCheckCurrentlyEndingForDP;
+				}
+			}
+		}
+	EndCheckCurrentlyEndingForDP:;
+		if (bConsiderExistingDefensivePact && pFromTeam->IsHasDefensivePact(eToTeam))
+#else
 		if(pFromTeam->IsHasDefensivePact(eToTeam))
+#endif
 			return false;
 		// Same Team
 		if(eFromTeam == eToTeam)
@@ -808,10 +937,14 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 		int iID = iData1;
 		//antonjs: todo: verify iChoice is valid as well:
 		//int iChoice = iData2;
+#ifdef CVASSERT_ENABLE
 		int iNumVotes = iData3;
+#endif
 		bool bRepeal = bFlag1;
 
+#ifdef CVASSERT_ENABLE
 		DEBUG_VARIABLE(iNumVotes);
+#endif
 
 #ifndef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 		if(GC.getGame().GetGameLeagues()->GetNumActiveLeagues() == 0)
@@ -823,7 +956,9 @@ bool CvDeal::IsPossibleToTradeItem(PlayerTypes ePlayer, PlayerTypes eToPlayer, T
 			return false;
 
 		CvAssert(pLeague->IsProposed(iID, bRepeal));
+#ifdef CVASSERT_ENABLE
 		CvAssert(iNumVotes <= pLeague->GetCoreVotesForMember(ePlayer));
+#endif
 		
 		// Can't already have a vote commitment in the deal
 		if(!bFinalizing && IsVoteCommitmentTrade(ePlayer))
@@ -848,21 +983,35 @@ int CvDeal::GetNumResource(PlayerTypes ePlayer, ResourceTypes eResource)
 	int iNumInRenewDeal = 0;
 	int iNumInExistingDeal = 0;
 
-
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	PlayerTypes eOtherPlayer = GetOtherPlayer(ePlayer);
+	CvGameDeals* pGameDeals = GC.getGame().GetGameDeals();
+	uint uiCurrentlyEndingDeals = pGameDeals->GetNumCurrentlyEndingDeals(ePlayer, eOtherPlayer);
+#endif
 	CvDeal* pRenewDeal = GET_PLAYER(ePlayer).GetDiplomacyAI()->GetDealToRenew();
 	if (!pRenewDeal)
 	{
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		PlayerTypes eOtherPlayer = GetOtherPlayer(ePlayer);
+#endif
 		if (eOtherPlayer != NO_PLAYER)
 		{
 			pRenewDeal = GET_PLAYER(eOtherPlayer).GetDiplomacyAI()->GetDealToRenew();
 		}
 	}
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	if (pRenewDeal || uiCurrentlyEndingDeals > 0)
+#else
 	if (pRenewDeal)
+#endif
 	{
 		// count any that are in the renew deal
 		TradedItemList::iterator it;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		if (pRenewDeal)
+		{
+#endif
 		for(it = pRenewDeal->m_TradedItems.begin(); it != pRenewDeal->m_TradedItems.end(); ++it)
 		{
 			if(it->m_eItemType == TRADE_ITEM_RESOURCES && it->m_eFromPlayer == ePlayer && (ResourceTypes)it->m_iData1 == eResource)
@@ -871,6 +1020,23 @@ int CvDeal::GetNumResource(PlayerTypes ePlayer, ResourceTypes eResource)
 				iNumInRenewDeal += it->m_iData2;
 			}
 		}
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+		}
+
+		CvDeal* pLoopDeal = NULL;
+		for (uint uiI = 0; uiI < uiCurrentlyEndingDeals; uiI++)
+		{
+			pLoopDeal = pGameDeals->GetCurrentlyEndingDeal(ePlayer, eOtherPlayer, uiI);
+			for (it = pLoopDeal->m_TradedItems.begin(); it != pLoopDeal->m_TradedItems.end(); ++it)
+			{
+				if (it->m_eItemType == TRADE_ITEM_RESOURCES && it->m_eFromPlayer == ePlayer && (ResourceTypes)it->m_iData1 == eResource)
+				{
+					// credit the amount
+					iNumInRenewDeal += it->m_iData2;
+				}
+			}
+		}
+#endif
 
 		// remove any that are in this deal
 		for(it = m_TradedItems.begin(); it != m_TradedItems.end(); ++it)
@@ -1856,7 +2022,11 @@ void CvDeal::RemoveThirdPartyWar(PlayerTypes eFrom, TeamTypes eThirdPartyTeam)
 	for(it = m_TradedItems.begin(); it != m_TradedItems.end(); ++it)
 	{
 		if(it->m_eItemType == TRADE_ITEM_THIRD_PARTY_WAR &&
+#ifdef AUI_WARNING_FIXES
+				(TeamTypes)it->m_iData1 == eThirdPartyTeam &&
+#else
 		        (PlayerTypes)it->m_iData1 == eThirdPartyTeam &&
+#endif
 		        (PlayerTypes)it->m_eFromPlayer == eFrom)
 		{
 			m_TradedItems.erase(it);
@@ -1906,7 +2076,11 @@ void CvDeal::ChangeThirdPartyWarDuration(PlayerTypes eFrom, TeamTypes eThirdPart
 	for(it = m_TradedItems.begin(); it != m_TradedItems.end(); ++it)
 	{
 		if(it->m_eItemType == TRADE_ITEM_THIRD_PARTY_WAR &&
+#ifdef AUI_WARNING_FIXES
+				(TeamTypes)it->m_iData1 == eThirdPartyTeam &&
+#else
 		        (PlayerTypes)it->m_iData1 == eThirdPartyTeam &&
+#endif
 		        (PlayerTypes)it->m_eFromPlayer == eFrom)
 		{
 			it->m_iDuration = iNewDuration;
@@ -2089,7 +2263,7 @@ CvGameDeals::~CvGameDeals()
 	}
 
 	m_Deals.clear();
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#ifdef AUI_EXPLICIT_DESTRUCTION
 	Init(); //clears all the deal lists
 #endif
 }
@@ -2106,7 +2280,11 @@ void CvGameDeals::Init()
 }
 
 /// Save off a new deal that has been agreed to
+#ifdef AUI_WARNING_FIXES
+void CvGameDeals::AddProposedDeal(const CvDeal& kDeal)
+#else
 void CvGameDeals::AddProposedDeal(CvDeal kDeal)
+#endif
 {
 	// Store Deal away
 	m_ProposedDeals.push_back(kDeal);
@@ -2555,7 +2733,9 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 					if (itemIter->m_iTurnsRemaining != 0)  // if this was the last turn the deal was ending anyways
 					{
 						// check to see if we are negative on resource or gold
+#ifndef AUI_WARNING_FIXES
 						bool bHaveEnoughGold = true;
+#endif
 						bool bHaveEnoughResource = true;
 						//if (itemIter->m_eItemType == TRADE_ITEM_GOLD_PER_TURN)
 						//{
@@ -2576,7 +2756,11 @@ void CvGameDeals::DoTurn(PlayerTypes eForPlayer)
 							break;
 						}
 
+#ifdef AUI_WARNING_FIXES
+						if (/*!bHaveEnoughGold ||*/ !bHaveEnoughResource)
+#else
 						if (!bHaveEnoughGold || !bHaveEnoughResource)
+#endif
 						{
 							bInvalidDeal = true;
 						}
@@ -3632,6 +3816,39 @@ uint CvGameDeals::GetNumHistoricDeals(PlayerTypes ePlayer)
 
 	return iCount;
 }
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+CvDeal* CvGameDeals::GetCurrentlyEndingDeal(PlayerTypes eFromPlayer, PlayerTypes eToPlayer, uint uiIndex)
+{
+	uint iCount = 0;
+	for (DealList::iterator it = m_CurrentlyEndingDeals.begin(); it != m_CurrentlyEndingDeals.end(); ++it)
+	{
+		if ((it->m_eFromPlayer == eFromPlayer && it->m_eToPlayer == eToPlayer) || (it->m_eFromPlayer == eToPlayer && it->m_eToPlayer == eFromPlayer))
+		{
+			if (iCount == uiIndex)
+				return &(*it);
+			else
+				iCount++;
+		}
+	}
+
+	return NULL;
+}
+
+uint CvGameDeals::GetNumCurrentlyEndingDeals(PlayerTypes eFromPlayer, PlayerTypes eToPlayer) const
+{
+	uint iCount = 0;
+	for (DealList::const_iterator it = m_CurrentlyEndingDeals.begin(); it != m_CurrentlyEndingDeals.end(); ++it)
+	{
+		if ((it->m_eFromPlayer == eFromPlayer && it->m_eToPlayer == eToPlayer) || (it->m_eFromPlayer == eToPlayer && it->m_eToPlayer == eFromPlayer))
+		{
+			iCount++;
+		}
+	}
+
+	return iCount;
+}
+#endif
+
 //------------------------------------------------------------------------------
 uint CvGameDeals::CreateDeal()
 {

@@ -307,9 +307,15 @@ protected:
 	int* m_piResourceQuantityModifiers;
 	int* m_piMovesChangeUnitCombats;
 	int* m_piMaintenanceModifierUnitCombats;
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	std::pair<int**, size_t> m_ppiImprovementYieldChanges;
+	std::pair<int**, size_t> m_ppiSpecialistYieldChanges;
+	std::pair<int**, size_t> m_ppiUnimprovedFeatureYieldChanges;
+#else
 	int** m_ppiImprovementYieldChanges;
 	int** m_ppiSpecialistYieldChanges;
 	int** m_ppiUnimprovedFeatureYieldChanges;
+#endif
 
 	std::multimap<int, int> m_FreePromotionUnitCombats;
 	std::vector<FreeResourceXCities> m_aFreeResourceXCities;
@@ -351,7 +357,11 @@ private:
 
 struct FreeTraitUnit
 {
+#ifdef AUI_WARNING_FIXES
+	UnitClassTypes m_iFreeUnit;
+#else
 	UnitTypes m_iFreeUnit;
+#endif
 	TechTypes m_ePrereqTech;
 };
 

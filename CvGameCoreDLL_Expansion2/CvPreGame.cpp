@@ -959,7 +959,11 @@ bool GetGameOption(const char* szOptionName, int& iValue)
 
 bool GetGameOption(GameOptionTypes eOption, int& iValue)
 {
+#ifdef AUI_WARNING_FIXES
+	if ((uint)eOption < (uint)NUM_GAMEOPTION_TYPES)
+#else
 	if((uint)eOption >= 0 && (uint)eOption < (uint)NUM_GAMEOPTION_TYPES)
+#endif
 	{
 		iValue = s_EnumBasedGameOptions[(size_t)eOption];
 		return true;
@@ -1010,7 +1014,11 @@ const std::vector<CustomOption>& GetGameOptions()
 bool SetGameOption(const char* szOptionName, int iValue)
 {
 	//Do not allow NULL entries :P
+#ifdef AUI_WARNING_FIXES
+	if (szOptionName == NULL || szOptionName[0] == '\0')
+#else
 	if(szOptionName == NULL || strlen(szOptionName) == 0)
+#endif
 		return false;
 
 	for(size_t i = 0; i < s_GameOptions.size(); i++)

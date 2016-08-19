@@ -3260,6 +3260,9 @@ bool CvHandicapInfo::CacheResults(Database::Results& kResults, CvDatabaseUtility
 
 		}
 
+#ifdef AUI_WARNING_FIXES
+		SAFE_DELETE_ARRAY(m_piGoodies);
+#endif
 		m_piGoodies = FNEW(int[m_iNumGoodies], c_eCiv5GameplayDLL, 0);
 		Database::Results kArrayResults;
 		char szSQL[512];
@@ -3313,6 +3316,12 @@ CvGameSpeedInfo::CvGameSpeedInfo() :
 	m_iMinorCivElectionFreqMod(0),
 	m_iLeaguePercent(0),
 	m_iNumTurnIncrements(0),
+#ifdef AUI_WARNING_FIXES
+	m_iSpyRatePercent(0),
+	m_iPeaceDealDuration(0),
+	m_iRelationshipDuration(0),
+	m_iOpinionDurationPercent(0),
+#endif
 	m_pGameTurnInfo(NULL)
 {
 }

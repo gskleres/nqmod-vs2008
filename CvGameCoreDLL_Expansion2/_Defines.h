@@ -77,8 +77,6 @@
 #define AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_NO_COSTLY_PLOT_REMOVAL
 /// If a city is on manual specialist control, reallocate citizens will not remove any specialists before reassigning citizens
 #define AUI_CITIZENS_FIX_DO_REALLOCATE_CITIZENS_OBEY_MANUAL_SPECIALIST_CONTROL
-/// Fixes a few possible cases of null pointer dereferences in FindTacticalTargets()
-#define AUI_TACTICAL_FIX_FIND_TACTICAL_TARGETS_NULL_POINTER
 /// The function that gets the amount of different trading partners a player has will now use an array instead of a vector to avoid crash possibilities
 #define AUI_TRADE_FIX_GET_NUM_DIFFERENT_TRADING_PARTNERS_USES_ARRAY
 /// Fixes the fact that the game's Linear Congruential RNG is set to use constants that would require a modulus of 2^31 instead of ones that need 2^32 (I couldn't introduce a modulus step because Civ5's engine really dislikes modifications to the RNG system)
@@ -87,6 +85,8 @@
 #define AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 /// Fixes a possible crash when exiting the game caused by too few items in a FStaticVector
 #define AUI_TRADE_FIX_POSSIBLE_DEALLOCATION_CRASH
+/// Adds explicit clearing functions to certain destructors to make sure they are executed to avoid memory corruption
+#define AUI_EXPLICIT_DESTRUCTION
 /// Fixes the fact that an FStaticVector type containing objects with trivial constructors (i.e. they are "Plain Old Data" = POD) is treated as the vector type wouldn't be POD (improves stability and performance)
 #define AUI_TRADE_FIX_FSTATICVECTOR_CONTENTS_ARE_POD
 /// Eliminates an unneccessary loop and a few more steps from the function that stores a trade route's path into the trade route's data
@@ -101,6 +101,14 @@
 #define AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
 /// Puppet cities and cities with automated production will no longer accidentally trigger the production notification
 #define AUI_CITY_FIX_PUPPET_CHOOSE_PRODUCTION_NOTIFICATION
+/// Adds a bunch of extra checks to the production notification invalidator so that it gets invalidated properly in more cases (e.g. when the city's owner changes)
+#define AUI_NOFITICATIONS_FIX_PRODUCTION_NOTIFICATION_REMOVAL_EXTRA_CHECKS
+/// Firaxis' original database-handling code had a weird way of allocating and destructing 2D arrays. It was not standard-compliant and possibly caused memory leaks. This has been rectified.
+#define AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+/// Makes UI combat prediction more representative of the actual combat that will take place when combat would tie
+#define AUI_GAME_FIX_COMBAT_PREDICTION_ACCURATE_PREDICT_TIES
+/// Extra combat strength from having heavy charge against a unit/plot that cannot retreat has been moved to CvUnit functions from the combat processing functions.
+#define AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -211,6 +219,18 @@
 #define AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
 /// Units with the ability to retreat from melee combat will not do so if they are guarding a civilian unit.
 #define AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+/// Fixed cases where moving a friendly unit into the owner's city would pop up an attack city dialogue AND where cities could be radared in unrevealed tiles.
+#define AUI_UNIT_FIX_CAN_MOVE_INTO_CITY_ATTACK_BLOCKER
+/// Recapturing a city originally owned by a player on the same team will properly no longer cause population losses or razed buildings
+#define AUI_PLAYER_FIX_ACQUIRE_CITY_NO_CITY_LOSSES_ON_RECAPTURE
+/// Fixed the free experience recomputation function so now wonders that give free experience globally (as opposed to just units built in one city) work properly
+#define AUI_PLAYER_FIX_RECOMPUTE_FREE_EXPERIENCE_GLOBAL_FREE_EXPERIENCE
+/// Fixed research costs for multi-player teams so that they scale with total team city count, and player-based cost modifiers apply only to the effect their cities have on the total modifier
+#define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+/// The discount to tech cost awarded for other teams already owning a specific tech can now be toggled via an in-game option
+#define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
+/// Restores the malus to coup chance if an enemy spy from the CS ally is present in the CS
+#define AUI_ESPIONAGE_FIX_RESTORE_ENEMY_SPY_COUP_MALUS
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
@@ -265,7 +285,7 @@
 
 // New hybrid mode
 /// When in hybrid mode, players who are not at war with each other have their turns happen simultaneously, thus speeding games up significantly
-//#define AUI_GAME_BETTER_HYBRID_MODE
+#define AUI_GAME_BETTER_HYBRID_MODE
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 /// Turn lengths are determined for each player at the beginning of the turn and cached, instead of having turn lengths be a global variable whose value can change mid-turn
 #define AUI_GAME_PLAYER_BASED_TURN_LENGTH
@@ -564,6 +584,10 @@
 #define AUI_STARTPOSITIONER_COASTAL_CIV_WATER_BIAS
 /// When calculating the founding value of a tile, tailor the SiteEvaluation function to the current player instead of the first one
 #define AUI_STARTPOSITIONER_FLAVORED_STARTS
+
+// Weird stuff
+/// Adds ranged counterattacks to the game, toggleable for now via in-game option
+#define DEL_RANGED_COUNTERATTACKS
 
 // GlobalDefines (GD) wrappers
 // INT

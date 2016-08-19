@@ -164,10 +164,15 @@ FDataStream& operator<<(FDataStream& kStream, const BuildingGreatWork& readFrom)
 	return kStream;
 }
 
+#ifdef CVASSERT_ENABLE
 void checkBattleUnitType(BattleUnitTypes unitType)
 {
 	DEBUG_VARIABLE(unitType);
 	CvAssertMsg((unitType >= 0) && (unitType < BATTLE_UNIT_COUNT), "Invalid battle unit type.");
+#else
+void checkBattleUnitType(BattleUnitTypes /*unitType*/)
+{
+#endif
 }
 
 //------------------------------------------------------------------------------------------------
@@ -554,6 +559,9 @@ void CvMissionDefinition::setSecondaryPlot(const CvPlot* plot)
 //------------------------------------------------------------------------------------------------
 CvAirMissionDefinition::CvAirMissionDefinition() :
 	CvMissionDefinition()
+#ifdef AUI_WARNING_FIXES
+	, m_aDamage()		//!< The ending damage of the units
+#endif
 {
 	m_fMissionTime = 0.0f;
 	m_eMissionType = CvTypes::getMISSION_AIRPATROL();

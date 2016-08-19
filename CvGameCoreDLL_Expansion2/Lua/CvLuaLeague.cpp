@@ -99,8 +99,13 @@ const char* CvLuaLeague::GetTypeName()
 //bool IsNone();
 int CvLuaLeague::lIsNone(lua_State* L)
 {
+#ifdef AUI_WARNING_FIXES
+	const bool bDoesNotExist = (GetInstance(L, 1, false) == NULL);
+	lua_pushboolean(L, bDoesNotExist ? 1 : 0);
+#else
 	const bool bDoesNotExist = (GetInstance(L, false) == NULL);
 	lua_pushboolean(L, bDoesNotExist);
+#endif
 	return 1;
 }
 //------------------------------------------------------------------------------
@@ -270,8 +275,13 @@ int CvLuaLeague::lGetInactiveResolutions(lua_State* L)
 	lua_createtable(L, 0, 0);
 	int iIndex = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<ResolutionTypes>& v = pLeague->GetInactiveResolutions();
+	for (std::vector<ResolutionTypes>::const_iterator it = v.begin(); it != v.end(); ++it)
+#else
 	std::vector<ResolutionTypes> v = pLeague->GetInactiveResolutions();
 	for(std::vector<ResolutionTypes>::iterator it = v.begin(); it != v.end(); ++it)
+#endif
 	{
 		lua_createtable(L, 0, 0);
 		const int t = lua_gettop(L);
@@ -293,8 +303,13 @@ int CvLuaLeague::lGetEnactProposals(lua_State* L)
 	lua_createtable(L, 0, 0);
 	int iIndex = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const EnactProposalList& v = pLeague->GetEnactProposals();
+	for (EnactProposalList::const_iterator it = v.begin(); it != v.end(); ++it)
+#else
 	EnactProposalList v = pLeague->GetEnactProposals();
 	for(EnactProposalList::iterator it = v.begin(); it != v.end(); ++it)
+#endif
 	{
 		lua_createtable(L, 0, 0);
 		const int t = lua_gettop(L);
@@ -314,8 +329,13 @@ int CvLuaLeague::lGetEnactProposalsOnHold(lua_State* L)
 	lua_createtable(L, 0, 0);
 	int iIndex = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const EnactProposalList& v = pLeague->GetEnactProposalsOnHold();
+	for (EnactProposalList::const_iterator it = v.begin(); it != v.end(); ++it)
+#else
 	EnactProposalList v = pLeague->GetEnactProposalsOnHold();
 	for(EnactProposalList::iterator it = v.begin(); it != v.end(); ++it)
+#endif
 	{
 		lua_createtable(L, 0, 0);
 		const int t = lua_gettop(L);
@@ -335,8 +355,13 @@ int CvLuaLeague::lGetRepealProposals(lua_State* L)
 	lua_createtable(L, 0, 0);
 	int iIndex = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const RepealProposalList& v = pLeague->GetRepealProposals();
+	for (RepealProposalList::const_iterator it = v.begin(); it != v.end(); ++it)
+#else
 	RepealProposalList v = pLeague->GetRepealProposals();
 	for(RepealProposalList::iterator it = v.begin(); it != v.end(); ++it)
+#endif
 	{
 		lua_createtable(L, 0, 0);
 		const int t = lua_gettop(L);
@@ -362,8 +387,13 @@ int CvLuaLeague::lGetRepealProposalsOnHold(lua_State* L)
 	lua_createtable(L, 0, 0);
 	int iIndex = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const RepealProposalList& v = pLeague->GetRepealProposalsOnHold();
+	for (RepealProposalList::const_iterator it = v.begin(); it != v.end(); ++it)
+#else
 	RepealProposalList v = pLeague->GetRepealProposalsOnHold();
 	for(RepealProposalList::iterator it = v.begin(); it != v.end(); ++it)
+#endif
 	{
 		lua_createtable(L, 0, 0);
 		const int t = lua_gettop(L);
@@ -389,8 +419,13 @@ int CvLuaLeague::lGetActiveResolutions(lua_State* L)
 	lua_createtable(L, 0, 0);
 	int iIndex = 1;
 
+#ifdef AUI_WARNING_FIXES
+	const ActiveResolutionList& v = pLeague->GetActiveResolutions();
+	for (ActiveResolutionList::const_iterator it = v.begin(); it != v.end(); ++it)
+#else
 	ActiveResolutionList v = pLeague->GetActiveResolutions();
 	for(ActiveResolutionList::iterator it = v.begin(); it != v.end(); ++it)
+#endif
 	{
 		lua_createtable(L, 0, 0);
 		const int t = lua_gettop(L);
@@ -710,7 +745,11 @@ int CvLuaLeague::lGetCurrentEffectsSummary(lua_State* L)
 
 	lua_createtable(L, 0, 0);
 	const int t = lua_gettop(L);
+#ifdef AUI_WARNING_FIXES
+	const std::vector<CvString>& vsEffects = pLeague->GetCurrentEffectsSummary(eObserver);
+#else
 	std::vector<CvString> vsEffects = pLeague->GetCurrentEffectsSummary(eObserver);
+#endif
 	for(uint i = 0; i < vsEffects.size(); i++)
 	{
 		const CvString s = vsEffects[i];
@@ -782,7 +821,11 @@ int CvLuaLeague::lGetGreatPersonRateModifierDetails(lua_State* L)
 //------------------------------------------------------------------------------
 // Helper functions
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvLuaLeague::lResolutionTableHelper(lua_State* L, const int iTop, const CvResolution& resolution)
+#else
 int CvLuaLeague::lResolutionTableHelper(lua_State* L, const int iTop, CvResolution &resolution)
+#endif
 {
 	lua_pushinteger(L, resolution.GetID());
 	lua_setfield(L, iTop, "ID");
@@ -799,7 +842,11 @@ int CvLuaLeague::lResolutionTableHelper(lua_State* L, const int iTop, CvResoluti
 	return 0;
 }
 //------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+int CvLuaLeague::lProposalTableHelper(lua_State* L, const int iTop, const CvProposal& proposal)
+#else
 int CvLuaLeague::lProposalTableHelper(lua_State* L, const int iTop, CvProposal &proposal)
+#endif
 {
 	lResolutionTableHelper(L, iTop, proposal);
 

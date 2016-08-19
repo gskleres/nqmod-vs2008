@@ -1423,7 +1423,11 @@ int CvPlayerTechs::GetResearchTurnsLeftTimes100(TechTypes eTech, bool bOverflow)
 				if((iI == m_pPlayer->GetID()) || kPlayer.GetPlayerTechs()->GetCurrentResearch() == eTech)
 				{
 					iResearchRate += kPlayer.GetScienceTimes100();
+#ifdef AUI_PLAYER_FIX_NO_RESEARCH_OVERFLOW_DOUBLE_DIP
+					iOverflow += kPlayer.getOverflowResearch();
+#else
 					iOverflow += (kPlayer.getOverflowResearch() * m_pPlayer->calculateResearchModifier(eTech)) / 100;
+#endif
 				}
 			}
 		}
@@ -1489,6 +1493,9 @@ CvTechXMLEntries* CvPlayerTechs::GetTechs() const
 /// include the player's research adjustment
 int CvPlayerTechs::GetResearchCost(TechTypes eTech) const
 {
+#ifdef AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+	return GET_TEAM(m_pPlayer->getTeam()).GetTeamTechs()->GetResearchCost(eTech);
+#else
 	// Get the research cost for the team
 	int iResearchCost = GET_TEAM(m_pPlayer->getTeam()).GetTeamTechs()->GetResearchCost(eTech);
 	
@@ -1519,6 +1526,7 @@ int CvPlayerTechs::GetResearchCost(TechTypes eTech) const
 		iResearchCost = (iResearchCost / 100);
 
 	return iResearchCost;
+#endif
 }
 
 //	----------------------------------------------------------------------------
@@ -1672,6 +1680,11 @@ void CvPlayerTechs::LogFlavors(FlavorTypes eFlavor)
 //=====================================
 /// Constructor
 CvTeamTechs::CvTeamTechs():
+#ifdef AUI_WARNING_FIXES
+	m_pTechs(NULL),
+	m_pTeam(NULL),
+	m_eLastTechAcquired(NO_TECH),
+#endif
 	m_pabHasTech(NULL),
 	m_pabNoTradeTech(NULL),
 	m_paiResearchProgress(NULL),
@@ -2169,6 +2182,49 @@ int CvTeamTechs::GetResearchCost(TechTypes eTech) const
 
 	iCost *= std::max(0, ((GC.getTECH_COST_EXTRA_TEAM_MEMBER_MODIFIER() * (m_pTeam->getNumMembers() - 1)) + 100));
 	iCost /= 100;
+
+#ifdef AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+	// Adjust to the players' research modifier
+	int iResearchMod = MAX(1, m_pTeam->calculateResearchModifier(eTech));
+	iCost = (iCost * 10000) / iResearchMod;
+
+	// Mod for City Count
+	int iCityCountMod = GC.getMap().getWorldInfo().GetNumCitiesTechCostMod();	// Default is 40, gets smaller on larger maps
+
+	// NQMP GJS - new Dictatorship of the Proletariat i.e. Communism BEGIN
+	int iWeightedResearchModDiscount = 0;
+	int iCityCount = 0;
+	int iLoopCityCount = 0;
+	for (int iI = 0; iI < MAX_CIV_PLAYERS; iI++)
+	{
+		CvPlayer& kLoopPlayer = GET_PLAYER((PlayerTypes)iI);
+		if (kLoopPlayer.getTeam() == m_pTeam->GetID())
+		{
+			iLoopCityCount = kLoopPlayer.GetMaxEffectiveCities(/*bIncludePuppets*/ true);
+			iCityCount += iLoopCityCount;
+			iWeightedResearchModDiscount += kLoopPlayer.GetNumCitiesResearchCostDiscount() * iLoopCityCount;
+		}
+	}
+	if (iCityCount > 0)
+	{
+		if (iWeightedResearchModDiscount != 0)
+		{
+			iCityCountMod = iCityCountMod * ((100 * iCityCount) + iWeightedResearchModDiscount) / iCityCount;
+			iCityCountMod /= 100;
+		}
+	}
+	// NQMP GJS - new Dictatorship of the Proletariat i.e. Communism END
+
+	iCityCountMod *= iCityCount;
+	iCost = iCost * (100 + iCityCountMod) / 100;
+
+	// We're going to round up so that the user wont get confused when the research progress seems to be equal to the research cost, but it is not acutally done.
+	// This is because the 'real' calculations use the GameCore's fixed point math where things are multiplied by 100
+	if ((iCost % 100) != 0)
+		iCost = (iCost / 100) + 1;
+	else
+		iCost = (iCost / 100);
+#endif
 
 	return std::max(1, iCost);
 }

@@ -244,8 +244,13 @@ int CvLuaTeam::pRegister(lua_State* L)
 //bool isNone();
 int CvLuaTeam::lIsNone(lua_State* L)
 {
+#ifdef AUI_WARNING_FIXES
+	const bool bDoesNotExist = (GetInstance(L, 1, false) == NULL);
+	lua_pushboolean(L, bDoesNotExist ? 1 : 0);
+#else
 	const bool bDoesNotExist = (GetInstance(L, false) == NULL);
 	lua_pushboolean(L, bDoesNotExist);
+#endif
 
 	return 1;
 }

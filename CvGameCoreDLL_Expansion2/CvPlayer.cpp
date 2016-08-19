@@ -1745,12 +1745,23 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 	CvString strName;
 	bool abEverOwned[MAX_PLAYERS];
 	PlayerTypes eOldOwner;
+#ifdef AUI_PLAYER_FIX_ACQUIRE_CITY_NO_CITY_LOSSES_ON_RECAPTURE
+	PlayerTypes eOriginalOwner = pOldCity->getOriginalOwner();
+#else
 	PlayerTypes eOriginalOwner;
+#endif
 	BuildingTypes eBuilding;
+#ifdef AUI_WARNING_FIXES
+	bool bRecapture = false;
+	int iCaptureGold = 0;
+	int iCaptureCulture = 0;
+	int iCaptureGreatWorks = 0;
+#else
 	bool bRecapture;
 	int iCaptureGold;
 	int iCaptureCulture;
 	int iCaptureGreatWorks;
+#endif
 	int iGameTurnFounded;
 	int iPopulation;
 	int iHighestPopulation;
@@ -1898,6 +1909,7 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 #ifndef FINAL_RELEASE
 		OutputDebugString("\n"); OutputDebugString(strBuffer); OutputDebugString("\n\n");
 #endif
+#ifndef AUI_WARNING_FIXES
 	}
 
 	iCaptureGold = 0;
@@ -1907,6 +1919,7 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 	if(bConquest)
 	{
 		iCaptureGold = 0;
+#endif
 
 		iCaptureGold += GC.getBASE_CAPTURE_GOLD();
 		iCaptureGold += (pOldCity->getPopulation() * GC.getCAPTURE_GOLD_PER_POPULATION());
@@ -1921,12 +1934,16 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 
 		iCaptureGold *= (100 + pOldCity->getCapturePlunderModifier()) / 100;
 		iCaptureGold *= (100 + GetPlayerTraits()->GetPlunderModifier()) / 100;
+#ifndef AUI_WARNING_FIXES
 	}
+#endif
 
 	GetTreasury()->ChangeGold(iCaptureGold);
 
+#ifndef AUI_WARNING_FIXES
 	if(bConquest)
 	{
+#endif
 #ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
 		iCaptureCulture = pOldCity->getJONSCulturePerTurnTimes100();
 		iCaptureCulture *= GetPlayerPolicies()->GetNumericModifier(POLICYMOD_CULTURAL_PLUNDER_MULTIPLIER);
@@ -1943,10 +1960,12 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 			changeJONSCulture(iCaptureCulture);
 #endif
 		}
+#ifndef AUI_WARNING_FIXES
 	}
 
 	if(bConquest)
 	{
+#endif
 		if (GetPlayerTraits()->IsTechFromCityConquer())
 		{
 			// Will this be the first time we have owned this city?
@@ -1955,13 +1974,18 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 				DoTechFromCityConquer(pOldCity);
 			}
 		}
+#ifndef AUI_WARNING_FIXES
 	}
 
 	// slewis - warmonger calculations
 	if (bConquest)
 	{
+#endif
 		if(!isMinorCiv())
 		{
+#ifdef AUI_PLAYER_FIX_ACQUIRE_CITY_NO_CITY_LOSSES_ON_RECAPTURE
+			if (GET_PLAYER(eOriginalOwner).getTeam() != getTeam())
+#else
 			bool bDoWarmonger = true;
 
 			// Don't award warmongering if you're conquering a city you owned back
@@ -1971,6 +1995,7 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 			}
 
 			if (bDoWarmonger)
+#endif
 			{
 				CvDiplomacyAIHelpers::ApplyWarmongerPenalties(GetID(), pOldCity->getOwner());
 			}
@@ -2100,7 +2125,11 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 		}
 	}
 
+#ifdef AUI_PLAYER_FIX_ACQUIRE_CITY_NO_CITY_LOSSES_ON_RECAPTURE
+	bRecapture = GET_PLAYER(eOriginalOwner).getTeam() == getTeam();
+#else
 	bRecapture = false; //((eHighestCulturePlayer != NO_PLAYER) ? (GET_PLAYER(eHighestCulturePlayer).getTeam() == getTeam()) : false);
+#endif
 
 	// Returning spies back to pool
 	CvCityEspionage* pOldCityEspionage = pOldCity->GetCityEspionage();
@@ -5155,7 +5184,11 @@ const CvCity* CvPlayer::getBusyCity() const
 		}
 	}
 
+#ifdef AUI_WARNING_FIXES
+	return NULL;
+#else
 	return false;
+#endif
 }
 
 //	----------------------------------------------------------------------------
@@ -9498,6 +9531,9 @@ int CvPlayer::calculateUnitSupply() const
 //	--------------------------------------------------------------------------------
 int CvPlayer::calculateResearchModifier(TechTypes eTech)
 {
+#ifdef AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+	return GET_TEAM(getTeam()).calculateResearchModifier(eTech);
+#else
 	int iModifier = 100;
 
 	if(NO_TECH == eTech)
@@ -9505,6 +9541,10 @@ int CvPlayer::calculateResearchModifier(TechTypes eTech)
 		return iModifier;
 	}
 
+#ifdef AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
+	if (!GC.getGame().isOption("GAMEOPTION_NO_TECH_COST_TOTAL_KNOWN_TEAM_MODIFIER"))
+	{
+#endif
 	int iKnownCount = 0;
 	int iPossibleKnownCount = 0;
 	for(int iI = 0; iI < MAX_CIV_TEAMS; iI++)
@@ -9526,6 +9566,9 @@ int CvPlayer::calculateResearchModifier(TechTypes eTech)
 	{
 		iModifier += (GC.getTECH_COST_TOTAL_KNOWN_TEAM_MODIFIER() * iKnownCount) / iPossibleKnownCount;
 	}
+#ifdef AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
+	}
+#endif
 
 	int iPossiblePaths = 0;
 	int iUnknownPaths = 0;
@@ -9553,6 +9596,7 @@ int CvPlayer::calculateResearchModifier(TechTypes eTech)
 	}
 
 	return iModifier;
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -9615,19 +9659,19 @@ int CvPlayer::unitsGoldenAgeReady() const
 #endif
 	int iCount;
 	int iLoop;
-#ifdef AUI_WARNING_FIXES
-	uint iI;
-#else
+#ifndef AUI_WARNING_FIXES
 	int iI;
 #endif
 
 #ifdef AUI_WARNING_FIXES
 	bool* pabUnitUsed = FNEW(bool[GC.getNumUnitInfos()], c_eCiv5GameplayDLL, 0);
+
+	for (uint iI = 0; iI < GC.getNumUnitInfos(); iI++)
 #else
 	pabUnitUsed = FNEW(bool[GC.getNumUnitInfos()], c_eCiv5GameplayDLL, 0);
-#endif
 
 	for(iI = 0; iI < GC.getNumUnitInfos(); iI++)
+#endif
 	{
 		pabUnitUsed[iI] = false;
 	}
@@ -12064,7 +12108,11 @@ int CvPlayer::GetHappinessFromLuxury(ResourceTypes eResource) const
 		// NQMP GJS - New Netherlands UA gives +1 Happiness per unique Luxury for the empire END
 	}
 
+#ifdef AUI_WARNING_FIXES
+	return 0;
+#else
 	return false;
+#endif
 }
 
 
@@ -13528,7 +13576,11 @@ int CvPlayer::getGreatPeopleCreated() const
 //	--------------------------------------------------------------------------------
 void CvPlayer::incrementGreatPeopleCreated()
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	m_iGreatPeopleCreated += 1;
+#else
 	m_iGreatPeopleCreated++;
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -13540,7 +13592,11 @@ int CvPlayer::getGreatGeneralsCreated() const
 //	--------------------------------------------------------------------------------
 void CvPlayer::incrementGreatGeneralsCreated()
 {
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	m_iGreatGeneralsCreated += 1;
+#else
 	m_iGreatGeneralsCreated++;
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -14482,7 +14538,11 @@ void CvPlayer::changeFreeExperienceFromMinors(int iChange)
 void CvPlayer::recomputeFreeExperience()
 {
 	m_iFreeExperience = m_iFreeExperienceFromBldgs;
+#ifdef AUI_PLAYER_FIX_RECOMPUTE_FREE_EXPERIENCE_GLOBAL_FREE_EXPERIENCE
+	m_iFreeExperience += m_iFreeExperienceFromMinors;
+#else
 	m_iFreeExperience = m_iFreeExperienceFromMinors;
+#endif
 	m_iFreeExperience += m_pPlayerPolicies->GetNumericModifier(POLICYMOD_FREE_EXPERIENCE);
 }
 
@@ -19261,7 +19321,11 @@ void CvPlayer::changeImprovementCount(ImprovementTypes eIndex, int iChange)
 
 
 //	--------------------------------------------------------------------------------
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+int CvPlayer::getGreatPersonImprovementCount() const
+#else
 int CvPlayer::getGreatPersonImprovementCount()
+#endif
 {
 	int iCount = 0;
 #ifdef AUI_WARNING_FIXES
@@ -20413,7 +20477,11 @@ CvCity* CvPlayer::GetFirstCityWithBuildingClass(BuildingClassTypes eBuildingClas
 			}
 		}
 	}
+#ifdef AUI_WARNING_FIXES
+	return NULL;
+#else
 	return false;
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -20529,9 +20597,13 @@ CvArmyAI* CvPlayer::addArmyAI()
 //	--------------------------------------------------------------------------------
 void CvPlayer::deleteArmyAI(int iID)
 {
+#ifdef CVASSERT_ENABLE
 	bool bRemoved = m_armyAIs.RemoveAt(iID);
 	DEBUG_VARIABLE(bRemoved);
 	CvAssertMsg(bRemoved, "could not find army, delete failed");
+#else
+	m_armyAIs.RemoveAt(iID);
+#endif
 }
 
 
@@ -20595,7 +20667,11 @@ CvAIOperation* CvPlayer::addAIOperation(int OperationType, PlayerTypes eEnemy, i
 	{
 		m_AIOperations.insert(std::make_pair(m_iNextOperationID.get(), pNewOperation));
 		pNewOperation->Init(m_iNextOperationID, m_eID, eEnemy, iArea, pTarget, pMuster);
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		m_iNextOperationID += 1;
+#else
 		m_iNextOperationID++;
+#endif
 	}
 	return pNewOperation;
 }
@@ -20807,7 +20883,11 @@ std::string CvPlayer::getScriptData() const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvPlayer::setScriptData(const std::string& strNewValue)
+#else
 void CvPlayer::setScriptData(std::string strNewValue)
+#endif
 {
 	m_strScriptData = strNewValue;
 }
@@ -20865,8 +20945,12 @@ void CvPlayer::doResearch()
 		TechTypes eCurrentTech = GetPlayerTechs()->GetCurrentResearch();
 		if(eCurrentTech == NO_TECH)
 		{
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#if defined(AUI_PLAYER_FIX_NO_RESEARCH_OVERFLOW_DOUBLE_DIP) && defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
+			int iOverflow = getCachedScienceT100ForThisTurn();
+#elif defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 			int iOverflow = (getCachedScienceT100ForThisTurn()) / MAX(1, calculateResearchModifier(eCurrentTech));
+#elif defined(AUI_PLAYER_FIX_NO_RESEARCH_OVERFLOW_DOUBLE_DIP)
+			int iOverflow = GetScienceTimes100();
 #else
 			int iOverflow = (GetScienceTimes100()) / std::max(1, calculateResearchModifier(eCurrentTech));
 #endif
@@ -24707,6 +24791,13 @@ CvPlotsVector& CvPlayer::GetPlots(void)
 	return m_aiPlots;
 }
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+const CvPlotsVector& CvPlayer::GetPlots() const
+{
+	return m_aiPlots;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 /// How many plots does this player own?
 int CvPlayer::GetNumPlots() const
@@ -25108,10 +25199,18 @@ void CvPlayer::ChangeNumNaturalWondersDiscoveredInArea(int iChange)
 
 //	--------------------------------------------------------------------------------
 /// Calculates how many Natural Wonders are in plots this player owns
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+int CvPlayer::GetNumNaturalWondersInOwnedPlots() const
+#else
 int CvPlayer::GetNumNaturalWondersInOwnedPlots()
+#endif
 {
 	int iValue = 0;
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	const CvPlotsVector& aiPlots = GetPlots();
+#else
 	CvPlotsVector& aiPlots = GetPlots();
+#endif
 	for(uint ui = 0; ui < aiPlots.size(); ui++)
 	{
 		// at the end of the plot list

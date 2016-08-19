@@ -21,7 +21,11 @@
 
 // Public Functions...
 
+#ifdef AUI_WARNING_FIXES
+CvFractal::CvFractal() : m_aaiFrac(), m_iXInc(0), m_iYInc(0)
+#else
 CvFractal::CvFractal()
+#endif
 {
 	m_iFracXExp = -1;
 	m_iFracYExp = -1;
@@ -51,6 +55,10 @@ void CvFractal::reset()
 	m_iFlags = 0;
 	m_iFracX = -1;
 	m_iFracY = -1;
+#ifdef AUI_WARNING_FIXES
+	m_iXInc = 0;
+	m_iYInc = 0;
+#endif
 }
 
 void CvFractal::fracInit(int iNewXs, int iNewYs, int iGrain, CvRandom& random, int iFlags, CvFractal* pRifts, int iFracXExp/*=7*/, int iFracYExp/*=6*/)
@@ -70,7 +78,11 @@ void CvFractal::fracInitHinted(int iNewXs, int iNewYs, int iGrain, CvRandom& ran
 	fracInitInternal(iNewXs, iNewYs, iGrain, random, pbyHints, iHintsLength, iFlagsNonPolar, pRifts, iFracXExp, iFracYExp);
 }
 
+#ifdef CVASSERT_ENABLE
 void CvFractal::fracInitInternal(int iNewXs, int iNewYs, int iGrain, CvRandom& random, byte* pbyHints, int iHintsLength, int iFlags, CvFractal* pRifts, int iFracXExp, int iFracYExp)
+#else
+void CvFractal::fracInitInternal(int iNewXs, int iNewYs, int iGrain, CvRandom& random, byte* pbyHints, int /*iHintsLength*/, int iFlags, CvFractal* pRifts, int iFracXExp, int iFracYExp)
+#endif
 {
 	FAssert(iNewXs < FRACTAL_MAX_DIMS);
 	FAssert(iNewYs < FRACTAL_MAX_DIMS);
@@ -122,10 +134,12 @@ void CvFractal::fracInitInternal(int iNewXs, int iNewYs, int iGrain, CvRandom& r
 
 	int iHintsWidth = (1 << (m_iFracXExp - iSmooth)) + ((m_iFlags & FRAC_WRAP_X) ? 0 : 1);
 	int iHintsHeight = (1 << (m_iFracYExp - iSmooth)) + ((m_iFlags & FRAC_WRAP_Y) ? 0 : 1);
+#ifdef CVASSERT_ENABLE
 	if(pbyHints != NULL)
 	{
 		CvAssertMsg(iHintsLength == iHintsWidth*iHintsHeight, "pbyHints is the wrong size!")
 	}
+#endif
 
 	for(iPass = iSmooth; iPass >= 0; iPass--)
 	{
@@ -211,8 +225,10 @@ void CvFractal::fracInitInternal(int iNewXs, int iNewYs, int iGrain, CvRandom& r
 						int iYY = iY % iHintsHeight; // wrap
 						int iHintsI = iYY*iHintsWidth + iXX;
 
+#ifdef CVASSERT_ENABLE
 						DEBUG_VARIABLE(iHintsLength);
 						CvAssertMsg(iHintsI < iHintsLength, "iHintsI out of range");
+#endif
 						m_aaiFrac[iX << iPass][iY << iPass] = pbyHints[iHintsI];
 					}
 				}

@@ -1611,11 +1611,23 @@ bool CvNotifications::IsNotificationExpired(int iIndex)
 			return true;
 		}
 
+#ifdef AUI_NOFITICATIONS_FIX_PRODUCTION_NOTIFICATION_REMOVAL_EXTRA_CHECKS
+		if (pCity->getOwner() != m_ePlayer)
+		{
+			return true;
+		}
+
+		if (pCity->isProductionAutomated())
+		{
+			return true;
+		}
+#else
 		// if the city is a puppet
 		if(pCity->IsPuppet())
 		{
 			return true;
 		}
+#endif
 
 		// City has chosen something
 		if(pCity->getOrderQueueLength() > 0)

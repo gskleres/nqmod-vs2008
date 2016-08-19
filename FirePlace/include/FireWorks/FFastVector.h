@@ -619,6 +619,9 @@ public:
 #ifdef BREAK_ON_STATIC_RESIZE
 		m_iNumResized = 0;
 #endif
+#ifdef AUI_WARNING_FIXES
+		m_bIsResized = RHS.m_bIsResized;
+#endif
 		Copy(RHS);
 	};
 	FStaticVector()
@@ -628,6 +631,9 @@ public:
 #ifdef BREAK_ON_STATIC_RESIZE
 		m_iNumResized = 0;
 #endif
+#ifdef AUI_WARNING_FIXES
+		m_bIsResized = false;
+#endif
     };
 	FStaticVector(unsigned int uiStartingMaxSize)
 	{
@@ -635,6 +641,9 @@ public:
 		m_pData = Alloc(m_uiCurrMaxSize);
 #ifdef BREAK_ON_STATIC_RESIZE
 		m_iNumResized = 0;
+#endif
+#ifdef AUI_WARNING_FIXES
+		m_bIsResized = false;
 #endif
 	};
 	~FStaticVector(){

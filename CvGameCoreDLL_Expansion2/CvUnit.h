@@ -1051,7 +1051,11 @@ public:
 
 	// Arbitrary Script Data
 	std::string getScriptData() const;
+#ifdef AUI_WARNING_FIXES
+	void setScriptData(const std::string& szNewValue);
+#else
 	void setScriptData(std::string szNewValue);
+#endif
 	int getScenarioData() const;
 	void setScenarioData(int iNewValue);
 
@@ -1257,7 +1261,11 @@ public:
 
 	// Ported in from old CvUnitAI class
 	int SearchRange(int iRange) const;
+#if defined(AUI_CONSTIFY) || defined(DEL_RANGED_COUNTERATTACKS)
+	bool PlotValid(const CvPlot* pPlot) const;
+#else
 	bool PlotValid(CvPlot* pPlot) const;
+#endif
 
 	CvUnitReligion* GetReligionData() const
 	{
@@ -1271,7 +1279,9 @@ public:
 	std::string stackTraceRemark(const FAutoVariableBase&) const;
 
 #ifdef AUI_SCOPE_FIXES
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+	bool CanWithdrawFromMelee(const CvUnit& pAttacker, const CvCombatInfo* pCombatInfo = NULL) const;
+#elif defined(AUI_CONSTIFY)
 	bool CanWithdrawFromMelee(const CvUnit& pAttacker) const;
 #else
 	bool CanWithdrawFromMelee(CvUnit& pAttacker);
@@ -1279,7 +1289,9 @@ public:
 	bool DoWithdrawFromMelee(CvUnit& pAttacker);
 
 	// these are do to a unit using Heavy Charge against you
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+	bool CanFallBackFromMelee(const CvUnit& kAttacker, const CvPlot* pFromPlot = NULL) const;
+#elif defined(AUI_CONSTIFY)
 	bool CanFallBackFromMelee(const CvUnit& pAttacker) const;
 #else
 	bool CanFallBackFromMelee(CvUnit& pAttacker);
@@ -1548,7 +1560,9 @@ protected:
 	CvUnit* airStrikeTarget(CvPlot& pPlot, bool bNoncombatAllowed) const;
 
 #ifndef AUI_SCOPE_FIXES
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+	bool CanWithdrawFromMelee(const CvUnit& pAttacker, const CvCombatInfo* pCombatInfo = NULL) const;
+#elif defined(AUI_CONSTIFY)
 	bool CanWithdrawFromMelee(const CvUnit& pAttacker) const;
 #else
 	bool CanWithdrawFromMelee(CvUnit& pAttacker);
@@ -1556,7 +1570,9 @@ protected:
 	bool DoWithdrawFromMelee(CvUnit& pAttacker);
 
 	// these are do to a unit using Heavy Charge against you
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+	bool CanFallBackFromMelee(const CvUnit& kAttacker, const CvPlot* pFromPlot = NULL) const;
+#elif defined(AUI_CONSTIFY)
 	bool CanFallBackFromMelee(const CvUnit& pAttacker) const;
 #else
 	bool CanFallBackFromMelee(CvUnit& pAttacker);

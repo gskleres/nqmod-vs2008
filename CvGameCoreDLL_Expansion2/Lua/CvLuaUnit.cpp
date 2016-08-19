@@ -85,6 +85,10 @@ void CvLuaUnit::PushMethods(lua_State* L, int t)
 
 	Method(CanRangeStrike);
 	Method(CanRangeStrikeAt);
+#ifdef DEL_RANGED_COUNTERATTACKS
+	Method(CanEverRangeStrikeAt);
+	Method(PlotValid);
+#endif
 
 	Method(CanParadrop);
 	Method(CanParadropAt);
@@ -483,8 +487,13 @@ const char* CvLuaUnit::GetTypeName()
 //bool isNone();
 int CvLuaUnit::lIsNone(lua_State* L)
 {
+#ifdef AUI_WARNING_FIXES
+	const bool bDoesNotExist = (GetInstance(L, 1, false) == NULL);
+	lua_pushboolean(L, bDoesNotExist ? 1 : 0);
+#else
 	const bool bDoesNotExist = (GetInstance(L, false) == NULL);
 	lua_pushboolean(L, bDoesNotExist);
+#endif
 
 	return 1;
 }
@@ -1063,6 +1072,34 @@ int CvLuaUnit::lCanRangeStrikeAt(lua_State* L)
 
 	//return BasicLuaMethod(L, &CvUnit::canRangeStrikeAt);
 }
+#ifdef DEL_RANGED_COUNTERATTACKS
+int CvLuaUnit::lCanEverRangeStrikeAt(lua_State* L)
+{
+	CvUnit* pkUnit = GetInstance(L);
+	const int x = lua_tointeger(L, 2);
+	const int y = lua_tointeger(L, 3);
+
+	const bool bResult = pkUnit->canRangeStrikeAt(x, y);
+
+	lua_pushboolean(L, bResult);
+	return 1;
+
+	//return BasicLuaMethod(L, &CvUnit::canEverRangeStrikeAt);
+}
+
+int CvLuaUnit::lPlotValid(lua_State* L)
+{
+	CvUnit* pkUnit = GetInstance(L);
+	CvPlot* pkPlot = CvLuaPlot::GetInstance(L, 2);
+
+	const bool bResult = pkUnit->PlotValid(pkPlot);
+
+	lua_pushboolean(L, bResult);
+	return 1;
+
+	//return BasicLuaMethod(L, &CvUnit::canEverRangeStrikeAt);
+}
+#endif
 //------------------------------------------------------------------------------
 //bool canParadrop(CyPlot* pPlot);
 int CvLuaUnit::lCanParadrop(lua_State* L)

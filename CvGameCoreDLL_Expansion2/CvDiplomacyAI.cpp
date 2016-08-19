@@ -168,6 +168,24 @@ CvDiplomacyAI::DiplomacyAIData::DiplomacyAIData() :
 //=====================================
 /// Constructor
 CvDiplomacyAI::CvDiplomacyAI():
+#ifdef AUI_WARNING_FIXES
+	m_pPlayer(NULL),
+	m_eDemandTargetPlayer(0),
+	m_bDemandReady(false),
+	m_iVictoryCompetitiveness(0),
+	m_iWonderCompetitiveness(0),
+	m_iMinorCivCompetitiveness(0),
+	m_iBoldness(0),
+	m_iDiploBalance(0),
+	m_iWarmongerHate(0),
+	m_iDenounceWillingness(0),
+	m_iDoFWillingness(0),
+	m_iLoyalty(0),
+	m_iNeediness(0),
+	m_iForgiveness(0),
+	m_iChattiness(0),
+	m_iMeanness(0),
+#endif
 	m_pDiploData(NULL),
 	m_paDiploLogStatementTurnCountScratchPad(NULL),
 	m_paeMajorCivOpinion(NULL),
@@ -5466,6 +5484,21 @@ bool CvDiplomacyAI::IsWantsOpenBordersWithPlayer(PlayerTypes ePlayer)
 
 	// If going for culture win always want open borders against civs we need influence on
 	AIGrandStrategyTypes eCultureStrategy = (AIGrandStrategyTypes) GC.getInfoTypeForString("AIGRANDSTRATEGY_CULTURE");
+#ifdef AUI_WARNING_FIXES
+	const CvPlayerCulture* pPlayerCulture = m_pPlayer->GetCulture();
+	if (eCultureStrategy != NO_AIGRANDSTRATEGY && m_pPlayer->GetGrandStrategyAI()->GetActiveGrandStrategy() == eCultureStrategy && pPlayerCulture->GetTourism() > 0)
+	{
+		// The civ we need influence on the most should ALWAYS be included
+		if (pPlayerCulture->GetCivLowestInfluence(false /*bCheckOpenBorders*/) == ePlayer)
+		{
+			return true;
+		}
+
+		// If have influence over half the civs, want OB with the other half
+		if (pPlayerCulture->GetNumCivsToBeInfluentialOn() <= m_pPlayer->GetCulture()->GetNumCivsInfluentialOn())
+		{
+			if (pPlayerCulture->GetInfluenceLevel(ePlayer) < INFLUENCE_LEVEL_INFLUENTIAL)
+#else
 	if (eCultureStrategy != NO_AIGRANDSTRATEGY && m_pPlayer->GetGrandStrategyAI()->GetActiveGrandStrategy() == eCultureStrategy && m_pPlayer->GetCulture()->GetTourism() > 0 )
 	{
 		// The civ we need influence on the most should ALWAYS be included
@@ -5478,6 +5511,7 @@ bool CvDiplomacyAI::IsWantsOpenBordersWithPlayer(PlayerTypes ePlayer)
 		if (m_pPlayer->GetCulture()->GetNumCivsToBeInfluentialOn() <= m_pPlayer->GetCulture()->GetNumCivsInfluentialOn())
 		{
 			if (m_pPlayer->GetCulture()->GetInfluenceLevel(ePlayer) < INFLUENCE_LEVEL_INFLUENTIAL)
+#endif
 			{
 				return true;
 			}
@@ -9070,9 +9104,16 @@ void CvDiplomacyAI::DoUpdateEstimateOtherPlayerVictoryDisputeLevels()
 						iVictoryDisputeWeight = 0;
 
 						// Do we think their Grand Strategies match?
+#ifdef AUI_WARNING_FIXES
+						const CvGrandStrategyAI* pGrandStrategyAI = GetPlayer()->GetGrandStrategyAI();
+						if (pGrandStrategyAI->GetGuessOtherPlayerActiveGrandStrategy(eLoopPlayer) == pGrandStrategyAI->GetGuessOtherPlayerActiveGrandStrategy(eLoopOtherPlayer))
+						{
+							switch (pGrandStrategyAI->GetGuessOtherPlayerActiveGrandStrategyConfidence(eLoopPlayer))
+#else
 						if(GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategy(eLoopPlayer) == GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategy(eLoopOtherPlayer))
 						{
 							switch(GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategyConfidence(eLoopPlayer))
+#endif
 							{
 							case GUESS_CONFIDENCE_POSITIVE:
 								iVictoryDisputeWeight += /*7*/ GC.getVICTORY_DISPUTE_OTHER_PLAYER_GRAND_STRATEGY_MATCH_POSITIVE();
@@ -9084,7 +9125,11 @@ void CvDiplomacyAI::DoUpdateEstimateOtherPlayerVictoryDisputeLevels()
 								iVictoryDisputeWeight += /*3*/ GC.getVICTORY_DISPUTE_OTHER_PLAYER_GRAND_STRATEGY_MATCH_UNSURE();
 								break;
 							}
+#ifdef AUI_WARNING_FIXES
+							switch (pGrandStrategyAI->GetGuessOtherPlayerActiveGrandStrategyConfidence(eLoopOtherPlayer))
+#else
 							switch(GetPlayer()->GetGrandStrategyAI()->GetGuessOtherPlayerActiveGrandStrategyConfidence(eLoopOtherPlayer))
+#endif
 							{
 							case GUESS_CONFIDENCE_POSITIVE:
 								iVictoryDisputeWeight += /*7*/ GC.getVICTORY_DISPUTE_OTHER_PLAYER_GRAND_STRATEGY_MATCH_POSITIVE();
@@ -12311,12 +12356,22 @@ void CvDiplomacyAI::DoContactMinorCivs()
 	EconomicAIStrategyTypes eNeedHappiness = (EconomicAIStrategyTypes) GC.getInfoTypeForString("ECONOMICAISTRATEGY_NEED_HAPPINESS");
 	EconomicAIStrategyTypes eNeedHappinessCritical = (EconomicAIStrategyTypes) GC.getInfoTypeForString("ECONOMICAISTRATEGY_NEED_HAPPINESS_CRITICAL");
 	EconomicAIStrategyTypes eLosingMoney = (EconomicAIStrategyTypes) GC.getInfoTypeForString("ECONOMICAISTRATEGY_LOSING_MONEY");
+#ifdef AUI_WARNING_FIXES
+	CvEconomicAI* pEconomicAI = GetPlayer()->GetEconomicAI();
+	bool bFoundCity = (eFoundCity != NO_ECONOMICAISTRATEGY) ? pEconomicAI->IsUsingStrategy(eFoundCity) : false;
+	bool bExpandLikeCrazy = (eExpandLikeCrazy != NO_ECONOMICAISTRATEGY) ? pEconomicAI->IsUsingStrategy(eExpandLikeCrazy) : false;
+	bool bExpandToOtherContinents = (eExpandToOtherContinents != NO_ECONOMICAISTRATEGY) ? pEconomicAI->IsUsingStrategy(eExpandToOtherContinents) : false;
+	bool bNeedHappiness = (eNeedHappiness != NO_ECONOMICAISTRATEGY) ? pEconomicAI->IsUsingStrategy(eNeedHappiness) : false;
+	bool bNeedHappinessCritical = (eNeedHappinessCritical != NO_ECONOMICAISTRATEGY) ? pEconomicAI->IsUsingStrategy(eNeedHappinessCritical) : false;
+	bool bLosingMoney = (eLosingMoney != NO_ECONOMICAISTRATEGY) ? pEconomicAI->IsUsingStrategy(eLosingMoney) : false;
+#else
 	bool bFoundCity = (eFoundCity != NO_ECONOMICAISTRATEGY) ? GetPlayer()->GetEconomicAI()->IsUsingStrategy(eFoundCity) : false;
 	bool bExpandLikeCrazy = (eExpandLikeCrazy != NO_ECONOMICAISTRATEGY) ? GetPlayer()->GetEconomicAI()->IsUsingStrategy(eExpandLikeCrazy) : false;
 	bool bExpandToOtherContinents = (eExpandToOtherContinents != NO_ECONOMICAISTRATEGY) ? GetPlayer()->GetEconomicAI()->IsUsingStrategy(eExpandToOtherContinents) : false;
 	bool bNeedHappiness = (eNeedHappiness != NO_ECONOMICAISTRATEGY) ? GetPlayer()->GetEconomicAI()->IsUsingStrategy(eNeedHappiness) : false;
 	bool bNeedHappinessCritical = (eNeedHappinessCritical != NO_ECONOMICAISTRATEGY) ? GetPlayer()->GetEconomicAI()->IsUsingStrategy(eNeedHappinessCritical) : false;
 	bool bLosingMoney = (eLosingMoney != NO_ECONOMICAISTRATEGY) ? GetPlayer()->GetEconomicAI()->IsUsingStrategy(eLosingMoney) : false;
+#endif
 
 	// **************************
 	// Would we like to buyout a minor this turn?  (Austria UA)
@@ -12350,7 +12405,11 @@ void CvDiplomacyAI::DoContactMinorCivs()
 	if(iDiplomacyFlavor >= /*4*/ GC.getMC_ALWAYS_GIFT_DIPLO_THRESHOLD() ||
 	        IsGoingForDiploVictory() ||
 	        IsGoingForCultureVictory() ||
+#ifdef AUI_WARNING_FIXES
+			pEconomicAI->IsSavingForThisPurchase(PURCHASE_TYPE_MINOR_CIV_GIFT) ||
+#else
 	        GetPlayer()->GetEconomicAI()->IsSavingForThisPurchase(PURCHASE_TYPE_MINOR_CIV_GIFT) ||
+#endif
 	        IsHasActiveGoldQuest() ||
 	        m_pPlayer->calculateGoldRate() > 100) // if we are very wealthy always do this
 	{
@@ -12374,8 +12433,13 @@ void CvDiplomacyAI::DoContactMinorCivs()
 	// **************************
 	bool bWantsToBullyUnit = false;
 
+#ifdef AUI_WARNING_FIXES
+	if (pEconomicAI->GetWorkersToCitiesRatio() < 0.25 &&  //antonjs: todo: XML
+		pEconomicAI->GetImprovedToImprovablePlotsRatio() < 0.50) //antonjs: todo: XML
+#else
 	if(GetPlayer()->GetEconomicAI()->GetWorkersToCitiesRatio() < 0.25 &&  //antonjs: todo: XML
 	        GetPlayer()->GetEconomicAI()->GetImprovedToImprovablePlotsRatio() < 0.50) //antonjs: todo: XML
+#endif
 	{
 		bWantsToBullyUnit = true;
 	}
@@ -12397,8 +12461,13 @@ void CvDiplomacyAI::DoContactMinorCivs()
 
 	if(iGoldFlavor >= 6 ||  //antonjs: todo: GC.getMC_ALWAYS_BULLY_GOLD_THRESHOLD()
 	        IsGoingForWorldConquest() ||
+#ifdef AUI_WARNING_FIXES
+		pEconomicAI->IsSavingForThisPurchase(PURCHASE_TYPE_UNIT) ||
+		pEconomicAI->IsSavingForThisPurchase(PURCHASE_TYPE_BUILDING) ||
+#else
 	        GetPlayer()->GetEconomicAI()->IsSavingForThisPurchase(PURCHASE_TYPE_UNIT) ||
 	        GetPlayer()->GetEconomicAI()->IsSavingForThisPurchase(PURCHASE_TYPE_BUILDING) ||
+#endif
 	        bLosingMoney ||
 	        m_pPlayer->calculateGoldRate() < 0) // if we are losing gold per turn
 	{
@@ -12839,7 +12908,11 @@ void CvDiplomacyAI::DoContactMinorCivs()
 				if(eApproach == MINOR_CIV_APPROACH_BULLY)
 				{
 					// Only bother if we can successfully bully
+#ifdef AUI_WARNING_FIXES
+					if (pMinorCivAI->CanMajorBullyUnit(eID))
+#else
 					if(pMinor->GetMinorCivAI()->CanMajorBullyUnit(eID))
+#endif
 					{
 						// The closer we are the better, because the unit travels less distance to get home
 						if(GetPlayer()->GetProximityToPlayer(eMinor) == PLAYER_PROXIMITY_NEIGHBORS)
@@ -12856,7 +12929,11 @@ void CvDiplomacyAI::DoContactMinorCivs()
 						//antonjs: consider: if military unit, it would be a good thing to get it near a rival or ongoing war
 
 						// If this minor has a PtP from someone, bullying it could have big consequences
+#ifdef AUI_WARNING_FIXES
+						if (pMinorCivAI->IsProtectedByAnyMajor())
+#else
 						if(pMinor->GetMinorCivAI()->IsProtectedByAnyMajor())
+#endif
 						{
 							iValue += -20;
 							//antonjs: consider: scale based on which major is protecting it
@@ -12870,7 +12947,11 @@ void CvDiplomacyAI::DoContactMinorCivs()
 						//antonjs: consider: distance to other majors
 
 						// If we are getting a bonus, don't mess that up!
+#ifdef AUI_WARNING_FIXES
+						if (pMinorCivAI->IsAllies(eID) || pMinorCivAI->IsFriends(eID))
+#else
 						if(pMinor->GetMinorCivAI()->IsAllies(eID) || pMinor->GetMinorCivAI()->IsFriends(eID))
+#endif
 						{
 							iValue = 0;
 						}
@@ -12892,7 +12973,11 @@ void CvDiplomacyAI::DoContactMinorCivs()
 				if(eApproach == MINOR_CIV_APPROACH_BULLY)
 				{
 					// Only bother if we can successfully bully
+#ifdef AUI_WARNING_FIXES
+					if (pMinorCivAI->CanMajorBullyGold(eID))
+#else
 					if(pMinor->GetMinorCivAI()->CanMajorBullyGold(eID))
+#endif
 					{
 						// The closer we are the better
 						if(GetPlayer()->GetProximityToPlayer(eMinor) == PLAYER_PROXIMITY_NEIGHBORS)
@@ -12901,20 +12986,32 @@ void CvDiplomacyAI::DoContactMinorCivs()
 							iValue += 20;
 
 						// We like to keep bullying the same minor
+#ifdef AUI_WARNING_FIXES
+						if (pMinorCivAI->IsEverBulliedByMajor(eID))
+#else
 						if(pMinor->GetMinorCivAI()->IsEverBulliedByMajor(eID))
+#endif
 						{
 							iValue += 20;
 						}
 
 						// If we have not bullied this minor recently, but someone else has, it might be good to wait for an opportunity to gain a lot of INF
+#ifdef AUI_WARNING_FIXES
+						if (!pMinorCivAI->IsRecentlyBulliedByMajor(eID) && pMinorCivAI->IsRecentlyBulliedByAnyMajor())
+#else
 						if(!pMinor->GetMinorCivAI()->IsRecentlyBulliedByMajor(eID) && pMinor->GetMinorCivAI()->IsRecentlyBulliedByAnyMajor())
+#endif
 						{
 							iValue += -10;
 							//antonjs: consider: but if everyone near the minor has bullied it, then there is nobody to come to its rescue, so we can bully safely
 						}
 
 						// If this minor has a PtP from someone, bullying it could have big consequences
+#ifdef AUI_WARNING_FIXES
+						if (pMinorCivAI->IsProtectedByAnyMajor())
+#else
 						if(pMinor->GetMinorCivAI()->IsProtectedByAnyMajor())
+#endif
 						{
 							iValue += -10;
 							//antonjs: consider: scale based on which major is protecting it
@@ -12928,7 +13025,11 @@ void CvDiplomacyAI::DoContactMinorCivs()
 						//antonjs: consider: distance to other majors
 
 						// If we are getting a bonus, don't mess that up!
+#ifdef AUI_WARNING_FIXES
+						if (pMinorCivAI->IsAllies(eID) || pMinorCivAI->IsFriends(eID))
+#else
 						if(pMinor->GetMinorCivAI()->IsAllies(eID) || pMinor->GetMinorCivAI()->IsFriends(eID))
+#endif
 						{
 							iValue = 0;
 						}
@@ -12975,12 +13076,21 @@ void CvDiplomacyAI::DoContactMinorCivs()
 			}
 			else
 			{
+#ifdef AUI_WARNING_FIXES
+				if (!pEconomicAI->IsSavingForThisPurchase(PURCHASE_TYPE_MINOR_CIV_GIFT))
+				{
+					LogMinorCivBuyout(eLoopMinor, iBuyoutCost, /*bSaving*/ true);
+
+					int iPriority = GC.getAI_GOLD_PRIORITY_BUYOUT_CITY_STATE();
+					pEconomicAI->StartSaveForPurchase(PURCHASE_TYPE_MINOR_CIV_GIFT, iBuyoutCost, iPriority);
+#else
 				if(!GetPlayer()->GetEconomicAI()->IsSavingForThisPurchase(PURCHASE_TYPE_MINOR_CIV_GIFT))
 				{
 					LogMinorCivBuyout(eLoopMinor, iBuyoutCost, /*bSaving*/ true);
 
 					int iPriority = GC.getAI_GOLD_PRIORITY_BUYOUT_CITY_STATE();
 					GetPlayer()->GetEconomicAI()->StartSaveForPurchase(PURCHASE_TYPE_MINOR_CIV_GIFT, iBuyoutCost, iPriority);
+#endif
 				}
 			}
 		}
@@ -14413,7 +14523,7 @@ void CvDiplomacyAI::DoRequest(PlayerTypes ePlayer, DiploStatementTypes& eStateme
 }
 
 /// Possible Contact Statement - Gifrt
-void CvDiplomacyAI::DoGift(PlayerTypes ePlayer, DiploStatementTypes& eStatement, CvDeal* pDeal)
+void CvDiplomacyAI::DoGift(PlayerTypes ePlayer, DiploStatementTypes& eStatement, CvDeal* pDeal) //-V669
 {
 	CvAssertMsg(ePlayer >= 0, "DIPLOMACY_AI: Invalid Player Index.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
 	CvAssertMsg(ePlayer < MAX_MAJOR_CIVS, "DIPLOMACY_AI: Invalid Player Index.  Please send Jon this with your last 5 autosaves and what changelist # you're playing.");
@@ -15222,7 +15332,11 @@ void CvDiplomacyAI::DoFYIDenouncedHumanEnemy(PlayerTypes ePlayer, DiploStatement
 				else if(eOpinion == MAJOR_CIV_OPINION_ALLY)
 					iWeight += 10;
 
+#ifdef AUI_WARNING_FIXES
+				if(eApproach == MAJOR_CIV_APPROACH_FRIENDLY)
+#else
 				if(eOpinion == MAJOR_CIV_APPROACH_FRIENDLY)
+#endif
 					iWeight += 2;
 
 				// Add weight if they're strong
@@ -15314,7 +15428,11 @@ void CvDiplomacyAI::DoFYIBefriendedHumanFriend(PlayerTypes ePlayer, DiploStateme
 				else if(eOpinion == MAJOR_CIV_OPINION_ALLY)
 					iWeight += 10;
 
+#ifdef AUI_WARNING_FIXES
+				if (eApproach == MAJOR_CIV_APPROACH_FRIENDLY)
+#else
 				if(eOpinion == MAJOR_CIV_APPROACH_FRIENDLY)
+#endif
 					iWeight += 2;
 
 				iWeight += GetChattiness();		// Usually ranges from 3 to 7
@@ -15412,6 +15530,9 @@ void CvDiplomacyAI::DoIdeologicalStatement(PlayerTypes ePlayer, DiploStatementTy
 	int iTurnsBetweenStatements = MAX_TURNS_SAFE_ESTIMATE;
 
 	CvPlayer &kTheirPlayer = GET_PLAYER(ePlayer);
+#ifdef AUI_WARNING_FIXES
+	CvPlayerCulture& kTheirCulture = *kTheirPlayer.GetCulture();
+#endif
 
 	if(eStatement == NO_DIPLO_STATEMENT_TYPE)
 	{
@@ -15428,7 +15549,11 @@ void CvDiplomacyAI::DoIdeologicalStatement(PlayerTypes ePlayer, DiploStatementTy
 			}
 		}
 
+#ifdef AUI_WARNING_FIXES
+		if (kTheirCulture.GetInfluenceLevel(m_pPlayer->GetID()) >= INFLUENCE_LEVEL_INFLUENTIAL)
+#else
 		if (kTheirPlayer.GetCulture()->GetInfluenceLevel(m_pPlayer->GetID()) >= INFLUENCE_LEVEL_INFLUENTIAL)
+#endif
 		{
 			eTempStatement = DIPLO_STATEMENT_YOUR_CULTURE_INFLUENTIAL;
 
@@ -15446,14 +15571,26 @@ void CvDiplomacyAI::DoIdeologicalStatement(PlayerTypes ePlayer, DiploStatementTy
 		{
 			PublicOpinionTypes eOpinionInMyCiv = m_pPlayer->GetCulture()->GetPublicOpinionType();
 			PlayerTypes eMyGreatestInfluence = m_pPlayer->GetCulture()->GetPublicOpinionBiggestInfluence();
+#ifdef AUI_WARNING_FIXES
+			PublicOpinionTypes eOpinionInTheirCiv = kTheirCulture.GetPublicOpinionType();
+			PlayerTypes eTheirGreatestInfluence = kTheirCulture.GetPublicOpinionBiggestInfluence();
+
+			// Did this player recently switch ideology due to our pressure?
+			int iIdeologySwitchTurn = kTheirCulture.GetTurnIdeologySwitch();
+#else
 			PublicOpinionTypes eOpinionInTheirCiv = kTheirPlayer.GetCulture()->GetPublicOpinionType();
 			PlayerTypes eTheirGreatestInfluence = kTheirPlayer.GetCulture()->GetPublicOpinionBiggestInfluence();
 
 			// Did this player recently switch ideology due to our pressure?
 			int iIdeologySwitchTurn = kTheirPlayer.GetCulture()->GetTurnIdeologySwitch();
+#endif
 			if (iIdeologySwitchTurn > 0 && iIdeologySwitchTurn + 10 > GC.getGame().getGameTurn())
 			{
+#ifdef AUI_WARNING_FIXES
+				kTheirCulture.SetTurnIdeologySwitch(-1);  // Reset so they only get 1 popup
+#else
 				kTheirPlayer.GetCulture()->SetTurnIdeologySwitch(-1);  // Reset so they only get 1 popup
+#endif
 				if (eTheirBranch == eFreedom)
 				{
 					eStatement = DIPLO_STATEMENT_SWITCH_OUR_IDEOLOGY_FREEDOM;
@@ -21671,7 +21808,11 @@ void CvDiplomacyAI::ChangeNegativeArchaeologyPoints(PlayerTypes ePlayer, int iCh
 		if(!GC.getGame().isGameMultiPlayer() && GET_PLAYER(ePlayer).isHuman() && ePlayer == GC.getGame().getActivePlayer())
 		{
 			if (m_paiNegativeArchaeologyPoints[ePlayer] >= 50 ||
+#ifdef AUI_WARNING_FIXES
+				(m_paiNegativeArchaeologyPoints[ePlayer] >= 40 && IsPlayerBrokenNoDiggingPromise(ePlayer)))
+#else
 				m_paiNegativeArchaeologyPoints[ePlayer] >= 40 && IsPlayerBrokenNoDiggingPromise(ePlayer))
+#endif
 			{
 				gDLL->UnlockAchievement(ACHIEVEMENT_XP2_34);
 			}

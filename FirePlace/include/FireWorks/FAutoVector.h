@@ -261,7 +261,9 @@ void FAutoVariable<std::vector<ElementType>, ClassContainer>::load(FDataStream &
 	clear();
 	m_commands.clear();
 	loadFrom >> m_value;
+#ifndef AUI_WARNING_FIXES
 	m_commands.clear();
+#endif
 }
 
 //---------------------------------------------------------------------------------------

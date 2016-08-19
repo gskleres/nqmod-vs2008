@@ -404,6 +404,10 @@ public:
 	void PopIgnoreWarning (TeamTypes eTeam);
 	int GetIgnoreWarningCount (TeamTypes eTeam);
 
+#ifdef AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+	int calculateResearchModifier(TechTypes eTech) const;
+#endif
+
 #ifdef AUI_GAME_BETTER_HYBRID_MODE
 	int getTurnOrder() const;
 	void setTurnOrder(int iTurnOrder);
@@ -414,8 +418,13 @@ public:
 	// Wrapper for giving Players on this Team a notification message
 	void AddNotification(NotificationTypes eNotificationType, const char* strMessage, const char* strSummary, int iX = -1, int iY = -1, int iGameDataIndex = -1, int iExtraGameData = -1);
 
+#ifdef AUI_WARNING_FIXES
+	void Read(FDataStream& kStream);
+	void Write(FDataStream& kStream) const;
+#else
 	virtual void Read(FDataStream& kStream);
 	virtual void Write(FDataStream& kStream) const;
+#endif
 
 protected:
 

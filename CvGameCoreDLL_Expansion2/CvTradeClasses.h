@@ -51,7 +51,7 @@ struct TradeConnection
 	int m_aiOriginYields[NUM_YIELD_TYPES];
 	int m_aiDestYields[NUM_YIELD_TYPES];
 
-#ifdef AUI_TRADE_FIX_POSSIBLE_DEALLOCATION_CRASH
+#ifdef AUI_EXPLICIT_DESTRUCTION
 	~TradeConnection()
 	{
 		m_aPlotList.clear();
@@ -366,7 +366,11 @@ public:
 #endif
 
 	void UpdateTradeConnectionWasPlundered();
+#ifdef AUI_WARNING_FIXES
+	void AddTradeConnectionWasPlundered(const TradeConnection& kTradeConnection);
+#else
 	void AddTradeConnectionWasPlundered(const TradeConnection kTradeConnection);
+#endif
 #ifdef AUI_CONSTIFY
 	bool CheckTradeConnectionWasPlundered(const TradeConnection& kTradeConnection) const;
 #else

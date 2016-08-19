@@ -826,7 +826,11 @@ public:
 	////////////////////////////////////////////////////////////////////////
 	class iterator : public LIST_TYPE::iterator{
 	public:
+#ifdef AUI_WARNING_FIXES
+		explicit iterator() : m_uiList(0) {};
+#else
 		explicit iterator(){};
+#endif
 		explicit iterator( const typename LIST_TYPE::iterator& it, unsigned int uiList )
 			: LIST_TYPE::iterator( it ), m_uiList(uiList) {};
 		~iterator(){};
@@ -848,7 +852,11 @@ public:
 	////////////////////////////////////////////////////////////////////////
 	class const_iterator : public LIST_TYPE::const_iterator{
 	public:
+#ifdef AUI_WARNING_FIXES
+		explicit const_iterator() : m_uiList(0) {};
+#else
 		explicit const_iterator(){};
+#endif
 		explicit const_iterator( const typename LIST_TYPE::const_iterator& it, unsigned int uiList )
 			: LIST_TYPE::const_iterator( it ), m_uiList(uiList) {};
 		

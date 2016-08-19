@@ -329,7 +329,11 @@ private:
 	CvPlayer* m_pPlayer;
 
 	int m_iNumProphetsSpawned;
+#ifdef AUI_WARNING_FIXES
+	bool m_bFoundingReligion;
+#else
 	int m_bFoundingReligion;
+#endif
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

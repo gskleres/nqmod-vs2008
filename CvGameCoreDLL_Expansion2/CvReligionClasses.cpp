@@ -189,6 +189,20 @@ FDataStream& operator<<(FDataStream& saveTo, const CvReligion& readFrom)
 
 CvString CvReligion::GetName() const
 {
+#ifdef AUI_WARNING_FIXES
+	CvString szReligionName = m_szCustomName;
+	if (szReligionName.IsEmpty())
+	{
+		CvReligionEntry* pEntry = GC.getReligionInfo(m_eReligion);
+		CvAssertMsg(pEntry, "pEntry for religion not expected to be NULL. Please send Anton or Ed your save file and version.");
+		if (pEntry)
+			szReligionName = pEntry->GetDescriptionKey();
+		else
+			szReligionName = "No Religion";
+	}
+	
+	return szReligionName;
+#else
 	CvReligionEntry* pEntry = GC.getReligionInfo(m_eReligion);
 	CvAssertMsg(pEntry, "pEntry for religion not expected to be NULL. Please send Anton or Ed your save file and version.");
 	if (pEntry)
@@ -199,6 +213,7 @@ CvString CvReligion::GetName() const
 
 	const char* szReligionNameBackup = "No Religion";
 	return szReligionNameBackup;
+#endif
 }
 
 //=====================================
@@ -4522,6 +4537,9 @@ FDataStream& operator<<(FDataStream& saveTo, const CvUnitReligion& readFrom)
 //=====================================
 /// Constructor
 CvReligionAI::CvReligionAI(void):
+#ifdef AUI_WARNING_FIXES
+	m_pBeliefs(NULL),
+#endif
 	m_pPlayer(NULL)
 {
 }
@@ -4589,10 +4607,16 @@ BeliefTypes CvReligionAI::ChoosePantheonBelief()
 	CvGameReligions* pGameReligions = GC.getGame().GetGameReligions();
 	CvWeightedVector<BeliefTypes, SAFE_ESTIMATE_NUM_BELIEFS, true> beliefChoices;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = pGameReligions->GetAvailablePantheonBeliefs();
+
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = pGameReligions->GetAvailablePantheonBeliefs();
 
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		CvBeliefEntry* pEntry = m_pBeliefs->GetEntry(eBelief);
@@ -4622,10 +4646,16 @@ BeliefTypes CvReligionAI::ChooseFounderBelief()
 	CvGameReligions* pGameReligions = GC.getGame().GetGameReligions();
 	CvWeightedVector<BeliefTypes, SAFE_ESTIMATE_NUM_BELIEFS, true> beliefChoices;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = pGameReligions->GetAvailableFounderBeliefs();
+
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = pGameReligions->GetAvailableFounderBeliefs();
 
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		CvBeliefEntry* pEntry = m_pBeliefs->GetEntry(eBelief);
@@ -4655,10 +4685,16 @@ BeliefTypes CvReligionAI::ChooseFollowerBelief()
 	CvGameReligions* pGameReligions = GC.getGame().GetGameReligions();
 	CvWeightedVector<BeliefTypes, SAFE_ESTIMATE_NUM_BELIEFS, true> beliefChoices;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = pGameReligions->GetAvailableFollowerBeliefs();
+
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = pGameReligions->GetAvailableFollowerBeliefs();
 
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		CvBeliefEntry* pEntry = m_pBeliefs->GetEntry(eBelief);
@@ -4688,10 +4724,16 @@ BeliefTypes CvReligionAI::ChooseEnhancerBelief()
 	CvGameReligions* pGameReligions = GC.getGame().GetGameReligions();
 	CvWeightedVector<BeliefTypes, SAFE_ESTIMATE_NUM_BELIEFS, true> beliefChoices;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = pGameReligions->GetAvailableEnhancerBeliefs();
+
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = pGameReligions->GetAvailableEnhancerBeliefs();
 
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		CvBeliefEntry* pEntry = m_pBeliefs->GetEntry(eBelief);
@@ -4721,10 +4763,16 @@ BeliefTypes CvReligionAI::ChooseBonusBelief(int iExcludeBelief1, int iExcludeBel
 	CvGameReligions* pGameReligions = GC.getGame().GetGameReligions();
 	CvWeightedVector<BeliefTypes, SAFE_ESTIMATE_NUM_BELIEFS, true> beliefChoices;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = pGameReligions->GetAvailableBonusBeliefs();
+
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = pGameReligions->GetAvailableBonusBeliefs();
 
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		CvBeliefEntry* pEntry = m_pBeliefs->GetEntry(eBelief);
@@ -4757,10 +4805,16 @@ BeliefTypes CvReligionAI::ChooseReformationBelief()
 	CvGameReligions* pGameReligions = GC.getGame().GetGameReligions();
 	CvWeightedVector<BeliefTypes, SAFE_ESTIMATE_NUM_BELIEFS, true> beliefChoices;
 
+#ifdef AUI_WARNING_FIXES
+	const std::vector<BeliefTypes>& availableBeliefs = pGameReligions->GetAvailableReformationBeliefs();
+
+	for (std::vector<BeliefTypes>::const_iterator it = availableBeliefs.begin(); it != availableBeliefs.end(); ++it)
+#else
 	std::vector<BeliefTypes> availableBeliefs = pGameReligions->GetAvailableReformationBeliefs();
 
 	for(std::vector<BeliefTypes>::iterator it = availableBeliefs.begin();
 	        it!= availableBeliefs.end(); ++it)
+#endif
 	{
 		const BeliefTypes eBelief = (*it);
 		CvBeliefEntry* pEntry = m_pBeliefs->GetEntry(eBelief);
@@ -6388,7 +6442,16 @@ bool CvReligionAI::HaveNearbyConversionTarget(ReligionTypes eReligion, bool bCan
 	bool bStartedOwnReligion;
 	TeamTypes eTeam = m_pPlayer->getTeam();
 	UnitTypes eMissionary = (UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY");
+#ifdef AUI_WARNING_FIXES
+	CvUnitEntry* pMissionaryInfo = GC.getUnitInfo(eMissionary);
+	if (!pMissionaryInfo)
+	{
+		return false;
+	}
+	int iMissionaryMoves = pMissionaryInfo->GetMoves();
+#else
 	int iMissionaryMoves = GC.getUnitInfo(eMissionary)->GetMoves();
+#endif
 
 	CvCity* pCapital = m_pPlayer->getCapitalCity();
 	if(pCapital == NULL)
@@ -6682,7 +6745,9 @@ UnitTypes CvReligionAI::GetDesiredFaithGreatPerson() const
 					{
 						iScore = 400;
 					}
+#ifndef AUI_WARNING_FIXES
 					iScore = 1000;
+#endif
 					iScore /= (1+ m_pPlayer->getScientistsFromFaith());
 				}
 				else if (eUnitClass == GC.getInfoTypeForString("UNITCLASS_MERCHANT"))

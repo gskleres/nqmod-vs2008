@@ -197,11 +197,23 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_paiTourismOnUnitCreation(NULL),
 	m_paiHurryModifier(NULL),
 	m_pabSpecialistValid(NULL),
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	m_ppiImprovementYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiBuildingClassYieldModifiers(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiBuildingClassYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+	m_ppiBuildingClassFlavorChanges(std::pair<int**, size_t>(NULL, 0)),
+#endif
+#else
 	m_ppiImprovementYieldChanges(NULL),
 	m_ppiBuildingClassYieldModifiers(NULL),
 	m_ppiBuildingClassYieldChanges(NULL),
 #ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
 	m_ppiBuildingClassFlavorChanges(NULL),
+#endif
+#endif
+#ifdef AUI_WARNING_FIXES
+	m_piImprovementCultureChange(NULL),
 #endif
 	m_piFlavorValue(NULL),
 	m_eFreeBuildingOnConquest(NO_BUILDING)
@@ -236,11 +248,25 @@ CvPolicyEntry::~CvPolicyEntry(void)
 	SAFE_DELETE_ARRAY(m_paiHurryModifier);
 	SAFE_DELETE_ARRAY(m_pabSpecialistValid);
 
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_piFlavorValue);
+	SAFE_DELETE_ARRAY(m_piImprovementCultureChange);
+#endif
+
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiImprovementYieldChanges.first, m_ppiImprovementYieldChanges.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldModifiers.first, m_ppiBuildingClassYieldModifiers.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldChanges.first, m_ppiBuildingClassYieldChanges.second);
+#ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassFlavorChanges.first, m_ppiBuildingClassFlavorChanges.second);
+#endif
+#else
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiImprovementYieldChanges);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldModifiers);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldChanges);
 #ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassFlavorChanges);
+#endif
 #endif
 }
 
@@ -454,7 +480,12 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 
 	//BuildingYieldModifiers
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiBuildingClassYieldModifiers.first, "BuildingClasses", "Yields");
+		m_ppiBuildingClassYieldModifiers.second = kUtility.MaxRows("BuildingClasses");
+#else
 		kUtility.Initialize2DArray(m_ppiBuildingClassYieldModifiers, "BuildingClasses", "Yields");
+#endif
 
 		std::string strKey("Policy_BuildingClassYieldModifiers");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -471,13 +502,22 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int iYieldID = pResults->GetInt(1);
 			const int iYieldMod = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiBuildingClassYieldModifiers.first[BuildingClassID][iYieldID] = iYieldMod;
+#else
 			m_ppiBuildingClassYieldModifiers[BuildingClassID][iYieldID] = iYieldMod;
+#endif
 		}
 	}
 
 	//BuildingYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiBuildingClassYieldChanges.first, "BuildingClasses", "Yields");
+		m_ppiBuildingClassYieldChanges.second = kUtility.MaxRows("BuildingClasses");
+#else
 		kUtility.Initialize2DArray(m_ppiBuildingClassYieldChanges, "BuildingClasses", "Yields");
+#endif
 
 		std::string strKey("Policy_BuildingClassYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -494,14 +534,23 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int iYieldID = pResults->GetInt(1);
 			const int iYieldChange = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiBuildingClassYieldChanges.first[BuildingClassID][iYieldID] = iYieldChange;
+#else
 			m_ppiBuildingClassYieldChanges[BuildingClassID][iYieldID] = iYieldChange;
+#endif
 		}
 	}
 
 #ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
 	//BuildingClassFlavorChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiBuildingClassFlavorChanges.first, "BuildingClasses", "Flavors");
+		m_ppiBuildingClassFlavorChanges.second = kUtility.MaxRows("BuildingClasses");
+#else
 		kUtility.Initialize2DArray(m_ppiBuildingClassFlavorChanges, "BuildingClasses", "Flavors");
+#endif
 
 		std::string strKey("Policy_BuildingClassFlavorChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -518,14 +567,23 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int iFlavorID = pResults->GetInt(1);
 			const int iFlavorChange = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiBuildingClassFlavorChanges.first[BuildingClassID][iFlavorID] = iFlavorChange;
+#else
 			m_ppiBuildingClassFlavorChanges[BuildingClassID][iFlavorID] = iFlavorChange;
+#endif
 		}
 	}
 #endif
 
 	//ImprovementYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiImprovementYieldChanges.first, "Improvements", "Yields");
+		m_ppiImprovementYieldChanges.second = kUtility.MaxRows("Improvements");
+#else
 		kUtility.Initialize2DArray(m_ppiImprovementYieldChanges, "Improvements", "Yields");
+#endif
 
 		std::string strKey("Policy_ImprovementYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -542,7 +600,11 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiImprovementYieldChanges.first[ImprovementID][YieldID] = yield;
+#else
 			m_ppiImprovementYieldChanges[ImprovementID][YieldID] = yield;
+#endif
 		}
 	}
 
@@ -1825,7 +1887,11 @@ int CvPolicyEntry::GetImprovementYieldChanges(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiImprovementYieldChanges.first ? m_ppiImprovementYieldChanges.first[i][j] : 0;
+#else
 	return m_ppiImprovementYieldChanges[i][j];
+#endif
 }
 
 /// Yield modifier for a specific BuildingClass by yield type
@@ -1835,7 +1901,11 @@ int CvPolicyEntry::GetBuildingClassYieldModifiers(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiBuildingClassYieldModifiers.first ? m_ppiBuildingClassYieldModifiers.first[i][j] : 0;
+#else
 	return m_ppiBuildingClassYieldModifiers[i][j];
+#endif
 }
 
 /// Yield change for a specific BuildingClass by yield type
@@ -1845,7 +1915,11 @@ int CvPolicyEntry::GetBuildingClassYieldChanges(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiBuildingClassYieldChanges.first ? m_ppiBuildingClassYieldChanges.first[i][j] : 0;
+#else
 	return m_ppiBuildingClassYieldChanges[i][j];
+#endif
 }
 
 #ifdef AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
@@ -2158,6 +2232,14 @@ CvPlayerPolicies::CvPlayerPolicies():
 	m_paePolicyBlockedBranchCheck(NULL),
 	m_pPolicyAI(NULL),
 	m_pPolicies(NULL),
+#ifdef AUI_WARNING_FIXES
+	m_paiPolicyBlockedCount(NULL),
+	m_paiPolicyBranchBlockedCount(NULL),
+	m_iNumExtraBranches(0),
+	m_eBranchPicked1(NO_POLICY_BRANCH_TYPE),
+	m_eBranchPicked2(NO_POLICY_BRANCH_TYPE),
+	m_eBranchPicked3(NO_POLICY_BRANCH_TYPE),
+#endif
 	m_pPlayer(NULL)
 {
 }

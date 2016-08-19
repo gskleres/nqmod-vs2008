@@ -949,10 +949,14 @@ bool CvMilitaryAI::BuyEmergencyBuilding(CvCity* pCity)
 					{
 						m_pPlayer->GetTreasury()->LogExpenditure((CvString)pkBuildingInfo->GetText(), iGoldCost, 8);
 						m_pPlayer->GetTreasury()->ChangeGold(-iGoldCost);
+#ifdef CVASSERT_ENABLE
 						int iResult = pCity->CreateBuilding(eBldg);
 
 						DEBUG_VARIABLE(iResult);
 						CvAssertMsg(iResult != FFreeList::INVALID_INDEX, "Unable to create building");
+#else
+						pCity->CreateBuilding(eBldg);
+#endif
 
 						CvString szMsg;
 						szMsg.Format("Emergency Building Purchased: %s, ", pkBuildingInfo->GetDescription());
@@ -3752,6 +3756,11 @@ bool CvMilitaryAI::WillAirUnitRebase(CvUnit* pUnit) const
 	for(pLoopCity = m_pPlayer->firstCity(&iLoopCity); pLoopCity != NULL; pLoopCity = m_pPlayer->nextCity(&iLoopCity))
 	{
 		CvPlot* pTarget = pLoopCity->plot();
+
+#ifdef AUI_WARNING_FIXES
+		if (!pTarget)
+			continue;
+#endif
 
 		if(pLoopCity->getDamage() > (pLoopCity->GetMaxHitPoints() / 5))
 		{

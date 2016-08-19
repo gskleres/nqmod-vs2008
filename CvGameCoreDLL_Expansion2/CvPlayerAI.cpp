@@ -786,7 +786,11 @@ OperationSlot CvPlayerAI::CityCommitToBuildUnitForOperationSlot(int iAreaID, int
 	return thisSlot;
 }
 
+#ifdef AUI_WARNING_FIXES
+void CvPlayerAI::CityUncommitToBuildUnitForOperationSlot(const OperationSlot& thisSlot)
+#else
 void CvPlayerAI::CityUncommitToBuildUnitForOperationSlot(OperationSlot thisSlot)
+#endif
 {
 	// find this operation
 	CvAIOperation* pThisOperation = getAIOperation(thisSlot.m_iOperationID);
@@ -796,7 +800,11 @@ void CvPlayerAI::CityUncommitToBuildUnitForOperationSlot(OperationSlot thisSlot)
 	}
 }
 
+#ifdef AUI_WARNING_FIXES
+void CvPlayerAI::CityFinishedBuildingUnitForOperationSlot(const OperationSlot& thisSlot, CvUnit* pThisUnit)
+#else
 void CvPlayerAI::CityFinishedBuildingUnitForOperationSlot(OperationSlot thisSlot, CvUnit* pThisUnit)
+#endif
 {
 	// find this operation
 	CvAIOperation* pThisOperation = getAIOperation(thisSlot.m_iOperationID);
@@ -937,7 +945,11 @@ GreatPeopleDirectiveTypes CvPlayerAI::GetDirectiveWriter(CvUnit* pGreatWriter)
 	GreatPeopleDirectiveTypes eDirective = NO_GREAT_PEOPLE_DIRECTIVE_TYPE;
 
 	// Defend against ideology pressure if not going for culture win
+#ifdef AUI_WARNING_FIXES
+	if (!GetDiplomacyAI()->IsGoingForCultureVictory() && GetCulture()->GetPublicOpinionUnhappiness() > 10)
+#else
 	if (eDirective == NO_GREAT_PEOPLE_DIRECTIVE_TYPE && !GetDiplomacyAI()->IsGoingForCultureVictory() && GetCulture()->GetPublicOpinionUnhappiness() > 10)
+#endif
 	{
 		eDirective = GREAT_PEOPLE_DIRECTIVE_CULTURE_BLAST;
 	}
@@ -967,7 +979,11 @@ GreatPeopleDirectiveTypes CvPlayerAI::GetDirectiveArtist(CvUnit* pGreatArtist)
 	GreatPeopleDirectiveTypes eDirective = NO_GREAT_PEOPLE_DIRECTIVE_TYPE;
 
 	// Defend against ideology pressure if not going for culture win
+#ifdef AUI_WARNING_FIXES
+	if (!GetDiplomacyAI()->IsGoingForCultureVictory() && GetCulture()->GetPublicOpinionUnhappiness() > 10)
+#else
 	if (eDirective == NO_GREAT_PEOPLE_DIRECTIVE_TYPE && !GetDiplomacyAI()->IsGoingForCultureVictory() && GetCulture()->GetPublicOpinionUnhappiness() > 10)
+#endif
 	{
 		eDirective = GREAT_PEOPLE_DIRECTIVE_GOLDEN_AGE;
 	}
@@ -1096,7 +1112,11 @@ GreatPeopleDirectiveTypes CvPlayerAI::GetDirectiveMerchant(CvUnit* pGreatMerchan
 		return NO_GREAT_PEOPLE_DIRECTIVE_TYPE;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	if (GC.getGame().getGameTurn() <= ((GC.getGame().getEstimateEndTurn() * 2) / 4))
+#else
 	if (eDirective == NO_GREAT_PEOPLE_DIRECTIVE_TYPE && GC.getGame().getGameTurn() <= ((GC.getGame().getEstimateEndTurn() * 2) / 4))
+#endif
 	{
 		if (GetDiplomacyAI()->IsGoingForDiploVictory() && !bTheVeniceException)
 		{
@@ -1127,7 +1147,11 @@ GreatPeopleDirectiveTypes CvPlayerAI::GetDirectiveScientist(CvUnit* /*pGreatScie
 	GreatPeopleDirectiveTypes eDirective = NO_GREAT_PEOPLE_DIRECTIVE_TYPE;
 
 	// If I'm in danger, use great person to get a tech boost
+#ifdef AUI_WARNING_FIXES
+	if (!IsSafe(this))
+#else
 	if(eDirective == NO_GREAT_PEOPLE_DIRECTIVE_TYPE && !IsSafe(this))
+#endif
 	{
 		eDirective = GREAT_PEOPLE_DIRECTIVE_USE_POWER;
 	}

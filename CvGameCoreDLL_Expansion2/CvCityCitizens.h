@@ -77,7 +77,7 @@ public:
 #else
 	BuildingTypes GetAIBestSpecialistBuilding(int& iSpecialistValue);
 #endif
-#ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
+#if defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS) || defined(AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER) || defined(AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION) || defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS) || defined(AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT)
 	int GetSpecialistValue(SpecialistTypes eSpecialist, bool bForRemoval = false) const;
 #elif defined(AUI_CONSTIFY)
 	int GetSpecialistValue(SpecialistTypes eSpecialist) const;

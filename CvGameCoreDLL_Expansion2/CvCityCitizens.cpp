@@ -104,6 +104,9 @@ void CvCityCitizens::Reset()
 	m_iNumForcedDefaultSpecialists = 0;
 
 	CvAssertMsg(m_aiSpecialistCounts==NULL, "about to leak memory, CvCityCitizens::m_aiSpecialistCounts");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_aiSpecialistCounts);
+#endif
 	m_aiSpecialistCounts = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 	{
@@ -111,6 +114,9 @@ void CvCityCitizens::Reset()
 	}
 
 	CvAssertMsg(m_aiSpecialistGreatPersonProgressTimes100==NULL, "about to leak memory, CvCityCitizens::m_aiSpecialistGreatPersonProgressTimes100");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_aiSpecialistGreatPersonProgressTimes100);
+#endif
 	m_aiSpecialistGreatPersonProgressTimes100 = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 	{
@@ -118,6 +124,9 @@ void CvCityCitizens::Reset()
 	}
 
 	CvAssertMsg(m_aiNumSpecialistsInBuilding==NULL, "about to leak memory, CvCityCitizens::m_aiNumSpecialistsInBuilding");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_aiNumSpecialistsInBuilding);
+#endif
 	m_aiNumSpecialistsInBuilding = FNEW(int[GC.getNumBuildingInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumBuildingInfos(); iI++)
 	{
@@ -125,6 +134,9 @@ void CvCityCitizens::Reset()
 	}
 
 	CvAssertMsg(m_aiNumForcedSpecialistsInBuilding==NULL, "about to leak memory, CvCityCitizens::m_aiNumForcedSpecialistsInBuilding");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_aiNumForcedSpecialistsInBuilding);
+#endif
 	m_aiNumForcedSpecialistsInBuilding = FNEW(int[GC.getNumBuildingInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumBuildingInfos(); iI++)
 	{
@@ -132,6 +144,9 @@ void CvCityCitizens::Reset()
 	}
 
 	CvAssertMsg(m_piBuildingGreatPeopleRateChanges==NULL, "about to leak memory, CvCityCitizens::m_piBuildingGreatPeopleRateChanges");
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_piBuildingGreatPeopleRateChanges);
+#endif
 	m_piBuildingGreatPeopleRateChanges = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
 	for(iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 	{
@@ -139,6 +154,7 @@ void CvCityCitizens::Reset()
 	}
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	SAFE_DELETE_ARRAY(m_aiCachedGPChangeT100ForThisTurn);
 	m_aiCachedGPChangeT100ForThisTurn = FNEW(int[GC.getNumSpecialistInfos()], c_eCiv5GameplayDLL, 0);
 	for (iI = 0; iI < GC.getNumSpecialistInfos(); iI++)
 	{
@@ -462,6 +478,8 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 #endif
 #ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
 	int iCurrentScienceLoss = -GetPlayer()->calculateGoldRateTimes100() - GetPlayer()->GetTreasury()->GetGoldTimes100();
+	if (IsWorkingPlot(pPlot))
+		iCurrentScienceLoss += iGoldYieldValue;
 	if (iCurrentScienceLoss > 0)
 	{
 		int iGoldToScienceT100 = MIN(iGoldYieldValue, iCurrentScienceLoss);
@@ -475,7 +493,11 @@ int CvCityCitizens::GetPlotValue(CvPlot* pPlot, bool bUseAllowGrowthFlag)
 	// How much surplus food are we making?
 	int iExcessFoodTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100);
 #if defined(AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER) || defined(AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION) || defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS)
-	int iExcessFoodWithPlotTimes100 = m_pCity->getYieldRateTimes100(YIELD_FOOD, false) - (m_pCity->foodConsumption() * 100) + pPlot->getYield(YIELD_FOOD) * m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
+	int iExcessFoodWithPlotTimes100 = iExcessFoodTimes100;
+	if (IsWorkingPlot(pPlot))
+		iExcessFoodTimes100 -= pPlot->getYield(YIELD_FOOD) * m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
+	else
+		iExcessFoodWithPlotTimes100 += pPlot->getYield(YIELD_FOOD) * m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
 #endif
 
 	bool bAvoidGrowth = IsAvoidGrowth();
@@ -792,17 +814,18 @@ bool CvCityCitizens::IsAvoidGrowth()
 					}
 				}
 				if ((GetPlayer()->GetUnhappinessFromCityPopulation() + GetPlayer()->GetUnhappinessFromOccupiedCities()) / 100 <
-					(GetPlayer()->GetUnhappinessFromCityPopulation(NULL, NULL, m_pCity, (bHasSpecialistSlot ? m_pCity : NULL)) 
+					(GetPlayer()->GetUnhappinessFromCityPopulation(NULL, NULL, m_pCity, (bHasSpecialistSlot ? m_pCity : NULL))
 						+ GetPlayer()->GetUnhappinessFromOccupiedCities(NULL, NULL, m_pCity, (bHasSpecialistSlot ? m_pCity : NULL))) / 100)
 					return true;
 			}
 		}
-#else
+	}
+#elif !defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS)
 	if(GetPlayer()->GetExcessHappiness() < 0)
 	{
 		return true;
-#endif
 	}
+#endif
 
 	return IsForcedAvoidGrowth();
 }
@@ -1253,7 +1276,7 @@ BuildingTypes CvCityCitizens::GetAIBestSpecialistBuilding(int& iSpecialistValue)
 }
 
 /// How valuable is eSpecialist?
-#ifdef AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS
+#if defined(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS) || defined(AUI_CITIZENS_GET_VALUE_SPLIT_EXCESS_FOOD_MUTLIPLIER) || defined(AUI_CITIZENS_GET_VALUE_ALTER_FOOD_VALUE_IF_FOOD_PRODUCTION) || defined(AUI_CITIZENS_GET_VALUE_CONSIDER_GROWTH_MODIFIERS) || defined(AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT)
 int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist, bool bForRemoval) const
 #elif defined(AUI_CONSTIFY)
 int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist) const
@@ -1362,13 +1385,19 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 		iExtraUnhappinessT100 /= 100;
 
 		// The more happiness we have, the less it's worth
-		// Numbers below are based on Primitive function of f = 2^(1-(Empire Happiness)/10) -> F = -20/ln(2) * 2^(-(Empire Happiness)/10
-		double dHappinessYieldValuePre = pow(2.0, -double(pPlayer->GetExcessHappiness()) / 10.0) * -20 / M_LN2;
-		double dHappinessYieldValuePost = pow(2.0, -double(pPlayer->GetExcessHappiness()) / 10.0 - double(iExtraUnhappinessT100)/1000.0) * -20 / M_LN2;
+		// Numbers below are based on Primitive function of f = 2^(1-(Empire Happiness)/10) -> F = -20/ln(2) * 2^(-(Empire Happiness)/10)
+		double dHappinessPre = double(pPlayer->GetExcessHappiness());
+		if (bForRemoval)
+			dHappinessPre += double(iExtraUnhappinessT100) / 100.0;
+		double dHappinessPost = dHappinessPre - double(iExtraUnhappinessT100) / 100.0;
+		double dHappinessYieldValuePre = pow(2.0, dHappinessPre / -10.0) * -20 / M_LN2;
+		double dHappinessYieldValuePost = pow(2.0, dHappinessPost / -10.0) * -20 / M_LN2;
 		iHappinessYieldValue = int(AUI_CITIZENS_UNHARDCODE_SPECIALIST_VALUE_HAPPINESS * (dHappinessYieldValuePost - dHappinessYieldValuePre) + 0.5);
 
 		iHappinessYieldValue *= -iExtraUnhappinessT100;
 		iHappinessYieldValue /= 100;
+		if (bForRemoval)
+			iExtraUnhappinessT100 *= -1;
 	}
 #else
 	int iHappinessYieldValue = (m_pCity->GetPlayer()->isHalfSpecialistUnhappiness()) ? 5 : 0; // TODO: un-hardcode this
@@ -1438,6 +1467,8 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 #endif
 #ifdef AUI_CITIZENS_GOLD_YIELD_COUNTS_AS_SCIENCE_WHEN_IN_DEFICIT
 	int iCurrentScienceLoss = -GetPlayer()->calculateGoldRateTimes100() - GetPlayer()->GetTreasury()->GetGoldTimes100();
+	if (bForRemoval)
+		iCurrentScienceLoss += iGoldYieldValue;
 	if (iCurrentScienceLoss > 0)
 	{
 		int iGoldToScienceT100 = MIN(iGoldYieldValue, iCurrentScienceLoss);
@@ -1465,6 +1496,8 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 	iSpecialistBaseFoodYield *= m_pCity->getBaseYieldRateModifier(YIELD_FOOD);
 #endif
 #endif
+	if (bForRemoval)
+		iExcessFoodTimes100 -= iSpecialistBaseFoodYield + iFoodConsumptionBonus;
 	int iExcessFoodWithPlotTimes100 = iSpecialistBaseFoodYield + iExcessFoodTimes100 + iFoodConsumptionBonus;
 #endif
 #ifdef AUI_CITIZENS_CONSIDER_HAPPINESS_VALUE_ON_OTHER_YIELDS
@@ -1477,7 +1510,7 @@ int CvCityCitizens::GetSpecialistValue(SpecialistTypes eSpecialist)
 		iScienceYieldValue += GC.getAI_CITIZEN_VALUE_SCIENCE() * iBonusScience / GetPlayer()->getNumCities();
 	}
 	// Happiness to culture already multiplied by 100
-	if (pPlayer->GetExcessHappiness() - iExtraUnhappinessT100 / 100 >= 0)
+	if (pPlayer->GetExcessHappiness() + -iExtraUnhappinessT100 / 100 >= 0)
 		iCultureYieldValue += GC.getAI_CITIZEN_VALUE_CULTURE() * (-iExtraUnhappinessT100 / 100) * GetPlayer()->getHappinessToCulture();
 #endif
 
@@ -2451,18 +2484,34 @@ void CvCityCitizens::DoAlterWorkingPlot(int iIndex)
 			// JON: Need to update this block to work with new system
 			else if(pPlot->getOwner() == GetOwner())
 			{
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				CvCity* pOldWorkingCityOverride = pPlot->getWorkingCityOverride();
+				if (pOldWorkingCityOverride != NULL)
+				{
+					if (pOldWorkingCityOverride->IsPuppet())
+					{
+						return;
+#else
 				// Can't take away forced plots from puppet Cities
 				if(pPlot->getWorkingCityOverride() != NULL)
 				{
 					if(pPlot->getWorkingCityOverride()->IsPuppet())
 					{
 						return;
+#endif
 					}
 				}
 
 				pPlot->setWorkingCityOverride(GetCity());
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+				if (pOldWorkingCityOverride)
+					pOldWorkingCityOverride->GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
 			}
 		}
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+		DoSelfConsistencyCheck();
+#endif
 	}
 }
 
@@ -3144,6 +3193,18 @@ void CvCityCitizens::DoRemoveSpecialistFromBuilding(BuildingTypes eBuilding, boo
 			ChangeNumUnassignedCitizens(1);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		ICvUserInterface2* pkIFace = GC.GetEngineUserInterface();
+		pkIFace->setDirty(GameData_DIRTY_BIT, true);
+		pkIFace->setDirty(CityInfo_DIRTY_BIT, true);
+		//pkIFace->setDirty(InfoPane_DIRTY_BIT, true );
+		pkIFace->setDirty(CityScreen_DIRTY_BIT, true);
+		pkIFace->setDirty(ColoredPlots_DIRTY_BIT, true);
+
+		auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(GetCity());
+
+		pkIFace->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_SPECIALISTS);
+#else
 		GC.GetEngineUserInterface()->setDirty(GameData_DIRTY_BIT, true);
 		GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 		//GC.GetEngineUserInterface()->setDirty(InfoPane_DIRTY_BIT, true );
@@ -3153,6 +3214,7 @@ void CvCityCitizens::DoRemoveSpecialistFromBuilding(BuildingTypes eBuilding, boo
 		auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(GetCity());
 
 		GC.GetEngineUserInterface()->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_SPECIALISTS);
+#endif
 	}
 }
 
@@ -3194,6 +3256,16 @@ void CvCityCitizens::DoRemoveAllSpecialistsFromBuilding(BuildingTypes eBuilding,
 			ChangeNumUnassignedCitizens(1);
 		}
 
+#ifdef AUI_WARNING_FIXES
+		ICvUserInterface2* pkIFace = GC.GetEngineUserInterface();
+		pkIFace->setDirty(CityInfo_DIRTY_BIT, true);
+		//pkIFace->setDirty(InfoPane_DIRTY_BIT, true );
+		pkIFace->setDirty(CityScreen_DIRTY_BIT, true);
+		pkIFace->setDirty(ColoredPlots_DIRTY_BIT, true);
+
+		auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(GetCity());
+		pkIFace->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_SPECIALISTS);
+#else
 		GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 		//GC.GetEngineUserInterface()->setDirty(InfoPane_DIRTY_BIT, true );
 		GC.GetEngineUserInterface()->setDirty(CityScreen_DIRTY_BIT, true);
@@ -3201,6 +3273,7 @@ void CvCityCitizens::DoRemoveAllSpecialistsFromBuilding(BuildingTypes eBuilding,
 
 		auto_ptr<ICvCity1> pCity = GC.WrapCityPointer(GetCity());
 		GC.GetEngineUserInterface()->SetSpecificCityInfoDirty(pCity.get(), CITY_UPDATE_TYPE_SPECIALISTS);
+#endif
 	}
 }
 

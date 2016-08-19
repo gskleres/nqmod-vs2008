@@ -29,7 +29,11 @@
 
 //	--------------------------------------------------------------------------------
 /// Default constructor
+#ifdef AUI_WARNING_FIXES
+CvGameTrade::CvGameTrade() : m_aaiTechDifference()
+#else
 CvGameTrade::CvGameTrade()
+#endif
 {
 	Reset();
 }
@@ -64,6 +68,9 @@ void CvGameTrade::Reset (void)
 	m_CurrentTemporaryPopupRoute.iPlotX = 0;
 	m_CurrentTemporaryPopupRoute.iPlotY = 0;
 	m_CurrentTemporaryPopupRoute.type = TRADE_CONNECTION_INTERNATIONAL;
+#ifdef AUI_WARNING_FIXES
+	ResetTechDifference();
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -372,7 +379,7 @@ bool CvGameTrade::CreateTradeRoute(CvCity* pOriginCity, CvCity* pDestCity, Domai
 	// reveal all plots to the player who created the trade route
 	TeamTypes eOriginTeam = GET_PLAYER(eOriginPlayer).getTeam();
 #ifdef AUI_ITERATORIZE
-	for (TradeConnectionPlotList::const_iterator it = m_aTradeConnections[iNewTradeRouteIndex].m_aPlotList.begin(); it != m_aTradeConnections[iNewTradeRouteIndex].m_aPlotList.begin(); ++it)
+	for (TradeConnectionPlotList::const_iterator it = m_aTradeConnections[iNewTradeRouteIndex].m_aPlotList.begin(); it != m_aTradeConnections[iNewTradeRouteIndex].m_aPlotList.end(); ++it)
 	{
 		GC.getMap().plot(it->m_iX, it->m_iY)->setRevealed(eOriginTeam, true, true);
 #else
@@ -1868,12 +1875,15 @@ void CvGameTrade::CreateVis(int iIndex)
 //	----------------------------------------------------------------------------
 #ifdef AUI_WARNING_FIXES
 CvUnit* CvGameTrade::GetVis(uint iIndex) const
+{
+	CvAssertMsg(iIndex < m_aTradeConnections.size(), "iIndex out of bounds");
+	if (iIndex >= m_aTradeConnections.size())
 #else
 CvUnit* CvGameTrade::GetVis(int iIndex)
-#endif
 {
 	CvAssertMsg(iIndex >= 0 && iIndex < (int)m_aTradeConnections.size(), "iIndex out of bounds");
 	if (iIndex < 0 || iIndex >= (int)m_aTradeConnections.size())
+#endif
 	{
 		return NULL;
 	}
@@ -2290,10 +2300,14 @@ void CvPlayerTrade::MoveUnits (void)
 				
 				// create new unit
 				UnitTypes eUnitType = GetTradeUnit(eDomain);
+#ifdef CVASSERT_ENABLE
 				CvUnit* pRebornUnit = m_pPlayer->initUnit(eUnitType, iOriginX, iOriginY, UNITAI_TRADE_UNIT);
 
 				DEBUG_VARIABLE(pRebornUnit);
 				CvAssertMsg(pRebornUnit, "pRebornUnit is null. This is bad!!");
+#else
+				m_pPlayer->initUnit(eUnitType, iOriginX, iOriginY, UNITAI_TRADE_UNIT);
+#endif
 			}
 		}
 	}
@@ -4326,7 +4340,11 @@ void CvPlayerTrade::UpdateTradeConnectionWasPlundered()
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvPlayerTrade::AddTradeConnectionWasPlundered(const TradeConnection& kTradeConnection)
+#else
 void CvPlayerTrade::AddTradeConnectionWasPlundered(const TradeConnection kTradeConnection)
+#endif
 {
 	bool bAdded = false;
 #ifdef AUI_ITERATORIZE
@@ -4840,6 +4858,9 @@ FDataStream& operator<<(FDataStream& saveTo, const CvPlayerTrade& readFrom)
 //=====================================
 /// Constructor
 CvTradeAI::CvTradeAI(void):
+#ifdef AUI_WARNING_FIXES
+	m_iRemovableValue(0),
+#endif
 m_pPlayer(NULL)
 {
 }

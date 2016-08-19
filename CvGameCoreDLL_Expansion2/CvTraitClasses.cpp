@@ -125,18 +125,56 @@ CvTraitEntry::CvTraitEntry() :
 	m_paiYieldModifier(NULL),
 	m_piStrategicResourceQuantityModifier(NULL),
 	m_piResourceQuantityModifiers(NULL),
+#ifdef AUI_WARNING_FIXES
+	m_piMovesChangeUnitCombats(NULL),
+	m_piMaintenanceModifierUnitCombats(NULL),
+	m_iWorkerSpeedModifier(0),
+	m_iAfraidMinorPerTurnInfluence(0),
+	m_iLandTradeRouteRangeBonus(0),
+	m_iTradeReligionModifier(0),
+	m_iTradeBuildingModifier(0),
+	m_eCombatBonusImprovement(NO_IMPROVEMENT),
+	m_bRiverTradeRoad(false),
+	m_bAngerFreeIntrusionOfCityStates(false),
+#endif
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	m_ppiImprovementYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiSpecialistYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiUnimprovedFeatureYieldChanges(std::pair<int**, size_t>(NULL, 0))
+#else
 	m_ppiImprovementYieldChanges(NULL),
 	m_ppiSpecialistYieldChanges(NULL),
 	m_ppiUnimprovedFeatureYieldChanges(NULL)
+#endif
 {
 }
 
 /// Destructor
 CvTraitEntry::~CvTraitEntry()
 {
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiImprovementYieldChanges.first, m_ppiImprovementYieldChanges.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiSpecialistYieldChanges.first, m_ppiSpecialistYieldChanges.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiUnimprovedFeatureYieldChanges.first, m_ppiUnimprovedFeatureYieldChanges.second);
+#else
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiImprovementYieldChanges);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiSpecialistYieldChanges);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiUnimprovedFeatureYieldChanges);
+#endif
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_paiExtraYieldThreshold);
+	SAFE_DELETE_ARRAY(m_paiYieldChange);
+	SAFE_DELETE_ARRAY(m_paiYieldChangeStrategicResources);
+	SAFE_DELETE_ARRAY(m_paiYieldChangeLuxuryResources); // NQMP GJS - New Netherlands UA
+	SAFE_DELETE_ARRAY(m_paiYieldChangeNaturalWonder);
+	SAFE_DELETE_ARRAY(m_paiYieldChangePerTradePartner);
+	SAFE_DELETE_ARRAY(m_paiYieldChangeIncomingTradeRoute);
+	SAFE_DELETE_ARRAY(m_paiYieldModifier);
+	SAFE_DELETE_ARRAY(m_piStrategicResourceQuantityModifier);
+	SAFE_DELETE_ARRAY(m_piResourceQuantityModifiers);
+	SAFE_DELETE_ARRAY(m_piMovesChangeUnitCombats);
+	SAFE_DELETE_ARRAY(m_piMaintenanceModifierUnitCombats);
+#endif
 }
 
 /// Accessor:: Modifier to experience needed for new level
@@ -795,7 +833,11 @@ int CvTraitEntry::GetImprovementYieldChanges(ImprovementTypes eIndex1, YieldType
 	CvAssertMsg(eIndex1 > -1, "Index out of bounds");
 	CvAssertMsg(eIndex2 < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(eIndex2 > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiImprovementYieldChanges.first ? m_ppiImprovementYieldChanges.first[eIndex1][eIndex2] : 0;
+#else
 	return m_ppiImprovementYieldChanges ? m_ppiImprovementYieldChanges[eIndex1][eIndex2] : 0;
+#endif
 }
 
 /// Accessor:: Extra yield from an improvement
@@ -805,7 +847,11 @@ int CvTraitEntry::GetSpecialistYieldChanges(SpecialistTypes eIndex1, YieldTypes 
 	CvAssertMsg(eIndex1 > -1, "Index out of bounds");
 	CvAssertMsg(eIndex2 < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(eIndex2 > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiSpecialistYieldChanges.first ? m_ppiSpecialistYieldChanges.first[eIndex1][eIndex2] : 0;
+#else
 	return m_ppiSpecialistYieldChanges ? m_ppiSpecialistYieldChanges[eIndex1][eIndex2] : 0;
+#endif
 }
 
 /// Accessor:: Extra yield from an unimproved feature
@@ -815,7 +861,11 @@ int CvTraitEntry::GetUnimprovedFeatureYieldChanges(FeatureTypes eIndex1, YieldTy
 	CvAssertMsg(eIndex1 > -1, "Index out of bounds");
 	CvAssertMsg(eIndex2 < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(eIndex2 > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiUnimprovedFeatureYieldChanges.first ? m_ppiUnimprovedFeatureYieldChanges.first[eIndex1][eIndex2] : 0;
+#else
 	return m_ppiUnimprovedFeatureYieldChanges ? m_ppiUnimprovedFeatureYieldChanges[eIndex1][eIndex2] : 0;
+#endif
 }
 
 /// Accessor:: Additional moves for a class of combat unit
@@ -1180,7 +1230,12 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 
 	//ImprovementYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiImprovementYieldChanges.first, "Improvements", "Yields");
+		m_ppiImprovementYieldChanges.second = kUtility.MaxRows("Improvements");
+#else
 		kUtility.Initialize2DArray(m_ppiImprovementYieldChanges, "Improvements", "Yields");
+#endif
 
 		std::string strKey("Trait_ImprovementYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -1197,13 +1252,22 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiImprovementYieldChanges.first[ImprovementID][YieldID] = yield;
+#else
 			m_ppiImprovementYieldChanges[ImprovementID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//SpecialistYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiSpecialistYieldChanges.first, "Specialists", "Yields");
+		m_ppiSpecialistYieldChanges.second = kUtility.MaxRows("Specialists");
+#else
 		kUtility.Initialize2DArray(m_ppiSpecialistYieldChanges, "Specialists", "Yields");
+#endif
 
 		std::string strKey("Building_SpecialistYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -1220,13 +1284,22 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiSpecialistYieldChanges.first[SpecialistID][YieldID] = yield;
+#else
 			m_ppiSpecialistYieldChanges[SpecialistID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//UnimprovedFeatureYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiUnimprovedFeatureYieldChanges.first, "Features", "Yields");
+		m_ppiUnimprovedFeatureYieldChanges.second = kUtility.MaxRows("Features");
+#else
 		kUtility.Initialize2DArray(m_ppiUnimprovedFeatureYieldChanges, "Features", "Yields");
+#endif
 
 		std::string strKey("Trait_UnimprovedFeatureYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -1243,7 +1316,11 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiUnimprovedFeatureYieldChanges.first[FeatureID][YieldID] = yield;
+#else
 			m_ppiUnimprovedFeatureYieldChanges[FeatureID][YieldID] = yield;
+#endif
 		}
 	}
 
@@ -1647,7 +1724,11 @@ void CvPlayerTraits::InitPlayerTraits()
 			}
 
 			FreeTraitUnit traitUnit;
+#ifdef AUI_WARNING_FIXES
+			traitUnit.m_iFreeUnit = (UnitClassTypes)trait->GetFreeUnitClassType();
+#else
 			traitUnit.m_iFreeUnit = (UnitTypes)trait->GetFreeUnitClassType();
+#endif
 			if(traitUnit.m_iFreeUnit != NO_UNITCLASS)
 			{
 				traitUnit.m_ePrereqTech = trait->GetFreeUnitPrereqTech();

@@ -18,6 +18,10 @@
 CvPolicyAI::CvPolicyAI(CvPlayerPolicies* currentPolicies):
 	m_pCurrentPolicies(currentPolicies)
 {
+#ifdef AUI_WARNING_FIXES
+	m_iPolicyWeightPropagationLevels = 0;
+	m_iPolicyWeightPercentDropNewBranch = 0;
+#endif	
 }
 
 /// Destructor
@@ -117,11 +121,17 @@ void CvPolicyAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropaga
 	int iPolicy;
 #endif
 	CvPolicyEntry* entry;
+#ifndef AUI_WARNING_FIXES
 	int* paiTempWeights;
+#endif
 
 	CvPolicyXMLEntries* pkPolicyEntries = m_pCurrentPolicies->GetPolicies();
 	// Create a temporary array of weights
+#ifdef AUI_WARNING_FIXES
+	int* paiTempWeights = FNEW(int[pkPolicyEntries->GetNumPolicies()], c_eCiv5GameplayDLL, 0);
+#else
 	paiTempWeights = (int*)_alloca(sizeof(int*) * pkPolicyEntries->GetNumPolicies());
+#endif
 
 	// Loop through all our policies
 	for(iPolicy = 0; iPolicy < pkPolicyEntries->GetNumPolicies(); iPolicy++)
@@ -146,6 +156,10 @@ void CvPolicyAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropaga
 	{
 		m_PolicyAIWeights.IncreaseWeight(iPolicy, paiTempWeights[iPolicy]);
 	}
+
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(paiTempWeights);
+#endif
 }
 
 /// Choose a player's next policy purchase (could be opening a branch)

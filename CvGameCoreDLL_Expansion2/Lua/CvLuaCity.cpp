@@ -499,7 +499,11 @@ const char* CvLuaCity::GetTypeName()
 //bool isNone();
 int CvLuaCity::lIsNone(lua_State* L)
 {
+#ifdef AUI_WARNING_FIXES
+	const bool bDoesNotExist = (GetInstance(L, 1, false) == NULL);
+#else
 	const bool bDoesNotExist = (GetInstance(L, false) == NULL);
+#endif
 	lua_pushboolean(L, bDoesNotExist);
 
 	return 1;
@@ -1663,12 +1667,20 @@ int CvLuaCity::lIsHasBuilding(lua_State* L)
 	const BuildingTypes eBuildingType = (BuildingTypes)lua_tointeger(L, 2);
 	if(eBuildingType != NO_BUILDING)
 	{
+#ifdef AUI_WARNING_FIXES
+		const int bResult = MIN(pkCity->GetCityBuildings()->GetNumBuilding(eBuildingType), 1);
+#else
 		const bool bResult = pkCity->GetCityBuildings()->GetNumBuilding(eBuildingType);
+#endif
 		lua_pushboolean(L, bResult);
 	}
 	else
 	{
+#ifdef AUI_WARNING_FIXES
+		lua_pushboolean(L, 0);
+#else
 		lua_pushboolean(L, false);
+#endif
 	}
 	return 1;
 }
@@ -2432,6 +2444,21 @@ int CvLuaCity::lGetReligionBuildingClassYieldChange(lua_State* L)
 	BuildingClassTypes eBuildingClass = (BuildingClassTypes)lua_tointeger(L, 2);
 	YieldTypes eYieldType = (YieldTypes)lua_tointeger(L, 3);
 
+#ifdef AUI_WARNING_FIXES
+	const CvCityReligions* pCityReligions = pkCity->GetCityReligions();
+	ReligionTypes eMajority = pCityReligions->GetReligiousMajority();
+	if (eMajority != NO_RELIGION)
+	{
+		const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eMajority, pkCity->getOwner());
+		if (pReligion)
+		{
+			int iFollowers = pCityReligions->GetNumFollowers(eMajority);
+			iYieldFromBuilding += pReligion->m_Beliefs.GetBuildingClassYieldChange(eBuildingClass, eYieldType, iFollowers);
+			BeliefTypes eSecondaryPantheon = pCityReligions->GetSecondaryReligionPantheonBelief();
+			if (eSecondaryPantheon != NO_BELIEF)
+			{
+				iFollowers = pCityReligions->GetNumFollowers(pCityReligions->GetSecondaryReligion());
+#else
 	ReligionTypes eMajority = pkCity->GetCityReligions()->GetReligiousMajority();
 	if(eMajority != NO_RELIGION)
 	{
@@ -2444,6 +2471,7 @@ int CvLuaCity::lGetReligionBuildingClassYieldChange(lua_State* L)
 			if (eSecondaryPantheon != NO_BELIEF)
 			{
 				iFollowers =  pkCity->GetCityReligions()->GetNumFollowers(pkCity->GetCityReligions()->GetSecondaryReligion());
+#endif
 				if (iFollowers >= GC.GetGameBeliefs()->GetEntry(eSecondaryPantheon)->GetMinFollowers())
 				{
 					iYieldFromBuilding += GC.GetGameBeliefs()->GetEntry(eSecondaryPantheon)->GetBuildingClassYieldChange(eBuildingClass, eYieldType);
@@ -3286,8 +3314,16 @@ int CvLuaCity::lIsCanAddSpecialistToBuilding(lua_State* L)
 {
 	CvCity* pkCity = GetInstance(L);
 	BuildingTypes bt = toValue<BuildingTypes>(L, 2);
+#ifdef AUI_WARNING_FIXES
+	bool bResult = false;
+#endif
 	if(bt != NO_BUILDING)
 	{
+#ifdef AUI_WARNING_FIXES
+		bResult = pkCity->GetCityCitizens()->IsCanAddSpecialistToBuilding(bt);
+	}
+	lua_pushboolean(L, bResult ? 1 : 0);
+#else
 		const bool bResult = pkCity->GetCityCitizens()->IsCanAddSpecialistToBuilding(bt);
 		lua_pushboolean(L, bResult);
 	}
@@ -3295,6 +3331,7 @@ int CvLuaCity::lIsCanAddSpecialistToBuilding(lua_State* L)
 	{
 		lua_pushboolean(L, false);
 	}
+#endif
 	return 1;
 }
 //------------------------------------------------------------------------------
@@ -3757,7 +3794,11 @@ int CvLuaCity::lSetBuildingGreatWork(lua_State* L)
 	const BuildingClassTypes iIndex = toValue<BuildingClassTypes>(L, 2);
 	const int iSlot = lua_tointeger(L, 3);
 	const int iGreatWorkIndex = lua_tointeger(L, 4);
+#ifdef AUI_WARNING_FIXES
+	if (iIndex != NO_BUILDINGCLASS)
+#else
 	if(iIndex != NO_BUILDING)
+#endif
 	{
 		pkCity->GetCityBuildings()->SetBuildingGreatWork(iIndex, iSlot, iGreatWorkIndex);
 	}
@@ -3846,16 +3887,26 @@ int CvLuaCity::lGetOrderFromQueue(lua_State* L)
 			lua_pushinteger(L, pkOrder->eOrderType);
 			lua_pushinteger(L, pkOrder->iData1);
 			lua_pushinteger(L, pkOrder->iData1);
+#ifdef AUI_WARNING_FIXES
+			lua_pushboolean(L, pkOrder->bSave ? 1 : 0);
+			lua_pushboolean(L, pkOrder->bRush ? 1 : 0);
+#else
 			lua_pushboolean(L, pkOrder->bSave);
 			lua_pushboolean(L, pkOrder->bRush);
+#endif
 			return 5;
 		}
 	}
 	lua_pushinteger(L, -1);
 	lua_pushinteger(L, 0);
 	lua_pushinteger(L, 0);
+#ifdef AUI_WARNING_FIXES
+	lua_pushboolean(L, 0);
+	lua_pushboolean(L, 0);
+#else
 	lua_pushboolean(L, false);
 	lua_pushboolean(L, false);
+#endif
 	return 5;
 }
 

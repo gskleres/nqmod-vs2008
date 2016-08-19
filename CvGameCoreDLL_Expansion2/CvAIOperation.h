@@ -238,8 +238,13 @@ public:
 	}
 	virtual OperationSlot PeekAtNextUnitToBuild(int iAreaID);
 	virtual OperationSlot CommitToBuildNextUnit(int iAreaID, int iTurns, CvCity* pCity);
+#ifdef AUI_WARNING_FIXES
+	virtual bool UncommitToBuild(const OperationSlot& thisOperationSlot);
+	virtual bool FinishedBuilding(const OperationSlot& thisOperationSlot);
+#else
 	virtual bool UncommitToBuild(OperationSlot thisOperationSlot);
 	virtual bool FinishedBuilding(OperationSlot thisOperationSlot);
+#endif
 	virtual bool GrabUnitsFromTheReserves(CvPlot* pMusterPlot, CvPlot* pTargetPlot);
 	bool DeleteArmyAI(int iID);
 	virtual void UnitWasRemoved(int iArmyID, int iSlotID);
@@ -264,7 +269,11 @@ protected:
 	}
 
 	virtual CvPlot* SelectInitialMusterPoint(CvArmyAI* pThisArmy);
+#ifdef AUI_WARNING_FIXES
+	virtual bool FindBestFitReserveUnit(const OperationSlot& thisOperationSlot, CvPlot* pMusterPlot, CvPlot* pTargetPlot, bool* bRequired);
+#else
 	virtual bool FindBestFitReserveUnit(OperationSlot thisOperationSlot, CvPlot* pMusterPlot, CvPlot* pTargetPlot, bool* bRequired);
+#endif
 
 	std::vector<int> m_viArmyIDs;
 	std::vector<OperationSlot> m_viListOfUnitsWeStillNeedToBuild;
@@ -1031,7 +1040,11 @@ public:
 	{
 		return 10;
 	}
+#ifdef AUI_WARNING_FIXES
+	virtual bool FindBestFitReserveUnit(const OperationSlot& thisOperationSlot, CvPlot* pMusterPlot, CvPlot* pTargetPlot, bool* bRequired);
+#else
 	virtual bool FindBestFitReserveUnit(OperationSlot thisOperationSlot, CvPlot* pMusterPlot, CvPlot* pTargetPlot, bool* bRequired);
+#endif
 
 	virtual CvCity* GetOperationStartCity() const;
 	virtual bool ArmyInPosition(CvArmyAI* pArmy);

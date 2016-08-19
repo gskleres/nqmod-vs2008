@@ -46,6 +46,12 @@ CvDllNetInitInfo::CvDllNetInitInfo()
 	m_iNumAdvancedStartPoints = CvPreGame::advancedStartPoints();
 	m_eMode = CvPreGame::gameMode();
 
+#ifdef AUI_WARNING_FIXES
+	m_iNumVictories = 0;
+	m_iPitbossTurnTime = m_iTurnTimerTime;
+	m_bStatReporting = false;
+#endif
+
 	ZeroMemory(m_szDebugString, sizeof m_szDebugString);
 }
 //------------------------------------------------------------------------------
@@ -131,12 +137,21 @@ const char* CvDllNetInitInfo::GetDebugString()
 	        , static_cast<int>(CvPreGame::era())
 	        , static_cast<int>(CvPreGame::calendar())
 	        , CvPreGame::gameTurn()
+#ifdef AUI_WARNING_FIXES
+		, CvPreGame::gameStarted() ? 1 : 0
+#else
 					, CvPreGame::gameStarted()
+#endif
 	        , static_cast<int>(CvPreGame::gameSpeed())
 	        , static_cast<int>(CvPreGame::turnTimer())
 	        , CvPreGame::gameName().c_str()
+#ifdef AUI_WARNING_FIXES
+		, (int)CvPreGame::syncRandomSeed()
+		, (int)CvPreGame::mapRandomSeed()
+#else
 	        , CvPreGame::syncRandomSeed()
 	        , CvPreGame::mapRandomSeed()
+#endif
 	       );
 
 	return m_szDebugString;

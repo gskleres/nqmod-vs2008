@@ -325,6 +325,19 @@ bool isPromotionValid(PromotionTypes ePromotion, UnitTypes eUnit, bool bLeader, 
 	PromotionTypes ePrereq7 = (PromotionTypes)promotionInfo->GetPrereqOrPromotion7();
 	PromotionTypes ePrereq8 = (PromotionTypes)promotionInfo->GetPrereqOrPromotion8();
 	PromotionTypes ePrereq9 = (PromotionTypes)promotionInfo->GetPrereqOrPromotion9();
+#ifdef AUI_WARNING_FIXES
+	if ((NO_PROMOTION == ePrereq1 || !isPromotionValid(ePrereq1, eUnit, bLeader, true)) &&
+		(NO_PROMOTION == ePrereq2 || !isPromotionValid(ePrereq2, eUnit, bLeader, true)) &&
+		(NO_PROMOTION == ePrereq3 || !isPromotionValid(ePrereq3, eUnit, bLeader, true)) &&
+		(NO_PROMOTION == ePrereq4 || !isPromotionValid(ePrereq4, eUnit, bLeader, true)) &&
+		(NO_PROMOTION == ePrereq5 || !isPromotionValid(ePrereq5, eUnit, bLeader, true)) &&
+		(NO_PROMOTION == ePrereq6 || !isPromotionValid(ePrereq6, eUnit, bLeader, true)) &&
+		(NO_PROMOTION == ePrereq7 || !isPromotionValid(ePrereq7, eUnit, bLeader, true)) &&
+		(NO_PROMOTION == ePrereq8 || !isPromotionValid(ePrereq8, eUnit, bLeader, true)) &&
+		(NO_PROMOTION == ePrereq9 || !isPromotionValid(ePrereq9, eUnit, bLeader, true)))
+	{
+		return false;
+#else
 	if(ePrereq1 != NO_PROMOTION ||
 		ePrereq2 != NO_PROMOTION ||
 		ePrereq3 != NO_PROMOTION ||
@@ -412,6 +425,7 @@ bool isPromotionValid(PromotionTypes ePromotion, UnitTypes eUnit, bool bLeader, 
 		{
 			return false;
 		}
+#endif
 	}
 
 	return true;

@@ -576,7 +576,11 @@ bool CvDllDatabaseUtility::ValidateGameDatabase()
 }
 
 
+#ifdef AUI_WARNING_FIXES
+#define ValidateCount(func) if(func() <= 0){bError = true; LogMsg("ERROR: %s <= 0", #func);}
+#else
 #define ValidateCount(func) if(func() <= 0){bError = true, LogMsg("ERROR: %s <= 0", #func);}
+#endif
 #define ValidateVectorSize(vec) ValidateCount(gc.##vec);
 bool CvDllDatabaseUtility::ValidatePrefetchProcess()
 {

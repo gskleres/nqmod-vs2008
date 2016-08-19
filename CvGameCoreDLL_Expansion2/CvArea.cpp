@@ -649,7 +649,11 @@ CvAreaBoundaries CvArea::getAreaBoundaries() const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvArea::setAreaBoundaries(const CvAreaBoundaries& newBoundaries)
+#else
 void CvArea::setAreaBoundaries(CvAreaBoundaries newBoundaries)
+#endif
 {
 	m_Boundaries = newBoundaries;
 }

@@ -1200,7 +1200,11 @@ public:
 	int getImprovementCount(ImprovementTypes eIndex) const;
 	void changeImprovementCount(ImprovementTypes eIndex, int iChange);
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int getGreatPersonImprovementCount() const;
+#else
 	int getGreatPersonImprovementCount();
+#endif
 
 	int getFreeBuildingCount(BuildingTypes eIndex) const;
 	bool isBuildingFree(BuildingTypes eIndex) const;
@@ -1332,7 +1336,11 @@ public:
 
 	// Arbitrary Script Data
 	std::string getScriptData() const;
+#ifdef AUI_WARNING_FIXES
+	void setScriptData(const std::string& szNewValue);
+#else
 	void setScriptData(std::string szNewValue);
+#endif
 
 	const CvString& getPbemEmailAddress() const;
 	void setPbemEmailAddress(const char* szAddress);
@@ -1367,6 +1375,9 @@ public:
 	void UpdatePlots();  // Modifies the list of plots and sets which ones the player owns
 	void AddAPlot(CvPlot* pPlot); // adds a plot at the end of the list
 	CvPlotsVector& GetPlots();  // gets the list of plots the player owns
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	const CvPlotsVector& GetPlots() const;
+#endif
 	int GetNumPlots() const;
 
 	int GetNumPlotsBought() const;
@@ -1408,7 +1419,11 @@ public:
 	void SetNumNaturalWondersDiscoveredInArea(int iValue);
 	void ChangeNumNaturalWondersDiscoveredInArea(int iChange);
 
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+	int GetNumNaturalWondersInOwnedPlots() const;
+#else
 	int GetNumNaturalWondersInOwnedPlots();
+#endif
 
 	int GetTurnsSinceSettledLastCity() const;
 	void SetTurnsSinceSettledLastCity(int iValue);
@@ -1533,7 +1548,11 @@ public:
 	int GetCityDistanceHighwaterMark() const;
 	void SetCityDistanceHighwaterMark(int iNewValue);
 
+#ifdef AUI_WARNING_FIXES
+	void SetEmbarkedGraphicOverride(const CvString& szGraphicName)
+#else
 	void SetEmbarkedGraphicOverride(CvString szGraphicName)
+#endif
 	{
 		m_strEmbarkedGraphicOverride = szGraphicName;
 	};
@@ -1564,8 +1583,13 @@ public:
 
 	virtual OperationSlot PeekAtNextUnitToBuildForOperationSlot(int iAreaID) = 0;
 	virtual OperationSlot CityCommitToBuildUnitForOperationSlot(int iAreaID, int iTurns, CvCity* pCity) = 0;
+#ifdef AUI_WARNING_FIXES
+	virtual void CityUncommitToBuildUnitForOperationSlot(const OperationSlot& thisSlot) = 0;
+	virtual void CityFinishedBuildingUnitForOperationSlot(const OperationSlot& thisSlot, CvUnit* pThisUnit) = 0;
+#else
 	virtual void CityUncommitToBuildUnitForOperationSlot(OperationSlot thisSlot) = 0;
 	virtual void CityFinishedBuildingUnitForOperationSlot(OperationSlot thisSlot, CvUnit* pThisUnit) = 0;
+#endif
 	virtual int GetNumUnitsNeededToBeBuilt() = 0;
 	const FAutoArchive& getSyncArchive() const;
 	FAutoArchive& getSyncArchive();

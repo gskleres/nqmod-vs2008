@@ -142,6 +142,12 @@ CvAIGrandStrategyXMLEntry* CvAIGrandStrategyXMLEntries::GetEntry(int index)
 //=====================================
 /// Constructor
 CvGrandStrategyAI::CvGrandStrategyAI():
+#ifdef AUI_WARNING_FIXES
+	m_pPlayer(NULL),
+	m_pAIGrandStrategies(NULL),
+	m_iNumTurnsSinceActiveSet(0),
+	m_eActiveGrandStrategy(NO_AIGRANDSTRATEGY),
+#endif
 	m_paiGrandStrategyPriority(NULL),
 	m_eGuessOtherPlayerActiveGrandStrategy(NULL),
 	m_eGuessOtherPlayerActiveGrandStrategyConfidence(NULL)

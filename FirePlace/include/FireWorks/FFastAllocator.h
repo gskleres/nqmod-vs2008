@@ -18,8 +18,13 @@ These are not general allocators, but specific to the FFastX data structures.
 ////////////////////////////////////////////////////////////////////////
 template< class T > struct FastAllocatorNodePolicy
 {
+#ifdef AUI_WARNING_FIXES
+	FastAllocatorNodePolicy() : m_bDeleted(false), uiNext(0) {};
+	FastAllocatorNodePolicy(const T& x) : data(x), m_bDeleted(false), uiNext(0) {};
+#else
 	FastAllocatorNodePolicy(){};
 	FastAllocatorNodePolicy(const T& x):data(x){};
+#endif
 
 	bool m_bDeleted;				//Array of list connectivity
 	unsigned int uiNext;		//The index of the next node

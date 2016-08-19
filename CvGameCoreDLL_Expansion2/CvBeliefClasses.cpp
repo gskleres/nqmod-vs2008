@@ -76,16 +76,30 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_paiYieldChangePerForeignCity(NULL),
 	m_paiYieldChangePerXForeignFollowers(NULL),
 	m_piResourceQuantityModifiers(NULL),
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	m_ppiImprovementYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiBuildingClassYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+	m_ppiBuildingClassFlavorChanges(std::pair<int**, size_t>(NULL, 0)),
+#endif
+#else
 	m_ppiImprovementYieldChanges(NULL),
 	m_ppiBuildingClassYieldChanges(NULL),
 #ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
 	m_ppiBuildingClassFlavorChanges(NULL),
 #endif
+#endif
 	m_paiBuildingClassHappiness(NULL),
 	m_paiBuildingClassTourism(NULL),
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	m_ppaiFeatureYieldChange(std::pair<int**, size_t>(NULL, 0)),
+	m_ppaiResourceYieldChange(std::pair<int**, size_t>(NULL, 0)),
+	m_ppaiTerrainYieldChange(std::pair<int**, size_t>(NULL, 0)),
+#else
 	m_ppaiFeatureYieldChange(NULL),
 	m_ppaiResourceYieldChange(NULL),
 	m_ppaiTerrainYieldChange(NULL),
+#endif
 	m_piResourceHappiness(NULL),
 	m_piYieldChangeAnySpecialist(NULL),
 	m_piYieldChangeTradeRoute(NULL),
@@ -101,6 +115,16 @@ CvBeliefEntry::CvBeliefEntry() :
 /// Destructor
 CvBeliefEntry::~CvBeliefEntry()
 {
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiImprovementYieldChanges.first, m_ppiImprovementYieldChanges.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldChanges.first, m_ppiBuildingClassYieldChanges.second);
+#ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassFlavorChanges.first, m_ppiBuildingClassFlavorChanges.second);
+#endif
+	CvDatabaseUtility::SafeDelete2DArray(m_ppaiFeatureYieldChange.first, m_ppaiFeatureYieldChange.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppaiResourceYieldChange.first, m_ppaiResourceYieldChange.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppaiTerrainYieldChange.first, m_ppaiTerrainYieldChange.second);
+#else
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiImprovementYieldChanges);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldChanges);
 #ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
@@ -109,6 +133,7 @@ CvBeliefEntry::~CvBeliefEntry()
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiFeatureYieldChange);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiResourceYieldChange);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiTerrainYieldChange);
+#endif
 }
 
 /// Accessor:: Minimum population in this city for belief to be active (0 = no such requirement)
@@ -456,7 +481,11 @@ int CvBeliefEntry::GetImprovementYieldChange(ImprovementTypes eIndex1, YieldType
 	CvAssertMsg(eIndex1 > -1, "Index out of bounds");
 	CvAssertMsg(eIndex2 < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(eIndex2 > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiImprovementYieldChanges.first ? m_ppiImprovementYieldChanges.first[eIndex1][eIndex2] : 0;
+#else
 	return m_ppiImprovementYieldChanges ? m_ppiImprovementYieldChanges[eIndex1][eIndex2] : 0;
+#endif
 }
 
 /// Yield change for a specific BuildingClass by yield type
@@ -466,7 +495,11 @@ int CvBeliefEntry::GetBuildingClassYieldChange(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiBuildingClassYieldChanges.first ? m_ppiBuildingClassYieldChanges.first[i][j] : 0;
+#else
 	return m_ppiBuildingClassYieldChanges[i][j];
+#endif
 }
 
 #ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
@@ -477,7 +510,11 @@ int CvBeliefEntry::GetBuildingClassFlavorChange(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < GC.getNumFlavorTypes(), "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiBuildingClassFlavorChanges.first ? m_ppiBuildingClassFlavorChanges.first[i][j] : 0;
+#else
 	return m_ppiBuildingClassFlavorChanges[i][j];
+#endif
 }
 #endif
 
@@ -505,7 +542,11 @@ int CvBeliefEntry::GetFeatureYieldChange(int i, int j) const // GJS - make a new
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiFeatureYieldChange.first ? m_ppaiFeatureYieldChange.first[i][j] : -1;
+#else
 	return m_ppaiFeatureYieldChange ? m_ppaiFeatureYieldChange[i][j] : -1;
+#endif
 }
 
 /// Change to Resource yield by type
@@ -515,7 +556,11 @@ int CvBeliefEntry::GetResourceYieldChange(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiResourceYieldChange.first ? m_ppaiResourceYieldChange.first[i][j] : -1;
+#else
 	return m_ppaiResourceYieldChange ? m_ppaiResourceYieldChange[i][j] : -1;
+#endif
 }
 
 /// Change to yield by terrain
@@ -525,7 +570,11 @@ int CvBeliefEntry::GetTerrainYieldChange(int i, int j) const // GJS - make a new
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiTerrainYieldChange.first ? m_ppaiTerrainYieldChange.first[i][j] : -1;
+#else
 	return m_ppaiTerrainYieldChange ? m_ppaiTerrainYieldChange[i][j] : -1;
+#endif
 }
 
 /// Happiness from a resource
@@ -687,7 +736,12 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 
 	//ImprovementYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiImprovementYieldChanges.first, "Improvements", "Yields");
+		m_ppiImprovementYieldChanges.second = kUtility.MaxRows("Improvements");
+#else
 		kUtility.Initialize2DArray(m_ppiImprovementYieldChanges, "Improvements", "Yields");
+#endif
 
 		std::string strKey("Belief_ImprovementYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -704,13 +758,22 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiImprovementYieldChanges.first[ImprovementID][YieldID] = yield;
+#else
 			m_ppiImprovementYieldChanges[ImprovementID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//BuildingClassYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiBuildingClassYieldChanges.first, "BuildingClasses", "Yields");
+		m_ppiBuildingClassYieldChanges.second = kUtility.MaxRows("BuildingClasses");
+#else
 		kUtility.Initialize2DArray(m_ppiBuildingClassYieldChanges, "BuildingClasses", "Yields");
+#endif
 
 		std::string strKey("Belief_BuildingClassYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -727,14 +790,23 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int iYieldID = pResults->GetInt(1);
 			const int iYieldChange = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiBuildingClassYieldChanges.first[BuildingClassID][iYieldID] = iYieldChange;
+#else
 			m_ppiBuildingClassYieldChanges[BuildingClassID][iYieldID] = iYieldChange;
+#endif
 		}
 	}
 
 #ifdef AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
 	//BuildingClassFlavorChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiBuildingClassFlavorChanges.first, "BuildingClasses", "Flavors");
+		m_ppiBuildingClassFlavorChanges.second = kUtility.MaxRows("BuildingClasses");
+#else
 		kUtility.Initialize2DArray(m_ppiBuildingClassFlavorChanges, "BuildingClasses", "Flavors");
+#endif
 
 		std::string strKey("Belief_BuildingClassFlavorChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -751,14 +823,23 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int iFlavorID = pResults->GetInt(1);
 			const int iFlavorChange = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiBuildingClassFlavorChanges.first[BuildingClassID][iFlavorID] = iFlavorChange;
+#else
 			m_ppiBuildingClassFlavorChanges[BuildingClassID][iFlavorID] = iFlavorChange;
+#endif
 		}
 	}
 #endif
 
 	//FeatureYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppaiFeatureYieldChange.first, "Features", "Yields");
+		m_ppaiFeatureYieldChange.second = kUtility.MaxRows("Features");
+#else
 		kUtility.Initialize2DArray(m_ppaiFeatureYieldChange, "Features", "Yields");
+#endif
 
 		std::string strKey("Belief_FeatureYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -775,13 +856,22 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppaiFeatureYieldChange.first[FeatureID][YieldID] = yield;
+#else
 			m_ppaiFeatureYieldChange[FeatureID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//ResourceYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppaiResourceYieldChange.first, "Resources", "Yields");
+		m_ppaiResourceYieldChange.second = kUtility.MaxRows("Resources");
+#else
 		kUtility.Initialize2DArray(m_ppaiResourceYieldChange, "Resources", "Yields");
+#endif
 
 		std::string strKey("Belief_ResourceYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -798,13 +888,22 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppaiResourceYieldChange.first[ResourceID][YieldID] = yield;
+#else
 			m_ppaiResourceYieldChange[ResourceID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//TerrainYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppaiTerrainYieldChange.first, "Terrains", "Yields");
+		m_ppaiTerrainYieldChange.second = kUtility.MaxRows("Terrains");
+#else
 		kUtility.Initialize2DArray(m_ppaiTerrainYieldChange, "Terrains", "Yields");
+#endif
 
 		std::string strKey("Belief_TerrainYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -821,7 +920,11 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppaiTerrainYieldChange.first[TerrainID][YieldID] = yield;
+#else
 			m_ppaiTerrainYieldChange[TerrainID][YieldID] = yield;
+#endif
 		}
 	}
 
@@ -924,15 +1027,16 @@ CvReligionBeliefs::CvReligionBeliefs(const CvReligionBeliefs& source)
 	m_paiBuildingClassEnabled = FNEW(int[GC.getNumBuildingClassInfos()], c_eCiv5GameplayDLL, 0);
 #ifdef AUI_WARNING_FIXES
 	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+	{
 #else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
-#endif
 	{
 		CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo((BuildingClassTypes)iI);
 		if(!pkBuildingClassInfo)
 		{
 			continue;
 		}
+#endif
 
 		m_paiBuildingClassEnabled[iI] = source.m_paiBuildingClassEnabled[iI];
 	}
@@ -977,18 +1081,22 @@ void CvReligionBeliefs::Reset()
 
 	m_ReligionBeliefs.clear();
 
+#ifdef AUI_WARNING_FIXES
+	SAFE_DELETE_ARRAY(m_paiBuildingClassEnabled);
+#endif
 	m_paiBuildingClassEnabled = FNEW(int[GC.getNumBuildingClassInfos()], c_eCiv5GameplayDLL, 0);
 #ifdef AUI_WARNING_FIXES
 	for (uint iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
+	{
 #else
 	for(int iI = 0; iI < GC.getNumBuildingClassInfos(); iI++)
-#endif
 	{
 		CvBuildingClassInfo* pkBuildingClassInfo = GC.getBuildingClassInfo((BuildingClassTypes)iI);
 		if(!pkBuildingClassInfo)
 		{
 			continue;
 		}
+#endif
 
 		m_paiBuildingClassEnabled[iI] = 0;
 	}

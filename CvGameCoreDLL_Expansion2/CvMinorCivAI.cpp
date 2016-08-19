@@ -4601,7 +4601,11 @@ int CvMinorCivAI::GetContestValueForPlayer(PlayerTypes ePlayer, MinorCivQuestTyp
 {
 	CvAssertMsg(ePlayer >= 0, "ePlayer is expected to be non-negative (invalid Index)");
 	CvAssertMsg(ePlayer < MAX_MAJOR_CIVS, "ePlayer is expected to be within maximum bounds (invalid Index)");
+#ifdef AUI_WARNING_FIXES
+	if (ePlayer < 0 || ePlayer >= MAX_MAJOR_CIVS) return -1;
+#else
 	if (ePlayer < 0 || ePlayer >= MAX_MAJOR_CIVS) return false;
+#endif
 
 	for (uint iQuestLoop = 0; iQuestLoop < m_QuestsGiven[ePlayer].size(); iQuestLoop++)
 	{
@@ -9995,6 +9999,11 @@ CvMinorCivInfo::CvMinorCivInfo() :
 	m_iDefaultPlayerColor(NO_PLAYERCOLOR),
 	m_iArtStyleType(NO_ARTSTYLE),
 	m_iMinorCivTrait(NO_MINOR_CIV_TRAIT_TYPE),
+#ifdef AUI_WARNING_FIXES
+	m_iNumLeaders(0),
+	m_bAIPlayable(false),
+	m_bPlayable(false),
+#endif
 	m_piFlavorValue(NULL)
 {
 }

@@ -237,6 +237,9 @@ public:
 		m_iID = 0;
 		m_iAttackStrength = 0;
 		m_iExpectedTargetDamage = 0;
+#ifdef DEL_RANGED_COUNTERATTACKS
+		m_iExpectedSelfDamage = 0;
+#endif
 	}
 
 	bool operator<(const CvTacticalCity& city) const
@@ -261,6 +264,16 @@ public:
 	{
 		return m_iExpectedTargetDamage;
 	};
+#ifdef DEL_RANGED_COUNTERATTACKS
+	void SetExpectedSelfDamage(int iExpectedDamage)
+	{
+		m_iExpectedSelfDamage = iExpectedDamage;
+	};
+	int GetExpectedSelfDamage() const
+	{
+		return m_iExpectedSelfDamage;
+	};
+#endif
 
 	// Derived
 	int GetAttackPriority() const
@@ -272,6 +285,9 @@ private:
 	int m_iID;
 	int m_iAttackStrength;
 	int m_iExpectedTargetDamage;
+#ifdef DEL_RANGED_COUNTERATTACKS
+	int m_iExpectedSelfDamage;
+#endif
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -551,6 +567,9 @@ public:
 		m_iY = 0;
 		m_eTargetType = AI_TACTICAL_TARGET_NONE;
 		m_iLastTurn = 0;
+#ifdef AUI_WARNING_FIXES
+		m_bIsNavalInvasion = false;
+#endif
 	};
 
 	int GetX() const

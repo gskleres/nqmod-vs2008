@@ -161,11 +161,16 @@ public:
 	bool isProductionSpecialist() const;
 	bool isProductionProcess() const;
 
-#ifdef AUI_CONSTIFY
+#ifdef AUI_WARNING_FIXES
+	bool canContinueProduction(const OrderData& order) const;
+#elif defined(AUI_CONSTIFY)
 	bool canContinueProduction(OrderData order) const;
-	int getProductionExperience(UnitTypes eUnit = NO_UNIT) const;
 #else
 	bool canContinueProduction(OrderData order);
+#endif
+#ifdef AUI_CONSTIFY
+	int getProductionExperience(UnitTypes eUnit = NO_UNIT) const;
+#else
 	int getProductionExperience(UnitTypes eUnit = NO_UNIT);
 #endif
 	void addProductionExperience(CvUnit* pUnit, bool bConscript = false);
@@ -757,7 +762,11 @@ public:
 	bool CanRangeStrikeNow() const;
 	bool IsHasBuildingThatAllowsRangeStrike() const;
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+	bool canRangeStrikeAt(int iX, int iY, bool bOnlyCheckForEverPossible = false) const;
+#else
 	bool canRangeStrikeAt(int iX, int iY) const;
+#endif
 	CityTaskResult rangeStrike(int iX, int iY);
 	CvUnit* rangedStrikeTarget(CvPlot* pPlot);
 	bool canRangedStrikeTarget(const CvPlot& targetPlot) const;

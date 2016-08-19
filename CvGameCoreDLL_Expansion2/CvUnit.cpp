@@ -334,8 +334,16 @@ CvUnit::~CvUnit()
 	FSerialization::unitsToCheck.erase(this);
 	if(!gDLL->GetDone() && GC.IsGraphicsInitialized())  // don't need to remove entity when the app is shutting down, or crash can occur
 	{
+#ifdef AUI_WARNING_FIXES
+		try
+		{
+#endif
 		auto_ptr<ICvUnit1> pDllUnit(new CvDllUnit(this));
 		gDLL->GameplayUnitDestroyed(pDllUnit.get());
+#ifdef AUI_WARNING_FIXES
+		}
+		catch (int) {}
+#endif
 	}
 
 	if (m_iMapLayer != DEFAULT_UNIT_MAP_LAYER)
@@ -1333,7 +1341,9 @@ void CvUnit::kill(bool bDelay, PlayerTypes ePlayer /*= NO_PLAYER*/)
 				*pkEntry++ = *pUnitNode;
 				pUnitNode = pPlot->nextUnitNode(pUnitNode);
 			}
+#ifndef AUI_WARNING_FIXES
 		}
+#endif
 
 		for(uint i = 0; i < uiOldUnitCount; i++)
 		{
@@ -1361,8 +1371,13 @@ void CvUnit::kill(bool bDelay, PlayerTypes ePlayer /*= NO_PLAYER*/)
 			}
 		}
 
+#ifndef AUI_WARNING_FIXES
 		if(pkOldUnits)
+#endif
 			_freea(pkOldUnits);
+#ifdef AUI_WARNING_FIXES
+		}
+#endif
 	}
 	// If a player killed this Unit...
 	if(ePlayer != NO_PLAYER)
@@ -2698,6 +2713,16 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 	if(bMoveFlags & MOVEFLAG_DESTINATION)
 	{
 		// Don't let another player's unit inside someone's city
+#ifdef AUI_UNIT_FIX_CAN_MOVE_INTO_CITY_ATTACK_BLOCKER
+		if (plot.isCity() && plot.isRevealed(getTeam()))
+		{
+#ifdef AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
+			if ((bMoveFlagAttack || (bMoveFlags & MOVEFLAG_DECLARE_WAR)) == (plot.getPlotCity()->getOwner() == getOwner()))
+#else
+			if (((bMoveFlags & MOVEFLAG_ATTACK) || (bMoveFlags & MOVEFLAG_DECLARE_WAR)) == (plot.getPlotCity()->getOwner() == getOwner()))
+#endif
+				return false;
+#else
 #ifdef AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
 		if (!bMoveFlagAttack && !(bMoveFlags & MOVEFLAG_DECLARE_WAR))
 #else
@@ -2706,6 +2731,7 @@ bool CvUnit::canMoveInto(const CvPlot& plot, byte bMoveFlags) const
 		{
 			if(plot.isCity() && plot.getPlotCity()->getOwner() != getOwner())
 				return false;
+#endif
 		}
 
 		// Check to see if any units are present at this full-turn move plot (borrowed from CvGameCoreUtils::pathDestValid())
@@ -3122,9 +3148,9 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 	if (bMoveFlags & MOVEFLAG_DESTINATION)
 	{
 		// Don't let another player's unit inside someone's city
-		if (!bMoveFlagAttack && !(bMoveFlags & MOVEFLAG_DECLARE_WAR))
+		if (plot.isCity() && plot.isRevealed(getTeam()))
 		{
-			if (plot.isCity() && plot.getPlotCity()->getOwner() != getOwner())
+			if ((bMoveFlagAttack && (bMoveFlags & MOVEFLAG_DECLARE_WAR)) == (plot.getPlotCity()->getOwner() == getOwner()))
 				return false;
 		}
 	}
@@ -5709,11 +5735,20 @@ void CvUnit::doHeal()
 void CvUnit::DoAttrition()
 {
 	CvPlot* pPlot = plot();
+#ifdef AUI_WARNING_FIXES
+	if (!pPlot)
+		return;
+	TeamTypes eOwnerTeam = pPlot->getTeam();
+#endif
 	CvString strAppendText;
 
 	if(!IsInFriendlyTerritory())
 	{
+#ifdef AUI_WARNING_FIXES
+		if (isEnemy(eOwnerTeam, pPlot) && getEnemyDamageChance() > 0 && getEnemyDamage() > 0)
+#else
 		if(isEnemy(pPlot->getTeam(), pPlot) && getEnemyDamageChance() > 0 && getEnemyDamage() > 0)
+#endif
 		{
 			if(GC.getGame().getJonRandNum(100, "Enemy Territory Damage Chance") < getEnemyDamageChance())
 			{
@@ -5750,7 +5785,9 @@ void CvUnit::DoAttrition()
 		}
 	}
 
+#ifndef AUI_WARNING_FIXES
 	TeamTypes eOwnerTeam = pPlot->getTeam();
+#endif
 
 	if (eOwnerTeam != NO_TEAM)
 	{
@@ -5779,7 +5816,11 @@ void CvUnit::DoAttrition()
 				else
 				{
 					GetReligionData()->SetReligiousStrength(iStrength - iStrengthLoss);
+#ifdef AUI_WARNING_FIXES
+					if (pPlot->GetActiveFogOfWarMode() == FOGOFWARMODE_OFF)
+#else
 					if (pPlot && pPlot->GetActiveFogOfWarMode() == FOGOFWARMODE_OFF)
+#endif
 					{
 						Localization::String string = GetLocalizedText("TXT_KEY_MISC_YOU_UNIT_WAS_DAMAGED_ATTRITION");
 
@@ -9497,9 +9538,11 @@ bool CvUnit::build(BuildTypes eBuild)
 			}
 		}
 
+#ifndef AUI_WARNING_FIXES
 		// wipe out all build progress also
 
 		bFinished = pPlot->changeBuildProgress(eBuild, workRate(false), getOwner());
+#endif
 
 	}
 
@@ -11378,6 +11421,13 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 
 	iCombat = GetBaseCombatStrength(bIsEmbarkedAttackingLand) * (iModifier + 100);
 
+#ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+	if (IsCanHeavyCharge() && pDefender && pToPlot && !pDefender->CanFallBackFromMelee(*this, pToPlot))
+	{
+		iCombat = (iCombat * 150) / 100;
+	}
+#endif
+
 	return std::max(1, iCombat);
 }
 
@@ -11724,7 +11774,7 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 		}
 
 		// Bonus for fighting in one's lands
-		if (pMyPlot->IsFriendlyTerritory(getOwner()))
+		if (pMyPlot && pMyPlot->IsFriendlyTerritory(getOwner()))
 		{
 			iTempModifier = getFriendlyLandsModifier();
 			iModifier += iTempModifier;
@@ -11870,7 +11920,7 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 		// Ranged Defense Mod (this was under the known unit bit, which is stupid)
 		iModifier += rangedDefenseModifier();
 		// Hills
-		if (pMyPlot->isHills())
+		if (pMyPlot && pMyPlot->isHills())
 			iModifier += hillsDefenseModifier();
 	}
 #endif
@@ -11890,13 +11940,14 @@ int CvUnit::GetMaxRangedCombatStrength(const CvUnit* pOtherUnit, const CvCity* p
 	{
 #ifdef AUI_UNIT_FIX_BAD_BONUS_STACKS
 		// Hills
-		if (pMyPlot && pMyPlot->isHills())
-			iModifier += hillsDefenseModifier();
-#endif
-		// No TERRAIN bonuses for this Unit?
-#if defined(AUI_UNIT_FIX_BAD_BONUS_STACKS)
-		iTempModifier = pMyPlot->defenseModifier(getTeam(), false);
+		if (pMyPlot)
+		{
+			if (pMyPlot->isHills())
+				iModifier += hillsDefenseModifier();
+			iTempModifier = pMyPlot->defenseModifier(getTeam(), false);
+		}
 #else
+		// No TERRAIN bonuses for this Unit?
 		iTempModifier = plot()->defenseModifier(getTeam(), false);
 #endif
 
@@ -14392,7 +14443,11 @@ void CvUnit::setXY(int iX, int iY, bool bGroup, bool bUpdate, bool bShow, bool b
 					{
 						// Is this a valid Promotion for the UnitCombatType?
 						if(m_pUnitInfo->GetUnitCombatType() != NO_UNITCOMBAT &&
+#ifdef AUI_WARNING_FIXES
+							::IsPromotionValidForUnitCombatType(ePromotion, getUnitType()))
+#else
 						        (::IsPromotionValidForUnitCombatType(ePromotion, getUnitType()) || ::IsPromotionValidForUnitCombatType(ePromotion, getUnitType())))
+#endif
 						{
 							setHasPromotion(ePromotion, true);
 						}
@@ -15018,7 +15073,14 @@ int CvUnit::setDamage(int iNewValue, PlayerTypes ePlayer, float fAdditionalTextD
 int CvUnit::changeDamage(int iChange, PlayerTypes ePlayer, float fAdditionalTextDelay, const CvString* pAppendText)
 {
 	VALIDATE_OBJECT;
+#ifdef DEL_RANGED_COUNTERATTACKS
+	if (iChange != 0)
+#endif
 	return setDamage((getDamage() + iChange), ePlayer, fAdditionalTextDelay, pAppendText);
+#ifdef DEL_RANGED_COUNTERATTACKS
+	else
+		return 0;
+#endif
 }
 
 
@@ -17371,7 +17433,11 @@ void CvUnit::setMadeAttack(bool bNewValue)
 	VALIDATE_OBJECT
 	if(bNewValue)
 	{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		m_iAttacksMade += 1;
+#else
 		m_iAttacksMade++;
+#endif
 	}
 	else
 	{
@@ -17418,7 +17484,11 @@ void CvUnit::setMadeInterception(bool bNewValue)
 	VALIDATE_OBJECT
 	if(bNewValue)
 	{
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+		m_iMadeInterceptionCount += 1;
+#else
 		m_iMadeInterceptionCount++;
+#endif
 	}
 	else
 	{
@@ -18038,7 +18108,11 @@ std::string CvUnit::getScriptData() const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef AUI_WARNING_FIXES
+void CvUnit::setScriptData(const std::string& strNewValue)
+#else
 void CvUnit::setScriptData(std::string strNewValue)
+#endif
 {
 	VALIDATE_OBJECT
 	m_strScriptData = strNewValue;
@@ -21507,7 +21581,11 @@ int CvUnit::SearchRange(int iRange) const
 }
 
 //	--------------------------------------------------------------------------------
+#if defined(AUI_CONSTIFY) || defined(DEL_RANGED_COUNTERATTACKS)
+bool CvUnit::PlotValid(const CvPlot* pPlot) const
+#else
 bool CvUnit::PlotValid(CvPlot* pPlot) const
+#endif
 {
 	VALIDATE_OBJECT
 	if(isNoRevealMap() && willRevealByMove(*pPlot))
@@ -21606,7 +21684,9 @@ CvUnit* CvUnit::airStrikeTarget(CvPlot& targetPlot, bool bNoncombatAllowed) cons
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
+bool CvUnit::CanWithdrawFromMelee(const CvUnit& attacker, const CvCombatInfo* pCombatInfo) const
+#elif defined(AUI_CONSTIFY)
 bool CvUnit::CanWithdrawFromMelee(const CvUnit& attacker) const
 #else
 bool CvUnit::CanWithdrawFromMelee(CvUnit& attacker)
@@ -21615,7 +21695,8 @@ bool CvUnit::CanWithdrawFromMelee(CvUnit& attacker)
 	VALIDATE_OBJECT
 #ifdef AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
 	int iNumDefendersInMyPlot = plot()->getNumDefenders(getOwner());
-	if (IsCanDefend() && iNumDefendersInMyPlot <= 1 && (uint)iNumDefendersInMyPlot > plot()->getNumUnits())
+	if (IsCanDefend() && iNumDefendersInMyPlot <= 1 && (uint)iNumDefendersInMyPlot > plot()->getNumUnits() && 
+		(!pCombatInfo || pCombatInfo->getDamageInflicted(BATTLE_UNIT_ATTACKER) < GetCurrHitPoints()))
 		return false;
 #endif
 	int iWithdrawChance = getExtraWithdrawal();
@@ -21687,7 +21768,9 @@ bool CvUnit::DoWithdrawFromMelee(CvUnit& attacker)
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+bool CvUnit::CanFallBackFromMelee(const CvUnit& attacker, const CvPlot* pFromPlot) const
+#elif defined(AUI_CONSTIFY)
 bool CvUnit::CanFallBackFromMelee(const CvUnit& attacker) const
 #else
 bool CvUnit::CanFallBackFromMelee(CvUnit& attacker)
@@ -21697,10 +21780,19 @@ bool CvUnit::CanFallBackFromMelee(CvUnit& attacker)
 	// Are some of the retreat hexes away from the attacker blocked?
 	int iBlockedHexes = 0;
 	CvPlot* pAttackerFromPlot = attacker.plot();
+#ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+	if (!pFromPlot)
+		pFromPlot = plot();
+	DirectionTypes eAttackDirection = directionXY(pAttackerFromPlot, pFromPlot);
+	int iBiases[3] = { 0,-1,1 };
+	int x = pFromPlot->getX();
+	int y = pFromPlot->getY();
+#else
 	DirectionTypes eAttackDirection = directionXY(pAttackerFromPlot, plot());
 	int iBiases[3] = {0,-1,1};
 	int x = plot()->getX();
 	int y = plot()->getY();
+#endif
 
 	for(int i = 0; i < 3; i++)
 	{
@@ -21819,8 +21911,17 @@ void CvUnit::AI_promote()
 		if(GC.getLogging() && GC.getAILogging())
 		{
 			CvString szMsg;
+#ifdef AUI_WARNING_FIXES
+			CvString szTemp;
+			CvPromotionEntry* pBestPromotionInfo = GC.getPromotionInfo(eBestPromotion);
+			if (pBestPromotionInfo)
+				szTemp = pBestPromotionInfo->GetDescription();
+			szMsg.Format("Promotion, %s, Received by %s, X: %d, Y: %d, Damage: %d",
+						szTemp.GetCString(), getName().GetCString(), getX(), getY(), getDamage());
+#else
 			szMsg.Format("Promotion, %s, Received by %s, X: %d, Y: %d, Damage: %d",
 			             GC.getPromotionInfo(eBestPromotion)->GetDescription(), getName().GetCString(), getX(), getY(), getDamage());
+#endif
 			GET_PLAYER(m_eOwner).GetTacticalAI()->LogTacticalMessage(szMsg, true /*bSkipLogDominanceZone*/);
 		}
 	}

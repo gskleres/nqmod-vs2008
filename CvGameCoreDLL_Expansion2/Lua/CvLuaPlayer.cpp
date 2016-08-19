@@ -1659,14 +1659,22 @@ int CvLuaPlayer::lGetFirstReadyUnitPlot(lua_State* L)
 int CvLuaPlayer::lHasBusyUnit(lua_State* L)
 {
 	CvPlayerAI* pkPlayer = GetInstance(L);
+#ifdef AUI_WARNING_FIXES
+	lua_pushboolean(L, pkPlayer->hasBusyUnit() ? 1 : 0);
+#else
 	lua_pushboolean(L, pkPlayer->hasBusyUnit());
+#endif
 	return 1;
 }
 
 //------------------------------------------------------------------------------
 int CvLuaPlayer::lHasBusyMovingUnit(lua_State* L)
 {
+#ifdef AUI_WARNING_FIXES
+	lua_pushboolean(L, 0);	// Obsolete function.  Units are never busy moving, movement is always instant in the game core.
+#else
 	lua_pushboolean(L, false);	// Obsolete function.  Units are never busy moving, movement is always instant in the game core.
+#endif
 	return 1;
 }
 
@@ -4091,6 +4099,9 @@ int CvLuaPlayer::lGetTradeToYouRoutesTTString(lua_State* L)
 int CvLuaPlayer::lGetTradeRoutes(lua_State* L)
 {
 	CvPlayerAI* pkPlayer = GetInstance(L);
+#ifdef AUI_WARNING_FIXES
+	const CvPlayerTrade* pPlayerTrade = pkPlayer->GetTrade();
+#endif
 
 	lua_createtable(L, 0, 0);
 	int index = 1;
@@ -4135,6 +4146,19 @@ int CvLuaPlayer::lGetTradeRoutes(lua_State* L)
 		lua_setfield(L, t, "ToCityName");
 		CvLuaCity::Push(L, pToCity);
 		lua_setfield(L, t, "ToCity");
+#ifdef AUI_WARNING_FIXES
+		lua_pushinteger(L, pPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_GOLD, true));
+		lua_setfield(L, t, "FromGPT");
+		lua_pushinteger(L, pPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_GOLD, false));
+		lua_setfield(L, t, "ToGPT");
+		lua_pushinteger(L, pPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_FOOD, false));
+		lua_setfield(L, t, "ToFood");
+		lua_pushinteger(L, pPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_PRODUCTION, false));
+		lua_setfield(L, t, "ToProduction");
+		lua_pushinteger(L, pPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_SCIENCE, true));
+		lua_setfield(L, t, "FromScience");
+		lua_pushinteger(L, pPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_SCIENCE, false));
+#else
 		lua_pushinteger(L, pkPlayer->GetTrade()->GetTradeConnectionValueTimes100(*pConnection, YIELD_GOLD, true));
 		lua_setfield(L, t, "FromGPT");
 		lua_pushinteger(L, pToPlayer->GetTrade()->GetTradeConnectionValueTimes100(*pConnection, YIELD_GOLD, false));
@@ -4146,6 +4170,7 @@ int CvLuaPlayer::lGetTradeRoutes(lua_State* L)
 		lua_pushinteger(L, pkPlayer->GetTrade()->GetTradeConnectionValueTimes100(*pConnection, YIELD_SCIENCE, true));
 		lua_setfield(L, t, "FromScience");
 		lua_pushinteger(L, pToPlayer->GetTrade()->GetTradeConnectionValueTimes100(*pConnection, YIELD_SCIENCE, false));
+#endif
 		lua_setfield(L, t, "ToScience");
 
 
@@ -4219,6 +4244,10 @@ int CvLuaPlayer::lGetTradeRoutesAvailable(lua_State* L)
 				continue;
 			}
 
+#ifdef AUI_WARNING_FIXES
+			const CvPlayerTrade* pOtherPlayerTrade = GET_PLAYER(eOtherPlayer).GetTrade();
+#endif
+
 			int iDestCityLoop;
 			CvCity* pDestCity = NULL;
 			for (pDestCity = GET_PLAYER(eOtherPlayer).firstCity(&iDestCityLoop); pDestCity != NULL; pDestCity = GET_PLAYER(eOtherPlayer).nextCity(&iDestCityLoop))
@@ -4290,6 +4319,19 @@ int CvLuaPlayer::lGetTradeRoutesAvailable(lua_State* L)
 						lua_setfield(L, t, "ToCityName");
 						CvLuaCity::Push(L, pDestCity);
 						lua_setfield(L, t, "ToCity");
+#ifdef AUI_WARNING_FIXES
+						lua_pushinteger(L, pPlayerTrade->GetTradeConnectionValueTimes100(kConnection, YIELD_GOLD, true));
+						lua_setfield(L, t, "FromGPT");
+						lua_pushinteger(L, pOtherPlayerTrade->GetTradeConnectionValueTimes100(kConnection, YIELD_GOLD, false));
+						lua_setfield(L, t, "ToGPT");
+						lua_pushinteger(L, pOtherPlayerTrade->GetTradeConnectionValueTimes100(kConnection, YIELD_FOOD, false));
+						lua_setfield(L, t, "ToFood");
+						lua_pushinteger(L, pOtherPlayerTrade->GetTradeConnectionValueTimes100(kConnection, YIELD_PRODUCTION, false));
+						lua_setfield(L, t, "ToProduction");
+						lua_pushinteger(L, pOtherPlayerTrade->GetTradeConnectionValueTimes100(kConnection, YIELD_SCIENCE, true));
+						lua_setfield(L, t, "FromScience");
+						lua_pushinteger(L, pOtherPlayerTrade->GetTradeConnectionValueTimes100(kConnection, YIELD_SCIENCE, false));
+#else
 						lua_pushinteger(L, pkPlayer->GetTrade()->GetTradeConnectionValueTimes100(kConnection, YIELD_GOLD, true));
 						lua_setfield(L, t, "FromGPT");
 						lua_pushinteger(L, GET_PLAYER(eOtherPlayer).GetTrade()->GetTradeConnectionValueTimes100(kConnection, YIELD_GOLD, false));
@@ -4301,6 +4343,7 @@ int CvLuaPlayer::lGetTradeRoutesAvailable(lua_State* L)
 						lua_pushinteger(L,  GET_PLAYER(eOtherPlayer).GetTrade()->GetTradeConnectionValueTimes100(kConnection, YIELD_SCIENCE, true));
 						lua_setfield(L, t, "FromScience");
 						lua_pushinteger(L, GET_PLAYER(eOtherPlayer).GetTrade()->GetTradeConnectionValueTimes100(kConnection, YIELD_SCIENCE, false));
+#endif
 						lua_setfield(L, t, "ToScience");
 
 						ReligionTypes eToReligion = NO_RELIGION;
@@ -4412,6 +4455,21 @@ int CvLuaPlayer::lGetTradeRoutesToYou(lua_State* L)
 		lua_setfield(L, t, "ToCityName");
 		CvLuaCity::Push(L, pToCity);
 		lua_setfield(L, t, "ToCity");
+#ifdef AUI_WARNING_FIXES
+		const CvPlayerTrade* pFromPlayerTrade = pFromPlayer->GetTrade();
+		const CvPlayerTrade* pToPlayerTrade = pToPlayer->GetTrade();
+		lua_pushinteger(L, pFromPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_GOLD, true));
+		lua_setfield(L, t, "FromGPT");
+		lua_pushinteger(L, pToPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_GOLD, false));
+		lua_setfield(L, t, "ToGPT");
+		lua_pushinteger(L, pToPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_FOOD, false));
+		lua_setfield(L, t, "ToFood");
+		lua_pushinteger(L, pToPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_PRODUCTION, false));
+		lua_setfield(L, t, "ToProduction");
+		lua_pushinteger(L, pFromPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_SCIENCE, true));
+		lua_setfield(L, t, "FromScience");
+		lua_pushinteger(L, pToPlayerTrade->GetTradeConnectionValueTimes100(*pConnection, YIELD_SCIENCE, false));
+#else
 		lua_pushinteger(L, pFromPlayer->GetTrade()->GetTradeConnectionValueTimes100(*pConnection, YIELD_GOLD, true));
 		lua_setfield(L, t, "FromGPT");
 		lua_pushinteger(L, pToPlayer->GetTrade()->GetTradeConnectionValueTimes100(*pConnection, YIELD_GOLD, false));
@@ -4423,6 +4481,7 @@ int CvLuaPlayer::lGetTradeRoutesToYou(lua_State* L)
 		lua_pushinteger(L, pFromPlayer->GetTrade()->GetTradeConnectionValueTimes100(*pConnection, YIELD_SCIENCE, true));
 		lua_setfield(L, t, "FromScience");
 		lua_pushinteger(L, pToPlayer->GetTrade()->GetTradeConnectionValueTimes100(*pConnection, YIELD_SCIENCE, false));
+#endif
 		lua_setfield(L, t, "ToScience");
 
 		ReligionTypes eToReligion = NO_RELIGION;

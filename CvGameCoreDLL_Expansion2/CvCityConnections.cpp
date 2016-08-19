@@ -82,6 +82,9 @@ void CvCityConnections::Uninit(void)
 		delete [] m_aRouteInfos;
 		m_aRouteInfos = NULL;
 	}
+#ifdef AUI_WARNING_FIXES
+	m_uiRouteInfosDimension = 0;
+#endif
 }
 
 /// Serialization read

@@ -127,10 +127,17 @@ CvImprovementEntry::CvImprovementEntry(void):
 	m_pbTerrainMakesValid(NULL),
 	m_pbFeatureMakesValid(NULL),
 	m_pbImprovementMakesValid(NULL),
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	m_ppiTechYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiTechNoFreshWaterYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiTechFreshWaterYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiRouteYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+#else
 	m_ppiTechYieldChanges(NULL),
 	m_ppiTechNoFreshWaterYieldChanges(NULL),
 	m_ppiTechFreshWaterYieldChanges(NULL),
 	m_ppiRouteYieldChanges(NULL),
+#endif
 	m_paImprovementResource(NULL)
 {
 }
@@ -158,6 +165,12 @@ CvImprovementEntry::~CvImprovementEntry(void)
 		SAFE_DELETE_ARRAY(m_paImprovementResource); // XXX make sure this isn't leaking memory...
 	}
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiTechYieldChanges.first, m_ppiTechYieldChanges.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiTechNoFreshWaterYieldChanges.first, m_ppiTechNoFreshWaterYieldChanges.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiTechFreshWaterYieldChanges.first, m_ppiTechFreshWaterYieldChanges.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiRouteYieldChanges.first, m_ppiRouteYieldChanges.second);
+#else
 	if(m_ppiTechYieldChanges != NULL)
 	{
 		CvDatabaseUtility::SafeDelete2DArray(m_ppiTechYieldChanges);
@@ -177,6 +190,7 @@ CvImprovementEntry::~CvImprovementEntry(void)
 	{
 		CvDatabaseUtility::SafeDelete2DArray(m_ppiRouteYieldChanges);
 	}
+#endif
 }
 
 /// Read from XML file
@@ -354,7 +368,12 @@ bool CvImprovementEntry::CacheResults(Database::Results& kResults, CvDatabaseUti
 
 	//TechYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiTechYieldChanges.first, iNumTechs, iNumYields);
+		m_ppiTechYieldChanges.second = iNumTechs;
+#else
 		kUtility.Initialize2DArray(m_ppiTechYieldChanges, iNumTechs, iNumYields);
+#endif
 
 		std::string strKey = "Improvements - TechYieldChanges";
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -375,13 +394,22 @@ bool CvImprovementEntry::CacheResults(Database::Results& kResults, CvDatabaseUti
 
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiTechYieldChanges.first[tech_idx][yield_idx] = yield;
+#else
 			m_ppiTechYieldChanges[tech_idx][yield_idx] = yield;
+#endif
 		}
 	}
 
 	//TechNoFreshWaterYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiTechNoFreshWaterYieldChanges.first, iNumTechs, iNumYields);
+		m_ppiTechNoFreshWaterYieldChanges.second = iNumTechs;
+#else
 		kUtility.Initialize2DArray(m_ppiTechNoFreshWaterYieldChanges, iNumTechs, iNumYields);
+#endif
 
 		std::string strKey = "Improvements - TechNoFreshWaterYieldChanges";
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -402,7 +430,11 @@ bool CvImprovementEntry::CacheResults(Database::Results& kResults, CvDatabaseUti
 
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiTechNoFreshWaterYieldChanges.first[tech_idx][yield_idx] = yield;
+#else
 			m_ppiTechNoFreshWaterYieldChanges[tech_idx][yield_idx] = yield;
+#endif
 		}
 
 		pResults->Reset();
@@ -411,7 +443,12 @@ bool CvImprovementEntry::CacheResults(Database::Results& kResults, CvDatabaseUti
 
 	//TechFreshWaterYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiTechFreshWaterYieldChanges.first, iNumTechs, iNumYields);
+		m_ppiTechFreshWaterYieldChanges.second = iNumTechs;
+#else
 		kUtility.Initialize2DArray(m_ppiTechFreshWaterYieldChanges, iNumTechs, iNumYields);
+#endif
 
 		std::string strKey = "Improvements - TechFreshWaterYieldChanges";
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -432,7 +469,11 @@ bool CvImprovementEntry::CacheResults(Database::Results& kResults, CvDatabaseUti
 
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiTechFreshWaterYieldChanges.first[tech_idx][yield_idx] = yield;
+#else
 			m_ppiTechFreshWaterYieldChanges[tech_idx][yield_idx] = yield;
+#endif
 		}
 
 		pResults->Reset();
@@ -442,7 +483,12 @@ bool CvImprovementEntry::CacheResults(Database::Results& kResults, CvDatabaseUti
 	//RouteYieldChanges
 	{
 		const int iNumRoutes = kUtility.MaxRows("Routes");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiRouteYieldChanges.first, iNumRoutes, iNumYields);
+		m_ppiRouteYieldChanges.second = iNumRoutes;
+#else
 		kUtility.Initialize2DArray(m_ppiRouteYieldChanges, iNumRoutes, iNumYields);
+#endif
 
 		std::string strKey = "Improvements - RouteYieldChanges";
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -463,7 +509,11 @@ bool CvImprovementEntry::CacheResults(Database::Results& kResults, CvDatabaseUti
 
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiRouteYieldChanges.first[route_idx][yield_idx] = yield;
+#else
 			m_ppiRouteYieldChanges[route_idx][yield_idx] = yield;
+#endif
 		}
 
 		pResults->Reset();
@@ -944,12 +994,20 @@ int CvImprovementEntry::GetTechYieldChanges(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiTechYieldChanges.first ? m_ppiTechYieldChanges.first[i][j] : 0;
+#else
 	return m_ppiTechYieldChanges[i][j];
+#endif
 }
 
 int* CvImprovementEntry::GetTechYieldChangesArray(int i)
 {
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiTechYieldChanges.first ? m_ppiTechYieldChanges.first[i] : NULL;
+#else
 	return m_ppiTechYieldChanges[i];
+#endif
 }
 
 /// How much a tech improves the yield of this improvement if it DOES NOT have fresh water
@@ -959,12 +1017,20 @@ int CvImprovementEntry::GetTechNoFreshWaterYieldChanges(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiTechNoFreshWaterYieldChanges.first ? m_ppiTechNoFreshWaterYieldChanges.first[i][j] : 0;
+#else
 	return m_ppiTechNoFreshWaterYieldChanges[i][j];
+#endif
 }
 
 int* CvImprovementEntry::GetTechNoFreshWaterYieldChangesArray(int i)
 {
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiTechNoFreshWaterYieldChanges.first ? m_ppiTechNoFreshWaterYieldChanges.first[i] : NULL;
+#else
 	return m_ppiTechNoFreshWaterYieldChanges[i];
+#endif
 }
 
 /// How much a tech improves the yield of this improvement if it has fresh water
@@ -974,12 +1040,20 @@ int CvImprovementEntry::GetTechFreshWaterYieldChanges(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiTechFreshWaterYieldChanges.first ? m_ppiTechFreshWaterYieldChanges.first[i][j] : 0;
+#else
 	return m_ppiTechFreshWaterYieldChanges[i][j];
+#endif
 }
 
 int* CvImprovementEntry::GetTechFreshWaterYieldChangesArray(int i)
 {
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiTechFreshWaterYieldChanges.first ? m_ppiTechFreshWaterYieldChanges.first[i] : NULL;
+#else
 	return m_ppiTechFreshWaterYieldChanges[i];
+#endif
 }
 
 /// How much a type of route improves the yield of this improvement
@@ -989,12 +1063,20 @@ int CvImprovementEntry::GetRouteYieldChanges(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiRouteYieldChanges.first ? m_ppiRouteYieldChanges.first[i][j] : 0;
+#else
 	return m_ppiRouteYieldChanges[i][j];
+#endif
 }
 
 int* CvImprovementEntry::GetRouteYieldChangesArray(int i)				// For Moose - CvWidgetData XXX
 {
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiRouteYieldChanges.first ? m_ppiRouteYieldChanges.first[i] : NULL;
+#else
 	return m_ppiRouteYieldChanges[i];
+#endif
 }
 
 /// How much a yield improves when a resource is present with the improvement

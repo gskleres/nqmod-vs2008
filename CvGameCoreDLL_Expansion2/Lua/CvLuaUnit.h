@@ -85,6 +85,10 @@ protected:
 
 	static int lCanRangeStrike(lua_State* L);
 	static int lCanRangeStrikeAt(lua_State* L);
+#ifdef DEL_RANGED_COUNTERATTACKS
+	static int lCanEverRangeStrikeAt(lua_State* L);
+	static int lPlotValid(lua_State* L);
+#endif
 
 	static int lCanParadrop(lua_State* L);
 	static int lCanParadropAt(lua_State* L);

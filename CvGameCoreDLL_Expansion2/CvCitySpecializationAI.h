@@ -173,7 +173,11 @@ private:
 	void LogSpecializationUpdate(CitySpecializationUpdateType eUpdate);
 	void LogNextSpecialization(CitySpecializationTypes eType);
 	void LogBestSites();
+#ifdef AUI_WARNING_FIXES
+	void LogCity(CvCity* pCity, const CitySpecializationData& data);
+#else
 	void LogCity(CvCity* pCity, CitySpecializationData data);
+#endif
 
 	CvPlayer* m_pPlayer;
 	CvCitySpecializationXMLEntries* m_pSpecializations;

@@ -188,14 +188,34 @@ CvBuildingEntry::CvBuildingEntry(void):
 	m_bArtInfoEraVariation(false),
 	m_bArtInfoCulturalVariation(false),
 	m_bArtInfoRandomVariation(false),
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	m_ppaiResourceYieldChange(std::pair<int**, size_t>(NULL, 0)),
+	m_ppaiFeatureYieldChange(std::pair<int**, size_t>(NULL, 0)),
+	m_ppaiSpecialistYieldChange(std::pair<int**, size_t>(NULL, 0)),
+	m_ppaiResourceYieldModifier(std::pair<int**, size_t>(NULL, 0)),
+	m_ppaiTerrainYieldChange(std::pair<int**, size_t>(NULL, 0)),
+	m_ppiBuildingClassYieldChanges(std::pair<int**, size_t>(NULL, 0)),
+#else
 	m_ppaiResourceYieldChange(NULL),
 	m_ppaiFeatureYieldChange(NULL),
 	m_ppaiSpecialistYieldChange(NULL),
 	m_ppaiResourceYieldModifier(NULL),
 	m_ppaiTerrainYieldChange(NULL),
 	m_ppiBuildingClassYieldChanges(NULL),
+#endif
 	m_paiBuildingClassHappiness(NULL),
 	m_paThemingBonusInfo(NULL),
+#ifdef AUI_WARNING_FIXES
+	m_iBuildingProductionModifier(0),
+	m_iWonderProductionModifier(0),
+	m_iCityConnectionTradeRouteModifier(0),
+	m_iCapturePlunderModifier(0),
+	m_iPolicyCostModifier(0),
+	m_iGlobalPlotCultureCostModifier(0),
+	m_iPlotCultureCostModifier(0),
+	m_iGlobalPlotBuyCostModifier(0),
+	m_iPlotBuyCostModifier(0),
+#endif
 	m_iNumThemingBonuses(0)
 {
 }
@@ -236,12 +256,21 @@ CvBuildingEntry::~CvBuildingEntry(void)
 	SAFE_DELETE_ARRAY(m_paiBuildingClassHappiness);
 	SAFE_DELETE_ARRAY(m_paThemingBonusInfo);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	CvDatabaseUtility::SafeDelete2DArray(m_ppaiResourceYieldChange.first, m_ppaiResourceYieldChange.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppaiFeatureYieldChange.first, m_ppaiFeatureYieldChange.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppaiSpecialistYieldChange.first, m_ppaiSpecialistYieldChange.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppaiResourceYieldModifier.first, m_ppaiResourceYieldModifier.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppaiTerrainYieldChange.first, m_ppaiTerrainYieldChange.second);
+	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldChanges.first, m_ppiBuildingClassYieldChanges.second);
+#else
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiResourceYieldChange);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiFeatureYieldChange);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiSpecialistYieldChange);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiResourceYieldModifier);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppaiTerrainYieldChange);
 	CvDatabaseUtility::SafeDelete2DArray(m_ppiBuildingClassYieldChanges);
+#endif
 }
 
 /// Read from XML file
@@ -494,7 +523,12 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 
 	//ResourceYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppaiResourceYieldChange.first, "Resources", "Yields");
+		m_ppaiResourceYieldChange.second = kUtility.MaxRows("Resources");
+#else
 		kUtility.Initialize2DArray(m_ppaiResourceYieldChange, "Resources", "Yields");
+#endif
 
 		std::string strKey("Building_ResourceYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -511,13 +545,22 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppaiResourceYieldChange.first[ResourceID][YieldID] = yield;
+#else
 			m_ppaiResourceYieldChange[ResourceID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//FeatureYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppaiFeatureYieldChange.first, "Features", "Yields");
+		m_ppaiFeatureYieldChange.second = kUtility.MaxRows("Features");
+#else
 		kUtility.Initialize2DArray(m_ppaiFeatureYieldChange, "Features", "Yields");
+#endif
 
 		std::string strKey("Building_FeatureYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -534,13 +577,22 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppaiFeatureYieldChange.first[FeatureID][YieldID] = yield;
+#else
 			m_ppaiFeatureYieldChange[FeatureID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//TerrainYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppaiTerrainYieldChange.first, "Terrains", "Yields");
+		m_ppaiTerrainYieldChange.second = kUtility.MaxRows("Terrains");
+#else
 		kUtility.Initialize2DArray(m_ppaiTerrainYieldChange, "Terrains", "Yields");
+#endif
 
 		std::string strKey("Building_TerrainYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -557,13 +609,22 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppaiTerrainYieldChange.first[TerrainID][YieldID] = yield;
+#else
 			m_ppaiTerrainYieldChange[TerrainID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//SpecialistYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppaiSpecialistYieldChange.first, "Specialists", "Yields");
+		m_ppaiSpecialistYieldChange.second = kUtility.MaxRows("Specialists");
+#else
 		kUtility.Initialize2DArray(m_ppaiSpecialistYieldChange, "Specialists", "Yields");
+#endif
 
 		std::string strKey("Building_SpecialistYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -580,13 +641,22 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppaiSpecialistYieldChange.first[SpecialistID][YieldID] = yield;
+#else
 			m_ppaiSpecialistYieldChange[SpecialistID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//ResourceYieldModifiers
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppaiResourceYieldModifier.first, "Resources", "Yields");
+		m_ppaiResourceYieldModifier.second = kUtility.MaxRows("Resources");
+#else
 		kUtility.Initialize2DArray(m_ppaiResourceYieldModifier, "Resources", "Yields");
+#endif
 
 		std::string strKey("Building_ResourceYieldModifiers");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -603,13 +673,22 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 			const int YieldID = pResults->GetInt(1);
 			const int yield = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppaiResourceYieldModifier.first[ResourceID][YieldID] = yield;
+#else
 			m_ppaiResourceYieldModifier[ResourceID][YieldID] = yield;
+#endif
 		}
 	}
 
 	//BuildingClassYieldChanges
 	{
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+		kUtility.Initialize2DArray(m_ppiBuildingClassYieldChanges.first, "BuildingClasses", "Yields");
+		m_ppiBuildingClassYieldChanges.second = kUtility.MaxRows("BuildingClasses");
+#else
 		kUtility.Initialize2DArray(m_ppiBuildingClassYieldChanges, "BuildingClasses", "Yields");
+#endif
 
 		std::string strKey("Building_BuildingClassYieldChanges");
 		Database::Results* pResults = kUtility.GetResults(strKey);
@@ -626,7 +705,11 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 			const int iYieldID = pResults->GetInt(1);
 			const int iYieldChange = pResults->GetInt(2);
 
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+			m_ppiBuildingClassYieldChanges.first[BuildingClassID][iYieldID] = iYieldChange;
+#else
 			m_ppiBuildingClassYieldChanges[BuildingClassID][iYieldID] = iYieldChange;
+#endif
 		}
 	}
 
@@ -1917,7 +2000,11 @@ int CvBuildingEntry::GetResourceYieldChange(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiResourceYieldChange.first ? (m_ppaiResourceYieldChange.first)[i][j] : -1;
+#else
 	return m_ppaiResourceYieldChange ? m_ppaiResourceYieldChange[i][j] : -1;
+#endif
 }
 
 /// Array of changes to Resource yield
@@ -1925,7 +2012,11 @@ int* CvBuildingEntry::GetResourceYieldChangeArray(int i) const
 {
 	CvAssertMsg(i < GC.getNumResourceInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiResourceYieldChange.first ? m_ppaiResourceYieldChange.first[i] : NULL;
+#else
 	return m_ppaiResourceYieldChange[i];
+#endif
 }
 
 /// Change to Feature yield by type
@@ -1935,7 +2026,11 @@ int CvBuildingEntry::GetFeatureYieldChange(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiFeatureYieldChange.first ? (m_ppaiFeatureYieldChange.first)[i][j] : -1;
+#else
 	return m_ppaiFeatureYieldChange ? m_ppaiFeatureYieldChange[i][j] : -1;
+#endif
 }
 
 /// Array of changes to Feature yield
@@ -1943,7 +2038,11 @@ int* CvBuildingEntry::GetFeatureYieldChangeArray(int i) const
 {
 	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiFeatureYieldChange.first ? m_ppaiFeatureYieldChange.first[i] : NULL;
+#else
 	return m_ppaiFeatureYieldChange[i];
+#endif
 }
 
 /// Change to specialist yield by type
@@ -1959,7 +2058,11 @@ int CvBuildingEntry::GetSpecialistYieldChange(int i, int j) const
 #endif
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiSpecialistYieldChange.first ? (m_ppaiSpecialistYieldChange.first)[i][j] : -1;
+#else
 	return m_ppaiSpecialistYieldChange ? m_ppaiSpecialistYieldChange[i][j] : -1;
+#endif
 }
 
 /// Array of changes to specialist yield
@@ -1967,7 +2070,11 @@ int* CvBuildingEntry::GetSpecialistYieldChangeArray(int i) const
 {
 	CvAssertMsg(i < GC.getNumSpecialistInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiSpecialistYieldChange.first ? m_ppaiSpecialistYieldChange.first[i] : NULL;
+#else
 	return m_ppaiSpecialistYieldChange[i];
+#endif
 }
 
 /// Modifier to resource yield
@@ -1977,7 +2084,11 @@ int CvBuildingEntry::GetResourceYieldModifier(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiResourceYieldModifier.first ? (m_ppaiResourceYieldModifier.first)[i][j] : -1;
+#else
 	return m_ppaiResourceYieldModifier ? m_ppaiResourceYieldModifier[i][j] : -1;
+#endif
 }
 
 /// Array of modifiers to resource yield
@@ -1985,7 +2096,11 @@ int* CvBuildingEntry::GetResourceYieldModifierArray(int i) const
 {
 	CvAssertMsg(i < GC.getNumResourceInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiResourceYieldModifier.first ? m_ppaiResourceYieldModifier.first[i] : NULL;
+#else
 	return m_ppaiResourceYieldModifier[i];
+#endif
 }
 
 /// Change to Terrain yield by type
@@ -1995,7 +2110,11 @@ int CvBuildingEntry::GetTerrainYieldChange(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiTerrainYieldChange.first ? (m_ppaiTerrainYieldChange.first)[i][j] : -1;
+#else
 	return m_ppaiTerrainYieldChange ? m_ppaiTerrainYieldChange[i][j] : -1;
+#endif
 }
 
 /// Array of changes to Feature yield
@@ -2003,7 +2122,11 @@ int* CvBuildingEntry::GetTerrainYieldChangeArray(int i) const
 {
 	CvAssertMsg(i < GC.getNumTerrainInfos(), "Index out of bounds");
 	CvAssertMsg(i > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppaiTerrainYieldChange.first ? m_ppaiTerrainYieldChange.first[i] : NULL;
+#else
 	return m_ppaiTerrainYieldChange[i];
+#endif
 }
 
 /// Yield change for a specific BuildingClass by yield type
@@ -2013,7 +2136,11 @@ int CvBuildingEntry::GetBuildingClassYieldChange(int i, int j) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	CvAssertMsg(j < NUM_YIELD_TYPES, "Index out of bounds");
 	CvAssertMsg(j > -1, "Index out of bounds");
+#ifdef AUI_DATABASE_UTILITY_PROPER_2D_ALLOCATION_AND_DESTRUCTION
+	return m_ppiBuildingClassYieldChanges.first ? (m_ppiBuildingClassYieldChanges.first)[i][j] : -1;
+#else
 	return m_ppiBuildingClassYieldChanges[i][j];
+#endif
 }
 
 /// Amount of extra Happiness per turn a BuildingClass provides
@@ -2637,7 +2764,7 @@ void CvCityBuildings::SetNumRealBuildingTimed(BuildingTypes eIndex, int iNewValu
 
 		if(buildingEntry->GetPreferredDisplayPosition() > 0)
 		{
-			auto_ptr<ICvCity1> pDllCity(new CvDllCity(m_pCity));
+			auto_ptr<ICvCity1> pDllCity(new CvDllCity(m_pCity)); //-V689
 
 			if(iNewValue > 0)
 			{

@@ -68,7 +68,11 @@ const char* CvLuaArea::GetTypeName()
 //bool isNone();
 int CvLuaArea::lIsNone(lua_State* L)
 {
+#ifdef AUI_WARNING_FIXES
+	const bool bExists = (GetInstance(L, 1, false) != NULL);
+#else
 	const bool bExists = (GetInstance(L, false) != NULL);
+#endif
 	lua_pushboolean(L, bExists);
 
 	return 1;

@@ -369,8 +369,13 @@ int CvLuaPlot::lSetTerrainType(lua_State* L)
 //bool isNone();
 int CvLuaPlot::lIsNone(lua_State* L)
 {
+#ifdef AUI_WARNING_FIXES
+	const bool bDoesNotExist = (GetInstance(L, 1, false) == NULL);
+	lua_pushboolean(L, bDoesNotExist ? 1 : 0);
+#else
 	const bool bDoesNotExist = (GetInstance(L, false) == NULL);
 	lua_pushboolean(L, bDoesNotExist);
+#endif
 
 	return 1;
 }
@@ -1659,10 +1664,17 @@ int CvLuaPlot::lGetActiveFogOfWarMode(lua_State* L)
 	{
 	case FOGOFWARMODE_OFF:
 		fow = 2;
+#ifdef AUI_WARNING_FIXES
+		break;
+#else
 	case FOGOFWARMODE_UNEXPLORED:
 		fow = 0;
+#endif
 	case FOGOFWARMODE_NOVIS:
 		fow = 1;
+#ifdef AUI_WARNING_FIXES
+		break;
+#endif
 	}
 
 	lua_pushinteger(L, fow);

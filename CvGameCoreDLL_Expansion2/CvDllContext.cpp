@@ -850,7 +850,9 @@ bool CvDllGameContext::SetDLLIFace(ICvEngineUtility1* pDll)
 {
 	//Since we're using QueryInterface to allocate a new instance, we need to explicitly clean up the old reference.
 	ICvEngineUtility4* pOldDll = GC.getDLLIFace();
+#ifndef AUI_WARNING_FIXES
 	if(pOldDll != NULL)
+#endif
 	{
 		delete pOldDll;
 	}
@@ -934,8 +936,10 @@ bool CvDllGameContext::RandomNumberGeneratorSyncCheck(PlayerTypes ePlayer, ICvRa
 
 		if(localSimRandomNumberGenerator.callStackDebuggingEnabled() && pkRandom->callStackDebuggingEnabled())
 		{
+#ifndef AUI_WARNING_FIXES
 			std::string localCallStack("");
 			std::string remoteCallStack("");
+#endif
 			localSimRandomNumberGenerator.resolveCallStacks();
 			const std::vector<std::string>& localCallStacks = localSimRandomNumberGenerator.getResolvedCallStacks();
 			const std::vector<std::string>& remoteCallStacks =  pkRandom->getResolvedCallStacks();
@@ -1391,7 +1395,9 @@ ICvEnumerator* CvDllGameContext::TEMPCalculatePathFinderUpdates(ICvUnit1* pHeadS
 		CvAStarNode* lastNode = thePathfinder.GetLastNode();
 		CvAStarNode* pathNode = lastNode;
 
+#ifndef AUI_WARNING_FIXES
 		pathNode = lastNode;
+#endif
 		int size = 0;
 		while(pathNode != NULL)
 		{
