@@ -585,6 +585,10 @@
 /// When calculating the founding value of a tile, tailor the SiteEvaluation function to the current player instead of the first one
 #define AUI_STARTPOSITIONER_FLAVORED_STARTS
 
+// Weird stuff
+/// Adds ranged counterattacks to the game, toggleable for now via in-game option
+#define DEL_RANGED_COUNTERATTACKS
+
 // GlobalDefines (GD) wrappers
 // INT
 #define GD_INT_DECL(name)       int m_i##name

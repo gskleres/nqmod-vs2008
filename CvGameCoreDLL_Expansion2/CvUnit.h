@@ -1261,7 +1261,11 @@ public:
 
 	// Ported in from old CvUnitAI class
 	int SearchRange(int iRange) const;
+#if defined(AUI_CONSTIFY) || defined(DEL_RANGED_COUNTERATTACKS)
+	bool PlotValid(const CvPlot* pPlot) const;
+#else
 	bool PlotValid(CvPlot* pPlot) const;
+#endif
 
 	CvUnitReligion* GetReligionData() const
 	{

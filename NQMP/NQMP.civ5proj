@@ -1046,6 +1046,11 @@
         <Type>UpdateDatabase</Type>
         <FileName>gameplay/AdjustKnownTechCostDiscount.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/CIV5GameOptions_Ranged_Counterattacks.xml</FileName>
+      </Action>
     </ModActions>
     <ModContent>
       <Content>
@@ -1326,6 +1331,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="gameplay\CIV5GameOptions_Randomized_Turn_Activation.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="gameplay\CIV5GameOptions_Ranged_Counterattacks.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1764,6 +1773,10 @@
     <Content Include="ui\CIV5GameOptions_AI_Gimps.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\EnemyUnitPanel.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
     <Content Include="ui\EUI_tooltips.lua">
       <SubType>Lua</SubType>

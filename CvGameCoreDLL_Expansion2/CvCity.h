@@ -762,7 +762,11 @@ public:
 	bool CanRangeStrikeNow() const;
 	bool IsHasBuildingThatAllowsRangeStrike() const;
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+	bool canRangeStrikeAt(int iX, int iY, bool bOnlyCheckForEverPossible = false) const;
+#else
 	bool canRangeStrikeAt(int iX, int iY) const;
+#endif
 	CityTaskResult rangeStrike(int iX, int iY);
 	CvUnit* rangedStrikeTarget(CvPlot* pPlot);
 	bool canRangedStrikeTarget(const CvPlot& targetPlot) const;

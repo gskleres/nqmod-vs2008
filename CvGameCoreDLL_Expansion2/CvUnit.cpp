@@ -15073,7 +15073,14 @@ int CvUnit::setDamage(int iNewValue, PlayerTypes ePlayer, float fAdditionalTextD
 int CvUnit::changeDamage(int iChange, PlayerTypes ePlayer, float fAdditionalTextDelay, const CvString* pAppendText)
 {
 	VALIDATE_OBJECT;
+#ifdef DEL_RANGED_COUNTERATTACKS
+	if (iChange != 0)
+#endif
 	return setDamage((getDamage() + iChange), ePlayer, fAdditionalTextDelay, pAppendText);
+#ifdef DEL_RANGED_COUNTERATTACKS
+	else
+		return 0;
+#endif
 }
 
 
@@ -21574,7 +21581,11 @@ int CvUnit::SearchRange(int iRange) const
 }
 
 //	--------------------------------------------------------------------------------
+#if defined(AUI_CONSTIFY) || defined(DEL_RANGED_COUNTERATTACKS)
+bool CvUnit::PlotValid(const CvPlot* pPlot) const
+#else
 bool CvUnit::PlotValid(CvPlot* pPlot) const
+#endif
 {
 	VALIDATE_OBJECT
 	if(isNoRevealMap() && willRevealByMove(*pPlot))

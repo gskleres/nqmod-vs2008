@@ -15836,10 +15836,17 @@ bool CvCity::IsHasBuildingThatAllowsRangeStrike() const
 }
 
 //	--------------------------------------------------------------------------------
+#ifdef DEL_RANGED_COUNTERATTACKS
+bool CvCity::canRangeStrikeAt(int iX, int iY, bool bOnlyCheckForEverPossible) const
+{
+	VALIDATE_OBJECT
+	if (!bOnlyCheckForEverPossible && !canRangeStrike())
+#else
 bool CvCity::canRangeStrikeAt(int iX, int iY) const
 {
 	VALIDATE_OBJECT
 	if(!canRangeStrike())
+#endif
 	{
 		return false;
 	}

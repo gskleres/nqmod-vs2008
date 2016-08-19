@@ -12523,13 +12523,47 @@ CombatPredictionTypes CvGame::GetCombatPrediction(const CvUnit* pAttackingUnit, 
 
 	CombatPredictionTypes ePrediction = NO_COMBAT_PREDICTION;
 
+#ifndef DEL_RANGED_COUNTERATTACKS
 	if(pAttackingUnit->isRanged())
 	{
 		return COMBAT_PREDICTION_RANGED;
 	}
+#endif
 
 	CvPlot* pFromPlot = pAttackingUnit->plot();
 	CvPlot* pToPlot = pDefendingUnit->plot();
+
+#ifdef DEL_RANGED_COUNTERATTACKS
+	int iAttackingDamageInflicted = 0;
+	int iDefenderDamageInflicted = 0;
+	if (pAttackingUnit->isRanged())
+	{
+		if (!GC.getGame().isOption("GAMEOPTION_ENABLE_RANGED_COUNTERATTACKS") || pDefendingUnit->IsCityAttackOnly() ||
+			!((pDefendingUnit->canRangeStrike() && pDefendingUnit->canEverRangeStrikeAt(pFromPlot->getX(), pFromPlot->getY())) ||
+				// Melee unit counterattacks
+			(pDefendingUnit->IsCanAttackWithMove() && pToPlot->isAdjacent(pFromPlot) && pDefendingUnit->PlotValid(pFromPlot) && pDefendingUnit->PlotValid(pToPlot))))
+		{
+			return COMBAT_PREDICTION_RANGED;
+		}
+		else
+		{
+			iAttackingDamageInflicted = pAttackingUnit->GetRangeCombatDamage(pDefendingUnit, /*pCity*/ NULL, /*bIncludeRand*/ false);
+			if (pDefendingUnit->IsCanAttackRanged())
+			{
+				iDefenderDamageInflicted = pDefendingUnit->GetRangeCombatDamage(pAttackingUnit, NULL, false);
+			}
+			else if (iAttackingDamageInflicted + pDefendingUnit->getDamage() < pDefendingUnit->GetMaxHitPoints())
+			{
+				// Melee unit (defender) is counterattacking by attacking into the plot from which they were bombarded, where the attacker is
+				int iAttackerStrength = pAttackingUnit->GetMaxDefenseStrength(pFromPlot, pDefendingUnit);
+				int iDefenderStrength = pDefendingUnit->GetMaxAttackStrength(pToPlot, pFromPlot, pAttackingUnit);
+				iDefenderDamageInflicted = pDefendingUnit->getCombatDamage(iDefenderStrength, iAttackerStrength, iAttackingDamageInflicted + pDefendingUnit->getDamage(), /*bIncludeRand*/ false, /*bAttackerIsCity*/ false, /*bDefenderIsCity*/ false);
+			}
+		}
+	}
+	else
+	{
+#endif
 
 	int iAttackingStrength = pAttackingUnit->GetMaxAttackStrength(pFromPlot, pToPlot, pDefendingUnit);
 	if(iAttackingStrength == 0)
@@ -12539,10 +12573,16 @@ CombatPredictionTypes CvGame::GetCombatPrediction(const CvUnit* pAttackingUnit, 
 
 	int iDefenderStrength = pDefendingUnit->GetMaxDefenseStrength(pToPlot, pAttackingUnit, false);
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+		iAttackingDamageInflicted = pAttackingUnit->getCombatDamage(iAttackingStrength, iDefenderStrength, pAttackingUnit->getDamage(), false, false, false);
+		iDefenderDamageInflicted = pDefendingUnit->getCombatDamage(iDefenderStrength, iAttackingStrength, pDefendingUnit->getDamage(), false, false, false);
+	}
+#else
 	//iMyDamageInflicted = pMyUnit:GetCombatDamage(iMyStrength, iTheirStrength, pMyUnit:GetDamage() + iTheirFireSupportCombatDamage, false, false, false);
 	int iAttackingDamageInflicted = pAttackingUnit->getCombatDamage(iAttackingStrength, iDefenderStrength, pAttackingUnit->getDamage(), false, false, false);
 	int iDefenderDamageInflicted  = pDefendingUnit->getCombatDamage(iDefenderStrength, iAttackingStrength, pDefendingUnit->getDamage(), false, false, false);
 	//iTheirDamageInflicted = iTheirDamageInflicted + iTheirFireSupportCombatDamage;
+#endif
 
 	int iMaxUnitHitPoints = GC.getMAX_HIT_POINTS();
 	if(iAttackingDamageInflicted > iMaxUnitHitPoints)

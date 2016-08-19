@@ -535,6 +535,12 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvUnit& kAttacker, CvUnit* pkDefende
 	int iMaxXP = 0;
 	int iDamage = 0;
 	int iTotalDamage = 0;
+#ifdef DEL_RANGED_COUNTERATTACKS
+	int iDamageToAttacker = 0;
+	int iTotalDamageToAttacker = 0;
+	const CvPlot* pFromPlot = kAttacker.plot();
+	const int iMaxHP = GC.getMAX_HIT_POINTS();
+#endif
 	PlayerTypes eDefenderOwner;
 	if(!plot.isCity())
 	{
@@ -550,13 +556,58 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvUnit& kAttacker, CvUnit* pkDefende
 		//CvAssert(pkDefender->IsCanDefend());
 
 		iDamage = kAttacker.GetRangeCombatDamage(pkDefender, /*pCity*/ NULL, /*bIncludeRand*/ true);
+#ifdef DEL_RANGED_COUNTERATTACKS
+		iTotalDamage = pkDefender->getDamage() + iDamage;
 
+		if (GC.getGame().isOption("GAMEOPTION_ENABLE_RANGED_COUNTERATTACKS"))
+		{
+			if (!kAttacker.isRangedSupportFire() && !pkDefender->IsCityAttackOnly() &&
+				// Ranged unit counterattacks
+				(pkDefender->canRangeStrike() && pkDefender->canEverRangeStrikeAt(pFromPlot->getX(), pFromPlot->getY())) || 
+				// Melee unit counterattacks
+				(pkDefender->IsCanAttackWithMove() && plot.isAdjacent(pFromPlot) && pkDefender->PlotValid(pFromPlot) && pkDefender->PlotValid(&plot)))
+			{
+				if (pkDefender->IsCanAttackRanged())
+				{
+					iDamageToAttacker = pkDefender->GetRangeCombatDamage(&kAttacker, NULL, true);
+				}
+				else if (iTotalDamage < iMaxHP)
+				{
+					// Melee unit (defender) is counterattacking by attacking into the plot from which they were bombarded, where the attacker is
+					int iAttackerStrength = kAttacker.GetMaxDefenseStrength(pFromPlot, pkDefender);
+					int iDefenderStrength = pkDefender->GetMaxAttackStrength(&plot, pFromPlot, &kAttacker);
+					iDamageToAttacker = pkDefender->getCombatDamage(iDefenderStrength, iAttackerStrength, iTotalDamage, /*bIncludeRand*/ true, /*bAttackerIsCity*/ false, /*bDefenderIsCity*/ false);
+				}
+			}
+
+			iTotalDamageToAttacker = iDamageToAttacker + kAttacker.getDamage();
+
+			// Will both units be killed by this? If so, take drastic corrective measures
+			if (iTotalDamage >= iMaxHP && iTotalDamageToAttacker >= iMaxHP)
+			{
+				// He who hath the least amount of damage survives with 1 HP left
+				if (iTotalDamage > iTotalDamageToAttacker)
+				{
+					iDamageToAttacker = iMaxHP - kAttacker.getDamage() - 1;
+					iTotalDamageToAttacker = iMaxHP - 1;
+					iTotalDamage = iMaxHP;
+				}
+				else
+				{
+					iDamage = iMaxHP - pkDefender->getDamage() - 1;
+					iTotalDamage = iMaxHP - 1;
+					iTotalDamageToAttacker = iMaxHP;
+				}
+			}
+		}
+#else
 		if(iDamage + pkDefender->getDamage() > GC.getMAX_HIT_POINTS())
 		{
 			iDamage = GC.getMAX_HIT_POINTS() - pkDefender->getDamage();
 		}
 
 		iTotalDamage = std::max(pkDefender->getDamage(), pkDefender->getDamage() + iDamage);
+#endif
 	}
 	else
 	{
@@ -584,14 +635,36 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvUnit& kAttacker, CvUnit* pkDefende
 			iDamage = pCity->GetMaxHitPoints() - pCity->getDamage() - 1;
 		}
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+		iTotalDamage = pCity->getDamage() + iDamage;
+
+		if (GC.getGame().isOption("GAMEOPTION_ENABLE_RANGED_COUNTERATTACKS"))
+		{
+			if (pCity->canRangeStrikeAt(pFromPlot->getX(), pFromPlot->getY(), true))
+			{
+				iDamageToAttacker = pCity->rangeCombatDamage(&kAttacker, NULL, true);
+			}
+
+			iTotalDamageToAttacker = iDamageToAttacker + kAttacker.getDamage();
+		}
+#else
 		iTotalDamage = std::max(pCity->getDamage(), pCity->getDamage() + iDamage);
+#endif
 	}
 	//////////////////////////////////////////////////////////////////////
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+	pkCombatInfo->setFinalDamage(BATTLE_UNIT_ATTACKER, iTotalDamageToAttacker);				// Total damage to the unit
+#else
 	pkCombatInfo->setFinalDamage(BATTLE_UNIT_ATTACKER, 0);				// Total damage to the unit
+#endif
 	pkCombatInfo->setDamageInflicted(BATTLE_UNIT_ATTACKER, iDamage);		// Damage inflicted this round
 	pkCombatInfo->setFinalDamage(BATTLE_UNIT_DEFENDER, iTotalDamage);		// Total damage to the unit
+#ifdef DEL_RANGED_COUNTERATTACKS
+	pkCombatInfo->setDamageInflicted(BATTLE_UNIT_DEFENDER, iDamageToAttacker);			// Damage inflicted this round
+#else
 	pkCombatInfo->setDamageInflicted(BATTLE_UNIT_DEFENDER, 0);			// Damage inflicted this round
+#endif
 
 	// Fear Damage
 	pkCombatInfo->setFearDamageInflicted(BATTLE_UNIT_ATTACKER, 0);
@@ -609,9 +682,13 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvUnit& kAttacker, CvUnit* pkDefende
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !bBarbarian && !kAttacker.isBarbarian());
 
 	pkCombatInfo->setAttackIsRanged(true);
+#ifdef DEL_RANGED_COUNTERATTACKS
+	pkCombatInfo->setDefenderRetaliates(iDamageToAttacker > 0);
+#else
 	// Defender doesn't retaliate.  We'll keep this separate from the ranged attack flag in case something changes to allow
 	// some units to retaliate on a ranged attack (Archer vs. Archers maybe?)
 	pkCombatInfo->setDefenderRetaliates(false);
+#endif
 
 	GC.GetEngineUserInterface()->setDirty(UnitInfo_DIRTY_BIT, true);
 }
@@ -639,6 +716,12 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvCity& kAttacker, CvUnit* pkDefende
 	int iDamage = 0;
 	int iTotalDamage = 0;
 	PlayerTypes eDefenderOwner = NO_PLAYER;
+#ifdef DEL_RANGED_COUNTERATTACKS
+	int iDamageToAttacker = 0;
+	int iTotalDamageToAttacker = 0;
+	const CvPlot* pFromPlot = kAttacker.plot();
+	const int iMaxHP = GC.getMAX_HIT_POINTS();
+#endif
 	if(!plot.isCity())
 	{
 		CvAssert(pkDefender != NULL);
@@ -652,12 +735,49 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvCity& kAttacker, CvUnit* pkDefende
 
 		iDamage = kAttacker.rangeCombatDamage(pkDefender);
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+		iTotalDamage = pkDefender->getDamage() + iDamage;
+
+		if (GC.getGame().isOption("GAMEOPTION_ENABLE_RANGED_COUNTERATTACKS"))
+		{
+			if (// Ranged unit counterattacks
+				(pkDefender->canRangeStrike() && pkDefender->canEverRangeStrikeAt(pFromPlot->getX(), pFromPlot->getY())) ||
+				// Melee unit counterattacks
+				(pkDefender->IsCanAttackWithMove() && plot.isAdjacent(pFromPlot) && pkDefender->PlotValid(pFromPlot) && pkDefender->PlotValid(&plot)))
+			{
+				if (pkDefender->IsCanAttackRanged())
+				{
+					iDamageToAttacker = pkDefender->GetRangeCombatDamage(NULL, &kAttacker, true);
+				}
+				else if (iTotalDamage < iMaxHP)
+				{
+					// Melee unit (defender) is counterattacking by attacking into the plot from which they were bombarded, where the attacker is
+					int iAttackerStrength = kAttacker.getStrengthValue();
+					int iDefenderStrength = pkDefender->GetMaxAttackStrength(&plot, pFromPlot, NULL);
+					// Damage steps: city deals ranged damage to melee unit -> unit deals melee damage to city with HP remaining -> unit actually takes damage as if the city had melee'd back
+					// The idea is to have it so that melee units take the same amount of damage in the end as if they'd attacked the city, but damage dealt back to the city depends on how much damage the city's ranged attack would have dealt
+					iDamageToAttacker = pkDefender->getCombatDamage(iDefenderStrength, iAttackerStrength, iTotalDamage, /*bIncludeRand*/ true, /*bAttackerIsCity*/ false, /*bDefenderIsCity*/ true);
+					iDamage = MAX(iDamage, pkDefender->getCombatDamage(iAttackerStrength, iDefenderStrength, kAttacker.getDamage(), /*bIncludeRand*/ true, /*bAttackerIsCity*/ true, /*bDefenderIsCity*/ false));
+					iTotalDamage = pkDefender->getDamage() + iDamage;
+				}
+			}
+
+			iTotalDamageToAttacker = iDamageToAttacker + kAttacker.getDamage();
+
+			// Cities can't be knocked to less than 1 HP by counterattacks
+			if (iTotalDamageToAttacker >= kAttacker.GetMaxHitPoints())
+			{
+				iTotalDamageToAttacker = kAttacker.GetMaxHitPoints() - kAttacker.getDamage() - 1;
+			}
+		}
+#else
 		if(iDamage + pkDefender->getDamage() > GC.getMAX_HIT_POINTS())
 		{
 			iDamage = GC.getMAX_HIT_POINTS() - pkDefender->getDamage();
 		}
 
 		iTotalDamage = std::max(pkDefender->getDamage(), pkDefender->getDamage() + iDamage);
+#endif
 	}
 	else
 	{
@@ -666,10 +786,18 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvCity& kAttacker, CvUnit* pkDefende
 
 	//////////////////////////////////////////////////////////////////////
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+	pkCombatInfo->setFinalDamage(BATTLE_UNIT_ATTACKER, iTotalDamageToAttacker);				// Total damage to the unit
+#else
 	pkCombatInfo->setFinalDamage(BATTLE_UNIT_ATTACKER, 0);				// Total damage to the unit
+#endif
 	pkCombatInfo->setDamageInflicted(BATTLE_UNIT_ATTACKER, iDamage);		// Damage inflicted this round
 	pkCombatInfo->setFinalDamage(BATTLE_UNIT_DEFENDER, iTotalDamage);		// Total damage to the unit
+#ifdef DEL_RANGED_COUNTERATTACKS
+	pkCombatInfo->setDamageInflicted(BATTLE_UNIT_DEFENDER, iDamageToAttacker);			// Damage inflicted this round
+#else
 	pkCombatInfo->setDamageInflicted(BATTLE_UNIT_DEFENDER, 0);			// Damage inflicted this round
+#endif
 
 	// Fear Damage
 	pkCombatInfo->setFearDamageInflicted(BATTLE_UNIT_ATTACKER, 0);
@@ -681,6 +809,10 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvCity& kAttacker, CvUnit* pkDefende
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
 
 	int iExperience = /*2*/ GC.getEXPERIENCE_DEFENDING_UNIT_RANGED();
+#ifdef DEL_RANGED_COUNTERATTACKS
+	if (!pkDefender->IsCanAttackRanged() && iDamageToAttacker > 0)
+		iExperience = /*5*/ GC.getEXPERIENCE_ATTACKING_CITY_MELEE();
+#endif
 	pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, iExperience);
 	int iMaxExperience = (GET_PLAYER(kAttacker.getOwner()).isMinorCiv()) ? 30 : MAX_INT; // NQMP GJS - cap XP from fighting CS to 30
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, iMaxExperience);
@@ -688,9 +820,13 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvCity& kAttacker, CvUnit* pkDefende
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !bBarbarian && !kAttacker.isBarbarian());
 
 	pkCombatInfo->setAttackIsRanged(true);
+#ifdef DEL_RANGED_COUNTERATTACKS
+	pkCombatInfo->setDefenderRetaliates(iDamageToAttacker > 0);
+#else
 	// Defender doesn't retaliate.  We'll keep this separate from the ranged attack flag in case something changes to allow
 	// some units to retaliate on a ranged attack (Archer vs. Archers maybe?)
 	pkCombatInfo->setDefenderRetaliates(false);
+#endif
 
 	GC.GetEngineUserInterface()->setDirty(UnitInfo_DIRTY_BIT, true);
 }
@@ -714,6 +850,12 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 	CvPlot* pkTargetPlot = kCombatInfo.getPlot();
 	CvAssert_Debug(pkTargetPlot);
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+	bool bAttackerDied = false;
+	int iDamageToAttacker = kCombatInfo.getDamageInflicted(BATTLE_UNIT_DEFENDER);
+	int iAttackerFearDamageInflicted = 0;//pInfo->getFearDamageInflicted( BATTLE_UNIT_ATTACKER );
+#endif
+
 	ICvUserInterface2* pkDLLInterface = GC.GetEngineUserInterface();
 	CvString strBuffer;
 
@@ -730,8 +872,38 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 
 				if(pkAttacker)
 				{
+#ifdef DEL_RANGED_COUNTERATTACKS
+					pkDefender->changeDamage(iDamage, pkAttacker->getOwner());
+					pkAttacker->changeDamage(iDamageToAttacker, pkDefender->getOwner());
+
+					if (iDamageToAttacker > 0) // && iDefenderStrength > 0)
+					{
+						pkDefender->changeExperience(
+							kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
+							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
+							true,
+							kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
+							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+					}
+					if (iDamage > 0) // && iDefenderStrength > 0)
+					{
+						pkAttacker->changeExperience(
+							kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
+							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
+							true,
+							kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
+							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
+					}
+
+																															// Anyone eat it?
+					bAttackerDied = (pkAttacker->getDamage() >= GC.getMAX_HIT_POINTS());
+					bTargetDied = (pkDefender->getDamage() >= GC.getMAX_HIT_POINTS());
+
+					if (bTargetDied)
+#else
 					// Defender died
 					if(iDamage + pkDefender->getDamage() >= GC.getMAX_HIT_POINTS())
+#endif
 					{
 						if(pkAttacker->getOwner() == GC.getGame().getActivePlayer())
 						{
@@ -747,7 +919,11 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 							pNotifications->Add(NOTIFICATION_UNIT_DIED, strBuffer, strSummary.toUTF8(), pkDefender->getX(), pkDefender->getY(), (int) pkDefender->getUnitType(), pkDefender->getOwner());
 						}
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+						pkAttacker->testPromotionReady();
+#else
 						bTargetDied = true;
+#endif
 
 						CvPlayerAI& kAttackerOwner = GET_PLAYER(pkAttacker->getOwner());
 						kAttackerOwner.GetPlayerAchievements().KilledUnitWithUnit(pkAttacker, pkDefender);
@@ -765,6 +941,30 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 							gDLL->UnlockAchievement(ACHIEVEMENT_ONEHITKILL);
 						}
 					}
+#ifdef DEL_RANGED_COUNTERATTACKS
+					else if (bAttackerDied)
+					{
+						CvPlayerAI& kDefenderOwner = GET_PLAYER(pkDefender->getOwner());
+						kDefenderOwner.GetPlayerAchievements().KilledUnitWithUnit(pkDefender, pkAttacker);
+
+						auto_ptr<ICvUnit1> pAttacker = GC.WrapUnitPointer(pkAttacker);
+						gDLL->GameplayUnitDestroyedInCombat(pAttacker.get());
+
+						if (GC.getGame().getActivePlayer() == pkAttacker->getOwner())
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_UNIT_DIED_ATTACKING", pkAttacker->getNameKey(), pkDefender->getNameKey(), iDamage, iAttackerFearDamageInflicted);
+							GC.GetEngineUserInterface()->AddMessage(uiParentEventID, pkAttacker->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, GC.getEraInfo(GC.getGame().getCurrentEra())->getAudioUnitDefeatScript(), MESSAGE_TYPE_INFO, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_RED"), pkTargetPlot->getX(), pkTargetPlot->getY()*/);
+						}
+						if (GC.getGame().getActivePlayer() == pkDefender->getOwner())
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_KILLED_ENEMY_UNIT", pkDefender->getNameKey(), iDamage, iAttackerFearDamageInflicted, pkAttacker->getNameKey(), pkAttacker->getVisualCivAdjective(pkDefender->getTeam()));
+							GC.GetEngineUserInterface()->AddMessage(uiParentEventID, pkDefender->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, GC.getEraInfo(GC.getGame().getCurrentEra())->getAudioUnitVictoryScript(), MESSAGE_TYPE_INFO, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_GREEN"), pkTargetPlot->getX(), pkTargetPlot->getY()*/);
+						}
+						pkDefender->testPromotionReady();
+
+						ApplyPostCombatTraitEffects(pkDefender, pkAttacker);
+					}
+#endif
 					// Nobody died
 					else
 					{
@@ -774,6 +974,10 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 							pkDLLInterface->AddMessage(uiParentEventID, pkAttacker->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, "AS2D_COMBAT", MESSAGE_TYPE_INFO, pkDefender->getUnitInfo().GetButton(), (ColorTypes)GC.getInfoTypeForString("COLOR_GREEN"), pkTargetPlot->getX(), pkTargetPlot->getY()*/);
 						}
 						strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_ARE_ATTACKED_BY_AIR", pkDefender->getNameKey(), pkAttacker->getNameKey(), iDamage);
+#ifdef DEL_RANGED_COUNTERATTACKS
+						pkAttacker->testPromotionReady();
+						pkDefender->testPromotionReady();
+#endif
 					}
 
 					//red icon over attacking unit
@@ -784,6 +988,7 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 					//white icon over defending unit
 					//pkDLLInterface->AddMessage(uiParentEventID, pkDefender->getOwner(), false, 0, ""/*, "AS2D_COMBAT", MESSAGE_TYPE_DISPLAY_ONLY, pkDefender->getUnitInfo().GetButton(), (ColorTypes)GC.getInfoTypeForString("COLOR_WHITE"), pkDefender->getX(), pkDefender->getY(), true, true*/);
 
+#ifndef DEL_RANGED_COUNTERATTACKS
 					//set damage but don't update entity damage visibility
 					pkDefender->changeDamage(iDamage, pkAttacker->getOwner());
 
@@ -794,6 +999,7 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 					    true,
 					    kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
 					    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+#endif
 				}
 
 				pkDefender->setCombatUnit(NULL);
@@ -834,6 +1040,7 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 
 	if(pkAttacker)
 	{
+#ifndef DEL_RANGED_COUNTERATTACKS
 		// Unit gains XP for executing a Range Strike
 		if(iDamage > 0) // && iDefenderStrength > 0)
 		{
@@ -846,6 +1053,7 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 		}
 
 		pkAttacker->testPromotionReady();
+#endif
 
 		pkAttacker->setCombatUnit(NULL);
 		pkAttacker->ClearMissionQueue(GetPostCombatDelay());
@@ -877,6 +1085,12 @@ void CvUnitCombat::ResolveRangedCityVsUnitCombat(const CvCombatInfo& kCombatInfo
 	ICvUserInterface2* pkDLLInterface = GC.GetEngineUserInterface();
 	int iActivePlayerID = GC.getGame().getActivePlayer();
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+	int iDamageToCity = kCombatInfo.getDamageInflicted(BATTLE_UNIT_DEFENDER);
+
+	CvString strBuffer;
+#endif
+
 	if(pkTargetPlot)
 	{
 		if(!pkTargetPlot->isCity())
@@ -889,6 +1103,17 @@ void CvUnitCombat::ResolveRangedCityVsUnitCombat(const CvCombatInfo& kCombatInfo
 
 				if(pkAttacker)
 				{
+#ifdef DEL_RANGED_COUNTERATTACKS
+					pkDefender->changeDamage(iDamage, pkAttacker->getOwner());
+					pkAttacker->changeDamage(iDamageToCity);
+
+					pkDefender->changeExperience(
+						kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
+						kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
+						true,
+						kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
+						kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+#endif
 					// Info message for the attacking player
 					if(iActivePlayerID == pkAttacker->getOwner())
 					{
@@ -905,6 +1130,45 @@ void CvUnitCombat::ResolveRangedCityVsUnitCombat(const CvCombatInfo& kCombatInfo
 						pkDLLInterface->AddMessage(uiParentEventID, pkDefender->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), localizedText.toUTF8());//, "AS2D_COMBAT", MESSAGE_TYPE_COMBAT_MESSAGE, pDefender->getUnitInfo().GetButton(), (ColorTypes)GC.getInfoTypeForString("COLOR_RED"), pDefender->getX(), pDefender->getY(), true, true);
 					}
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+					if (pkDefender->IsDead())
+					{
+						CvNotifications* pNotifications = GET_PLAYER(pkDefender->getOwner()).GetNotifications();
+						if (pNotifications)
+						{
+							Localization::String localizedText = Localization::Lookup("TXT_KEY_MISC_YOU_ARE_ATTACKED_BY_CITY");
+							localizedText << pkDefender->getNameKey() << pkAttacker->getNameKey() << iDamage;
+							Localization::String strSummary = Localization::Lookup("TXT_KEY_UNIT_LOST");
+							pNotifications->Add(NOTIFICATION_UNIT_DIED, localizedText.toUTF8(), strSummary.toUTF8(), pkDefender->getX(), pkDefender->getY(), (int)pkDefender->getUnitType(), pkDefender->getOwner());
+						}
+
+						if (pkAttacker->getOwner() == iActivePlayerID && iDamageToCity > 0)
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_KILLED_ENEMY_UNIT_CITY", pkAttacker->getNameKey(), iDamageToCity, pkDefender->getNameKey(), pkDefender->getVisualCivAdjective(pkAttacker->getTeam()));
+							GC.GetEngineUserInterface()->AddMessage(uiParentEventID, pkAttacker->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, GC.getEraInfo(GC.getGame().getCurrentEra())->getAudioUnitVictoryScript(), MESSAGE_TYPE_INFO, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_GREEN"), pkPlot->getX(), pkPlot->getY()*/);
+						}
+
+						// Earn bonuses for kills?
+						CvPlayer& kAttackingPlayer = GET_PLAYER(pkAttacker->getOwner());
+						kAttackingPlayer.DoYieldsFromKill(NO_UNIT, pkDefender->getUnitType(), pkDefender->getX(), pkDefender->getY(), pkDefender->isBarbarian(), 0);
+					}
+					// Neither side lost
+					else if (iDamageToCity > 0)
+					{
+						if (pkDefender->getOwner() == iActivePlayerID)
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_UNIT_WITHDRAW_CITY", pkDefender->getNameKey(), iDamage, pkAttacker->getNameKey(), iDamageToCity);
+							GC.GetEngineUserInterface()->AddMessage(uiParentEventID, pkDefender->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, "AS2D_OUR_WITHDRAWL", MESSAGE_TYPE_INFO, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_GREEN"), pkPlot->getX(), pkPlot->getY()*/);
+						}
+						if (pkAttacker->getOwner() == iActivePlayerID)
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_ENEMY_UNIT_WITHDRAW_CITY", pkDefender->getNameKey(), iDamageToCity, pkAttacker->getNameKey(), iDamage);
+							GC.GetEngineUserInterface()->AddMessage(uiParentEventID, pkAttacker->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, "AS2D_THEIR_WITHDRAWL", MESSAGE_TYPE_INFO, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_RED"), pkPlot->getX(), pkPlot->getY()*/);
+						}
+
+						ApplyPostCityCombatEffects(pkDefender, pkAttacker, iDamageToCity);
+					}
+#else
 					if(iDamage + pkDefender->getDamage() >= GC.getMAX_HIT_POINTS())
 					{
 						CvNotifications* pNotifications = GET_PLAYER(pkDefender->getOwner()).GetNotifications();
@@ -932,6 +1196,7 @@ void CvUnitCombat::ResolveRangedCityVsUnitCombat(const CvCombatInfo& kCombatInfo
 					    true,
 					    kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
 					    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+#endif
 				}
 
 				pkDefender->setCombatUnit(NULL);
