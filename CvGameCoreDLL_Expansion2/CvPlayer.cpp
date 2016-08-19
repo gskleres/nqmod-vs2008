@@ -22694,6 +22694,24 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 
 		// Free Culture-per-turn in every City
 		int iCityCultureChange = pPolicy->GetCulturePerCity() * iChange;
+#ifdef FRUITY_TRADITION_ARISTOCRACY
+		if (pLoopCity->isCapital())
+		{
+			int numLuxuries = 0;
+			ResourceTypes eResource;
+			CvResourceInfo* pkResourceInfo;
+			for (int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+			{
+				eResource = (ResourceTypes) iResourceLoop;
+				pkResourceInfo = GC.getResourceInfo(eResource);
+				if (pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY && this->getNumResourceAvailable(eResource) > 0)
+				{
+					numLuxuries++;
+				}
+			}
+			iCityCultureChange += (pPolicy->GetCapitalCulturePerUniqueLuxury() * numLuxuries) * iChange;
+		}
+#endif
 		if(pLoopCity->GetGarrisonedUnit() != NULL)
 		{
 			iCityCultureChange += (pPolicy->GetCulturePerGarrisonedUnit() * iChange);
