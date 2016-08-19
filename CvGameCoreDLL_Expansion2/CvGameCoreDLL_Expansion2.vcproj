@@ -524,6 +524,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\_FruityDefines.h"
+				>
+			</File>
+			<File
 				RelativePath=".\banned.h"
 				>
 			</File>

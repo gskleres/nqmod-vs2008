@@ -49,6 +49,7 @@
 #include <algorithm>
 
 #include "_Defines.h"
+#include "_FruityDefines.h"
 
 #include <vector>
 #include <list>
