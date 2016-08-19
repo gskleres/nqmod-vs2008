@@ -134,6 +134,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_iMinorBullyScoreModifier(0),
 	m_iThemingBonusMultiplier(0),
 	m_iInternalTradeRouteYieldModifier(0),
+#ifdef FRUITY_TRADITION_LANDED_ELITE 
+	m_iInternalTradeRouteFoodYieldChange(0),
+#endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
 	m_iOpenBordersTourismModifier(0),
@@ -403,6 +406,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iMinorBullyScoreModifier = kResults.GetInt("MinorBullyScoreModifier");
 	m_iThemingBonusMultiplier = kResults.GetInt("ThemingBonusMultiplier");
 	m_iInternalTradeRouteYieldModifier = kResults.GetInt("InternalTradeRouteYieldModifier");
+#ifdef FRUITY_TRADITION_LANDED_ELITE
+	m_iInternalTradeRouteFoodYieldChange = kResults.GetInt("InternalTradeRouteFoodYieldChange");
+#endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
 	m_iOpenBordersTourismModifier = kResults.GetInt("OpenBordersTourismModifier");
@@ -1392,6 +1398,14 @@ int CvPolicyEntry::GetInternalTradeRouteYieldModifier() const
 	return m_iInternalTradeRouteYieldModifier;
 }
 
+#ifdef FRUITY_TRADITION_LANDED_ELITE
+/// Flat food increase for internal trade routes
+int CvPolicyEntry::GetInternalTradeRouteFoodYieldChange() const
+{
+	return m_iInternalTradeRouteFoodYieldChange;
+}
+#endif
+
 /// Boost to tourism bonus for shared religion
 int CvPolicyEntry::GetSharedReligionTourismModifier() const
 {
@@ -1565,9 +1579,7 @@ int CvPolicyEntry::GetBarbarianCombatBonus() const
 /// Can we now see when and where Barb Camps appear?
 bool CvPolicyEntry::IsAlwaysSeeBarbCamps() const
 {
-	// NQMP GJS - all players always see barb camps from beginning of game now, do not need to open Honor
-	//return m_bAlwaysSeeBarbCamps;
-	return true;
+	return m_bAlwaysSeeBarbCamps;
 }
 
 /// Reveal all Minor Civ capital locations
@@ -2829,6 +2841,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 			case POLICYMOD_INTERNAL_TRADE_MODIFIER:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetInternalTradeRouteYieldModifier();
 				break;
+#ifdef FRUITY_TRADITION_LANDED_ELITE
+			case POLICYMOD_INTERNAL_TRADE_FOOD_YIELD_CHANGE:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetInternalTradeRouteFoodYieldChange();
+				break;
+#endif
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetSharedReligionTourismModifier();
 				break;

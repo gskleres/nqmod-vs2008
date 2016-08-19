@@ -2973,6 +2973,9 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 					iModifier += GET_PLAYER(kTradeConnection.m_eDestOwner).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_INTERNAL_TRADE_MODIFIER);
 					iValue *= iModifier;
 					iValue /= 100;
+#ifdef FRUITY_TRADITION_LANDED_ELITE
+					iValue += GET_PLAYER(kTradeConnection.m_eDestOwner).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_INTERNAL_TRADE_FOOD_YIELD_CHANGE);
+#endif
 				}
 				break;
 			case TRADE_CONNECTION_PRODUCTION:
@@ -2995,6 +2998,13 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 					iValue *= iModifier;
 					iValue /= 100;
 				}
+#ifdef FRUITY_TRADITION_LANDED_ELITE
+				if (eYield == YIELD_FOOD)
+				{
+					iValue = GET_PLAYER(kTradeConnection.m_eDestOwner).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_INTERNAL_TRADE_FOOD_YIELD_CHANGE);
+				}
+#endif
+
 				break;
 			}
 		}

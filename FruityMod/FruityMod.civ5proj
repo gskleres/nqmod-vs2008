@@ -639,7 +639,22 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>social_policies/1_tradition/Tradition0_OpenerAndFinisher.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>social_policies/1_tradition/Tradition1_Oligarchy.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>social_policies/1_tradition/Tradition2_Aristocracy.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>social_policies/1_tradition/Tradition3_LandedElite.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -1446,7 +1461,23 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="social_policies\1_tradition\Tradition0_OpenerAndFinisher.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="social_policies\1_tradition\Tradition1_Oligarchy.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="social_policies\1_tradition\Tradition2_Aristocracy.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="social_policies\1_tradition\Tradition3_LandedElite.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="social_policies\1_tradition\Tradition4_Monarchy.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

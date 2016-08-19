@@ -145,6 +145,9 @@ public:
 	int GetMinorBullyScoreModifier() const;
 	int GetThemingBonusMultiplier() const;
 	int GetInternalTradeRouteYieldModifier() const;
+#ifdef FRUITY_TRADITION_LANDED_ELITE
+	int GetInternalTradeRouteFoodYieldChange() const;
+#endif
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
 	int GetOpenBordersTourismModifier() const;
@@ -348,6 +351,9 @@ private:
 	int m_iMinorBullyScoreModifier;
 	int m_iThemingBonusMultiplier;
 	int m_iInternalTradeRouteYieldModifier;
+#ifdef FRUITY_TRADITION_LANDED_ELITE
+	int m_iInternalTradeRouteFoodYieldChange;
+#endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
 	int m_iOpenBordersTourismModifier;
@@ -581,6 +587,9 @@ enum PolicyModifierType
 	POLICYMOD_THEMING_BONUS,
 	POLICYMOD_CITY_STATE_TRADE_CHANGE,
 	POLICYMOD_INTERNAL_TRADE_MODIFIER,
+#ifdef FRUITY_TRADITION_LANDED_ELITE
+	POLICYMOD_INTERNAL_TRADE_FOOD_YIELD_CHANGE,
+#endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,
 	POLICYMOD_OPEN_BORDERS_TOURISM_MODIFIER,
