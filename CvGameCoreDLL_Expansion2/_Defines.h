@@ -109,6 +109,8 @@
 #define AUI_GAME_FIX_COMBAT_PREDICTION_ACCURATE_PREDICT_TIES
 /// Extra combat strength from having heavy charge against a unit/plot that cannot retreat has been moved to CvUnit functions from the combat processing functions.
 #define AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+/// Fixes a bug where Lua mods that use different functions for religion founding and enhancing could allow multiple players to enhance or found religions in simultaneous multiplayer with conflicting beliefs, resulting in religions enhancing/founding multiple times
+#define AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts

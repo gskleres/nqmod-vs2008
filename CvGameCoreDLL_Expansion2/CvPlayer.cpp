@@ -22695,21 +22695,25 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 		// Free Culture-per-turn in every City
 		int iCityCultureChange = pPolicy->GetCulturePerCity() * iChange;
 #ifdef FRUITY_TRADITION_ARISTOCRACY
-		if (pLoopCity->isCapital())
+		if (pPolicy->GetCapitalCulturePerUniqueLuxury() != 0 && pLoopCity->isCapital())
 		{
-			int numLuxuries = 0;
-			ResourceTypes eResource;
-			CvResourceInfo* pkResourceInfo;
+			int iNumLuxuries = 0;
+			ResourceTypes eResource = NO_RESOURCE;
+			const CvResourceInfo* pkResourceInfo = NULL;
+#ifdef AUI_WARNING_FIXES
+			for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
 			for (int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 			{
-				eResource = (ResourceTypes) iResourceLoop;
+				eResource = static_cast<ResourceTypes>(iResourceLoop);
 				pkResourceInfo = GC.getResourceInfo(eResource);
-				if (pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY && this->getNumResourceAvailable(eResource) > 0)
+				if (pkResourceInfo && pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY && getNumResourceAvailable(eResource) > 0)
 				{
-					numLuxuries++;
+					iNumLuxuries++;
 				}
 			}
-			iCityCultureChange += (pPolicy->GetCapitalCulturePerUniqueLuxury() * numLuxuries) * iChange;
+			iCityCultureChange += pPolicy->GetCapitalCulturePerUniqueLuxury() * iNumLuxuries * iChange;
 		}
 #endif
 		if(pLoopCity->GetGarrisonedUnit() != NULL)

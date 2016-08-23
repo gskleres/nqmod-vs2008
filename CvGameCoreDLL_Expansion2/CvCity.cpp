@@ -494,6 +494,16 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 			GET_PLAYER(ePlayer).GetCityConnections()->Update();
 		}
 	}
+#ifdef FRUITY_TRADITION_ARISTOCRACY
+	// Add Resource Quantity to total (placed early to make sure policies can handle the resources located on the city tile)
+	if (plot()->getResourceType() != NO_RESOURCE)
+	{
+		if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech((TechTypes)GC.getResourceInfo(plot()->getResourceType())->getTechCityTrade()))
+		{
+			owningPlayer.changeNumResourceTotal(plot()->getResourceType(), plot()->getNumResourceForPlayer(getOwner()));
+		}
+	}
+#endif
 	owningPlayer.DoUpdateHappiness();
 
 	// Policy changes
@@ -509,27 +519,40 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 		if(owningPlayer.GetPlayerPolicies()->HasPolicy(ePolicy) && !owningPlayer.GetPlayerPolicies()->IsPolicyBlocked(ePolicy))
 		{
 			// Free Culture-per-turn in every City from Policies
-			ChangeJONSCulturePerTurnFromPolicies(GC.getPolicyInfo(ePolicy)->GetCulturePerCity());
 #ifdef FRUITY_TRADITION_ARISTOCRACY
-			if (isCapital())
+			CvPolicyEntry* pkPolicyInfo = GC.getPolicyInfo(ePolicy);
+			if (pkPolicyInfo)
 			{
-				int numLuxuries = 0;
-				ResourceTypes eResource;
-				for (int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+				int iExtraCulture = pkPolicyInfo->GetCulturePerCity();
+				if (pkPolicyInfo->GetCapitalCulturePerUniqueLuxury() != 0 && isCapital())
 				{
-					eResource = (ResourceTypes) iResourceLoop;
-					CvResourceInfo* pkResourceInfo = GC.getResourceInfo(eResource);
-					if (pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY && owningPlayer.getNumResourceAvailable(eResource, true) > 0)
+					int iNumLuxuries = 0;
+					ResourceTypes eResource = NO_RESOURCE;
+					const CvResourceInfo* pkResourceInfo = NULL;
+#ifdef AUI_WARNING_FIXES
+					for (uint iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#else
+					for (int iResourceLoop = 0; iResourceLoop < GC.getNumResourceInfos(); iResourceLoop++)
+#endif
 					{
-						numLuxuries++;
+						eResource = static_cast<ResourceTypes>(iResourceLoop);
+						pkResourceInfo = GC.getResourceInfo(eResource);
+						if (pkResourceInfo && pkResourceInfo->getResourceUsage() == RESOURCEUSAGE_LUXURY && owningPlayer.getNumResourceAvailable(eResource) > 0)
+						{
+							iNumLuxuries++;
+						}
 					}
+					iExtraCulture += pkPolicyInfo->GetCapitalCulturePerUniqueLuxury() * iNumLuxuries;
 				}
-				ChangeJONSCulturePerTurnFromPolicies(GC.getPolicyInfo(ePolicy)->GetCapitalCulturePerUniqueLuxury() * numLuxuries);
+				ChangeJONSCulturePerTurnFromPolicies(iExtraCulture);
 			}
+#else
+			ChangeJONSCulturePerTurnFromPolicies(GC.getPolicyInfo(ePolicy)->GetCulturePerCity());
 #endif
 		}
 	}
 
+#ifndef FRUITY_TRADITION_ARISTOCRACY
 	// Add Resource Quantity to total
 	if(plot()->getResourceType() != NO_RESOURCE)
 	{
@@ -538,6 +561,7 @@ void CvCity::init(int iID, PlayerTypes eOwner, int iX, int iY, bool bBumpUnits, 
 			owningPlayer.changeNumResourceTotal(plot()->getResourceType(), plot()->getNumResourceForPlayer(getOwner()));
 		}
 	}
+#endif
 
 #ifndef AUI_HEXSPACE_DX_LOOPS
 	CvPlot* pLoopPlot;
