@@ -2423,7 +2423,27 @@ int CvLuaGame::lFoundPantheon(lua_State* L)
 	const PlayerTypes ePlayer = static_cast<PlayerTypes>(luaL_checkint(L, 1));
 	const BeliefTypes eBelief = static_cast<BeliefTypes>(luaL_checkint(L, 2));
 
+#ifdef AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE
+	CvGameReligions* pkGameReligions(GC.getGame().GetGameReligions());
+	CvGameReligions::FOUNDING_RESULT eResult = pkGameReligions->CanCreatePantheon(ePlayer, true);
+	if (eResult == CvGameReligions::FOUNDING_OK)
+	{
+		if (pkGameReligions->IsPantheonBeliefAvailable(eBelief))
+		{
+			pkGameReligions->FoundPantheon(ePlayer, eBelief);
+		}
+		else
+		{
+			CvGameReligions::NotifyPlayer(ePlayer, CvGameReligions::FOUNDING_BELIEF_IN_USE);
+		}
+	}
+	else
+	{
+		CvGameReligions::NotifyPlayer(ePlayer, eResult);
+	}
+#else
 	GC.getGame().GetGameReligions()->FoundPantheon(ePlayer, eBelief);
+#endif
 
 	return 0;
 }
@@ -2439,7 +2459,35 @@ int CvLuaGame::lFoundReligion(lua_State* L)
 	const BeliefTypes eBelief4 = static_cast<BeliefTypes>(luaL_checkint(L, 7));
 	CvCity* pkHolyCity	= CvLuaCity::GetInstance(L, 8);
 
+#ifdef AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE
+	if (pkHolyCity && ePlayer != NO_PLAYER)
+	{
+		CvGameReligions* pkGameReligions(GC.getGame().GetGameReligions());
+		CvGameReligions::FOUNDING_RESULT eResult = pkGameReligions->CanFoundReligion(ePlayer, eReligion, szCustomName, eBelief1, eBelief2, eBelief3, eBelief4, pkHolyCity);
+		if (eResult == CvGameReligions::FOUNDING_OK)
+			pkGameReligions->FoundReligion(ePlayer, eReligion, szCustomName, eBelief1, eBelief2, eBelief3, eBelief4, pkHolyCity);
+		else
+		{
+			CvGameReligions::NotifyPlayer(ePlayer, eResult);
+			// We don't want them to lose the opportunity to found the religion, and the Great Prophet is already gone so just repost the notification
+			// If someone beat them to the last religion, well... tough luck.
+			CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
+			if (kPlayer.isHuman() && eResult != CvGameReligions::FOUNDING_NO_RELIGIONS_AVAILABLE)
+			{
+				CvNotifications* pNotifications = kPlayer.GetNotifications();
+				if (pNotifications)
+				{
+					CvString strBuffer = GetLocalizedText("TXT_KEY_NOTIFICATION_FOUND_RELIGION");
+					CvString strSummary = GetLocalizedText("TXT_KEY_NOTIFICATION_SUMMARY_FOUND_RELIGION");
+					pNotifications->Add(NOTIFICATION_FOUND_RELIGION, strBuffer, strSummary, pkHolyCity->getX(), pkHolyCity->getY(), -1, pkHolyCity->GetID());
+				}
+				kPlayer.GetReligions()->SetFoundingReligion(true);
+			}
+		}
+}
+#else
 	GC.getGame().GetGameReligions()->FoundReligion(ePlayer, eReligion, szCustomName, eBelief1, eBelief2, eBelief3, eBelief4, pkHolyCity);
+#endif
 
 	return 0;
 }
@@ -2451,7 +2499,33 @@ int CvLuaGame::lEnhanceReligion(lua_State* L)
 	const BeliefTypes eBelief1 = static_cast<BeliefTypes>(luaL_checkint(L, 3));
 	const BeliefTypes eBelief2 = static_cast<BeliefTypes>(luaL_checkint(L, 4));
 
+#ifdef AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE
+	CvGameReligions* pkGameReligions(GC.getGame().GetGameReligions());
+
+	CvGameReligions::FOUNDING_RESULT eResult = pkGameReligions->CanEnhanceReligion(ePlayer, eReligion, eBelief1, eBelief2);
+	if (eResult == CvGameReligions::FOUNDING_OK)
+		pkGameReligions->EnhanceReligion(ePlayer, eReligion, eBelief1, eBelief2);
+	else
+	{
+		CvGameReligions::NotifyPlayer(ePlayer, eResult);
+		// We don't want them to lose the opportunity to enhance the religion, and the Great Prophet is already gone so just repost the notification
+		CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
+		CvCity* pkCity = kPlayer.getCapitalCity();
+		if (kPlayer.isHuman() && eResult != CvGameReligions::FOUNDING_NO_RELIGIONS_AVAILABLE && pkCity)
+		{
+			CvNotifications* pNotifications = kPlayer.GetNotifications();
+			if (pNotifications)
+			{
+				CvString strBuffer = GetLocalizedText("TXT_KEY_NOTIFICATION_ENHANCE_RELIGION");
+				CvString strSummary = GetLocalizedText("TXT_KEY_NOTIFICATION_SUMMARY_ENHANCE_RELIGION");
+				pNotifications->Add(NOTIFICATION_ENHANCE_RELIGION, strBuffer, strSummary, pkCity->getX(), pkCity->getY(), -1, pkCity->GetID());
+			}
+			kPlayer.GetReligions()->SetFoundingReligion(true);
+		}
+	}
+#else
 	GC.getGame().GetGameReligions()->EnhanceReligion(ePlayer, eReligion, eBelief1, eBelief2);
+#endif
 
 	return 0;
 }

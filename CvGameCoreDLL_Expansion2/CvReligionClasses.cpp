@@ -617,10 +617,10 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanCreatePantheon(PlayerTypes 
 	}
 
 	// Has a religion been enhanced yet (and total number of religions/pantheons is equal to number of religions allowed)?
-	ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
@@ -1068,12 +1068,20 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanFoundReligion(PlayerTypes e
 			if(kReligion.m_eReligion == (*it).m_eReligion)
 				return FOUNDING_RELIGION_IN_USE;
 
+#ifdef AUI_WARNING_FIXES
+			for (int iSrcBelief = it->m_Beliefs.GetNumBeliefs(); iSrcBelief >= 0; iSrcBelief--)
+#else
 			for(int iSrcBelief = (*it).m_Beliefs.GetNumBeliefs(); iSrcBelief--;)
+#endif
 			{
 				BeliefTypes eSrcBelief = (*it).m_Beliefs.GetBelief(iSrcBelief);
 				if(eSrcBelief != NO_BELIEF)
 				{
+#ifdef AUI_WARNING_FIXES
+					for (int iDestBelief = kReligion.m_Beliefs.GetNumBeliefs(); iDestBelief >= 0; iDestBelief--)
+#else
 					for(int iDestBelief = kReligion.m_Beliefs.GetNumBeliefs(); iDestBelief--;)
+#endif
 					{
 						BeliefTypes eDestBelief = kReligion.m_Beliefs.GetBelief(iDestBelief);
 						if(eDestBelief != NO_BELIEF && eDestBelief == eSrcBelief)
@@ -1111,9 +1119,14 @@ void CvGameReligions::EnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligi
 		return;
 	}
 
+#ifdef AUI_WARNING_FIXES
+	it->m_bEnhanced = true;
+#endif
 	it->m_Beliefs.AddBelief(eBelief1);
 	it->m_Beliefs.AddBelief(eBelief2);
+#ifndef AUI_WARNING_FIXES
 	it->m_bEnhanced = true;
+#endif
 
 	// Update game systems
 	UpdateAllCitiesThisReligion(eReligion);
@@ -1185,21 +1198,33 @@ void CvGameReligions::EnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligi
 /// Can the new beliefs be added to the religion?
 CvGameReligions::FOUNDING_RESULT CvGameReligions::CanEnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligion, BeliefTypes eBelief1, BeliefTypes eBelief2)
 {
-	bool bFoundIt = false;
-	ReligionList::iterator it;
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+#ifdef AUI_WARNING_FIXES
+	if (eBelief1 != NO_BELIEF && IsInSomeReligion(eBelief1))
+		return FOUNDING_BELIEF_IN_USE;
+	if (eBelief2 != NO_BELIEF && IsInSomeReligion(eBelief2))
+		return FOUNDING_BELIEF_IN_USE;
 #else
+	bool bFoundIt = false;
+#endif
+#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+	for (ReligionList::iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+#else
+	ReligionList::iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
 		if(it->m_eReligion == eReligion && it->m_eFounder == ePlayer)
 		{
+#ifdef AUI_WARNING_FIXES
+			return FOUNDING_OK;
+#else
 			bFoundIt = true;
 			break;
+#endif
 		}
 	}
 
+#ifndef AUI_WARNING_FIXES
 	if(bFoundIt)
 	{
 		if(eBelief1 != NO_BELIEF && IsInSomeReligion(eBelief1))
@@ -1209,6 +1234,7 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanEnhanceReligion(PlayerTypes
 
 		return FOUNDING_OK;
 	}
+#endif
 
 	return FOUNDING_RELIGION_IN_USE;
 }
@@ -1316,10 +1342,10 @@ void CvGameReligions::SetHolyCity(ReligionTypes eReligion, CvCity* pkHolyCity)
 /// Switch founder for a religion (useful for scenario scripting)
 void CvGameReligions::SetFounder(ReligionTypes eReligion, PlayerTypes eFounder)
 {
-	ReligionList::iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
@@ -1357,25 +1383,33 @@ void CvGameReligions::UpdateAllCitiesThisReligion(ReligionTypes eReligion)
 /// Return a pointer to a religion that has been founded
 const CvReligion* CvGameReligions::GetReligion(ReligionTypes eReligion, PlayerTypes ePlayer) const
 {
-	ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
 		// If talking about a pantheon, make sure to match the player
+#ifdef AUI_WARNING_FIXES
+		if (it->m_eReligion == eReligion)
+		{
+			if (it->m_eReligion != RELIGION_PANTHEON || it->m_eFounder == ePlayer)
+#else
 		if(it->m_eReligion == eReligion && it->m_eReligion == RELIGION_PANTHEON)
 		{
 			if(it->m_eFounder == ePlayer)
+#endif
 			{
 				return it;
 			}
 		}
+#ifndef AUI_WARNING_FIXES
 		else if(it->m_eReligion == eReligion)
 		{
 			return it;
 		}
+#endif
 	}
 
 	return NULL;
@@ -1384,10 +1418,10 @@ const CvReligion* CvGameReligions::GetReligion(ReligionTypes eReligion, PlayerTy
 /// Has some religion already claimed this belief?
 bool CvGameReligions::IsInSomeReligion(BeliefTypes eBelief) const
 {
-	ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
@@ -1403,10 +1437,10 @@ bool CvGameReligions::IsInSomeReligion(BeliefTypes eBelief) const
 /// Get the belief in this player's pantheon
 BeliefTypes CvGameReligions::GetBeliefInPantheon(PlayerTypes ePlayer) const
 {
-	ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
@@ -1422,10 +1456,10 @@ BeliefTypes CvGameReligions::GetBeliefInPantheon(PlayerTypes ePlayer) const
 /// Has this player created a pantheon?
 bool CvGameReligions::HasCreatedPantheon(PlayerTypes ePlayer) const
 {
-	ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
@@ -1445,10 +1479,10 @@ int CvGameReligions::GetNumPantheonsCreated() const
 
 	for(int iI = 0; iI < MAX_MAJOR_CIVS; iI++)
 	{
-		ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-		for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+		for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+		ReligionList::const_iterator it;
 		for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 		{
@@ -1560,12 +1594,16 @@ int CvGameReligions::GetNumCitiesFollowing(ReligionTypes eReligion) const
 /// Has this player created a religion?
 bool CvGameReligions::HasCreatedReligion(PlayerTypes ePlayer) const
 {
+#ifdef AUI_WARNING_FIXES
+	return GetReligionCreatedByPlayer(ePlayer) > RELIGION_PANTHEON;
+#else
     if (GetReligionCreatedByPlayer(ePlayer) > RELIGION_PANTHEON)
 	{
 		return true;
 	}
 
 	return false;
+#endif
 }
 
 /// Has this player reformed their religion?
@@ -1644,10 +1682,10 @@ ReligionTypes CvGameReligions::GetReligionCreatedByPlayer(PlayerTypes ePlayer) c
 {
 	ReligionTypes eRtnValue = NO_RELIGION;
 
-	ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
@@ -1656,6 +1694,9 @@ ReligionTypes CvGameReligions::GetReligionCreatedByPlayer(PlayerTypes ePlayer) c
 			if(!it->m_bPantheon)
 			{
 				eRtnValue = it->m_eReligion;
+#ifdef AUI_WARNING_FIXES
+				break;
+#endif
 			}
 		}
 	}
@@ -1697,10 +1738,10 @@ int CvGameReligions::GetNumReligionsFounded() const
 {
 	int iRtnValue = 0;
 
-	ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
@@ -1718,10 +1759,10 @@ int CvGameReligions::GetNumReligionsEnhanced() const
 {
 	int iRtnValue = 0;
 
-	ReligionList::const_iterator it;
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
+	for (ReligionList::const_iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
+	ReligionList::const_iterator it;
 	for(it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); it++)
 #endif
 	{
