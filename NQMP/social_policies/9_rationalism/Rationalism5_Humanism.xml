@@ -10,35 +10,57 @@
 		</Update>
 	</Policies>
 	<Policy_BuildingClassYieldModifiers>
+		<Delete PolicyType="POLICY_HUMANISM" BuildingClassType="BUILDINGCLASS_UNIVERSITY" YieldType="YIELD_SCIENCE" YieldMod="17" />
+	</Policy_BuildingClassYieldModifiers>
+	<Policy_BuildingClassProductionModifiers>
+		<Row>
+			<PolicyType>POLICY_HUMANISM</PolicyType>
+			<BuildingClassType>BUILDINGCLASS_LIBRARY</BuildingClassType>
+			<ProductionModifier>100</ProductionModifier>
+		</Row>
 		<Row>
 			<PolicyType>POLICY_HUMANISM</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_UNIVERSITY</BuildingClassType>
-			<YieldType>YIELD_SCIENCE</YieldType>
-			<YieldMod>17</YieldMod>
+			<ProductionModifier>100</ProductionModifier>
 		</Row>
-	</Policy_BuildingClassYieldModifiers>
+		<Row>
+			<PolicyType>POLICY_HUMANISM</PolicyType>
+			<BuildingClassType>BUILDINGCLASS_OBSERVATORY</BuildingClassType>
+			<ProductionModifier>100</ProductionModifier>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_HUMANISM</PolicyType>
+			<BuildingClassType>BUILDINGCLASS_PUBLIC_SCHOOL</BuildingClassType>
+			<ProductionModifier>100</ProductionModifier>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_HUMANISM</PolicyType>
+			<BuildingClassType>BUILDINGCLASS_LABORATORY</BuildingClassType>
+			<ProductionModifier>100</ProductionModifier>
+		</Row>
+	</Policy_BuildingClassProductionModifiers>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_HUMANISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_HUMANISM_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Humanism[ENDCOLOR][NEWLINE]+17% [ICON_RESEARCH] Science from Universities.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Humanism[ENDCOLOR][NEWLINE]+100% [ICON_PRODUCTION] Production towards Libraries, Universities, Observatories, Public Schools, and Research Labs.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_HUMANISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_HUMANISM_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Humanism[ENDCOLOR][NEWLINE]+17% [ICON_RESEARCH] Science from Universities.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Humanism[ENDCOLOR][NEWLINE]+100% [ICON_PRODUCTION] Production towards Libraries, Universities, Observatories, Public Schools, and Research Labs.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_HUMANISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_HUMANISM_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Humanism[ENDCOLOR][NEWLINE]+17% [ICON_RESEARCH] Science from Universities.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Humanism[ENDCOLOR][NEWLINE]+100% [ICON_PRODUCTION] Production towards Libraries, Universities, Observatories, Public Schools, and Research Labs.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_HUMANISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_HUMANISM_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Humanism[ENDCOLOR][NEWLINE]+17% [ICON_RESEARCH] Science from Universities.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Humanism[ENDCOLOR][NEWLINE]+100% [ICON_PRODUCTION] Production towards Libraries, Universities, Observatories, Public Schools, and Research Labs.</Text>
 		</Row>
 	</Language_RU_RU>
 

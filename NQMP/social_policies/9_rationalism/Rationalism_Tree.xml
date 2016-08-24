@@ -5,12 +5,12 @@
 	<!-- New Rationalism Tree
 	
 					   Sovereignty					
-	  			  __________|___________
-	  			 |					    |
-	   Scientific Revolution	    Free Thought
-				 |____________________|	    |____
-						  |				         |
-					  Secularism			  Humanism
+	  			  __________|________________________________
+	  			 |					    |                    |
+	   	      Humanism            Free Thought      Scientific Revolution
+				                        |____________________|	    
+						                          |				        
+			                         		  Secularism			  
 					
 	-->
 
@@ -20,19 +20,19 @@
 			<Where Type="POLICY_SOVEREIGNTY" />
 		</Update>
 		<Update>
-			<Set GridX="2" GridY="2" />
+			<Set GridX="5" GridY="2" />
 			<Where Type="POLICY_SCIENTIFIC_REVOLUTION" />
 		</Update>
 		<Update>
-			<Set GridX="4" GridY="2" />
+			<Set GridX="3" GridY="2" />
 			<Where Type="POLICY_FREE_THOUGHT" />
 		</Update>
 		<Update>
-			<Set GridX="2" GridY="3" />
+			<Set GridX="4" GridY="3" />
 			<Where Type="POLICY_SECULARISM" />
 		</Update>
 		<Update>
-			<Set GridX="4" GridY="3" />
+			<Set GridX="1" GridY="2" />
 			<Where Type="POLICY_HUMANISM" />
 		</Update>
 	</Policies>
@@ -60,7 +60,7 @@
 		</Row>
 		<Row>
 			<PolicyType>POLICY_HUMANISM</PolicyType>
-			<PrereqPolicy>POLICY_FREE_THOUGHT</PrereqPolicy>
+			<PrereqPolicy>POLICY_SOVEREIGNTY</PrereqPolicy>
 		</Row>
 	</Policy_PrereqPolicies>
 
