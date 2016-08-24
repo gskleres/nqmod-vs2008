@@ -2484,7 +2484,7 @@ int CvLuaGame::lFoundReligion(lua_State* L)
 				kPlayer.GetReligions()->SetFoundingReligion(true);
 			}
 		}
-}
+	}
 #else
 	GC.getGame().GetGameReligions()->FoundReligion(ePlayer, eReligion, szCustomName, eBelief1, eBelief2, eBelief3, eBelief4, pkHolyCity);
 #endif
