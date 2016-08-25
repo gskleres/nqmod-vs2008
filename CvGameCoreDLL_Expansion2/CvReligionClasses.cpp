@@ -1068,20 +1068,12 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanFoundReligion(PlayerTypes e
 			if(kReligion.m_eReligion == (*it).m_eReligion)
 				return FOUNDING_RELIGION_IN_USE;
 
-#ifdef AUI_WARNING_FIXES
-			for (int iSrcBelief = it->m_Beliefs.GetNumBeliefs(); iSrcBelief >= 0; iSrcBelief--)
-#else
 			for(int iSrcBelief = (*it).m_Beliefs.GetNumBeliefs(); iSrcBelief--;)
-#endif
 			{
 				BeliefTypes eSrcBelief = (*it).m_Beliefs.GetBelief(iSrcBelief);
 				if(eSrcBelief != NO_BELIEF)
 				{
-#ifdef AUI_WARNING_FIXES
-					for (int iDestBelief = kReligion.m_Beliefs.GetNumBeliefs(); iDestBelief >= 0; iDestBelief--)
-#else
 					for(int iDestBelief = kReligion.m_Beliefs.GetNumBeliefs(); iDestBelief--;)
-#endif
 					{
 						BeliefTypes eDestBelief = kReligion.m_Beliefs.GetBelief(iDestBelief);
 						if(eDestBelief != NO_BELIEF && eDestBelief == eSrcBelief)
@@ -1509,10 +1501,17 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailablePantheonBeliefs()
 	for(int iI = 0; iI < iNumBeleifs; iI++)
 	{
 		const BeliefTypes eBelief(static_cast<BeliefTypes>(iI));
+#ifdef AUI_WARNING_FIXES
+		CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
+		if (pEntry && pEntry->IsPantheonBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+#else
 		if(!IsInSomeReligion(eBelief))
 		{
 			CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
 			if(pEntry && pEntry->IsPantheonBelief())
+#endif
 			{
 				availableBeliefs.push_back(eBelief);
 			}
@@ -1530,10 +1529,17 @@ bool CvGameReligions::IsPantheonBeliefAvailable(BeliefTypes eBelief)
 #endif
 {
 	CvBeliefXMLEntries* pkBeliefs = GC.GetGameBeliefs();
+#ifdef AUI_WARNING_FIXES
+	CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
+	if (pEntry && pEntry->IsPantheonBelief())
+	{
+		if (!IsInSomeReligion(eBelief))
+#else
 	if(!IsInSomeReligion(eBelief))
 	{
 		CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
 		if(pEntry && pEntry->IsPantheonBelief())
+#endif
 		{
 			return true;
 		}
@@ -1793,10 +1799,17 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailableFounderBeliefs()
 	for(int iI = 0; iI < iNumBeleifs; iI++)
 	{
 		const BeliefTypes eBelief(static_cast<BeliefTypes>(iI));
+#ifdef AUI_WARNING_FIXES
+		CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
+		if (pEntry && pEntry->IsFounderBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+#else
 		if(!IsInSomeReligion(eBelief))
 		{
 			CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
 			if(pEntry && pEntry->IsFounderBelief())
+#endif
 			{
 				availableBeliefs.push_back(eBelief);
 			}
@@ -1818,10 +1831,17 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailableFollowerBeliefs()
 	for(int iI = 0; iI < iNumBeleifs; iI++)
 	{
 		const BeliefTypes eBelief(static_cast<BeliefTypes>(iI));
+#ifdef AUI_WARNING_FIXES
+		CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
+		if (pEntry && pEntry->IsFollowerBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+#else
 		if(!IsInSomeReligion(eBelief))
 		{
 			CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
 			if(pEntry && pEntry->IsFollowerBelief())
+#endif
 			{
 				availableBeliefs.push_back(eBelief);
 			}
@@ -1843,10 +1863,17 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailableEnhancerBeliefs()
 	for(int iI = 0; iI < iNumBeleifs; iI++)
 	{
 		const BeliefTypes eBelief(static_cast<BeliefTypes>(iI));
+#ifdef AUI_WARNING_FIXES
+		CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
+		if (pEntry && pEntry->IsEnhancerBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+#else
 		if(!IsInSomeReligion(eBelief))
 		{
 			CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
 			if(pEntry && pEntry->IsEnhancerBelief())
+#endif
 			{
 				availableBeliefs.push_back(eBelief);
 			}
@@ -1868,10 +1895,17 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailableBonusBeliefs()
 	for(int iI = 0; iI < iNumBeleifs; iI++)
 	{
 		const BeliefTypes eBelief(static_cast<BeliefTypes>(iI));
+#ifdef AUI_WARNING_FIXES
+		CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
+		if (pEntry && (pEntry->IsEnhancerBelief() || pEntry->IsFollowerBelief() || pEntry->IsFounderBelief() || pEntry->IsPantheonBelief()))
+		{
+			if (!IsInSomeReligion(eBelief))
+#else
 		if(!IsInSomeReligion(eBelief))
 		{
 			CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
 			if(pEntry && (pEntry->IsEnhancerBelief() || pEntry->IsFollowerBelief() || pEntry->IsFounderBelief() || pEntry->IsPantheonBelief()))
+#endif
 			{
 				availableBeliefs.push_back(eBelief);
 			}
@@ -1893,10 +1927,17 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailableReformationBeliefs()
 	for(int iI = 0; iI < iNumBeleifs; iI++)
 	{
 		const BeliefTypes eBelief(static_cast<BeliefTypes>(iI));
+#ifdef AUI_WARNING_FIXES
+		CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
+		if (pEntry && pEntry->IsReformationBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+#else
 		if(!IsInSomeReligion(eBelief))
 		{
 			CvBeliefEntry* pEntry = pkBeliefs->GetEntry(eBelief);
 			if(pEntry && pEntry->IsReformationBelief())
+#endif
 			{
 				availableBeliefs.push_back(eBelief);
 			}
