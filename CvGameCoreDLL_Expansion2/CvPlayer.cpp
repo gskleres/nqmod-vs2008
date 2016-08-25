@@ -18096,6 +18096,21 @@ int CvPlayer::GetScienceYieldFromPreviousTurns(int iGameTurn, int iNumPreviousTu
 	return iSum;
 }
 
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+void CvPlayer::AddInfluenceWithAllKnownMinors(int iInfluence)
+{
+	CvTeam& pTeam = GET_TEAM(getTeam());
+
+	for (int iMinorCivLoop = MAX_MAJOR_CIVS; iMinorCivLoop < MAX_CIV_PLAYERS; iMinorCivLoop++)
+	{
+		PlayerTypes eMinorCivLoop = (PlayerTypes) iMinorCivLoop;
+		if (GET_PLAYER(eMinorCivLoop).isAlive() && pTeam.isHasMet(GET_PLAYER(eMinorCivLoop).getTeam()))
+		{
+			GET_PLAYER(eMinorCivLoop).GetMinorCivAI()->ChangeFriendshipWithMajor(GetID(), iInfluence, false);
+		}
+	}
+}
+#endif
 //	--------------------------------------------------------------------------------
 bool CvPlayer::IsGetsScienceFromPlayer(PlayerTypes ePlayer) const
 {

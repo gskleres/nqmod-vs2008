@@ -2,30 +2,48 @@
 <!-- Created by ModBuddy on 8/20/2016 2:43:04 PM -->
 <GameData>
 
-	<!-- Nobel Prize:  
+	<!-- Nobel Prize: Gifting Great People removed. Now provides 10 Influence will all known City States when a Great Scientist, Merchant, or Engineer is born. 
 	<Traits>
-		
-	</Traits>-->
+		<Update>
+			<Set GreatPersonGiftInfluence="0" InfluencePerRationalGreatPersonBorn="10" />
+			<Where Type="TRAIT_DIPLOMACY_GREAT_PEOPLE" />
+		</Update>
+	</Traits>
+	<Units>
+		<Update>
+			<Set IsRationalGreatPerson ="true" />
+			<Where Class="UNITCLASS_SCIENTIST" />
+		</Update>
+		<Update>
+			<Set IsRationalGreatPerson ="true" />
+			<Where Class="UNITCLASS_ENGINEER" />
+		</Update>
+		<Update>
+			<Set IsRationalGreatPerson ="true" />
+			<Where Class="UNITCLASS_MERCHANT" />
+		</Update>
+	</Units> -->
 
 	<!-- remove Hakkapeliitta -->
 	<Civilization_UnitClassOverrides>
 		<Delete UnitType="UNIT_SWEDISH_HAKKAPELIITTA" />
 	</Civilization_UnitClassOverrides>
 	
-	<!-- [New UB] Falu Gruva (replaces Ironworks): +8 Production, hills provide +1 Production and +1 Gold and 3 merchant slots. -->
+	<!-- [New UB] Falu Gruva (replaces Ironworks): +8 Production, +8 Gold, hills provide +1 Production, and +4 merchant points. -->
 	<Buildings>
 		<Row>
 			<Type>BUILDING_FALU_GRUVA</Type>
 			<BuildingClass>BUILDINGCLASS_IRONWORKS</BuildingClass>
 			<Cost>125</Cost>
 			<PrereqTech>TECH_MACHINERY</PrereqTech>
-			<Help>TXT_KEY_BUILDING_IRONWORKS_HELP</Help>
+			<Help>TXT_KEY_BUILDING_FALU_GRUVA_HELP</Help>
 			<Description>TXT_KEY_BUILDING_FALU_GRUVA</Description>
 			<Civilopedia>TXT_KEY_BUILDING_FALU_GRUVA_PEDIA</Civilopedia>
+			<EnhancedYieldTech>TECH_FLIGHT</EnhancedYieldTech>
 			<Strategy>TXT_KEY_BUILDING_FALU_GRUVA_STRATEGY</Strategy>
 			<ArtDefineTag>ART_DEF_BUILDING_IRONWORKS</ArtDefineTag>
 			<SpecialistType>SPECIALIST_MERCHANT</SpecialistType>
-			<SpecialistCount>3</SpecialistCount>
+			<GreatPeopleRateChange>4</GreatPeopleRateChange>
 			<NukeImmune>true</NukeImmune>
 			<NumCityCostMod>30</NumCityCostMod>
 			<HurryCostModifier>-1</HurryCostModifier>
@@ -54,6 +72,11 @@
 			<YieldType>YIELD_PRODUCTION</YieldType>
 			<Yield>8</Yield>
 		</Row>
+		<Row>
+			<BuildingType>BUILDING_FALU_GRUVA</BuildingType>
+			<YieldType>YIELD_GOLD</YieldType>
+			<Yield>8</Yield>
+		</Row>
 	</Building_YieldChanges>
 	<Building_TerrainYieldChanges>
 		<Row>
@@ -62,17 +85,16 @@
 			<YieldType>YIELD_PRODUCTION</YieldType>
 			<Yield>1</Yield>
 		</Row>
-		<Row>
-			<BuildingType>BUILDING_FALU_GRUVA</BuildingType>
-			<TerrainType>TERRAIN_HILL</TerrainType>
-			<YieldType>YIELD_GOLD</YieldType>
-			<Yield>1</Yield>
-		</Row>
 	</Building_TerrainYieldChanges>
 	<Building_Flavors>
 		<Row>
 			<BuildingType>BUILDING_FALU_GRUVA</BuildingType>
 			<FlavorType>FLAVOR_PRODUCTION</FlavorType>
+			<Flavor>75</Flavor>
+		</Row>
+		<Row>
+			<BuildingType>BUILDING_FALU_GRUVA</BuildingType>
+			<FlavorType>FLAVOR_GOLD</FlavorType>
 			<Flavor>50</Flavor>
 		</Row>
 		<Row>
@@ -81,6 +103,13 @@
 			<Flavor>20</Flavor>
 		</Row>
 	</Building_Flavors>
+	<Building_TechEnhancedYieldChanges>
+		<Row>
+			<BuildingType>BUILDING_FALU_GRUVA</BuildingType>
+			<YieldType>YIELD_CULTURE</YieldType>
+			<Yield>6</Yield>
+		</Row>
+	</Building_TechEnhancedYieldChanges>
 	<Civilization_BuildingClassOverrides>
 		<Row>
 			<CivilizationType>CIVILIZATION_SWEDEN</CivilizationType>
@@ -92,20 +121,22 @@
 
 	<!-- localization -->
 	<Language_en_US>
-		<!--
+		<!-- 
 		<Delete Tag="TXT_KEY_TRAIT_DIPLOMACY_GREAT_PEOPLE" />
 		<Row Tag="TXT_KEY_TRAIT_DIPLOMACY_GREAT_PEOPLE">
-			<Text>Whenever a Great Scientist, Engineer, or Merchant is born, gain 15 [ICON_INFLUENCE] Influence in each City State with a Trade Route. When declaring friendship, Sweden and their friend gain +10% Great Person generation.</Text>
-		</Row>
-		-->
+			<Text>Whenever a Great Scientist, Engineer, or Merchant is born, gain 10 [ICON_INFLUENCE] Influence with every known City State. When declaring friendship, Sweden and their friend gain +10% Great Person generation.</Text>
+		</Row> -->
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA">
 			<Text>Falu Gruva</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_HELP">
+			<Text>Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_CULTURE] Culture once Flight is discovered.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_PEDIA">
 			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Falun_Mine)[ENDCOLOR][NEWLINE][NEWLINE]Falun Mine (Swedish: Falu Gruva) was a mine in Falun, Sweden, that operated for a millennium from the 10th century to 1992. It produced as much as two thirds of Europe's copper needs and helped fund many of Sweden's wars in the 17th century. Technological developments at the mine had a profound influence on mining globally for two centuries. Since 2001 it has been designated a UNESCO world heritage site as well as a museum.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_STRATEGY">
-			<Text>In addition to the normal +8 [ICON_PRODUCTION] Production of the Ironworks it replaces, Falu Gruva also provides an additional +1 [ICON_PRODUCTION] and +1 [ICON_GOLD] Gold from hills and has 3 Great Merchant slots. Only Sweden may build it.</Text>
+			<Text>In addition to the normal +8 [ICON_PRODUCTION] Production of the Ironworks it replaces, Falu Gruva also provides +8 [ICON_GOLD] Gold, +1 [ICON_PRODUCTION] Production for all hill tiles worked by the city, and +4 Great Merchant points. +6 [ICON_CULTURE] Culture once Flight is discovered. Only Sweden may build it.</Text>
 		</Row>
 	</Language_en_US>
 	

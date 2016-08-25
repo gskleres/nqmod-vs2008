@@ -26,6 +26,9 @@ CvTraitEntry::CvTraitEntry() :
 	m_iGreatGeneralRateModifier(0),
 	m_iGreatGeneralExtraBonus(0),
 	m_iGreatPersonGiftInfluence(0),
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	m_iInfluencePerRationalGreatPersonBorn(0),
+#endif
 	m_iMaxGlobalBuildingProductionModifier(0),
 	m_iMaxTeamBuildingProductionModifier(0),
 	m_iMaxPlayerBuildingProductionModifier(0),
@@ -212,6 +215,13 @@ int CvTraitEntry::GetGreatPersonGiftInfluence() const
 {
 	return m_iGreatPersonGiftInfluence;
 }
+
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+int CvTraitEntry::GetInfluencePerRationalGreatPersonBorn() const
+{
+	return m_iInfluencePerRationalGreatPersonBorn;
+};
+#endif
 
 /// Accessor:: Overall production boost
 int CvTraitEntry::GetMaxGlobalBuildingProductionModifier() const
@@ -983,6 +993,9 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 	m_iGreatGeneralRateModifier				= kResults.GetInt("GreatGeneralRateModifier");
 	m_iGreatGeneralExtraBonus				= kResults.GetInt("GreatGeneralExtraBonus");
 	m_iGreatPersonGiftInfluence				= kResults.GetInt("GreatPersonGiftInfluence");
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	m_iInfluencePerRationalGreatPersonBorn	= kResults.GetInt("InfluencePerRationalGreatPersonBorn");
+#endif
 	m_iMaxGlobalBuildingProductionModifier	= kResults.GetInt("MaxGlobalBuildingProductionModifier");
 	m_iMaxTeamBuildingProductionModifier	= kResults.GetInt("MaxTeamBuildingProductionModifier");
 	m_iMaxPlayerBuildingProductionModifier	= kResults.GetInt("MaxPlayerBuildingProductionModifier");
@@ -1488,6 +1501,9 @@ void CvPlayerTraits::InitPlayerTraits()
 			m_iGreatGeneralRateModifier += trait->GetGreatGeneralRateModifier();
 			m_iGreatGeneralExtraBonus += trait->GetGreatGeneralExtraBonus();
 			m_iGreatPersonGiftInfluence += trait->GetGreatPersonGiftInfluence();
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+			m_iInfluencePerRationalGreatPersonBorn += trait->GetInfluencePerRationalGreatPersonBorn();
+#endif
 			m_iLevelExperienceModifier += trait->GetLevelExperienceModifier();
 			m_iMaxGlobalBuildingProductionModifier += trait->GetMaxGlobalBuildingProductionModifier();
 			m_iMaxTeamBuildingProductionModifier += trait->GetMaxTeamBuildingProductionModifier();
@@ -1787,6 +1803,9 @@ void CvPlayerTraits::Reset()
 	m_iGreatGeneralRateModifier = 0;
 	m_iGreatGeneralExtraBonus = 0;
 	m_iGreatPersonGiftInfluence = 0;
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	m_iInfluencePerRationalGreatPersonBorn = 0;
+#endif
 	m_iLevelExperienceModifier= 0;
 	m_iMaxGlobalBuildingProductionModifier = 0;
 	m_iMaxTeamBuildingProductionModifier = 0;
@@ -2794,6 +2813,9 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 	kStream >> m_iGreatGeneralExtraBonus;
 
 	kStream >> m_iGreatPersonGiftInfluence;
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	kStream >> m_iInfluencePerRationalGreatPersonBorn;
+#endif
 
 	kStream >> m_iLevelExperienceModifier;
 	kStream >> m_iMaxGlobalBuildingProductionModifier;
@@ -3190,6 +3212,9 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << m_iGreatGeneralRateModifier;
 	kStream << m_iGreatGeneralExtraBonus;
 	kStream << m_iGreatPersonGiftInfluence;
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	kStream << m_iInfluencePerRationalGreatPersonBorn;
+#endif
 	kStream << m_iLevelExperienceModifier;
 	kStream << m_iMaxGlobalBuildingProductionModifier;
 	kStream << m_iMaxTeamBuildingProductionModifier;

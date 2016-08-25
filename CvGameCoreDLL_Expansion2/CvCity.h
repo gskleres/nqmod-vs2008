@@ -606,6 +606,10 @@ public:
 	int getSeaPlotYield(YieldTypes eIndex) const;
 	void changeSeaPlotYield(YieldTypes eIndex, int iChange);
 
+#ifdef NQ_ALLOW_BUILDING_HILL_YIELD_CHANGES
+	int getHillYieldChangesFromBuildings(YieldTypes eYield) const;
+#endif
+
 	int getMountainScienceYield() const; // NQMP GJS - mountain science yield
 	void changeMountainScienceYield(int iChange); // NQMP GJS - mountain science yield
 

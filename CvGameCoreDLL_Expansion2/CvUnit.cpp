@@ -672,6 +672,18 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 		kPlayer.GetCulture()->AddTourismAllKnownCivs(iTourism);
 	}
 
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	// does the Nobel Prize (Sweden) trigger for this unit being born?
+	if (getUnitInfo().IsRationalGreatPerson())
+	{
+		int iInfluence = kPlayer.GetPlayerTraits()->GetInfluencePerRationalGreatPersonBorn();
+		if (iInfluence > 0)
+		{
+			kPlayer.AddInfluenceWithAllKnownMinors(iInfluence);
+		}
+	}
+#endif
+
 	// Recon unit? If so, he sees what's around him
 	if(IsRecon())
 	{
