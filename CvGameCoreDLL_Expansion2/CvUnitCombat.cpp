@@ -1021,12 +1021,57 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 					bBarbarian = pCity->isBarbarian();
 					pCity->changeDamage(iDamage);
 
+#ifdef DEL_RANGED_COUNTERATTACKS
+					pkAttacker->changeDamage(iDamageToAttacker, pCity->getOwner());
+
+					if (iDamage > 0) // && iDefenderStrength > 0)
+					{
+						pkAttacker->changeExperience(
+							kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
+							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
+							true,
+							kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
+							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
+					}
+
+					// Anyone eat it?
+					bAttackerDied = (pkAttacker->getDamage() >= GC.getMAX_HIT_POINTS());
+
+					if (bAttackerDied)
+					{
+						auto_ptr<ICvUnit1> pAttacker = GC.WrapUnitPointer(pkAttacker);
+						gDLL->GameplayUnitDestroyedInCombat(pAttacker.get());
+
+						if (GC.getGame().getActivePlayer() == pkAttacker->getOwner())
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_UNIT_DIED_ATTACKING_CITY", pkAttacker->getNameKey(), pCity->getNameKey(), iDamage, iAttackerFearDamageInflicted);
+							pkDLLInterface->AddMessage(uiParentEventID, pkAttacker->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, GC.getEraInfo(GC.getGame().getCurrentEra())->getAudioUnitDefeatScript(), MESSAGE_TYPE_INFO, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_RED"), pkTargetPlot->getX(), pkTargetPlot->getY()*/);
+						}
+						if (GC.getGame().getActivePlayer() == pCity->getOwner())
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_KILLED_ENEMY_UNIT_CITY", pCity->getNameKey(), iDamageToAttacker, iAttackerFearDamageInflicted, pkAttacker->getNameKey(), pkAttacker->getVisualCivAdjective(pCity->getTeam()));
+							pkDLLInterface->AddMessage(uiParentEventID, pCity->getOwner(), true, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, GC.getEraInfo(GC.getGame().getCurrentEra())->getAudioUnitVictoryScript(), MESSAGE_TYPE_INFO, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_GREEN"), pkTargetPlot->getX(), pkTargetPlot->getY()*/);
+						}
+					}
+					else
+					{
+						pkAttacker->testPromotionReady();
+#endif
 					if(pCity->getOwner() == GC.getGame().getActivePlayer())
 					{
 						strBuffer = GetLocalizedText("TXT_KEY_MISC_YOUR_CITY_ATTACKED_BY_AIR", pCity->getNameKey(), pkAttacker->getNameKey(), iDamage);
 						//red icon over attacking unit
 						pkDLLInterface->AddMessage(uiParentEventID, pCity->getOwner(), false, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, "AS2D_COMBAT", MESSAGE_TYPE_INFO, pkAttacker->m_pUnitInfo->GetButton(), (ColorTypes)GC.getInfoTypeForString("COLOR_RED"), pkAttacker->getX(), pkAttacker->getY(), true, true*/);
 					}
+#ifdef DEL_RANGED_COUNTERATTACKS
+						if (GC.getGame().getActivePlayer() == pkAttacker->getOwner())
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_YOU_ATTACK_BY_AIR", pkAttacker->getNameKey(), pCity->getNameKey(), iDamage);
+							pkDLLInterface->AddMessage(uiParentEventID, pkAttacker->getOwner(), false, GC.getEVENT_MESSAGE_TIME(), strBuffer/*, GC.getEraInfo(GC.getGame().getCurrentEra())->getAudioUnitDefeatScript(), MESSAGE_TYPE_INFO, NULL, (ColorTypes)GC.getInfoTypeForString("COLOR_RED"), pkTargetPlot->getX(), pkTargetPlot->getY()*/);
+							pkAttacker->testPromotionReady();
+						}
+					}
+#endif
 				}
 
 				pCity->clearCombat();
