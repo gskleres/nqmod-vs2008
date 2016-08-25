@@ -9996,6 +9996,17 @@ void CvCity::changeSeaPlotYield(YieldTypes eIndex, int iChange)
 	}
 }
 
+#ifdef NQ_ALLOW_BUILDING_HILL_YIELD_CHANGES
+/// Change to Hills yield from buildings
+int CvCity::getHillYieldChangesFromBuildings(YieldTypes eYield) const
+{
+	VALIDATE_OBJECT
+	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
+	CvAssertMsg(eIndex < NUM_YIELD_TYPES, "eIndex expected to be < NUM_YIELD_TYPES");
+	return m_ppaiTerrainYieldChange[TERRAIN_HILL][eYield];
+}
+#endif
+
 // NQMP GJS - mountain science yield begin
 int CvCity::getMountainScienceYield() const
 {

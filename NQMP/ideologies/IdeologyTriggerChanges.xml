@@ -23,7 +23,7 @@
 			<Description>TXT_KEY_BUILDING_CENTER_OF_PROGRESS_HELP</Description>
 			<ArtDefineTag>ART_DEF_BUILDING_NATIONAL_COLLEGE</ArtDefineTag>
 			<NukeImmune>true</NukeImmune>
-			<NumCityCostMod>15</NumCityCostMod>
+			<NumCityCostMod>0</NumCityCostMod>
 			<XBuiltTriggersIdeologyChoice>1</XBuiltTriggersIdeologyChoice>
 			<HurryCostModifier>-1</HurryCostModifier>
 			<MinAreaSize>-1</MinAreaSize>

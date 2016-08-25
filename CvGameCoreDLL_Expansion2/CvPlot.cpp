@@ -7747,6 +7747,16 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 		}
 		// NQMP GJS - mountain science yield end
 
+#ifdef NQ_ALLOW_BUILDING_HILL_YIELD_CHANGES
+		if (isHills())
+		{
+			if (NULL != pWorkingCity)
+			{
+				iYield += pWorkingCity->getHillYieldChangesFromBuildings(eYield);
+			}
+		}
+#endif
+
 		// Extra yield for features
 		if(getFeatureType() != NO_FEATURE)
 		{

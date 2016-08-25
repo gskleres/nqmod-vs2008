@@ -59,6 +59,9 @@ public:
 	int GetGreatGeneralRateModifier() const;
 	int GetGreatGeneralExtraBonus() const;
 	int GetGreatPersonGiftInfluence() const;
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	int GetInfluencePerRationalGreatPersonBorn() const;
+#endif
 	int GetMaxGlobalBuildingProductionModifier() const;
 	int GetMaxTeamBuildingProductionModifier() const;
 	int GetMaxPlayerBuildingProductionModifier() const;
@@ -195,6 +198,9 @@ protected:
 	int m_iGreatGeneralRateModifier;
 	int m_iGreatGeneralExtraBonus;
 	int m_iGreatPersonGiftInfluence;
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	int m_iInfluencePerRationalGreatPersonBorn;
+#endif
 	int m_iMaxGlobalBuildingProductionModifier;
 	int m_iMaxTeamBuildingProductionModifier;
 	int m_iMaxPlayerBuildingProductionModifier;
@@ -405,6 +411,12 @@ public:
 	{
 		return m_iGreatPersonGiftInfluence;
 	};
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	int GetInfluencePerRationalGreatPersonBorn() const
+	{
+		return m_iInfluencePerRationalGreatPersonBorn;
+	};
+#endif
 	int GetLevelExperienceModifier() const
 	{
 		return m_iLevelExperienceModifier;
@@ -874,6 +886,9 @@ private:
 	int m_iGreatGeneralRateModifier;
 	int m_iGreatGeneralExtraBonus;
 	int m_iGreatPersonGiftInfluence;
+#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
+	int m_iInfluencePerRationalGreatPersonBorn;
+#endif
 	int m_iLevelExperienceModifier;
 	int m_iMaxGlobalBuildingProductionModifier;
 	int m_iMaxTeamBuildingProductionModifier;

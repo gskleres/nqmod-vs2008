@@ -616,5 +616,9 @@
 // NQ Changes
 // Always show barb camps to all players instead of locking it to a policy
 #define NQ_ALWAYS_SEE_BARB_CAMPS
+// Allow hill terrain changes based on buildings (Swedish UB: Falu Gruva)
+#define NQ_ALLOW_BUILDING_HILL_YIELD_CHANGES
+// Influence with all known city states when scientist, merchant, or engineer is born (Swedish UA: Nobel Prize)
+//#define NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
 
 #endif
