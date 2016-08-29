@@ -6405,7 +6405,11 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 	{
 		GetTreasury()->ChangeGold(iGold);
 
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iGold);
+#else
 		strBuffer += GetLocalizedText("TXT_KEY_MISC_RECEIVED_GOLD", iGold);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_GOLD, iGold, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -6448,6 +6452,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iCulture /= 100;
 
 		changeJONSCulture(iCulture);
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iCulture);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_CULTURE, iCulture, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -6463,6 +6470,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= 100;
 
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iFaith);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -6479,6 +6489,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= iDivisor;
 		iFaith *= iDivisor;
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iFaith);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -6494,6 +6507,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= iDivisor;
 		iFaith *= iDivisor;
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iFaith);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
