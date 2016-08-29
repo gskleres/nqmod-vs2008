@@ -3162,7 +3162,7 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 		// Don't let another player's unit inside someone's city
 		if (plot.isCity() && plot.isRevealed(getTeam()))
 		{
-			if ((bMoveFlagAttack && (bMoveFlags & MOVEFLAG_DECLARE_WAR)) == (plot.getPlotCity()->getOwner() == getOwner()))
+			if ((bMoveFlagAttack || (bMoveFlags & MOVEFLAG_DECLARE_WAR)) == (plot.getPlotCity()->getTeam() == getTeam()))
 				return false;
 		}
 	}
@@ -3467,7 +3467,18 @@ int CvUnit::getCombatDamage(int iStrength, int iOpponentStrength, int iCurrentDa
 	int iRoll = 0;
 	if(bIncludeRand)
 	{
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
+		{
+			int iMaxRoll = GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
+			iRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Combat Damage") * 80;
+			iRoll -= GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
+			iRoll += GC.getGame().getJonRandNum(80, "Unit Combat Damage Noise");
+		}
+		else
+#endif
 		iRoll = /*400*/ GC.getGame().getJonRandNum(GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "Unit Combat Damage");
+
 		iRoll *= iDamageRatio;
 		iRoll /= GC.getMAX_HIT_POINTS();
 	}
@@ -7567,15 +7578,23 @@ bool CvUnit::construct(BuildingTypes eBuilding)
 bool CvUnit::CanFoundReligion(const CvPlot* pPlot) const
 {
 	VALIDATE_OBJECT
+#ifdef AUI_WARNING_FIXES
+	if (!m_pUnitInfo->IsFoundReligion())
+	{
+		return false;
+	}
+#endif
 	CvCity* pCity;
 	CvGameReligions* pReligions = GC.getGame().GetGameReligions();
 
 	pCity = pPlot->getPlotCity();
 
+#ifndef AUI_WARNING_FIXES
 	if(!m_pUnitInfo->IsFoundReligion())
 	{
 		return false;
 	}
+#endif
 
 	if(pCity == NULL)
 	{
@@ -9008,6 +9027,12 @@ void CvUnit::PerformCultureBomb(int iRadius)
 	// Change ownership of nearby plots
 	int iBombRange = iRadius;
 	CvPlot* pLoopPlot;
+#ifdef AUI_UNIT_CITADEL_RESISTANT_TO_CULTURE_BOMB
+	ImprovementTypes eLoopImprovement = NO_IMPROVEMENT;
+	const CvImprovementEntry* pImprovementInfo = NULL;
+	const CvPlot* pLoopPlot2 = NULL;
+	int iI;
+#endif
 #ifdef AUI_HEXSPACE_DX_LOOPS
 	int iMaxDX, iDX;
 	for (int iDY = -iBombRange; iDY <= iBombRange; iDY++)
@@ -9035,6 +9060,45 @@ void CvUnit::PerformCultureBomb(int iRadius)
 			// Can't flip Cities, sorry
 			if(pLoopPlot->isCity())
 				continue;
+
+#ifdef AUI_UNIT_CITADEL_RESISTANT_TO_CULTURE_BOMB
+			eLoopImprovement = pLoopPlot->getRevealedImprovementType(getTeam());
+			if (eLoopImprovement != NO_IMPROVEMENT)
+			{
+				pImprovementInfo = GC.getImprovementInfo(eLoopImprovement);
+				if (pImprovementInfo && pImprovementInfo->GetCultureBombRadius() > 0)
+				{
+					bool bPlotHasResistingCitadel = false;
+
+					for (iI = 0; iI < NUM_DIRECTION_TYPES; iI++)
+					{
+						pLoopPlot2 = plotDirection(pLoopPlot->getX(), pLoopPlot->getY(), (DirectionTypes)iI);
+						if (pLoopPlot2 != NULL && pLoopPlot2->getOwner() == pLoopPlot->getOwner())
+						{
+							if (plotDistance(getX(), getY(), pLoopPlot2->getX(), pLoopPlot2->getY()) > iBombRange)
+							{
+								bPlotHasResistingCitadel = true;
+								break;
+							}
+							else
+							{
+								eLoopImprovement = pLoopPlot->getRevealedImprovementType(getTeam());
+								// Citadels don't defend adjacent citadels on their own (so 2 neighboring citadels don't become invulnerable to culture bombs
+								if (eLoopImprovement == NO_IMPROVEMENT || 
+									(GC.getImprovementInfo(eLoopImprovement) && GC.getImprovementInfo(eLoopImprovement)->GetCultureBombRadius() <= 0))
+								{
+									bPlotHasResistingCitadel = true;
+									break;
+								}
+							}
+						}
+					}
+
+					if (bPlotHasResistingCitadel)
+						continue;
+				}
+			}
+#endif
 
 			if(pLoopPlot->getOwner() != NO_PLAYER){
 				// Notify plot owner
@@ -9550,7 +9614,7 @@ bool CvUnit::build(BuildTypes eBuild)
 			}
 		}
 
-#ifndef AUI_WARNING_FIXES
+#ifndef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
 		// wipe out all build progress also
 
 		bFinished = pPlot->changeBuildProgress(eBuild, workRate(false), getOwner());
@@ -9949,7 +10013,9 @@ bool CvUnit::giveExperience()
 				if(pUnit && pUnit != this && pUnit->getOwner() == getOwner() && pUnit->canAcquirePromotionAny())
 				{
 					pUnit->changeExperience(i < iRemainder ? iMinExperiencePerUnit+1 : iMinExperiencePerUnit);
+#ifndef AUI_UNIT_TEST_PROMOTION_READY_MOVED
 					pUnit->testPromotionReady();
+#endif
 				}
 
 				i++;
@@ -12054,6 +12120,16 @@ int CvUnit::GetAirCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bInc
 	int iAttackerRoll = 0;
 	if(bIncludeRand)
 	{
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
+		{
+			int iMaxRoll = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
+			iAttackerRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") * 80;
+			iAttackerRoll -= GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
+			iAttackerRoll += GC.getGame().getJonRandNum(80, "Unit Ranged Combat Damage Noise");
+		}
+		else
+#endif
 		iAttackerRoll = /*300*/ GC.getGame().getJonRandNum(GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "Unit Ranged Combat Damage");
 		iAttackerRoll *= iAttackerDamageRatio;
 		iAttackerRoll /= GC.getMAX_HIT_POINTS();
@@ -12161,6 +12237,16 @@ int CvUnit::GetRangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bI
 	int iAttackerRoll = 0;
 	if(bIncludeRand)
 	{
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
+		{
+			int iMaxRoll = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
+			iAttackerRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") * 80;
+			iAttackerRoll -= GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
+			iAttackerRoll += GC.getGame().getJonRandNum(80, "Unit Ranged Combat Damage Noise");
+		}
+		else
+#endif
 		iAttackerRoll = /*300*/ GC.getGame().getJonRandNum(GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "Unit Ranged Combat Damage");
 		iAttackerRoll *= iAttackerDamageRatio;
 		iAttackerRoll /= GC.getMAX_HIT_POINTS();
@@ -12228,6 +12314,16 @@ int CvUnit::GetAirStrikeDefenseDamage(const CvUnit* pAttacker, bool bIncludeRand
 	int iDefenderRoll = 0;
 	if(bIncludeRand)
 	{
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
+		{
+			int iMaxRoll = GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
+			iDefenderRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") * 80;
+			iDefenderRoll -= GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
+			iDefenderRoll += GC.getGame().getJonRandNum(80, "Unit Air Strike Combat Damage Noise");
+		}
+		else
+#endif
 		iDefenderRoll = /*200*/ GC.getGame().getJonRandNum(GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE(), "Unit Air Strike Combat Damage");
 		iDefenderRoll *= iDefenderDamageRatio;
 		iDefenderRoll /= GC.getMAX_HIT_POINTS();
@@ -12428,6 +12524,16 @@ int CvUnit::GetInterceptionDamage(const CvUnit* pAttacker, bool bIncludeRand) co
 	int iInterceptorRoll = 0;
 	if(bIncludeRand)
 	{
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
+		{
+			int iMaxRoll = GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
+			iInterceptorRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Interception Combat Damage") * 80;
+			iInterceptorRoll -= GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
+			iInterceptorRoll += GC.getGame().getJonRandNum(80, "Interception Combat Damage Noise");
+		}
+		else
+#endif
 		iInterceptorRoll = /*300*/ GC.getGame().getJonRandNum(GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "Interception Combat Damage");
 		iInterceptorRoll *= iInterceptorDamageRatio;
 		iInterceptorRoll /= GC.getMAX_HIT_POINTS();
@@ -15303,10 +15409,17 @@ void CvUnit::setExperience(int iNewValue, int iMax)
 		m_iExperience = std::min(((iMax == -1) ? INT_MAX : iMax), iNewValue);
 		CvAssert(getExperience() >= 0);
 
+#ifdef AUI_UNIT_TEST_PROMOTION_READY_MOVED
+		if (!IsDead())
+		{
+			testPromotionReady();
+			if (getOwner() == GC.getGame().getActivePlayer())
+#else
 		if(getOwner() == GC.getGame().getActivePlayer())
 		{
 			// Don't show XP for unit that's about to bite the dust
 			if(!IsDead())
+#endif
 			{
 				Localization::String localizedText = Localization::Lookup("TXT_KEY_EXPERIENCE_POPUP");
 				localizedText << iExperienceChange;
@@ -21617,7 +21730,11 @@ bool CvUnit::PlotValid(CvPlot* pPlot) const
 		{
 			return true;
 		}
+#ifdef DEL_RANGED_COUNTERATTACKS
+		else if ((pPlot->isFriendlyCity(*this, true) || pPlot->isEnemyCity(*this)) && pPlot->isCoastalLand())
+#else
 		else if(pPlot->isFriendlyCity(*this, true) && pPlot->isCoastalLand())
+#endif
 		{
 			return true;
 		}

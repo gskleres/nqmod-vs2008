@@ -2602,19 +2602,33 @@ int CvPlot::getBuildTime(BuildTypes eBuild, PlayerTypes ePlayer) const
 //	--------------------------------------------------------------------------------
 int CvPlot::getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowExtra, int iThenExtra) const
 {
+#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+	int iBuildLeft = getBuildTime(eBuild, ePlayer) - getBuildProgress(eBuild);
+
+	if (iBuildLeft <= 0)
+#else
 	int iBuildLeft = getBuildTime(eBuild, ePlayer);
 
 	if(iBuildLeft == 0)
+#endif
 		return 0;
 
 	const IDInfo* pUnitNode;
 	const CvUnit* pLoopUnit;
+#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+	int iLoopBuildRate = 0;
+	int iTurnsLeft = 0;
+	// Max'es needed to counteract EUI code
+	int iNowBuildRate = MAX(iNowExtra, 0);
+	int iThenBuildRate = MAX(iThenExtra, 0);
+#else
 	int iNowBuildRate;
 	int iThenBuildRate;
 	int iTurnsLeft;
 
 	iNowBuildRate = iNowExtra;
 	iThenBuildRate = iThenExtra;
+#endif
 
 	pUnitNode = headUnitNode();
 
@@ -2625,11 +2639,20 @@ int CvPlot::getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowEx
 
 		if(pLoopUnit && pLoopUnit->getBuildType() == eBuild)
 		{
+#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+			iLoopBuildRate = pLoopUnit->workRate(true);
+			//if (pLoopUnit->canMove())
+			//{
+			//	iNowBuildRate += iLoopBuildRate;
+			//}
+			iThenBuildRate += iLoopBuildRate;
+#else
 			if(pLoopUnit->canMove())
 			{
 				iNowBuildRate += pLoopUnit->workRate(false);
 			}
 			iThenBuildRate += pLoopUnit->workRate(true);
+#endif
 		}
 	}
 
@@ -2639,6 +2662,17 @@ int CvPlot::getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowEx
 		return INT_MAX;
 	}
 
+#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+	iBuildLeft = MAX(0, iBuildLeft - iNowBuildRate);
+
+	iTurnsLeft = ((iBuildLeft + iThenBuildRate - 1) / iThenBuildRate);
+
+	// Works around weird UI bug
+	if (getBuildProgress(eBuild) == 0 && iTurnsLeft > 1)
+		iTurnsLeft++;
+
+	return MAX(1, iTurnsLeft);
+#else
 	iBuildLeft -= getBuildProgress(eBuild);
 	iBuildLeft -= iNowBuildRate;
 
@@ -2655,6 +2689,7 @@ int CvPlot::getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowEx
 
 	//return std::max(1, iTurnsLeft);
 	return iTurnsLeft;
+#endif
 }
 
 
@@ -2665,7 +2700,14 @@ int CvPlot::getBuildTurnsTotal(BuildTypes eBuild, PlayerTypes ePlayer) const
 	const CvUnit* pLoopUnit;
 	int iNowBuildRate = 0;
 	int iThenBuildRate = 0;
+#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+	int iLoopBuildRate = 0;
+	int iBuildLeft = getBuildTime(eBuild, ePlayer);
+	if (iBuildLeft <= 0)
+		return 1;
+#else
 	int iBuildLeft = 0;
+#endif
 	int iTurnsLeft = 0;
 
 	pUnitNode = headUnitNode();
@@ -2677,11 +2719,20 @@ int CvPlot::getBuildTurnsTotal(BuildTypes eBuild, PlayerTypes ePlayer) const
 
 		if(pLoopUnit && pLoopUnit->getBuildType() == eBuild)
 		{
+#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+			iLoopBuildRate = pLoopUnit->workRate(true);
+			//if (pLoopUnit->canMove())
+			//{
+			//	iNowBuildRate += iLoopBuildRate;
+			//}
+			iThenBuildRate += iLoopBuildRate;
+#else
 			if(pLoopUnit->canMove())
 			{
 				iNowBuildRate += pLoopUnit->workRate(false);
 			}
 			iThenBuildRate += pLoopUnit->workRate(true);
+#endif
 		}
 	}
 
@@ -2691,6 +2742,17 @@ int CvPlot::getBuildTurnsTotal(BuildTypes eBuild, PlayerTypes ePlayer) const
 		return INT_MAX;
 	}
 
+#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+	iBuildLeft = MAX(0, iBuildLeft - iNowBuildRate);
+
+	iTurnsLeft = ((iBuildLeft + iThenBuildRate - 1) / iThenBuildRate);
+
+	// Works around weird UI bug
+	if (getBuildProgress(eBuild) == 0 && iTurnsLeft > 1)
+		iTurnsLeft++;
+
+	return MAX(1, iTurnsLeft);
+#else
 	iBuildLeft = getBuildTime(eBuild, ePlayer);
 
 	iBuildLeft = std::max(0, iBuildLeft);
@@ -2700,6 +2762,7 @@ int CvPlot::getBuildTurnsTotal(BuildTypes eBuild, PlayerTypes ePlayer) const
 	iTurnsLeft--;
 
 	return std::max(1, iTurnsLeft);
+#endif
 }
 
 
@@ -3983,6 +4046,34 @@ bool CvPlot::IsActualEnemyUnit(PlayerTypes ePlayer, bool bCombatUnitsOnly) const
 
 	return false;
 }
+
+#ifdef AUI_CITY_CITIZENS_COUNTERBLOCKADE
+bool CvPlot::HasAlliedUnit(PlayerTypes ePlayer, bool bCombatUnitsOnly) const
+{
+	TeamTypes eTeam = GET_PLAYER(ePlayer).getTeam();
+
+#ifdef AUI_WARNING_FIXES
+	for (uint iUnitLoop = 0; iUnitLoop < getNumUnits(); iUnitLoop++)
+#else
+	for (int iUnitLoop = 0; iUnitLoop < getNumUnits(); iUnitLoop++)
+#endif
+	{
+		CvUnit* pkUnit = getUnitByIndex(iUnitLoop);
+		if (pkUnit)
+		{
+			if (pkUnit->getTeam() == eTeam)
+			{
+				if (!bCombatUnitsOnly || pkUnit->IsCombatUnit())
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 // Used to restrict number of units allowed on a plot at one time
@@ -7806,6 +7897,9 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 
 	if(bCity)
 	{
+#ifdef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
+		iYield = MAX(iYield, kYield.getMinCity());
+#else
 		iYield = std::max(iYield, kYield.getMinCity());
 
 		// Mod for Player; used for Policies and such
@@ -7828,6 +7922,7 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 		}
 
 		iYield += (iTemp / 100);
+#endif
 	}
 
 	iYield += GC.getGame().getPlotExtraYield(m_iX, m_iY, eYield);
@@ -9552,6 +9647,11 @@ void CvPlot::addUnit(CvUnit* pUnit, bool bUpdate)
 		m_units.insertAtEnd(&unitIDInfo);
 	}
 
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+	if (pUnit->getTeam() != getTeam() && getWorkingCity())
+		getWorkingCity()->GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
+
 	if(bUpdate)
 	{
 		updateCenterUnit();
@@ -9572,6 +9672,10 @@ void CvPlot::removeUnit(CvUnit* pUnit, bool bUpdate)
 		{
 			CvAssertMsg(GetPlayerUnit(*pUnitNode)->at(getX(), getY()), "The current unit instance is expected to be at getX_INLINE and getY_INLINE");
 			m_units.deleteNode(pUnitNode);
+#ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
+			if (pUnit->getTeam() != getTeam() && getWorkingCity())
+				getWorkingCity()->GetCityCitizens()->DoSelfConsistencyCheck();
+#endif
 			break;
 		}
 		else
@@ -10666,6 +10770,9 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 
 	if(bCity)
 	{
+#ifdef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
+		iYield = MAX(iYield, kYield.getMinCity());
+#else
 		iYield = std::max(iYield, kYield.getMinCity());
 
 		// Mod for Player; used for Policies and such
@@ -10688,6 +10795,7 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 		}
 
 		iYield += (iTemp / 100);
+#endif
 	}
 
 	iYield += GC.getGame().getPlotExtraYield(m_iX, m_iY, eYield);

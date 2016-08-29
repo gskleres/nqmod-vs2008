@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+	<!-- Table data -->
+	<GameOptions>
+		<Row>
+			<Type>GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS</Type>
+			<Description>TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS</Description>
+			<Help>TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS_HELP</Help>
+		</Row>
+	</GameOptions>
+	<Language_en_US>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS">
+			<Text>Binomial RNG for Combat Rolls</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS_HELP">
+			<Text>[COLOR_WARNING_TEXT](Lag warning)[ENDCOLOR] Combat rolls are generated in a binomial distribution with some noise instead of in a flat distribution. This means players are much more likely to get rolls near the expected average than rolls faraway from it. Lag warning becase 61 RNG rolls need to be synched for every combat roll instead of one. Range of combat rolls is extended to 4x the original range, but even with this extension, players are 40x less likely to get rolls equivalent to or more extreme than the highest or lowest rolls under the original system (but these rolls are still possible).</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Binomial RNG for Combat Rolls</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) (Lag warning)[ENDCOLOR] Combat rolls are generated in a binomial distribution with some noise instead of in a flat distribution. This means players are much more likely to get rolls near the expected average than rolls faraway from it. Lag warning becase 61 RNG rolls need to be synched for every combat roll instead of one. Range of combat rolls is extended to 4x the original range, but even with this extension, players are 40x less likely to get rolls equivalent to or more extreme than the highest or lowest rolls under the original system (but these rolls are still possible).</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_ES_ES>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS">
+			<Text>[COLOR_WARNING_TEXT](ES_ES text) [ENDCOLOR]Binomial RNG for Combat Rolls</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS_HELP">
+			<Text>[COLOR_WARNING_TEXT](ES_ES text) (Lag warning)[ENDCOLOR] Combat rolls are generated in a binomial distribution with some noise instead of in a flat distribution. This means players are much more likely to get rolls near the expected average than rolls faraway from it. Lag warning becase 61 RNG rolls need to be synched for every combat roll instead of one. Range of combat rolls is extended to 4x the original range, but even with this extension, players are 40x less likely to get rolls equivalent to or more extreme than the highest or lowest rolls under the original system (but these rolls are still possible).</Text>
+		</Row>
+	</Language_ES_ES>
+	<Language_FR_FR>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS">
+			<Text>[COLOR_WARNING_TEXT](FR_FR text) [ENDCOLOR]Binomial RNG for Combat Rolls</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS_HELP">
+			<Text>[COLOR_WARNING_TEXT](FR_FR text) (Lag warning)[ENDCOLOR] Combat rolls are generated in a binomial distribution with some noise instead of in a flat distribution. This means players are much more likely to get rolls near the expected average than rolls faraway from it. Lag warning becase 61 RNG rolls need to be synched for every combat roll instead of one. Range of combat rolls is extended to 4x the original range, but even with this extension, players are 40x less likely to get rolls equivalent to or more extreme than the highest or lowest rolls under the original system (but these rolls are still possible).</Text>
+		</Row>
+	</Language_FR_FR>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Binomial RNG for Combat Rolls</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) (Lag warning)[ENDCOLOR] Combat rolls are generated in a binomial distribution with some noise instead of in a flat distribution. This means players are much more likely to get rolls near the expected average than rolls faraway from it. Lag warning becase 61 RNG rolls need to be synched for every combat roll instead of one. Range of combat rolls is extended to 4x the original range, but even with this extension, players are 40x less likely to get rolls equivalent to or more extreme than the highest or lowest rolls under the original system (but these rolls are still possible).</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Binomial RNG for Combat Rolls</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) (Lag warning)[ENDCOLOR] Combat rolls are generated in a binomial distribution with some noise instead of in a flat distribution. This means players are much more likely to get rolls near the expected average than rolls faraway from it. Lag warning becase 61 RNG rolls need to be synched for every combat roll instead of one. Range of combat rolls is extended to 4x the original range, but even with this extension, players are 40x less likely to get rolls equivalent to or more extreme than the highest or lowest rolls under the original system (but these rolls are still possible).</Text>
+		</Row>
+	</Language_RU_RU>
+</GameData>
