@@ -204,7 +204,7 @@
 /// When war is manually declared by a player against another (i.e. not through a defensive pact), if the defender has any trade routes to the attacker, those trade routes get cancelled instead of destroyed. This applies to both sides of a Defensive Pact DoW.
 #define NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
 /// If an air unit on intercept duty falls to at or below (value) HP after suffering an air sweep, it will get "knocked out" of intercept mode. This notifies human players of interceptors on low HP and hopefully stops interceptors with multiple intercepts per turn from getting killed from full health by two air sweeps, which stops increased intercepts per turn from being a death sentence
-#define NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH (55)
+#define NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH (50)
 /// City-states are banned from building and capturing settlers outright (latter could previously not work), instead of the game relying on mishmash of flavors
 #define AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
 /// Fixes the fact that game speed modifiers are applied twice to units that can blast tourism, i.e. Great Musicians; also fixes other, more rare bugs related to tourism blast strength (credits to FilthyRobot for finding the bug)
@@ -233,6 +233,22 @@
 #define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
 /// Restores the malus to coup chance if an enemy spy from the CS ally is present in the CS
 #define AUI_ESPIONAGE_FIX_RESTORE_ENEMY_SPY_COUP_MALUS
+/// Goody hut messages now properly appear for all yields, even if there's no popup
+#define AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+/// Relocates all per-city and capitol-based yield changes from CvPlot to CvCity, which means that hundredths will be properly accounted for instead of being rounded down immediately
+#define AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
+/// Fixes air sweeping against ground interceptors to show up correctly and properly deal damage to the air unit
+#define AUI_UNIT_COMBAT_FIX_AIR_SWEEP_VS_GROUND_INTERCEPTOR
+/// The "force end turn" control now checks to make sure nothing (invalid) is blocking it
+#define AUI_GAME_FIX_CONTROL_FORCE_END_TURN_CHECKS_FOR_BLOCKING
+/// Fixed a bug where units building a new improvement or road would have 2x build speed on their first turn of building
+#define AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+/// Promotion testing is now done every time a unit's XP is changed, instead of having it manually called all the time
+#define AUI_UNIT_TEST_PROMOTION_READY_MOVED
+/// If a friendly unit is closer to a blockaded tile than the closest enemy unit, then a tile becomes unblockaded.
+#define AUI_CITY_CITIZENS_COUNTERBLOCKADE
+/// Citadels can only be captured with a culture bomb if they would have no non-citadel tiles of friendly culture adjacent to them after the culture bomb
+#define AUI_UNIT_CITADEL_RESISTANT_TO_CULTURE_BOMB
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
@@ -284,6 +300,8 @@
 #define NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END
 /// Fighters set to intercept duty can only perform interceptions after the player ends their turn. This should only affect simultaneous mode and stops players from turning on intercepts mid-turn to make air sweeps unreliable.
 #define NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END
+/// Respawns a player's Great Prophet if it was consumed but the player was beaten to founding the last possible religion in the game
+#define AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
 
 // New hybrid mode
 /// When in hybrid mode, players who are not at war with each other have their turns happen simultaneously, thus speeding games up significantly
@@ -365,6 +383,8 @@
 #define AUI_DIPLOMACY_GET_RANDOM_PERSONALITY_WEIGHT_USES_BINOM_RNG
 /// When adding or subtracting flavor value, the binomial RNG is used to generate a normal distribution instead of a flat one
 #define AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USES_BINOM_RNG
+/// Adds an option to the game to use the binomial RNG for combat rolls. Range is increased by 4x to compensate for binomial weight, and even then players are 40x less likely to get rolls outside the original range with a flat RNG
+#define NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
 #endif
 
 // AI fixes that significantly affect MP
