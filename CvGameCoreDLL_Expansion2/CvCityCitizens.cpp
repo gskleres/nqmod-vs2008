@@ -2676,6 +2676,11 @@ bool CvCityCitizens::IsPlotBlockaded(CvPlot* pPlot) const
 	int iBlockadeDistance = /*2*/ GC.getNAVAL_PLOT_BLOCKADE_RANGE();
 	int iDX, iDY;
 	CvPlot* pNearbyPlot;
+#ifdef AUI_CITY_CITIZENS_COUNTERBLOCKADE
+	int iClosestEnemyDistance = MAX_INT;
+	int iClosestAllyDistance = MAX_INT - 1;
+	int iLoopDistance = 0;
+#endif
 
 	PlayerTypes ePlayer = m_pCity->getOwner();
 
@@ -2710,15 +2715,39 @@ bool CvCityCitizens::IsPlotBlockaded(CvPlot* pPlot) const
 						// Enemy boat within range to blockade our plot?
 						if(pNearbyPlot->IsActualEnemyUnit(ePlayer))
 						{
+#ifdef AUI_CITY_CITIZENS_COUNTERBLOCKADE
+#ifdef AUI_HEXSPACE_DX_LOOPS
+							iLoopDistance = hexDistance(iDX, iDY);
+#else
+							iLoopDistance = plotDistance(pPlot->getX(), pPlot->getY(), pNearbyPlot->getX(), pNearbyPlot->getY());
+#endif
+							if (iLoopDistance < iClosestEnemyDistance)
+								iClosestEnemyDistance = iLoopDistance;
+						}
+
+						if (pNearbyPlot->HasAlliedUnit(ePlayer))
+						{
+#ifdef AUI_HEXSPACE_DX_LOOPS
+							iLoopDistance = hexDistance(iDX, iDY);
+#else
+							iLoopDistance = plotDistance(pPlot->getX(), pPlot->getY(), pNearbyPlot->getX(), pNearbyPlot->getY());
+#endif
+							if (iLoopDistance < iClosestAllyDistance)
+								iClosestAllyDistance = iLoopDistance;
+#else
 							return true;
+#endif
 						}
 					}
 				}
 			}
 		}
 	}
-
+#ifdef AUI_CITY_CITIZENS_COUNTERBLOCKADE
+	return iClosestEnemyDistance < iClosestAllyDistance;
+#else
 	return false;
+#endif
 }
 
 // Is there a naval blockade on any of this city's water tiles?
