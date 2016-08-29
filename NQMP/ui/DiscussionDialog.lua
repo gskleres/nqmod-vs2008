@@ -1096,9 +1096,7 @@ Controls.Button5:RegisterCallback( Mouse.eLClick, OnButton5 );
 function OnButton6()
     g_InstanceManager:ResetInstances();
     	
-	local pPlayer = Players[Game.GetActivePlayer()];
 	local iActivePlayer = Game.GetActivePlayer();
-	local pTeam = Teams[pPlayer:GetTeam()];
 	local pAIPlayer = Players[g_iAIPlayer];
 
 	local iButtonID = 6;
