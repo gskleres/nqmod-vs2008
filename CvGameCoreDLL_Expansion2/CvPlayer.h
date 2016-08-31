@@ -157,6 +157,7 @@ public:
 	int getCachedScienceT100ForThisTurn() const;
 	int getCachedFaithForThisTurn() const;
 	int getCachedExcessHappinessForThisTurn() const;
+	int getCachedSpyStartingRank() const;
 #endif
 
 	void doTurn();
@@ -1672,6 +1673,7 @@ protected:
 	int m_iCachedScienceT100ForThisTurn;
 	int m_iCachedFaithForThisTurn;
 	int m_iCachedExcessHappinessForThisTurn;
+	int m_iCachedSpyStartingRank;
 #endif
 
 #ifdef AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL

@@ -4298,6 +4298,11 @@ int CvPlayer::getCachedExcessHappinessForThisTurn() const
 {
 	return m_iCachedExcessHappinessForThisTurn;
 }
+
+int CvPlayer::getCachedSpyStartingRank() const
+{
+	return m_iCachedSpyStartingRank;
+}
 #endif
 
 //	---------------------------------------------------------------------------
@@ -4470,6 +4475,16 @@ void CvPlayer::doTurnPostDiplomacy()
 	// Gold
 	GetTreasury()->DoGold();
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	// Moved up so it's unaffected by spies
+	DoIncomingUnits();
+
+	// Science
+	doResearch();
+
+	GetEspionage()->DoTurn();
+#endif
+
 	// Culture
 
 	// Prevent exploits in turn timed MP games - no accumulation of culture if player hasn't picked yet
@@ -4561,10 +4576,12 @@ void CvPlayer::doTurnPostDiplomacy()
 		GetPlayerPolicies()->DoPolicyAI();
 	}
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	// Science
 	doResearch();
 
 	GetEspionage()->DoTurn();
+#endif
 
 	// Faith
 	CvGameReligions* pGameReligions = kGame.GetGameReligions();
@@ -4578,7 +4595,11 @@ void CvPlayer::doTurnPostDiplomacy()
 	if(GetAnarchyNumTurns() > 0)
 		ChangeAnarchyNumTurns(-1);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	GetEspionage()->CacheSpyStats();
+#else
 	DoIncomingUnits();
+#endif
 
 	const int iGameTurn = kGame.getGameTurn();
 
@@ -4629,6 +4650,10 @@ void CvPlayer::cacheYields()
 
 	// Cache Faith
 	m_iCachedFaithForThisTurn = GetTotalFaithPerTurn();
+
+	GetEspionage()->CacheSpyStats();
+
+	m_iCachedSpyStartingRank = GetStartingSpyRank();
 }
 #endif
 

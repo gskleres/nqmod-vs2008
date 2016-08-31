@@ -72,6 +72,13 @@ public:
 	int m_iReviveCounter; // after killed, counter to reincarnate a spy
 	bool m_bIsDiplomat;
 	bool m_bEvaluateReassignment; // used by the AI. Flag to indicate if the spy should be evaluated to be reassigned
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int m_iMyPoliciesEspionageModifierCached;
+	int m_iInfluenceMajorCivSpyRankBonusCached;
+	int m_iInfluenceCityStateSpyRankBonusCached;
+	int m_iInfluenceSurveillanceTimeCached;
+	CvSpyRank m_eCachedRank;
+#endif
 };
 
 FDataStream& operator>>(FDataStream&, CvEspionageSpy&);
@@ -147,6 +154,9 @@ public:
 	void UpdateSpies();
 	void UpdateCity(CvCity* pCity);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	void CacheSpyStats();
+#endif
 	int CalcPerTurn(int iSpyState, CvCity* pCity, int iSpyIndex);
 	int CalcRequired(int iSpyState, CvCity* pCity, int iSpyIndex);
 
