@@ -79,6 +79,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>civs/AmericaChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>civs/AssyriaChanges.xml</FileName>
       </Action>
       <Action>
@@ -135,6 +140,11 @@
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>civs/IroquoisChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/JapanChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -1121,6 +1131,12 @@
         <Description>T1_CovertAction</Description>
         <FileName>ideologies/freedom/T1_CovertAction.xml</FileName>
       </Content>
+      <Content>
+        <Type>InGameUIAddin</Type>
+        <Name>AmericaChanges</Name>
+        <Description>America Changes</Description>
+        <FileName>civs/AmericaChanges.xml</FileName>
+      </Content>
     </ModContent>
     <ModProperties />
     <Homepage>http://www.reddit.com/r/nqmod</Homepage>
@@ -1238,6 +1254,14 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="civs\AmericaChanges.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\AmericaChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="civs\AssyriaChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1283,6 +1307,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="civs\IroquoisChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\JapanChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
