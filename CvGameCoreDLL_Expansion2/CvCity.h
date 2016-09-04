@@ -65,6 +65,7 @@ public:
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	void cacheYieldsForTurn();
+	void doResourceDemands();
 #endif
 	void doTurn();
 

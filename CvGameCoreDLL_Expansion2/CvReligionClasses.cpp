@@ -400,15 +400,13 @@ void CvGameReligions::DoPlayerTurn(CvPlayer& kPlayer)
 	bool bCouldAtStartAffordFaithPurchase = kPlayer.GetReligions()->CanAffordFaithPurchase();
 	const PlayerTypes ePlayer = kPlayer.GetID();
 
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	int iFaithPerTurn = kPlayer.getCachedFaithForThisTurn();
-#else
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	int iFaithPerTurn = kPlayer.GetTotalFaithPerTurn();
-#endif
 	if(iFaithPerTurn > 0)
 	{
 		kPlayer.ChangeFaith(iFaithPerTurn);
 	}
+#endif
 
 	// If just now can afford missionary, add a notification
 	bool bCanNowAffordFaithPurchase = kPlayer.GetReligions()->CanAffordFaithPurchase();

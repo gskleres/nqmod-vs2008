@@ -4576,16 +4576,19 @@ void CvPlayer::doTurnPostDiplomacy()
 		GetPlayerPolicies()->DoPolicyAI();
 	}
 
-#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	// Split from faith auto-purchasing
+	ChangeFaith(getCachedFaithForThisTurn());
+#else
 	// Science
 	doResearch();
 
 	GetEspionage()->DoTurn();
-#endif
 
 	// Faith
 	CvGameReligions* pGameReligions = kGame.GetGameReligions();
 	pGameReligions->DoPlayerTurn(*this);
+#endif
 
 	// Leagues
 	CvGameLeagues* pGameLeagues = kGame.GetGameLeagues();
@@ -4597,6 +4600,12 @@ void CvPlayer::doTurnPostDiplomacy()
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	GetEspionage()->CacheSpyStats();
+
+	int iLoop = 0;
+	for (CvCity* pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
+	{
+		pLoopCity->doResourceDemands();
+	}
 #else
 	DoIncomingUnits();
 #endif
@@ -4604,6 +4613,10 @@ void CvPlayer::doTurnPostDiplomacy()
 	const int iGameTurn = kGame.getGameTurn();
 
 	GatherPerTurnReplayStats(iGameTurn);
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	// Religion auto-purchasing
+	kGame.GetGameReligions()->DoPlayerTurn(*this);
+#endif
 
 	GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 

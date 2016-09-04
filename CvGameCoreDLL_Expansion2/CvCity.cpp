@@ -1692,6 +1692,24 @@ void CvCity::cacheYieldsForTurn()
 	// Faith
 	//setCachedYieldT100ForThisTurn(YIELD_FAITH, GetFaithPerTurn());
 }
+
+void CvCity::doResourceDemands()
+{
+	// Following function also looks at WLTKD stuff
+	DoTestResourceDemanded();
+
+	// Resource Demanded Counter
+	if (GetResourceDemandedCountdown() > 0)
+	{
+		ChangeResourceDemandedCountdown(-1);
+
+		if (GetResourceDemandedCountdown() == 0)
+		{
+			// Pick a Resource to demand
+			DoPickResourceDemanded();
+		}
+	}
+}
 #endif
 
 //	--------------------------------------------------------------------------------
@@ -1787,8 +1805,10 @@ void CvCity::doTurn()
 			}
 		}
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		// Following function also looks at WLTKD stuff
 		DoTestResourceDemanded();
+#endif
 
 		// Culture accumulation
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
@@ -1822,7 +1842,7 @@ void CvCity::doTurn()
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		GetCityCitizens()->DoTurn();
-#endif
+#else
 
 		// Resource Demanded Counter
 		if(GetResourceDemandedCountdown() > 0)
@@ -1835,6 +1855,7 @@ void CvCity::doTurn()
 				DoPickResourceDemanded();
 			}
 		}
+#endif
 
 		updateStrengthValue();
 
