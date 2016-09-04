@@ -160,5 +160,65 @@
 			<Text>Way of the Warrior</Text>
 		</Row>
 	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_BUILDING_DOJO">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Dojo</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_DOJO_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+15 XP for all Units. +2 [ICON_RESEARCH] Science in the City. Units trained here gain the Way of the Warrior promotion, granting them +10% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_DOJO_TEXT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Dojo)[ENDCOLOR][NEWLINE][NEWLINE]Dojo is a Japanese term which literally means "place of the way". Initially, dojos were adjunct to temples.[NEWLINE][NEWLINE]In the Western World, the term dojo primarily refers to a training place specifically for Japanese martial arts such as aikido, judo, karate, or samurai; in Japan, any physical training facility, including professional wrestling schools, may be called dojo because of its close martial arts roots. The term can also refer to a formal training place for any of the Japanese arts ending in "do", meaning "way".</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_DOJO_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Dojo is the Japanese unique building, replacing the barracks. It provides unit experience, city science, and a unique promotion that gives extra combat strength to Japan's units. Dojos can significantly advance your military capabilities.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_WAY_OF_THE_WARRIOR_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+10% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_WAY_OF_THE_WARRIOR">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Way of the Warrior</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_BUILDING_DOJO">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Dojo</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_DOJO_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+15 XP for all Units. +2 [ICON_RESEARCH] Science in the City. Units trained here gain the Way of the Warrior promotion, granting them +10% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_DOJO_TEXT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Dojo)[ENDCOLOR][NEWLINE][NEWLINE]Dojo is a Japanese term which literally means "place of the way". Initially, dojos were adjunct to temples.[NEWLINE][NEWLINE]In the Western World, the term dojo primarily refers to a training place specifically for Japanese martial arts such as aikido, judo, karate, or samurai; in Japan, any physical training facility, including professional wrestling schools, may be called dojo because of its close martial arts roots. The term can also refer to a formal training place for any of the Japanese arts ending in "do", meaning "way".</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_DOJO_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The Dojo is the Japanese unique building, replacing the barracks. It provides unit experience, city science, and a unique promotion that gives extra combat strength to Japan's units. Dojos can significantly advance your military capabilities.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_WAY_OF_THE_WARRIOR_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+10% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_WAY_OF_THE_WARRIOR">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Way of the Warrior</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_BUILDING_DOJO">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Dojo</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_DOJO_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+15 XP for all Units. +2 [ICON_RESEARCH] Science in the City. Units trained here gain the Way of the Warrior promotion, granting them +10% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_DOJO_TEXT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Dojo)[ENDCOLOR][NEWLINE][NEWLINE]Dojo is a Japanese term which literally means "place of the way". Initially, dojos were adjunct to temples.[NEWLINE][NEWLINE]In the Western World, the term dojo primarily refers to a training place specifically for Japanese martial arts such as aikido, judo, karate, or samurai; in Japan, any physical training facility, including professional wrestling schools, may be called dojo because of its close martial arts roots. The term can also refer to a formal training place for any of the Japanese arts ending in "do", meaning "way".</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_DOJO_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The Dojo is the Japanese unique building, replacing the barracks. It provides unit experience, city science, and a unique promotion that gives extra combat strength to Japan's units. Dojos can significantly advance your military capabilities.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_WAY_OF_THE_WARRIOR_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+10% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_WAY_OF_THE_WARRIOR">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Way of the Warrior</Text>
+		</Row>
+	</Language_RU_RU>
 
 </GameData>

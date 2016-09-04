@@ -72,8 +72,50 @@
 			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/American_pioneer)[ENDCOLOR][NEWLINE][NEWLINE]American pioneers are any of the people in American history who migrated west to join in settling and developing new areas. The term especially refers to those who were going to settle any territory which had previously not been settled or developed by European or American society, although the territory may have been inhabited by or utilized by Native Americans.[NEWLINE][NEWLINE]The pioneer concept and ethos greatly predate the migration to parts of the United States now called Western, as many places now considered as East were also settled by pioneers from the coast. For example, Daniel Boone, a key figure in American history, settled in Kentucky, when that "Dark and Bloody Ground" was still undeveloped.[NEWLINE][NEWLINE]One important development in the Western settlement was the Homestead Act, which provided formal legislation which regulated the settlement process.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_PIONEER_STRATEGY">
-			<Text>The Dojo is the Japanese unique building, replacing the barracks. It provides unit experience, city science, and a unique promotion that gives extra combat strength to Japan's units. Dojos can significantly advance your military capabilities.</Text>
+			<Text>Use Pioneers to expand quickly and get your empire running faster than other civilizations.</Text>
 		</Row>
 	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_UNIT_PIONEER">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Pioneer</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_HELP_PIONEER">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Ignores terrain costs and becomes a Worker when it settles a city (exception: your first Pioneer that settles the Capital does not become a Worker).</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_ANTIQUITY_PIONEER_TEXT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/American_pioneer)[ENDCOLOR][NEWLINE][NEWLINE]American pioneers are any of the people in American history who migrated west to join in settling and developing new areas. The term especially refers to those who were going to settle any territory which had previously not been settled or developed by European or American society, although the territory may have been inhabited by or utilized by Native Americans.[NEWLINE][NEWLINE]The pioneer concept and ethos greatly predate the migration to parts of the United States now called Western, as many places now considered as East were also settled by pioneers from the coast. For example, Daniel Boone, a key figure in American history, settled in Kentucky, when that "Dark and Bloody Ground" was still undeveloped.[NEWLINE][NEWLINE]One important development in the Western settlement was the Homestead Act, which provided formal legislation which regulated the settlement process.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_PIONEER_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Use Pioneers to expand quickly and get your empire running faster than other civilizations.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_UNIT_PIONEER">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Pioneer</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_HELP_PIONEER">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Ignores terrain costs and becomes a Worker when it settles a city (exception: your first Pioneer that settles the Capital does not become a Worker).</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_ANTIQUITY_PIONEER_TEXT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/American_pioneer)[ENDCOLOR][NEWLINE][NEWLINE]American pioneers are any of the people in American history who migrated west to join in settling and developing new areas. The term especially refers to those who were going to settle any territory which had previously not been settled or developed by European or American society, although the territory may have been inhabited by or utilized by Native Americans.[NEWLINE][NEWLINE]The pioneer concept and ethos greatly predate the migration to parts of the United States now called Western, as many places now considered as East were also settled by pioneers from the coast. For example, Daniel Boone, a key figure in American history, settled in Kentucky, when that "Dark and Bloody Ground" was still undeveloped.[NEWLINE][NEWLINE]One important development in the Western settlement was the Homestead Act, which provided formal legislation which regulated the settlement process.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_PIONEER_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Use Pioneers to expand quickly and get your empire running faster than other civilizations.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_UNIT_PIONEER">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Pioneer</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_HELP_PIONEER">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Ignores terrain costs and becomes a Worker when it settles a city (exception: your first Pioneer that settles the Capital does not become a Worker).</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_ANTIQUITY_PIONEER_TEXT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/American_pioneer)[ENDCOLOR][NEWLINE][NEWLINE]American pioneers are any of the people in American history who migrated west to join in settling and developing new areas. The term especially refers to those who were going to settle any territory which had previously not been settled or developed by European or American society, although the territory may have been inhabited by or utilized by Native Americans.[NEWLINE][NEWLINE]The pioneer concept and ethos greatly predate the migration to parts of the United States now called Western, as many places now considered as East were also settled by pioneers from the coast. For example, Daniel Boone, a key figure in American history, settled in Kentucky, when that "Dark and Bloody Ground" was still undeveloped.[NEWLINE][NEWLINE]One important development in the Western settlement was the Homestead Act, which provided formal legislation which regulated the settlement process.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_PIONEER_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Use Pioneers to expand quickly and get your empire running faster than other civilizations.</Text>
+		</Row>
+	</Language_RU_RU>
 	
 </GameData>

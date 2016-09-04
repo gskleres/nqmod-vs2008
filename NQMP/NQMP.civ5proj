@@ -354,6 +354,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>religion/AllowExtraReligions.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>religion/FaithPurchasingChanges.xml</FileName>
       </Action>
       <Action>
@@ -1549,6 +1554,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="improvements\PlantationChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\AllowExtraReligions.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
