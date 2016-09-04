@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 5/5/2016 6:01:19 AM -->
 <GameData>
 
-	<!-- Haakkaakakakakawhatever it is now has 5 movement and also gets Charge to run around like a crazy person killing already damaged things. -->
+	<!-- Hakkapeliitta now has 5 movement and also gets Charge promotion. -->
 	<Units>
 		<Update>
 			<Set Moves="5" />

@@ -76,6 +76,12 @@
 			<Flavor>4</Flavor>
 		</Row>
 	</Unit_Flavors>
+	<Unit_FreePromotions>
+		<Row>
+			<UnitType>UNIT_DANISH_LONGSHIP</UnitType>
+			<PromotionType>PROMOTION_CAN_MOVE_AFTER_ATTACKING</PromotionType>
+		</Row>
+	</Unit_FreePromotions>
 	<Language_en_US>
 		<Row Tag="TXT_KEY_UNIT_DANISH_LONGSHIP">
 			<Text>Longship</Text>

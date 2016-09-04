@@ -2,13 +2,19 @@
 <!-- Created by ModBuddy on 5/4/2016 10:23:50 AM -->
 <GameData>
 
-	<!-- Spice Islanders no longer requires cities founded on other continents (Capital still won't count). -->
+	<!-- Spice Islanders no longer requires cities founded on other continents (Capital still won't count). However, the unique luxuries no longer provide +2 Gold. -->
 	<Traits>
 		<Update>
 			<Set UniqueLuxuryRequiresNewArea="false" />
 			<Where Type="TRAIT_SPICE" />
 		</Update>
 	</Traits>
+	<Resource_YieldChanges>
+		<Delete ResourceType="RESOURCE_NUTMEG" YieldType="YIELD_GOLD" Yield="2" />
+		<Delete ResourceType="RESOURCE_CLOVES" YieldType="YIELD_GOLD" Yield="2" />
+		<Delete ResourceType="RESOURCE_PEPPER" YieldType="YIELD_GOLD" Yield="2" />
+	</Resource_YieldChanges>
+	
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_TRAIT_SPICE" />
 		<Row Tag="TXT_KEY_TRAIT_SPICE">

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2016-09-04 01:43:38 -->
+<GameData>
+
+	<!-- Game option to allow up to 8 religions regardless of map size. -->
+	<GameOptions>
+		<Row>
+			<Type>GAMEOPTION_ALLOW_EXTRA_RELIGIONS</Type>
+			<Description>TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS</Description>
+			<Help>TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS_HELP</Help>
+		</Row>
+	</GameOptions>
+	<Language_en_US>
+		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS">
+			<Text>Allow Extra Religions (max 8)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS_HELP">
+			<Text>The maximum number of Religions that can be founded is increased to 8 regardless of map size.</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Allow Extra Religions (max 8)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The maximum number of Religions that can be founded is increased to 8 regardless of map size.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Allow Extra Religions (max 8)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The maximum number of Religions that can be founded is increased to 8 regardless of map size.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Allow Extra Religions (max 8)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_EXTRA_RELIGIONS_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The maximum number of Religions that can be founded is increased to 8 regardless of map size.</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>

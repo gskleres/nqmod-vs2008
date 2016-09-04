@@ -5687,7 +5687,30 @@ int CvWorldInfo::getGridHeight() const
 //------------------------------------------------------------------------------
 int CvWorldInfo::getMaxActiveReligions() const
 {
+#ifdef NQ_ALLOW_EXTRA_RELIGIONS
+	if (GC.getGame().isOption("GAMEOPTION_ALLOW_EXTRA_RELIGIONS"))
+	{
+		int iMaxReligionsPossible = 8; // TODO: put this into XML
+		int iI;
+		int iNumMajorPlayersEver = 0;
+
+		for(iI = 0; iI < MAX_CIV_PLAYERS; iI++)
+		{
+			if(GET_PLAYER((PlayerTypes)iI).isEverAlive() && !GET_PLAYER((PlayerTypes)iI).isMinorCiv() && !GET_PLAYER((PlayerTypes)iI).isBarbarian())
+			{
+				iNumMajorPlayersEver++;
+			}
+		}
+
+		return (iNumMajorPlayersEver > iMaxReligionsPossible) ? iMaxReligionsPossible : iNumMajorPlayersEver;
+	}
+	else
+	{
+		return m_iMaxActiveReligions;
+	}
+#else
 	return m_iMaxActiveReligions;
+#endif
 }
 //------------------------------------------------------------------------------
 int CvWorldInfo::getTerrainGrainChange() const
