@@ -7438,7 +7438,11 @@ bool CvPlayer::canTrain(UnitTypes eUnit, bool bContinue, bool bTestVisible, bool
 	// One City Challenge
 	if(pUnitInfo.IsFound() || pUnitInfo.IsFoundAbroad())
 	{
-#ifdef AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
+#if defined(NQM_AI_GIMP_NO_BUILDING_SETTLERS) && defined(AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER)
+		if (isMinorCiv() || (isHuman() && GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE)) || (!isHuman() && GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_BUILDING_SETTLERS")))
+#elif defined(NQM_AI_GIMP_NO_BUILDING_SETTLERS)
+		if ((isHuman() && GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE)) || (!isHuman() && GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_BUILDING_SETTLERS")))
+#elif defined(AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER)
 		if (isMinorCiv() || (GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && isHuman()))
 #else
 		if(GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && isHuman())

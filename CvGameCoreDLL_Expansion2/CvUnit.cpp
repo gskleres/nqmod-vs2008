@@ -8658,7 +8658,11 @@ bool CvUnit::canBuyCityState(const CvPlot* pPlot, bool bTestVisible) const
 		return false;
 	}
 
+#ifdef NQM_AI_GIMP_NO_BUILDING_SETTLERS
+	if ((GET_PLAYER(getOwner()).isHuman() && GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE)) || (!GET_PLAYER(getOwner()).isHuman() && GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_BUILDING_SETTLERS")))
+#else
 	if (GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && GET_PLAYER(getOwner()).isHuman())
+#endif
 	{
 		return false;
 	}

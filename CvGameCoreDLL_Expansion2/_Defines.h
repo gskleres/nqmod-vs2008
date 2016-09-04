@@ -265,6 +265,8 @@
 #define NQM_AI_GIMP_NO_WORLD_WONDERS
 /// AI players will always accept white peace offered by human players (this is a lot easier to implement than banning DoWs outright, which would mess with everything that relies on operations and sneak attacks)
 #define NQM_AI_GIMP_ALWAYS_WHITE_PEACE
+/// AI players will not build units that can settle. Also disables "expansion" economic strategies
+#define NQM_AI_GIMP_NO_BUILDING_SETTLERS
 
 // Observer mode fixes
 /// Observers will see all resources
