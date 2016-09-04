@@ -5690,19 +5690,19 @@ int CvWorldInfo::getMaxActiveReligions() const
 #ifdef NQ_ALLOW_EXTRA_RELIGIONS
 	if (GC.getGame().isOption("GAMEOPTION_ALLOW_EXTRA_RELIGIONS"))
 	{
-		int iMaxReligionsPossible = 8; // TODO: put this into XML
-		int iI;
 		int iNumMajorPlayersEver = 0;
+		SlotStatus eLoopSlotStatus = SS_OPEN;
 
-		for(iI = 0; iI < MAX_CIV_PLAYERS; iI++)
+		for(int iI = 0; iI < MAX_MAJOR_CIVS; iI++)
 		{
-			if(GET_PLAYER((PlayerTypes)iI).isEverAlive() && !GET_PLAYER((PlayerTypes)iI).isMinorCiv() && !GET_PLAYER((PlayerTypes)iI).isBarbarian())
+			eLoopSlotStatus = CvPreGame::slotStatus(PlayerTypes(iI));
+			if(eLoopSlotStatus == SS_TAKEN || eLoopSlotStatus == SS_COMPUTER)
 			{
 				iNumMajorPlayersEver++;
 			}
 		}
 
-		return (iNumMajorPlayersEver > iMaxReligionsPossible) ? iMaxReligionsPossible : iNumMajorPlayersEver;
+		return iNumMajorPlayersEver;
 	}
 	else
 	{

@@ -674,10 +674,10 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 
 #ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
 	// does the Nobel Prize (Sweden) trigger for this unit being born?
-	if (getUnitInfo().IsRationalGreatPerson())
+	int iInfluence = kPlayer.GetPlayerTraits()->GetInfluencePerRationalGreatPersonBorn();
+	if (iInfluence > 0)
 	{
-		int iInfluence = kPlayer.GetPlayerTraits()->GetInfluencePerRationalGreatPersonBorn();
-		if (iInfluence > 0)
+		if (getUnitInfo().IsRationalGreatPerson())
 		{
 			kPlayer.AddInfluenceWithAllKnownMinors(iInfluence);
 		}

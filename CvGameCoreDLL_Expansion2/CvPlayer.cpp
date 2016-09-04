@@ -18153,14 +18153,19 @@ int CvPlayer::GetScienceYieldFromPreviousTurns(int iGameTurn, int iNumPreviousTu
 #ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
 void CvPlayer::AddInfluenceWithAllKnownMinors(int iInfluence)
 {
-	CvTeam& pTeam = GET_TEAM(getTeam());
-
-	for (int iMinorCivLoop = MAX_MAJOR_CIVS; iMinorCivLoop < MAX_CIV_PLAYERS; iMinorCivLoop++)
+	if (iInfluence != 0)
 	{
-		PlayerTypes eMinorCivLoop = (PlayerTypes) iMinorCivLoop;
-		if (GET_PLAYER(eMinorCivLoop).isAlive() && pTeam.isHasMet(GET_PLAYER(eMinorCivLoop).getTeam()))
+		CvTeam& pTeam = GET_TEAM(getTeam());
+		PlayerTypes eMinorCivLoop = NO_PLAYER;
+
+		for (int iMinorCivLoop = MAX_MAJOR_CIVS; iMinorCivLoop < MAX_CIV_PLAYERS; iMinorCivLoop++)
 		{
-			GET_PLAYER(eMinorCivLoop).GetMinorCivAI()->ChangeFriendshipWithMajor(GetID(), iInfluence, false);
+			eMinorCivLoop = PlayerTypes(iMinorCivLoop);
+			CvPlayer& kMinorLoopPlayer = GET_PLAYER(eMinorCivLoop);
+			if (kMinorLoopPlayer.isAlive() && kMinorLoopPlayer.isMinorCiv() && pTeam.isHasMet(kMinorLoopPlayer.getTeam()))
+			{
+				kMinorLoopPlayer.GetMinorCivAI()->ChangeFriendshipWithMajor(GetID(), iInfluence, false);
+			}
 		}
 	}
 }
