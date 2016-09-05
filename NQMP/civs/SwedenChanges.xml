@@ -40,6 +40,7 @@
 			<Description>TXT_KEY_BUILDING_FALU_GRUVA</Description>
 			<Civilopedia>TXT_KEY_BUILDING_FALU_GRUVA_PEDIA</Civilopedia>
 			<EnhancedYieldTech>TECH_FLIGHT</EnhancedYieldTech>
+			<TechEnhancedTourism>6</TechEnhancedTourism>
 			<Strategy>TXT_KEY_BUILDING_FALU_GRUVA_STRATEGY</Strategy>
 			<ArtDefineTag>ART_DEF_BUILDING_IRONWORKS</ArtDefineTag>
 			<SpecialistType>SPECIALIST_MERCHANT</SpecialistType>
@@ -103,13 +104,6 @@
 			<Flavor>20</Flavor>
 		</Row>
 	</Building_Flavors>
-	<Building_TechEnhancedYieldChanges>
-		<Row>
-			<BuildingType>BUILDING_FALU_GRUVA</BuildingType>
-			<YieldType>YIELD_CULTURE</YieldType>
-			<Yield>6</Yield>
-		</Row>
-	</Building_TechEnhancedYieldChanges>
 	<Civilization_BuildingClassOverrides>
 		<Row>
 			<CivilizationType>CIVILIZATION_SWEDEN</CivilizationType>

@@ -5103,6 +5103,9 @@ CvYieldInfo::CvYieldInfo() :
 	m_iPopulationChangeOffset(0),
 	m_iPopulationChangeDivisor(0),
 	m_iMinCity(0),
+#ifdef NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
+	m_iMinCityOnHillsAdjust(0),
+#endif
 	m_iGoldenAgeYield(0),
 	m_iGoldenAgeYieldThreshold(0),
 	m_iGoldenAgeYieldMod(0),
@@ -5144,6 +5147,12 @@ int CvYieldInfo::getMinCity() const
 {
 	return m_iMinCity;
 }
+#ifdef NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
+int CvYieldInfo::getMinCityOnHillsAdjust() const
+{
+	return m_iMinCityOnHillsAdjust;
+}
+#endif
 //------------------------------------------------------------------------------
 int CvYieldInfo::getGoldenAgeYield() const
 {
@@ -5177,6 +5186,9 @@ bool CvYieldInfo::CacheResults(Database::Results& kResults, CvDatabaseUtility& k
 	kResults.GetValue("PopulationChangeOffset", m_iPopulationChangeOffset);
 	kResults.GetValue("PopulationChangeDivisor", m_iPopulationChangeDivisor);
 	kResults.GetValue("MinCity", m_iMinCity);
+#ifdef NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
+	kResults.GetValue("MinCityOnHillsAdjust", m_iMinCityOnHillsAdjust);
+#endif
 	kResults.GetValue("GoldenAgeYield", m_iGoldenAgeYield);
 	kResults.GetValue("GoldenAgeYieldThreshold", m_iGoldenAgeYieldThreshold);
 	kResults.GetValue("GoldenAgeYieldMod", m_iGoldenAgeYieldMod);

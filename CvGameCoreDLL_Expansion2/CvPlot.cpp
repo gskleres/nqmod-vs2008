@@ -7897,11 +7897,24 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 
 	if(bCity)
 	{
-#ifdef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
-		iYield = MAX(iYield, kYield.getMinCity());
+#ifdef NQ_FLATLAND_CITY_MIN_FOOD
+		int iMinCityYield = kYield.getMinCity();
+		if (isFlatlands() && eYield == YIELD_FOOD)
+		{
+			iMinCityYield += 1; // TODO: put in XML
+		}
+		iYield = MAX(iYield, iMinCityYield);
+#elif defined(NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST)
+		int iMinCityYield = kYield.getMinCity();
+		if (isHills())
+		{
+			iMinCityYield += kYield.getMinCityOnHillsAdjust();
+		}
+		iYield = MAX(iYield, iMinCityYield);
 #else
 		iYield = std::max(iYield, kYield.getMinCity());
-
+#endif
+#ifndef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
 		// Mod for Player; used for Policies and such
 		int iTemp = GET_PLAYER(getOwner()).GetCityYieldChange(eYield);	// In hundreds - will be added to capitalYieldChange below
 

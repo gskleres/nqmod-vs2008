@@ -34,6 +34,16 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>_sql/TechnologyDiscountsByPolicy.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>_sql/Yield_MinCityOnHillsAdjust.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>buildings/BroadcastTowerChanges.xml</FileName>
       </Action>
       <Action>
@@ -395,6 +405,11 @@
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>religion/ReformationChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>resolutions/MoreFrequentVotes.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -1126,6 +1141,11 @@
         <Type>UpdateDatabase</Type>
         <FileName>gameplay/CIV5GameOptions_Automation_Resets_TurnTimer.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/FlatlandCityExtraFood.xml</FileName>
+      </Action>
     </ModActions>
     <ModContent>
       <Content>
@@ -1459,6 +1479,10 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="gameplay\FlatlandCityExtraFood.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="gameplay\GoodyHutChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1608,6 +1632,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="religion\ReformationChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="resolutions\MoreFrequentVotes.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2236,6 +2264,14 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="_sql\Policies_ExtraTourismPerGreatWork.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="_sql\TechnologyDiscountsByPolicy.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="_sql\Yield_MinCityOnHillsAdjust.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
