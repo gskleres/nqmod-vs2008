@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2016-09-03 20:25:58 -->
 <GameData>
 
-	<!-- Plantations now provides +1 Food from Sugar, Spices, and Wine -->
+	<!-- Plantations now provides +1 Food from Sugar, Spices, Wine, Cocoa, and Citrus -->
 	<Improvement_ResourceType_Yields>
 		<Row>
 			<ImprovementType>IMPROVEMENT_PLANTATION</ImprovementType>
@@ -19,6 +19,18 @@
 		<Row>
 			<ImprovementType>IMPROVEMENT_PLANTATION</ImprovementType>
 			<ResourceType>RESOURCE_WINE</ResourceType>
+			<YieldType>YIELD_FOOD</YieldType>
+			<Yield>1</Yield>
+		</Row>
+		<Row>
+			<ImprovementType>IMPROVEMENT_PLANTATION</ImprovementType>
+			<ResourceType>RESOURCE_COCOA</ResourceType>
+			<YieldType>YIELD_FOOD</YieldType>
+			<Yield>1</Yield>
+		</Row>
+		<Row>
+			<ImprovementType>IMPROVEMENT_PLANTATION</ImprovementType>
+			<ResourceType>RESOURCE_CITRUS</ResourceType>
 			<YieldType>YIELD_FOOD</YieldType>
 			<Yield>1</Yield>
 		</Row>

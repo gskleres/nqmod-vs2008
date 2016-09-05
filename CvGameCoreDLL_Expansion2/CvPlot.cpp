@@ -7806,8 +7806,16 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 
 	if(bCity)
 	{
+#ifdef NQ_FLATLAND_CITY_MIN_FOOD
+		int minCityYield = kYield.getMinCity();
+		if (isFlatlands() && eYield == YIELD_FOOD)
+		{
+			minCityYield += 1; // TODO: put in XML
+		}
+		iYield = std::max(iYield, minCityYield);
+#else
 		iYield = std::max(iYield, kYield.getMinCity());
-
+#endif
 		// Mod for Player; used for Policies and such
 		int iTemp = GET_PLAYER(getOwner()).GetCityYieldChange(eYield);	// In hundreds - will be added to capitalYieldChange below
 
