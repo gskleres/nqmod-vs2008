@@ -97,6 +97,7 @@
 		</Update>
 	</Policies>
 	
+	<!-- 44 potential techs will be affected Honor Finisher -->
 	<Technologies>
 		<Update>
 			<Set PolicyDiscountPercent="10" />
