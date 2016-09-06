@@ -672,14 +672,34 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 		kPlayer.GetCulture()->AddTourismAllKnownCivs(iTourism);
 	}
 
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	// does the Nobel Prize (Sweden) trigger for this unit being born?
-	if (getUnitInfo().IsRationalGreatPerson())
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	if (IsGreatPerson())
 	{
-		int iInfluence = kPlayer.GetPlayerTraits()->GetInfluencePerRationalGreatPersonBorn();
-		if (iInfluence > 0)
+		int iScienceBonus = kPlayer.GetPlayerTraits()->GetSciencePerGreatPersonBorn();
+		if (iScienceBonus > 0)
 		{
-			kPlayer.AddInfluenceWithAllKnownMinors(iInfluence);
+			iScienceBonus *= (kPlayer.GetCurrentEra() + 1);
+			iScienceBonus *= GC.getGame().getGameSpeedInfo().getTrainPercent();
+			iScienceBonus /= 100;
+
+			TechTypes eCurrentTech = kPlayer.GetPlayerTechs()->GetCurrentResearch();
+			if(eCurrentTech == NO_TECH)
+			{
+				kPlayer.changeOverflowResearch(iScienceBonus);
+			}
+			else
+			{
+				CvTeam &kTeam = GET_TEAM(kPlayer.getTeam());
+				kTeam.GetTeamTechs()->ChangeResearchProgress(eCurrentTech, iScienceBonus, kPlayer.GetID());
+			}
+			
+			if (plot() && plot()->GetActiveFogOfWarMode() == FOGOFWARMODE_OFF)
+			{
+				char text[256] = {0};
+				sprintf_s(text, "[COLOR_BLUE]+%d[ENDCOLOR]", iScienceBonus);
+				float fDelay = GC.getPOST_COMBAT_TEXT_DELAY() * 2;
+				DLLUI->AddPopupText(plot()->getX(), plot()->getY(), text, fDelay);
+			}
 		}
 	}
 #endif
@@ -7467,6 +7487,10 @@ bool CvUnit::found()
 	auto_ptr<ICvUnit1> pDllUnit(new CvDllUnit(this));
 	gDLL->GameplayUnitVisibility(pDllUnit.get(), false);
 	kill(true);
+
+#ifdef NQ_AMERICAN_PIONEER
+	//TODO: check for american pioneer trait and if true add a worker at the plot
+#endif
 
 	return true;
 }

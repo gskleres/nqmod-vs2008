@@ -59,9 +59,6 @@ public:
 	int GetGreatGeneralRateModifier() const;
 	int GetGreatGeneralExtraBonus() const;
 	int GetGreatPersonGiftInfluence() const;
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	int GetInfluencePerRationalGreatPersonBorn() const;
-#endif
 	int GetMaxGlobalBuildingProductionModifier() const;
 	int GetMaxTeamBuildingProductionModifier() const;
 	int GetMaxPlayerBuildingProductionModifier() const;
@@ -76,6 +73,9 @@ public:
 	int GetCapitalBuildingModifier() const;
 	int GetPlotBuyCostModifier() const;
 	int GetPlotCultureCostModifier() const;
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	int GetSciencePerGreatPersonBorn() const;
+#endif
 	int GetCultureFromKills() const;
 	int GetFaithFromKills() const;
 	int GetCityCultureBonus() const;
@@ -198,9 +198,6 @@ protected:
 	int m_iGreatGeneralRateModifier;
 	int m_iGreatGeneralExtraBonus;
 	int m_iGreatPersonGiftInfluence;
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	int m_iInfluencePerRationalGreatPersonBorn;
-#endif
 	int m_iMaxGlobalBuildingProductionModifier;
 	int m_iMaxTeamBuildingProductionModifier;
 	int m_iMaxPlayerBuildingProductionModifier;
@@ -215,6 +212,9 @@ protected:
 	int m_iCapitalBuildingModifier;
 	int m_iPlotBuyCostModifier;
 	int m_iPlotCultureCostModifier;
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	int m_iSciencePerGreatPersonBorn;
+#endif
 	int m_iCultureFromKills;
 	int m_iFaithFromKills;
 	int m_iCityCultureBonus;
@@ -411,12 +411,6 @@ public:
 	{
 		return m_iGreatPersonGiftInfluence;
 	};
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	int GetInfluencePerRationalGreatPersonBorn() const
-	{
-		return m_iInfluencePerRationalGreatPersonBorn;
-	};
-#endif
 	int GetLevelExperienceModifier() const
 	{
 		return m_iLevelExperienceModifier;
@@ -477,6 +471,12 @@ public:
 	{
 		return m_iPlotCultureCostModifier;
 	};
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	int GetSciencePerGreatPersonBorn() const
+	{
+		return m_iSciencePerGreatPersonBorn;
+	}
+#endif
 	int GetCultureFromKills() const
 	{
 		return m_iCultureFromKills;
@@ -886,9 +886,6 @@ private:
 	int m_iGreatGeneralRateModifier;
 	int m_iGreatGeneralExtraBonus;
 	int m_iGreatPersonGiftInfluence;
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	int m_iInfluencePerRationalGreatPersonBorn;
-#endif
 	int m_iLevelExperienceModifier;
 	int m_iMaxGlobalBuildingProductionModifier;
 	int m_iMaxTeamBuildingProductionModifier;
@@ -904,6 +901,9 @@ private:
 	int m_iCapitalBuildingModifier;
 	int m_iPlotBuyCostModifier;
 	int m_iPlotCultureCostModifier;
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	int m_iSciencePerGreatPersonBorn;
+#endif
 	int m_iCultureFromKills;
 	int m_iFaithFromKills;
 	int m_iCityCultureBonus;

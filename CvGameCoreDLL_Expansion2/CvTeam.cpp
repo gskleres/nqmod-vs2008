@@ -5329,6 +5329,8 @@ void CvTeam::announceTechToPlayers(TechTypes eIndex, bool bPartial)
 //	--------------------------------------------------------------------------------
 void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, bool bFirst, bool bAnnounce)
 {
+#ifdef NQ_TECH_DISCOUNT_BY_POLICY
+#endif
 	CvCity* pCapitalCity;
 	CvCity* pCity;
 	CvString strBuffer;
