@@ -8261,7 +8261,9 @@ void CvGame::constructTurnOrders()
 			kCurTeam.setTurnOrder(iTeamIdx);
 		}
 	}
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	calculateMaxTurnLengths();
+#endif
 }
 
 #ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
