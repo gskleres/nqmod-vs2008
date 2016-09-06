@@ -640,8 +640,6 @@
 #define NQ_ALWAYS_SEE_BARB_CAMPS
 // Allow hill terrain changes based on buildings (Swedish UB: Falu Gruva)
 #define NQ_ALLOW_BUILDING_HILL_YIELD_CHANGES
-// Influence with all known city states when scientist, merchant, or engineer is born (Swedish UA: Nobel Prize)
-//#define NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN // something is busted with this right now, big time, crashes every game
 // Can no longer purchase Great Scientists with Faith
 #define NQ_NO_FAITH_PURCHASING_SCIENTISTS
 // Game Option: Extra Religions (allows any number of religions up to max players or 8, whichever is lower)
@@ -656,5 +654,7 @@
 #endif
 // Allow specific tech discounts based on policy choices
 #define NQ_TECH_DISCOUNT_BY_POLICY
+// Sweden UA now gives flat science in the empire when a great person is born
+#define NQ_SCIENCE_PER_GREAT_PERSON_BORN
 
 #endif

@@ -26,9 +26,6 @@ CvTraitEntry::CvTraitEntry() :
 	m_iGreatGeneralRateModifier(0),
 	m_iGreatGeneralExtraBonus(0),
 	m_iGreatPersonGiftInfluence(0),
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	m_iInfluencePerRationalGreatPersonBorn(0),
-#endif
 	m_iMaxGlobalBuildingProductionModifier(0),
 	m_iMaxTeamBuildingProductionModifier(0),
 	m_iMaxPlayerBuildingProductionModifier(0),
@@ -43,6 +40,9 @@ CvTraitEntry::CvTraitEntry() :
 	m_iCapitalBuildingModifier(0),
 	m_iPlotBuyCostModifier(0),
 	m_iPlotCultureCostModifier(0),
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	m_iSciencePerGreatPersonBorn(0),
+#endif
 	m_iCultureFromKills(0),
 	m_iFaithFromKills(0),
 	m_iCityCultureBonus(0),
@@ -216,13 +216,6 @@ int CvTraitEntry::GetGreatPersonGiftInfluence() const
 	return m_iGreatPersonGiftInfluence;
 }
 
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-int CvTraitEntry::GetInfluencePerRationalGreatPersonBorn() const
-{
-	return m_iInfluencePerRationalGreatPersonBorn;
-};
-#endif
-
 /// Accessor:: Overall production boost
 int CvTraitEntry::GetMaxGlobalBuildingProductionModifier() const
 {
@@ -306,6 +299,14 @@ int CvTraitEntry::GetPlotCultureCostModifier() const
 {
 	return m_iPlotCultureCostModifier;
 }
+
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+/// Accessor:: science from great person spawning
+int CvTraitEntry::GetSciencePerGreatPersonBorn() const
+{
+	return m_iSciencePerGreatPersonBorn;
+}
+#endif
 
 /// Accessor:: culture for kills
 int CvTraitEntry::GetCultureFromKills() const
@@ -993,9 +994,6 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 	m_iGreatGeneralRateModifier				= kResults.GetInt("GreatGeneralRateModifier");
 	m_iGreatGeneralExtraBonus				= kResults.GetInt("GreatGeneralExtraBonus");
 	m_iGreatPersonGiftInfluence				= kResults.GetInt("GreatPersonGiftInfluence");
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	m_iInfluencePerRationalGreatPersonBorn	= kResults.GetInt("InfluencePerRationalGreatPersonBorn");
-#endif
 	m_iMaxGlobalBuildingProductionModifier	= kResults.GetInt("MaxGlobalBuildingProductionModifier");
 	m_iMaxTeamBuildingProductionModifier	= kResults.GetInt("MaxTeamBuildingProductionModifier");
 	m_iMaxPlayerBuildingProductionModifier	= kResults.GetInt("MaxPlayerBuildingProductionModifier");
@@ -1010,6 +1008,9 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 	m_iCapitalBuildingModifier				= kResults.GetInt("CapitalBuildingModifier");
 	m_iPlotBuyCostModifier					= kResults.GetInt("PlotBuyCostModifier");
 	m_iPlotCultureCostModifier              = kResults.GetInt("PlotCultureCostModifier");
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	m_iSciencePerGreatPersonBorn			= kResults.GetInt("SciencePerGreatPersonBorn");
+#endif
 	m_iCultureFromKills						= kResults.GetInt("CultureFromKills");
 	m_iFaithFromKills						= kResults.GetInt("FaithFromKills");
 	m_iCityCultureBonus						= kResults.GetInt("CityCultureBonus");
@@ -1501,9 +1502,6 @@ void CvPlayerTraits::InitPlayerTraits()
 			m_iGreatGeneralRateModifier += trait->GetGreatGeneralRateModifier();
 			m_iGreatGeneralExtraBonus += trait->GetGreatGeneralExtraBonus();
 			m_iGreatPersonGiftInfluence += trait->GetGreatPersonGiftInfluence();
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-			m_iInfluencePerRationalGreatPersonBorn += trait->GetInfluencePerRationalGreatPersonBorn();
-#endif
 			m_iLevelExperienceModifier += trait->GetLevelExperienceModifier();
 			m_iMaxGlobalBuildingProductionModifier += trait->GetMaxGlobalBuildingProductionModifier();
 			m_iMaxTeamBuildingProductionModifier += trait->GetMaxTeamBuildingProductionModifier();
@@ -1519,6 +1517,9 @@ void CvPlayerTraits::InitPlayerTraits()
 			m_iCapitalBuildingModifier += trait->GetCapitalBuildingModifier();
 			m_iPlotBuyCostModifier += trait->GetPlotBuyCostModifier();
 			m_iPlotCultureCostModifier += trait->GetPlotCultureCostModifier();
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+			m_iSciencePerGreatPersonBorn += trait->GetSciencePerGreatPersonBorn();
+#endif
 			m_iCultureFromKills += trait->GetCultureFromKills();
 			m_iFaithFromKills += trait->GetFaithFromKills();
 			m_iCityCultureBonus += trait->GetCityCultureBonus();
@@ -1803,9 +1804,6 @@ void CvPlayerTraits::Reset()
 	m_iGreatGeneralRateModifier = 0;
 	m_iGreatGeneralExtraBonus = 0;
 	m_iGreatPersonGiftInfluence = 0;
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	m_iInfluencePerRationalGreatPersonBorn = 0;
-#endif
 	m_iLevelExperienceModifier= 0;
 	m_iMaxGlobalBuildingProductionModifier = 0;
 	m_iMaxTeamBuildingProductionModifier = 0;
@@ -1821,6 +1819,9 @@ void CvPlayerTraits::Reset()
 	m_iCapitalBuildingModifier = 0;
 	m_iPlotBuyCostModifier = 0;
 	m_iPlotCultureCostModifier = 0;
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	m_iSciencePerGreatPersonBorn = 0;
+#endif
 	m_iCultureFromKills = 0;
 	m_iFaithFromKills = 0;
 	m_iCityCultureBonus = 0;
@@ -2813,9 +2814,6 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 	kStream >> m_iGreatGeneralExtraBonus;
 
 	kStream >> m_iGreatPersonGiftInfluence;
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	kStream >> m_iInfluencePerRationalGreatPersonBorn;
-#endif
 
 	kStream >> m_iLevelExperienceModifier;
 	kStream >> m_iMaxGlobalBuildingProductionModifier;
@@ -2832,6 +2830,9 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 	kStream >> m_iCapitalBuildingModifier;
 	kStream >> m_iPlotBuyCostModifier;
 	kStream >> m_iPlotCultureCostModifier;
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	kStream >> m_iSciencePerGreatPersonBorn;
+#endif
 	kStream >> m_iCultureFromKills;
 	if (uiVersion >= 19)
 	{
@@ -3212,9 +3213,6 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << m_iGreatGeneralRateModifier;
 	kStream << m_iGreatGeneralExtraBonus;
 	kStream << m_iGreatPersonGiftInfluence;
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	kStream << m_iInfluencePerRationalGreatPersonBorn;
-#endif
 	kStream << m_iLevelExperienceModifier;
 	kStream << m_iMaxGlobalBuildingProductionModifier;
 	kStream << m_iMaxTeamBuildingProductionModifier;
@@ -3230,6 +3228,9 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << m_iCapitalBuildingModifier;
 	kStream << m_iPlotBuyCostModifier;
 	kStream << m_iPlotCultureCostModifier;
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+	kStream << m_iSciencePerGreatPersonBorn;
+#endif
 	kStream << m_iCultureFromKills;
 	kStream << m_iFaithFromKills;
 	kStream << m_iCityCultureBonus;

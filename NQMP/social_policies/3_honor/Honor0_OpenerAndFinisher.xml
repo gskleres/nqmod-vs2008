@@ -6,25 +6,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_HONOR_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. A free Great General appears. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Honor[ENDCOLOR] improves the effectiveness of one's army in a variety of ways.[NEWLINE][NEWLINE]Adopting Honor gives a +33% combat bonus VS Barbarians. Gain [ICON_CULTURE] Culture for the empire for each enemy unit killed. Unlocks building the Temple of Artemis.[NEWLINE][NEWLINE]Adopting all policies in the Honor tree will grant [ICON_RESEARCH] Science for each enemy unit killed. Great Generals can be purchased with [ICON_PEACE] Faith starting in the Industrial Era.</Text>
 		</Row>
 	</Language_RU_RU>
 	
@@ -46,16 +46,6 @@
 			<Set PolicyBranchType="POLICY_BRANCH_HONOR"/>
 		</Update>
 	</Buildings>
-	<Language_en_US>
-		<Update>
-			<Set Text="" />
-			<Where Tag="" />
-		</Update>
-		<Update>
-			<Set Text="" />
-			<Where Tag="" />
-		</Update>
-	</Language_en_US>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_WONDER_STATUE_ZEUS_HELP" />
 		<Row Tag="TXT_KEY_WONDER_STATUE_ZEUS_HELP">
@@ -102,78 +92,190 @@
 	<!-- *** NOTE: Help text updated with Honor Opener. -->
 	<Policies>
 		<Update>
-			<Set GoldFromKills="0" ScienceFromKills="100" IncludesOneShotFreeUnits="true" />
+			<Set GoldFromKills="0" ScienceFromKills="100" />
 			<Where Type="POLICY_HONOR_FINISHER" />
 		</Update>
 	</Policies>
-	<Policy_FreeUnitClasses>
-		<Row>
-			<PolicyType>POLICY_HONOR_FINISHER</PolicyType>
-			<UnitClassType>UNITCLASS_GREAT_GENERAL</UnitClassType>
-			<Count>1</Count>
-		</Row>
-	</Policy_FreeUnitClasses>
-	<!--UnitPromotions>
-		<Row>
-			<Type>PROMOTION_QUICK_GENERAL</Type>
-			<Description>TXT_KEY_PROMOTION_QUICK_GENERAL</Description>
-			<Help>TXT_KEY_PROMOTION_QUICK_GENERAL_HELP</Help>
-			<Sound>AS2D_IF_LEVELUP</Sound>
-			<CannotBeChosen>true</CannotBeChosen>
-			<MovesChange>2</MovesChange>
-			<PortraitIndex>59</PortraitIndex>
-			<IconAtlas>ABILITY_ATLAS</IconAtlas>
-			<PediaType>PEDIA_SHARED</PediaType>
-			<PediaEntry>TXT_KEY_PROMOTION_QUICK_GENERAL</PediaEntry>
-		</Row>
-	</UnitPromotions>
-	<UnitPromotions_CivilianUnitType>
-		<Row>
-			<PromotionType>PROMOTION_QUICK_GENERAL</PromotionType>
-			<UnitType>UNIT_GREAT_GENERAL</UnitType>
-		</Row>
-		<Row>
-			<PromotionType>PROMOTION_QUICK_GENERAL</PromotionType>
-			<UnitType>UNIT_MONGOLIAN_KHAN</UnitType>
-		</Row>
-	</UnitPromotions_CivilianUnitType>
-	<Policy_FreePromotions>
-		<Row>
-			<PolicyType>POLICY_HONOR_FINISHER</PolicyType>
-			<PromotionType>PROMOTION_QUICK_GENERAL</PromotionType>
-		</Row>
-	</Policy_FreePromotions>
-	<Language_en_US>
-		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL">
-			<Text>Quick General</Text>
-		</Row>
-		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL_HELP">
-			<Text>+2 [ICON_MOVES] Movement.</Text>
-		</Row>
-	</Language_en_US>
-	<Language_DE_DE>
-		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Quick General</Text>
-		</Row>
-		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+2 [ICON_MOVES] Movement.</Text>
-		</Row>
-	</Language_DE_DE>
-	<Language_PL_PL>
-		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Quick General</Text>
-		</Row>
-		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+2 [ICON_MOVES] Movement.</Text>
-		</Row>
-	</Language_PL_PL>
-	<Language_RU_RU>
-		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Quick General</Text>
-		</Row>
-		<Row Tag="TXT_KEY_PROMOTION_QUICK_GENERAL_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+2 [ICON_MOVES] Movement.</Text>
-		</Row>
-	</Language_RU_RU>-->
+	
+	<!-- 44 potential techs will be affected Honor Finisher -->
+	<Technologies>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_ARCHERY" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_THE_WHEEL" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_BRONZE_WORKING" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_SAILING" /> <!-- naval -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_CONSTRUCTION" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_MATHEMATICS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_IRON_WORKING" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_HORSEBACK_RIDING" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_MACHINERY" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_PHYSICS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_STEEL" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_CIVIL_SERVICE" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_CHIVALRY" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_COMPASS" /> <!-- naval -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_CHEMISTRY" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_GUNPOWDER" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_METALLURGY" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_ASTRONOMY" /> <!-- naval -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_NAVIGATION" /> <!-- naval -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_INDUSTRIALIZATION" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_DYNAMITE" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_RIFLING" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_MILITARY_SCIENCE" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_STEAM_POWER" /> <!-- naval -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_BALLISTICS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_REPLACEABLE_PARTS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_ELECTRONICS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_COMBUSTION" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_REFRIGERATION" /> <!-- naval -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_FLIGHT" /> <!-- air -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_NUCLEAR_FISSION" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_ROCKETRY" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_COMBINED_ARMS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_PENICILIN" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_RADAR" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_COMPUTERS" /> <!-- air (helicopter) -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_MOBILE_TACTICS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_NANOTECHNOLOGY" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_ROBOTICS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_TELECOM" /> <!-- naval -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_LASERS" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_NUCLEAR_FUSION" />
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_STEALTH" /> <!-- air -->
+		</Update>
+		<Update>
+			<Set PolicyDiscountPercent="10" />
+			<Where Type="TECH_ADVANCED_BALLISTICS" />
+		</Update>
+
+	</Technologies>
 
 </GameData>

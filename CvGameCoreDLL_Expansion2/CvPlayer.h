@@ -1118,10 +1118,6 @@ public:
 
 	int GetScienceYieldFromPreviousTurns(int iGameTurn, int iNumPreviousTurnsToCount);
 
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	void AddInfluenceWithAllKnownMinors(int iInfluence);
-#endif
-
 	bool IsGetsScienceFromPlayer(PlayerTypes ePlayer) const;
 	void SetGetsScienceFromPlayer(PlayerTypes ePlayer, bool bValue);
 

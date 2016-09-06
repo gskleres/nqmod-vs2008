@@ -96,9 +96,6 @@ CvUnitEntry::CvUnitEntry(void) :
 	m_bRangeAttackOnlyInDomain(false),
 	m_bTrade(false),
 	m_iNumExoticGoods(0),
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	m_bIsRationalGreatPerson(false),
-#endif
 	m_pbUpgradeUnitClass(NULL),
 	m_pbUnitAIType(NULL),
 	m_pbNotUnitAIType(NULL),
@@ -232,9 +229,6 @@ bool CvUnitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& k
 	m_bRangeAttackOnlyInDomain = kResults.GetBool("RangeAttackOnlyInDomain");
 	m_bTrade = kResults.GetBool("Trade");
 	m_iNumExoticGoods = kResults.GetInt("NumExoticGoods");
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-	m_bIsRationalGreatPerson = kResults.GetBool("IsRationalGreatPerson");
-#endif
 
 	m_strUnitArtInfoTag = kResults.GetText("UnitArtInfo");
 	m_bUnitArtInfoCulturalVariation = kResults.GetBool("UnitArtInfoCulturalVariation");
@@ -936,14 +930,6 @@ int CvUnitEntry::GetNumExoticGoods() const
 {
 	return m_iNumExoticGoods;
 }
-
-#ifdef NQ_INFLUENCE_PER_RATIONAL_GREAT_PERSON_BORN
-/// Does this unit trigger Nobel Prize (Sweden UA)?
-bool CvUnitEntry::IsRationalGreatPerson() const
-{
-	return m_bIsRationalGreatPerson;
-}
-#endif
 
 /// Return unit's current command
 int CvUnitEntry::GetCommandType() const

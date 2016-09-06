@@ -1,3 +1,2 @@
 -- Insert SQL Rules Here
--- ALTER TABLE Traits ADD InfluencePerRationalGreatPersonBorn INTEGER DEFAULT 0;
--- ALTER TABLE Units ADD IsRationalGreatPerson BOOLEAN DEFAULT false;
+ALTER TABLE Traits ADD SciencePerGreatPersonBorn INTEGER DEFAULT 0;
