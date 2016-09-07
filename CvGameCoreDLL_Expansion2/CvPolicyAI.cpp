@@ -128,7 +128,8 @@ void CvPolicyAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropaga
 	CvPolicyXMLEntries* pkPolicyEntries = m_pCurrentPolicies->GetPolicies();
 	// Create a temporary array of weights
 #ifdef AUI_WARNING_FIXES
-	int* paiTempWeights = FNEW(int[pkPolicyEntries->GetNumPolicies()], c_eCiv5GameplayDLL, 0);
+	FFastVector<int, true> paiTempWeights;
+	paiTempWeights.reserve(pkPolicyEntries->GetNumPolicies());
 #else
 	paiTempWeights = (int*)_alloca(sizeof(int*) * pkPolicyEntries->GetNumPolicies());
 #endif
@@ -140,9 +141,15 @@ void CvPolicyAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropaga
 
 		// Set its weight by looking at policy's weight for this flavor and using iWeight multiplier passed in
 		if(entry)
+#ifdef AUI_WARNING_FIXES
+			paiTempWeights.push_back(entry->GetFlavorValue(eFlavor) * iWeight);
+		else
+			paiTempWeights.push_back(0);
+#else
 			paiTempWeights[iPolicy] = entry->GetFlavorValue(eFlavor) * iWeight;
 		else
 			paiTempWeights[iPolicy] = 0;
+#endif
 	}
 
 	// Propagate these values left in the tree so prereqs get bought
@@ -156,10 +163,6 @@ void CvPolicyAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropaga
 	{
 		m_PolicyAIWeights.IncreaseWeight(iPolicy, paiTempWeights[iPolicy]);
 	}
-
-#ifdef AUI_WARNING_FIXES
-	SAFE_DELETE_ARRAY(paiTempWeights);
-#endif
 }
 
 /// Choose a player's next policy purchase (could be opening a branch)
@@ -784,11 +787,13 @@ int CvPolicyAI::GetNumHappinessPolicies(CvPlayer* pPlayer, PolicyBranchTypes eBr
 // PRIVATE METHODS
 //=====================================
 /// Add weights to policies that are prereqs for the ones already weighted in this strategy
-void CvPolicyAI::WeightPrereqs(int* paiTempWeights, int iPropagationPercent)
-{
 #ifdef AUI_WARNING_FIXES
+void CvPolicyAI::WeightPrereqs(FFastVector<int, true> paiTempWeights, int iPropagationPercent)
+{
 	uint iPolicyLoop;
 #else
+void CvPolicyAI::WeightPrereqs(int* paiTempWeights, int iPropagationPercent)
+{
 	int iPolicyLoop;
 #endif
 

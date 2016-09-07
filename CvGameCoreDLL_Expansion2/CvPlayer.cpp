@@ -9712,29 +9712,32 @@ int CvPlayer::unitsGoldenAgeCapable() const
 int CvPlayer::unitsGoldenAgeReady() const
 {
 	const CvUnit* pLoopUnit;
-#ifndef AUI_WARNING_FIXES
-	bool* pabUnitUsed;
-#endif
-	int iCount;
-	int iLoop;
-#ifndef AUI_WARNING_FIXES
-	int iI;
-#endif
-
 #ifdef AUI_WARNING_FIXES
-	bool* pabUnitUsed = FNEW(bool[GC.getNumUnitInfos()], c_eCiv5GameplayDLL, 0);
+	FFastVector<bool, true> pabUnitUsed;
+	pabUnitUsed.reserve(GC.getNumUnitInfos());
 
 	for (uint iI = 0; iI < GC.getNumUnitInfos(); iI++)
+	{
+		pabUnitUsed.push_back(false);
+	}
+
+	int iCount = 0;
+	int iLoop = 0;
 #else
+	bool* pabUnitUsed;
+	int iCount;
+	int iLoop;
+	int iI;
+
 	pabUnitUsed = FNEW(bool[GC.getNumUnitInfos()], c_eCiv5GameplayDLL, 0);
 
 	for(iI = 0; iI < GC.getNumUnitInfos(); iI++)
-#endif
 	{
 		pabUnitUsed[iI] = false;
 	}
 
 	iCount = 0;
+#endif
 
 	for(pLoopUnit = firstUnit(&iLoop); pLoopUnit != NULL; pLoopUnit = nextUnit(&iLoop))
 	{
@@ -9748,7 +9751,9 @@ int CvPlayer::unitsGoldenAgeReady() const
 		}
 	}
 
+#ifndef AUI_WARNING_FIXES
 	SAFE_DELETE_ARRAY(pabUnitUsed);
+#endif
 
 	return iCount;
 }
