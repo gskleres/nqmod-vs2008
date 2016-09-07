@@ -2741,8 +2741,24 @@ InfluenceLevelTrend CvPlayerCulture::GetInfluenceTrend(PlayerTypes ePlayer) cons
 	// PctTurn2 = InfluenceT2 / LifetimeCultureT2
 	
 	// So if looking at is PctT2 > PctT1, can see if  (InfluenceT2 * LifetimeCultureT1) > (InfluenceT1 * LifetimeCultureT2)
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int iOtherPlayerLastTurnLifetimeCulture = kOtherPlayer.GetCulture()->GetLastTurnLifetimeCulture();
+	int iOtherPlayerThisTurnLifetimeCulture = kOtherPlayer.GetJONSCultureEverGenerated();
+#ifdef AUI_GAME_BETTER_HYBRID_MODE
+	if (kOtherPlayer.getTurnOrder() > m_pPlayer->getTurnOrder())
+#else
+	if (ePlayer > m_pPlayer->GetID())
+#endif
+	{
+		iOtherPlayerLastTurnLifetimeCulture = iOtherPlayerThisTurnLifetimeCulture;
+		iOtherPlayerThisTurnLifetimeCulture += m_pPlayer->GetTotalJONSCulturePerTurn();
+	}
+	int iLHS = GetInfluenceOn(ePlayer) * iOtherPlayerLastTurnLifetimeCulture;
+	int iRHS = GetLastTurnInfluenceOn(ePlayer) * iOtherPlayerThisTurnLifetimeCulture;
+#else
 	int iLHS = GetInfluenceOn(ePlayer) * kOtherPlayer.GetCulture()->GetLastTurnLifetimeCulture();
 	int iRHS = GetLastTurnInfluenceOn(ePlayer) * kOtherPlayer.GetJONSCultureEverGenerated();
+#endif
 
 	if (kOtherPlayer.GetCulture()->GetLastTurnLifetimeCulture() > 0 && kOtherPlayer.GetJONSCultureEverGenerated() > 0)
 	{
@@ -2774,6 +2790,8 @@ int CvPlayerCulture::GetTurnsToInfluential(PlayerTypes ePlayer) const
 		int iInfluence = GetInfluenceOn(ePlayer);
 		int iInflPerTurn = GetInfluencePerTurn(ePlayer);
 #ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
+		iInfluence *= 100;
+		iInflPerTurn *= 100;
 		int iCulture = kOtherPlayer.GetJONSCultureEverGeneratedTimes100();
 		int iCultPerTurn = kOtherPlayer.GetTotalJONSCulturePerTurnTimes100();
 #else

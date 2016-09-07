@@ -326,7 +326,9 @@ bool isPromotionValid(PromotionTypes ePromotion, UnitTypes eUnit, bool bLeader, 
 	PromotionTypes ePrereq8 = (PromotionTypes)promotionInfo->GetPrereqOrPromotion8();
 	PromotionTypes ePrereq9 = (PromotionTypes)promotionInfo->GetPrereqOrPromotion9();
 #ifdef AUI_WARNING_FIXES
-	if ((NO_PROMOTION == ePrereq1 || !isPromotionValid(ePrereq1, eUnit, bLeader, true)) &&
+	if ((ePrereq1 != NO_PROMOTION || ePrereq2 != NO_PROMOTION || ePrereq3 != NO_PROMOTION || ePrereq4 != NO_PROMOTION ||
+			ePrereq5 != NO_PROMOTION || ePrereq6 != NO_PROMOTION || ePrereq7 != NO_PROMOTION || ePrereq8 != NO_PROMOTION || ePrereq9 != NO_PROMOTION) &&
+		(NO_PROMOTION == ePrereq1 || !isPromotionValid(ePrereq1, eUnit, bLeader, true)) &&
 		(NO_PROMOTION == ePrereq2 || !isPromotionValid(ePrereq2, eUnit, bLeader, true)) &&
 		(NO_PROMOTION == ePrereq3 || !isPromotionValid(ePrereq3, eUnit, bLeader, true)) &&
 		(NO_PROMOTION == ePrereq4 || !isPromotionValid(ePrereq4, eUnit, bLeader, true)) &&

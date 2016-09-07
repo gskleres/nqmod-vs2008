@@ -17,6 +17,11 @@
 			<Description>TXT_KEY_GAME_OPTION_AI_GIMP_ALWAYS_WHITE_PEACE</Description>
 			<Help>TXT_KEY_GAME_OPTION_AI_GIMP_ALWAYS_WHITE_PEACE_HELP</Help>
 		</Row>
+		<Row>
+			<Type>GAMEOPTION_AI_GIMP_NO_BUILDING_SETTLERS</Type>
+			<Description>TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS</Description>
+			<Help>TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS_HELP</Help>
+		</Row>
 	</GameOptions>
 	<Language_en_US>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
@@ -36,6 +41,12 @@
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_ALWAYS_WHITE_PEACE_HELP">
 			<Text>AI players will always accept White Peace offers by humans.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS">
+			<Text>AI Cannot Build Settlers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS_HELP">
+			<Text>AI players will never build units that can settle.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -57,6 +68,12 @@
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_ALWAYS_WHITE_PEACE_HELP">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]AI players will always accept White Peace offers by humans.</Text>
 		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]AI Cannot Build Settlers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]AI players will never build units that can settle.</Text>
+		</Row>
 	</Language_DE_DE>
 	<Language_ES_ES>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
@@ -76,6 +93,12 @@
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_ALWAYS_WHITE_PEACE_HELP">
 			<Text>[COLOR_WARNING_TEXT](ES_ES text) [ENDCOLOR]AI players will always accept White Peace offers by humans.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS">
+			<Text>[COLOR_WARNING_TEXT](ES_ES text) [ENDCOLOR]AI Cannot Build Settlers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](ES_ES text) [ENDCOLOR]AI players will never build units that can settle.</Text>
 		</Row>
 	</Language_ES_ES>
 	<Language_FR_FR>
@@ -97,6 +120,12 @@
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_ALWAYS_WHITE_PEACE_HELP">
 			<Text>[COLOR_WARNING_TEXT](FR_FR text) [ENDCOLOR]AI players will always accept White Peace offers by humans.</Text>
 		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS">
+			<Text>[COLOR_WARNING_TEXT](FR_FR text) [ENDCOLOR]AI Cannot Build Settlers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](FR_FR text) [ENDCOLOR]AI players will never build units that can settle.</Text>
+		</Row>
 	</Language_FR_FR>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
@@ -117,6 +146,12 @@
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_ALWAYS_WHITE_PEACE_HELP">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]AI players will always accept White Peace offers by humans.</Text>
 		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]AI Cannot Build Settlers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]AI players will never build units that can settle.</Text>
+		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_RELIGION_SPREAD">
@@ -136,6 +171,12 @@
 		</Row>
 		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_ALWAYS_WHITE_PEACE_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]AI players will always accept White Peace offers by humans.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]AI Cannot Build Settlers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GAME_OPTION_AI_GIMP_NO_BUILDING_SETTLERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]AI players will never build units that can settle.</Text>
 		</Row>
 	</Language_RU_RU>
 </GameData>

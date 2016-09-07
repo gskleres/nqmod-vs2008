@@ -277,6 +277,9 @@ public:
 	bool isVisibleOtherUnit(PlayerTypes ePlayer) const;
 
 	bool IsActualEnemyUnit(PlayerTypes ePlayer, bool bCombatUnitsOnly = true) const;
+#ifdef AUI_CITY_CITIZENS_COUNTERBLOCKADE
+	bool HasAlliedUnit(PlayerTypes ePlayer, bool bCombatUnitsOnly = true) const;
+#endif
 
 	int getNumFriendlyUnitsOfType(const CvUnit* pUnit, bool bBreakOnUnitLimit = true) const;
 

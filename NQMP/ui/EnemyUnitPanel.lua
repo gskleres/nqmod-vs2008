@@ -331,7 +331,7 @@ function UpdateCombatOddsUnitVsCity(pMyUnit, pCity)
 					iNumVisibleAAUnits = pMyUnit:GetInterceptorCount(pPlot, nil, true, true);		
 					bInterceptPossible = true;	
 				elseif (Game.IsOption("GAMEOPTION_ENABLE_RANGED_COUNTERATTACKS")) then
-					if (pCity:CanRangeStrikeAt(pMyUnit:getX(), pMyUnit:getY(), 1)) then
+					if (pCity:CanRangeStrikeAt(pMyUnit:GetX(), pMyUnit:GetY(), true)) then
 						iTheirDamageInflicted = pCity:RangeCombatDamage(pMyUnit, nil, false);
 					end
 				end
@@ -1703,7 +1703,7 @@ function UpdateCombatOddsCityVsUnit(myCity, theirUnit)
 	local myCityMaxHP = myCity:GetMaxHitPoints();
 	local myCityCurHP = myCity:GetDamage();
 	local myCityDamageInflicted = myCity:RangeCombatDamage(theirUnit, nil);
-	local myCityStrength = myCity:GetStrengthValue();
+	local myCityStrength = myCity:GetStrengthValue(true);
 	
 	local theirUnitMaxHP = GameDefines["MAX_HIT_POINTS"];
 	local theirUnitCurHP = theirUnit:GetDamage();
@@ -1719,12 +1719,9 @@ function UpdateCombatOddsCityVsUnit(myCity, theirUnit)
 			theirUnitDamageInflicted = theirUnit:GetRangeCombatDamage(nil, myCity, false);
 		elseif (myCityDamageInflicted + theirUnitCurHP < theirUnitMaxHP and theirUnit:IsCanAttackWithMove() and Map.PlotDistance(theirUnit:GetX(), theirUnit:GetY(), myCity:GetX(), myCity:GetY()) <= 1 and theirUnit:PlotValid(pFromPlot) and theirUnit:PlotValid(pToPlot)) then
 			local iMyDefenseStrength = myCity:GetStrengthValue();
-			local iTheirAttackStrength = theirUnit:GetMaxAttackStrength(pToPlot, pFromPlot, pMyUnit);
+			local iTheirAttackStrength = theirUnit:GetMaxAttackStrength(pToPlot, pFromPlot, pMyUnit) * GameDefines["CITY_RANGED_ATTACK_STRENGTH_MULTIPLIER"];
+			iTheirAttackStrength = math.floor(iTheirAttackStrength / 100);
 			theirUnitDamageInflicted = theirUnit:GetCombatDamage(iTheirAttackStrength, iMyDefenseStrength, myCityDamageInflicted + theirUnitCurHP, false, false, true);
-			local iTempDamage = theirUnit:GetCombatDamage(iMyDefenseStrength, iTheirAttackStrength, theirUnitCurHP, false, true, false);
-			if (iTempDamage > myCityDamageInflicted) then
-				myCityDamageInflicted = iTempDamage;
-			end
 		end
 	end
 

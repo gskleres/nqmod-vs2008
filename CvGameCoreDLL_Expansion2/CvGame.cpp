@@ -2031,7 +2031,7 @@ bool CvGame::hasTurnTimerExpired(PlayerTypes playerID)
 		if(getElapsedGameTurns() > 0)
 		{
 #ifdef NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
-			if (isLocalPlayer && !gDLL->allAICivsProcessedThisTurn() && allUnitAIProcessed())
+			if (isLocalPlayer && ((!gDLL->allAICivsProcessedThisTurn() && allUnitAIProcessed()) || (isOption("GAMEOPTION_AUTOMATION_RESETS_TIMER") && !allUnitAIProcessed())))
 #else
 			if(isLocalPlayer && (!gDLL->allAICivsProcessedThisTurn() || !allUnitAIProcessed()))
 #endif
@@ -3393,7 +3393,9 @@ bool CvGame::canDoControl(ControlTypes eControl)
 	case CONTROL_CYCLEUNIT_ALT:
 	case CONTROL_CYCLEWORKER:
 	case CONTROL_LASTUNIT:
+#ifndef AUI_GAME_FIX_CONTROL_FORCE_END_TURN_CHECKS_FOR_BLOCKING
 	case CONTROL_FORCEENDTURN:
+#endif
 	case CONTROL_AUTOMOVES:
 	case CONTROL_SAVE_GROUP:
 	case CONTROL_QUICK_SAVE:
@@ -3479,6 +3481,18 @@ bool CvGame::canDoControl(ControlTypes eControl)
 			return true;
 		}
 		break;
+
+#ifdef AUI_GAME_FIX_CONTROL_FORCE_END_TURN_CHECKS_FOR_BLOCKING
+	case CONTROL_FORCEENDTURN:
+		{
+			EndTurnBlockingTypes eBlock = GET_PLAYER(getActivePlayer()).GetEndTurnBlockingType();
+			if ((eBlock == NO_ENDTURN_BLOCKING_TYPE || eBlock == ENDTURN_BLOCKING_UNITS) && !GC.GetEngineUserInterface()->isFocused())
+			{
+				return true;
+			}
+		}
+		break;
+#endif
 
 	case CONTROL_TOGGLE_STRATEGIC_VIEW:
 		GC.GetEngineUserInterface()->ToggleStrategicView();
@@ -8247,7 +8261,9 @@ void CvGame::constructTurnOrders()
 			kCurTeam.setTurnOrder(iTeamIdx);
 		}
 	}
+#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	calculateMaxTurnLengths();
+#endif
 }
 
 #ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH

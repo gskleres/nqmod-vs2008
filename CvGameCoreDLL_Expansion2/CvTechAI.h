@@ -53,7 +53,11 @@ public:
 
 private:
 	// Internal methods
+#ifdef AUI_WARNING_FIXES
+	void WeightPrereqs(FFastVector<int, true> paiTempWeights, int iPropagationPercent);
+#else
 	void WeightPrereqs(int* paiTempWeights, int iPropagationPercent);
+#endif
 	void PropagateWeights(int iTech, int iWeight, int iPropagationPercent, int iPropagationLevel);
 
 	// Recompute weights taking into account tech cost

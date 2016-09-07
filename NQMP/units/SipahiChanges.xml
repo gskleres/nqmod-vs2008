@@ -5,7 +5,7 @@
 	<!-- Sipahi now cost 20% less and are available at Gunpowder -->
 	<Units>
 		<Update>
-			<Set Cost="148" FaithCost="196" PrereqTech="TECH_GUNPOWDER" />
+			<Set Cost="148" FaithCost="296" PrereqTech="TECH_GUNPOWDER" />
 			<Where Type="UNIT_OTTOMAN_SIPAHI" />
 		</Update>
 	</Units>

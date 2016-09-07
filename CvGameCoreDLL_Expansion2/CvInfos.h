@@ -1558,6 +1558,9 @@ public:
 	int getPopulationChangeOffset() const;
 	int getPopulationChangeDivisor() const;
 	int getMinCity() const;
+#ifdef NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
+	int getMinCityOnHillsAdjust() const;
+#endif
 	int getGoldenAgeYield() const;
 	int getGoldenAgeYieldThreshold() const;
 	int getGoldenAgeYieldMod() const;
@@ -1573,6 +1576,9 @@ protected:
 	int m_iPopulationChangeOffset;
 	int m_iPopulationChangeDivisor;
 	int m_iMinCity;
+#ifdef NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
+	int m_iMinCityOnHillsAdjust;
+#endif
 	int m_iGoldenAgeYield;
 	int m_iGoldenAgeYieldThreshold;
 	int m_iGoldenAgeYieldMod;

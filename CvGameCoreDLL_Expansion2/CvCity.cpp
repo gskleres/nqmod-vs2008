@@ -1692,6 +1692,24 @@ void CvCity::cacheYieldsForTurn()
 	// Faith
 	//setCachedYieldT100ForThisTurn(YIELD_FAITH, GetFaithPerTurn());
 }
+
+void CvCity::doResourceDemands()
+{
+	// Following function also looks at WLTKD stuff
+	DoTestResourceDemanded();
+
+	// Resource Demanded Counter
+	if (GetResourceDemandedCountdown() > 0)
+	{
+		ChangeResourceDemandedCountdown(-1);
+
+		if (GetResourceDemandedCountdown() == 0)
+		{
+			// Pick a Resource to demand
+			DoPickResourceDemanded();
+		}
+	}
+}
 #endif
 
 //	--------------------------------------------------------------------------------
@@ -1787,8 +1805,10 @@ void CvCity::doTurn()
 			}
 		}
 
+#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		// Following function also looks at WLTKD stuff
 		DoTestResourceDemanded();
+#endif
 
 		// Culture accumulation
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
@@ -1822,7 +1842,7 @@ void CvCity::doTurn()
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 		GetCityCitizens()->DoTurn();
-#endif
+#else
 
 		// Resource Demanded Counter
 		if(GetResourceDemandedCountdown() > 0)
@@ -1835,6 +1855,7 @@ void CvCity::doTurn()
 				DoPickResourceDemanded();
 			}
 		}
+#endif
 
 		updateStrengthValue();
 
@@ -3988,7 +4009,9 @@ void CvCity::addProductionExperience(CvUnit* pUnit, bool bConscript)
 		}
 	}
 
+#ifndef AUI_UNIT_TEST_PROMOTION_READY_MOVED
 	pUnit->testPromotionReady();
+#endif
 }
 
 
@@ -5683,6 +5706,13 @@ int CvCity::getProductionDifference(int /*iProductionNeeded*/, int /*iProduction
 
 	// Sum up difference
 	int iBaseProduction = getBaseYieldRate(YIELD_PRODUCTION) * 100;
+#ifdef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
+	iBaseProduction += GET_PLAYER(getOwner()).GetCityYieldChange(YIELD_PRODUCTION);
+	if (isCapital())
+	{
+		iBaseProduction += GET_PLAYER(getOwner()).GetCapitalYieldChange(YIELD_PRODUCTION);
+	}
+#endif
 	iBaseProduction += (GetYieldPerPopTimes100(YIELD_PRODUCTION) * getPopulation());
 
 #ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
@@ -5756,6 +5786,13 @@ int CvCity::getProductionDifferenceTimes100(int /*iProductionNeeded*/, int /*iPr
 
 	// Sum up difference
 	int iBaseProduction = getBaseYieldRate(YIELD_PRODUCTION) * 100;
+#ifdef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
+	iBaseProduction += GET_PLAYER(getOwner()).GetCityYieldChange(YIELD_PRODUCTION);
+	if (isCapital())
+	{
+		iBaseProduction += GET_PLAYER(getOwner()).GetCapitalYieldChange(YIELD_PRODUCTION);
+	}
+#endif
 	iBaseProduction += (GetYieldPerPopTimes100(YIELD_PRODUCTION) * getPopulation());
 
 #ifdef AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
@@ -10309,6 +10346,13 @@ int CvCity::getYieldRateTimes100(YieldTypes eIndex, bool bIgnoreTrade) const
 
 	// Sum up yield rate
 	int iBaseYield = getBaseYieldRate(eIndex) * 100;
+#ifdef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
+	iBaseYield += GET_PLAYER(getOwner()).GetCityYieldChange(eIndex);
+	if (isCapital())
+	{
+		iBaseYield += GET_PLAYER(getOwner()).GetCapitalYieldChange(eIndex);
+	}
+#endif
 	iBaseYield += (GetYieldPerPopTimes100(eIndex) * getPopulation());
 	iBaseYield += (GetYieldPerReligionTimes100(eIndex) * GetCityReligions()->GetNumReligionsWithFollowers());
 
@@ -10341,6 +10385,13 @@ int CvCity::getBaseYieldRate(YieldTypes eIndex) const
 	iValue += GetBaseYieldRateFromMisc(eIndex);
 	iValue += GetBaseYieldRateFromReligion(eIndex);
 	iValue += GetBaseYieldRateFromGreatWorks(eIndex); // NQMP GJS - Artistic Genius fix to add science to Great Works
+#ifdef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
+	// Coastal City Mod
+	if (isCoastal())
+	{
+		iValue += GET_PLAYER(getOwner()).GetCoastalCityYieldChange(eIndex);
+	}
+#endif
 
 	return iValue;
 }
@@ -10536,7 +10587,16 @@ int CvCity::GetYieldPerPopTimes100(YieldTypes eIndex) const
 	CvAssertMsg(eIndex >= 0, "eIndex expected to be >= 0");
 	CvAssertMsg(eIndex < NUM_YIELD_TYPES, "eIndex expected to be < NUM_YIELD_TYPES");
 
+#ifdef AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
+	int iRet = m_aiYieldPerPop[eIndex];
+	if (isCapital())
+	{
+		iRet += GET_PLAYER(getOwner()).GetCapitalYieldPerPopChange(eIndex);
+	}
+	return iRet;
+#else
 	return m_aiYieldPerPop[eIndex];
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -15894,7 +15954,7 @@ bool CvCity::IsHasBuildingThatAllowsRangeStrike() const
 bool CvCity::canRangeStrikeAt(int iX, int iY, bool bOnlyCheckForEverPossible) const
 {
 	VALIDATE_OBJECT
-	if (!bOnlyCheckForEverPossible && !canRangeStrike())
+	if ((!bOnlyCheckForEverPossible || IsResistance() || IsRazing() || getDamage() == GetMaxHitPoints()) && !canRangeStrike())
 #else
 bool CvCity::canRangeStrikeAt(int iX, int iY) const
 {
@@ -16102,6 +16162,16 @@ int CvCity::rangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bIncl
 	int iAttackerRoll = 0;
 	if(bIncludeRand)
 	{
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
+		{
+			int iMaxRoll = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
+			iAttackerRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "City Ranged Attack Damage") * 80;
+			iAttackerRoll -= GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
+			iAttackerRoll += GC.getGame().getJonRandNum(80, "City Ranged Attack Damage Noise");
+		}
+		else
+#endif
 		iAttackerRoll = GC.getGame().getJonRandNum(/*300*/ GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "City Ranged Attack Damage");
 	}
 	else
@@ -16157,6 +16227,16 @@ int CvCity::GetAirStrikeDefenseDamage(const CvUnit* pAttacker, bool bIncludeRand
 	int iDefenderRoll = 0;
 	if(bIncludeRand)
 	{
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
+		{
+			int iMaxRoll = GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
+			iDefenderRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") * 80;
+			iDefenderRoll -= GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
+			iDefenderRoll += GC.getGame().getJonRandNum(80, "Unit Air Strike Combat Damage Noise");
+		}
+		else
+#endif
 		iDefenderRoll = /*200*/ GC.getGame().getJonRandNum(GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE(), "Unit Air Strike Combat Damage");
 		iDefenderRoll *= iDefenderDamageRatio;
 		iDefenderRoll /= GetMaxHitPoints();

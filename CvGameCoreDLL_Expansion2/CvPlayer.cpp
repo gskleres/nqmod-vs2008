@@ -4298,6 +4298,11 @@ int CvPlayer::getCachedExcessHappinessForThisTurn() const
 {
 	return m_iCachedExcessHappinessForThisTurn;
 }
+
+int CvPlayer::getCachedSpyStartingRank() const
+{
+	return m_iCachedSpyStartingRank;
+}
 #endif
 
 //	---------------------------------------------------------------------------
@@ -4470,6 +4475,16 @@ void CvPlayer::doTurnPostDiplomacy()
 	// Gold
 	GetTreasury()->DoGold();
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	// Moved up so it's unaffected by spies
+	DoIncomingUnits();
+
+	// Science
+	doResearch();
+
+	GetEspionage()->DoTurn();
+#endif
+
 	// Culture
 
 	// Prevent exploits in turn timed MP games - no accumulation of culture if player hasn't picked yet
@@ -4561,6 +4576,10 @@ void CvPlayer::doTurnPostDiplomacy()
 		GetPlayerPolicies()->DoPolicyAI();
 	}
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	// Split from faith auto-purchasing
+	ChangeFaith(getCachedFaithForThisTurn());
+#else
 	// Science
 	doResearch();
 
@@ -4569,6 +4588,7 @@ void CvPlayer::doTurnPostDiplomacy()
 	// Faith
 	CvGameReligions* pGameReligions = kGame.GetGameReligions();
 	pGameReligions->DoPlayerTurn(*this);
+#endif
 
 	// Leagues
 	CvGameLeagues* pGameLeagues = kGame.GetGameLeagues();
@@ -4578,11 +4598,25 @@ void CvPlayer::doTurnPostDiplomacy()
 	if(GetAnarchyNumTurns() > 0)
 		ChangeAnarchyNumTurns(-1);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	GetEspionage()->CacheSpyStats();
+
+	int iLoop = 0;
+	for (CvCity* pLoopCity = firstCity(&iLoop); pLoopCity != NULL; pLoopCity = nextCity(&iLoop))
+	{
+		pLoopCity->doResourceDemands();
+	}
+#else
 	DoIncomingUnits();
+#endif
 
 	const int iGameTurn = kGame.getGameTurn();
 
 	GatherPerTurnReplayStats(iGameTurn);
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	// Religion auto-purchasing
+	kGame.GetGameReligions()->DoPlayerTurn(*this);
+#endif
 
 	GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 
@@ -4629,6 +4663,10 @@ void CvPlayer::cacheYields()
 
 	// Cache Faith
 	m_iCachedFaithForThisTurn = GetTotalFaithPerTurn();
+
+	GetEspionage()->CacheSpyStats();
+
+	m_iCachedSpyStartingRank = GetStartingSpyRank();
 }
 #endif
 
@@ -6405,7 +6443,11 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 	{
 		GetTreasury()->ChangeGold(iGold);
 
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iGold);
+#else
 		strBuffer += GetLocalizedText("TXT_KEY_MISC_RECEIVED_GOLD", iGold);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_GOLD, iGold, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -6448,6 +6490,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iCulture /= 100;
 
 		changeJONSCulture(iCulture);
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iCulture);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_CULTURE, iCulture, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -6463,6 +6508,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= 100;
 
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iFaith);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -6479,6 +6527,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= iDivisor;
 		iFaith *= iDivisor;
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iFaith);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -6494,6 +6545,9 @@ void CvPlayer::receiveGoody(CvPlot* pPlot, GoodyTypes eGoody, CvUnit* pUnit)
 		iFaith /= iDivisor;
 		iFaith *= iDivisor;
 		ChangeFaith(iFaith);
+#ifdef AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
+		strBuffer = GetLocalizedText(kGoodyInfo.GetDescriptionKey(), iFaith);
+#endif
 #ifdef AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 		ReportYieldFromKill(YIELD_FAITH, iFaith, pPlot->getX(), pPlot->getY(), iNumYieldBonuses);
 		iNumYieldBonuses += 1;
@@ -7384,7 +7438,11 @@ bool CvPlayer::canTrain(UnitTypes eUnit, bool bContinue, bool bTestVisible, bool
 	// One City Challenge
 	if(pUnitInfo.IsFound() || pUnitInfo.IsFoundAbroad())
 	{
-#ifdef AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
+#if defined(NQM_AI_GIMP_NO_BUILDING_SETTLERS) && defined(AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER)
+		if (isMinorCiv() || (isHuman() && GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE)) || (!isHuman() && GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_BUILDING_SETTLERS")))
+#elif defined(NQM_AI_GIMP_NO_BUILDING_SETTLERS)
+		if ((isHuman() && GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE)) || (!isHuman() && GC.getGame().isOption("GAMEOPTION_AI_GIMP_NO_BUILDING_SETTLERS")))
+#elif defined(AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER)
 		if (isMinorCiv() || (GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && isHuman()))
 #else
 		if(GC.getGame().isOption(GAMEOPTION_ONE_CITY_CHALLENGE) && isHuman())
@@ -9654,29 +9712,32 @@ int CvPlayer::unitsGoldenAgeCapable() const
 int CvPlayer::unitsGoldenAgeReady() const
 {
 	const CvUnit* pLoopUnit;
-#ifndef AUI_WARNING_FIXES
-	bool* pabUnitUsed;
-#endif
-	int iCount;
-	int iLoop;
-#ifndef AUI_WARNING_FIXES
-	int iI;
-#endif
-
 #ifdef AUI_WARNING_FIXES
-	bool* pabUnitUsed = FNEW(bool[GC.getNumUnitInfos()], c_eCiv5GameplayDLL, 0);
+	FFastVector<bool, true> pabUnitUsed;
+	pabUnitUsed.reserve(GC.getNumUnitInfos());
 
 	for (uint iI = 0; iI < GC.getNumUnitInfos(); iI++)
+	{
+		pabUnitUsed.push_back(false);
+	}
+
+	int iCount = 0;
+	int iLoop = 0;
 #else
+	bool* pabUnitUsed;
+	int iCount;
+	int iLoop;
+	int iI;
+
 	pabUnitUsed = FNEW(bool[GC.getNumUnitInfos()], c_eCiv5GameplayDLL, 0);
 
 	for(iI = 0; iI < GC.getNumUnitInfos(); iI++)
-#endif
 	{
 		pabUnitUsed[iI] = false;
 	}
 
 	iCount = 0;
+#endif
 
 	for(pLoopUnit = firstUnit(&iLoop); pLoopUnit != NULL; pLoopUnit = nextUnit(&iLoop))
 	{
@@ -9690,7 +9751,9 @@ int CvPlayer::unitsGoldenAgeReady() const
 		}
 	}
 
+#ifndef AUI_WARNING_FIXES
 	SAFE_DELETE_ARRAY(pabUnitUsed);
+#endif
 
 	return iCount;
 }

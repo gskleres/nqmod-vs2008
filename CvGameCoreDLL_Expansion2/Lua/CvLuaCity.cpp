@@ -3525,40 +3525,56 @@ int CvLuaCity::lIsFreePromotion(lua_State* L)
 //int getSpecialistFreeExperience();
 int CvLuaCity::lGetSpecialistFreeExperience(lua_State* L)
 {
+#ifdef DEL_RANGED_COUNTERATTACKS
+	return BasicLuaMethod(L, &CvCity::getSpecialistFreeExperience);
+#else
 	CvCity* pkCity = GetInstance(L);
 	const int iResult = pkCity->getSpecialistFreeExperience();
 
 	lua_pushinteger(L, iResult);
 	return 1;
+#endif
 }
 //------------------------------------------------------------------------------
 //void updateStrengthValue();
 int CvLuaCity::lUpdateStrengthValue(lua_State* L)
 {
+#ifdef DEL_RANGED_COUNTERATTACKS
+	return BasicLuaMethod(L, &CvCity::updateStrengthValue);
+#else
 	CvCity* pkCity = GetInstance(L);
 	pkCity->updateStrengthValue();
 
 	return 1;
+#endif
 }
 //------------------------------------------------------------------------------
 //int getStrengthValue();
 int CvLuaCity::lGetStrengthValue(lua_State* L)
 {
+#ifdef DEL_RANGED_COUNTERATTACKS
+	return BasicLuaMethod(L, &CvCity::getStrengthValue);
+#else
 	CvCity* pkCity = GetInstance(L);
 	const int iResult = pkCity->getStrengthValue();
 
 	lua_pushinteger(L, iResult);
 	return 1;
+#endif
 }
 //------------------------------------------------------------------------------
 //int getDamage();
 int CvLuaCity::lGetDamage(lua_State* L)
 {
+#ifdef DEL_RANGED_COUNTERATTACKS
+	return BasicLuaMethod(L, &CvCity::getDamage);
+#else
 	CvCity* pkCity = GetInstance(L);
 	const int iResult = pkCity->getDamage();
 
 	lua_pushinteger(L, iResult);
 	return 1;
+#endif
 }
 //------------------------------------------------------------------------------
 //void setDamage(int iValue);
@@ -3576,11 +3592,15 @@ int CvLuaCity::lChangeDamage(lua_State* L)
 //int GetMaxHitPoints();
 int CvLuaCity::lGetMaxHitPoints(lua_State* L)
 {
+#ifdef DEL_RANGED_COUNTERATTACKS
+	return BasicLuaMethod(L, &CvCity::GetMaxHitPoints);
+#else
 	CvCity* pkCity = GetInstance(L);
 	const int iResult = pkCity->GetMaxHitPoints();
 
 	lua_pushinteger(L, iResult);
 	return 1;
+#endif
 }
 //------------------------------------------------------------------------------
 //bool CanRangeStrike()

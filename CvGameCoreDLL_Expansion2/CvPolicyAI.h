@@ -54,7 +54,11 @@ public:
 
 private:
 	// Internal methods
+#ifdef AUI_WARNING_FIXES
+	void WeightPrereqs(FFastVector<int, true> paiTempWeights, int iPropagationPercent);
+#else
 	void WeightPrereqs(int* paiTempWeightst, int iPropagationPercent);
+#endif
 	void PropagateWeights(int iPolicy, int iWeight, int iPropagationPercent, int iPropagationLevel);
 	int WeighBranch(PolicyBranchTypes eBranch);
 	bool IsBranchEffectiveInGame(PolicyBranchTypes eBranch);

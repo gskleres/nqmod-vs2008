@@ -39,6 +39,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>_sql/Yield_MinCityOnHillsAdjust.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>buildings/BroadcastTowerChanges.xml</FileName>
       </Action>
       <Action>
@@ -1126,6 +1131,21 @@
         <Type>UpdateDatabase</Type>
         <FileName>gameplay/CIV5GameOptions_Ranged_Counterattacks.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/CIV5GameOptions_Binomial_RNG_Combat.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/CIV5GameOptions_Automation_Resets_TurnTimer.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>gameplay/FlatlandCityExtraFood.xml</FileName>
+      </Action>
     </ModActions>
     <ModContent>
       <Content>
@@ -1427,7 +1447,15 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="gameplay\CIV5GameOptions_Automation_Resets_TurnTimer.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="gameplay\CIV5GameOptions_AutoPause_on_Active_Disconnect.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="gameplay\CIV5GameOptions_Binomial_RNG_Combat.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1448,6 +1476,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="gameplay\CIV5GameOptions_Relative_TurnTimers.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="gameplay\FlatlandCityExtraFood.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1911,6 +1943,18 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="ui\CultureT100_Compatibility\CultureOverview.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\CultureT100_Compatibility\EconomicGeneralInfo.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\CultureT100_Compatibility\VictoryProgress.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
     <Content Include="ui\DiscussionDialog.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
@@ -2227,6 +2271,10 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="_sql\Yield_MinCityOnHillsAdjust.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="civs" />
@@ -2239,6 +2287,7 @@
     <Folder Include="ideologies" />
     <Folder Include="scoring_tweaks\" />
     <Folder Include="great_people" />
+    <Folder Include="ui\CultureT100_Compatibility" />
     <Folder Include="_sql" />
     <Folder Include="resolutions" />
     <Folder Include="ui" />

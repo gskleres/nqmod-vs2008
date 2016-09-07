@@ -2470,7 +2470,6 @@ int CvLuaGame::lFoundReligion(lua_State* L)
 		{
 			CvGameReligions::NotifyPlayer(ePlayer, eResult);
 			// We don't want them to lose the opportunity to found the religion, and the Great Prophet is already gone so just repost the notification
-			// If someone beat them to the last religion, well... tough luck.
 			CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
 			if (kPlayer.isHuman() && eResult != CvGameReligions::FOUNDING_NO_RELIGIONS_AVAILABLE)
 			{
@@ -2482,6 +2481,14 @@ int CvLuaGame::lFoundReligion(lua_State* L)
 					pNotifications->Add(NOTIFICATION_FOUND_RELIGION, strBuffer, strSummary, pkHolyCity->getX(), pkHolyCity->getY(), -1, pkHolyCity->GetID());
 				}
 				kPlayer.GetReligions()->SetFoundingReligion(true);
+			}
+			else if (kPlayer.getCapitalCity())
+			{
+				UnitTypes eUnit = (UnitTypes)GC.getInfoTypeForString("UNIT_PROPHET", true);
+				if (eUnit != NO_UNIT)
+				{
+					kPlayer.getCapitalCity()->GetCityCitizens()->DoSpawnGreatPerson(eUnit, false /*bIncrementCount*/, false);
+				}
 			}
 		}
 	}
@@ -2511,7 +2518,7 @@ int CvLuaGame::lEnhanceReligion(lua_State* L)
 		// We don't want them to lose the opportunity to enhance the religion, and the Great Prophet is already gone so just repost the notification
 		CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
 		CvCity* pkCity = kPlayer.getCapitalCity();
-		if (kPlayer.isHuman() && eResult != CvGameReligions::FOUNDING_NO_RELIGIONS_AVAILABLE && pkCity)
+		if (kPlayer.isHuman() && pkCity)
 		{
 			CvNotifications* pNotifications = kPlayer.GetNotifications();
 			if (pNotifications)

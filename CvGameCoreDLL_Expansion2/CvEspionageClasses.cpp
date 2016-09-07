@@ -686,7 +686,11 @@ void CvPlayerEspionage::ProcessSpy(uint uiSpyIndex)
 		if(pSpy->m_iReviveCounter >= iSpyTurnsToRevive)
 		{
 			pSpy->m_iName = GetNextSpyName();
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			pSpy->m_eRank = (CvSpyRank)m_pPlayer->getCachedSpyStartingRank();
+#else
 			pSpy->m_eRank = (CvSpyRank)m_pPlayer->GetStartingSpyRank();
+#endif
 			pSpy->m_eSpyState = SPY_STATE_UNASSIGNED;
 			pSpy->m_iCityX = -1;
 			pSpy->m_iCityY = -1;
@@ -1311,6 +1315,29 @@ void CvPlayerEspionage::UpdateCity(CvCity* pCity)
 	pCityEspionage->m_aiRate[m_pPlayer->GetID()] = pCityEspionage->m_aiLastPotential[m_pPlayer->GetID()];
 }
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+void CvPlayerEspionage::CacheSpyStats()
+{
+	for (SpyList::iterator itSpy = m_aSpyList.begin(); itSpy != m_aSpyList.end(); ++itSpy)
+	{
+		itSpy->m_eCachedRank = itSpy->m_eRank;
+		itSpy->m_iMyPoliciesEspionageModifierCached = m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_STEAL_TECH_FASTER_MODIFIER);
+
+		CvPlot* pCityPlot = GC.getMap().plot(itSpy->m_iCityX, itSpy->m_iCityY);
+		if (pCityPlot)
+		{
+			CvCity* pLoopCity = pCityPlot->getPlotCity();
+			if (pLoopCity)
+			{
+				itSpy->m_iInfluenceMajorCivSpyRankBonusCached = m_pPlayer->GetCulture()->GetInfluenceMajorCivSpyRankBonus(pLoopCity->getOwner());
+				itSpy->m_iInfluenceCityStateSpyRankBonusCached = m_pPlayer->GetCulture()->GetInfluenceCityStateSpyRankBonus(pLoopCity->getOwner());
+				itSpy->m_iInfluenceSurveillanceTimeCached = m_pPlayer->GetCulture()->GetInfluenceSurveillanceTime(pLoopCity->getOwner());
+			}
+		}
+	}
+}
+#endif
+
 /// CalcPerTurn - How much the spy will do at this task per turn
 int CvPlayerEspionage::CalcPerTurn(int iSpyState, CvCity* pCity, int iSpyIndex)
 {
@@ -1345,8 +1372,17 @@ int CvPlayerEspionage::CalcPerTurn(int iSpyState, CvCity* pCity, int iSpyIndex)
 			int iResult = max(iFinalModifier, 1);
 			if(iSpyIndex >= 0)
 			{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				int iSpyRank = m_aSpyList[iSpyIndex].m_eCachedRank;
+				iSpyRank += m_aSpyList[iSpyIndex].m_iInfluenceMajorCivSpyRankBonusCached;
+				iMyPoliciesEspionageModifier = m_aSpyList[iSpyIndex].m_iMyPoliciesEspionageModifierCached;
+				iFinalModifier = (iBaseYieldRate * (100 + iCityEspionageModifier + iPlayerEspionageModifier + iTheirPoliciesEspionageModifier + iMyPoliciesEspionageModifier)) / 100;
+
+				iResult = MAX(iFinalModifier, 1);
+#else
 				int iSpyRank = m_aSpyList[iSpyIndex].m_eRank;
 				iSpyRank += m_pPlayer->GetCulture()->GetInfluenceMajorCivSpyRankBonus(eCityOwner);
+#endif
 				iResult *= 100 + (GC.getESPIONAGE_GATHERING_INTEL_RATE_BY_SPY_RANK_PERCENT() * iSpyRank);
 				iResult /= 100;
 			}
@@ -1362,8 +1398,13 @@ int CvPlayerEspionage::CalcPerTurn(int iSpyState, CvCity* pCity, int iSpyIndex)
 			int iResult = 1;
 			if(iSpyIndex >= 0)
 			{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+				int iSpyRank = m_aSpyList[iSpyIndex].m_eCachedRank;
+				iSpyRank += m_aSpyList[iSpyIndex].m_iInfluenceCityStateSpyRankBonusCached;
+#else
 				int iSpyRank = m_aSpyList[iSpyIndex].m_eRank;
 				iSpyRank += m_pPlayer->GetCulture()->GetInfluenceCityStateSpyRankBonus(pCity->getOwner());
+#endif
 				iResult = (iSpyRank + 1) * (iSpyRank + 1);
 			}
 			return iResult;
@@ -1399,7 +1440,11 @@ int CvPlayerEspionage::CalcRequired(int iSpyState, CvCity* pCity, int iSpyIndex)
 	CvAssertMsg(pCity, "pCity is null");
 	CvAssertMsg(iSpyIndex >= 0, "iSpyIndex is out of bounds");
 #else
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+int CvPlayerEspionage::CalcRequired(int iSpyState, CvCity* pCity, int iSpyIndex)
+#else
 int CvPlayerEspionage::CalcRequired(int iSpyState, CvCity* pCity, int)
+#endif
 {
 #endif
 
@@ -1415,7 +1460,14 @@ int CvPlayerEspionage::CalcRequired(int iSpyState, CvCity* pCity, int)
 		int iTime = 3;
 		if (pCity)
 		{
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+			if (iSpyIndex >= 0)
+			{
+				iTime = m_aSpyList[iSpyIndex].m_iInfluenceSurveillanceTimeCached;
+			}
+#else
 			iTime = m_pPlayer->GetCulture()->GetInfluenceSurveillanceTime(pCity->getOwner());
+#endif
 		}
 		return iTime;
 	}

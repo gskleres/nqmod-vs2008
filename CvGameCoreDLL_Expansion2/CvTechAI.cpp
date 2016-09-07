@@ -103,7 +103,8 @@ void CvTechAI::Write(FDataStream& kStream) const
 void CvTechAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropagationPercent)
 {
 #ifdef AUI_WARNING_FIXES
-	int* paiTempWeights = FNEW(int[m_pCurrentTechs->GetTechs()->GetNumTechs()], c_eCiv5GameplayDLL, 0);
+	FFastVector<int, true> paiTempWeights;
+	paiTempWeights.reserve(m_pCurrentTechs->GetTechs()->GetNumTechs());
 #else
 	int* paiTempWeights;
 
@@ -120,8 +121,23 @@ void CvTechAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropagati
 	{
 		const TechTypes eTech = static_cast<TechTypes>(iTech);
 		CvTechEntry* entry = m_pCurrentTechs->GetTechs()->GetEntry(iTech);
-		if(entry)
+		if (entry)
 		{
+#ifdef AUI_WARNING_FIXES
+			// Set its weight by looking at tech's weight for this flavor and using iWeight multiplier passed in
+			int iLoopWeight = entry->GetFlavorValue(eFlavor) * iWeight;
+
+			// Multiply the weight by any special player-specific weighting (i.e. to prioritize civ unique bonuses)
+			iLoopWeight *= m_pCurrentTechs->GetPlayer()->GetPlayerTechs()->GetCivTechPriority(eTech);
+
+			// Multiply the weight by any locale-specific weighting (i.e. to prioritize unlocking resources)
+			iLoopWeight *= m_pCurrentTechs->GetPlayer()->GetPlayerTechs()->GetLocaleTechPriority(eTech);
+
+			paiTempWeights.push_back(iLoopWeight);
+		}
+		else
+			paiTempWeights.push_back(0);
+#else
 			// Set its weight by looking at tech's weight for this flavor and using iWeight multiplier passed in
 			paiTempWeights[iTech] = entry->GetFlavorValue(eFlavor) * iWeight;
 
@@ -131,6 +147,7 @@ void CvTechAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropagati
 			// Multiply the weight by any locale-specific weighting (i.e. to prioritize unlocking resources)
 			paiTempWeights[iTech] *= m_pCurrentTechs->GetPlayer()->GetPlayerTechs()->GetLocaleTechPriority(eTech);
 		}
+#endif
 	}
 
 	// Propagate these values left in the tree so prereqs get bought
@@ -149,10 +166,6 @@ void CvTechAI::AddFlavorWeights(FlavorTypes eFlavor, int iWeight, int iPropagati
 			m_TechAIWeights.IncreaseWeight(iTech, paiTempWeights[iTech]);
 		}
 	}
-
-#ifdef AUI_WARNING_FIXES
-	SAFE_DELETE_ARRAY(paiTempWeights);
-#endif
 }
 
 
@@ -324,11 +337,13 @@ float CvTechAI::GetTechRatio()
 // PRIVATE METHODS
 //=====================================
 /// Add weights to techs that are prereqs for the ones already weighted in this strategy
-void CvTechAI::WeightPrereqs(int* paiTempWeights, int iPropagationPercent)
-{
 #ifdef AUI_WARNING_FIXES
+void CvTechAI::WeightPrereqs(FFastVector<int, true> paiTempWeights, int iPropagationPercent)
+{
 	uint iTechLoop;
 #else
+void CvTechAI::WeightPrereqs(int* paiTempWeights, int iPropagationPercent)
+{
 	int iTechLoop;
 #endif
 
