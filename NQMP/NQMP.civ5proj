@@ -44,6 +44,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>buildings/AmphitheaterChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>buildings/BroadcastTowerChanges.xml</FileName>
       </Action>
       <Action>
@@ -80,6 +85,11 @@
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>buildings/ObservatoryChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>buildings/OperaHouseChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -1283,6 +1293,10 @@
     <DeployMod>true</DeployMod>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="buildings\AmphitheaterChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="buildings\BroadcastTowerChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1312,6 +1326,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="buildings\Observatory_SQL.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="buildings\OperaHouseChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
