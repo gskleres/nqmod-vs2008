@@ -2,12 +2,18 @@
 <!-- Created by ModBuddy on 5/4/2016 8:39:17 AM -->
 <GameData>
 
-	<!-- Broadcast Towers now need Opera Houses instead of Museums. -->
+	<!-- Broadcast Towers now need Opera Houses instead of Museums. They also provide +2 Culture by default. -->
 	<Building_ClassesNeededInCity>
 		<Update>
 			<Set BuildingClassType="BUILDINGCLASS_OPERA_HOUSE" />
 			<Where BuildingType="BUILDING_BROADCAST_TOWER" />
 		</Update>
 	</Building_ClassesNeededInCity>
+	<Building_YieldChanges>
+		<Update>
+			<Set Yield="2" />
+			<Where BuildingType="BUILDING_BROADCAST_TOWER" YieldType="YIELD_CULTURE" />
+		</Update>
+	</Building_YieldChanges>
 
 </GameData>
