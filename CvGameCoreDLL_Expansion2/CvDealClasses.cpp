@@ -3059,9 +3059,6 @@ void CvGameDeals::DoCancelDealsBetweenPlayers(PlayerTypes eFromPlayer, PlayerTyp
 
 	if(m_CurrentDeals.size() > 0)
 	{
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-		bool bOtherPlayerCanRespond = !GET_PLAYER(eFromPlayer).isEndTurn();
-#endif
 		bool bSomethingChanged = false;
 
 		// Copy the deals into a temporary container
@@ -3099,7 +3096,7 @@ void CvGameDeals::DoCancelDealsBetweenPlayers(PlayerTypes eFromPlayer, PlayerTyp
 					PlayerTypes eItemFromPlayer = itemIter->m_eFromPlayer;
 					PlayerTypes eItemToPlayer = it->GetOtherPlayer(eItemFromPlayer);
 
-					if (eItemToPlayer == eToPlayer || bOtherPlayerCanRespond || itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT)
+					if (eItemToPlayer == eToPlayer || eItemToPlayer == eFromPlayer || itemIter->m_eItemType == TRADE_ITEM_RESEARCH_AGREEMENT)
 					{
 						DoEndTradedItem(&*itemIter, eItemToPlayer, true);
 					}
@@ -3110,11 +3107,6 @@ void CvGameDeals::DoCancelDealsBetweenPlayers(PlayerTypes eFromPlayer, PlayerTyp
 					DoEndTradedItem(&*itemIter, eToPlayer, true);
 #endif
 				}
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-				if (!bOtherPlayerCanRespond)
-					m_CurrentlyEndingDeals.push_back(*it);
-				else
-#endif
 				m_HistoricalDeals.push_back(*it);
 			}
 			else
