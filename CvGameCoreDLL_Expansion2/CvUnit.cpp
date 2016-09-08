@@ -3151,16 +3151,9 @@ bool CvUnit::canMoveOrAttackIntoCommon(const CvPlot& plot, byte bMoveFlags) cons
 				return false;
 			}
 
-			if (isHuman())
+			if (!isHuman() || !(bMoveFlags & MOVEFLAG_DECLARE_WAR))
 			{
-				if (!(bMoveFlags & MOVEFLAG_DECLARE_WAR))
-				{
 					return false;
-				}
-			}
-			else
-			{
-				return false;
 			}
 		}
 	}
@@ -3210,10 +3203,6 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 			return false;
 		}
 	}
-	else if (isNoCapture() && plot.isEnemyCity(*this))
-	{
-		return false;
-	}
 
 	// Can't enter an enemy city until it's "defeated"
 	if (plot.isEnemyCity(*this))
@@ -3224,6 +3213,10 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 				return false;
 			if (isHasPromotion((PromotionTypes)GC.getPROMOTION_ONLY_DEFENSIVE()))
 				return false;	// Can't advance into an enemy city
+		}
+		else if (isNoCapture())
+		{
+			return false;
 		}
 		else if (plot.getPlotCity()->getDamage() < plot.getPlotCity()->GetMaxHitPoints())
 		{
@@ -3345,9 +3338,6 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 		else //if !bMoveFlagAttack
 		{
 			bool bEmbarkedAndAdjacent = false;
-#ifndef AUI_UNIT_FIX_RADAR
-			bool bEnemyUnitPresent = false;
-#endif
 
 			// Without this code, Embarked Units can move on top of enemies because they have no visibility
 			if (isEmbarked() || (bMoveFlags & MOVEFLAG_PRETEND_EMBARKED))
@@ -3390,14 +3380,7 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 				return false;
 			}
 
-			if (isHuman())
-			{
-				if (!(bMoveFlags & MOVEFLAG_DECLARE_WAR))
-				{
-					return false;
-				}
-			}
-			else
+			if (!isHuman() || !(bMoveFlags & MOVEFLAG_DECLARE_WAR))
 			{
 				return false;
 			}

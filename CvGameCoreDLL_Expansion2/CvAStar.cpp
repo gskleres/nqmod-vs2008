@@ -1731,7 +1731,6 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 		{
 			kToNodeCacheData.bIsCalculated = true;
 			kToNodeCacheData.bPlotVisibleToTeam = true;
-			kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 			kToNodeCacheData.bIsMountain = pToPlot->isMountain();
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
 			kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
@@ -1752,16 +1751,9 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 					kToNodeCacheData.bContainsOtherFriendlyTeamCity = true;
 			}
 			kToNodeCacheData.bContainsEnemyCity = pToPlot->isEnemyCity(*pUnit);
-			if (kToNodeCacheData.bPlotVisibleToTeam)
-			{
-				kToNodeCacheData.bContainsVisibleEnemy = pToPlot->isVisibleEnemyUnit(pUnit);
-				kToNodeCacheData.bContainsVisibleEnemyDefender = pToPlot->getBestDefender(NO_PLAYER, unit_owner, pUnit).pointer() != NULL;
-			}
-			else
-			{
-				kToNodeCacheData.bContainsVisibleEnemy = false;
-				kToNodeCacheData.bContainsVisibleEnemyDefender = false;
-			}
+			kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
+			kToNodeCacheData.bContainsVisibleEnemy = pToPlot->isVisibleEnemyUnit(pUnit);
+			kToNodeCacheData.bContainsVisibleEnemyDefender = pToPlot->getBestDefender(NO_PLAYER, unit_owner, pUnit).pointer() != NULL;
 		}
 #endif
 		return TRUE;
@@ -1773,7 +1765,6 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 	if (!kToNodeCacheData.bIsCalculated)
 	{
 		kToNodeCacheData.bPlotVisibleToTeam = pToPlot->isVisible(eUnitTeam);
-		kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 		kToNodeCacheData.bIsMountain = pToPlot->isMountain();
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
 		kToNodeCacheData.bIsWater = !pToPlot->IsAllowsWalkWater();
@@ -1795,11 +1786,13 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 		kToNodeCacheData.bContainsEnemyCity = pToPlot->isEnemyCity(*pUnit);
 		if (kToNodeCacheData.bPlotVisibleToTeam)
 		{
+			kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 			kToNodeCacheData.bContainsVisibleEnemy = pToPlot->isVisibleEnemyUnit(pUnit);
 			kToNodeCacheData.bContainsVisibleEnemyDefender = pToPlot->getBestDefender(NO_PLAYER, unit_owner, pUnit).pointer() != NULL;
 		}
 		else
 		{
+			kToNodeCacheData.iNumFriendlyUnitsOfType = 0;
 			kToNodeCacheData.bContainsVisibleEnemy = false;
 			kToNodeCacheData.bContainsVisibleEnemyDefender = false;
 		}
