@@ -111,6 +111,8 @@
 #define AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
 /// Fixes a bug where Lua mods that use different functions for religion founding and enhancing could allow multiple players to enhance or found religions in simultaneous multiplayer with conflicting beliefs, resulting in religions enhancing/founding multiple times
 #define AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE
+/// Moved the check for available beliefs from CvUnit to CvReligion so that it always fires properly for non-pantheons
+#define AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts

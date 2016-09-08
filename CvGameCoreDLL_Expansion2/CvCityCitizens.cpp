@@ -3585,7 +3585,11 @@ int CvCityCitizens::GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass)
 }
 
 /// Create a GP!
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet, bool bSpawnWithNoExpendedTrigger)
+#else
 void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet)
+#endif
 {
 	CvAssert(eUnit != NO_UNIT);
 
@@ -3605,6 +3609,10 @@ void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, b
 
 	CvPlayer& kPlayer = GET_PLAYER(GetCity()->getOwner());
 	CvUnit* newUnit = kPlayer.initUnit(eUnit, GetCity()->getX(), GetCity()->getY());
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	if (bSpawnWithNoExpendedTrigger)
+		newUnit->SetIgnoreExpended(true);
+#endif
 
 	// Bump up the count
 	if(bIncrementCount && !bCountAsProphet)
