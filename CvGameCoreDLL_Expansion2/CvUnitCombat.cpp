@@ -815,10 +815,6 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvCity& kAttacker, CvUnit* pkDefende
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
 
 	int iExperience = /*2*/ GC.getEXPERIENCE_DEFENDING_UNIT_RANGED();
-#ifdef DEL_RANGED_COUNTERATTACKS
-	if (!pkDefender->IsCanAttackRanged() && iDamageToAttacker > 0)
-		iExperience = /*5*/ GC.getEXPERIENCE_ATTACKING_CITY_MELEE();
-#endif
 	pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, iExperience);
 	int iMaxExperience = (GET_PLAYER(kAttacker.getOwner()).isMinorCiv()) ? 30 : MAX_INT; // NQMP GJS - cap XP from fighting CS to 30
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, iMaxExperience);
@@ -882,24 +878,18 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 					pkDefender->changeDamage(iDamage, pkAttacker->getOwner());
 					pkAttacker->changeDamage(iDamageToAttacker, pkDefender->getOwner());
 
-					if (iDamageToAttacker > 0) // && iDefenderStrength > 0)
-					{
-						pkDefender->changeExperience(
-							kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
-							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
-							true,
-							kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
-							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
-					}
-					if (iDamage > 0) // && iDefenderStrength > 0)
-					{
-						pkAttacker->changeExperience(
-							kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
-							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
-							true,
-							kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
-							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
-					}
+					pkDefender->changeExperience(
+						kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
+						kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
+						true,
+						kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
+						kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+					pkAttacker->changeExperience(
+						kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
+						kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
+						true,
+						kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
+						kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
 
 																															// Anyone eat it?
 					bAttackerDied = (pkAttacker->getDamage() >= GC.getMAX_HIT_POINTS());
@@ -1034,15 +1024,12 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 #ifdef DEL_RANGED_COUNTERATTACKS
 					pkAttacker->changeDamage(iDamageToAttacker, pCity->getOwner());
 
-					if (iDamage > 0) // && iDefenderStrength > 0)
-					{
-						pkAttacker->changeExperience(
-							kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
-							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
-							true,
-							kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
-							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
-					}
+					pkAttacker->changeExperience(
+						kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
+						kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
+						true,
+						kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
+						kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
 
 					// Anyone eat it?
 					bAttackerDied = (pkAttacker->getDamage() >= GC.getMAX_HIT_POINTS());
