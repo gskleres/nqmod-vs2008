@@ -9713,16 +9713,13 @@ int CvPlayer::unitsGoldenAgeReady() const
 {
 	const CvUnit* pLoopUnit;
 #ifdef AUI_WARNING_FIXES
-	FFastVector<bool, true> pabUnitUsed;
-	pabUnitUsed.reserve(GC.getNumUnitInfos());
-
-	for (uint iI = 0; iI < GC.getNumUnitInfos(); iI++)
-	{
-		pabUnitUsed.push_back(false);
-	}
+	// This solution is usually faster (and definitely smaller) because players will not have a lot of Golden Age-able units
+	FStaticVector<UnitTypes, 2, true, c_eCiv5GameplayDLL> pabUnitUsed;
+	FStaticVector<UnitTypes, 2, true, c_eCiv5GameplayDLL>::iterator it;
 
 	int iCount = 0;
 	int iLoop = 0;
+	UnitTypes eLoopUnitType = NO_UNIT;
 #else
 	bool* pabUnitUsed;
 	int iCount;
@@ -9741,6 +9738,21 @@ int CvPlayer::unitsGoldenAgeReady() const
 
 	for(pLoopUnit = firstUnit(&iLoop); pLoopUnit != NULL; pLoopUnit = nextUnit(&iLoop))
 	{
+#ifdef AUI_WARNING_FIXES
+		if (pLoopUnit->isGoldenAge())
+		{
+			eLoopUnitType = pLoopUnit->getUnitType();
+			for (it = pabUnitUsed.begin(); it != pabUnitUsed.end(); ++it)
+			{
+				if (*it == eLoopUnitType)
+				{
+					goto NextUnit;
+				}
+			}
+			pabUnitUsed.push_back(eLoopUnitType);
+			iCount++;
+		NextUnit:;
+#else
 		if(!(pabUnitUsed[pLoopUnit->getUnitType()]))
 		{
 			if(pLoopUnit->isGoldenAge())
@@ -9748,6 +9760,7 @@ int CvPlayer::unitsGoldenAgeReady() const
 				pabUnitUsed[pLoopUnit->getUnitType()] = true;
 				iCount++;
 			}
+#endif
 		}
 	}
 

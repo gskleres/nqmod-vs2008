@@ -983,6 +983,9 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_bAITurnProcessed = false;
 	m_bWaitingForMove = false;
 	m_eTacticalMove = NO_TACTICAL_MOVE;
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+	m_bCanInstahealThisTurn = true;
+#endif
 #if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
 	m_bIsInterceptBlockedUntilEndTurn = false;
 #endif
@@ -19455,6 +19458,16 @@ void CvUnit::read(FDataStream& kStream)
 
 	kStream >> m_iResearchBulbAmount; // GJS
 
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+	kStream >> m_bCanInstahealThisTurn;
+#endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	kStream >> m_bIsInterceptBlockedUntilEndTurn;
+#endif
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	kStream >> m_bIsIgnoreExpended;
+#endif
+
 	//  Read mission queue
 	UINT uSize;
 	kStream >> uSize;
@@ -19569,12 +19582,22 @@ void CvUnit::write(FDataStream& kStream) const
 
 	kStream << m_iTourismBlastStrength;
 
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+	kStream << m_bCanInstahealThisTurn;
+#endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	kStream << m_bIsInterceptBlockedUntilEndTurn;
+#endif
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	kStream << m_bIsIgnoreExpended;
+#endif
+
 	kStream << m_iResearchBulbAmount; // GJS
 
 	//  Write mission list
 	kStream << m_missionQueue.getLength();
 #ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
-	for (unsigned int uIdx = 0; uIdx < m_missionQueue.getLength(); ++uIdx)
+	for (UINT uIdx = 0; uIdx < m_missionQueue.getLength(); ++uIdx)
 #else
 	for(int uIdx = 0; uIdx < m_missionQueue.getLength(); ++uIdx)
 #endif
