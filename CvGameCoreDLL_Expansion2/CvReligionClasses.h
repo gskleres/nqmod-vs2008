@@ -163,7 +163,7 @@ public:
 	FOUNDING_RESULT CanFoundReligion(PlayerTypes ePlayer, ReligionTypes eReligion, const char* szCustomName, BeliefTypes eBelief1, BeliefTypes eBelief2, BeliefTypes eBelief3, BeliefTypes eBelief4, CvCity* pkHolyCity);
 	FOUNDING_RESULT CanEnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligion, BeliefTypes eBelief1, BeliefTypes eBelief2);
 #ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
-	FOUNDING_RESULT CanAddReformationBelief(PlayerTypes ePlayer) const;
+	FOUNDING_RESULT CanAddReformationBelief(PlayerTypes ePlayer, BeliefTypes eBelief = NO_BELIEF) const;
 #endif
 
 	// Functions for religious actions
