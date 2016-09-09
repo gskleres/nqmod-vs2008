@@ -128,8 +128,14 @@ public:
 	void ChangeNumForcedWorkingPlots(int iChange);
 
 	bool IsCanWork(CvPlot* pPlot) const;
+#ifdef AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
+	bool IsPlotBlockaded(const CvPlot* pPlot) const;
+	bool GetNumForcedWorkingPlotsBlocked() const;
+#else
 	bool IsPlotBlockaded(CvPlot* pPlot) const;
+#endif
 	bool IsAnyPlotBlockaded() const;
+
 
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
 	bool DoVerifyWorkingPlot(CvPlot* pPlot);
