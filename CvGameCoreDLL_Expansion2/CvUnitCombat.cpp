@@ -140,12 +140,21 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 		int iMaxExperience = (GET_PLAYER(pkCity->getOwner()).isMinorCiv()) ? 30 : MAX_INT; // NQMP GJS - cap XP from fighting CS to 30
 		pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_ATTACKER, iMaxExperience);
 		pkCombatInfo->setInBorders(BATTLE_UNIT_ATTACKER, plot.getOwner() == pkCity->getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		bool bIsGlobalXPAwarded = !kAttacker.isBarbarian() && !GET_PLAYER(kAttacker.getOwner()).isMinorCiv() && !pkCity->isBarbarian() && !GET_PLAYER(pkCity->getOwner()).isMinorCiv();
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
+#endif
 
 		pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, 0);
 		pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, kAttacker.maxXPValue());
 		pkCombatInfo->setInBorders(BATTLE_UNIT_DEFENDER, plot.getOwner() == kAttacker.getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !pkCity->isBarbarian());
+#endif
 
 		pkCombatInfo->setAttackIsRanged(false);
 		pkCombatInfo->setDefenderRetaliates(true);
@@ -231,7 +240,12 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 		pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, iExperience);
 		pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, kAttacker.maxXPValue());
 		pkCombatInfo->setInBorders(BATTLE_UNIT_DEFENDER, plot.getOwner() == pkDefender->getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		bool bIsGlobalXPAwarded = !kAttacker.isBarbarian() && !GET_PLAYER(kAttacker.getOwner()).isMinorCiv() && !pkDefender->isBarbarian() && !GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !kAttacker.isBarbarian());
+#endif
 
 		//iExperience = ((iExperience * iDefenderEffectiveStrength) / iAttackerEffectiveStrength);
 		//iExperience = range(iExperience, GC.getMIN_EXPERIENCE_PER_COMBAT(), GC.getMAX_EXPERIENCE_PER_COMBAT());
@@ -239,7 +253,11 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 		pkCombatInfo->setExperience(BATTLE_UNIT_ATTACKER, iExperience);
 		pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_ATTACKER, pkDefender->maxXPValue());
 		pkCombatInfo->setInBorders(BATTLE_UNIT_ATTACKER, plot.getOwner() == kAttacker.getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !pkDefender->isBarbarian());
+#endif
 
 		pkCombatInfo->setAttackIsRanged(false);
 
@@ -679,13 +697,22 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvUnit& kAttacker, CvUnit* pkDefende
 	pkCombatInfo->setExperience(BATTLE_UNIT_ATTACKER, iExperience);
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_ATTACKER, iMaxXP);
 	pkCombatInfo->setInBorders(BATTLE_UNIT_ATTACKER, plot.getOwner() == eDefenderOwner);
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	bool bIsGlobalXPAwarded = !kAttacker.isBarbarian() && !GET_PLAYER(kAttacker.getOwner()).isMinorCiv() && !pkDefender->isBarbarian() && !GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, bIsGlobalXPAwarded);
+#else
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
+#endif
 
 	iExperience = /*2*/ GC.getEXPERIENCE_DEFENDING_UNIT_RANGED();
 	pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, iExperience);
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, kAttacker.maxXPValue());
 	pkCombatInfo->setInBorders(BATTLE_UNIT_DEFENDER, plot.getOwner() == kAttacker.getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, bIsGlobalXPAwarded);
+#else
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !bBarbarian && !kAttacker.isBarbarian());
+#endif
 
 	pkCombatInfo->setAttackIsRanged(true);
 #ifdef DEL_RANGED_COUNTERATTACKS
@@ -812,14 +839,23 @@ void CvUnitCombat::GenerateRangedCombatInfo(CvCity& kAttacker, CvUnit* pkDefende
 	pkCombatInfo->setExperience(BATTLE_UNIT_ATTACKER, 0);
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_ATTACKER, 0);
 	pkCombatInfo->setInBorders(BATTLE_UNIT_ATTACKER, plot.getOwner() == eDefenderOwner);
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	bool bIsGlobalXPAwarded = !kAttacker.isBarbarian() && !GET_PLAYER(kAttacker.getOwner()).isMinorCiv() && !pkDefender->isBarbarian() && !GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, bIsGlobalXPAwarded);
+#else
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
+#endif
 
 	int iExperience = /*2*/ GC.getEXPERIENCE_DEFENDING_UNIT_RANGED();
 	pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, iExperience);
 	int iMaxExperience = (GET_PLAYER(kAttacker.getOwner()).isMinorCiv()) ? 30 : MAX_INT; // NQMP GJS - cap XP from fighting CS to 30
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, iMaxExperience);
 	pkCombatInfo->setInBorders(BATTLE_UNIT_DEFENDER, plot.getOwner() == kAttacker.getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, bIsGlobalXPAwarded);
+#else
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !bBarbarian && !kAttacker.isBarbarian());
+#endif
 
 	pkCombatInfo->setAttackIsRanged(true);
 #ifdef DEL_RANGED_COUNTERATTACKS
@@ -1575,13 +1611,22 @@ void CvUnitCombat::GenerateAirCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender, 
 	pkCombatInfo->setExperience(BATTLE_UNIT_ATTACKER, iExperience);
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_ATTACKER, iMaxXP);
 	pkCombatInfo->setInBorders(BATTLE_UNIT_ATTACKER, plot.getOwner() == eDefenderOwner);
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	bool bIsGlobalXPAwarded = !kAttacker.isBarbarian() && !GET_PLAYER(kAttacker.getOwner()).isMinorCiv() && !pkDefender->isBarbarian() && !GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, bIsGlobalXPAwarded);
+#else
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
+#endif
 
 	iExperience = /*2*/ GC.getEXPERIENCE_DEFENDING_UNIT_AIR();
 	pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, iExperience);
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, MAX_INT);
 	pkCombatInfo->setInBorders(BATTLE_UNIT_DEFENDER, plot.getOwner() == kAttacker.getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, bIsGlobalXPAwarded);
+#else
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !bBarbarian);
+#endif
 
 	if (iInterceptionDamage > 0)
 	{
@@ -1589,7 +1634,11 @@ void CvUnitCombat::GenerateAirCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender, 
 		pkCombatInfo->setExperience( BATTLE_UNIT_INTERCEPTOR, iExperience );
 		pkCombatInfo->setMaxExperienceAllowed( BATTLE_UNIT_INTERCEPTOR, MAX_INT );
 		pkCombatInfo->setInBorders( BATTLE_UNIT_INTERCEPTOR, plot.getOwner() == kAttacker.getOwner() );
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_INTERCEPTOR, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal( BATTLE_UNIT_INTERCEPTOR, !bBarbarian );
+#endif
 	}
 
 	pkCombatInfo->setAttackIsBombingMission(true);
@@ -1867,6 +1916,9 @@ void CvUnitCombat::GenerateAirSweepCombatInfo(CvUnit& kAttacker, CvUnit* pkDefen
 	int iDefenderStrength = 0;
 
 	int iDefenderExperience = 0;
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	bool bIsGlobalXPAwarded = !kAttacker.isBarbarian() && !GET_PLAYER(kAttacker.getOwner()).isMinorCiv() && !pkDefender->isBarbarian() && !GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+#endif
 
 	// Ground AA interceptor
 	if(pkDefender->getDomainType() != DOMAIN_AIR)
@@ -1889,12 +1941,20 @@ void CvUnitCombat::GenerateAirSweepCombatInfo(CvUnit& kAttacker, CvUnit* pkDefen
 		pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, iDefenderExperience);
 		pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_ATTACKER, pkDefender->maxXPValue());
 		pkCombatInfo->setInBorders(BATTLE_UNIT_ATTACKER, plot.getOwner() == pkDefender->getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
+#endif
 
 		pkCombatInfo->setExperience(BATTLE_UNIT_ATTACKER, 0);
 		pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, kAttacker.maxXPValue());
 		pkCombatInfo->setInBorders(BATTLE_UNIT_DEFENDER, plot.getOwner() == kAttacker.getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !pkDefender->isBarbarian());
+#endif
 #endif
 	}
 	// Air interceptor
@@ -1950,7 +2010,11 @@ void CvUnitCombat::GenerateAirSweepCombatInfo(CvUnit& kAttacker, CvUnit* pkDefen
 		pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, iDefenderExperience);
 		pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_ATTACKER, pkDefender->maxXPValue());
 		pkCombatInfo->setInBorders(BATTLE_UNIT_ATTACKER, plot.getOwner() == pkDefender->getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
+#endif
 
 		//iExperience = ((iExperience * iDefenderEffectiveStrength) / iAttackerEffectiveStrength);
 		//iExperience = range(iExperience, GC.getMIN_EXPERIENCE_PER_COMBAT(), GC.getMAX_EXPERIENCE_PER_COMBAT());
@@ -1958,7 +2022,11 @@ void CvUnitCombat::GenerateAirSweepCombatInfo(CvUnit& kAttacker, CvUnit* pkDefen
 		pkCombatInfo->setExperience(BATTLE_UNIT_ATTACKER, iExperience);
 		pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, kAttacker.maxXPValue());
 		pkCombatInfo->setInBorders(BATTLE_UNIT_DEFENDER, plot.getOwner() == kAttacker.getOwner());
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, bIsGlobalXPAwarded);
+#else
 		pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_DEFENDER, !pkDefender->isBarbarian());
+#endif
 	}
 
 	pkCombatInfo->setAttackIsRanged(false);
@@ -2264,7 +2332,11 @@ void CvUnitCombat::GenerateNuclearCombatInfo(CvUnit& kAttacker, CvPlot& plot, Cv
 	pkCombatInfo->setExperience(BATTLE_UNIT_ATTACKER, 0);
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_ATTACKER, 0);
 	pkCombatInfo->setInBorders(BATTLE_UNIT_ATTACKER, plot.getOwner() != kAttacker.getOwner());	// Not really correct
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, false); // Since experience earned is 0 anyway, no need to bother
+#else
 	pkCombatInfo->setUpdateGlobal(BATTLE_UNIT_ATTACKER, !kAttacker.isBarbarian());
+#endif
 
 	pkCombatInfo->setExperience(BATTLE_UNIT_DEFENDER, 0);
 	pkCombatInfo->setMaxExperienceAllowed(BATTLE_UNIT_DEFENDER, 0);
