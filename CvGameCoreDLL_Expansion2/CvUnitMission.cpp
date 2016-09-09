@@ -866,6 +866,13 @@ bool CvUnitMission::CanStartMission(UnitHandle hUnit, int iMission, int iData1, 
 		return false;
 	}
 
+#ifdef AUI_UNIT_MISSION_FIX_NO_MISSION_ON_DEATH
+	if (hUnit->isDelayedDeath())
+	{
+		return false;
+	}
+#endif
+
 	// Prevented by scripting?
 	ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 	if(pkScriptSystem)
