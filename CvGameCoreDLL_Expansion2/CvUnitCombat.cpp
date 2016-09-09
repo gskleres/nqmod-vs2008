@@ -311,21 +311,36 @@ void CvUnitCombat::ResolveMeleeCombat(const CvCombatInfo& kCombatInfo, uint uiPa
 		pkDefender->changeDamage(iAttackerDamageInflicted, pkAttacker->getOwner());
 		iAttackerDamageDelta = pkAttacker->changeDamage(iDefenderDamageInflicted, pkDefender->getOwner(), -1.f);		// Signal that we don't want the popup text.  It will be added later when the unit is at its final location
 
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		bool bIsCSOrBarb = pkAttacker->isBarbarian() || GET_PLAYER(pkAttacker->getOwner()).isMinorCiv();
+#endif
 		// Update experience for both sides.
 		pkDefender->changeExperience(
 		    kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
 		    kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
 		    true,
 		    kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
-		    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+		    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+			, !bIsCSOrBarb);
+#else
+			);
+#endif
 
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		bIsCSOrBarb = pkDefender->isBarbarian() || GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+#endif
 		pkAttacker->changeExperience(
 		    kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
 		    kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
 		    true,
 		    kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
-		    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
-
+		    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+			, !bIsCSOrBarb);
+#else
+			);
+#endif
 		// Anyone eat it?
 		bAttackerDead = (pkAttacker->getDamage() >= GC.getMAX_HIT_POINTS());
 		bDefenderDead = (pkDefender->getDamage() >= GC.getMAX_HIT_POINTS());
@@ -849,6 +864,9 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 //	int iExperience = kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER);
 //	int iMaxXP = kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER);
 	bool bBarbarian = false;
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	bool bIsCSOrBarb = false;
+#endif
 
 	CvUnit* pkAttacker = kCombatInfo.getUnit(BATTLE_UNIT_ATTACKER);
 	CvAssert_Debug(pkAttacker);
@@ -884,21 +902,37 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 
 					if (iDamageToAttacker > 0) // && iDefenderStrength > 0)
 					{
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+						bIsCSOrBarb = pkAttacker->isBarbarian() || GET_PLAYER(pkAttacker->getOwner()).isMinorCiv();
+#endif
 						pkDefender->changeExperience(
 							kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
 							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
 							true,
 							kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
-							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+							, !bIsCSOrBarb);
+#else
+							);
+#endif
 					}
 					if (iDamage > 0) // && iDefenderStrength > 0)
 					{
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+						bIsCSOrBarb = pkDefender->isBarbarian() || GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+#endif
 						pkAttacker->changeExperience(
 							kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
 							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
 							true,
 							kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
-							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
+							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+							, !bIsCSOrBarb);
+#else
+							);
+#endif
 					}
 
 																															// Anyone eat it?
@@ -1003,12 +1037,20 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 					pkDefender->changeDamage(iDamage, pkAttacker->getOwner());
 
 					// Update experience
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+					bIsCSOrBarb = pkAttacker->isBarbarian() || GET_PLAYER(pkAttacker->getOwner()).isMinorCiv();
+#endif
 					pkDefender->changeExperience(
 					    kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
 					    kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
 					    true,
 					    kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
-					    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+					    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+						, !bIsCSOrBarb);
+#else
+						);
+#endif
 #endif
 				}
 
@@ -1036,12 +1078,20 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 
 					if (iDamage > 0) // && iDefenderStrength > 0)
 					{
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+						bIsCSOrBarb = GET_PLAYER(pCity->getOwner()).isMinorCiv();
+#endif
 						pkAttacker->changeExperience(
 							kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
 							kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
 							true,
 							kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
-							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
+							kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+							, !bIsCSOrBarb);
+#else
+							);
+#endif
 					}
 
 					// Anyone eat it?
@@ -1100,12 +1150,38 @@ void CvUnitCombat::ResolveRangedUnitVsCombat(const CvCombatInfo& kCombatInfo, ui
 		// Unit gains XP for executing a Range Strike
 		if(iDamage > 0) // && iDefenderStrength > 0)
 		{
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+			if(!pkTargetPlot->isCity())
+			{
+				// Unit
+				CvUnit* pkDefender = kCombatInfo.getUnit(BATTLE_UNIT_DEFENDER);
+				CvAssert_Debug(pkDefender != NULL);
+				if(pkDefender)
+				{
+					bIsCSOrBarb = pkDefender->isBarbarian() || GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+				}
+			else
+			{
+				// City
+				CvCity* pCity = pkTargetPlot->getPlotCity();
+				CvAssert_Debug(pCity != NULL);
+				if(pCity)
+				{
+					bIsCSOrBarb = GET_PLAYER(pCity->getOwner()).isMinorCiv();
+				}
+			}
+#endif
 			pkAttacker->changeExperience(
 			    kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
 			    kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
 			    true,
 			    kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
-			    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
+			    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+				, !bIsCSOrBarb);
+#else
+				);
+#endif
 		}
 
 #ifndef AUI_UNIT_TEST_PROMOTION_READY_MOVED
@@ -1130,6 +1206,9 @@ void CvUnitCombat::ResolveRangedCityVsUnitCombat(const CvCombatInfo& kCombatInfo
 	bool bTargetDied = false;
 	int iDamage = kCombatInfo.getDamageInflicted(BATTLE_UNIT_ATTACKER);
 	bool bBarbarian = false;
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	bool bIsCSOrBarb = false;
+#endif
 
 	CvCity* pkAttacker = kCombatInfo.getCity(BATTLE_UNIT_ATTACKER);
 	CvAssert_Debug(pkAttacker);
@@ -1165,12 +1244,20 @@ void CvUnitCombat::ResolveRangedCityVsUnitCombat(const CvCombatInfo& kCombatInfo
 					pkDefender->changeDamage(iDamage, pkAttacker->getOwner());
 					pkAttacker->changeDamage(iDamageToCity);
 
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+					bIsCSOrBarb = GET_PLAYER(pkAttacker->getOwner()).isMinorCiv();
+#endif
 					pkDefender->changeExperience(
 						kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
 						kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
 						true,
 						kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
-						kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+						kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+						, !bIsCSOrBarb);
+#else
+						);
+#endif
 
 					if (pkDefender->IsDead())
 					{
@@ -1247,12 +1334,20 @@ void CvUnitCombat::ResolveRangedCityVsUnitCombat(const CvCombatInfo& kCombatInfo
 					pkDefender->changeDamage(iDamage, pkAttacker->getOwner());
 
 					// Update experience
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+					bIsCSOrBarb = GET_PLAYER(pkAttacker->getOwner()).isMinorCiv();
+#endif
 					pkDefender->changeExperience(
 					    kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
 					    kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
 					    true,
 					    kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
-					    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+					    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+						, !bIsCSOrBarb);
+#else
+						);
+#endif
 #endif
 				}
 
@@ -1305,11 +1400,19 @@ void CvUnitCombat::ResolveCityMeleeCombat(const CvCombatInfo& kCombatInfo, uint 
 		pkAttacker->changeDamage(iDefenderDamageInflicted, pkDefender->getOwner());
 		pkDefender->changeDamage(iAttackerDamageInflicted);
 
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		bool bIsCSOrBarb = GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+#endif
 		pkAttacker->changeExperience(kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
 		                             kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
 		                             true,
 		                             false,
-		                             kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
+		                             kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+									 , !bIsCSOrBarb);
+#else
+									 );
+#endif
 	}
 
 	bool bCityConquered = false;
@@ -1621,6 +1724,9 @@ void CvUnitCombat::ResolveAirUnitVsCombat(const CvCombatInfo& kCombatInfo, uint 
 	bool bTargetDied = false;
 	int iAttackerDamageInflicted = kCombatInfo.getDamageInflicted(BATTLE_UNIT_ATTACKER);
 	int iDefenderDamageInflicted = kCombatInfo.getDamageInflicted(BATTLE_UNIT_DEFENDER);
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	bool bIsCSOrBarb = false;
+#endif
 
 	CvUnit* pkAttacker = kCombatInfo.getUnit(BATTLE_UNIT_ATTACKER);
 
@@ -1638,12 +1744,20 @@ void CvUnitCombat::ResolveAirUnitVsCombat(const CvCombatInfo& kCombatInfo, uint 
 	{
 		pInterceptor->setMadeInterception(true);
 		pInterceptor->setCombatUnit(NULL);
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+		bIsCSOrBarb = pkAttacker->isBarbarian() || GET_PLAYER(pkAttacker->getOwner()).isMinorCiv();
+#endif
 		pInterceptor->changeExperience(
 			kCombatInfo.getExperience(BATTLE_UNIT_INTERCEPTOR),
 			kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_INTERCEPTOR),
 			true,
 			kCombatInfo.getInBorders(BATTLE_UNIT_INTERCEPTOR),
-			kCombatInfo.getUpdateGlobal(BATTLE_UNIT_INTERCEPTOR));
+			kCombatInfo.getUpdateGlobal(BATTLE_UNIT_INTERCEPTOR)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+			, !bIsCSOrBarb);
+#else
+			);
+#endif
 	}
 
 	CvPlot* pkTargetPlot = kCombatInfo.getPlot();
@@ -1675,12 +1789,20 @@ void CvUnitCombat::ResolveAirUnitVsCombat(const CvCombatInfo& kCombatInfo, uint 
 					pkDefender->changeDamage(iAttackerDamageInflicted, pkAttacker->getOwner());
 
 					// Update experience
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+					bIsCSOrBarb = pkAttacker->isBarbarian() || GET_PLAYER(pkAttacker->getOwner()).isMinorCiv();
+#endif
 					pkDefender->changeExperience(
 					    kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
 					    kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
 					    true,
 					    kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
-					    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+					    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+						, !bIsCSOrBarb);
+#else
+						);
+#endif
 
 					// Attacker died
 					if(pkAttacker->IsDead())
@@ -1831,7 +1953,12 @@ void CvUnitCombat::ResolveAirUnitVsCombat(const CvCombatInfo& kCombatInfo, uint 
 				                             kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
 				                             true,
 				                             kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
-				                             kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
+				                             kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+											 , false); // suicide units do not give great general points
+#else
+											 );
+#endif
 
 #ifndef AUI_UNIT_TEST_PROMOTION_READY_MOVED
 				// Promotion time?
@@ -1989,6 +2116,9 @@ void CvUnitCombat::ResolveAirSweep(const CvCombatInfo& kCombatInfo, uint uiParen
 	CvString strBuffer;
 	bool bAttackerDead = false;
 	bool bDefenderDead = false;
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	bool bIsCSOrBarb = false;
+#endif
 
 	CvUnit* pkAttacker = kCombatInfo.getUnit(BATTLE_UNIT_ATTACKER);
 	CvUnit* pkDefender = kCombatInfo.getUnit(BATTLE_UNIT_DEFENDER);
@@ -2018,19 +2148,35 @@ void CvUnitCombat::ResolveAirSweep(const CvCombatInfo& kCombatInfo, uint uiParen
 			pkAttacker->changeDamage(iDefenderDamageInflicted, pkDefender->getOwner());
 
 			// Update experience for both sides.
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+			bIsCSOrBarb = pkAttacker->isBarbarian() || GET_PLAYER(pkAttacker->getOwner()).isMinorCiv();
+#endif
 			pkDefender->changeExperience(
 			    kCombatInfo.getExperience(BATTLE_UNIT_DEFENDER),
 			    kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_DEFENDER),
 			    true,
 			    kCombatInfo.getInBorders(BATTLE_UNIT_DEFENDER),
-			    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER));
+			    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_DEFENDER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+				, !bIsCSOrBarb);
+#else
+				);
+#endif
 
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+			bIsCSOrBarb = pkDefender->isBarbarian() || GET_PLAYER(pkDefender->getOwner()).isMinorCiv();
+#endif
 			pkAttacker->changeExperience(
 			    kCombatInfo.getExperience(BATTLE_UNIT_ATTACKER),
 			    kCombatInfo.getMaxExperienceAllowed(BATTLE_UNIT_ATTACKER),
 			    true,
 			    kCombatInfo.getInBorders(BATTLE_UNIT_ATTACKER),
-			    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER));
+			    kCombatInfo.getUpdateGlobal(BATTLE_UNIT_ATTACKER)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+				, !bIsCSOrBarb);
+#else
+				);
+#endif
 
 			// Anyone eat it?
 			bAttackerDead = (pkAttacker->getDamage() >= GC.getMAX_HIT_POINTS());

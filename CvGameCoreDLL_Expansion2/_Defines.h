@@ -656,5 +656,9 @@
 #define NQ_TECH_DISCOUNT_BY_POLICY
 // Sweden UA now gives flat science in the empire when a great person is born
 #define NQ_SCIENCE_PER_GREAT_PERSON_BORN
+// Spoils of War - old Assyria UA now applies to all players by default
+#define NQ_SPOILS_OF_WAR
+// City States and Barbarian units no longer give any Great General points
+#define NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
 
 #endif

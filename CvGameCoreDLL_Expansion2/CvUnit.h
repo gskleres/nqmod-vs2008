@@ -712,7 +712,11 @@ public:
 
 	int getExperience() const;
 	void setExperience(int iNewValue, int iMax = -1);
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+	void changeExperience(int iChange, int iMax = -1, bool bFromCombat = false, bool bInBorders = false, bool bUpdateGlobal = false, bool bEarnGreatPersonPoints = true);
+#else
 	void changeExperience(int iChange, int iMax = -1, bool bFromCombat = false, bool bInBorders = false, bool bUpdateGlobal = false);
+#endif
 
 	int getLevel() const;
 	void setLevel(int iNewValue);

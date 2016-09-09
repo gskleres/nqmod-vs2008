@@ -15486,7 +15486,11 @@ void CvUnit::setExperience(int iNewValue, int iMax)
 
 
 //	--------------------------------------------------------------------------------
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+void CvUnit::changeExperience(int iChange, int iMax, bool bFromCombat, bool bInBorders, bool bUpdateGlobal, bool bEarnGreatPersonPoints)
+#else
 void CvUnit::changeExperience(int iChange, int iMax, bool bFromCombat, bool bInBorders, bool bUpdateGlobal)
+#endif
 {
 	VALIDATE_OBJECT
 	// Barbs don't get XP or Promotions
@@ -15563,28 +15567,42 @@ void CvUnit::changeExperience(int iChange, int iMax, bool bFromCombat, bool bInB
 
 			if(iMax == -1)
 			{
-				if(getDomainType() == DOMAIN_SEA)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+				if (bEarnGreatPersonPoints)
 				{
-					kPlayer.changeNavalCombatExperience((iChange * iCombatExperienceMod) / 100);
+#endif
+					if(getDomainType() == DOMAIN_SEA)
+					{
+						kPlayer.changeNavalCombatExperience((iChange * iCombatExperienceMod) / 100);
+					}
+					else
+					{
+						kPlayer.changeCombatExperience((iChange * iCombatExperienceMod) / 100);
+					}
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
 				}
-				else
-				{
-					kPlayer.changeCombatExperience((iChange * iCombatExperienceMod) / 100);
-				}
+#endif
 			}
 			else
 			{
 				int iModdedChange = min(iMax - m_iExperience, iChange);
 				if(iModdedChange > 0)
 				{
-					if(getDomainType() == DOMAIN_SEA)
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+					if (bEarnGreatPersonPoints)
 					{
-						kPlayer.changeNavalCombatExperience((iModdedChange * iCombatExperienceMod) / 100);
+#endif
+						if(getDomainType() == DOMAIN_SEA)
+						{
+							kPlayer.changeNavalCombatExperience((iModdedChange * iCombatExperienceMod) / 100);
+						}
+						else
+						{
+							kPlayer.changeCombatExperience((iModdedChange * iCombatExperienceMod) / 100);
+						}
+#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
 					}
-					else
-					{
-						kPlayer.changeCombatExperience((iModdedChange * iCombatExperienceMod) / 100);
-					}
+#endif
 				}
 			}
 		}
