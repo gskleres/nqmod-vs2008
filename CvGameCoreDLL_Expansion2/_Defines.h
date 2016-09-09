@@ -245,8 +245,8 @@
 #define AUI_UNIT_COMBAT_FIX_AIR_SWEEP_VS_GROUND_INTERCEPTOR
 /// The "force end turn" control now checks to make sure nothing (invalid) is blocking it
 #define AUI_GAME_FIX_CONTROL_FORCE_END_TURN_CHECKS_FOR_BLOCKING
-/// Fixed a bug where units building a new improvement or road would have 2x build speed on their first turn of building
-#define AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+/// Fixed a bug where units building a new improvement or road would have 2x build speed on their first turn of building; commented out because it causes issues with the UI
+//#define AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
 /// Promotion testing is now done every time a unit's XP is changed, instead of having it manually called all the time
 #define AUI_UNIT_TEST_PROMOTION_READY_MOVED
 /// If a friendly unit is closer to a blockaded tile than the closest enemy unit, then a tile becomes unblockaded.
