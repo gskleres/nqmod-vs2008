@@ -128,8 +128,14 @@ public:
 	void ChangeNumForcedWorkingPlots(int iChange);
 
 	bool IsCanWork(CvPlot* pPlot) const;
+#ifdef AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
+	bool IsPlotBlockaded(const CvPlot* pPlot) const;
+	bool GetNumForcedWorkingPlotsBlocked() const;
+#else
 	bool IsPlotBlockaded(CvPlot* pPlot) const;
+#endif
 	bool IsAnyPlotBlockaded() const;
+
 
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
 	bool DoVerifyWorkingPlot(CvPlot* pPlot);
@@ -189,7 +195,11 @@ public:
 
 	int GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass);
 #endif
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	void DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet, bool bSpawnWithNoExpendedTrigger = false);
+#else
 	void DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet);
+#endif
 #ifdef AUI_CITIZENS_FOOD_PRODUCTION_TRIAL_RUN_THEN_SELF_CONSISTENCY
 	bool getIgnoreFoodProduction() const;
 	void setIgnoreFoodProduction(bool bNewValue);

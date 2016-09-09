@@ -16162,13 +16162,13 @@ int CvCity::rangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bIncl
 	int iAttackerRoll = 0;
 	if(bIncludeRand)
 	{
-#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iMaxRoll = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
-			iAttackerRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "City Ranged Attack Damage") * 80;
-			iAttackerRoll -= GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
-			iAttackerRoll += GC.getGame().getJonRandNum(80, "City Ranged Attack Damage Noise");
+			int iAverageDamage = (iAttackerDamage + GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iSigma = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
+			int iMaxRoll = iSigma*iSigma*4 + 1;
+			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "City Ranged Attack Damage") - (iMaxRoll / 2);
 		}
 		else
 #endif
@@ -16181,6 +16181,9 @@ int CvCity::rangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bIncl
 		iAttackerRoll /= 2;	// The divide by 2 is to provide the average damage
 	}
 	iAttackerDamage += iAttackerRoll;
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS()));
+#endif
 
 
 	double fStrengthRatio = (double(iAttackerStrength) / iDefenderStrength);
@@ -16222,34 +16225,45 @@ int CvCity::GetAirStrikeDefenseDamage(const CvUnit* pAttacker, bool bIncludeRand
 	// The roll will vary damage between 2 and 3 (out of 10) for two units of identical strength
 
 	int iDefenderDamageRatio = GetMaxHitPoints() - getDamage();
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	int iDefenderDamage = /*200*/ GC.getAIR_STRIKE_SAME_STRENGTH_MIN_DEFENSE_DAMAGE();
+#else
 	int iDefenderDamage = /*200*/ GC.getAIR_STRIKE_SAME_STRENGTH_MIN_DEFENSE_DAMAGE() * iDefenderDamageRatio / GetMaxHitPoints();
+#endif
 
 	int iDefenderRoll = 0;
 	if(bIncludeRand)
 	{
-#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iMaxRoll = GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
-			iDefenderRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") * 80;
-			iDefenderRoll -= GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
-			iDefenderRoll += GC.getGame().getJonRandNum(80, "Unit Air Strike Combat Damage Noise");
+			int iAverageDamage = (iDefenderDamage + GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE()) / 2;
+			int iSigma = GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 6;
+			int iMaxRoll = iSigma*iSigma * 4 + 1;
+			iDefenderRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") - (iMaxRoll / 2);
 		}
 		else
 #endif
 		iDefenderRoll = /*200*/ GC.getGame().getJonRandNum(GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE(), "Unit Air Strike Combat Damage");
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iDefenderRoll *= iDefenderDamageRatio;
 		iDefenderRoll /= GetMaxHitPoints();
+#endif
 	}
 	else
 	{
 		iDefenderRoll = /*200*/ GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE();
 		iDefenderRoll -= 1;	// Subtract 1 here, because this is the amount normally "lost" when doing a rand roll
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iDefenderRoll *= iDefenderDamageRatio;
 		iDefenderRoll /= GetMaxHitPoints();
+#endif
 		iDefenderRoll /= 2;	// The divide by 2 is to provide the average damage
 	}
 	iDefenderDamage += iDefenderRoll;
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	iDefenderDamage = MAX(1, MIN(iDefenderDamage, GC.getMAX_HIT_POINTS())) * iDefenderDamageRatio / GetMaxHitPoints();
+#endif
 
 	double fStrengthRatio = (double(iDefenderStrength) / iAttackerStrength);
 

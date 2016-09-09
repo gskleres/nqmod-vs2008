@@ -1,4 +1,4 @@
-// Defines.h
+﻿// Defines.h
 #pragma once
 
 #ifndef DEFINES_LIST
@@ -111,6 +111,10 @@
 #define AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
 /// Fixes a bug where Lua mods that use different functions for religion founding and enhancing could allow multiple players to enhance or found religions in simultaneous multiplayer with conflicting beliefs, resulting in religions enhancing/founding multiple times
 #define AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE
+/// Moved the check for available beliefs from CvUnit to CvReligion so that it always fires properly for non-pantheons
+#define AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+/// If a unit is dead, it cannot perform any mission (fixes cases where players could cause two missions to fire in multiplayer)
+#define AUI_UNIT_MISSION_FIX_NO_MISSION_ON_DEATH
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -241,8 +245,8 @@
 #define AUI_UNIT_COMBAT_FIX_AIR_SWEEP_VS_GROUND_INTERCEPTOR
 /// The "force end turn" control now checks to make sure nothing (invalid) is blocking it
 #define AUI_GAME_FIX_CONTROL_FORCE_END_TURN_CHECKS_FOR_BLOCKING
-/// Fixed a bug where units building a new improvement or road would have 2x build speed on their first turn of building
-#define AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+/// Fixed a bug where units building a new improvement or road would have 2x build speed on their first turn of building; commented out because it causes issues with the UI
+//#define AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
 /// Promotion testing is now done every time a unit's XP is changed, instead of having it manually called all the time
 #define AUI_UNIT_TEST_PROMOTION_READY_MOVED
 /// If a friendly unit is closer to a blockaded tile than the closest enemy unit, then a tile becomes unblockaded.
@@ -385,8 +389,8 @@
 #define AUI_DIPLOMACY_GET_RANDOM_PERSONALITY_WEIGHT_USES_BINOM_RNG
 /// When adding or subtracting flavor value, the binomial RNG is used to generate a normal distribution instead of a flat one
 #define AUI_FLAVOR_MANAGER_GET_ADJUSTED_VALUE_USES_BINOM_RNG
-/// Adds an option to the game to use the binomial RNG for combat rolls. Range is increased by 4x to compensate for binomial weight, and even then players are 40x less likely to get rolls outside the original range with a flat RNG
-#define NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+/// Adds an option to the game to use the binomial RNG for combat rolls. To compensate for binomial weight, range is increased so that the original range falls between ±3σ (i.e. a 134x range increase)
+#define NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 #endif
 
 // AI fixes that significantly affect MP
@@ -496,6 +500,8 @@
 #define AUI_CITIZENS_PUPPET_AND_ANNEX_REALLOCATES_CITIZENS
 /// The citizen manager will instantly reallocate citizens if it switches onto or off of food production mode (i.e. the mode where excess food contributes toward production instead of growth)
 #define AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
+/// Changes the citizen manager so that locked tiles that get blocked (through siege or blockade) are not counted as locked until the tile is no longer blocked
+#define AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix

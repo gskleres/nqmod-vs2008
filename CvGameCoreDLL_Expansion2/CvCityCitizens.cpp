@@ -2482,7 +2482,11 @@ void CvCityCitizens::DoAlterWorkingPlot(int iIndex)
 				}
 			}
 			// JON: Need to update this block to work with new system
+#ifdef AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
+			else if ((pPlot->getOwner() == GetOwner()) && pPlot->getWorkingCityOverride() != GetCity())
+#else
 			else if(pPlot->getOwner() == GetOwner())
+#endif
 			{
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
 				CvCity* pOldWorkingCityOverride = pPlot->getWorkingCityOverride();
@@ -2620,7 +2624,11 @@ void CvCityCitizens::DoDemoteWorstForcedWorkingPlot()
 /// How many plots have we forced to be worked?
 int CvCityCitizens::GetNumForcedWorkingPlots() const
 {
+#ifdef AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
+	return m_iNumForcedWorkingPlots + GetNumForcedWorkingPlotsBlocked();
+#else
 	return m_iNumForcedWorkingPlots;
+#endif
 }
 
 /// Changes how many plots we have forced to be worked
@@ -2670,7 +2678,11 @@ bool CvCityCitizens::IsCanWork(CvPlot* pPlot) const
 }
 
 // Is there a naval blockade on this water tile?
+#ifdef AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
+bool CvCityCitizens::IsPlotBlockaded(const CvPlot* pPlot) const
+#else
 bool CvCityCitizens::IsPlotBlockaded(CvPlot* pPlot) const
+#endif
 {
 	// See if there are any enemy boats near us that are blockading this plot
 	int iBlockadeDistance = /*2*/ GC.getNAVAL_PLOT_BLOCKADE_RANGE();
@@ -2774,6 +2786,37 @@ bool CvCityCitizens::IsAnyPlotBlockaded() const
 
 	return false;
 }
+
+#ifdef AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
+bool CvCityCitizens::GetNumForcedWorkingPlotsBlocked() const
+{
+	int iCount = 0;
+
+	const CvPlot* pLoopPlot;
+
+	// Look at all workable Plots
+	for (int iPlotLoop = 0; iPlotLoop < NUM_CITY_PLOTS; iPlotLoop++)
+	{
+		if (iPlotLoop != CITY_HOME_PLOT)
+		{
+			pLoopPlot = GetCityPlotFromIndex(iPlotLoop);
+
+			if (pLoopPlot != NULL)
+			{
+				if (IsForcedWorkingPlot(pLoopPlot))
+				{
+					if ((pLoopPlot->plotCheck(PUF_canSiege, GetOwner()) != NULL) || (IsPlotBlockaded(pLoopPlot)))
+					{
+						iCount++;
+					}
+				}
+			}
+		}
+	}
+
+	return iCount;
+}
+#endif
 
 /// If we're working this plot make sure we're allowed, and if we're not then correct the situation
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
@@ -3585,7 +3628,11 @@ int CvCityCitizens::GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass)
 }
 
 /// Create a GP!
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet, bool bSpawnWithNoExpendedTrigger)
+#else
 void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, bool bCountAsProphet)
+#endif
 {
 	CvAssert(eUnit != NO_UNIT);
 
@@ -3605,6 +3652,10 @@ void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, b
 
 	CvPlayer& kPlayer = GET_PLAYER(GetCity()->getOwner());
 	CvUnit* newUnit = kPlayer.initUnit(eUnit, GetCity()->getX(), GetCity()->getY());
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	if (bSpawnWithNoExpendedTrigger)
+		newUnit->SetIgnoreExpended(true);
+#endif
 
 	// Bump up the count
 	if(bIncrementCount && !bCountAsProphet)

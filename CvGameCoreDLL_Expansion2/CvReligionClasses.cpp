@@ -458,7 +458,11 @@ void CvGameReligions::DoPlayerTurn(CvPlayer& kPlayer)
 
 	// Pick a Reformation belief?
 	ReligionTypes eReligionCreated = GetReligionCreatedByPlayer(ePlayer);
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+	if (eReligionCreated > RELIGION_PANTHEON && CanAddReformationBelief(ePlayer) == FOUNDING_OK)
+#else
 	if (eReligionCreated > RELIGION_PANTHEON && !HasAddedReformationBelief(ePlayer) && kPlayer.GetPlayerPolicies()->HasPolicyGrantingReformationBelief())
+#endif
 	{
 		if (!kPlayer.isHuman())
 		{
@@ -649,7 +653,11 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanCreatePantheon(PlayerTypes 
 		}
 	}
 
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+	if (!IsAnyAvailablePantheonBeliefs())
+#else
 	if (GetAvailablePantheonBeliefs().size() == 0)
+#endif
 		return FOUNDING_NO_BELIEFS_AVAILABLE;
 
 	return FOUNDING_OK;
@@ -1029,6 +1037,21 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanFoundReligion(PlayerTypes e
 
 	CvPlayer& kPlayer = GET_PLAYER(ePlayer);
 
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+	if (!IsAnyAvailableFounderBeliefs() || !IsAnyAvailableFollowerBeliefs())
+	{
+		return FOUNDING_NO_BELIEFS_AVAILABLE;
+	}
+	if (eReligion == NO_RELIGION || pkHolyCity == NULL || eBelief1 == NO_BELIEF || eBelief2 == NO_BELIEF || eBelief3 == NO_BELIEF || eBelief4 == NO_BELIEF)
+	{
+		if (kPlayer.GetReligions()->IsFoundingReligion())
+		{
+			return FOUNDING_PLAYER_ALREADY_CREATED_RELIGION;
+		}
+		return FOUNDING_OK;
+	}
+#endif
+
 	CvReligion kReligion(eReligion, ePlayer, pkHolyCity, false);
 
 	// Copy over belief from your pantheon
@@ -1124,6 +1147,9 @@ void CvGameReligions::EnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligi
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
 	kPlayer.doSelfConsistencyCheckAllCities();
 #endif
+#ifdef AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE
+	kPlayer.GetReligions()->SetFoundingReligion(false);
+#endif
 
 	ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 	if(pkScriptSystem) 
@@ -1196,6 +1222,21 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanEnhanceReligion(PlayerTypes
 #else
 	bool bFoundIt = false;
 #endif
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+	if (eReligion == NO_RELIGION)
+		return FOUNDING_INVALID_PLAYER;
+	if (!IsAnyAvailableEnhancerBeliefs() || !IsAnyAvailableFollowerBeliefs())
+	{
+		return FOUNDING_NO_BELIEFS_AVAILABLE;
+	}
+	if (eBelief1 == NO_BELIEF || eBelief2 == NO_BELIEF)
+	{
+		if (GET_PLAYER(ePlayer).GetReligions()->IsFoundingReligion())
+		{
+			return FOUNDING_PLAYER_ALREADY_CREATED_RELIGION;
+		}
+	}
+#endif
 #ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
 	for (ReligionList::iterator it = m_CurrentReligions.begin(); it != m_CurrentReligions.end(); ++it)
 #else
@@ -1205,6 +1246,10 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanEnhanceReligion(PlayerTypes
 	{
 		if(it->m_eReligion == eReligion && it->m_eFounder == ePlayer)
 		{
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+			if (it->m_bEnhanced)
+				return FOUNDING_RELIGION_ENHANCED;
+#endif
 #ifdef AUI_WARNING_FIXES
 			return FOUNDING_OK;
 #else
@@ -1308,6 +1353,34 @@ void CvGameReligions::AddReformationBelief(PlayerTypes ePlayer, ReligionTypes eR
 	}
 	GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 }
+
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+CvGameReligions::FOUNDING_RESULT CvGameReligions::CanAddReformationBelief(PlayerTypes ePlayer) const
+{
+	if (ePlayer == NO_PLAYER)
+	{
+		return FOUNDING_INVALID_PLAYER;
+	}
+	if (!GET_PLAYER(ePlayer).GetPlayerPolicies()->HasPolicyGrantingReformationBelief())
+	{
+		return FOUNDING_INVALID_PLAYER;
+	}
+	if (!IsAnyAvailableReformationBeliefs())
+	{
+		return FOUNDING_NO_BELIEFS_AVAILABLE;
+	}
+	if (HasAddedReformationBelief(ePlayer))
+	{
+		return FOUNDING_PLAYER_ALREADY_CREATED_RELIGION;
+	}
+	if (!GET_PLAYER(ePlayer).GetReligions()->HasCreatedReligion())
+	{
+		return FOUNDING_INVALID_PLAYER;
+	}
+
+	return FOUNDING_OK;
+}
+#endif
 
 /// Move the Holy City for a religion (useful for scenario scripting)
 void CvGameReligions::SetHolyCity(ReligionTypes eReligion, CvCity* pkHolyCity)
@@ -1944,6 +2017,123 @@ std::vector<BeliefTypes> CvGameReligions::GetAvailableReformationBeliefs()
 
 	return availableBeliefs;
 }
+
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+bool CvGameReligions::IsAnyAvailablePantheonBeliefs() const
+{
+	CvBeliefXMLEntries* pkBeliefs = GC.GetGameBeliefs();
+	const CvBeliefEntry* pLoopEntry = NULL;
+	BeliefTypes eBelief = NO_BELIEF;
+	for (int iI = 0; iI < pkBeliefs->GetNumBeliefs(); iI++)
+	{
+		eBelief = static_cast<BeliefTypes>(iI);
+		pLoopEntry = pkBeliefs->GetEntry(eBelief);
+		if (pLoopEntry && pLoopEntry->IsPantheonBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool CvGameReligions::IsAnyAvailableFounderBeliefs() const
+{
+	CvBeliefXMLEntries* pkBeliefs = GC.GetGameBeliefs();
+	const CvBeliefEntry* pLoopEntry = NULL;
+	BeliefTypes eBelief = NO_BELIEF;
+	for (int iI = 0; iI < pkBeliefs->GetNumBeliefs(); iI++)
+	{
+		eBelief = static_cast<BeliefTypes>(iI);
+		pLoopEntry = pkBeliefs->GetEntry(eBelief);
+		if (pLoopEntry && pLoopEntry->IsFounderBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool CvGameReligions::IsAnyAvailableFollowerBeliefs() const
+{
+	CvBeliefXMLEntries* pkBeliefs = GC.GetGameBeliefs();
+	const CvBeliefEntry* pLoopEntry = NULL;
+	BeliefTypes eBelief = NO_BELIEF;
+	for (int iI = 0; iI < pkBeliefs->GetNumBeliefs(); iI++)
+	{
+		eBelief = static_cast<BeliefTypes>(iI);
+		pLoopEntry = pkBeliefs->GetEntry(eBelief);
+		if (pLoopEntry && pLoopEntry->IsFollowerBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool CvGameReligions::IsAnyAvailableEnhancerBeliefs() const
+{
+	CvBeliefXMLEntries* pkBeliefs = GC.GetGameBeliefs();
+	const CvBeliefEntry* pLoopEntry = NULL;
+	BeliefTypes eBelief = NO_BELIEF;
+	for (int iI = 0; iI < pkBeliefs->GetNumBeliefs(); iI++)
+	{
+		eBelief = static_cast<BeliefTypes>(iI);
+		pLoopEntry = pkBeliefs->GetEntry(eBelief);
+		if (pLoopEntry && pLoopEntry->IsEnhancerBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool CvGameReligions::IsAnyAvailableBonusBeliefs() const
+{
+	CvBeliefXMLEntries* pkBeliefs = GC.GetGameBeliefs();
+	const CvBeliefEntry* pLoopEntry = NULL;
+	BeliefTypes eBelief = NO_BELIEF;
+	for (int iI = 0; iI < pkBeliefs->GetNumBeliefs(); iI++)
+	{
+		eBelief = static_cast<BeliefTypes>(iI);
+		pLoopEntry = pkBeliefs->GetEntry(eBelief);
+		if (pLoopEntry && (pLoopEntry->IsEnhancerBelief() || pLoopEntry->IsFollowerBelief() || pLoopEntry->IsFounderBelief() || pLoopEntry->IsPantheonBelief()))
+		{
+			if (!IsInSomeReligion(eBelief))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool CvGameReligions::IsAnyAvailableReformationBeliefs() const
+{
+	CvBeliefXMLEntries* pkBeliefs = GC.GetGameBeliefs();
+	const CvBeliefEntry* pLoopEntry = NULL;
+	BeliefTypes eBelief = NO_BELIEF;
+	for (int iI = 0; iI < pkBeliefs->GetNumBeliefs(); iI++)
+	{
+		eBelief = static_cast<BeliefTypes>(iI);
+		pLoopEntry = pkBeliefs->GetEntry(eBelief);
+		if (pLoopEntry && pLoopEntry->IsReformationBelief())
+		{
+			if (!IsInSomeReligion(eBelief))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+#endif
 
 /// How much pressure is exerted between these cities?
 #ifdef AUI_CONSTIFY

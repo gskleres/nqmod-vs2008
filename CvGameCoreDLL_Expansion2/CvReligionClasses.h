@@ -162,6 +162,9 @@ public:
 	FOUNDING_RESULT CanCreatePantheon(PlayerTypes ePlayer, bool bCheckFaithTotal);
 	FOUNDING_RESULT CanFoundReligion(PlayerTypes ePlayer, ReligionTypes eReligion, const char* szCustomName, BeliefTypes eBelief1, BeliefTypes eBelief2, BeliefTypes eBelief3, BeliefTypes eBelief4, CvCity* pkHolyCity);
 	FOUNDING_RESULT CanEnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligion, BeliefTypes eBelief1, BeliefTypes eBelief2);
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+	FOUNDING_RESULT CanAddReformationBelief(PlayerTypes ePlayer) const;
+#endif
 
 	// Functions for religious actions
 	ReligionTypes GetReligionToFound(PlayerTypes ePlayer);
@@ -217,6 +220,14 @@ public:
 	std::vector<BeliefTypes> GetAvailableEnhancerBeliefs();
 	std::vector<BeliefTypes> GetAvailableBonusBeliefs();
 	std::vector<BeliefTypes> GetAvailableReformationBeliefs();
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+	bool IsAnyAvailablePantheonBeliefs() const;
+	bool IsAnyAvailableFounderBeliefs() const;
+	bool IsAnyAvailableFollowerBeliefs() const;
+	bool IsAnyAvailableEnhancerBeliefs() const;
+	bool IsAnyAvailableBonusBeliefs() const;
+	bool IsAnyAvailableReformationBeliefs() const;
+#endif
 
 #ifdef AUI_CONSTIFY
 	int GetAdjacentCityReligiousPressure(ReligionTypes eReligion, const CvCity* pFromCity, const CvCity* pToCity, int& iNumTradeRoutesInfluencing, bool bPretendTradeConnection) const;

@@ -270,6 +270,9 @@ CvUnit::CvUnit() :
 #if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
 	, m_bIsInterceptBlockedUntilEndTurn("CvUnit::m_bIsInterceptBlockedUntilEndTurn", m_syncArchive)
 #endif
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	, m_bIsIgnoreExpended("CvUnit::m_bIsIgnoreExpended", m_syncArchive)
+#endif
 	, m_bPromotionReady("CvUnit::m_bPromotionReady", m_syncArchive)
 	, m_bDeathDelay("CvUnit::m_bDeathDelay", m_syncArchive)
 	, m_bCombatFocus("CvUnit::m_bCombatFocus", m_syncArchive)
@@ -980,8 +983,14 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_bAITurnProcessed = false;
 	m_bWaitingForMove = false;
 	m_eTacticalMove = NO_TACTICAL_MOVE;
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+	m_bCanInstahealThisTurn = true;
+#endif
 #if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
 	m_bIsInterceptBlockedUntilEndTurn = false;
+#endif
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	m_bIsIgnoreExpended = false;
 #endif
 
 	m_eOwner = eOwner;
@@ -1311,6 +1320,10 @@ void CvUnit::convert(CvUnit* pUnit, bool bIsUpgrade)
 			pLoopUnit->setTransportUnit(this);
 		}
 	}
+
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	SetIgnoreExpended(pUnit->IsIgnoreExpended());
+#endif
 
 	pUnit->kill(true);
 }
@@ -3141,16 +3154,9 @@ bool CvUnit::canMoveOrAttackIntoCommon(const CvPlot& plot, byte bMoveFlags) cons
 				return false;
 			}
 
-			if (isHuman())
+			if (!isHuman() || !(bMoveFlags & MOVEFLAG_DECLARE_WAR))
 			{
-				if (!(bMoveFlags & MOVEFLAG_DECLARE_WAR))
-				{
 					return false;
-				}
-			}
-			else
-			{
-				return false;
 			}
 		}
 	}
@@ -3200,10 +3206,6 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 			return false;
 		}
 	}
-	else if (isNoCapture() && plot.isEnemyCity(*this))
-	{
-		return false;
-	}
 
 	// Can't enter an enemy city until it's "defeated"
 	if (plot.isEnemyCity(*this))
@@ -3214,6 +3216,10 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 				return false;
 			if (isHasPromotion((PromotionTypes)GC.getPROMOTION_ONLY_DEFENSIVE()))
 				return false;	// Can't advance into an enemy city
+		}
+		else if (isNoCapture())
+		{
+			return false;
 		}
 		else if (plot.getPlotCity()->getDamage() < plot.getPlotCity()->GetMaxHitPoints())
 		{
@@ -3335,9 +3341,6 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 		else //if !bMoveFlagAttack
 		{
 			bool bEmbarkedAndAdjacent = false;
-#ifndef AUI_UNIT_FIX_RADAR
-			bool bEnemyUnitPresent = false;
-#endif
 
 			// Without this code, Embarked Units can move on top of enemies because they have no visibility
 			if (isEmbarked() || (bMoveFlags & MOVEFLAG_PRETEND_EMBARKED))
@@ -3380,14 +3383,7 @@ bool CvUnit::canMoveOrAttackIntoAttackOnly(const CvPlot& plot, byte bMoveFlags) 
 				return false;
 			}
 
-			if (isHuman())
-			{
-				if (!(bMoveFlags & MOVEFLAG_DECLARE_WAR))
-				{
-					return false;
-				}
-			}
-			else
+			if (!isHuman() || !(bMoveFlags & MOVEFLAG_DECLARE_WAR))
 			{
 				return false;
 			}
@@ -3479,38 +3475,49 @@ int CvUnit::getCombatDamage(int iStrength, int iOpponentStrength, int iCurrentDa
 		iDamageRatio = GC.getMAX_HIT_POINTS() - (iCurrentDamage * iWoundedDamageMultiplier / 100);
 	}
 
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	int iDamage = /*400*/ GC.getATTACK_SAME_STRENGTH_MIN_DAMAGE();
+#else
 	int iDamage = 0;
 
 	iDamage = /*400*/ GC.getATTACK_SAME_STRENGTH_MIN_DAMAGE() * iDamageRatio / GC.getMAX_HIT_POINTS();
+#endif
 
 	// Don't use rand when calculating projected combat results
 	int iRoll = 0;
 	if(bIncludeRand)
 	{
-#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iMaxRoll = GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
-			iRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Combat Damage") * 80;
-			iRoll -= GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
-			iRoll += GC.getGame().getJonRandNum(80, "Unit Combat Damage Noise");
+			int iAverageDamage = (iDamage + GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iSigma = GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
+			int iMaxRoll = iSigma*iSigma * 4 + 1;
+			iRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Combat Damage") - (iMaxRoll / 2);
 		}
 		else
 #endif
 		iRoll = /*400*/ GC.getGame().getJonRandNum(GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "Unit Combat Damage");
 
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iRoll *= iDamageRatio;
 		iRoll /= GC.getMAX_HIT_POINTS();
+#endif
 	}
 	else
 	{
 		iRoll = /*400*/ GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE();
 		iRoll -= 1;	// Subtract 1 here, because this is the amount normally "lost" when doing a rand roll
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iRoll *= iDamageRatio;
 		iRoll /= GC.getMAX_HIT_POINTS();
+#endif
 		iRoll /= 2;	// The divide by 2 is to provide the average damage
 	}
 	iDamage += iRoll;
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	iDamage = MAX(1, MIN(iDamage, GC.getMAX_HIT_POINTS())) * iDamageRatio / GC.getMAX_HIT_POINTS();
+#endif
 
 	// Calculations performed to dampen amount of damage by units that are close in strength
 	// RATIO = (((((ME / OPP) + 3) / 4) ^ 4) + 1) / 2
@@ -6819,6 +6826,9 @@ bool CvUnit::createGreatWork()
 
 		if(IsGreatPerson())
 		{
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+			if (!IsIgnoreExpended())
+#endif
 			kPlayer.DoGreatPersonExpended(getUnitType());
 		}
 
@@ -7609,7 +7619,9 @@ bool CvUnit::CanFoundReligion(const CvPlot* pPlot) const
 	}
 #endif
 	CvCity* pCity;
+#ifndef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
 	CvGameReligions* pReligions = GC.getGame().GetGameReligions();
+#endif
 
 	pCity = pPlot->getPlotCity();
 
@@ -7625,10 +7637,12 @@ bool CvUnit::CanFoundReligion(const CvPlot* pPlot) const
 		return false;
 	}
 
+#ifndef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
 	if(GET_PLAYER(getOwner()).GetReligions()->IsFoundingReligion())
 	{
 		return false;
 	}
+#endif
 
 	if(getTeam() != pCity->getTeam())
 	{
@@ -7645,12 +7659,16 @@ bool CvUnit::CanFoundReligion(const CvPlot* pPlot) const
 		return false;
 	}
 
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+	if (GC.getGame().GetGameReligions()->CanFoundReligion(getOwner(), NO_RELIGION, NULL, NO_BELIEF, NO_BELIEF, NO_BELIEF, NO_BELIEF, pCity) != CvGameReligions::FOUNDING_OK)
+#else
 	if(pReligions->GetNumReligionsStillToFound() <= 0)
 	{
 		return false;
 	}
 
 	if(pReligions->HasCreatedReligion(getOwner()))
+#endif
 	{
 		return false;
 	}
@@ -7674,10 +7692,12 @@ bool CvUnit::CanFoundReligion(const CvPlot* pPlot) const
 		}
 	}
 
+#ifndef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
 	if (pReligions->GetAvailableFounderBeliefs().size() < 1 || pReligions->GetAvailableFollowerBeliefs().size() < 1)
 	{
 		return false;
 	}
+#endif
 
 	return true;
 }
@@ -7707,6 +7727,9 @@ bool CvUnit::DoFoundReligion()
 					pNotifications->Add(NOTIFICATION_FOUND_RELIGION, strBuffer, strSummary, pkPlot->getX(), pkPlot->getY(), -1, pkCity->GetID());
 				}
 				kOwner.GetReligions()->SetFoundingReligion(true);
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+				if (!IsIgnoreExpended())
+#endif
 				kOwner.DoGreatPersonExpended(getUnitType());
 				kill(true);
 			}
@@ -7736,6 +7759,9 @@ bool CvUnit::DoFoundReligion()
 					}
 
 					pReligions->FoundReligion(getOwner(), eReligion, NULL, eBeliefs[0], eBeliefs[1], eBeliefs[2], eBeliefs[3], pkCity);
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+					if (!IsIgnoreExpended())
+#endif
 					kOwner.DoGreatPersonExpended(getUnitType());
 					kill(true);
 				}
@@ -7778,6 +7804,13 @@ bool CvUnit::CanEnhanceReligion(const CvPlot* pPlot) const
 		return false;
 	}
 
+#if defined(AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE) && !defined(AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED)
+	if (GET_PLAYER(getOwner()).GetReligions()->SetFoundingReligion())
+	{
+		return false;
+	}
+#endif
+
 	if(getTeam() != pCity->getTeam())
 	{
 		return false;
@@ -7793,24 +7826,32 @@ bool CvUnit::CanEnhanceReligion(const CvPlot* pPlot) const
 		return false;
 	}
 
+#ifndef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
 	if(!pReligions->HasCreatedReligion(getOwner()))
 	{
 		return false;
 	}
+#endif
 
 	ReligionTypes eReligion = pReligions->GetReligionCreatedByPlayer(getOwner());
 	const CvReligion* pReligion = pReligions->GetReligion(eReligion, getOwner());
+#ifndef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
 	if(pReligion->m_bEnhanced)
 	{
 		return false;
 	}
+#endif
 
 	if(getX() != pReligion->m_iHolyCityX || getY() != pReligion->m_iHolyCityY)
 	{
 		return false;
 	}
 
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+	if (pReligions->CanEnhanceReligion(getOwner(), eReligion, NO_BELIEF, NO_BELIEF) != CvGameReligions::FOUNDING_OK)
+#else
 	if (pReligions->GetAvailableEnhancerBeliefs().size() < 1 || pReligions->GetAvailableFollowerBeliefs().size() < 1)
+#endif
 	{
 		return false;
 	}
@@ -7842,6 +7883,12 @@ bool CvUnit::DoEnhanceReligion()
 					CvString strSummary = GetLocalizedText("TXT_KEY_NOTIFICATION_SUMMARY_ENHANCE_RELIGION");
 					pNotifications->Add(NOTIFICATION_ENHANCE_RELIGION, strBuffer, strSummary, pkPlot->getX(), pkPlot->getY(), -1, pkCity->GetID());
 				}
+#ifdef AUI_RELIGION_FIX_SIMULTANEOUS_ENHANCE_OR_FOUND_CAUSING_MULTIPLE
+				kOwner.GetReligions()->SetFoundingReligion(true);
+#endif
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+				if (!IsIgnoreExpended())
+#endif
 				kOwner.DoGreatPersonExpended(getUnitType());
 				kill(true);
 			}
@@ -7856,6 +7903,9 @@ bool CvUnit::DoEnhanceReligion()
 
 					pReligions->EnhanceReligion(getOwner(), eReligion, eBelief1, eBelief2);
 
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+					if (!IsIgnoreExpended())
+#endif
 					kOwner.DoGreatPersonExpended(getUnitType());
 					kill(true);
 				}
@@ -8005,6 +8055,9 @@ bool CvUnit::DoSpreadReligion()
 				if(IsGreatPerson())
 				{
 					CvPlayer& kPlayer = GET_PLAYER(getOwner());
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+					if (!IsIgnoreExpended())
+#endif
 					kPlayer.DoGreatPersonExpended(getUnitType());
 				}
 
@@ -8314,6 +8367,9 @@ bool CvUnit::discover()
 
 	if(IsGreatPerson())
 	{
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		if (!IsIgnoreExpended())
+#endif
 		pPlayer->DoGreatPersonExpended(getUnitType());
 	}
 
@@ -8540,6 +8596,9 @@ bool CvUnit::hurry()
 	if(IsGreatPerson())
 	{
 		CvPlayer& kPlayer = GET_PLAYER(getOwner());
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		if (!IsIgnoreExpended())
+#endif
 		kPlayer.DoGreatPersonExpended(getUnitType());
 	}
 
@@ -8660,6 +8719,9 @@ bool CvUnit::trade()
 	if(IsGreatPerson())
 	{
 		CvPlayer& kPlayer = GET_PLAYER(getOwner());
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		if (!IsIgnoreExpended())
+#endif
 		kPlayer.DoGreatPersonExpended(getUnitType());
 	}
 
@@ -8764,6 +8826,9 @@ bool CvUnit::buyCityState()
 	if (IsGreatPerson())
 	{
 		CvPlayer& kPlayer = GET_PLAYER(getOwner());
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		if (!IsIgnoreExpended())
+#endif
 		kPlayer.DoGreatPersonExpended(getUnitType());
 	}
 
@@ -8841,6 +8906,9 @@ bool CvUnit::repairFleet()
 	if(IsGreatPerson())
 	{
 		CvPlayer& kPlayer = GET_PLAYER(getOwner());
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		if (!IsIgnoreExpended())
+#endif
 		kPlayer.DoGreatPersonExpended(getUnitType());
 	}
 
@@ -8994,6 +9062,9 @@ bool CvUnit::DoCultureBomb()
 
 		if(IsGreatPerson())
 		{
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+			if (!IsIgnoreExpended())
+#endif
 			kPlayer.DoGreatPersonExpended(getUnitType());
 		}
 
@@ -9243,6 +9314,9 @@ bool CvUnit::goldenAge()
 
 	if(IsGreatPerson())
 	{
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		if (!IsIgnoreExpended())
+#endif
 		kPlayer.DoGreatPersonExpended(getUnitType());
 	}
 
@@ -9365,6 +9439,9 @@ bool CvUnit::givePolicies()
 
 	if(IsGreatPerson())
 	{
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		if (!IsIgnoreExpended())
+#endif
 		kPlayer.DoGreatPersonExpended(getUnitType());
 	}
 
@@ -9464,6 +9541,9 @@ bool CvUnit::blastTourism()
 
 	if(IsGreatPerson())
 	{
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		if (!IsIgnoreExpended())
+#endif
 		kUnitOwner.DoGreatPersonExpended(getUnitType());
 	}
 
@@ -9722,6 +9802,9 @@ bool CvUnit::build(BuildTypes eBuild)
 
 				if(IsGreatPerson())
 				{
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+					if (!IsIgnoreExpended())
+#endif
 					kPlayer.DoGreatPersonExpended(getUnitType());
 				}
 
@@ -10398,6 +10481,17 @@ bool CvUnit::IsGreatPerson() const
 
 	return (getSpecialUnitType() == eSpecialUnitGreatPerson);
 }
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+bool CvUnit::IsIgnoreExpended() const
+{
+	return m_bIsIgnoreExpended;
+}
+void CvUnit::SetIgnoreExpended(bool bNewValue)
+{
+	if (m_bIsIgnoreExpended != bNewValue)
+		m_bIsIgnoreExpended = bNewValue;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 UnitTypes CvUnit::getCaptureUnitType(CivilizationTypes eCivilization) const
@@ -12142,35 +12236,44 @@ int CvUnit::GetAirCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bInc
 		iAttackerDamageRatio = 0;
 
 	int iAttackerDamage = /*250*/ GC.getRANGE_ATTACK_SAME_STRENGTH_MIN_DAMAGE();
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 	iAttackerDamage *= iAttackerDamageRatio;
 	iAttackerDamage /= GC.getMAX_HIT_POINTS();
+#endif
 
 	int iAttackerRoll = 0;
 	if(bIncludeRand)
 	{
-#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iMaxRoll = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
-			iAttackerRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") * 80;
-			iAttackerRoll -= GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
-			iAttackerRoll += GC.getGame().getJonRandNum(80, "Unit Ranged Combat Damage Noise");
+			int iAverageDamage = (iAttackerDamage + GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iSigma = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
+			int iMaxRoll = iSigma*iSigma * 4 + 1;
+			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") - (iMaxRoll / 2);
 		}
 		else
 #endif
 		iAttackerRoll = /*300*/ GC.getGame().getJonRandNum(GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "Unit Ranged Combat Damage");
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iAttackerRoll *= iAttackerDamageRatio;
 		iAttackerRoll /= GC.getMAX_HIT_POINTS();
+#endif
 	}
 	else
 	{
 		iAttackerRoll = /*300*/ GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE();
 		iAttackerRoll -= 1;	// Subtract 1 here, because this is the amount normally "lost" when doing a rand roll
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iAttackerRoll *= iAttackerDamageRatio;
 		iAttackerRoll /= GC.getMAX_HIT_POINTS();
+#endif
 		iAttackerRoll /= 2;	// The divide by 2 is to provide the average damage
 	}
 	iAttackerDamage += iAttackerRoll;
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS())) * iAttackerDamageRatio / GetMaxHitPoints();
+#endif
 
 	double fStrengthRatio = ((iDefenderStrength > 0)?(double(iAttackerStrength) / iDefenderStrength):double(iAttackerStrength));
 
@@ -12259,35 +12362,44 @@ int CvUnit::GetRangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bI
 		iAttackerDamageRatio = 0;
 
 	int iAttackerDamage = /*250*/ GC.getRANGE_ATTACK_SAME_STRENGTH_MIN_DAMAGE();
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 	iAttackerDamage *= iAttackerDamageRatio;
 	iAttackerDamage /= GC.getMAX_HIT_POINTS();
+#endif
 
 	int iAttackerRoll = 0;
 	if(bIncludeRand)
 	{
-#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iMaxRoll = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
-			iAttackerRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") * 80;
-			iAttackerRoll -= GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
-			iAttackerRoll += GC.getGame().getJonRandNum(80, "Unit Ranged Combat Damage Noise");
+			int iAverageDamage = (iAttackerDamage + GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iSigma = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
+			int iMaxRoll = iSigma*iSigma * 4 + 1;
+			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") - (iMaxRoll / 2);
 		}
 		else
 #endif
 		iAttackerRoll = /*300*/ GC.getGame().getJonRandNum(GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "Unit Ranged Combat Damage");
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iAttackerRoll *= iAttackerDamageRatio;
 		iAttackerRoll /= GC.getMAX_HIT_POINTS();
+#endif
 	}
 	else
 	{
 		iAttackerRoll = /*300*/ GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE();
 		iAttackerRoll -= 1;	// Subtract 1 here, because this is the amount normally "lost" when doing a rand roll
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iAttackerRoll *= iAttackerDamageRatio;
 		iAttackerRoll /= GC.getMAX_HIT_POINTS();
+#endif
 		iAttackerRoll /= 2;	// The divide by 2 is to provide the average damage
 	}
 	iAttackerDamage += iAttackerRoll;
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS())) * iAttackerDamageRatio / GetMaxHitPoints();
+#endif
 
 	double fStrengthRatio = (iDefenderStrength > 0)?(double(iAttackerStrength) / iDefenderStrength):double(iAttackerStrength);
 
@@ -12337,34 +12449,45 @@ int CvUnit::GetAirStrikeDefenseDamage(const CvUnit* pAttacker, bool bIncludeRand
 		return 0;
 
 	int iDefenderDamageRatio = GC.getMAX_HIT_POINTS() - getDamage();
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	int iDefenderDamage = /*200*/ GC.getAIR_STRIKE_SAME_STRENGTH_MIN_DEFENSE_DAMAGE();
+#else
 	int iDefenderDamage = /*200*/ GC.getAIR_STRIKE_SAME_STRENGTH_MIN_DEFENSE_DAMAGE() * iDefenderDamageRatio / GC.getMAX_HIT_POINTS();
+#endif
 
 	int iDefenderRoll = 0;
 	if(bIncludeRand)
 	{
-#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iMaxRoll = GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
-			iDefenderRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") * 80;
-			iDefenderRoll -= GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
-			iDefenderRoll += GC.getGame().getJonRandNum(80, "Unit Air Strike Combat Damage Noise");
+			int iAverageDamage = (iDefenderDamage + GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE()) / 2;
+			int iSigma = GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 6;
+			int iMaxRoll = iSigma*iSigma * 4 + 1;
+			iDefenderRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") - (iMaxRoll / 2);
 		}
 		else
 #endif
 		iDefenderRoll = /*200*/ GC.getGame().getJonRandNum(GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE(), "Unit Air Strike Combat Damage");
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iDefenderRoll *= iDefenderDamageRatio;
 		iDefenderRoll /= GC.getMAX_HIT_POINTS();
+#endif
 	}
 	else
 	{
 		iDefenderRoll = /*200*/ GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE();
 		iDefenderRoll -= 1;	// Subtract 1 here, because this is the amount normally "lost" when doing a rand roll
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iDefenderRoll *= iDefenderDamageRatio;
 		iDefenderRoll /= GC.getMAX_HIT_POINTS();
+#endif
 		iDefenderRoll /= 2;	// The divide by 2 is to provide the average damage
 	}
 	iDefenderDamage += iDefenderRoll;
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	iDefenderDamage = MAX(1, MIN(iDefenderDamage, GC.getMAX_HIT_POINTS())) * iDefenderDamageRatio / GetMaxHitPoints();
+#endif
 
 	double fStrengthRatio = (double(iDefenderStrength) / iAttackerStrength);
 
@@ -12547,34 +12670,45 @@ int CvUnit::GetInterceptionDamage(const CvUnit* pAttacker, bool bIncludeRand) co
 	// The roll will vary damage between 2 and 3 (out of 10) for two units of identical strength
 
 	int iInterceptorDamageRatio = GC.getMAX_HIT_POINTS() - getDamage();
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	int iInterceptorDamage = /*400*/ GC.getINTERCEPTION_SAME_STRENGTH_MIN_DAMAGE();
+#else
 	int iInterceptorDamage = /*400*/ GC.getINTERCEPTION_SAME_STRENGTH_MIN_DAMAGE() * iInterceptorDamageRatio / GC.getMAX_HIT_POINTS();
+#endif
 
 	int iInterceptorRoll = 0;
 	if(bIncludeRand)
 	{
-#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION_WITH_4X_RANGE_INCREASE
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iMaxRoll = GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 20; // Reduce 1200 down to 60 to make things manageable for the for() loop inside
-			iInterceptorRoll = GC.getGame().getJonRandNumBinom(iMaxRoll, "Interception Combat Damage") * 80;
-			iInterceptorRoll -= GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() * 3 / 2; // Re-centers random roll after 4x multiplier
-			iInterceptorRoll += GC.getGame().getJonRandNum(80, "Interception Combat Damage Noise");
+			int iAverageDamage = (iInterceptorDamage + GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iSigma = GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
+			int iMaxRoll = iSigma*iSigma * 4 + 1;
+			iInterceptorRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Interception Combat Damage") - (iMaxRoll / 2);
 		}
 		else
 #endif
 		iInterceptorRoll = /*300*/ GC.getGame().getJonRandNum(GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE(), "Interception Combat Damage");
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iInterceptorRoll *= iInterceptorDamageRatio;
 		iInterceptorRoll /= GC.getMAX_HIT_POINTS();
+#endif
 	}
 	else
 	{
 		iInterceptorRoll = /*300*/ GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE();
 		iInterceptorRoll -= 1;	// Subtract 1 here, because this is the amount normally "lost" when doing a rand roll
+#ifndef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		iInterceptorRoll *= iInterceptorDamageRatio;
 		iInterceptorRoll /= GC.getMAX_HIT_POINTS();
+#endif
 		iInterceptorRoll /= 2;	// The divide by 2 is to provide the average damage
 	}
 	iInterceptorDamage += iInterceptorRoll;
+#ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
+	iInterceptorDamage = MAX(1, MIN(iInterceptorDamage, GC.getMAX_HIT_POINTS())) * iInterceptorDamageRatio / GetMaxHitPoints();
+#endif
 
 	double fStrengthRatio = (double(iInterceptorStrength) / iAttackerStrength);
 
@@ -15486,11 +15620,7 @@ void CvUnit::setExperience(int iNewValue, int iMax)
 
 
 //	--------------------------------------------------------------------------------
-#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
-void CvUnit::changeExperience(int iChange, int iMax, bool bFromCombat, bool bInBorders, bool bUpdateGlobal, bool bEarnGreatPersonPoints)
-#else
 void CvUnit::changeExperience(int iChange, int iMax, bool bFromCombat, bool bInBorders, bool bUpdateGlobal)
-#endif
 {
 	VALIDATE_OBJECT
 	// Barbs don't get XP or Promotions
@@ -15567,42 +15697,28 @@ void CvUnit::changeExperience(int iChange, int iMax, bool bFromCombat, bool bInB
 
 			if(iMax == -1)
 			{
-#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
-				if (bEarnGreatPersonPoints)
+				if(getDomainType() == DOMAIN_SEA)
 				{
-#endif
-					if(getDomainType() == DOMAIN_SEA)
-					{
-						kPlayer.changeNavalCombatExperience((iChange * iCombatExperienceMod) / 100);
-					}
-					else
-					{
-						kPlayer.changeCombatExperience((iChange * iCombatExperienceMod) / 100);
-					}
-#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+					kPlayer.changeNavalCombatExperience((iChange * iCombatExperienceMod) / 100);
 				}
-#endif
+				else
+				{
+					kPlayer.changeCombatExperience((iChange * iCombatExperienceMod) / 100);
+				}
 			}
 			else
 			{
 				int iModdedChange = min(iMax - m_iExperience, iChange);
 				if(iModdedChange > 0)
 				{
-#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
-					if (bEarnGreatPersonPoints)
+					if(getDomainType() == DOMAIN_SEA)
 					{
-#endif
-						if(getDomainType() == DOMAIN_SEA)
-						{
-							kPlayer.changeNavalCombatExperience((iModdedChange * iCombatExperienceMod) / 100);
-						}
-						else
-						{
-							kPlayer.changeCombatExperience((iModdedChange * iCombatExperienceMod) / 100);
-						}
-#ifdef NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+						kPlayer.changeNavalCombatExperience((iModdedChange * iCombatExperienceMod) / 100);
 					}
-#endif
+					else
+					{
+						kPlayer.changeCombatExperience((iModdedChange * iCombatExperienceMod) / 100);
+					}
 				}
 			}
 		}
@@ -19393,6 +19509,16 @@ void CvUnit::read(FDataStream& kStream)
 
 	kStream >> m_iResearchBulbAmount; // GJS
 
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+	kStream >> m_bCanInstahealThisTurn;
+#endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	kStream >> m_bIsInterceptBlockedUntilEndTurn;
+#endif
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	kStream >> m_bIsIgnoreExpended;
+#endif
+
 	//  Read mission queue
 	UINT uSize;
 	kStream >> uSize;
@@ -19507,12 +19633,22 @@ void CvUnit::write(FDataStream& kStream) const
 
 	kStream << m_iTourismBlastStrength;
 
+#if defined(NQM_UNIT_FIX_NO_DOUBLE_INSTAHEAL_ON_SAME_TURN) || defined(NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP)
+	kStream << m_bCanInstahealThisTurn;
+#endif
+#if defined(NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END) || defined(NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END)
+	kStream << m_bIsInterceptBlockedUntilEndTurn;
+#endif
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+	kStream << m_bIsIgnoreExpended;
+#endif
+
 	kStream << m_iResearchBulbAmount; // GJS
 
 	//  Write mission list
 	kStream << m_missionQueue.getLength();
 #ifdef AUI_FIX_FFASTVECTOR_USE_UNSIGNED
-	for (unsigned int uIdx = 0; uIdx < m_missionQueue.getLength(); ++uIdx)
+	for (UINT uIdx = 0; uIdx < m_missionQueue.getLength(); ++uIdx)
 #else
 	for(int uIdx = 0; uIdx < m_missionQueue.getLength(); ++uIdx)
 #endif

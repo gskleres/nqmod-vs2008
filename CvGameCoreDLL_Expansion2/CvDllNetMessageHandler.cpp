@@ -320,12 +320,25 @@ void CvDllNetMessageHandler::ResponseFoundPantheon(PlayerTypes ePlayer, BeliefTy
 		}
 		else if (pEntry->IsReformationBelief())
 		{
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+			CvGameReligions::FOUNDING_RESULT eResult = pkGameReligions->CanAddReformationBelief(ePlayer);
+			if (eResult == CvGameReligions::FOUNDING_OK)
+			{
+				ReligionTypes eReligion = GET_PLAYER(ePlayer).GetReligions()->GetReligionCreatedByPlayer();
+#else
 			CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
 			if (!pkGameReligions->HasAddedReformationBelief(ePlayer) && kPlayer.GetReligions()->HasCreatedReligion())
 			{
 				ReligionTypes eReligion = kPlayer.GetReligions()->GetReligionCreatedByPlayer();
+#endif
 				pkGameReligions->AddReformationBelief(ePlayer, eReligion, eBelief);
 			}
+#ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
+			else
+			{
+				CvGameReligions::NotifyPlayer(ePlayer, eResult);
+			}
+#endif
 		}
 	}
 }
@@ -347,7 +360,11 @@ void CvDllNetMessageHandler::ResponseFoundReligion(PlayerTypes ePlayer, Religion
 			// We don't want them to lose the opportunity to found the religion, and the Great Prophet is already gone so just repost the notification
 			// If someone beat them to the last religion, well... tough luck.
 			CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+			if (kPlayer.isHuman() && eResult != CvGameReligions::FOUNDING_NO_RELIGIONS_AVAILABLE && eResult != CvGameReligions::FOUNDING_NO_BELIEFS_AVAILABLE)
+#else
 			if(kPlayer.isHuman() && eResult != CvGameReligions::FOUNDING_NO_RELIGIONS_AVAILABLE)
+#endif
 			{
 				CvNotifications* pNotifications = kPlayer.GetNotifications();
 				if(pNotifications)
@@ -364,7 +381,7 @@ void CvDllNetMessageHandler::ResponseFoundReligion(PlayerTypes ePlayer, Religion
 				UnitTypes eUnit = (UnitTypes)GC.getInfoTypeForString("UNIT_PROPHET", true);
 				if (eUnit != NO_UNIT)
 				{
-					kPlayer.getCapitalCity()->GetCityCitizens()->DoSpawnGreatPerson(eUnit, false /*bIncrementCount*/, false);
+					kPlayer.getCapitalCity()->GetCityCitizens()->DoSpawnGreatPerson(eUnit, false /*bIncrementCount*/, false, true);
 				}
 			}
 #endif
@@ -391,7 +408,7 @@ void CvDllNetMessageHandler::ResponseEnhanceReligion(PlayerTypes ePlayer, Religi
 		CvCity* pkCity = GC.getMap().plot(iCityX, iCityY)->getPlotCity();
 		CvPlayerAI& kPlayer = GET_PLAYER(ePlayer);
 #ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
-		if (kPlayer.isHuman() && pkCity)
+		if (kPlayer.isHuman() && pkCity && eResult != CvGameReligions::FOUNDING_NO_BELIEFS_AVAILABLE)
 #else
 		if(kPlayer.isHuman() && eResult != CvGameReligions::FOUNDING_NO_RELIGIONS_AVAILABLE && pkCity)
 #endif
@@ -405,6 +422,16 @@ void CvDllNetMessageHandler::ResponseEnhanceReligion(PlayerTypes ePlayer, Religi
 			}
 			kPlayer.GetReligions()->SetFoundingReligion(true);
 		}
+#ifdef AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
+		else if (kPlayer.getCapitalCity())
+		{
+			UnitTypes eUnit = (UnitTypes)GC.getInfoTypeForString("UNIT_PROPHET", true);
+			if (eUnit != NO_UNIT)
+			{
+				kPlayer.getCapitalCity()->GetCityCitizens()->DoSpawnGreatPerson(eUnit, false /*bIncrementCount*/, false, true);
+			}
+		}
+#endif
 	}
 }
 //------------------------------------------------------------------------------

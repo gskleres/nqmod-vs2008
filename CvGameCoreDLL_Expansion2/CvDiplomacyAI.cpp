@@ -5837,10 +5837,11 @@ bool CvDiplomacyAI::IsWillingToMakePeaceWithHuman(PlayerTypes ePlayer)
 	if (kHumanPlayer.isHuman())
 	{
 #ifdef NQM_AI_GIMP_ALWAYS_WHITE_PEACE
-		bool bWillMakePeace = GetPlayerNumTurnsAtWar(ePlayer) >= 5 || GC.getGame().isOption("GAMEOPTION_AI_GIMP_ALWAYS_WHITE_PEACE");
-#else
-		bool bWillMakePeace = GetPlayerNumTurnsAtWar(ePlayer) >= 5;
+		if (GC.getGame().isOption("GAMEOPTION_AI_GIMP_ALWAYS_WHITE_PEACE"))
+			return true;
 #endif
+		bool bWillMakePeace = GetPlayerNumTurnsAtWar(ePlayer) >= 5;
+
 
 		if(!GET_TEAM(m_pPlayer->getTeam()).canChangeWarPeace(kHumanPlayer.getTeam()))
 		{
