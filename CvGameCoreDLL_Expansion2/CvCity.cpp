@@ -16182,7 +16182,7 @@ int CvCity::rangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bIncl
 	}
 	iAttackerDamage += iAttackerRoll;
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
-	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS()));
+	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS()*100));
 #endif
 
 
@@ -16262,7 +16262,7 @@ int CvCity::GetAirStrikeDefenseDamage(const CvUnit* pAttacker, bool bIncludeRand
 	}
 	iDefenderDamage += iDefenderRoll;
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
-	iDefenderDamage = MAX(1, MIN(iDefenderDamage, GC.getMAX_HIT_POINTS())) * iDefenderDamageRatio / GetMaxHitPoints();
+	iDefenderDamage = MAX(1, MIN(iDefenderDamage, GC.getMAX_HIT_POINTS() * 100)) * iDefenderDamageRatio / GetMaxHitPoints();
 #endif
 
 	double fStrengthRatio = (double(iDefenderStrength) / iAttackerStrength);
