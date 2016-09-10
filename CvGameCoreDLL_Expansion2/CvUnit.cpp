@@ -3516,7 +3516,7 @@ int CvUnit::getCombatDamage(int iStrength, int iOpponentStrength, int iCurrentDa
 	}
 	iDamage += iRoll;
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
-	iDamage = MAX(1, MIN(iDamage, GC.getMAX_HIT_POINTS())) * iDamageRatio / GC.getMAX_HIT_POINTS();
+	iDamage = MAX(1, MIN(iDamage, GC.getMAX_HIT_POINTS() * 100)) * iDamageRatio / GC.getMAX_HIT_POINTS();
 #endif
 
 	// Calculations performed to dampen amount of damage by units that are close in strength
@@ -12272,7 +12272,7 @@ int CvUnit::GetAirCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bInc
 	}
 	iAttackerDamage += iAttackerRoll;
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
-	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS())) * iAttackerDamageRatio / GetMaxHitPoints();
+	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS() * 100)) * iAttackerDamageRatio / GetMaxHitPoints();
 #endif
 
 	double fStrengthRatio = ((iDefenderStrength > 0)?(double(iAttackerStrength) / iDefenderStrength):double(iAttackerStrength));
@@ -12398,7 +12398,7 @@ int CvUnit::GetRangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bI
 	}
 	iAttackerDamage += iAttackerRoll;
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
-	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS())) * iAttackerDamageRatio / GetMaxHitPoints();
+	iAttackerDamage = MAX(1, MIN(iAttackerDamage, GC.getMAX_HIT_POINTS() * 100)) * iAttackerDamageRatio / GetMaxHitPoints();
 #endif
 
 	double fStrengthRatio = (iDefenderStrength > 0)?(double(iAttackerStrength) / iDefenderStrength):double(iAttackerStrength);
@@ -12486,7 +12486,7 @@ int CvUnit::GetAirStrikeDefenseDamage(const CvUnit* pAttacker, bool bIncludeRand
 	}
 	iDefenderDamage += iDefenderRoll;
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
-	iDefenderDamage = MAX(1, MIN(iDefenderDamage, GC.getMAX_HIT_POINTS())) * iDefenderDamageRatio / GetMaxHitPoints();
+	iDefenderDamage = MAX(1, MIN(iDefenderDamage, GC.getMAX_HIT_POINTS() * 100)) * iDefenderDamageRatio / GetMaxHitPoints();
 #endif
 
 	double fStrengthRatio = (double(iDefenderStrength) / iAttackerStrength);
@@ -12707,7 +12707,7 @@ int CvUnit::GetInterceptionDamage(const CvUnit* pAttacker, bool bIncludeRand) co
 	}
 	iInterceptorDamage += iInterceptorRoll;
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
-	iInterceptorDamage = MAX(1, MIN(iInterceptorDamage, GC.getMAX_HIT_POINTS())) * iInterceptorDamageRatio / GetMaxHitPoints();
+	iInterceptorDamage = MAX(1, MIN(iInterceptorDamage, GC.getMAX_HIT_POINTS() * 100)) * iInterceptorDamageRatio / GetMaxHitPoints();
 #endif
 
 	double fStrengthRatio = (double(iInterceptorStrength) / iAttackerStrength);

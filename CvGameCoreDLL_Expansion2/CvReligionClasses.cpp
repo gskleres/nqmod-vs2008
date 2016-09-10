@@ -1355,7 +1355,7 @@ void CvGameReligions::AddReformationBelief(PlayerTypes ePlayer, ReligionTypes eR
 }
 
 #ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
-CvGameReligions::FOUNDING_RESULT CvGameReligions::CanAddReformationBelief(PlayerTypes ePlayer) const
+CvGameReligions::FOUNDING_RESULT CvGameReligions::CanAddReformationBelief(PlayerTypes ePlayer, BeliefTypes eBelief) const
 {
 	if (ePlayer == NO_PLAYER)
 	{
@@ -1376,6 +1376,10 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanAddReformationBelief(Player
 	if (!GET_PLAYER(ePlayer).GetReligions()->HasCreatedReligion())
 	{
 		return FOUNDING_INVALID_PLAYER;
+	}
+	if (eBelief != NO_BELIEF && IsInSomeReligion(eBelief))
+	{
+		return FOUNDING_BELIEF_IN_USE;
 	}
 
 	return FOUNDING_OK;

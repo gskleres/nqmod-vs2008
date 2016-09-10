@@ -321,7 +321,7 @@ void CvDllNetMessageHandler::ResponseFoundPantheon(PlayerTypes ePlayer, BeliefTy
 		else if (pEntry->IsReformationBelief())
 		{
 #ifdef AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
-			CvGameReligions::FOUNDING_RESULT eResult = pkGameReligions->CanAddReformationBelief(ePlayer);
+			CvGameReligions::FOUNDING_RESULT eResult = pkGameReligions->CanAddReformationBelief(ePlayer, eBelief);
 			if (eResult == CvGameReligions::FOUNDING_OK)
 			{
 				ReligionTypes eReligion = GET_PLAYER(ePlayer).GetReligions()->GetReligionCreatedByPlayer();
