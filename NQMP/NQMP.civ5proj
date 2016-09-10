@@ -659,6 +659,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>wonders_natural/FujiChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>wonders_natural/GrandMesaChanges.xml</FileName>
       </Action>
       <Action>
@@ -670,6 +675,11 @@
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>wonders_natural/OldFaithfulChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_natural/SriPadaChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2163,6 +2173,10 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="wonders_natural\FujiChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="wonders_natural\OldFaithfulChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -2172,6 +2186,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="wonders_natural\KrakatoaChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_natural\SriPadaChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

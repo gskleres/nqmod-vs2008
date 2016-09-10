@@ -23,7 +23,11 @@ void CvUnitMovement::GetCostsForMove(const CvUnit* pUnit, const CvPlot* pFromPlo
 	TerrainTypes eTerrain = pToPlot->getTerrainType();
 	CvTerrainInfo* pTerrainInfo = (eTerrain > NO_TERRAIN) ? GC.getTerrainInfo(eTerrain) : 0;
 
+#ifdef NQ_FIX_FASTER_ALONG_RIVER
+	if(bIgnoreTerrainCost || (bFasterAlongRiver && pToPlot->isRiver() && pFromPlot->isRiver()) || (bFasterInHills && pToPlot->isHills()))
+#else
 	if(bIgnoreTerrainCost || (bFasterAlongRiver && pToPlot->isRiver()) || (bFasterInHills && pToPlot->isHills()))
+#endif
 	{
 		iRegularCost = 1;
 	}
