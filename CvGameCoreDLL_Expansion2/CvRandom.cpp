@@ -268,7 +268,7 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 		}
 	}
 #else
-	unsigned short usRet = 0;
+	unsigned int uiRet = 0;
 	unsigned long ulNewSeed = m_ulRandomSeed;
 	if (uiNum > 1)
 	{
@@ -278,7 +278,7 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 		{
 			// no need to worry about masking with MAX_UNSIGNED_SHORT, max cycle number takes care of it
 			ulNewSeed = (RANDOM_A * ulNewSeed) + RANDOM_C;
-			usRet += (ulNewSeed >> BINOM_SHIFT) & 1; // need the shift so results only repeat after 2^BINOM_SHIFT iterations
+			uiRet += (ulNewSeed >> BINOM_SHIFT) & 1; // need the shift so results only repeat after 2^BINOM_SHIFT iterations
 		}
 	}
 #endif
@@ -308,7 +308,7 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 #ifdef AUI_USE_SFMT_RNG
 					sprintf_s(szOut, "%d, %d, %u, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, uiRtnValue, m_ulRandomSeed, m_ulCallCount, (intptr_t)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
 #else
-					sprintf_s(szOut, "%d, %d, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, (uint)usRet, getSeed(), (intptr_t)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
+					sprintf_s(szOut, "%d, %d, %u, %u, %u, %8x, %s, %s\n", kGame.getGameTurn(), kGame.getTurnSlice(), uiNum, uiRet, getSeed(), (intptr_t)this, m_bSynchronous ? "sync" : "async", (pszLog != NULL) ? pszLog : "Unknown");
 #endif
 					pLog->Msg(szOut);
 
@@ -346,7 +346,7 @@ unsigned int CvRandom::getBinom(unsigned int uiNum, const char* pszLog)
 #else
 	m_ulRandomSeed = ulNewSeed;
 
-	return (uint)usRet;
+	return uiRet;
 #endif
 }
 #endif

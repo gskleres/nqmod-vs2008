@@ -3490,10 +3490,10 @@ int CvUnit::getCombatDamage(int iStrength, int iOpponentStrength, int iCurrentDa
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iAverageDamage = (iDamage + GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iAverageDamage = iDamage + (GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 2);
 			int iSigma = GC.getATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
 			int iMaxRoll = iSigma*iSigma * 4 + 1;
-			iRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Combat Damage") - (iMaxRoll / 2);
+			iRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Combat Damage") - (iMaxRoll / 2) - iDamage;
 		}
 		else
 #endif
@@ -12247,10 +12247,10 @@ int CvUnit::GetAirCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bInc
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iAverageDamage = (iAttackerDamage + GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iAverageDamage = iAttackerDamage + (GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 2);
 			int iSigma = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
 			int iMaxRoll = iSigma*iSigma * 4 + 1;
-			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") - (iMaxRoll / 2);
+			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") - (iMaxRoll / 2) - iAverageDamage;
 		}
 		else
 #endif
@@ -12373,10 +12373,10 @@ int CvUnit::GetRangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bI
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iAverageDamage = (iAttackerDamage + GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iAverageDamage = iAttackerDamage + (GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 2);
 			int iSigma = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
 			int iMaxRoll = iSigma*iSigma * 4 + 1;
-			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") - (iMaxRoll / 2);
+			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Ranged Combat Damage") - (iMaxRoll / 2) - iAverageDamage;
 		}
 		else
 #endif
@@ -12461,10 +12461,10 @@ int CvUnit::GetAirStrikeDefenseDamage(const CvUnit* pAttacker, bool bIncludeRand
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iAverageDamage = (iDefenderDamage + GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE()) / 2;
+			int iAverageDamage = iDefenderDamage + (GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 2);
 			int iSigma = GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 6;
 			int iMaxRoll = iSigma*iSigma * 4 + 1;
-			iDefenderRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") - (iMaxRoll / 2);
+			iDefenderRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") - (iMaxRoll / 2) - iAverageDamage;
 		}
 		else
 #endif
@@ -12682,10 +12682,10 @@ int CvUnit::GetInterceptionDamage(const CvUnit* pAttacker, bool bIncludeRand) co
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iAverageDamage = (iInterceptorDamage + GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iAverageDamage = iInterceptorDamage + (GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 2);
 			int iSigma = GC.getINTERCEPTION_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
 			int iMaxRoll = iSigma*iSigma * 4 + 1;
-			iInterceptorRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Interception Combat Damage") - (iMaxRoll / 2);
+			iInterceptorRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Interception Combat Damage") - (iMaxRoll / 2) - iInterceptorDamage;
 		}
 		else
 #endif

@@ -381,7 +381,7 @@
 
 // Binomial RNG Stuff (Delnar: the binomial RNG generates numbers in a binomial distribution instead of a flat one like the regular RNG)
 /// Enables the Binomial Random Number Generator (originally from Artificial Unintelligence)
-//#define AUI_BINOM_RNG
+#define AUI_BINOM_RNG
 #ifdef AUI_BINOM_RNG
 /// Generated ridges use the binomial RNG for directional bias strength and ridge weakness
 #define AUI_FRACTAL_RIDGE_USE_BINOM_RNG
