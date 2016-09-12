@@ -666,5 +666,7 @@
 #define NQ_SPOILS_OF_WAR
 // City States and Barbarian units no longer give any Great General points
 #define NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
+// FasterAlongRiver now requires the plot you are coming from to be a river plot as well
+#define NQ_FIX_FASTER_ALONG_RIVER
 
 #endif

@@ -16165,10 +16165,10 @@ int CvCity::rangeCombatDamage(const CvUnit* pDefender, CvCity* pCity, bool bIncl
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iAverageDamage = (iAttackerDamage + GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE()) / 2;
+			int iAverageDamage = iAttackerDamage + (GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 2);
 			int iSigma = GC.getRANGE_ATTACK_SAME_STRENGTH_POSSIBLE_EXTRA_DAMAGE() / 6;
 			int iMaxRoll = iSigma*iSigma*4 + 1;
-			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "City Ranged Attack Damage") - (iMaxRoll / 2);
+			iAttackerRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "City Ranged Attack Damage") - (iMaxRoll / 2) - iAttackerDamage;
 		}
 		else
 #endif
@@ -16237,10 +16237,10 @@ int CvCity::GetAirStrikeDefenseDamage(const CvUnit* pAttacker, bool bIncludeRand
 #ifdef NQM_COMBAT_RNG_USE_BINOM_RNG_OPTION
 		if (GC.getGame().isOption("GAMEOPTION_USE_BINOM_RNG_FOR_COMBAT_ROLLS"))
 		{
-			int iAverageDamage = (iDefenderDamage + GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE()) / 2;
+			int iAverageDamage = iDefenderDamage + (GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 2);
 			int iSigma = GC.getAIR_STRIKE_SAME_STRENGTH_POSSIBLE_EXTRA_DEFENSE_DAMAGE() / 6;
 			int iMaxRoll = iSigma*iSigma * 4 + 1;
-			iDefenderRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") - (iMaxRoll / 2);
+			iDefenderRoll = iAverageDamage + GC.getGame().getJonRandNumBinom(iMaxRoll, "Unit Air Strike Combat Damage") - (iMaxRoll / 2) - iDefenderDamage;
 		}
 		else
 #endif
