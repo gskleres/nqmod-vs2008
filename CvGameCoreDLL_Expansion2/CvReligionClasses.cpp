@@ -1042,7 +1042,7 @@ CvGameReligions::FOUNDING_RESULT CvGameReligions::CanFoundReligion(PlayerTypes e
 	{
 		return FOUNDING_NO_BELIEFS_AVAILABLE;
 	}
-	if (eReligion == NO_RELIGION || pkHolyCity == NULL || eBelief1 == NO_BELIEF || eBelief2 == NO_BELIEF || eBelief3 == NO_BELIEF || eBelief4 == NO_BELIEF)
+	if (eReligion == NO_RELIGION || pkHolyCity == NULL || eBelief1 == NO_BELIEF || eBelief2 == NO_BELIEF)
 	{
 		if (kPlayer.GetReligions()->IsFoundingReligion())
 		{
