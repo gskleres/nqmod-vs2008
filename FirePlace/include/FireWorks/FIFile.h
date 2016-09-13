@@ -20,11 +20,7 @@ public:
 		GREATER = 1
 	};
 
-#ifdef AUI_WARNING_FIXES
-	inline FFileTimestamp() { FILETIME tmp; tmp.dwLowDateTime = 0; tmp.dwHighDateTime = 0; m_time = tmp; };
-#else
 	inline FFileTimestamp() {};
-#endif
 	inline FFileTimestamp( const FILETIME& t ) : m_time(t) {};
 
 	inline bool operator<( const FFileTimestamp& a ) const  { return Compare( a ) == LESS;    };

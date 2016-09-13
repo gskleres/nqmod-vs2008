@@ -30,7 +30,7 @@ struct BuilderDirective
 	    CHOP,						   // remove a feature to improve production
 	    REMOVE_ROAD,				   // remove a road from a plot
 	    NUM_DIRECTIVES
-#ifdef AUI_VC120_FORMALITIES
+#ifdef AUI_WARNING_FIXES
 	} _BuilderDirectiveType;
 #else
 	};

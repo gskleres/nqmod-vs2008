@@ -41,6 +41,7 @@ enum CvAStarListType
 };
 
 
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //
 //  STRUCT:     CvPathNodeCacheData
@@ -67,6 +68,7 @@ struct CvPathNodeCacheData
 	bool bContainsVisibleEnemyDefender:1;
 	int	iNumFriendlyUnitsOfType;
 };
+#endif
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //
@@ -117,7 +119,17 @@ public:
 		m_iTotalCost = 0;
 		m_iKnownCost = 0;
 		m_iHeuristicCost = 0;
-#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		bPlotVisibleToTeam = false;
+		bIsMountain = false;
+		bIsWater = false;
+		bCanEnterTerrain = false;
+		bIsRevealedToTeam = false;
+		bContainsOtherFriendlyTeamCity = false;
+		bContainsEnemyCity = false;
+		bContainsVisibleEnemy = false;
+		bContainsVisibleEnemyDefender = false;
+#else
 		m_iNumChildren = 0;
 #endif
 		m_iData1 = 0;
@@ -133,7 +145,11 @@ public:
 		m_pStack = NULL;
 
 #ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		bIsCalculated = false;
+#else
 		m_kCostCacheData.bIsCalculated = false;
+#endif
 #endif
 
 		m_apChildren.clear();
@@ -144,6 +160,12 @@ public:
 	int m_iHeuristicCost; // Heuristic (h)
 	int m_iData1;
 	int m_iData2;
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	int	iNumFriendlyUnitsOfType;
+#endif
+#ifdef AUI_WARNING_FIXES
+	int m_iX, m_iY;         // Coordinate position
+#endif
 
 	CvAStarListType m_eCvAStarListType;
 
@@ -158,9 +180,7 @@ public:
 	FStaticVector<CvAStarNode*, 6, true, c_eCiv5GameplayDLL, 0> m_apChildren;
 #endif
 
-#ifdef AUI_WARNING_FIXES
-	int m_iX, m_iY;         // Coordinate position
-#else
+#ifndef AUI_WARNING_FIXES
 	short m_iX, m_iY;         // Coordinate position
 #endif
 #ifdef AUI_ASTAR_CACHE_PLOTS_AT_NODES
@@ -170,13 +190,29 @@ public:
 	short m_iNumChildren;
 #endif
 	bool m_bOnStack;
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+	bool bIsCalculated;
+#endif
+	bool bPlotVisibleToTeam;
+	bool bIsMountain;
+	bool bIsWater;
+	bool bCanEnterTerrain;
+	bool bIsRevealedToTeam;
+	bool bContainsOtherFriendlyTeamCity;
+	bool bContainsEnemyCity;
+	bool bContainsVisibleEnemy;
+	bool bContainsVisibleEnemyDefender;
+#endif
 
 #ifdef AUI_ASTAR_PRECALCULATE_NEIGHBORS_ON_INITIALIZE
 	// for faster neighbor lookup (potential children)
 	CvAStarNode* m_apNeighbors[NUM_DIRECTION_TYPES];
 #endif
 
+#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
 	CvPathNodeCacheData m_kCostCacheData;
+#endif
 };
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

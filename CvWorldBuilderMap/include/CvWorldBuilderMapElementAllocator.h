@@ -71,9 +71,7 @@ public:
 	void Release()
 	{
 		// Free allocated memory
-#if defined(FXS_MEMORY_TRACKER) || defined(FXS_MEMORY_MANAGER)
 		if( m_aData ) FFREE(m_aData);
-#endif
 
 		// Re-initialize data members.  (this also sets m_aData to NULL again)
 		new(this)CvWorldBuilderMapElementAllocator();

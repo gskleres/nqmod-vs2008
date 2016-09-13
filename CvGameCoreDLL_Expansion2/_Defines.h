@@ -37,8 +37,6 @@
 #define AUI_SCOPE_FIXES
 /// Replaces all instances of iterators with postfix incrementors to have prefix incrementors, increasing performance
 #define AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-/// Adds a few extra functions that can be used for 128-bit SSE types like __m128i and __m128d
-#define AUI_SIMD_ADDITIONS
 /// Fast comparison functions (to be used for built-in types like int, float, double, etc.)
 #define NQM_FAST_COMP
 /// Performance optimizations related to bit twiddling (http://www.graphics.stanford.edu/~seander/bithacks.html)
@@ -53,18 +51,12 @@
 #define AUI_STOPWATCH_SUBTRACT_BEFORE_DELTA_CAST
 /// Implements the missing iterator typedefs for BaseVector
 #define AUI_FIX_FFASTVECTOR_BASEVECTOR_ITERATOR
-/// Implements the missing erase(iterator) function for FFastVector
-#define AUI_FIX_FFASTVECTOR_ERASE
 /// Functions that called ints for variables used for indexes and choice numbers now call unsigned ints instead
 #define AUI_FIX_FFASTVECTOR_USE_UNSIGNED
-/// Minor optimizations to some FFastVector classes, justified by the fact that these classes are used extremely often and speed is of the essence when accessing their methods
-#define AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
 /// Optimized parts of functions responsible for updating plot vision code
 #define AUI_PLOT_VISIBILITY_OPTIMIZATIONS
 /// Optimizes loops that iterate over relative coordinates to hexspace
 #define AUI_HEXSPACE_DX_LOOPS
-/// Fixes some misc. warnings/errors generated when code is attempted to be compiled using VC120 (it won't work because link targets are all VC90-compiled, but all other errors/warnings are legitimate)
-#define AUI_VC120_FORMALITIES
 /// CvUnit::canMoveOrAttackInto() no longer calls certain expensive calls twice (also improves pathfinder performance)
 #define AUI_UNIT_FIX_CAN_MOVE_OR_ATTACK_INTO_NO_DUPLICATE_CALLS
 /// CvUnit::canMoveInto() is optimized to not perform redundant checks for attack flag (also improves pathfinder performance)
@@ -115,8 +107,6 @@
 #define AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
 /// If a unit is dead, it cannot perform any mission (fixes cases where players could cause two missions to fire in multiplayer)
 #define AUI_UNIT_MISSION_FIX_NO_MISSION_ON_DEATH
-/// Removes all non-engine instances of alloc, malloc, and firemalloc and replaces them with new (also replaced corresponding free calls with delete calls)
-#define AUI_REMOVE_MALLOC
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -320,6 +310,8 @@
 #endif
 
 // Pathfinder (A*) optimizations, tweaks, and fixes
+/// Removes instances of alloc, malloc, and firemalloc from AStar and replaces them with new (also replaced corresponding free calls with delete calls)
+#define AUI_ASTAR_REMOVE_MALLOC
 /// A* functions no longer run the canEnterTerrain() functions during validation (it should normally be run once and cached, but Firaxis did a bunch of stupids)
 #define AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
 /// Moves the check for whether a node has no parent to the beginning of PathValid() (originally from Community Patch)

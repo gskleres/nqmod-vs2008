@@ -46,11 +46,7 @@ class FVariableDebug;
 #define FVARTYPE FVariableDebug
 #endif	//	FINAL_RELEASE
 
-#ifdef AUI_VC120_FORMALITIES
-typedef std::tr1::unordered_map< FString, FVARTYPE*, FStringHashTraits > FVariableHash;
-#else
 typedef STDEXT::hash_map< FString, FVARTYPE*, FStringHashTraits > FVariableHash;
-#endif
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // CLASS:	FVariableCallback
@@ -91,11 +87,7 @@ class FDataStream;
 class FVariable
 {
 	public:
-#ifdef AUI_WARNING_FIXES
-		FVariable() : m_dValue(0), m_eType(FVARTYPE_BOOL) {}
-#else
 		FVariable() : m_dValue(0) {}
-#endif
 		FVariable(const FVariable& src) { CopyFrom(src); }
 		virtual ~FVariable();
 
@@ -158,21 +150,15 @@ class FVariable
 		{
 			if ( !_stricmp(szType, "Check" ) ) return FVARTYPE_BOOL; 
 			if ( !_stricmp(szType, "Char")) return FVARTYPE_CHAR; 
-#ifndef AUI_WARNING_FIXES
 			if ( !_stricmp(szType, "Char")) return FVARTYPE_UCHAR; 
 			if ( !_stricmp(szType, "Int")) return FVARTYPE_SHORT; 
 			if ( !_stricmp(szType, "UInt")) return FVARTYPE_USHORT; 
-#endif
 			if ( !_stricmp(szType, "Int")) return FVARTYPE_INT; 
 			if ( !_stricmp(szType, "UInt")) return FVARTYPE_UINT; 
 			if ( !_stricmp(szType, "Float"))return FVARTYPE_FLOAT; 
-#ifndef AUI_WARNING_FIXES
 			if ( !_stricmp(szType, "Float")) return FVARTYPE_DOUBLE; 
-#endif
 			if ( !_stricmp(szType, "String")) return FVARTYPE_STRING; 
-#ifndef AUI_WARNING_FIXES
 			if ( !_stricmp(szType, "String")) return FVARTYPE_WSTRING; 
-#endif
 			return FVARTYPE_INT; // ?
 		}
 

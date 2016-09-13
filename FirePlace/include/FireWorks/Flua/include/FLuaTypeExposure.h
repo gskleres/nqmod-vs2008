@@ -272,11 +272,7 @@ namespace FLua
 		}
 
 	private:
-#ifdef AUI_WARNING_FIXES
-		TypeExposures() : m_uiTypeEntryCount(0), m_aTypeEntries() {}
-#else
 		TypeExposures() : m_uiTypeEntryCount(0) {}
-#endif
 		static inline TypeExposures &Ref() { static TypeExposures kInst; return kInst; }
 
 		ExposeTypeFn m_aTypeEntries[sm_uiMaxTypeExposures];

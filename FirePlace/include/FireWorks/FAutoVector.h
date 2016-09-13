@@ -74,11 +74,7 @@ struct AutoVectorCommand
 		return true;
 	}
 
-#ifdef AUI_WARNING_FIXES
-	CommandTypes command;
-#else
 	unsigned char command;
-#endif
 	unsigned int  index;
 	ElementType   value;
 };
@@ -261,9 +257,7 @@ void FAutoVariable<std::vector<ElementType>, ClassContainer>::load(FDataStream &
 	clear();
 	m_commands.clear();
 	loadFrom >> m_value;
-#ifndef AUI_WARNING_FIXES
 	m_commands.clear();
-#endif
 }
 
 //---------------------------------------------------------------------------------------

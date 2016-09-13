@@ -150,7 +150,7 @@ void CvAStar::DeInit()
 	{
 		for(int iI = 0; iI < m_iColumns; iI++)
 		{
-#ifdef AUI_REMOVE_MALLOC
+#ifdef AUI_ASTAR_REMOVE_MALLOC
 			SAFE_DELETE_ARRAY(m_ppaaNodes[iI]);
 		}
 
@@ -206,21 +206,21 @@ void CvAStar::Initialize(int iColumns, int iRows, bool bWrapX, bool bWrapY, CvAP
 	m_pBest = NULL;
 	m_pStackHead = NULL;
 
-#ifdef AUI_REMOVE_MALLOC
+#ifdef AUI_ASTAR_REMOVE_MALLOC
 	m_ppaaNodes = FNEW(CvAStarNode*[m_iColumns], c_eCiv5GameplayDLL, 0);
 #else
 	m_ppaaNodes = reinterpret_cast<CvAStarNode**>(FMALLOCALIGNED(sizeof(CvAStarNode*)*m_iColumns, 64, c_eCiv5GameplayDLL, 0));
 #endif
 	for(iI = 0; iI < m_iColumns; iI++)
 	{
-#ifdef AUI_REMOVE_MALLOC
+#ifdef AUI_ASTAR_REMOVE_MALLOC
 		m_ppaaNodes[iI] = FNEW(CvAStarNode[m_iRows], c_eCiv5GameplayDLL, 0);
 #else
 		m_ppaaNodes[iI] = reinterpret_cast<CvAStarNode*>(FMALLOCALIGNED(sizeof(CvAStarNode)*m_iRows, 64, c_eCiv5GameplayDLL, 0));
 #endif
 		for(iJ = 0; iJ < m_iRows; iJ++)
 		{
-#ifndef AUI_REMOVE_MALLOC
+#ifndef AUI_ASTAR_REMOVE_MALLOC
 			new(&m_ppaaNodes[iI][iJ]) CvAStarNode();
 #endif
 			m_ppaaNodes[iI][iJ].m_iX = iI;
@@ -1735,7 +1735,11 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 	CvPlot* pToPlot = theMap.plotUnchecked(node->m_iX, node->m_iY);
 #endif
 	PREFETCH_FASTAR_CVPLOT(reinterpret_cast<char*>(pToPlot));
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	CvAStarNode& kToNodeCacheData = *node;
+#else
 	CvPathNodeCacheData& kToNodeCacheData = node->m_kCostCacheData;
+#endif
 #endif
 
 #ifdef AUI_ASTAR_FIX_PARENT_NODE_ALWAYS_VALID_OPTIMIZATION
@@ -1815,7 +1819,11 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 		}
 	}
 #else
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	CvAStarNode& kToNodeCacheData = *node;
+#else
 	CvPathNodeCacheData& kToNodeCacheData = node->m_kCostCacheData;
+#endif
 	kToNodeCacheData.bPlotVisibleToTeam = pToPlot->isVisible(eUnitTeam);
 	kToNodeCacheData.iNumFriendlyUnitsOfType = pToPlot->getNumFriendlyUnitsOfType(pUnit);
 	kToNodeCacheData.bIsMountain = pToPlot->isMountain();
@@ -1925,7 +1933,11 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 #endif
 
 	// Get a reference to the parent node cache data
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	CvAStarNode& kFromNodeCacheData = *parent;
+#else
 	CvPathNodeCacheData& kFromNodeCacheData = parent->m_kCostCacheData;
+#endif
 
 	// Loop through the current path until we find the path origin.
 	// This validates the path with the inclusion of the new path node.  We must do this because of the rules of where a unit can finish a turn.
@@ -1941,7 +1953,11 @@ int PathValid(CvAStarNode* parent, CvAStarNode* node, int data, const void* poin
 #endif
 		PREFETCH_FASTAR_NODE(pNode->m_pParent);
 
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		CvAStarNode& kNodeCacheData = *node;
+#else
 		CvPathNodeCacheData& kNodeCacheData = pNode->m_kCostCacheData;
+#endif
 		// This is a safeguard against the algorithm believing a plot to be impassable before actually knowing it (mid-search)
 		if(iOldNumTurns != -1 || (iDestX == iNodeX && iDestY == iNodeY))
 		{
@@ -2301,7 +2317,22 @@ int PathNodeAdd(CvAStarNode* parent, CvAStarNode* node, int data, const void* po
 			pNode->m_iY = node->m_iY;
 			pNode->m_pParent = node->m_pParent;
 			pNode->m_eCvAStarListType = CVASTARLIST_OPEN;
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+#ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+			pNode->bIsCalculated = node->bIsCalculated;
+#endif
+			pNode->bPlotVisibleToTeam = node->bPlotVisibleToTeam;
+			pNode->bIsMountain = node->bIsMountain;
+			pNode->bIsWater = node->bIsWater;
+			pNode->bCanEnterTerrain = node->bCanEnterTerrain;
+			pNode->bIsRevealedToTeam = node->bIsRevealedToTeam;
+			pNode->bContainsOtherFriendlyTeamCity = node->bContainsOtherFriendlyTeamCity;
+			pNode->bContainsEnemyCity = node->bContainsEnemyCity;
+			pNode->bContainsVisibleEnemy = node->bContainsVisibleEnemy;
+			pNode->bContainsVisibleEnemyDefender = node->bContainsVisibleEnemyDefender;
+#else
 			pNode->m_kCostCacheData = node->m_kCostCacheData;
+#endif
 			finder->AddToOpen(pNode);
 		}
 	}
@@ -2774,7 +2805,11 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 #endif
 #ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
 	PlayerTypes unit_owner = pUnit->getOwner();
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	CvAStarNode& kToNodeCacheData = *node;
+#else
 	CvPathNodeCacheData& kToNodeCacheData = node->m_kCostCacheData;
+#endif
 #endif
 
 	if(parent == NULL)
@@ -2863,7 +2898,11 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 #endif
 
 #ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	CvAStarNode& kFromNodeCacheData = *parent;
+#else
 	CvPathNodeCacheData& kFromNodeCacheData = parent->m_kCostCacheData;
+#endif
 #endif
 
 	// slewis - moved this up so units can't move directly into the water. Not 100% sure this is the right solution.
@@ -4809,7 +4848,11 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 	{
 #ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
 		// Cache values for this node that we will use in the loop
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		CvAStarNode& kToNodeCacheData = *node;
+#else
 		CvPathNodeCacheData& kToNodeCacheData = node->m_kCostCacheData;
+#endif
 		if (!kToNodeCacheData.bIsCalculated)
 		{
 			kToNodeCacheData.bIsCalculated = true;
@@ -4852,7 +4895,11 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 #endif
 
 	// Cache the data for the node
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	CvAStarNode& kToNodeCacheData = *node;
+#else
 	CvPathNodeCacheData& kToNodeCacheData = node->m_kCostCacheData;
+#endif
 #ifdef AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
 	if (!kToNodeCacheData.bIsCalculated)
 	{
@@ -5001,12 +5048,14 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 
 	iOldNumTurns = -1;
 
-#ifndef AUI_ASTAR_MINOR_OPTIMIZATION
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+	CvAStarNode& kFromNodeCacheData = *parent;
+#else
 	CvPlot* pPlot = NULL;
-#endif
 
 	// Get a reference to the parent node cache data
 	CvPathNodeCacheData& kFromNodeCacheData = parent->m_kCostCacheData;
+#endif
 
 	// Loop through the current path until we find the path origin.
 	// This validates the path with the inclusion of the new path node.  We must do this because of the rules of where a unit can finish a turn.
@@ -5023,7 +5072,11 @@ int TacticalAnalysisMapPathValid(CvAStarNode* parent, CvAStarNode* node, int dat
 
 		PREFETCH_FASTAR_NODE(pNode->m_pParent);
 
+#ifdef AUI_ASTAR_MINOR_OPTIMIZATION
+		CvAStarNode& kNodeCacheData = *pNode;
+#else
 		CvPathNodeCacheData& kNodeCacheData = pNode->m_kCostCacheData;
+#endif
 		// This is a safeguard against the algorithm believing a plot to be impassable before actually knowing it (mid-search)
 		if(iOldNumTurns != -1 || (iDestX == iNodeX && iDestY == iNodeY))
 		{

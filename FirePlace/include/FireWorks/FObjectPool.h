@@ -97,10 +97,8 @@ FObjectPool<T>::FObjectPool( uint uiSize, bool bGrow )
 	m_pStorage = FNEW( FPoolNode[uiSize], c_eMPoolTypeContainer, 0 );
 
 	#ifndef		_NDS
-#ifndef AUI_WARNING_FIXES
 	if (!m_pStorage)
 		throw(-1);
-#endif
 	#endif	//	!_NDS
 
 	// Now pre-allocated each object in that array
@@ -130,10 +128,8 @@ FObjectPool<T>::FObjectPool( const FObjectPool<T>& source )
 	m_pStorage = FNEW( T(source.m_uiSize * sizeof(FPoolNode)), c_eMPoolTypeContainer, 0 );
 
 	#ifndef		_NDS
-#ifndef AUI_WARNING_FIXES
 	if (!m_pStorage)
 		throw(-1);
-#endif
 	#endif	//	!_NDS
 
 	// Pre-allocate and set each object in the array
