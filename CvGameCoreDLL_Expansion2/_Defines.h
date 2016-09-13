@@ -115,6 +115,8 @@
 #define AUI_RELIGION_FIX_NO_BELIEFS_AVAILABLE_CHECK_FOR_NON_PANTHEON_MOVED
 /// If a unit is dead, it cannot perform any mission (fixes cases where players could cause two missions to fire in multiplayer)
 #define AUI_UNIT_MISSION_FIX_NO_MISSION_ON_DEATH
+/// Removes all non-engine instances of alloc, malloc, and firemalloc and replaces them with new (also replaced corresponding free calls with delete calls)
+#define AUI_REMOVE_MALLOC
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
@@ -504,8 +506,8 @@
 #define AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
 
 // City Governor Stuff
-/// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix
-#define AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+/// Fixes various possible bugs by replacing std::vector's resize() and [] calls with push_back() and clear()
+#define AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
 /// Replaces the "lower influence cost by 1 if near NW or resource" code with code that lowers the influence cost of plots that are between resources or natural wonders and the closest owned plot of the city
 #define AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 /// Weights the yield contribution to a plot's influence cost by the value of the yield to citizen automation.

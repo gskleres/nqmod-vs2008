@@ -150,11 +150,18 @@ void CvAStar::DeInit()
 	{
 		for(int iI = 0; iI < m_iColumns; iI++)
 		{
+#ifdef AUI_REMOVE_MALLOC
+			SAFE_DELETE_ARRAY(m_ppaaNodes[iI]);
+		}
+
+		SAFE_DELETE_ARRAY(m_ppaaNodes);
+#else
 			FFREEALIGNED(m_ppaaNodes[iI]);
 		}
 
 		FFREEALIGNED(m_ppaaNodes);
 		m_ppaaNodes=0;
+#endif
 	}
 }
 
@@ -199,13 +206,23 @@ void CvAStar::Initialize(int iColumns, int iRows, bool bWrapX, bool bWrapY, CvAP
 	m_pBest = NULL;
 	m_pStackHead = NULL;
 
+#ifdef AUI_REMOVE_MALLOC
+	m_ppaaNodes = FNEW(CvAStarNode*[m_iColumns], c_eCiv5GameplayDLL, 0);
+#else
 	m_ppaaNodes = reinterpret_cast<CvAStarNode**>(FMALLOCALIGNED(sizeof(CvAStarNode*)*m_iColumns, 64, c_eCiv5GameplayDLL, 0));
+#endif
 	for(iI = 0; iI < m_iColumns; iI++)
 	{
+#ifdef AUI_REMOVE_MALLOC
+		m_ppaaNodes[iI] = FNEW(CvAStarNode[m_iRows], c_eCiv5GameplayDLL, 0);
+#else
 		m_ppaaNodes[iI] = reinterpret_cast<CvAStarNode*>(FMALLOCALIGNED(sizeof(CvAStarNode)*m_iRows, 64, c_eCiv5GameplayDLL, 0));
+#endif
 		for(iJ = 0; iJ < m_iRows; iJ++)
 		{
+#ifndef AUI_REMOVE_MALLOC
 			new(&m_ppaaNodes[iI][iJ]) CvAStarNode();
+#endif
 			m_ppaaNodes[iI][iJ].m_iX = iI;
 			m_ppaaNodes[iI][iJ].m_iY = iJ;
 #ifdef AUI_ASTAR_CACHE_PLOTS_AT_NODES

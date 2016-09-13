@@ -1834,15 +1834,23 @@ int CvLuaCity::lGetNextBuyablePlot(lua_State* L)
 int CvLuaCity::lGetBuyablePlotList(lua_State* L)
 {
 	CvCity* pkCity = GetInstance(L);
-#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
-	FFastVector<int, true, c_eCiv5GameplayDLL> aiPlotList;
+	std::vector<int> aiPlotList;
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
 	aiPlotList.reserve(NUM_DIRECTION_TYPES * GC.getMAXIMUM_ACQUIRE_PLOT_DISTANCE());
 #else
-	std::vector<int> aiPlotList;
 	aiPlotList.resize(20, -1);
 #endif
 	pkCity->GetBuyablePlotList(aiPlotList);
 
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
+
+	for (std::vector<int>::iterator it = aiPlotList.begin(); it != aiPlotList.end(); ++it)
+	{
+		CvLuaPlot::Push(L, GC.getMap().plotByIndex(*it));
+	}
+
+	return  aiPlotList.size();
+#else
 	int iReturnValues = 0;
 
 	for(uint ui = 0; ui < aiPlotList.size(); ui++)
@@ -1860,6 +1868,7 @@ int CvLuaCity::lGetBuyablePlotList(lua_State* L)
 	}
 
 	return iReturnValues;
+#endif
 }
 
 //------------------------------------------------------------------------------
