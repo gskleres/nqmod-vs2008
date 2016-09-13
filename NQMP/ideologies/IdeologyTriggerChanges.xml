@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by ModBuddy on 4/20/2016 7:55:48 PM -->
 <GameData>
+	
+	<!-- First Ideology free tenets reduced to 1 (down from 2). -->
+	<PolicyBranchTypes>
+		<Update>
+			<Set FirstAdopterFreePolicies="1" />
+		</Update>
+	</PolicyBranchTypes>
+	
+	<!-- Center of Progress -->
 	<BuildingClasses>
 		<Row>
 			<Type>BUILDINGCLASS_CENTER_OF_PROGRESS</Type>
