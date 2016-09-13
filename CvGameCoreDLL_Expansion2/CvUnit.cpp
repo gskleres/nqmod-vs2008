@@ -9174,16 +9174,11 @@ void CvUnit::PerformCultureBomb(int iRadius)
 						pLoopPlot2 = plotDirection(pLoopPlot->getX(), pLoopPlot->getY(), (DirectionTypes)iI);
 						if (pLoopPlot2 != NULL && pLoopPlot2->getOwner() == pLoopPlot->getOwner())
 						{
-							if (plotDistance(getX(), getY(), pLoopPlot2->getX(), pLoopPlot2->getY()) > iBombRange)
-							{
-								bPlotHasResistingCitadel = true;
-								break;
-							}
-							else
+							if (plotDistance(getX(), getY(), pLoopPlot2->getX(), pLoopPlot2->getY()) > iBombRange && !pLoopPlot->isCity())
 							{
 								eLoopImprovement = pLoopPlot->getRevealedImprovementType(getTeam());
 								// Citadels don't defend adjacent citadels on their own (so 2 neighboring citadels don't become invulnerable to culture bombs
-								if (eLoopImprovement == NO_IMPROVEMENT || 
+								if (eLoopImprovement == NO_IMPROVEMENT ||
 									(GC.getImprovementInfo(eLoopImprovement) && GC.getImprovementInfo(eLoopImprovement)->GetCultureBombRadius() <= 0))
 								{
 									bPlotHasResistingCitadel = true;

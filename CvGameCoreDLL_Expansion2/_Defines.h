@@ -243,7 +243,7 @@
 #define AUI_UNIT_TEST_PROMOTION_READY_MOVED
 /// If a friendly unit is closer to a blockaded tile than the closest enemy unit, then a tile becomes unblockaded.
 #define AUI_CITY_CITIZENS_COUNTERBLOCKADE
-/// Citadels can only be captured with a culture bomb if they would have no non-citadel tiles of friendly culture adjacent to them after the culture bomb
+/// Citadels can only be captured with a culture bomb if they would have no non-citadel, non-city tiles of friendly culture adjacent to them after the culture bomb
 #define AUI_UNIT_CITADEL_RESISTANT_TO_CULTURE_BOMB
 
 // Turn timer stuff
