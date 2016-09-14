@@ -365,9 +365,6 @@ public:
 	{
 		if( m_uiCurrSize == m_uiCurrMaxSize )
 			GrowSize(m_uiCurrMaxSize);
-#ifdef AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
-		if (!bPODType)
-#endif
 		new( (void*)&m_pData[m_uiCurrSize] )T();
 		return m_uiCurrSize++;
 	};
@@ -379,14 +376,7 @@ public:
 	{
 		if( m_uiCurrSize == m_uiCurrMaxSize )
 			GrowSize(m_uiCurrMaxSize);
-#ifdef AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
-		if (bPODType)
-			memcpy((void*)&m_pData[m_uiCurrSize], &element, sizeof(T));
-		else
-			new((void*)&m_pData[m_uiCurrSize])T(element);
-#else
 		new( (void*)&m_pData[m_uiCurrSize] )T(element);
-#endif
 		return m_uiCurrSize++;
 	};
 
@@ -412,19 +402,6 @@ public:
 
 		m_uiCurrSize = uNewSize;
 	}
-
-#ifdef AUI_FIX_FFASTVECTOR_ERASE
-	// remove the element pointed to by 'it' and shrink the list
-	void erase(iterator it)
-	{
-		for (unsigned int i = it - m_pData; i + 1< m_uiCurrSize; ++i)
-		{
-			m_pData[i] = m_pData[i + 1];
-		}
-
-		--m_uiCurrSize;
-	}
-#endif
 
 	//Add uiNum copies of element to the end of the vector.
 	void push_back_copy( const T& element, unsigned int uiNum  )
@@ -619,9 +596,6 @@ public:
 #ifdef BREAK_ON_STATIC_RESIZE
 		m_iNumResized = 0;
 #endif
-#ifdef AUI_WARNING_FIXES
-		m_bIsResized = RHS.m_bIsResized;
-#endif
 		Copy(RHS);
 	};
 	FStaticVector()
@@ -631,9 +605,6 @@ public:
 #ifdef BREAK_ON_STATIC_RESIZE
 		m_iNumResized = 0;
 #endif
-#ifdef AUI_WARNING_FIXES
-		m_bIsResized = false;
-#endif
     };
 	FStaticVector(unsigned int uiStartingMaxSize)
 	{
@@ -641,9 +612,6 @@ public:
 		m_pData = Alloc(m_uiCurrMaxSize);
 #ifdef BREAK_ON_STATIC_RESIZE
 		m_iNumResized = 0;
-#endif
-#ifdef AUI_WARNING_FIXES
-		m_bIsResized = false;
 #endif
 	};
 	~FStaticVector(){
@@ -660,39 +628,25 @@ public:
 	};
 
     bool operator == (const THIS_TYPE& RHS) const {
-#ifndef AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
         bool bResult = false;
-#endif
 
         if( m_uiCurrSize != RHS.m_uiCurrSize )
         {
-#ifdef AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
-			return false;
-#else
             goto Cleanup;
-#endif
         }
 
         for( UINT uIdx = 0; uIdx < m_uiCurrSize; ++uIdx )
         {
             if( m_pData[ uIdx ] != RHS.m_pData[ uIdx ] )
             {
-#ifdef AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
-				return false;
-#else
                 goto Cleanup;
-#endif
             }
         }
-#ifdef AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
-		return true;
-#else
         bResult = true;
 
 Cleanup:
 
 		return bResult;
-#endif
 
 	};
 
@@ -723,14 +677,7 @@ Cleanup:
 		m_bIsResized = false;
 		if( m_uiCurrSize == m_uiCurrMaxSize )
 			GrowSize(m_uiCurrMaxSize);
-#ifdef AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
-		if (bPODType)
-			memcpy((void*)&m_pData[m_uiCurrSize], &element, sizeof(T));
-		else
-			new((void*)&m_pData[m_uiCurrSize])T(element);
-#else
 		new( (void*)&m_pData[m_uiCurrSize] )T(element);
-#endif
 		return m_uiCurrSize++;
 	};
 
@@ -755,13 +702,9 @@ Cleanup:
 	{
 		m_bIsResized = false;
 
-#ifdef AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
-		for (unsigned int i = it - m_pData; i + 1< m_uiCurrSize; ++i)
-#else
 		unsigned int uIndex = it - m_pData;
 
         for(unsigned int i = uIndex; i + 1< m_uiCurrSize; ++i)
-#endif
         {
             m_pData[i] = m_pData[i+1];
         }

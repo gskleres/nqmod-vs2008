@@ -37,8 +37,6 @@
 #define AUI_SCOPE_FIXES
 /// Replaces all instances of iterators with postfix incrementors to have prefix incrementors, increasing performance
 #define AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-/// Adds a few extra functions that can be used for 128-bit SSE types like __m128i and __m128d
-#define AUI_SIMD_ADDITIONS
 /// Fast comparison functions (to be used for built-in types like int, float, double, etc.)
 #define NQM_FAST_COMP
 /// Performance optimizations related to bit twiddling (http://www.graphics.stanford.edu/~seander/bithacks.html)
@@ -53,18 +51,12 @@
 #define AUI_STOPWATCH_SUBTRACT_BEFORE_DELTA_CAST
 /// Implements the missing iterator typedefs for BaseVector
 #define AUI_FIX_FFASTVECTOR_BASEVECTOR_ITERATOR
-/// Implements the missing erase(iterator) function for FFastVector
-#define AUI_FIX_FFASTVECTOR_ERASE
 /// Functions that called ints for variables used for indexes and choice numbers now call unsigned ints instead
 #define AUI_FIX_FFASTVECTOR_USE_UNSIGNED
-/// Minor optimizations to some FFastVector classes, justified by the fact that these classes are used extremely often and speed is of the essence when accessing their methods
-#define AUI_FIX_FFASTVECTOR_OPTIMIZATIONS
 /// Optimized parts of functions responsible for updating plot vision code
 #define AUI_PLOT_VISIBILITY_OPTIMIZATIONS
 /// Optimizes loops that iterate over relative coordinates to hexspace
 #define AUI_HEXSPACE_DX_LOOPS
-/// Fixes some misc. warnings/errors generated when code is attempted to be compiled using VC120 (it won't work because link targets are all VC90-compiled, but all other errors/warnings are legitimate)
-#define AUI_VC120_FORMALITIES
 /// CvUnit::canMoveOrAttackInto() no longer calls certain expensive calls twice (also improves pathfinder performance)
 #define AUI_UNIT_FIX_CAN_MOVE_OR_ATTACK_INTO_NO_DUPLICATE_CALLS
 /// CvUnit::canMoveInto() is optimized to not perform redundant checks for attack flag (also improves pathfinder performance)
@@ -251,7 +243,7 @@
 #define AUI_UNIT_TEST_PROMOTION_READY_MOVED
 /// If a friendly unit is closer to a blockaded tile than the closest enemy unit, then a tile becomes unblockaded.
 #define AUI_CITY_CITIZENS_COUNTERBLOCKADE
-/// Citadels can only be captured with a culture bomb if they would have no non-citadel tiles of friendly culture adjacent to them after the culture bomb
+/// Citadels can only be captured with a culture bomb if they would have no non-citadel, non-city tiles of friendly culture adjacent to them after the culture bomb
 #define AUI_UNIT_CITADEL_RESISTANT_TO_CULTURE_BOMB
 
 // Turn timer stuff
@@ -318,6 +310,8 @@
 #endif
 
 // Pathfinder (A*) optimizations, tweaks, and fixes
+/// Removes instances of alloc, malloc, and firemalloc from AStar and replaces them with new (also replaced corresponding free calls with delete calls)
+#define AUI_ASTAR_REMOVE_MALLOC
 /// A* functions no longer run the canEnterTerrain() functions during validation (it should normally be run once and cached, but Firaxis did a bunch of stupids)
 #define AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
 /// Moves the check for whether a node has no parent to the beginning of PathValid() (originally from Community Patch)
@@ -504,8 +498,8 @@
 #define AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
 
 // City Governor Stuff
-/// Fixes various possible bugs by replacing std::vector with FFastVector as the list type and relying on push_back() and clear() instead of trying to handle the vector as a matrix
-#define AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+/// Fixes various possible bugs by replacing std::vector's resize() and [] calls with push_back() and clear()
+#define AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
 /// Replaces the "lower influence cost by 1 if near NW or resource" code with code that lowers the influence cost of plots that are between resources or natural wonders and the closest owned plot of the city
 #define AUI_CITY_GET_BUYABLE_PLOT_LIST_RESOURCE_NW_OSMOSIS
 /// Weights the yield contribution to a plot's influence cost by the value of the yield to citizen automation.

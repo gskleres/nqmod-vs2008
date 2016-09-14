@@ -801,11 +801,7 @@ public:
 	bool CanBuyAnyPlot(void);
 #endif
 	CvPlot* GetNextBuyablePlot();
-#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
-	void GetBuyablePlotList(FFastVector<int, true, c_eCiv5GameplayDLL>& aiPlotList);
-#else
 	void GetBuyablePlotList(std::vector<int>& aiPlotList);
-#endif
 	int GetBuyPlotCost(int iPlotX, int iPlotY) const;
 	void BuyPlot(int iPlotX, int iPlotY);
 	void DoAcquirePlot(int iPlotX, int iPlotY);

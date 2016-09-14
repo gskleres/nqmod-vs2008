@@ -11725,11 +11725,10 @@ bool CvCity::CanBuyAnyPlot(void)
 CvPlot* CvCity::GetNextBuyablePlot(void)
 {
 	VALIDATE_OBJECT
-#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
-	FFastVector<int, true, c_eCiv5GameplayDLL> aiPlotList;
+	std::vector<int> aiPlotList;
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
 	aiPlotList.reserve(NUM_DIRECTION_TYPES * GC.getMAXIMUM_ACQUIRE_PLOT_DISTANCE());
 #else
-	std::vector<int> aiPlotList;
 	aiPlotList.resize(20, -1);
 #endif
 	GetBuyablePlotList(aiPlotList);
@@ -11763,7 +11762,7 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 	// NQMP GJS - Shoshone + Colonialism better extra territory fix end
 #endif
 
-#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
 	int iListLength = aiPlotList.size();
 #else
 	int iListLength = 0;
@@ -11793,14 +11792,10 @@ CvPlot* CvCity::GetNextBuyablePlot(void)
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
-void CvCity::GetBuyablePlotList(FFastVector<int, true, c_eCiv5GameplayDLL>& aiPlotList)
-#else
 void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
-#endif
 {
 	VALIDATE_OBJECT
-#ifndef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+#ifndef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
 	aiPlotList.resize(20, -1);
 	int iResultListIndex = 0;
 #endif
@@ -12313,7 +12308,7 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 					// Are we cheap enough to get picked next?
 					if (iInfluenceCost < iLowestCost)
 					{
-#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
 						aiPlotList.clear();
 #else
 						// clear reset list
@@ -12338,7 +12333,7 @@ void CvCity::GetBuyablePlotList(std::vector<int>& aiPlotList)
 						{
 							iLowestBuyCost = iCurBuyCost;
 #endif
-#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_USE_FFASTVECTOR
+#ifdef AUI_CITY_FIX_GET_NEXT_BUYABLE_PLOT_VECTOR_USE_RESERVE
 						aiPlotList.push_back(pLoopPlot->GetPlotIndex());
 #else
 						aiPlotList[iResultListIndex] = pLoopPlot->GetPlotIndex();

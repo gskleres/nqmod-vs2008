@@ -757,7 +757,7 @@ public:
 
 	template< class DerivedClass >
 #ifdef AUI_WARNING_FIXES
-	inline void CopyFrom(DerivedClass /**pParent*/, const DelegateMemento &right) {
+	inline void CopyFrom(DerivedClass* /*pParent*/, const DelegateMemento &right) {
 #else
 	inline void CopyFrom (DerivedClass *pParent, const DelegateMemento &right) {
 #endif
