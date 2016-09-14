@@ -182,6 +182,10 @@ CvUnit::CvUnit() :
 	, m_iNearbyEnemyCombatRange(0)
 	, m_iSapperCount(0)
 	, m_iCanHeavyCharge(0)
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	, m_iHeavyChargeDownhill(0)
+#endif
+
 	, m_iNumExoticGoods(0)
 	, m_iAdjacentModifier("CvUnit::m_iAdjacentModifier", m_syncArchive)
 	, m_iRangedAttackModifier("CvUnit::m_iRangedAttackModifier", m_syncArchive)
@@ -941,6 +945,9 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_iGoldenAgeValueFromKills = 0;
 	m_iSapperCount = 0;
 	m_iCanHeavyCharge = 0;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	m_iHeavyChargeDownhill = 0;
+#endif
 	m_iNumExoticGoods = 0;
 	m_iTacticalAIPlotX = INVALID_PLOT_COORD;
 	m_iTacticalAIPlotY = INVALID_PLOT_COORD;
@@ -11451,6 +11458,16 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 	VALIDATE_OBJECT
 
 	bool bIsEmbarkedAttackingLand = isEmbarked() && (pToPlot && !pToPlot->isWater());
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	bool isAttackingFromHigherElevation = false;
+	if (pFromPlot && pToPlot)
+	{
+		if ((pFromPlot->isMountain() && !pToPlot->isMountain()) || (pFromPlot->isHills() && pToPlot->isFlatlands()))
+		{
+			isAttackingFromHigherElevation = true;
+		}
+	}
+#endif
 
 	if(isEmbarked() && !bIsEmbarkedAttackingLand)
 		return GetEmbarkedUnitDefense();
@@ -11487,6 +11504,15 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 
 	if(pToPlot != NULL)
 	{
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+		// Heavy Charge Downhill
+		if (GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation)
+		{
+			iTempModifier = GetHeavyChargeDownhill();
+			iModifier += iTempModifier;
+		}
+#endif
+
 		// Attacking a City
 		if(pToPlot->isCity())
 		{
@@ -11617,10 +11643,23 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 	iCombat = GetBaseCombatStrength(bIsEmbarkedAttackingLand) * (iModifier + 100);
 
 #ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	if (pDefender && pToPlot && pFromPlot)
+	{
+		bool isAttackingFromHigherElevation = 
+			(pFromPlot->isMountain() && !pToPlot->isMountain()) || // attacking from mountain to non-mountain
+			(pFromPlot->isHills() && pToPlot->isFlatlands()); // attacking from hills to flatlands
+		if ((IsCanHeavyCharge() || (GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation)) && !pDefender->CanFallBackFromMelee(*this, pToPlot))
+		{
+			iCombat = (iCombat * 150) / 100;
+		}
+	}
+#else
 	if (IsCanHeavyCharge() && pDefender && pToPlot && !pDefender->CanFallBackFromMelee(*this, pToPlot))
 	{
 		iCombat = (iCombat * 150) / 100;
 	}
+#endif
 #endif
 
 	return std::max(1, iCombat);
@@ -17514,6 +17553,25 @@ void CvUnit::ChangeCanHeavyChargeCount(int iChange)
 	m_iCanHeavyCharge += iChange;
 }
 
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+//	--------------------------------------------------------------------------------
+int CvUnit::GetHeavyChargeDownhill() const
+{
+	VALIDATE_OBJECT
+	return m_iHeavyChargeDownhill;
+}
+
+//	--------------------------------------------------------------------------------
+void CvUnit::ChangeHeavyChargeDownhill(int iChange)
+{
+	VALIDATE_OBJECT
+	if(iChange != 0)
+	{
+		m_iHeavyChargeDownhill += iChange;
+	}
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 int CvUnit::getFriendlyLandsModifier() const
 {
@@ -19023,6 +19081,9 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 		ChangeCityAttackOnlyCount((thisPromotion.IsCityAttackOnly()) ? iChange: 0);
 		ChangeCaptureDefeatedEnemyCount((thisPromotion.IsCaptureDefeatedEnemy()) ? iChange: 0);
 		ChangeCanHeavyChargeCount((thisPromotion.IsCanHeavyCharge()) ? iChange : 0);
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+		ChangeHeavyChargeDownhill((thisPromotion.GetHeavyChargeDownhill()) * iChange);
+#endif
 
 		ChangeEmbarkExtraVisibility((thisPromotion.GetEmbarkExtraVisibility()) * iChange);
 		ChangeEmbarkDefensiveModifier((thisPromotion.GetEmbarkDefenseModifier()) * iChange);
@@ -19450,6 +19511,9 @@ void CvUnit::read(FDataStream& kStream)
 	}
 
 	kStream >> m_iCanHeavyCharge;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	kStream >> m_iHeavyChargeDownhill;
+#endif
 
 	if (uiVersion >= 5)
 	{
@@ -19597,6 +19661,9 @@ void CvUnit::write(FDataStream& kStream) const
 	kStream << m_iIgnoreZOC;
 	kStream << m_iSapperCount;
 	kStream << m_iCanHeavyCharge;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	kStream << m_iHeavyChargeDownhill;
+#endif
 	kStream << m_iNumExoticGoods;
 	kStream << m_iCityAttackOnlyCount;
 	kStream << m_iCaptureDefeatedEnemyCount;

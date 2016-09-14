@@ -141,6 +141,9 @@ CvPromotionEntry::CvPromotionEntry():
 	m_bPostCombatPromotionsExclusive(false),
 	m_bSapper(false),
 	m_bCanHeavyCharge(false),
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	m_iHeavyChargeDownhill(0),
+#endif
 	m_piTerrainAttackPercent(NULL),
 	m_piTerrainDefensePercent(NULL),
 	m_piFeatureAttackPercent(NULL),
@@ -238,6 +241,9 @@ bool CvPromotionEntry::CacheResults(Database::Results& kResults, CvDatabaseUtili
 	m_bPostCombatPromotionsExclusive = kResults.GetBool("PostCombatPromotionsExclusive");
 	m_bSapper = kResults.GetBool("Sapper");
 	m_bCanHeavyCharge = kResults.GetBool("HeavyCharge");
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	m_iHeavyChargeDownhill = kResults.GetBool("HeavyChargeDownhill");
+#endif
 
 	m_iVisibilityChange = kResults.GetInt("VisibilityChange");
 	m_iMovesChange = kResults.GetInt("MovesChange");
@@ -1419,6 +1425,14 @@ bool CvPromotionEntry::IsCanHeavyCharge() const
 {
 	return m_bCanHeavyCharge;
 }
+
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+/// Accessor: Does this unit heavy charge downhill? (higher elvation to lower elevation, +X% and force an enemy to retreat or take extra damage)
+int CvPromotionEntry::GetHeavyChargeDownhill() const
+{
+	return m_iHeavyChargeDownhill;
+}
+#endif
 
 /// Accessor: Does this promotion change into another after combat?
 bool CvPromotionEntry::HasPostCombatPromotions() const

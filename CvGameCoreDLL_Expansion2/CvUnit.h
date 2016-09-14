@@ -938,6 +938,11 @@ public:
 	bool IsCanHeavyCharge() const;
 	void ChangeCanHeavyChargeCount(int iChange);
 
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int GetHeavyChargeDownhill() const;
+	void ChangeHeavyChargeDownhill(int iChange);
+#endif
+
 	int getFriendlyLandsModifier() const;
 	void changeFriendlyLandsModifier(int iChange);
 
@@ -1470,6 +1475,9 @@ protected:
 	int m_iEverSelectedCount;
 	int m_iSapperCount;
 	int m_iCanHeavyCharge;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int m_iHeavyChargeDownhill;
+#endif
 	int m_iNumExoticGoods;
 
 	FAutoVariable<bool, CvUnit> m_bPromotionReady;

@@ -169,6 +169,9 @@ public:
 	bool IsIgnoreZOC() const;
 	bool IsSapper() const;
 	bool IsCanHeavyCharge() const;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int GetHeavyChargeDownhill() const;
+#endif
 	bool HasPostCombatPromotions() const;
 	bool ArePostCombatPromotionsExclusive() const;
 
@@ -347,6 +350,9 @@ protected:
 	bool m_bPostCombatPromotionsExclusive;
 	bool m_bSapper;
 	bool m_bCanHeavyCharge;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int m_iHeavyChargeDownhill;
+#endif
 
 	CvString m_strSound;
 
