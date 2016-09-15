@@ -4784,6 +4784,13 @@ ResourceTypes CvMinorCivAI::GetNearbyResourceForQuest(PlayerTypes ePlayer)
 				continue;
 			}
 
+#ifdef NQ_NO_UNIQUE_LUX_REQUESTS
+			// cannot be a resource unique to a civilization (i.e. Indonesian uniques)
+			if(pkResourceInfo->GetRequiredCivilization() != NULL && pkResourceInfo->GetRequiredCivilization() != NO_CIVILIZATION)
+			{
+				continue;
+			}
+#endif
 			// Must be this Resource on the player's area
 			if(pPlayerArea->getNumResources(eResource) == 0)
 			{

@@ -666,5 +666,7 @@
 #define NQ_HEAVY_CHARGE_DOWNHILL
 // China's new UA gives bonus movement when turn starts on or adjacent to great general
 #define NQ_ART_OF_WAR_PROMOTION
+// Indonesian unique luxuries disallowed from being required for City State quests an WLtKD requests
+#define NQ_NO_UNIQUE_LUX_REQUESTS
 
 #endif
