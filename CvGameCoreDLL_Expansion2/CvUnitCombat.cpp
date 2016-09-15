@@ -181,10 +181,22 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 		}
 
 #ifndef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+		bool isAttackingFromHigherElevation =
+			(kAttacker.plot()->isMountain() && !pkDefender->plot()->isMountain()) ||
+			(kAttacker.plot()->isHills() && pkDefender->plot()->isFlatlands());
+		
+		if ((kAttacker.IsCanHeavyCharge() || (kAttacker.GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
+			&& !pkDefender->CanFallBackFromMelee(kAttacker))
+		{
+			iAttackerStrength = (iAttackerStrength * 150) / 100;
+		}
+#else
 		if (kAttacker.IsCanHeavyCharge() && !pkDefender->CanFallBackFromMelee(kAttacker))
 		{
 			iAttackerStrength = (iAttackerStrength * 150) / 100;
 		}
+#endif
 #endif
 
 		int iAttackerDamageInflicted = kAttacker.getCombatDamage(iAttackerStrength, iDefenderStrength, kAttacker.getDamage(), /*bIncludeRand*/ true, /*bAttackerIsCity*/ false, /*bDefenderIsCity*/ false);
@@ -261,6 +273,15 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 
 		pkCombatInfo->setAttackIsRanged(false);
 
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+		bool isAttackingFromHigherElevation = false;
+		if (kAttacker.GetHeavyChargeDownhill() > 0)
+		{
+			isAttackingFromHigherElevation = 
+				(kAttacker.plot()->isMountain() && !pkDefender->plot()->isMountain()) ||
+				(kAttacker.plot()->isHills() && pkDefender->plot()->isFlatlands());
+		}
+#endif
 		bool bAdvance = true;
 		if(plot.getNumDefenders(pkDefender->getOwner()) > 1)
 		{
@@ -276,7 +297,12 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 				pkCombatInfo->setDefenderCaptured(true);
 			}
 		}
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+		else if ((kAttacker.IsCanHeavyCharge() || (kAttacker.GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
+			&& !pkDefender->isDelayedDeath() && (iAttackerDamageInflicted > iDefenderDamageInflicted) )
+#else
 		else if (kAttacker.IsCanHeavyCharge() && !pkDefender->isDelayedDeath() && (iAttackerDamageInflicted > iDefenderDamageInflicted) )
+#endif
 		{
 			bAdvance = true;
 		}
@@ -485,7 +511,19 @@ void CvUnitCombat::ResolveMeleeCombat(const CvCombatInfo& kCombatInfo, uint uiPa
 			if(pkTargetPlot)
 #endif
 			{
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+				bool isAttackingFromHigherElevation = false;
+				if (pkAttacker->GetHeavyChargeDownhill() > 0)
+				{
+					isAttackingFromHigherElevation = 
+						(pkAttacker->plot()->isMountain() && !pkDefender->plot()->isMountain()) ||
+						(pkAttacker->plot()->isHills() && pkDefender->plot()->isFlatlands());
+				}
+				if ((pkAttacker->IsCanHeavyCharge() || (pkAttacker->GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
+					&& !pkDefender->isDelayedDeath() && bAttackerDidMoreDamage)
+#else
 				if (pkAttacker->IsCanHeavyCharge() && !pkDefender->isDelayedDeath() && bAttackerDidMoreDamage)
+#endif
 				{
 					pkDefender->DoFallBackFromMelee(*pkAttacker);
 				}

@@ -15,6 +15,17 @@
 		</Update>
 	</Traits>
 	
+	<!-- River Bias (instead of Avoid Tundra) -->
+	<Civilization_Start_Region_Avoid>
+		<Delete CivilizationType="CIVILIZATION_SONGHAI" RegionType="REGION_TUNDRA" />
+	</Civilization_Start_Region_Avoid>
+	<Civilization_Start_Along_River>
+		<Row>
+			<CivilizationType>CIVILIZATION_SONGHAI</CivilizationType>
+			<StartAlongRiver>true</StartAlongRiver>
+		</Row>
+	</Civilization_Start_Along_River>
+
 	<!-- localization -->
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_TRAIT_AMPHIB_WARLORD" />

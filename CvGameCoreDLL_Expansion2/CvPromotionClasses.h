@@ -97,6 +97,9 @@ public:
 	int  GetGreatGeneralModifier() const;
 	bool IsGreatGeneralReceivesMovement() const;
 	bool IsEmbarkedUnitReceivesMovement() const; // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	int GetGreatGeneralOnOrAdjacentConfersMovement() const;
+#endif
 	int  GetGreatGeneralCombatModifier() const;
 	int  GetFriendlyLandsModifier() const;
 	int  GetFriendlyLandsAttackModifier() const;
@@ -169,6 +172,9 @@ public:
 	bool IsIgnoreZOC() const;
 	bool IsSapper() const;
 	bool IsCanHeavyCharge() const;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int GetHeavyChargeDownhill() const;
+#endif
 	bool HasPostCombatPromotions() const;
 	bool ArePostCombatPromotionsExclusive() const;
 
@@ -278,6 +284,9 @@ protected:
 	int m_iGreatGeneralModifier;
 	bool m_bGreatGeneralReceivesMovement;
 	bool m_bEmbarkedUnitReceivesMovement; // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	int m_iGreatGeneralOnOrAdjacentConfersMovement;
+#endif
 	int m_iGreatGeneralCombatModifier;
 	int m_iFriendlyLandsModifier;
 	int m_iFriendlyLandsAttackModifier;
@@ -347,6 +356,9 @@ protected:
 	bool m_bPostCombatPromotionsExclusive;
 	bool m_bSapper;
 	bool m_bCanHeavyCharge;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int m_iHeavyChargeDownhill;
+#endif
 
 	CvString m_strSound;
 

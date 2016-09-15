@@ -920,6 +920,10 @@ public:
 	void ChangeGreatGeneralReceivesMovementCount(int iChange);
 	bool IsEmbarkedUnitReceivesMovement() const; // NQMP GJS - Danish Longship
 	void ChangeEmbarkedUnitReceivesMovementCount(int iChange); // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	int GetGreatGeneralOnOrAdjacentConfersMovement() const;
+	void ChangeGreatGeneralOnOrAdjacentConfersMovement(int iChange);
+#endif
 	int GetGreatGeneralCombatModifier() const;
 	void ChangeGreatGeneralCombatModifier(int iChange);
 
@@ -937,6 +941,11 @@ public:
 
 	bool IsCanHeavyCharge() const;
 	void ChangeCanHeavyChargeCount(int iChange);
+
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int GetHeavyChargeDownhill() const;
+	void ChangeHeavyChargeDownhill(int iChange);
+#endif
 
 	int getFriendlyLandsModifier() const;
 	void changeFriendlyLandsModifier(int iChange);
@@ -1458,6 +1467,9 @@ protected:
 	FAutoVariable<int, CvUnit> m_iGreatGeneralModifier;
 	int m_iGreatGeneralReceivesMovementCount;
 	int m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	int m_iGreatGeneralOnOrAdjacentConfersMovement;
+#endif
 	int m_iGreatGeneralCombatModifier;
 	int m_iIgnoreGreatGeneralBenefit;
 	int m_iIgnoreZOC;
@@ -1470,6 +1482,9 @@ protected:
 	int m_iEverSelectedCount;
 	int m_iSapperCount;
 	int m_iCanHeavyCharge;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int m_iHeavyChargeDownhill;
+#endif
 	int m_iNumExoticGoods;
 
 	FAutoVariable<bool, CvUnit> m_bPromotionReady;

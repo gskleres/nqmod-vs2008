@@ -1622,7 +1622,15 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 									int iAttackerStrength = pUnit->GetMaxAttackStrength(pFromPlot, pToPlot, pDefender);
 									int iDefenderStrength = pDefender->GetMaxDefenseStrength(pToPlot, pUnit);
 
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+									bool isAttackingFromHigherElevation = 
+										((pUnit->plot()->isMountain() && !pDefender->plot()->isMountain()) || // attacking from mountain to non-mountain
+										(pUnit->plot()->isHills() && pDefender->plot()->isFlatlands())); // attacking from hills to flatlands
+									if ((pUnit->IsCanHeavyCharge() || (pUnit->GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
+										&& !pDefender->CanFallBackFromMelee(*pUnit))
+#else
 									if (pUnit->IsCanHeavyCharge() && !pDefender->CanFallBackFromMelee(*pUnit))
+#endif
 										iAttackerStrength = (iAttackerStrength * 150) / 100;
 
 									iSelfDamage = pDefender->getCombatDamage(iDefenderStrength, iAttackerStrength, pDefender->getDamage() + iDealtDamage, /*bIncludeRand*/ false, /*bAttackerIsCity*/ false, /*bDefenderIsCity*/ false);
@@ -2708,9 +2716,16 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 									int iAttackerStrength = pUnit->GetMaxAttackStrength(pFromPlot, pToPlot, pDefender);
 									int iDefenderStrength = pDefender->GetMaxDefenseStrength(pToPlot, pUnit);
 
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+									bool isAttackingFromHigherElevation = 
+										((pUnit->plot()->isMountain() && !pDefender->plot()->isMountain()) || // attacking from mountain to non-mountain
+										(pUnit->plot()->isHills() && pDefender->plot()->isFlatlands())); // attacking from hills to flatlands
+									if ((pUnit->IsCanHeavyCharge() || (pUnit->GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
+										&& !pDefender->CanFallBackFromMelee(*pUnit))
+#else
 									if (pUnit->IsCanHeavyCharge() && !pDefender->CanFallBackFromMelee(*pUnit))
+#endif
 										iAttackerStrength = (iAttackerStrength * 150) / 100;
-
 									iSelfDamage = pDefender->getCombatDamage(iDefenderStrength, iAttackerStrength, pDefender->getDamage() + iDealtDamage, /*bIncludeRand*/ false, /*bAttackerIsCity*/ false, /*bDefenderIsCity*/ false);
 									iDealtDamage = pUnit->getCombatDamage(iAttackerStrength, iDefenderStrength, pUnit->getDamage(), /*bIncludeRand*/ false, /*bAttackerIsCity*/ false, /*bDefenderIsCity*/ false);
 

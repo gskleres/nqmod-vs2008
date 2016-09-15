@@ -182,6 +182,10 @@ CvUnit::CvUnit() :
 	, m_iNearbyEnemyCombatRange(0)
 	, m_iSapperCount(0)
 	, m_iCanHeavyCharge(0)
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	, m_iHeavyChargeDownhill(0)
+#endif
+
 	, m_iNumExoticGoods(0)
 	, m_iAdjacentModifier("CvUnit::m_iAdjacentModifier", m_syncArchive)
 	, m_iRangedAttackModifier("CvUnit::m_iRangedAttackModifier", m_syncArchive)
@@ -941,6 +945,9 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_iGoldenAgeValueFromKills = 0;
 	m_iSapperCount = 0;
 	m_iCanHeavyCharge = 0;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	m_iHeavyChargeDownhill = 0;
+#endif
 	m_iNumExoticGoods = 0;
 	m_iTacticalAIPlotX = INVALID_PLOT_COORD;
 	m_iTacticalAIPlotY = INVALID_PLOT_COORD;
@@ -953,6 +960,9 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_iGreatGeneralModifier = 0;
 	m_iGreatGeneralReceivesMovementCount = 0;
 	m_iEmbarkedUnitReceivesMovementCount = 0; // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	m_iGreatGeneralOnOrAdjacentConfersMovement = 0;
+#endif
 	m_iGreatGeneralCombatModifier = 0;
 	m_iIgnoreGreatGeneralBenefit = 0;
 	m_iIgnoreZOC = 0;
@@ -7491,6 +7501,17 @@ bool CvUnit::found()
 	CvPlayerAI& kPlayer = GET_PLAYER(getOwner());
 	CvPlayerAI& kActivePlayer = GET_PLAYER(eActivePlayer);
 
+#ifdef NQ_AMERICAN_PIONEER
+	// When American Pioneer settles non-capital cities, a free Worker appears.
+	//UnitTypes thisUnitType = getUnitType();
+	//UnitTypes expectedUnitType = (UnitTypes) GC.getInfoTypeForString("UNIT_AMERICAN_PIONEER");
+	//int numCities = kPlayer.getNumCities();
+	if (getUnitType() == (UnitTypes)GC.getInfoTypeForString("UNIT_AMERICAN_PIONEER") && kPlayer.getNumCities() > 0)
+	{
+		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), getX(), getY());
+	}
+	//TODO: put this into XML as a trait for the pioneer? it seems like this is a pretty special unique snowflake so not sure how to make it generic
+#endif
 	kPlayer.found(getX(), getY());
 
 	if(pPlot->isActiveVisible(false))
@@ -7508,10 +7529,6 @@ bool CvUnit::found()
 	auto_ptr<ICvUnit1> pDllUnit(new CvDllUnit(this));
 	gDLL->GameplayUnitVisibility(pDllUnit.get(), false);
 	kill(true);
-
-#ifdef NQ_AMERICAN_PIONEER
-	//TODO: check for american pioneer trait and if true add a worker at the plot
-#endif
 
 	return true;
 }
@@ -10691,6 +10708,41 @@ int CvUnit::baseMoves(DomainTypes eIntoDomain /* = NO_DOMAIN */) const
 
 	int iExtraUnitCombatTypeMoves = pTraits->GetMovesChangeUnitCombat((UnitCombatTypes)(m_pUnitInfo->GetUnitCombatType()));
 
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	if (plot() && eDomain == DOMAIN_LAND && !isEmbarked() && GetGreatGeneralOnOrAdjacentConfersMovement() > 0)
+	{
+		bool getsBonusMovementFromGeneral = false;
+		int pX = plot()->getX();
+		int pY = plot()->getY();
+		CvPlot* pLoopPlot;
+		CvUnit* pLoopUnit;
+		IDInfo* pUnitNode;
+
+		for (int iI = NO_DIRECTION; iI < NUM_DIRECTION_TYPES; iI++)
+		{
+			pLoopPlot = plotDirection(pX, pY, (DirectionTypes)iI);
+			if (pLoopPlot != NULL && pLoopPlot->getNumUnits() > 0)
+			{
+				pUnitNode = pLoopPlot->headUnitNode();
+				while (pUnitNode != NULL)
+				{
+					pLoopUnit = ::getUnit(*pUnitNode);
+					if (pLoopUnit && pLoopUnit->getOwner() == getOwner() && pLoopUnit->IsGreatGeneral())
+					{
+						getsBonusMovementFromGeneral = true;
+						break;
+					}
+					pUnitNode = pLoopPlot->nextUnitNode(pUnitNode);
+				}
+			}
+		}
+		if (getsBonusMovementFromGeneral)
+		{
+			iExtraUnitCombatTypeMoves += GetGreatGeneralOnOrAdjacentConfersMovement();
+		}
+	}
+#endif
+
 #ifdef AUI_WARNING_FIXES
 	return (m_pUnitInfo->GetMoves() + getExtraMoves() + thisTeam.getExtraMoves(eDomain) + iExtraNavalMoves + iExtraGoldenAgeMoves + iExtraUnitCombatTypeMoves);
 #else
@@ -11451,6 +11503,16 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 	VALIDATE_OBJECT
 
 	bool bIsEmbarkedAttackingLand = isEmbarked() && (pToPlot && !pToPlot->isWater());
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	bool isAttackingFromHigherElevation = false;
+	if (pFromPlot && pToPlot)
+	{
+		if ((pFromPlot->isMountain() && !pToPlot->isMountain()) || (pFromPlot->isHills() && pToPlot->isFlatlands()))
+		{
+			isAttackingFromHigherElevation = true;
+		}
+	}
+#endif
 
 	if(isEmbarked() && !bIsEmbarkedAttackingLand)
 		return GetEmbarkedUnitDefense();
@@ -11487,6 +11549,15 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 
 	if(pToPlot != NULL)
 	{
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+		// Heavy Charge Downhill
+		if (GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation)
+		{
+			iTempModifier = GetHeavyChargeDownhill();
+			iModifier += iTempModifier;
+		}
+#endif
+
 		// Attacking a City
 		if(pToPlot->isCity())
 		{
@@ -11617,10 +11688,23 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 	iCombat = GetBaseCombatStrength(bIsEmbarkedAttackingLand) * (iModifier + 100);
 
 #ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	if (pDefender && pToPlot && pFromPlot)
+	{
+		bool isAttackingFromHigherElevation = 
+			(pFromPlot->isMountain() && !pToPlot->isMountain()) || // attacking from mountain to non-mountain
+			(pFromPlot->isHills() && pToPlot->isFlatlands()); // attacking from hills to flatlands
+		if ((IsCanHeavyCharge() || (GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation)) && !pDefender->CanFallBackFromMelee(*this, pToPlot))
+		{
+			iCombat = (iCombat * 150) / 100;
+		}
+	}
+#else
 	if (IsCanHeavyCharge() && pDefender && pToPlot && !pDefender->CanFallBackFromMelee(*this, pToPlot))
 	{
 		iCombat = (iCombat * 150) / 100;
 	}
+#endif
 #endif
 
 	return std::max(1, iCombat);
@@ -17356,6 +17440,19 @@ void CvUnit::ChangeEmbarkedUnitReceivesMovementCount(int iChange)
 }
 // NQMP GJS - Danish Longship END
 
+#ifdef NQ_ART_OF_WAR_PROMOTION
+//	--------------------------------------------------------------------------------
+int CvUnit::GetGreatGeneralOnOrAdjacentConfersMovement() const
+{
+	return m_iGreatGeneralOnOrAdjacentConfersMovement;
+}
+
+void CvUnit::ChangeGreatGeneralOnOrAdjacentConfersMovement(int iChange)
+{
+	m_iGreatGeneralOnOrAdjacentConfersMovement += iChange;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 int CvUnit::GetGreatGeneralCombatModifier() const
 {
@@ -17513,6 +17610,25 @@ void CvUnit::ChangeCanHeavyChargeCount(int iChange)
 {
 	m_iCanHeavyCharge += iChange;
 }
+
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+//	--------------------------------------------------------------------------------
+int CvUnit::GetHeavyChargeDownhill() const
+{
+	VALIDATE_OBJECT
+	return m_iHeavyChargeDownhill;
+}
+
+//	--------------------------------------------------------------------------------
+void CvUnit::ChangeHeavyChargeDownhill(int iChange)
+{
+	VALIDATE_OBJECT
+	if(iChange != 0)
+	{
+		m_iHeavyChargeDownhill += iChange;
+	}
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 int CvUnit::getFriendlyLandsModifier() const
@@ -19023,6 +19139,9 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 		ChangeCityAttackOnlyCount((thisPromotion.IsCityAttackOnly()) ? iChange: 0);
 		ChangeCaptureDefeatedEnemyCount((thisPromotion.IsCaptureDefeatedEnemy()) ? iChange: 0);
 		ChangeCanHeavyChargeCount((thisPromotion.IsCanHeavyCharge()) ? iChange : 0);
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+		ChangeHeavyChargeDownhill((thisPromotion.GetHeavyChargeDownhill()) * iChange);
+#endif
 
 		ChangeEmbarkExtraVisibility((thisPromotion.GetEmbarkExtraVisibility()) * iChange);
 		ChangeEmbarkDefensiveModifier((thisPromotion.GetEmbarkDefenseModifier()) * iChange);
@@ -19084,6 +19203,9 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 		changeGreatGeneralModifier(thisPromotion.GetGreatGeneralModifier() * iChange);
 		ChangeGreatGeneralReceivesMovementCount(thisPromotion.IsGreatGeneralReceivesMovement() ? iChange: 0);
 		ChangeEmbarkedUnitReceivesMovementCount(thisPromotion.IsEmbarkedUnitReceivesMovement() ? iChange: 0); // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+		ChangeGreatGeneralOnOrAdjacentConfersMovement(thisPromotion.GetGreatGeneralOnOrAdjacentConfersMovement() * iChange);
+#endif
 		ChangeGreatGeneralCombatModifier(thisPromotion.GetGreatGeneralCombatModifier() * iChange);
 
 		ChangeIgnoreGreatGeneralBenefitCount(thisPromotion.IsIgnoreGreatGeneralBenefit() ? iChange: 0);
@@ -19428,6 +19550,9 @@ void CvUnit::read(FDataStream& kStream)
 
 	kStream >> m_iGreatGeneralReceivesMovementCount;
 	kStream >> m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Lonship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	kStream >> m_iGreatGeneralOnOrAdjacentConfersMovement;
+#endif
 	kStream >> m_iGreatGeneralCombatModifier;
 	kStream >> m_iIgnoreGreatGeneralBenefit;
 
@@ -19450,6 +19575,9 @@ void CvUnit::read(FDataStream& kStream)
 	}
 
 	kStream >> m_iCanHeavyCharge;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	kStream >> m_iHeavyChargeDownhill;
+#endif
 
 	if (uiVersion >= 5)
 	{
@@ -19592,11 +19720,17 @@ void CvUnit::write(FDataStream& kStream) const
 
 	kStream << m_iGreatGeneralReceivesMovementCount;
 	kStream << m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	kStream << m_iGreatGeneralOnOrAdjacentConfersMovement;
+#endif
 	kStream << m_iGreatGeneralCombatModifier;
 	kStream << m_iIgnoreGreatGeneralBenefit;
 	kStream << m_iIgnoreZOC;
 	kStream << m_iSapperCount;
 	kStream << m_iCanHeavyCharge;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	kStream << m_iHeavyChargeDownhill;
+#endif
 	kStream << m_iNumExoticGoods;
 	kStream << m_iCityAttackOnlyCount;
 	kStream << m_iCaptureDefeatedEnemyCount;
