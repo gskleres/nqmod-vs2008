@@ -664,5 +664,7 @@
 #define NQ_FIX_FASTER_ALONG_RIVER
 // Add HeavyChargeDownhill promotion for Carthage Elephant
 #define NQ_HEAVY_CHARGE_DOWNHILL
+// China's new UA gives bonus movement when turn starts on or adjacent to great general
+#define NQ_ART_OF_WAR_PROMOTION
 
 #endif

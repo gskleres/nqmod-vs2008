@@ -960,6 +960,9 @@ void CvUnit::reset(int iID, UnitTypes eUnit, PlayerTypes eOwner, bool bConstruct
 	m_iGreatGeneralModifier = 0;
 	m_iGreatGeneralReceivesMovementCount = 0;
 	m_iEmbarkedUnitReceivesMovementCount = 0; // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	m_iGreatGeneralOnOrAdjacentConfersMovement = 0;
+#endif
 	m_iGreatGeneralCombatModifier = 0;
 	m_iIgnoreGreatGeneralBenefit = 0;
 	m_iIgnoreZOC = 0;
@@ -7498,6 +7501,17 @@ bool CvUnit::found()
 	CvPlayerAI& kPlayer = GET_PLAYER(getOwner());
 	CvPlayerAI& kActivePlayer = GET_PLAYER(eActivePlayer);
 
+#ifdef NQ_AMERICAN_PIONEER
+	// When American Pioneer settles non-capital cities, a free Worker appears.
+	//UnitTypes thisUnitType = getUnitType();
+	//UnitTypes expectedUnitType = (UnitTypes) GC.getInfoTypeForString("UNIT_AMERICAN_PIONEER");
+	//int numCities = kPlayer.getNumCities();
+	if (getUnitType() == (UnitTypes)GC.getInfoTypeForString("UNIT_AMERICAN_PIONEER") && kPlayer.getNumCities() > 0)
+	{
+		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), getX(), getY());
+	}
+	//TODO: put this into XML as a trait for the pioneer? it seems like this is a pretty special unique snowflake so not sure how to make it generic
+#endif
 	kPlayer.found(getX(), getY());
 
 	if(pPlot->isActiveVisible(false))
@@ -7515,10 +7529,6 @@ bool CvUnit::found()
 	auto_ptr<ICvUnit1> pDllUnit(new CvDllUnit(this));
 	gDLL->GameplayUnitVisibility(pDllUnit.get(), false);
 	kill(true);
-
-#ifdef NQ_AMERICAN_PIONEER
-	//TODO: check for american pioneer trait and if true add a worker at the plot
-#endif
 
 	return true;
 }
@@ -10697,6 +10707,41 @@ int CvUnit::baseMoves(DomainTypes eIntoDomain /* = NO_DOMAIN */) const
 	}
 
 	int iExtraUnitCombatTypeMoves = pTraits->GetMovesChangeUnitCombat((UnitCombatTypes)(m_pUnitInfo->GetUnitCombatType()));
+
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	if (plot() && eDomain == DOMAIN_LAND && !isEmbarked() && GetGreatGeneralOnOrAdjacentConfersMovement() > 0)
+	{
+		bool getsBonusMovementFromGeneral = false;
+		int pX = plot()->getX();
+		int pY = plot()->getY();
+		CvPlot* pLoopPlot;
+		CvUnit* pLoopUnit;
+		IDInfo* pUnitNode;
+
+		for (int iI = NO_DIRECTION; iI < NUM_DIRECTION_TYPES; iI++)
+		{
+			pLoopPlot = plotDirection(pX, pY, (DirectionTypes)iI);
+			if (pLoopPlot != NULL && pLoopPlot->getNumUnits() > 0)
+			{
+				pUnitNode = pLoopPlot->headUnitNode();
+				while (pUnitNode != NULL)
+				{
+					pLoopUnit = ::getUnit(*pUnitNode);
+					if (pLoopUnit && pLoopUnit->getOwner() == getOwner() && pLoopUnit->IsGreatGeneral())
+					{
+						getsBonusMovementFromGeneral = true;
+						break;
+					}
+					pUnitNode = pLoopPlot->nextUnitNode(pUnitNode);
+				}
+			}
+		}
+		if (getsBonusMovementFromGeneral)
+		{
+			iExtraUnitCombatTypeMoves += GetGreatGeneralOnOrAdjacentConfersMovement();
+		}
+	}
+#endif
 
 #ifdef AUI_WARNING_FIXES
 	return (m_pUnitInfo->GetMoves() + getExtraMoves() + thisTeam.getExtraMoves(eDomain) + iExtraNavalMoves + iExtraGoldenAgeMoves + iExtraUnitCombatTypeMoves);
@@ -17395,6 +17440,19 @@ void CvUnit::ChangeEmbarkedUnitReceivesMovementCount(int iChange)
 }
 // NQMP GJS - Danish Longship END
 
+#ifdef NQ_ART_OF_WAR_PROMOTION
+//	--------------------------------------------------------------------------------
+int CvUnit::GetGreatGeneralOnOrAdjacentConfersMovement() const
+{
+	return m_iGreatGeneralOnOrAdjacentConfersMovement;
+}
+
+void CvUnit::ChangeGreatGeneralOnOrAdjacentConfersMovement(int iChange)
+{
+	m_iGreatGeneralOnOrAdjacentConfersMovement += iChange;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 int CvUnit::GetGreatGeneralCombatModifier() const
 {
@@ -19145,6 +19203,9 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 		changeGreatGeneralModifier(thisPromotion.GetGreatGeneralModifier() * iChange);
 		ChangeGreatGeneralReceivesMovementCount(thisPromotion.IsGreatGeneralReceivesMovement() ? iChange: 0);
 		ChangeEmbarkedUnitReceivesMovementCount(thisPromotion.IsEmbarkedUnitReceivesMovement() ? iChange: 0); // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+		ChangeGreatGeneralOnOrAdjacentConfersMovement(thisPromotion.GetGreatGeneralOnOrAdjacentConfersMovement() * iChange);
+#endif
 		ChangeGreatGeneralCombatModifier(thisPromotion.GetGreatGeneralCombatModifier() * iChange);
 
 		ChangeIgnoreGreatGeneralBenefitCount(thisPromotion.IsIgnoreGreatGeneralBenefit() ? iChange: 0);
@@ -19489,6 +19550,9 @@ void CvUnit::read(FDataStream& kStream)
 
 	kStream >> m_iGreatGeneralReceivesMovementCount;
 	kStream >> m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Lonship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	kStream >> m_iGreatGeneralOnOrAdjacentConfersMovement;
+#endif
 	kStream >> m_iGreatGeneralCombatModifier;
 	kStream >> m_iIgnoreGreatGeneralBenefit;
 
@@ -19656,6 +19720,9 @@ void CvUnit::write(FDataStream& kStream) const
 
 	kStream << m_iGreatGeneralReceivesMovementCount;
 	kStream << m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	kStream << m_iGreatGeneralOnOrAdjacentConfersMovement;
+#endif
 	kStream << m_iGreatGeneralCombatModifier;
 	kStream << m_iIgnoreGreatGeneralBenefit;
 	kStream << m_iIgnoreZOC;

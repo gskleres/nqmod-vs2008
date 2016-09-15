@@ -59,6 +59,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>buildings/FaluGruva.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>buildings/GardenChanges.xml</FileName>
       </Action>
       <Action>
@@ -120,6 +125,16 @@
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>civs/CarthageChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/ChinaChanges.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>civs/ChinaChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -280,6 +295,11 @@
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>great_people/GreatEngineerChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>great_people/GreatHumanitarian.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -604,6 +624,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>units/Pioneer.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>units/PracinhaChanges.xml</FileName>
       </Action>
       <Action>
@@ -635,6 +660,11 @@
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>units/TrebuchetChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>units/WingedHussarChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -1241,12 +1271,6 @@
         <Description>T1_CovertAction</Description>
         <FileName>ideologies/freedom/T1_CovertAction.xml</FileName>
       </Content>
-      <Content>
-        <Type>InGameUIAddin</Type>
-        <Name>AmericaChanges</Name>
-        <Description>America Changes</Description>
-        <FileName>civs/AmericaChanges.xml</FileName>
-      </Content>
     </ModContent>
     <ModProperties />
     <Homepage>http://www.reddit.com/r/nqmod</Homepage>
@@ -1340,6 +1364,10 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="buildings\FaluGruva.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="buildings\GardenChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1372,10 +1400,6 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="civs\AmericaChanges.lua">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
     <Content Include="civs\AmericaChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1393,6 +1417,14 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="civs\CarthageChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\ChinaChanges.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="civs\ChinaChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -1569,6 +1601,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="great_people\GreatEngineerChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="great_people\GreatHumanitarian.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2112,6 +2148,10 @@
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="units\Pioneer.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="units\PracinhaChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -2137,6 +2177,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="units\TrebuchetChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="units\WingedHussarChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

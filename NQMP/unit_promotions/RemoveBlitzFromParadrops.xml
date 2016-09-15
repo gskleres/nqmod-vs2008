@@ -44,7 +44,7 @@
 		</Update>
 	</Units>
 	
-	<!-- Apply free American/Songhai/Shoshone promotions to this new unit type -->
+	<!-- Apply free American/Songhai/Shoshone/new China promotions to this new unit type -->
 	<Trait_FreePromotionUnitCombats>
 		<Row>
 			<TraitType>TRAIT_RIVER_EXPANSION</TraitType>
@@ -57,14 +57,14 @@
 			<PromotionType>PROMOTION_AMPHIBIOUS</PromotionType>
 		</Row>
 		<Row>
-			<TraitType>TRAIT_AMPHIB_WARLORD</TraitType>
-			<UnitCombatType>UNITCOMBAT_PARADROPPER</UnitCombatType>
-			<PromotionType>PROMOTION_WAR_CANOES</PromotionType>
-		</Row>
-		<Row>
 			<TraitType>TRAIT_GREAT_EXPANSE</TraitType>
 			<UnitCombatType>UNITCOMBAT_PARADROPPER</UnitCombatType>
 			<PromotionType>PROMOTION_HOMELAND_GUARDIAN_BOOGALOO</PromotionType>
+		</Row>
+		<Row>
+			<TraitType>TRAIT_ART_OF_WAR</TraitType>
+			<UnitCombatType>UNITCOMBAT_PARADROPPER</UnitCombatType>
+			<PromotionType>PROMOTION_ART_OF_WAR</PromotionType>
 		</Row>
 	</Trait_FreePromotionUnitCombats>
 

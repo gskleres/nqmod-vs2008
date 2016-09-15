@@ -920,6 +920,10 @@ public:
 	void ChangeGreatGeneralReceivesMovementCount(int iChange);
 	bool IsEmbarkedUnitReceivesMovement() const; // NQMP GJS - Danish Longship
 	void ChangeEmbarkedUnitReceivesMovementCount(int iChange); // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	int GetGreatGeneralOnOrAdjacentConfersMovement() const;
+	void ChangeGreatGeneralOnOrAdjacentConfersMovement(int iChange);
+#endif
 	int GetGreatGeneralCombatModifier() const;
 	void ChangeGreatGeneralCombatModifier(int iChange);
 
@@ -1463,6 +1467,9 @@ protected:
 	FAutoVariable<int, CvUnit> m_iGreatGeneralModifier;
 	int m_iGreatGeneralReceivesMovementCount;
 	int m_iEmbarkedUnitReceivesMovementCount; // NQMP GJS - Danish Longship
+#ifdef NQ_ART_OF_WAR_PROMOTION
+	int m_iGreatGeneralOnOrAdjacentConfersMovement;
+#endif
 	int m_iGreatGeneralCombatModifier;
 	int m_iIgnoreGreatGeneralBenefit;
 	int m_iIgnoreZOC;
