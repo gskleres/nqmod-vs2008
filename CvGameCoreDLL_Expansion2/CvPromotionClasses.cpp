@@ -245,7 +245,7 @@ bool CvPromotionEntry::CacheResults(Database::Results& kResults, CvDatabaseUtili
 	m_bSapper = kResults.GetBool("Sapper");
 	m_bCanHeavyCharge = kResults.GetBool("HeavyCharge");
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
-	m_iHeavyChargeDownhill = kResults.GetBool("HeavyChargeDownhill");
+	m_iHeavyChargeDownhill = kResults.GetInt("HeavyChargeDownhill");
 #endif
 
 	m_iVisibilityChange = kResults.GetInt("VisibilityChange");
