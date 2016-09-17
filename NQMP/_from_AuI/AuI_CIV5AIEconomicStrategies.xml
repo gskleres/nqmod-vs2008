@@ -27,7 +27,7 @@
 		</Update>
 	</AIEconomicStrategies>
 	<AIEconomicStrategy_Player_Flavors>
-	<!-- Old value of 10 isn't exactly "like crazy". Now 75, that's more like it! -->
+	<!-- Old value of 10 changed to 75 to be even more exaggerated -->
 		<Update>
 			<Set Flavor="75" />
 			<Where AIEconomicStrategyType="ECONOMICAISTRATEGY_EXPAND_LIKE_CRAZY" />
@@ -62,7 +62,7 @@
 			<FlavorType>FLAVOR_MOBILE</FlavorType>
 			<Flavor>-10</Flavor>
 		</Row>
-		<!-- Conquest Grand Strategy had some odd omissions and oddly low priorities -->
+		<!-- changed Conquest Grand Strategy low priority and added one additional flavor -->
 		<Update>
 			<Set Flavor="10" />
 			<Where AIEconomicStrategyType="ECONOMICAISTRATEGY_GS_CONQUEST" FlavorType="FLAVOR_AIR" />
@@ -112,7 +112,7 @@
 		</Row>
 	</AIEconomicStrategy_Player_Flavors>
 	<AIEconomicStrategy_City_Flavors>
-	<!-- Old value of 10 isn't exactly "like crazy". Now 75, that's more like it! -->
+	<!-- Old value of 10 changed to 75 to be even more exaggerated -->
 		<Update>
 			<Set Flavor="75" />
 			<Where AIEconomicStrategyType="ECONOMICAISTRATEGY_EXPAND_LIKE_CRAZY" />
@@ -147,7 +147,7 @@
 			<FlavorType>FLAVOR_MOBILE</FlavorType>
 			<Flavor>-10</Flavor>
 		</Row>
-		<!-- Conquest Grand Strategy had some odd omissions and oddly low priorities -->
+		<!-- changed Conquest Grand Strategy priority and added an additiona flavor -->
 		<Update>
 			<Set Flavor="10" />
 			<Where AIEconomicStrategyType="ECONOMICAISTRATEGY_GS_CONQUEST" FlavorType="FLAVOR_AIR" />
@@ -202,7 +202,7 @@
 		</Row>
 	</AIEconomicStrategy_City_Flavors>
 	<AIEconomicStrategy_Flavors>
-		<!-- Old value of 10 isn't exactly "like crazy". Now 75, that's more like it! -->
+		<!-- Old value of 10 changed to 75 to be even more exaggerated -->
 		<Update>
 			<Set Flavor="75" />
 			<Where AIEconomicStrategyType="ECONOMICAISTRATEGY_EXPAND_LIKE_CRAZY" />
@@ -237,7 +237,7 @@
 			<FlavorType>FLAVOR_MOBILE</FlavorType>
 			<Flavor>-10</Flavor>
 		</Row>
-		<!-- Conquest Grand Strategy had some odd omissions and oddly low priorities -->
+		<!-- changed Conquest Grand Strategy priority and added an additional flavor -->
 		<Update>
 			<Set Flavor="10" />
 			<Where AIEconomicStrategyType="ECONOMICAISTRATEGY_GS_CONQUEST" FlavorType="FLAVOR_AIR" />

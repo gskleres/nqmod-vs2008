@@ -5,19 +5,17 @@
 	<!-- A lot of rows had to be deleted and rewritten instead of using Update because indexing isn't clear in this table.
 		BNW-specific naval formations weren't modified to maintain compatibility with non-BNW versions -->
 	<MultiUnitFormation_SlotEntries>
-		<!-- Who on Earth thought putting melee units in ranged units' spots was a good idea? -->
+		<!-- no longer putting melee units in ranged units' spots -->
 		<Update>
 			<Set SecondaryUnitType="UNITAI_RANGED" />
 			<Where MultiUnitPositionType="MUPOSITION_BOMBARD" SecondaryUnitType="UNITAI_DEFENSE"/>
 		</Update>
 		
-		<!-- Apparently Firaxis realized this and didn't do the same stupid for Bigger City Attack Force... -->
+		<!-- changes Bigger City Attack Force -->
 		<Update>
 			<Set SecondaryUnitType="UNITAI_DEFENSE" />
 			<Where MultiUnitFormationType="MUFORMATION_BIGGER_CITY_ATTACK_FORCE" MultiUnitPositionType="MUPOSITION_BOMBARD" PrimaryUnitType="UNITAI_ATTACK" SecondaryUnitType="UNITAI_RANGED"/>
 		</Update>
-		
-		<!-- ... instead, they did a different stupid for Bigger City Attack Force -->
 		<Update>
 			<Set PrimaryUnitType="UNITAI_DEFENSE" />
 			<Where MultiUnitFormationType="MUFORMATION_BIGGER_CITY_ATTACK_FORCE" MultiUnitPositionType="MUPOSITION_FRONT_LINE" PrimaryUnitType="UNITAI_RANGED"/>
@@ -198,7 +196,7 @@
 			<MultiUnitPositionType>MUPOSITION_CIVILIAN_SUPPORT</MultiUnitPositionType>
 		</Row>
 
-		<!-- By default, this formation could allow for slow movers... which kind of kills the "fast" part of "fast pillagers" -->
+		<!-- Changed fast pillagers to only use fast movers -->
 		<Delete MultiUnitFormationType="MUFORMATION_FAST_PILLAGERS"/>
 		<Row>
 			<MultiUnitFormationType>MUFORMATION_FAST_PILLAGERS</MultiUnitFormationType>
@@ -248,13 +246,11 @@
 			<MultiUnitPositionType>MUPOSITION_FRONT_LINE</MultiUnitPositionType>
 		</Row>
 
-		<!-- More fixing of melee units in ranged units' slots... -->
+		<!-- disallow melee units in ranged units' slots -->
 		<Update>
 			<Set SecondaryUnitType="UNITAI_RANGED" />
 			<Where MultiUnitFormationType="MUFORMATION_RAPID_RESPONSE_FORCE" PrimaryUnitType="UNITAI_RANGED"/>
 		</Update>
-
-		<!-- More fixing of melee units in ranged units' slots... -->
 		<Update>
 			<Set SecondaryUnitType="UNITAI_CITY_BOMBARD" />
 			<Where MultiUnitFormationType="MUFORMATION_CLOSE_CITY_DEFENSE" PrimaryUnitType="UNITAI_RANGED"/>
