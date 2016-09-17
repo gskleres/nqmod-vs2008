@@ -6,6 +6,15 @@
 	<PolicyBranchTypes>
 		<Update>
 			<Set FirstAdopterFreePolicies="1" />
+			<Where Type="POLICY_BRANCH_FREEDOM" />
+		</Update>
+		<Update>
+			<Set FirstAdopterFreePolicies="1" />
+			<Where Type="POLICY_BRANCH_ORDER" />
+		</Update>
+		<Update>
+			<Set FirstAdopterFreePolicies="1" />
+			<Where Type="POLICY_BRANCH_AUTOCRACY" />
 		</Update>
 	</PolicyBranchTypes>
 	
