@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
-	<!-- Table data -->
+	<!-- Table data 
 	<GameOptions>
 		<Row>
 			<Type>GAMEOPTION_ENABLE_RANGED_COUNTERATTACKS</Type>
@@ -55,5 +55,5 @@
 		<Row Tag="TXT_KEY_GAME_OPTION_ENABLE_RANGED_COUNTERATTACKS_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Units and cities can now receive instant counterattacks from ranged attacks. If a ranged unit or a city is attacked by a ranged unit or city, if they could attack back right away, they instantly counterattack similar to melee combat. Melee units counterattack similarly, i.e. they need to be adjacent to the attacker and able to attack the tile, but their counterattacks trigger only after the ranged unit/city has dealt its damage. If a melee unit counterattacks a city, they counterattack at a -60% multiplicative strength penalty identical to the one cities have when attacking. Cities cannot die from being counterattacked. Contact Delnar_Ersike if you encounter any bugs.</Text>
 		</Row>
-	</Language_RU_RU>
+	</Language_RU_RU>-->
 </GameData>
