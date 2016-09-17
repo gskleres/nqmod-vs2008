@@ -46,9 +46,6 @@ public:
 	int GetFirstFreeUnitClass() const;
 	int GetFirstFreeTechs() const;
 	int GetEmbarkedMoveChange() const;
-#ifdef NQ_TECH_DISCOUNT_BY_POLICY
-	int GetPolicyDiscountPercent() const;
-#endif
 	int GetNumInternationalTradeRoutesChange() const;;
 	int GetInfluenceSpreadModifier() const;;
 	int GetExtraVotesPerDiplomat() const;
@@ -114,9 +111,6 @@ private:
 	int m_iFirstFreeUnitClass;
 	int m_iFirstFreeTechs;
 	int m_iEmbarkedMoveChange;
-#ifdef NQ_TECH_DISCOUNT_BY_POLICY
-	int m_iPolicyDiscountPercent;
-#endif
 	int m_iInternationalTradeRoutesChange;
 	int m_iInfluenceSpreadModifier;
 	int m_iExtraVotesPerDiplomat;

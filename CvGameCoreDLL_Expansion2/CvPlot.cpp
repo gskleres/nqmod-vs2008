@@ -7897,14 +7897,7 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 
 	if(bCity)
 	{
-#ifdef NQ_FLATLAND_CITY_MIN_FOOD
-		int iMinCityYield = kYield.getMinCity();
-		if (isFlatlands() && eYield == YIELD_FOOD)
-		{
-			iMinCityYield += 1; // TODO: put in XML
-		}
-		iYield = MAX(iYield, iMinCityYield);
-#elif defined(NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST)
+#ifdef NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
 		int iMinCityYield = kYield.getMinCity();
 		if (isHills())
 		{

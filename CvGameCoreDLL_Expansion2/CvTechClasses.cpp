@@ -31,9 +31,6 @@ CvTechEntry::CvTechEntry(void):
 	m_iFirstFreeUnitClass(NO_UNITCLASS),
 	m_iFirstFreeTechs(0),
 	m_iEmbarkedMoveChange(0),
-#ifdef NQ_TECH_DISCOUNT_BY_POLICY
-	m_iPolicyDiscountPercent(0),
-#endif
 	m_iInternationalTradeRoutesChange(0),
 	m_iInfluenceSpreadModifier(0),
 	m_iExtraVotesPerDiplomat(0),
@@ -100,9 +97,6 @@ bool CvTechEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& k
 	m_iWorkerSpeedModifier = kResults.GetInt("WorkerSpeedModifier");
 	m_iFirstFreeTechs = kResults.GetInt("FirstFreeTechs");
 	m_iEmbarkedMoveChange = kResults.GetInt("EmbarkedMoveChange");
-#ifdef NQ_TECH_DISCOUNT_BY_POLICY
-	m_iPolicyDiscountPercent = kResults.GetInt("PolicyDiscountPercent");
-#endif
 	m_iInternationalTradeRoutesChange = kResults.GetInt("InternationalTradeRoutesChange");
 	m_iInfluenceSpreadModifier = kResults.GetInt("InfluenceSpreadModifier");
 	m_iExtraVotesPerDiplomat = kResults.GetInt("ExtraVotesPerDiplomat");
@@ -281,14 +275,6 @@ int CvTechEntry::GetEmbarkedMoveChange() const
 {
 	return m_iEmbarkedMoveChange;
 }
-
-#ifdef NQ_TECH_DISCOUNT_BY_POLICY
-/// Percent discount on specific technology if policy requirement is met
-int CvTechEntry::GetPolicyDiscountPercent() const
-{
-	return m_iPolicyDiscountPercent;
-}
-#endif
 
 /// Number of additional land trade routes provided
 int CvTechEntry::GetNumInternationalTradeRoutesChange (void) const

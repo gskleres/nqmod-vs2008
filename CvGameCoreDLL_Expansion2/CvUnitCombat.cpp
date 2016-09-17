@@ -165,6 +165,9 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 		// Unit vs. Unit
 		CvAssert(pkDefender != NULL);
 
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+		bool isAttackingFromHigherElevation;
+#endif
 		int iDefenderStrength = pkDefender->GetMaxDefenseStrength(&plot, &kAttacker);
 		int iAttackerStrength = 0;
 		if(kAttacker.GetMaxRangedCombatStrength(NULL, /*pCity*/ NULL, true, true) > 0 && kAttacker.getDomainType() == DOMAIN_AIR)
@@ -182,7 +185,7 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 
 #ifndef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
-		bool isAttackingFromHigherElevation =
+		isAttackingFromHigherElevation =
 			(kAttacker.plot()->isMountain() && !pkDefender->plot()->isMountain()) ||
 			(kAttacker.plot()->isHills() && pkDefender->plot()->isFlatlands());
 		
@@ -274,7 +277,7 @@ void CvUnitCombat::GenerateMeleeCombatInfo(CvUnit& kAttacker, CvUnit* pkDefender
 		pkCombatInfo->setAttackIsRanged(false);
 
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
-		bool isAttackingFromHigherElevation = false;
+		isAttackingFromHigherElevation = false;
 		if (kAttacker.GetHeavyChargeDownhill() > 0)
 		{
 			isAttackingFromHigherElevation = 

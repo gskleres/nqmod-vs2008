@@ -646,14 +646,8 @@
 #define NQ_ALLOW_EXTRA_RELIGIONS
 // American Pioneer
 #define NQ_AMERICAN_PIONEER
-/// Adds a new field for minimum city yield that adjust said yield when the city is on hills
+/// Adds a new field for minimum city yield that adjust said yield when the city is on hills (currently -1)
 #define NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
-#ifndef NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
-// Flatland cities have +1 minimum food compared to hill cities
-#define NQ_FLATLAND_CITY_MIN_FOOD
-#endif
-// Allow specific tech discounts based on policy choices
-#define NQ_TECH_DISCOUNT_BY_POLICY
 // Sweden UA now gives flat science in the empire when a great person is born
 #define NQ_SCIENCE_PER_GREAT_PERSON_BORN
 // Spoils of War - old Assyria UA now applies to all players by default
@@ -666,7 +660,7 @@
 #define NQ_HEAVY_CHARGE_DOWNHILL
 // China's new UA gives bonus movement when turn starts on or adjacent to great general
 #define NQ_ART_OF_WAR_PROMOTION
-// Indonesian unique luxuries disallowed from being required for City State quests an WLtKD requests
+// Civ-specific luxuries (Indonesia) disallowed from being required for City State quests an WLtKD requests
 #define NQ_NO_UNIQUE_LUX_REQUESTS
 
 #endif

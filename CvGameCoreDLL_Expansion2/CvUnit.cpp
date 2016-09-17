@@ -7503,14 +7503,11 @@ bool CvUnit::found()
 
 #ifdef NQ_AMERICAN_PIONEER
 	// When American Pioneer settles non-capital cities, a free Worker appears.
-	//UnitTypes thisUnitType = getUnitType();
-	//UnitTypes expectedUnitType = (UnitTypes) GC.getInfoTypeForString("UNIT_AMERICAN_PIONEER");
-	//int numCities = kPlayer.getNumCities();
 	if (getUnitType() == (UnitTypes)GC.getInfoTypeForString("UNIT_AMERICAN_PIONEER") && kPlayer.getNumCities() > 0)
 	{
 		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), getX(), getY());
 	}
-	//TODO: put this into XML as a trait for the pioneer? it seems like this is a pretty special unique snowflake so not sure how to make it generic
+	//TODO: maybe put this into XML as a trait for the pioneer? it seems like a unique snowflake so not sure how to/why we should make it generic...
 #endif
 	kPlayer.found(getX(), getY());
 
