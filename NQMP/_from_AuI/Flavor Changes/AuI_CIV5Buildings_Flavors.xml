@@ -183,22 +183,6 @@
 			<Flavor>75</Flavor>
 		</Row>
 		
-		<!-- Now covered in Lua -->
-		<Delete BuildingType="BUILDING_PETRA" FlavorType="FLAVOR_GROWTH" />
-		<Delete BuildingType="BUILDING_PETRA" FlavorType="FLAVOR_PRODUCTION" />
-		<Delete BuildingType="BUILDING_STATUE_OF_LIBERTY" FlavorType="FLAVOR_PRODUCTION" />
-		<Delete BuildingType="BUILDING_SISTINE_CHAPEL" FlavorType="FLAVOR_CULTURE" />
-		<Delete BuildingType="BUILDING_CN_TOWER" FlavorType="FLAVOR_GROWTH" />
-		<Delete BuildingType="BUILDING_CN_TOWER" FlavorType="FLAVOR_HAPPINESS" />
-		<Update>
-			<Set Flavor="20" />
-			<Where BuildingType="BUILDING_RED_FORT" FlavorType="FLAVOR_CITY_DEFENSE" />
-		</Update>
-		<Update>
-			<Set Flavor="20" />
-			<Where BuildingType="BUILDING_PRORA" FlavorType="FLAVOR_HAPPINESS" />
-		</Update>
-		
 		<!-- Now covered by the catcher for free buildings and Terracotta free units in the DLL -->
 		<Delete BuildingType="BUILDING_CN_TOWER" FlavorType="FLAVOR_CULTURE" />
 		<Delete BuildingType="BUILDING_TERRACOTTA_ARMY" FlavorType="FLAVOR_OFFENSE" />

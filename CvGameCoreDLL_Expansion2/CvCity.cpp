@@ -3504,7 +3504,11 @@ void CvCity::DoPickResourceDemanded(bool bCurrentResourceInvalid)
 		CvResourceInfo* pkResource = GC.getResourceInfo(eResource);
 		if (pkResource && pkResource->getResourceUsage() == RESOURCEUSAGE_LUXURY)
 		{
+#ifdef NQ_NO_UNIQUE_LUX_REQUESTS
+			if (pkResource->isOnlyMinorCivs() || (pkResource->GetRequiredCivilization() != NULL && pkResource->GetRequiredCivilization() != NO_CIVILIZATION))
+#else
 			if (pkResource->isOnlyMinorCivs())
+#endif
 			{
 				veInvalidLuxuryResources.push_back(eResource);
 			}

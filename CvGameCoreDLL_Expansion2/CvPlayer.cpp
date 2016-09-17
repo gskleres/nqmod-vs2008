@@ -1967,12 +1967,12 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 	{
 #endif
 #ifdef NQ_SPOILS_OF_WAR
-		// Will this be the first time we have owned this city? And was it not a city state?
+		// Will this be the first time we have owned this city? And was it not originally a city state?
 		if (!pOldCity->isEverOwned(GetID()) && !GET_PLAYER(pOldCity->getOriginalOwner()).isMinorCiv())
 		{
 			DoTechFromCityConquer(pOldCity);
 		}
-#else
+#endif
 		if (GetPlayerTraits()->IsTechFromCityConquer())
 		{
 			// Will this be the first time we have owned this city?
@@ -1981,7 +1981,6 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 				DoTechFromCityConquer(pOldCity);
 			}
 		}
-#endif
 #ifndef AUI_WARNING_FIXES
 	}
 
