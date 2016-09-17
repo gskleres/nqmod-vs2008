@@ -584,6 +584,11 @@
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>units/HelicopterGunshipChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>units/InfantryChanges.xml</FileName>
       </Action>
       <Action>
@@ -2113,6 +2118,10 @@
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="units\HakkapeliittaChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="units\HelicopterGunshipChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
