@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
-	<!-- Table data
+	<!-- Table data -->
 	<GameOptions>
 		<Row>
 			<Type>GAMEOPTION_NO_TECH_COST_TOTAL_KNOWN_TEAM_MODIFIER</Type>
@@ -55,5 +55,5 @@
 		<Row Tag="TXT_KEY_GAME_OPTION_NO_TECH_COST_TOTAL_KNOWN_TEAM_MODIFIER_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Disables the tech cost discount awarded to teams that is based on the fraction of teams in the game that already have the tech.</Text>
 		</Row>
-	</Language_RU_RU> -->
+	</Language_RU_RU>
 </GameData>

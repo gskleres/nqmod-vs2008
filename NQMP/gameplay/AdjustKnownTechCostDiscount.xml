@@ -5,7 +5,7 @@
 	<Defines>
 		<Update>
 			<Set Value="25" />
-			<Where Name="TECH_COST_TOTAL_KNOWN_TEAM_MODIFIER" >
+			<Where Name="TECH_COST_TOTAL_KNOWN_TEAM_MODIFIER" />
 		</Update>
 	</Defines>
 	
