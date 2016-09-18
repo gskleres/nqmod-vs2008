@@ -573,7 +573,7 @@ CvProposerDecision::~CvProposerDecision(void)
 {
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 int CvProposerDecision::GetDecision() const
 #else
 int CvProposerDecision::GetDecision()
@@ -582,7 +582,7 @@ int CvProposerDecision::GetDecision()
 	return m_sVote.iChoice;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 PlayerTypes CvProposerDecision::GetProposer() const
 #else
 PlayerTypes CvProposerDecision::GetProposer()
@@ -635,14 +635,14 @@ CvVoterDecision::~CvVoterDecision(void)
 {
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)  || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 int CvVoterDecision::GetDecision() const
 #else
 int CvVoterDecision::GetDecision()
 #endif
 {
 	CvWeightedVector<int, 64, true> vChoices;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	for (PlayerVoteList::const_iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
 #else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); it++)
@@ -721,7 +721,7 @@ int CvVoterDecision::GetDecision()
 	return LeagueHelpers::CHOICE_NONE;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 bool CvVoterDecision::IsTie() const
 {
 	const std::vector<int>& vTop = GetTopVotedChoices(1);
@@ -734,14 +734,14 @@ bool CvVoterDecision::IsTie()
 	return (vTop.size() != 1);
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 std::vector<int> CvVoterDecision::GetTopVotedChoices(int iNumTopChoices) const
 #else
 std::vector<int> CvVoterDecision::GetTopVotedChoices(int iNumTopChoices)
 #endif
 {
 	CvWeightedVector<int, 64, true> vChoices;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	for (PlayerVoteList::const_iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
 #else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); it++)
@@ -794,14 +794,14 @@ std::vector<int> CvVoterDecision::GetTopVotedChoices(int iNumTopChoices)
 	return vTopChoices;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 int CvVoterDecision::GetVotesCast() const
 #else
 int CvVoterDecision::GetVotesCast()
 #endif
 {
 	int iCount = 0;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	for (PlayerVoteList::const_iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
 #else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); it++)
@@ -812,14 +812,14 @@ int CvVoterDecision::GetVotesCast()
 	return iCount;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 int CvVoterDecision::GetVotesCastForChoice(int iChoice) const
 #else
 int CvVoterDecision::GetVotesCastForChoice(int iChoice)
 #endif
 {
 	int iCount = 0;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	for (PlayerVoteList::const_iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
 #else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); it++)
@@ -833,14 +833,14 @@ int CvVoterDecision::GetVotesCastForChoice(int iChoice)
 	return iCount;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 int CvVoterDecision::GetVotesMarginOfTopChoice() const
 #else
 int CvVoterDecision::GetVotesMarginOfTopChoice()
 #endif
 {
 	int iDelta = 0;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	const std::vector<int>& vTopChoices = GetTopVotedChoices(2);
 #else
 	std::vector<int> vTopChoices = GetTopVotedChoices(2);
@@ -857,14 +857,14 @@ int CvVoterDecision::GetVotesMarginOfTopChoice()
 	return iDelta;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 int CvVoterDecision::GetVotesCastByPlayer(PlayerTypes ePlayer) const
 #else
 int CvVoterDecision::GetVotesCastByPlayer(PlayerTypes ePlayer)
 #endif
 {
 	int iCount = 0;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	for (PlayerVoteList::const_iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
 #else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
@@ -878,14 +878,14 @@ int CvVoterDecision::GetVotesCastByPlayer(PlayerTypes ePlayer)
 	return iCount;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 LeagueHelpers::PlayerList CvVoterDecision::GetPlayersVotingForChoice(int iChoice) const
 #else
 LeagueHelpers::PlayerList CvVoterDecision::GetPlayersVotingForChoice(int iChoice)
 #endif
 {
 	LeagueHelpers::PlayerList v;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	for (PlayerVoteList::const_iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
 #else
 	for (PlayerVoteList::iterator it = m_vVotes.begin(); it != m_vVotes.end(); ++it)
@@ -1059,7 +1059,7 @@ CvProposerDecision* CvResolution::GetProposerDecision()
 	return &m_ProposerDecision;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 const CvResolutionEffects* CvResolution::GetEffects() const
 {
 	return &m_sEffects;
@@ -4107,7 +4107,7 @@ bool CvLeague::IsLuxuryHappinessBanned(ResourceTypes eResource)
 	return false;
 }
 
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 int CvLeague::GetResearchMod(TechTypes eTech) const
 #else
 int CvLeague::GetResearchMod(TechTypes eTech)
@@ -4116,7 +4116,7 @@ int CvLeague::GetResearchMod(TechTypes eTech)
 	int iValue = 0;
 
 	int iKnownByMemberMod = 0;
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	for (ActiveResolutionList::const_iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
 #elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
@@ -7508,12 +7508,10 @@ bool CvGameLeagues::CanContributeToLeagueProject(PlayerTypes ePlayer, LeagueProj
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvLeague* it = GetActiveLeague();
 	if (it)
-#else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
 #endif
 	{
 		if (it->CanMemberContribute(ePlayer, eLeagueProject))
@@ -7530,12 +7528,10 @@ void CvGameLeagues::DoLeagueProjectContribution(PlayerTypes ePlayer, LeagueProje
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvLeague* it = GetActiveLeague();
 	if (it)
-#else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
 #endif
 	{
 		if (it->CanMemberContribute(ePlayer, eLeagueProject))
@@ -7568,12 +7564,10 @@ bool CvGameLeagues::IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvLeague* it = GetActiveLeague();
 	if (it)
-#else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
 #endif
 	{
 		if (it->IsMember(eTrader))
@@ -7592,12 +7586,10 @@ bool CvGameLeagues::IsLuxuryHappinessBanned(PlayerTypes ePlayer, ResourceTypes e
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvLeague* it = GetActiveLeague();
 	if (it)
-#else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7642,12 +7634,10 @@ int CvGameLeagues::GetResearchMod(PlayerTypes ePlayer, TechTypes eTech)
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvLeague* it = GetActiveLeague();
 	if (it)
-#else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7668,12 +7658,10 @@ int CvGameLeagues::GetFeatureYieldChange(PlayerTypes ePlayer, FeatureTypes eFeat
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvLeague* it = GetActiveLeague();
 	if (it)
-#else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7694,12 +7682,10 @@ int CvGameLeagues::GetWorldWonderYieldChange(PlayerTypes ePlayer, YieldTypes eYi
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvLeague* it = GetActiveLeague();
 	if (it)
-#else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))
@@ -7719,12 +7705,10 @@ bool CvGameLeagues::IsNoTrainingNuclearWeapons(PlayerTypes ePlayer)
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	CvLeague* it = GetActiveLeague();
 	if (it)
-#else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #else
 	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
 #endif
 	{
 		if (it->IsMember(ePlayer))

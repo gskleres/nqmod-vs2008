@@ -172,7 +172,7 @@ public:
 	typedef FStaticVector<PlayerVote, MAX_MAJOR_CIVS, false, c_eCiv5GameplayDLL> PlayerVoteList;
 
 	// Pure virtual functions
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	virtual int GetDecision() const = 0;
 #else
 	virtual int GetDecision() = 0;
@@ -206,7 +206,7 @@ public:
 	CvProposerDecision(ResolutionDecisionTypes eType, PlayerTypes eProposer, int iChoice);
 	~CvProposerDecision(void);
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	int GetDecision() const;
 	PlayerTypes GetProposer() const;
 #else
@@ -237,7 +237,7 @@ public:
 	CvVoterDecision(ResolutionDecisionTypes eType);
 	~CvVoterDecision(void);
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	int GetDecision() const;
 	bool IsTie() const;
 	std::vector<int> GetTopVotedChoices(int iNumTopChoices) const;
@@ -298,7 +298,7 @@ public:
 	CvResolutionEffects* GetEffects();
 	CvVoterDecision* GetVoterDecision();
 	CvProposerDecision* GetProposerDecision();
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	const CvResolutionEffects* GetEffects() const;
 	const CvVoterDecision* GetVoterDecision() const;
 	const CvProposerDecision* GetProposerDecision() const;
@@ -631,7 +631,7 @@ public:
 	// Resolution Effect Queries
 	bool IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient);
 	bool IsLuxuryHappinessBanned(ResourceTypes eLuxury);
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_TECH_FIX_TEAMER_RESEARCH_COSTS)
 	int GetResearchMod(TechTypes eTech) const;
 #else
 	int GetResearchMod(TechTypes eTech);
