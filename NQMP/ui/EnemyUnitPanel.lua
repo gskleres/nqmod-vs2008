@@ -1,3 +1,4 @@
+-- Ranged Counterattacks will only be enabled if DLL define DEL_RANGED_COUNTERATTACKS is enabled.
 -------------------------------------------------
 -- Enemy Unit Panel Screen 
 -------------------------------------------------
@@ -836,7 +837,7 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 			----------------------------------------------------------------------------
 			-- BONUSES MY UNIT GETS
 			----------------------------------------------------------------------------
-
+-- TODO: African Forest Elephant
 			local iModifier;
 			
 			if (not bRanged) then

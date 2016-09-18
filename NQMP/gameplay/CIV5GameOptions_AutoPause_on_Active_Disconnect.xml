@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
-	<!-- Table data -->
+	<!-- Table data 
 	<GameOptions>
 		<Row>
 			<Type>GAMEOPTION_AUTOPAUSE_ON_ACTIVE_DISCONNECT</Type>
@@ -56,5 +56,5 @@
 		<Row Tag="TXT_KEY_GAME_OPTION_RELATIVE_TURN_TIMERS_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Automatically pauses the game when a non-observer human player who has not been eliminated or kicked disconnects from the game. Kicking the player will unpause the game if they are the only one who is disconnected. Only works with simultaneous or hybrid turn mode.</Text>
 		</Row>
-	</Language_RU_RU>
+	</Language_RU_RU>-->
 </GameData>

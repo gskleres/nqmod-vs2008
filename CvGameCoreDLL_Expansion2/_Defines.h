@@ -112,8 +112,10 @@
 #define AUI_UNIT_MISSION_FIX_NO_MISSION_ON_DEATH
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
+*/
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
 #define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+/*
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
 /// When choosing the top n choices from a weighted vector, choices with weight equal to the last choice are also included
@@ -184,8 +186,10 @@
 /*
 /// Fixes the bug where a low beaker yield put into an RA would result in an artificially lower beaker reward
 #define AUI_DEAL_FIX_ACCURATE_EARLYGAME_RESEARCH_AGREEMENT_YIELDS
+*/
 /// Automating a unit no longer resets the turn timer (from theCAndeMan)
 #define NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
+/*
 /// If multiple civs have are eligible to found the league, choose a random one instead of the one with the highest slot
 #define AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
 /// Adds a few more things that are transferred to gifted units (GS beaker count, whether the unit is set up for ranged attacks, how many interceptions the unit has made) and removed some things being applied to gifted units (eg. gifted GP no longer triggers CS quests)
@@ -244,10 +248,12 @@
 /*
 /// Fixed the free experience recomputation function so now wonders that give free experience globally (as opposed to just units built in one city) work properly
 #define AUI_PLAYER_FIX_RECOMPUTE_FREE_EXPERIENCE_GLOBAL_FREE_EXPERIENCE
+*/
 /// Fixed research costs for multi-player teams so that they scale with total team city count, and player-based cost modifiers apply only to the effect their cities have on the total modifier
 #define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
 /// The discount to tech cost awarded for other teams already owning a specific tech can now be toggled via an in-game option
 #define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
+/*
 /// Restores the malus to coup chance if an enemy spy from the CS ally is present in the CS
 #define AUI_ESPIONAGE_FIX_RESTORE_ENEMY_SPY_COUP_MALUS
 */
@@ -320,15 +326,16 @@
 #define NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY
 /// If the game/player who is in simultaneous mode declares war and the turn timer has less than 60 seconds remaining, it is filled back up to 60 seconds
 //#define NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
+*/
 /// Randomizes the order in which player turns activate in simultaneous mode. E.g. this makes it so that the host no longer wins wonder races against all other players if they finish a wonder the same turn as another player.
 #define NQM_GAME_RANDOMIZE_TURN_ACTIVATION_ORDER_IN_SIMULTANEOUS
+/*
 /// Anti-air ground/sea units can no longer intercept planes after they move until the player ends their turn. This should only affect simultaneous mode and stops players from deliberately moving in AA after another player has done air sweeps.
 #define NQM_UNIT_NO_AA_INTERCEPT_AFTER_MOVE_BEFORE_TURN_END
 /// Fighters set to intercept duty can only perform interceptions after the player ends their turn. This should only affect simultaneous mode and stops players from turning on intercepts mid-turn to make air sweeps unreliable.
 #define NQM_UNIT_FIGHTER_NO_INTERCEPT_UNTIL_AFTER_TURN_END
 /// Respawns a player's Great Prophet if it was consumed but the player was beaten to founding the last possible religion in the game
 #define AUI_DLLNETMESSAGEHANDLER_FIX_RESPAWN_PROPHET_IF_BEATEN_TO_LAST_RELIGION
-
 // New hybrid mode
 /// When in hybrid mode, players who are not at war with each other have their turns happen simultaneously, thus speeding games up significantly
 #define AUI_GAME_BETTER_HYBRID_MODE
@@ -524,7 +531,6 @@
 #define AUI_CITIZENS_REALLOCATE_ON_FOOD_PRODUCTION_CHANGE
 /// Changes the citizen manager so that locked tiles that get blocked (through siege or blockade) are not counted as locked until the tile is no longer blocked
 #define AUI_CITIZENS_FIX_LOCKED_TILES_BLOCKED
-*/
 
 // City Governor Stuff
 /// Fixes various possible bugs by replacing std::vector's resize() and [] calls with push_back() and clear()
@@ -542,7 +548,6 @@
 /// Delnar: Moved Fruitstrike's code to prioritize plots with the lowest gold purchasing cost in the case of ties into the end of GetBuyablePlotList() so that plots will still be randomly decided if their gold purchasing costs are the same (instead of prioritizing Northeastern plots)
 #define NQM_CITY_GET_NEXT_BUYABLE_PLOT_MOVE_GOLD_PURCHASE_COST_PRIORITY_TO_GET_BUYABLE_PLOT_LIST
 
-/*
 // AI/Automated Worker fixes
 /// AI/Automated Inca workers know that there is no maintenance on hills, so routines are adjusted as a result
 #define AUI_WORKER_INCA_HILLS
@@ -596,7 +601,6 @@
 /// Unhardcodes the fact that the AI will not remove features that are needed to construct a civ's unique improvement
 #define AUI_WORKER_UNHARDCODE_NO_REMOVE_FEATURE_THAT_IS_REQUIRED_FOR_UNIQUE_IMPROVEMENT
 #endif
-*/
 
 // HomelandAI fixes; used by automated workers/scouts and extensively by CS
 /// Disables the code that would start fortifying scouts if recon state was set as "enough"
@@ -624,7 +628,6 @@
 /// After moving workers around, the AI will move combat units around to guard those workers. Not ideal because AI will still not send workers to dangerous tiles even if they'd have a protector there, but better than nothing.
 #define AUI_HOMELAND_PLOT_WORKER_MOVES_ALSO_PLOTS_WORKER_DEFENSE
 
-/*
 // Voting/League AI Stuff for when a player is defeated but their AI can still vote on proposals
 /// When voting for a player, the AI will now adjust for the fact that the voting system is First-Past-The-Post (so it will try to vote against players as well)
 #define AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
