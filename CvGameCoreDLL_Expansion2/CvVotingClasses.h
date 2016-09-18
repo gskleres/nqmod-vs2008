@@ -631,7 +631,11 @@ public:
 	// Resolution Effect Queries
 	bool IsTradeEmbargoed(PlayerTypes eTrader, PlayerTypes eRecipient);
 	bool IsLuxuryHappinessBanned(ResourceTypes eLuxury);
+#ifdef AUI_CONSTIFY
+	int GetResearchMod(TechTypes eTech) const;
+#else
 	int GetResearchMod(TechTypes eTech);
+#endif
 	int GetFeatureYieldChange(FeatureTypes eFeature, YieldTypes eYield);
 	int GetWorldWonderYieldChange(YieldTypes eYield);
 	bool IsNoTrainingNuclearWeapons();
