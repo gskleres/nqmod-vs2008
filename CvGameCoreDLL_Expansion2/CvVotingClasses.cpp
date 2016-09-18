@@ -4107,12 +4107,18 @@ bool CvLeague::IsLuxuryHappinessBanned(ResourceTypes eResource)
 	return false;
 }
 
+#ifdef AUI_CONSTIFY
+int CvLeague::GetResearchMod(TechTypes eTech) const
+#else
 int CvLeague::GetResearchMod(TechTypes eTech)
+#endif
 {
 	int iValue = 0;
 
 	int iKnownByMemberMod = 0;
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
+#ifdef AUI_CONSTIFY
+	for (ActiveResolutionList::const_iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); ++it)
 #else
 	for (ActiveResolutionList::iterator it = m_vActiveResolutions.begin(); it != m_vActiveResolutions.end(); it++)
@@ -7610,14 +7616,10 @@ int CvGameLeagues::GetResearchMod(TeamTypes eTeam, TechTypes eTech) const
 {
 	int iValue = 0;
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
-	CvLeague* it = GetActiveLeague();
+	const CvLeague* it = GetActiveLeague();
 	if (it)
 #else
-#ifdef AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS
-	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
-#else
-	for (LeagueList::iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); it++)
-#endif
+	for (LeagueList::const_iterator it = m_vActiveLeagues.begin(); it != m_vActiveLeagues.end(); ++it)
 #endif
 	{
 		for (int iI = 0; iI < MAX_CIV_PLAYERS; iI++)
