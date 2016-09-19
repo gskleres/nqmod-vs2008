@@ -114,7 +114,7 @@
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 */
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
-#define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+// ------ #define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /*
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
@@ -250,9 +250,9 @@
 #define AUI_PLAYER_FIX_RECOMPUTE_FREE_EXPERIENCE_GLOBAL_FREE_EXPERIENCE
 */
 /// Fixed research costs for multi-player teams so that they scale with total team city count, and player-based cost modifiers apply only to the effect their cities have on the total modifier
-#define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+// -------- #define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
 /// The discount to tech cost awarded for other teams already owning a specific tech can now be toggled via an in-game option
-#define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
+// -------- #define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
 /*
 /// Restores the malus to coup chance if an enemy spy from the CS ally is present in the CS
 #define AUI_ESPIONAGE_FIX_RESTORE_ENEMY_SPY_COUP_MALUS
