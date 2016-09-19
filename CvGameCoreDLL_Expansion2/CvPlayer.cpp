@@ -4496,31 +4496,38 @@ void CvPlayer::doTurnPostDiplomacy()
 
 	// Prevent exploits in turn timed MP games - no accumulation of culture if player hasn't picked yet
 	GetCulture()->SetLastTurnLifetimeCulture(GetJONSCultureEverGenerated());
+#ifdef NQM_PRUNING
+	if (!kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED) || (getJONSCulture() < getNextPolicyCost()))
+	{
+#else
 	if(kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED))
 	{
 		if(getJONSCulture() < getNextPolicyCost())
+#endif
 #if defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100) && defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 			changeJONSCultureTimes100(getCachedJONSCultureForThisTurn());
 #elif defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100)
-			changeJONSCultureTimes100(GetTotalJONSCulturePerTurn());
+			changeJONSCultureTimes100(GetTotalJONSCulturePerTurnTimes100());
 #elif defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 			changeJONSCulture(getCachedJONSCultureForThisTurn());
 #else
 			changeJONSCulture(GetTotalJONSCulturePerTurn());
 #endif
 	}
+#ifndef NQM_PRUNING
 	else
 	{
 #if defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100) && defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 		changeJONSCultureTimes100(getCachedJONSCultureForThisTurn());
 #elif defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100)
-		changeJONSCultureTimes100(GetTotalJONSCulturePerTurn());
+		changeJONSCultureTimes100(GetTotalJONSCulturePerTurnTimes100());
 #elif defined(AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE)
 		changeJONSCulture(getCachedJONSCultureForThisTurn());
 #else
 		changeJONSCulture(GetTotalJONSCulturePerTurn());
 #endif
 	}
+#endif
 
 	// Compute the cost of policies for this turn
 	DoUpdateNextPolicyCost();
