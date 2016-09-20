@@ -236,7 +236,11 @@ FDataStream& OldLoad(FDataStream&, CvDeal&);
 FDataStream& operator>>(FDataStream&, CvDeal&);
 FDataStream& operator<<(FDataStream&, const CvDeal&);
 
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+typedef FStaticVector<CvDeal, 128, false, c_eCiv5GameplayDLL > DealList;
+#else
 typedef FStaticVector<CvDeal, 20, false, c_eCiv5GameplayDLL > DealList;
+#endif
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //  CLASS: CvGameDeals
 //!  \brief All the information about deals made between players

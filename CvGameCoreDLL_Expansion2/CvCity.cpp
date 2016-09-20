@@ -243,7 +243,9 @@ CvCity::CvCity() :
 	, m_ppaiFeatureYieldChange(0)
 	, m_ppaiTerrainYieldChange(0)
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	, m_paCachedYieldT100ForThisTurn(0)
+	, m_iCachedFoodT100ForThisTurn(0)
+	, m_iCachedProductionT100ForThisTurn(0)
+	, m_iCachedCultureT100ForThisTurn(0)
 #endif
 #ifdef AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
 	, m_pCityBuildings(FNEW(CvCityBuildings, c_eCiv5GameplayDLL, 0) (this))
@@ -747,9 +749,6 @@ void CvCity::uninit()
 		}
 	}
 	SAFE_DELETE_ARRAY(m_ppaiTerrainYieldChange);
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	SAFE_DELETE_ARRAY(m_paCachedYieldT100ForThisTurn);
-#endif
 
 	m_pCityBuildings->Uninit();
 	m_pCityStrategyAI->Uninit();
@@ -932,6 +931,12 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 	m_strName = "";
 	m_strNameIAmNotSupposedToBeUsedAnyMoreBecauseThisShouldNotBeCheckedAndWeNeedToPreserveSaveGameCompatibility = "";
 	m_strScriptData = "";
+
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	m_iCachedFoodT100ForThisTurn = 0;
+	m_iCachedProductionT100ForThisTurn = 0;
+	m_iCachedCultureT100ForThisTurn = 0;
+#endif
 
 	m_bPopulationRankValid = false;
 	m_iPopulationRank = -1;
@@ -1140,10 +1145,6 @@ void CvCity::reset(int iID, PlayerTypes eOwner, int iX, int iY, bool bConstructo
 				m_ppaiTerrainYieldChange[iI][iJ] = 0;
 			}
 		}
-
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-		m_paCachedYieldT100ForThisTurn = FNEW(int[NUM_YIELD_TYPES], c_eCiv5GameplayDLL, 0);
-#endif
 	}
 
 	if(!bConstructorCall)
@@ -1671,26 +1672,17 @@ void CvCity::cacheYieldsForTurn()
 	GetCityCitizens()->cacheGPChangesT100ForThisTurn();
 
 	// Food
-	setCachedYieldT100ForThisTurn(YIELD_FOOD, foodDifferenceTimes100());
+	m_iCachedFoodT100ForThisTurn = foodDifferenceTimes100();
 
 	// Production
-	setCachedYieldT100ForThisTurn(YIELD_PRODUCTION, getCurrentProductionDifferenceTimes100(false, isProduction()));
-
-	// Gold
-	//setCachedYieldT100ForThisTurn(YIELD_GOLD, getYieldRateTimes100(YIELD_GOLD, false));
-
-	// Science
-	//setCachedYieldT100ForThisTurn(YIELD_SCIENCE, getYieldRateTimes100(YIELD_GOLD, false));
+	m_iCachedProductionT100ForThisTurn = getCurrentProductionDifferenceTimes100(false, isProduction());
 
 	// Culture
 #ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
-	setCachedYieldT100ForThisTurn(YIELD_CULTURE, MAX(getJONSCulturePerTurnTimes100(), 0));
+	m_iCachedCultureT100ForThisTurn = MAX(getJONSCulturePerTurnTimes100(), 0);
 #else
-	setCachedYieldT100ForThisTurn(YIELD_CULTURE, MAX(getJONSCulturePerTurn(), 0));
+	m_iCachedCultureT100ForThisTurn = MAX(getJONSCulturePerTurn(), 0);
 #endif
-
-	// Faith
-	//setCachedYieldT100ForThisTurn(YIELD_FAITH, GetFaithPerTurn());
 }
 
 void CvCity::doResourceDemands()
@@ -1812,12 +1804,12 @@ void CvCity::doTurn()
 
 		// Culture accumulation
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-		if (getCachedYieldT100ForThisTurn(YIELD_CULTURE) > 0)
+		if (getCachedCultureT100ForThisTurn() > 0)
 		{
 #ifdef AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
-			ChangeJONSCultureStoredTimes100(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
+			ChangeJONSCultureStoredTimes100(getCachedCultureT100ForThisTurn());
 #else
-			ChangeJONSCultureStored(getCachedYieldT100ForThisTurn(YIELD_CULTURE));
+			ChangeJONSCultureStored(getCachedCultureT100ForThisTurn());
 #endif
 #elif defined(AUI_PLAYER_FIX_JONS_CULTURE_IS_T100)
 		if (getJONSCulturePerTurnTimes100() > 0)
@@ -9994,14 +9986,17 @@ void CvCity::SetPlayersReligion(PlayerTypes eNewValue)
 }
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-int CvCity::getCachedYieldT100ForThisTurn(YieldTypes eIndex) const
+int CvCity::getCachedFoodT100ForThisTurn() const
 {
-	return m_paCachedYieldT100ForThisTurn[eIndex];
+	return m_iCachedFoodT100ForThisTurn;
 }
-
-void CvCity::setCachedYieldT100ForThisTurn(YieldTypes eIndex, int iAmount)
+int CvCity::getCachedProductionT100ForThisTurn() const
 {
-	m_paCachedYieldT100ForThisTurn[eIndex] = iAmount;
+	return m_iCachedProductionT100ForThisTurn;
+}
+int CvCity::getCachedCultureT100ForThisTurn() const
+{
+	return m_iCachedCultureT100ForThisTurn;
 }
 #endif
 
@@ -14392,7 +14387,7 @@ void CvCity::doGrowth()
 	}
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	int iDiff = getCachedYieldT100ForThisTurn(YIELD_FOOD);
+	int iDiff = getCachedFoodT100ForThisTurn();
 #else
 	int iDiff = foodDifferenceTimes100();
 #endif
@@ -14802,7 +14797,7 @@ void CvCity::doProduction(bool bAllowNoProduction)
 		}
 
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-		changeProductionTimes100(getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+		changeProductionTimes100(getCachedProductionT100ForThisTurn());
 #else
 		changeProductionTimes100(getCurrentProductionDifferenceTimes100(false, true));
 #endif
@@ -14834,7 +14829,7 @@ void CvCity::doProduction(bool bAllowNoProduction)
 	else
 	{
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-		changeOverflowProductionTimes100(getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+		changeOverflowProductionTimes100(getCachedProductionT100ForThisTurn());
 #else
 		changeOverflowProductionTimes100(getCurrentProductionDifferenceTimes100(false, false));
 #endif
@@ -14863,7 +14858,7 @@ void CvCity::doProcess()
 			if (pInfo->GetProcess() == eProcess)
 			{
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-				GC.getGame().GetGameLeagues()->DoLeagueProjectContribution(getOwner(), eLeagueProject, getCachedYieldT100ForThisTurn(YIELD_PRODUCTION));
+				GC.getGame().GetGameLeagues()->DoLeagueProjectContribution(getOwner(), eLeagueProject, getCachedProductionT100ForThisTurn());
 #else
 				GC.getGame().GetGameLeagues()->DoLeagueProjectContribution(getOwner(), eLeagueProject, getCurrentProductionDifferenceTimes100(false, true));
 #endif
