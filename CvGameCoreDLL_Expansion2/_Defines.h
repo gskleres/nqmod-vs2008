@@ -114,7 +114,7 @@
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 */
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
-// ------ #define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /*
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
