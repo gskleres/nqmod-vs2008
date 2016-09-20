@@ -1602,7 +1602,7 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 		vector<CvGreatWorkInMyEmpire>::const_iterator it2 = it;
 #ifdef AUI_WARNING_FIXES
 		for (++it2; it2 != works2.end() && aArtifactsChosen.size() < iWorksInHalf; ++it2)
-#elif defiend(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 		for (++it2; it2 != works2.end() && aArtifactsChosen.size() < (unsigned int)iWorksInHalf; ++it2)
 #else
 		for (it2++; it2 != works2.end() && aArtifactsChosen.size() < (unsigned int)iWorksInHalf; it2++)
@@ -1627,7 +1627,7 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 			vector<CvGreatWorkInMyEmpire>::const_iterator it3;
 #ifdef AUI_WARNING_FIXES
 			for (it3 = works1.begin(); it3 != works1.end() && aWorksChosen.size() < iNumSlots; ++it3)
-#elif defiend(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 			for (it3 = works1.begin(); it3 != works1.end() && aWorksChosen.size() < (unsigned int)iNumSlots; ++it3)
 #else
 			for (it3 = works1.begin(); it3 != works1.end() && aWorksChosen.size() < (unsigned int)iNumSlots; it3++)
@@ -1663,7 +1663,7 @@ bool CvPlayerCulture::ThemeEqualArtArtifact(CvGreatWorkBuildingInMyEmpire kBldg,
 				vector<CvGreatWorkInMyEmpire>::const_iterator it4 = it3;
 #ifdef AUI_WARNING_FIXES
 				for (++it4; it4 != works1.end() && aWorksChosen.size() < iNumSlots; ++it4)
-#elif defiend(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
+#elif defined(AUI_ITERATOR_POSTFIX_INCREMENT_OPTIMIZATIONS)
 				for (++it4; it4 != works1.end() && aWorksChosen.size() < (unsigned int)iNumSlots; ++it4)
 #else
 				for (it4++; it4 != works1.end() && aWorksChosen.size() < (unsigned int)iNumSlots; it4++)
