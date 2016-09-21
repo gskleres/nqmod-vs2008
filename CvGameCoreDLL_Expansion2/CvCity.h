@@ -66,6 +66,9 @@ public:
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	void cacheYieldsForTurn();
 	void doResourceDemands();
+	int getCachedFoodT100ForThisTurn() const;
+	int getCachedProductionT100ForThisTurn() const;
+	int getCachedCultureT100ForThisTurn() const;
 #endif
 	void doTurn();
 
@@ -597,11 +600,6 @@ public:
 	PlayerTypes GetPlayersReligion() const;
 	void SetPlayersReligion(PlayerTypes eNewValue);
 
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	int getCachedYieldT100ForThisTurn(YieldTypes eIndex) const;
-	void setCachedYieldT100ForThisTurn(YieldTypes eIndex, int iAmount);
-#endif
-
 	// Yield
 
 	int getSeaPlotYield(YieldTypes eIndex) const;
@@ -1061,6 +1059,11 @@ protected:
 	FAutoVariable<std::vector<int>, CvCity> m_paiUnitCombatFreeExperience;
 	FAutoVariable<std::vector<int>, CvCity> m_paiUnitCombatProductionModifier;
 	FAutoVariable<std::vector<int>, CvCity> m_paiFreePromotionCount;
+#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+	int m_iCachedFoodT100ForThisTurn;
+	int m_iCachedProductionT100ForThisTurn;
+	int m_iCachedCultureT100ForThisTurn;
+#endif
 
 	int m_iBaseHappinessFromBuildings;
 	int m_iUnmoddedHappinessFromBuildings;
@@ -1077,9 +1080,6 @@ protected:
 	int** m_ppaiResourceYieldChange;
 	int** m_ppaiFeatureYieldChange;
 	int** m_ppaiTerrainYieldChange;
-#ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-	int* m_paCachedYieldT100ForThisTurn;
-#endif
 
 	CvCityBuildings* m_pCityBuildings;
 	CvCityStrategyAI* m_pCityStrategyAI;
