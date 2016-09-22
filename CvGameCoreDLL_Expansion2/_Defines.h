@@ -114,7 +114,7 @@
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
 */
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
-#define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE // ------ 
 /*
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
@@ -168,8 +168,10 @@
 #define AUI_UNIT_FIX_BAD_BONUS_STACKS
 /// Implements the missing getter for the enemy defender based on the unit in question (rather than the player); this is important for hidden nationality units
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
+*/
 /// Fixes the bug where order-specific hammer bonuses would go into overflow for an order that may not be eligible for those bonuses
-#define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+// ------ #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+/*
 #ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /// If a city grows or starves a population, it will add any difference in food production after the change to its food supply. Among other things, this means a) the food yields earned by new citizens are evaluated just like all other yields, and b) the food consumption of the new citizen is taken into account on the turn the citizen is added
 #define AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
@@ -250,9 +252,9 @@
 #define AUI_PLAYER_FIX_RECOMPUTE_FREE_EXPERIENCE_GLOBAL_FREE_EXPERIENCE
 */
 /// Fixed research costs for multi-player teams so that they scale with total team city count, and player-based cost modifiers apply only to the effect their cities have on the total modifier
-// -------- #define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+// ------ #define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
 /// The discount to tech cost awarded for other teams already owning a specific tech can now be toggled via an in-game option
-// -------- #define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
+#define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
 /*
 /// Restores the malus to coup chance if an enemy spy from the CS ally is present in the CS
 #define AUI_ESPIONAGE_FIX_RESTORE_ENEMY_SPY_COUP_MALUS
