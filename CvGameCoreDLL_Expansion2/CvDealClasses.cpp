@@ -2971,19 +2971,31 @@ void CvGameDeals::DoUpdateCurrentDealsList()
 	DealList::iterator it;
 
 	DealList tempDeals;
-
-	// Copy the deals into a temporary container
-	for(it = m_CurrentDeals.begin(); it != m_CurrentDeals.end(); ++it)
-	{
-		tempDeals.push_back(*it);
-	}
 #ifdef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 	for (it = m_CurrentlyEndingDeals.begin(); it != m_CurrentlyEndingDeals.end(); ++it)
 	{
 		tempDeals.push_back(*it);
 	}
 	m_CurrentlyEndingDeals.clear();
+	for (it = tempDeals.begin(); it != tempDeals.end(); ++it)
+	{
+		if (it->m_eFromPlayer == eForPlayer || it->m_eToPlayer == eForPlayer)
+		{
+			m_HistoricalDeals.push_back(*it);
+		}
+		else
+		{
+			m_CurrentlyEndingDeals.push_back(*it);
+		}
+	}
+	tempDeals.clear();
 #endif
+
+	// Copy the deals into a temporary container
+	for(it = m_CurrentDeals.begin(); it != m_CurrentDeals.end(); ++it)
+	{
+		tempDeals.push_back(*it);
+	}
 
 	// Copy them to either current or historical deals based on whether or not they
 	// are still active
