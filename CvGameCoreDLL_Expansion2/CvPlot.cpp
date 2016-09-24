@@ -7321,6 +7321,20 @@ int CvPlot::calculateNatureYield(YieldTypes eYield, TeamTypes eTeam, bool bIgnor
 	if(isLake())
 	{
 		iYield += kYield.getLakeChange();
+#ifdef NQ_LAKE_BELIEF_BONUSES
+		if (pWorkingCity != NULL)
+		{
+			const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eMajority, pWorkingCity->getOwner());
+			if (pReligion)
+			{
+				iYield += pReligion->m_Beliefs.GetFeatureYieldChange(FEATURE_ICE, eYield);
+				if (eSecondaryPantheon != NO_BELIEF)
+				{
+					iYield += GC.GetGameBeliefs()->GetEntry(eSecondaryPantheon)->GetFeatureYieldChange(FEATURE_ICE, eYield);
+				}
+			}
+		}
+#endif
 	}
 
 	if(!bIgnoreFeature)
@@ -7348,7 +7362,11 @@ int CvPlot::calculateNatureYield(YieldTypes eYield, TeamTypes eTeam, bool bIgnor
 			if(pWorkingCity != NULL && eMajority != NO_RELIGION)
 			{
 				const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eMajority, pWorkingCity->getOwner());
+#ifdef NQ_LAKE_BELIEF_BONUSES
+				if(pReligion && getFeatureType() != FEATURE_ICE)
+#else
 				if(pReligion)
+#endif
 				{
 					int iReligionChange = pReligion->m_Beliefs.GetFeatureYieldChange(getFeatureType(), eYield);
 					if (eSecondaryPantheon != NO_BELIEF)

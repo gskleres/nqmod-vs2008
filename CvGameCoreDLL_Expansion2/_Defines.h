@@ -702,5 +702,9 @@
 #define NQ_ART_OF_WAR_PROMOTION
 // Civ-specific luxuries (Indonesia) disallowed from being required for City State quests an WLtKD requests
 #define NQ_NO_UNIQUE_LUX_REQUESTS
+// Allow lake feature yield boosts from religion
+// This is a huge cheat so I don't have to code a whole new table for "fake features" of which lakes are labeled.
+// In NQMod, ice has no belief bonuses, and so I'm overriding FEATURE_ICE to be used for lakes instead.
+#define NQ_LAKE_BELIEF_BONUSES
 
 #endif
