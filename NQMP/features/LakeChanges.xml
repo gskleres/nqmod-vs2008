@@ -3,12 +3,6 @@
 <GameData>
 
 	<!-- Lakes now produce 3 Food and 1 Gold by default -->
-	<Units>
-		<Update>
-			<Set Moves="12" />
-			<Where Type="UNIT_WARRIOR" />
-		</Update>
-	</Units>
 	<Yields>
 		<Update>
 			<Set LakeChange="2" />
