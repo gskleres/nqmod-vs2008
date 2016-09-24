@@ -271,6 +271,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>features/LakeChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>gameplay/GoodyHutChanges.xml</FileName>
       </Action>
       <Action>
@@ -1603,6 +1608,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
+    <Content Include="features\LakeChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="gameplay\AdjustKnownTechCostDiscount.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -2529,6 +2538,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
     <Folder Include="ideologies\order" />
     <Folder Include="improvements" />
     <Folder Include="ideologies" />
+    <Folder Include="features" />
     <Folder Include="scoring_tweaks\" />
     <Folder Include="great_people" />
     <Folder Include="ui\CultureT100_Compatibility" />
