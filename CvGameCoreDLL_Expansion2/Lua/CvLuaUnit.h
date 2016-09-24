@@ -269,6 +269,9 @@ protected:
 	static int lCityAttackModifier(lua_State* L);
 	static int lCityDefenseModifier(lua_State* L);
 	static int lHillsAttackModifier(lua_State* L);
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	static int lHeavyChargeDownhillModifier(lua_State* L);
+#endif
 	static int lHillsDefenseModifier(lua_State* L);
 	static int lOpenAttackModifier(lua_State* L);
 	static int lOpenRangedAttackModifier(lua_State* L);

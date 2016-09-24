@@ -26,41 +26,33 @@
 	
 	<!-- localization -->
 	<Language_en_US>
-		<Delete Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL" />
 		<Row Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL">
 			<Text>Hannibal's Charge</Text>
 		</Row>
-		<Delete Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL_HELP">
 			<Text>If attacking from higher elevation into lower elevation, gains +20% Combat Strength and forces defender to retreat if it inflicts more damage than it receives. A defender who cannot retreat takes 50% additional damage.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
-		<Delete Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL" />
 		<Row Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Hannibal's Charge</Text>
 		</Row>
-		<Delete Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL_HELP">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]If attacking from higher elevation into lower elevation, gains +20% Combat Strength and forces defender to retreat if it inflicts more damage than it receives. A defender who cannot retreat takes 50% additional damage.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
-		<Delete Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL" />
 		<Row Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Hannibal's Charge</Text>
 		</Row>
-		<Delete Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL_HELP">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]If attacking from higher elevation into lower elevation, gains +20% Combat Strength and forces defender to retreat if it inflicts more damage than it receives. A defender who cannot retreat takes 50% additional damage.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
-		<Delete Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL" />
 		<Row Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Hannibal's Charge</Text>
 		</Row>
-		<Delete Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]If attacking from higher elevation into lower elevation, gains +20% Combat Strength and forces defender to retreat if it inflicts more damage than it receives. A defender who cannot retreat takes 50% additional damage.</Text>
 		</Row>

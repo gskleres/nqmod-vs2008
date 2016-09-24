@@ -13921,6 +13921,14 @@ int CvUnit::hillsAttackModifier() const
 	return (getExtraHillsAttackPercent());
 }
 
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+//	--------------------------------------------------------------------------------
+int CvUnit::heavyChargeDownhillModifier() const
+{
+	VALIDATE_OBJECT
+	return (GetHeavyChargeDownhill());
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 int CvUnit::hillsDefenseModifier() const

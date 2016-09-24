@@ -615,6 +615,9 @@ public:
 	int cityDefenseModifier() const;
 	int rangedDefenseModifier() const;
 	int hillsAttackModifier() const;
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	int heavyChargeDownhillModifier() const;
+#endif
 	int hillsDefenseModifier() const;
 	int openAttackModifier() const;
 	int openRangedAttackModifier() const;
