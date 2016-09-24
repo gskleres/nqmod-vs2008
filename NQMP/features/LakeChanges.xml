@@ -14,10 +14,6 @@
 			<Set LakeChange="2" />
 			<Where Type="YIELD_FOOD" />
 		</Update>
-		<Update>
-			<Set LakeChange="1" />
-			<Where Type="YIELD_GOLD" />
-		</Update>
 	</Yields>
 	
 </GameData>
