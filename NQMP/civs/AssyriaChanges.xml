@@ -2,63 +2,41 @@
 <!-- Created by ModBuddy on 12/24/2015 10:59:11 PM -->
 <GameData>
 	
-	<!-- Royal Library now gives 15 XP instead of 10, and 1 Great Writer point per turn. -->
-	<Building_DomainFreeExperiencePerGreatWork>
-		<Update>
-			<Set Experience="15" />
-			<Where BuildingType="BUILDING_ROYAL_LIBRARY" />
-		</Update>
-	</Building_DomainFreeExperiencePerGreatWork>
-
-	<!-- TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP -->
+	<!-- localization -->
 	<Language_en_US>
-		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP" />
-		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP">
-			<Text>Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units.</Text>
+		<Delete Tag="TXT_KEY_TRAIT_SLAYER_OF_TIAMAT" />
+		<Row Tag="TXT_KEY_TRAIT_SLAYER_OF_TIAMAT">
+			<Text>When a city is conquered, gain a free Great Work if you have any available slots.  Gaining a city through a trade deal does not count, and it can only happen once per enemy city.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GREAT_WORK_FROM_CONQUEST">
+			<Text>{@1_PlyrName} has discovered {@2_WndrName} while sacking a City!</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
-		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP" />
-		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units.</Text>
+		<Delete Tag="TXT_KEY_TRAIT_SLAYER_OF_TIAMAT" />
+		<Row Tag="TXT_KEY_TRAIT_SLAYER_OF_TIAMAT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]When a city is conquered, gain a free Great Work if you have any available slots.  Gaining a city through a trade deal does not count, and it can only happen once per enemy city.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GREAT_WORK_FROM_CONQUEST">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]{@1_PlyrName} has discovered {@2_WndrName} while sacking a City!</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
-		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP" />
-		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units.</Text>
+		<Delete Tag="TXT_KEY_TRAIT_SLAYER_OF_TIAMAT" />
+		<Row Tag="TXT_KEY_TRAIT_SLAYER_OF_TIAMAT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]When a city is conquered, gain a free Great Work if you have any available slots.  Gaining a city through a trade deal does not count, and it can only happen once per enemy city.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_GREAT_WORK_FROM_CONQUEST">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]{@1_PlyrName} has discovered {@2_WndrName} while sacking a City!</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
-		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP" />
-		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units.</Text>
+		<Delete Tag="TXT_KEY_TRAIT_SLAYER_OF_TIAMAT" />
+		<Row Tag="TXT_KEY_TRAIT_SLAYER_OF_TIAMAT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]When a city is conquered, gain a free Great Work if you have any available slots.  Gaining a city through a trade deal does not count, and it can only happen once per enemy city.</Text>
 		</Row>
-	</Language_RU_RU>
-	
-	<!-- TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY -->
-	<Language_en_US>
-		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY" />
-		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY">
-			<Text>In addition to the [ICON_RESEARCH] Science output of the Library it replaces, the Royal Library, once filled with a Great Work, provides 15 extra XP to Units trained in this city, so place a Great Work here as soon as possible for the maximum benefit. Only the Assyrians may build it.</Text>
-		</Row>
-	</Language_en_US>
-	<Language_DE_DE>
-		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY" />
-		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]In addition to the [ICON_RESEARCH] Science output of the Library it replaces, the Royal Library, once filled with a Great Work, provides 15 extra XP to Units trained in this city, so place a Great Work here as soon as possible for the maximum benefit. Only the Assyrians may build it.</Text>
-		</Row>
-	</Language_DE_DE>
-	<Language_PL_PL>
-		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY" />
-		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]In addition to the [ICON_RESEARCH] Science output of the Library it replaces, the Royal Library, once filled with a Great Work, provides 15 extra XP to Units trained in this city, so place a Great Work here as soon as possible for the maximum benefit. Only the Assyrians may build it.</Text>
-		</Row>
-	</Language_PL_PL>
-	<Language_RU_RU>
-		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY" />
-		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]In addition to the [ICON_RESEARCH] Science output of the Library it replaces, the Royal Library, once filled with a Great Work, provides 15 extra XP to Units trained in this city, so place a Great Work here as soon as possible for the maximum benefit. Only the Assyrians may build it.</Text>
+		<Row Tag="TXT_KEY_GREAT_WORK_FROM_CONQUEST">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]{@1_PlyrName} has discovered {@2_WndrName} while sacking a City!</Text>
 		</Row>
 	</Language_RU_RU>
 

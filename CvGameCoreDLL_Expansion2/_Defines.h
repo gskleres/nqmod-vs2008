@@ -170,7 +170,7 @@
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
 */
 /// Fixes the bug where order-specific hammer bonuses would go into overflow for an order that may not be eligible for those bonuses
-// ------ #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT
+ // ------ #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT 
 /*
 #ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /// If a city grows or starves a population, it will add any difference in food production after the change to its food supply. Among other things, this means a) the food yields earned by new citizens are evaluated just like all other yields, and b) the food consumption of the new citizen is taken into account on the turn the citizen is added
@@ -690,6 +690,8 @@
 #define NQ_SCIENCE_PER_GREAT_PERSON_BORN
 // Spoils of War - old Assyria UA now applies to all players by default
 #define NQ_SPOILS_OF_WAR
+// Treasures of Nineveh now gives a free Great Work the first time each city is conquered
+#define NQ_GREAT_WORK_ON_UNIQUE_CONQUEST
 // City States and Barbarian units no longer give any Great General points
 #define NQ_NO_GG_POINTS_FROM_CS_OR_BARBS
 // FasterAlongRiver now requires the plot you are coming from to be a river plot as well

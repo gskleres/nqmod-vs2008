@@ -1978,7 +1978,11 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 			// Will this be the first time we have owned this city?
 			if (!pOldCity->isEverOwned(GetID()))
 			{
+#ifdef NQ_GREAT_WORK_ON_UNIQUE_CONQUEST
+				DoGreatWorkFromCityConquer(pOldCity);
+#else
 				DoTechFromCityConquer(pOldCity);
+#endif
 			}
 		}
 #ifndef AUI_WARNING_FIXES
@@ -11047,6 +11051,104 @@ void CvPlayer::ReportYieldFromKill(YieldTypes eYield, int iValue, int iX, int iY
 		}
 	}
 }
+
+#ifdef NQ_GREAT_WORK_ON_UNIQUE_CONQUEST
+//	--------------------------------------------------------------------------------
+/// Each a great work from conquering a city
+void CvPlayer::DoGreatWorkFromCityConquer(CvCity* pConqueredCity)
+{
+	CvGameCulture *pCulture = GC.getGame().GetGameCulture();
+	if(pCulture == NULL)
+	{
+		CvAssertMsg(pCulture != NULL, "This should never happen.");
+		return;
+	}
+
+	// Is there a slot of the right type somewhere in the empire? Check Writing first, Art second, Music last
+	GreatWorkSlotType eGreatWorkSlot = NO_GREAT_WORK_SLOT;
+	GreatWorkClass eGreatWorkClass = NO_GREAT_WORK_CLASS;
+	UnitTypes eUnitType = NO_UNIT;
+	if (this->GetCulture()->GetNumAvailableGreatWorkSlots(CvTypes::getGREAT_WORK_SLOT_LITERATURE()) > 0)
+	{
+		eGreatWorkSlot = CvTypes::getGREAT_WORK_SLOT_LITERATURE();
+		eGreatWorkClass = (GreatWorkClass)GC.getInfoTypeForString("GREAT_WORK_LITERATURE");
+		eUnitType = (UnitTypes)GC.getInfoTypeForString("UNIT_WRITER");
+	}
+	else if (this->GetCulture()->GetNumAvailableGreatWorkSlots(CvTypes::getGREAT_WORK_SLOT_ART_ARTIFACT()) > 0)
+	{
+		eGreatWorkSlot = CvTypes::getGREAT_WORK_SLOT_ART_ARTIFACT();
+		eGreatWorkClass = (GreatWorkClass)GC.getInfoTypeForString("GREAT_WORK_ART");
+		eUnitType = (UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST");
+	}
+	else if (this->GetCulture()->GetNumAvailableGreatWorkSlots(CvTypes::getGREAT_WORK_SLOT_MUSIC()) > 0)
+	{
+		eGreatWorkSlot = CvTypes::getGREAT_WORK_SLOT_MUSIC();
+		eGreatWorkClass = (GreatWorkClass)GC.getInfoTypeForString("GREAT_WORK_MUSIC");
+		eUnitType = (UnitTypes)GC.getInfoTypeForString("UNIT_MUSICIAN");
+	}
+	
+	// fill it if we found one!
+	if (eGreatWorkSlot != NO_GREAT_WORK_SLOT)
+	{
+#ifdef AUI_WARNING_FIXES
+		uint iSlot = MAX_UNSIGNED_INT; // Passed by reference below
+#else
+		int iSlot = -1; // Passed by reference below
+#endif
+		BuildingClassTypes eBuildingClass = NO_BUILDINGCLASS; // Passed by reference below
+		GreatWorkType eGreatWorkType = NO_GREAT_WORK;
+
+		// get the great work we're spawning		
+		CvString strName;
+		CvUnitEntry* pkUnitEntry = GC.getUnitInfo(eUnitType);
+		int iNumUnitCreated = GC.getGame().getUnitCreatedCount(eUnitType);
+		int iNumNames = pkUnitEntry->GetNumUnitNames();
+		if (iNumUnitCreated < iNumNames)
+		{
+			int iNameOffset = GC.getGame().getJonRandNum(iNumNames, "Unit name selection");
+			int iI;
+			for(iI = 0; iI < iNumNames; iI++)
+			{
+				int iIndex = (iNameOffset + iI) % iNumNames;
+				strName = pkUnitEntry->GetUnitNames(iIndex);
+				if(!GC.getGame().isGreatPersonBorn(strName))
+				{
+					eGreatWorkType = pkUnitEntry->GetGreatWorks(iIndex);
+					GC.getGame().addGreatPersonBornName(strName);
+					break;
+				}
+			}
+		}
+
+		// spawn it!
+		int iGWindex;
+		if (eGreatWorkType != NO_GREAT_WORK)
+		{
+			CvCity *pCity = this->GetCulture()->GetClosestAvailableGreatWorkSlot(pConqueredCity->getX(), pConqueredCity->getY(), eGreatWorkSlot, &eBuildingClass, &iSlot);
+			if (pCity)
+			{
+				Localization::String name = Localization::Lookup(strName);
+				CvString strBuffer;
+				strBuffer.Format("%s (%s)", name.toUTF8(), pkUnitEntry->GetDescription());
+				iGWindex = pCulture->CreateGreatWork(eGreatWorkType, eGreatWorkClass, pCity->getOwner(), this->GetCurrentEra(), strBuffer);
+				pCity->GetCityBuildings()->SetBuildingGreatWork(eBuildingClass, iSlot, iGWindex);
+
+				// --- notification ---
+				bool bDontShowRewardPopup = GC.GetEngineUserInterface()->IsOptionNoRewardPopups();
+				Localization::String localizedText;
+
+				CvNotifications* pNotifications = this->GetNotifications();
+				if(pNotifications)
+				{
+					localizedText = Localization::Lookup("TXT_KEY_GREAT_WORK_FROM_CONQUEST");
+					localizedText << this->getNameKey() << pCulture->GetGreatWorkName(iGWindex);
+					pNotifications->Add(NOTIFICATION_GREAT_WORK_COMPLETED_ACTIVE_PLAYER, localizedText.toUTF8(), localizedText.toUTF8(), pConqueredCity->getX(), pConqueredCity->getY(), iGWindex, this->GetID());
+				}
+			}
+		}
+	}
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 /// Each a technology from conquering a city
