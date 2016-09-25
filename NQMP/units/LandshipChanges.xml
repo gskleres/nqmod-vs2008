@@ -5,7 +5,7 @@
 	<!-- Landships can now be purchased with Faith. -->
 	<Units>
 		<Update>
-			<Set FaithCost="700" />
+			<Set FaithCost="700" RequiresFaithPurchaseEnabled="true" />
 			<Where Type="UNIT_WWI_TANK" />
 		</Update>
 	</Units>
