@@ -93,7 +93,6 @@
 */
 /// Fixes the discrepancy where culture is not stored and calculated with hundredths in mind, which greatly messes up modifiers applied to it
 #define AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
-/*
 /// Puppet cities and cities with automated production will no longer accidentally trigger the production notification
 #define AUI_CITY_FIX_PUPPET_CHOOSE_PRODUCTION_NOTIFICATION
 /// Adds a bunch of extra checks to the production notification invalidator so that it gets invalidated properly in more cases (e.g. when the city's owner changes)
@@ -112,9 +111,8 @@
 #define AUI_UNIT_MISSION_FIX_NO_MISSION_ON_DEATH
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
-*/
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
-// ------ #define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
+#define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /*
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
@@ -170,7 +168,7 @@
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
 */
 /// Fixes the bug where order-specific hammer bonuses would go into overflow for an order that may not be eligible for those bonuses
- // ------ #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT 
+// ------ #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT 
 /*
 #ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /// If a city grows or starves a population, it will add any difference in food production after the change to its food supply. Among other things, this means a) the food yields earned by new citizens are evaluated just like all other yields, and b) the food consumption of the new citizen is taken into account on the turn the citizen is added
