@@ -17622,7 +17622,8 @@ bool CvUnit::IsCanHeavyCharge(const CvPlot* pFromPlot, const CvPlot* pToPlot) co
 	}
 	else if (GetHeavyChargeDownhill() > 0 && pFromPlot && pToPlot)
 	{
-		return (pFromPlot->isMountain() && !pToPlot->isMountain()) || (pFromPlot->isHills() && pToPlot->isFlatlands());
+		// Higher PlotType = lower elevation (Mountain -> Hills -> Flatland -> Ocean)
+		return (pFromPlot->getPlotType() < pToPlot->getPlotType());
 	}
 	return false;
 }
