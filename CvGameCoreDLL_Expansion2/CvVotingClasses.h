@@ -337,7 +337,7 @@ public:
 	~CvProposal(void);
 
 	// Pure virtual functions
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	virtual bool IsPassed(int iTotalSessionVotes) const = 0;
 	virtual CvString GetProposalName(bool bForLogging) const = 0;
 #else
@@ -370,7 +370,7 @@ public:
 	~CvEnactProposal(void);
 
 	void Init();
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	bool IsPassed(int iTotalSessionVotes) const;
 	CvString GetProposalName(bool bForLogging = false) const;
 #else
@@ -431,7 +431,7 @@ class CvRepealProposal : public CvProposal
 {
 public:
 	CvRepealProposal(void);
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	CvRepealProposal(const CvActiveResolution* pResolution, PlayerTypes eProposalPlayer);
 #else
 	CvRepealProposal(CvActiveResolution* pResolution, PlayerTypes eProposalPlayer);
@@ -439,7 +439,7 @@ public:
 	~CvRepealProposal(void);
 
 	void Init();
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	bool IsPassed(int iTotalSessionVotes) const;
 	CvString GetProposalName(bool bForLogging = false) const;
 	const CvVoterDecision* GetRepealDecision() const;
@@ -564,7 +564,7 @@ public:
 	bool IsProposed(int iResolutionID, bool bRepeal, bool bCheckOnHold = false);
 	bool IsEnactProposed(ResolutionTypes eResolution, int iProposerChoice);
 	bool IsRepealProposed(int iResolutionID) const;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	std::vector<int> GetChoicesForDecision(ResolutionDecisionTypes eDecision, PlayerTypes eDecider) const;
 	CvString GetTextForChoice(ResolutionDecisionTypes eDecision, int iChoice) const;
 #else
@@ -957,7 +957,7 @@ public:
 	void DoVoteCommitments(CvLeague* pLeague);
 
 	// Naked knowledge for other players
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	DesireLevels EvaluateVoteForTrade(int iResolutionID, int iVoteChoice, int iNumVotes, bool bRepeal) const;
 	DesireLevels EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes eProposer, ResolutionTypes eResolution, int iProposerChoice = LeagueHelpers::CHOICE_NONE) const;
 	DesireLevels EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes eProposer, int iTargetResolutionID) const;
@@ -983,7 +983,7 @@ public:
 	CvString GetCommitVoteDetails(PlayerTypes eToPlayer);
 
 	CvPlayer* GetPlayer();
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	const CvPlayer* GetPlayer() const;
 #endif
 
@@ -993,7 +993,7 @@ public:
 
 private:
 	
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	static CvString GetTextForDesire(DesireLevels eDesire);
 	static DesireLevels EvaluateDesire(int iRawEvaluationScore);
 #else
@@ -1033,7 +1033,7 @@ private:
 #endif
 
 	// Logging
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	void LogVoteChoiceConsidered(const CvEnactProposal* pProposal, int iChoice, int iScore) const;
 	void LogVoteChoiceConsidered(const CvRepealProposal* pProposal, int iChoice, int iScore) const;
 	void LogVoteChoiceCommitted(const CvEnactProposal* pProposal, int iChoice, int iVotes) const;

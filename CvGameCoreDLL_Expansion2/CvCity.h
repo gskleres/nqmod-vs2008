@@ -83,7 +83,7 @@ public:
 	void DoUpdateIndustrialRouteToCapital();
 
 	void SetRouteToCapitalConnected(bool bValue);
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_SLIDING_LOGISTIC_MAINTENANCE_SCALE)
 	bool IsRouteToCapitalConnected() const;
 #else
 	bool IsRouteToCapitalConnected(void);

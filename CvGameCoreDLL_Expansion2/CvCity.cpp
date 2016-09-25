@@ -2076,7 +2076,7 @@ void CvCity::SetRouteToCapitalConnected(bool bValue)
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_SLIDING_LOGISTIC_MAINTENANCE_SCALE)
 bool CvCity::IsRouteToCapitalConnected() const
 #else
 bool CvCity::IsRouteToCapitalConnected(void)

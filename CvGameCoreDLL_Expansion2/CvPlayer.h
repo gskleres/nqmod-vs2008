@@ -1193,7 +1193,7 @@ public:
 	int getResourceSiphoned(ResourceTypes eIndex) const;
 	void changeResourceSiphoned(ResourceTypes eIndex, int iChange);
 
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	int getResourceInOwnedPlots(ResourceTypes eIndex) const;
 #else
 	int getResourceInOwnedPlots(ResourceTypes eIndex);
@@ -1204,7 +1204,7 @@ public:
 	int getImprovementCount(ImprovementTypes eIndex) const;
 	void changeImprovementCount(ImprovementTypes eIndex, int iChange);
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	int getGreatPersonImprovementCount() const;
 #else
 	int getGreatPersonImprovementCount();
@@ -1379,7 +1379,7 @@ public:
 	void UpdatePlots();  // Modifies the list of plots and sets which ones the player owns
 	void AddAPlot(CvPlot* pPlot); // adds a plot at the end of the list
 	CvPlotsVector& GetPlots();  // gets the list of plots the player owns
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	const CvPlotsVector& GetPlots() const;
 #endif
 	int GetNumPlots() const;
@@ -1423,7 +1423,7 @@ public:
 	void SetNumNaturalWondersDiscoveredInArea(int iValue);
 	void ChangeNumNaturalWondersDiscoveredInArea(int iChange);
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	int GetNumNaturalWondersInOwnedPlots() const;
 #else
 	int GetNumNaturalWondersInOwnedPlots();
