@@ -7038,8 +7038,6 @@ CvGameLeagues::~CvGameLeagues(void)
 {
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	SAFE_DELETE(m_ActiveLeague);
-#elif defined(AUI_EXPLICIT_DESTRUCTION)
-	m_vActiveLeagues.clear();
 #endif
 }
 
@@ -8566,7 +8564,7 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int
 #ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes eProposer, ResolutionTypes eResolution, int iProposerChoice) const
 #else
-CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes /*eProposer*/, ResolutionTypes eResolution, int iProposerChoice) const
+CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes /*eProposer*/, ResolutionTypes eResolution, int iProposerChoice) const
 #endif
 #else
 #ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
@@ -8595,7 +8593,7 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeag
 #ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes eProposer, int iTargetResolutionID) const
 #else
-CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes /*eProposer*/, int iTargetResolutionID) const
+CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes /*eProposer*/, int iTargetResolutionID) const
 #endif
 #else
 #ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
