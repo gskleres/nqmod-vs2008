@@ -1333,60 +1333,6 @@ void CvTeam::DoDeclareWar(TeamTypes eTeam, bool bDefensivePact, bool bMinorAllyP
 		}
 	}
 
-#ifdef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
-	if (isHuman() && GET_TEAM(eTeam).isHuman())
-	{
-#ifdef AUI_GAME_BETTER_HYBRID_MODE
-		if (getTurnOrder() == GET_TEAM(eTeam).getTurnOrder())
-#else
-		if (isSimultaneousTurns() || GET_TEAM(eTeam).isSimultaneousTurns())
-#endif
-		{
-			CvGame& kGame = GC.getGame();
-			if (kGame.isOption(GAMEOPTION_END_TURN_TIMER_ENABLED) && kGame.getElapsedGameTurns() > 0 && 
-#ifdef AUI_GAME_RELATIVE_TURN_TIMERS
-				(kGame.getPitbossTurnTime() == 0 || kGame.isOption("GAMEOPTION_RELATIVE_TURN_TIMER")))
-#else
-				kGame.getPitbossTurnTime() == 0)
-#endif
-			{
-				const CvTurnTimerInfo& kTurnTimer = CvPreGame::turnTimerInfo();
-				float fBaseTurnTime = static_cast<float>(kTurnTimer.getBaseTime());
-
-#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
-				FFastVector<int, true, c_eCiv5GameplayDLL>::const_iterator piCurMaxTurnLength = kGame.m_aiMaxTurnLengths.begin();
-				piCurMaxTurnLength += GET_PLAYER(kGame.getActivePlayer()).getTurnOrder();
-
-				float fGameTurnEnd = static_cast<float>(*piCurMaxTurnLength);
-#else
-				float fGameTurnEnd = static_cast<float>(kGame.getMaxTurnLen());
-
-				//NOTE:  These times exclude the time used for AI processing.
-				//Time since the current player's turn started.  Used for measuring time for players in sequential turn mode.
-				float fTimeSinceCurrentTurnStart = kGame.m_curTurnTimer.Peek() + kGame.m_fCurrentTurnTimerPauseDelta;
-#ifndef AUI_GAME_BETTER_HYBRID_MODE
-				//Time since the game (year) turn started.  Used for measuring time for players in simultaneous turn mode.
-				float fTimeSinceGameTurnStart = kGame.m_timeSinceGameTurnStart.Peek() + kGame.m_fCurrentTurnTimerPauseDelta;
-#endif
-#endif
-#ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
-				float fTimeElapsed = kGame.m_curTurnTimer.Peek() + kGame.m_fCurrentTurnTimerPauseDelta;
-#elif defined(AUI_GAME_BETTER_HYBRID_MODE)
-				float fTimeElapsed = timeSinceCurrentTurnStart;
-#else
-				float fTimeElapsed = (GET_PLAYER(kGame.getActivePlayer()).isSimultaneousTurns() ? fTimeSinceGameTurnStart : fTimeSinceCurrentTurnStart);
-#endif
-				float fTimeToAdd = MAX(0.0f, fTimeElapsed - fGameTurnEnd + fBaseTurnTime);
-				if (fTimeToAdd > 0)
-				{
-					kGame.m_curTurnTimer.m_qStart += (__int64)(fTimeToAdd/ kGame.m_curTurnTimer.m_fFreq);
-					kGame.m_timeSinceGameTurnStart.m_qStart += (__int64)(fTimeToAdd / kGame.m_timeSinceGameTurnStart.m_fFreq);
-				}
-			}
-		}
-	}
-#endif
-
 	int iMinorCivLoop;
 	int iMajorCivLoop;
 
