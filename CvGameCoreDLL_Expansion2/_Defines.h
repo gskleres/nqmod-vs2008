@@ -88,9 +88,9 @@
 #define AUI_FLAVORMANAGER_FIX_POSSIBLE_CRASH_ON_FLAVOR_BROADCAST
 /// When CvCity's constructor is called, component objects of CvCity have their parent pointers set immediately when the components are constructed (improves stability)
 #define AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
+*/
 /// Visibility update is always triggered when a plot's visibility changes for a player, thus fixing situations like purchasing a plot not updating sight immediately
 #define AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
-*/
 /// Fixes the discrepancy where culture is not stored and calculated with hundredths in mind, which greatly messes up modifiers applied to it
 #define AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
 /// Puppet cities and cities with automated production will no longer accidentally trigger the production notification

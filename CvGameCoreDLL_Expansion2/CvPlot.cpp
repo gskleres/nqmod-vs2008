@@ -8177,7 +8177,7 @@ PlotVisibilityChangeResult CvPlot::changeVisibilityCount(TeamTypes eTeam, int iC
 					{
 						updateSymbols();
 						updateFog(true);
-#ifndef AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
+#ifdef AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
 						updateVisibility();
 #endif
 					}
@@ -8251,7 +8251,7 @@ PlotVisibilityChangeResult CvPlot::changeVisibilityCount(TeamTypes eTeam, int iC
 			if(eTeam == GC.getGame().getActiveTeam())
 			{
 				//updateFog();
-#ifndef AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
+#ifdef AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
 				updateVisibility();
 #endif
 				updateCenterUnit();
