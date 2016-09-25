@@ -5208,7 +5208,11 @@ int CvTradeAI::ScoreProductionTR (const TradeConnection& kTradeConnection, std::
 	// if we're not going to a target production city, ignore
 	bool bValidTarget = false;
 #ifdef AUI_ITERATORIZE
-	for (std::vector<const CvCity*>::iterator it = aTargetCityList.begin(); it != aTargetCityList.end(); ++it)
+#ifdef AUI_CONSTIFY
+	for (std::vector<const CvCity*>::const_iterator it = aTargetCityList.begin(); it != aTargetCityList.end(); ++it)
+#else
+	for (std::vector<CvCity*>::const_iterator it = aTargetCityList.begin(); it != aTargetCityList.end(); ++it)
+#endif
 	{
 		if (kTradeConnection.m_iDestX == (*it)->getX() && kTradeConnection.m_iDestY == (*it)->getY())
 #else

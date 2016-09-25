@@ -1651,7 +1651,7 @@ void CvCity::kill()
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE)
 CvPlayer* CvCity::GetPlayer() const
 #else
 CvPlayer* CvCity::GetPlayer()
