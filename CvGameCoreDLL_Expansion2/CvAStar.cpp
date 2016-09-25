@@ -1623,11 +1623,7 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 									int iDefenderStrength = pDefender->GetMaxDefenseStrength(pToPlot, pUnit);
 
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
-									bool isAttackingFromHigherElevation = 
-										((pUnit->plot()->isMountain() && !pDefender->plot()->isMountain()) || // attacking from mountain to non-mountain
-										(pUnit->plot()->isHills() && pDefender->plot()->isFlatlands())); // attacking from hills to flatlands
-									if ((pUnit->IsCanHeavyCharge() || (pUnit->GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
-										&& !pDefender->CanFallBackFromMelee(*pUnit))
+									if (pUnit->IsCanHeavyCharge(pUnit->plot(), pDefender->plot()) && !pDefender->CanFallBackFromMelee(*pUnit))
 #else
 									if (pUnit->IsCanHeavyCharge() && !pDefender->CanFallBackFromMelee(*pUnit))
 #endif
@@ -2717,11 +2713,7 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 									int iDefenderStrength = pDefender->GetMaxDefenseStrength(pToPlot, pUnit);
 
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
-									bool isAttackingFromHigherElevation = 
-										((pUnit->plot()->isMountain() && !pDefender->plot()->isMountain()) || // attacking from mountain to non-mountain
-										(pUnit->plot()->isHills() && pDefender->plot()->isFlatlands())); // attacking from hills to flatlands
-									if ((pUnit->IsCanHeavyCharge() || (pUnit->GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
-										&& !pDefender->CanFallBackFromMelee(*pUnit))
+									if (pUnit->IsCanHeavyCharge(pUnit->plot(), pDefender->plot()) && !pDefender->CanFallBackFromMelee(*pUnit))
 #else
 									if (pUnit->IsCanHeavyCharge() && !pDefender->CanFallBackFromMelee(*pUnit))
 #endif
