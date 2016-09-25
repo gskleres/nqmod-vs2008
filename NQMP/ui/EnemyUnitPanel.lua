@@ -1149,6 +1149,24 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 					controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
 				end
 			end
+
+			-- NQ_HEAVY_CHARGE_DOWNHILL begin
+			local isDownhill = false;
+			if (pFromPlot:IsMountain() and not pToPlot:IsMountain()) then
+				isDownhill = true;
+			end
+			if (pFromPlot:IsHills() and pToPlot:IsFlatlands()) then
+				isDownhill = true;
+			end
+			if (isDownhill) then
+				iModifier = pMyUnit:HeavyChargeDownhillModifier();
+				if (iModifier ~= 0) then
+					controlTable = g_MyCombatDataIM:GetInstance();
+					controlTable.Text:LocalizeAndSetText( "TXT_KEY_PROMOTION_HEAVY_CHARGE_DOWNHILL" );
+					controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
+				end
+			end
+			-- NQ_HEAVY_CHARGE_DOWNHILL end
 			
 			if (pToPlot:IsOpenGround()) then
 			

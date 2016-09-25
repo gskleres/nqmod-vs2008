@@ -81,10 +81,10 @@
 	<!-- localization -->
 	<Language_en_US>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA">
-			<Text>Falu Gruva</Text>
+			<Text>Falu Gruva [COLOR_CYAN]*[ENDCOLOR]</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_HELP">
-			<Text>Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_TOURISM] Tourism once Flight is discovered.</Text>
+			<Text>[COLOR_CYAN]* National Wonder (each player may build one)[ENDCOLOR][NEWLINE][NEWLINE]Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_TOURISM] Tourism once Flight is discovered.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_PEDIA">
 			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Falun_Mine)[ENDCOLOR][NEWLINE][NEWLINE]Falun Mine (Swedish: Falu Gruva) was a mine in Falun, Sweden, that operated for a millennium from the 10th century to 1992. It produced as much as two thirds of Europe's copper needs and helped fund many of Sweden's wars in the 17th century. Technological developments at the mine had a profound influence on mining globally for two centuries. Since 2001 it has been designated a UNESCO world heritage site as well as a museum.</Text>
@@ -96,10 +96,10 @@
 
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Falu Gruva</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Falu Gruva [COLOR_CYAN]*[ENDCOLOR]</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_TOURISM] Tourism once Flight is discovered.</Text>
+			<Text>[COLOR_CYAN]* National Wonder (each player may build one)[ENDCOLOR][NEWLINE][NEWLINE][COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_TOURISM] Tourism once Flight is discovered.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_PEDIA">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Falun_Mine)[ENDCOLOR][NEWLINE][NEWLINE]Falun Mine (Swedish: Falu Gruva) was a mine in Falun, Sweden, that operated for a millennium from the 10th century to 1992. It produced as much as two thirds of Europe's copper needs and helped fund many of Sweden's wars in the 17th century. Technological developments at the mine had a profound influence on mining globally for two centuries. Since 2001 it has been designated a UNESCO world heritage site as well as a museum.</Text>
@@ -111,10 +111,10 @@
 
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Falu Gruva</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Falu Gruva [COLOR_CYAN]*[ENDCOLOR]</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_TOURISM] Tourism once Flight is discovered.</Text>
+			<Text>[COLOR_CYAN]* National Wonder (each player may build one)[ENDCOLOR][NEWLINE][NEWLINE][COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_TOURISM] Tourism once Flight is discovered.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_PEDIA">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Falun_Mine)[ENDCOLOR][NEWLINE][NEWLINE]Falun Mine (Swedish: Falu Gruva) was a mine in Falun, Sweden, that operated for a millennium from the 10th century to 1992. It produced as much as two thirds of Europe's copper needs and helped fund many of Sweden's wars in the 17th century. Technological developments at the mine had a profound influence on mining globally for two centuries. Since 2001 it has been designated a UNESCO world heritage site as well as a museum.</Text>
@@ -126,10 +126,10 @@
 
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Falu Gruva</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Falu Gruva [COLOR_CYAN]*[ENDCOLOR]</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_TOURISM] Tourism once Flight is discovered.</Text>
+			<Text>[COLOR_CYAN]* National Wonder (each player may build one)[ENDCOLOR][NEWLINE][NEWLINE][COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Must have built a Workshop in all Cities. The cost goes up the more cities there are in the empire. +1 [ICON_PRODUCTION] Production for all hill tiles worked by this City. +6 [ICON_TOURISM] Tourism once Flight is discovered.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_FALU_GRUVA_PEDIA">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Falun_Mine)[ENDCOLOR][NEWLINE][NEWLINE]Falun Mine (Swedish: Falu Gruva) was a mine in Falun, Sweden, that operated for a millennium from the 10th century to 1992. It produced as much as two thirds of Europe's copper needs and helped fund many of Sweden's wars in the 17th century. Technological developments at the mine had a profound influence on mining globally for two centuries. Since 2001 it has been designated a UNESCO world heritage site as well as a museum.</Text>

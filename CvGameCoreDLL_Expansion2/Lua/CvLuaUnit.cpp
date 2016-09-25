@@ -260,6 +260,9 @@ void CvLuaUnit::PushMethods(lua_State* L, int t)
 	Method(CityAttackModifier);
 	Method(CityDefenseModifier);
 	Method(HillsAttackModifier);
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+	Method(HeavyChargeDownhillModifier);
+#endif
 	Method(HillsDefenseModifier);
 	Method(RoughAttackModifier);
 	Method(OpenAttackModifier);
@@ -2663,6 +2666,18 @@ int CvLuaUnit::lHillsAttackModifier(lua_State* L)
 	lua_pushinteger(L, iResult);
 	return 1;
 }
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+//------------------------------------------------------------------------------
+//int heavyChargeDownhillModifier();
+int CvLuaUnit::lHeavyChargeDownhillModifier(lua_State* L)
+{
+	CvUnit* pkUnit = GetInstance(L);
+
+	const int iResult = pkUnit->heavyChargeDownhillModifier();
+	lua_pushinteger(L, iResult);
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 //int hillsDefenseModifier();
 int CvLuaUnit::lHillsDefenseModifier(lua_State* L)

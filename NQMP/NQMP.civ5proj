@@ -101,6 +101,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>buildings/RoyalLibraryChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>buildings/StoneworksChanges.xml</FileName>
       </Action>
       <Action>
@@ -266,6 +271,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>features/LakeChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>gameplay/GoodyHutChanges.xml</FileName>
       </Action>
       <Action>
@@ -406,6 +416,86 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/_RemoveOldPantheons.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/AncestorWorship.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/EarthMother.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/GoddessOfFestivals.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/God-King.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/GodOfTheSea.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/MonumentToTheGods.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/MysticRituals.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/OceansBounty.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/RainDancing.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/ReligiousIdols.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/RiteOfSpring.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/SacredPath.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/SpiritAnimals.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/SunGod.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>religion/pantheons/VisionQuests.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>religion/AllowExtraReligions.xml</FileName>
       </Action>
       <Action>
@@ -432,11 +522,6 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>religion/InquisitorChanges.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>religion/PantheonChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -611,6 +696,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>units/LandshipChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>units/LandsknechtChanges.xml</FileName>
       </Action>
       <Action>
@@ -696,12 +786,57 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/CircusMaximusChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>wonders_national/EastIndiaCompanyChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/GrandTempleChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/HermitageChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/HeroicEpicChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/IronworksChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/NationalCollegeChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/NationalEpic.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>wonders_national/NationalIntelligenceAgencyChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/NationalVisitorCenterChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_national/OxfordUniversityChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -1413,6 +1548,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="buildings\RoyalLibraryChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="buildings\StoneworksChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -1548,6 +1687,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
     <Content Include="CvGameCore_Expansion2.pdb">
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
+    <Content Include="features\LakeChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="gameplay\AdjustKnownTechCostDiscount.xml">
       <SubType>Lua</SubType>
@@ -1737,7 +1880,87 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="religion\PantheonChanges.xml">
+    <Content Include="religion\pantheons\AncestorWorship.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\DesertFolklore.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\EarthMother.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\God-King.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\GoddessOfFestivals.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\GoddessOfTheHunt.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\GodOfTheSea.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\MonumentToTheGods.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\MysticRituals.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\OceansBounty.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\OneWithNature.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\OralTradition.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\RainDancing.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\ReligiousIdols.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\RiteOfSpring.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\SacredPath.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\SpiritAnimals.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\StoneCircles.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\SunGod.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\VisionQuests.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="religion\pantheons\_RemoveOldPantheons.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2153,6 +2376,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="units\LandshipChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="units\LandsknechtChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -2253,11 +2480,47 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="wonders_national\CircusMaximusChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="wonders_national\EastIndiaCompanyChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="wonders_national\GrandTempleChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_national\HermitageChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_national\HeroicEpicChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_national\IronworksChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_national\NationalCollegeChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_national\NationalEpic.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="wonders_national\NationalIntelligenceAgencyChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_national\NationalVisitorCenterChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_national\OxfordUniversityChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2439,6 +2702,8 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
     <Folder Include="ideologies\order" />
     <Folder Include="improvements" />
     <Folder Include="ideologies" />
+    <Folder Include="features" />
+    <Folder Include="religion\pantheons" />
     <Folder Include="scoring_tweaks\" />
     <Folder Include="great_people" />
     <Folder Include="ui\CultureT100_Compatibility" />

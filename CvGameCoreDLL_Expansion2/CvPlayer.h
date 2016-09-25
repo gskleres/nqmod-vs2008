@@ -427,6 +427,9 @@ public:
 	void DoUnresearchedTechBonusFromKill(UnitTypes eKilledUnitType, int iX, int iY, int &iNumBonuses);
 	void ReportYieldFromKill(YieldTypes eYield, int iValue, int iX, int iY, int iDelay);
 
+#ifdef NQ_GREAT_WORK_ON_UNIQUE_CONQUEST
+	void DoGreatWorkFromCityConquer(CvCity* pConqueredCity);
+#endif
 	void DoTechFromCityConquer(CvCity* pConqueredCity);
 
 	// Faith
