@@ -48,6 +48,9 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_iProphetStrengthModifier(0),
 	m_iProphetCostModifier(0),
 	m_iMissionaryStrengthModifier(0),
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	m_iMissionaryExtraSpreads(0),
+#endif
 	m_iMissionaryCostModifier(0),
 	m_iFriendlyCityStateSpreadModifier(0),
 	m_iGreatPersonExpendedFaith(0),
@@ -65,6 +68,9 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_bReformer(false),
 	m_bRequiresPeace(false),
 	m_bConvertsBarbarians(false),
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	m_bShepherdAndFlock(false),
+#endif
 	m_bFaithPurchaseAllGreatPeople(false),
 
 	m_eObsoleteEra(NO_ERA),
@@ -310,6 +316,14 @@ int CvBeliefEntry::GetMissionaryStrengthModifier() const
 	return m_iMissionaryStrengthModifier;
 }
 
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+/// Accessor:: missionary extra spreads
+int CvBeliefEntry::GetMissionaryExtraSpreads() const
+{
+	return m_iMissionaryExtraSpreads;
+}
+#endif
+
 /// Accessor:: missionary cost discount
 int CvBeliefEntry::GetMissionaryCostModifier() const
 {
@@ -405,6 +419,14 @@ bool CvBeliefEntry::ConvertsBarbarians() const
 {
 	return m_bConvertsBarbarians;
 }
+
+#ifdef NQ_SHEPHERD_AND_FLOCK
+/// Accessor: is this belief shepherd and flock?
+bool CvBeliefEntry::ShepherdAndFlock() const
+{
+	return m_bShepherdAndFlock;
+}
+#endif
 
 /// Accessor: is this a belief that allows you to purchase any type of Great Person with Faith?
 bool CvBeliefEntry::FaithPurchaseAllGreatPeople() const
@@ -687,6 +709,9 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iProphetStrengthModifier        = kResults.GetInt("ProphetStrengthModifier");
 	m_iProphetCostModifier            = kResults.GetInt("ProphetCostModifier");
 	m_iMissionaryStrengthModifier     = kResults.GetInt("MissionaryStrengthModifier");
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	m_iMissionaryExtraSpreads		  = kResults.GetInt("MissionaryExtraSpreads");
+#endif
 	m_iMissionaryCostModifier         = kResults.GetInt("MissionaryCostModifier");
 	m_iFriendlyCityStateSpreadModifier= kResults.GetInt("FriendlyCityStateSpreadModifier");
 	m_iGreatPersonExpendedFaith       = kResults.GetInt("GreatPersonExpendedFaith");
@@ -704,6 +729,9 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_bReformer						  = kResults.GetBool("Reformation");
 	m_bRequiresPeace				  = kResults.GetBool("RequiresPeace");
 	m_bConvertsBarbarians			  = kResults.GetBool("ConvertsBarbarians");
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	m_bShepherdAndFlock				  = kResults.GetBool("ShepherdAndFlock");
+#endif
 	m_bFaithPurchaseAllGreatPeople	  = kResults.GetBool("FaithPurchaseAllGreatPeople");
 
 	//References
@@ -1008,6 +1036,9 @@ CvReligionBeliefs::CvReligionBeliefs(const CvReligionBeliefs& source)
 	m_iProphetStrengthModifier = source.m_iProphetStrengthModifier;
 	m_iProphetCostModifier = source.m_iProphetCostModifier;
 	m_iMissionaryStrengthModifier = source.m_iMissionaryStrengthModifier;
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	m_iMissionaryExtraSpreads = source.m_iMissionaryExtraSpreads;
+#endif
 	m_iMissionaryCostModifier = source.m_iMissionaryCostModifier;
 	m_iFriendlyCityStateSpreadModifier = source.m_iFriendlyCityStateSpreadModifier;
 	m_iGreatPersonExpendedFaith = source.m_iGreatPersonExpendedFaith;
@@ -1065,6 +1096,9 @@ void CvReligionBeliefs::Reset()
 	m_iProphetStrengthModifier = 0;
 	m_iProphetCostModifier = 0;
 	m_iMissionaryStrengthModifier = 0;
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	m_iMissionaryExtraSpreads = 0;
+#endif
 	m_iMissionaryCostModifier = 0;
 	m_iFriendlyCityStateSpreadModifier = 0;
 	m_iGreatPersonExpendedFaith = 0;
@@ -1128,6 +1162,9 @@ void CvReligionBeliefs::AddBelief(BeliefTypes eBelief)
 	m_iProphetStrengthModifier += belief->GetProphetStrengthModifier();
 	m_iProphetCostModifier += belief->GetProphetCostModifier();
 	m_iMissionaryStrengthModifier += belief->GetMissionaryStrengthModifier();
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	m_iMissionaryExtraSpreads += belief->GetMissionaryExtraSpreads();
+#endif
 	m_iMissionaryCostModifier += belief->GetMissionaryCostModifier();
 	m_iFriendlyCityStateSpreadModifier += belief->GetFriendlyCityStateSpreadModifier();
 	m_iGreatPersonExpendedFaith += belief->GetGreatPersonExpendedFaith();
@@ -1457,7 +1494,6 @@ int CvReligionBeliefs::GetYieldChangePerForeignCity(YieldTypes eYield) const
 }
 
 /// Extra yield for foreign followers
-// NQMP GJS - reference new Underground Sect
 int CvReligionBeliefs::GetYieldChangePerXForeignFollowers(YieldTypes eYield) const
 {
 	CvBeliefXMLEntries* pBeliefs = GC.GetGameBeliefs();
@@ -1797,6 +1833,27 @@ bool CvReligionBeliefs::IsConvertsBarbarians() const
 	return false;
 }
 
+#ifdef NQ_SHEPHERD_AND_FLOCK
+/// Is there a belief that matches Shepherd & Flock?
+bool CvReligionBeliefs::IsShepherdAndFlock() const
+{
+	CvBeliefXMLEntries* pBeliefs = GC.GetGameBeliefs();
+
+	for(int i = 0; i < pBeliefs->GetNumBeliefs(); i++)
+	{
+		if(HasBelief((BeliefTypes)i))
+		{
+			if (pBeliefs->GetEntry(i)->ShepherdAndFlock())
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+#endif
+
 /// Is there a belief that allows faith buying of all great people
 bool CvReligionBeliefs::IsFaithPurchaseAllGreatPeople() const
 {
@@ -1837,6 +1894,9 @@ void CvReligionBeliefs::Read(FDataStream& kStream)
 	kStream >> m_iProphetStrengthModifier;
 	kStream >> m_iProphetCostModifier;
 	kStream >> m_iMissionaryStrengthModifier;
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	kStream >> m_iMissionaryExtraSpreads;
+#endif
 	kStream >> m_iMissionaryCostModifier;
 	kStream >> m_iFriendlyCityStateSpreadModifier;
 	kStream >> m_iGreatPersonExpendedFaith;
@@ -1891,6 +1951,9 @@ void CvReligionBeliefs::Write(FDataStream& kStream) const
 	kStream << m_iProphetStrengthModifier;
 	kStream << m_iProphetCostModifier;
 	kStream << m_iMissionaryStrengthModifier;
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	kStream << m_iMissionaryExtraSpreads;
+#endif
 	kStream << m_iMissionaryCostModifier;
 	kStream << m_iFriendlyCityStateSpreadModifier;
 	kStream << m_iGreatPersonExpendedFaith;

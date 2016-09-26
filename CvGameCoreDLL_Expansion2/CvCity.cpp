@@ -5066,14 +5066,22 @@ int CvCity::GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts)
 	}
 
 	// Modify by any beliefs
+#ifdef NQ_FIX_MISSIONARY_COST_MODIFIER_BELIEF
+	if(bIncludeBeliefDiscounts && pkUnitInfo->IsSpreadReligion() && !pkUnitInfo->IsFoundReligion())
+#else
 	if(bIncludeBeliefDiscounts && (pkUnitInfo->IsSpreadReligion() || pkUnitInfo->IsRemoveHeresy()) && !pkUnitInfo->IsFoundReligion())
+#endif
 	{
 		CvGameReligions* pReligions = GC.getGame().GetGameReligions();
 		ReligionTypes eMajority = GetCityReligions()->GetReligiousMajority();
 		if(eMajority > RELIGION_PANTHEON)
 		{
 			const CvReligion* pReligion = pReligions->GetReligion(eMajority, getOwner());
+#ifdef NQ_FIX_MISSIONARY_COST_MODIFIER_BELIEF
+			if(pReligion && pReligion->m_eFounder == getOwner())
+#else
 			if(pReligion)
+#endif
 			{
 				int iReligionCostMod = pReligion->m_Beliefs.GetMissionaryCostModifier();
 
@@ -5087,9 +5095,14 @@ int CvCity::GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts)
 	}
 
 	// Make the number not be funky
+#ifdef NQ_FAITH_COST_ROUNDS_TO_NEAREST_5
+	iCost /= 5;
+	iCost *= 5;
+#else
 	int iDivisor = /*10*/ GC.getGOLD_PURCHASE_VISIBLE_DIVISOR();
 	iCost /= iDivisor;
 	iCost *= iDivisor;
+#endif
 
 	return iCost;
 }
@@ -14240,7 +14253,24 @@ void CvCity::Purchase(UnitTypes eUnitType, BuildingTypes eBuildingType, ProjectT
 			// Missionary strength
 			if(iReligionSpreads > 0 && eReligion > RELIGION_PANTHEON)
 			{
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+				if (!pUnit->getUnitInfo().IsFoundReligion())
+				{
+					iReligionSpreads += GetCityBuildings()->GetMissionaryExtraSpreads();
+					
+					// only your missionaries of your religion get this boost
+					ReligionTypes eFoundedReligion = GC.getGame().GetGameReligions()->GetFounderBenefitsReligion(kPlayer.GetID());
+					if(eFoundedReligion == eReligion) 
+					{
+						const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eFoundedReligion, NO_PLAYER);
+						iReligionSpreads += pReligion->m_Beliefs.GetMissionaryExtraSpreads();
+					}
+					
+				}
+				pUnit->GetReligionData()->SetSpreadsLeft(iReligionSpreads);
+#else
 				pUnit->GetReligionData()->SetSpreadsLeft(iReligionSpreads + GetCityBuildings()->GetMissionaryExtraSpreads());
+#endif
 				pUnit->GetReligionData()->SetReligiousStrength(iReligiousStrength);
 			}
 

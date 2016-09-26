@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2016-09-25 05:44:53 -->
+<GameData>
+
+	<!-- +20% Combat Strength near friendly Cities that follow this Religion. -->
+	<Beliefs>
+		<Update>
+			<Set Enhancer="false" Founder="true" />
+			<Where Type="BELIEF_DEFENDER_FAITH" />
+		</Update>
+	</Beliefs>
+
+</GameData>
