@@ -1212,7 +1212,7 @@ void CvEnactProposal::Init()
 {
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 bool CvEnactProposal::IsPassed(int iTotalSessionVotes) const
 #else
 bool CvEnactProposal::IsPassed(int iTotalSessionVotes)
@@ -1263,7 +1263,7 @@ bool CvEnactProposal::IsPassed(int iTotalSessionVotes)
 	return false;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 CvString CvEnactProposal::GetProposalName(bool bForLogging) const
 #else
 CvString CvEnactProposal::GetProposalName(bool bForLogging)
@@ -1801,7 +1801,7 @@ CvRepealProposal::CvRepealProposal(void)
 	m_iTargetResolutionID = -1;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 CvRepealProposal::CvRepealProposal(const CvActiveResolution* pResolution, PlayerTypes eProposalPlayer) : CvProposal(pResolution->GetID(), pResolution->GetType(), pResolution->GetLeague(), eProposalPlayer)
 #else
 CvRepealProposal::CvRepealProposal(CvActiveResolution* pResolution, PlayerTypes eProposalPlayer) : CvProposal(pResolution->GetID(), pResolution->GetType(), pResolution->GetLeague(), eProposalPlayer)
@@ -1821,7 +1821,7 @@ void CvRepealProposal::Init()
 {
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 bool CvRepealProposal::IsPassed(int iTotalSessionVotes) const
 #else
 bool CvRepealProposal::IsPassed(int iTotalSessionVotes)
@@ -1859,7 +1859,7 @@ bool CvRepealProposal::IsPassed(int iTotalSessionVotes)
 	}
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 CvString CvRepealProposal::GetProposalName(bool bForLogging) const
 #else
 CvString CvRepealProposal::GetProposalName(bool bForLogging)
@@ -1890,7 +1890,7 @@ CvVoterDecision* CvRepealProposal::GetRepealDecision()
 	return &m_RepealDecision;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 const CvVoterDecision* CvRepealProposal::GetRepealDecision() const
 {
 	return &m_RepealDecision;
@@ -3045,7 +3045,7 @@ bool CvLeague::IsRepealProposed(int iResolutionID) const
 	return false;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 std::vector<int> CvLeague::GetChoicesForDecision(ResolutionDecisionTypes eDecision, PlayerTypes eDecider) const
 #else
 std::vector<int> CvLeague::GetChoicesForDecision(ResolutionDecisionTypes eDecision, PlayerTypes eDecider)
@@ -3137,7 +3137,7 @@ std::vector<int> CvLeague::GetChoicesForDecision(ResolutionDecisionTypes eDecisi
 	return vChoices;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 CvString CvLeague::GetTextForChoice(ResolutionDecisionTypes eDecision, int iChoice) const
 #else
 CvString CvLeague::GetTextForChoice(ResolutionDecisionTypes eDecision, int iChoice)
@@ -7038,8 +7038,6 @@ CvGameLeagues::~CvGameLeagues(void)
 {
 #ifdef AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
 	SAFE_DELETE(m_ActiveLeague);
-#elif defined(AUI_EXPLICIT_DESTRUCTION)
-	m_vActiveLeagues.clear();
 #endif
 }
 
@@ -8486,7 +8484,7 @@ void CvLeagueAI::DoVoteCommitments(CvLeague* pLeague)
 
 // How much do we like this vote commitment (either from us to someone else, or from someone else to us)?
 #ifdef CVASSERT_ENABLE
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int iVoteChoice, int iNumVotes, bool bRepeal) const
 #else
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int iVoteChoice, int iNumVotes, bool bRepeal)
@@ -8494,7 +8492,7 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int
 {
 	DEBUG_VARIABLE(iNumVotes);
 #else
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int iVoteChoice, int /*iNumVotes*/, bool bRepeal) const
 #else
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int iVoteChoice, int /*iNumVotes*/, bool bRepeal)
@@ -8562,18 +8560,14 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateVoteForTrade(int iResolutionID, int
 }
 
 // How much do we like an enact proposal, so that we can give a hint to the player making proposals?
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 #ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes eProposer, ResolutionTypes eResolution, int iProposerChoice) const
 #else
-CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes /*eProposer*/, ResolutionTypes eResolution, int iProposerChoice) const
+CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes /*eProposer*/, ResolutionTypes eResolution, int iProposerChoice) const
 #endif
-#else
-#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
-CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes eProposer, ResolutionTypes eResolution, int iProposerChoice)
 #else
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes /*eProposer*/, ResolutionTypes eResolution, int iProposerChoice)
-#endif
 #endif
 {
 	CvAssert(pLeague);
@@ -8591,18 +8585,14 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeag
 }
 
 // How much do we like a repeal proposal, so that we can give a hint to the player making proposals?
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 #ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes eProposer, int iTargetResolutionID) const
 #else
-CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes /*eProposer*/, int iTargetResolutionID) const
+CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(const CvLeague* pLeague, PlayerTypes /*eProposer*/, int iTargetResolutionID) const
 #endif
-#else
-#ifdef AUI_VOTING_TWEAKED_PROPOSAL_SCORING
-CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes eProposer, int iTargetResolutionID)
 #else
 CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeague, PlayerTypes /*eProposer*/, int iTargetResolutionID)
-#endif
 #endif
 {
 	CvAssert(pLeague);
@@ -8638,7 +8628,7 @@ CvLeagueAI::DesireLevels CvLeagueAI::EvaluateProposalForProposer(CvLeague* pLeag
 }
 
 // Calculate how much we think our interests are aligned with ePlayer, based on ideology, liberation, past voting patterns, etc.
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 CvLeagueAI::AlignmentLevels CvLeagueAI::EvaluateAlignment(PlayerTypes ePlayer) const
 #else
 CvLeagueAI::AlignmentLevels CvLeagueAI::EvaluateAlignment(PlayerTypes ePlayer)
@@ -9062,7 +9052,7 @@ CvPlayer* CvLeagueAI::GetPlayer()
 	return m_pPlayer;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 const CvPlayer* CvLeagueAI::GetPlayer() const
 {
 	return m_pPlayer;
@@ -10870,7 +10860,7 @@ int CvLeagueAI::ScoreProposal(CvLeague* pLeague, CvActiveResolution* pResolution
 	return iYesScore;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 void CvLeagueAI::LogVoteChoiceConsidered(const CvEnactProposal* pProposal, int iChoice, int iScore) const
 #else
 void CvLeagueAI::LogVoteChoiceConsidered(CvEnactProposal* pProposal, int iChoice, int iScore)
@@ -10907,7 +10897,7 @@ void CvLeagueAI::LogVoteChoiceConsidered(CvEnactProposal* pProposal, int iChoice
 	GC.getGame().GetGameLeagues()->LogLeagueMessage(sMessage);
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 void CvLeagueAI::LogVoteChoiceConsidered(const CvRepealProposal* pProposal, int iChoice, int iScore) const
 #else
 void CvLeagueAI::LogVoteChoiceConsidered(CvRepealProposal* pProposal, int iChoice, int iScore)
@@ -10944,7 +10934,7 @@ void CvLeagueAI::LogVoteChoiceConsidered(CvRepealProposal* pProposal, int iChoic
 	GC.getGame().GetGameLeagues()->LogLeagueMessage(sMessage);
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 void CvLeagueAI::LogVoteChoiceCommitted(const CvEnactProposal* pProposal, int iChoice, int iVotes) const
 #else
 void CvLeagueAI::LogVoteChoiceCommitted(CvEnactProposal* pProposal, int iChoice, int iVotes)
@@ -10981,7 +10971,7 @@ void CvLeagueAI::LogVoteChoiceCommitted(CvEnactProposal* pProposal, int iChoice,
 	GC.getGame().GetGameLeagues()->LogLeagueMessage(sMessage);
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 void CvLeagueAI::LogVoteChoiceCommitted(const CvRepealProposal* pProposal, int iChoice, int iVotes) const
 #else
 void CvLeagueAI::LogVoteChoiceCommitted(CvRepealProposal* pProposal, int iChoice, int iVotes)

@@ -50,13 +50,6 @@ struct TradeConnection
 	int m_iTurnRouteComplete;
 	int m_aiOriginYields[NUM_YIELD_TYPES];
 	int m_aiDestYields[NUM_YIELD_TYPES];
-
-#ifdef AUI_EXPLICIT_DESTRUCTION
-	~TradeConnection()
-	{
-		m_aPlotList.clear();
-	}
-#endif
 };
 
 #define PROJECTED_MAX_TRADE_CONNECTIONS_PER_CIV 14
@@ -233,11 +226,7 @@ struct TradeConnectionWasPlundered
 	int m_iTurnPlundered;
 };
 
-#ifdef AUI_TRADE_FIX_POSSIBLE_DEALLOCATION_CRASH
-typedef FStaticVector<TradeConnectionWasPlundered, PROJECTED_MAX_TRADE_CONNECTIONS_PER_CIV, false, c_eCiv5GameplayDLL> TradeConnectionWasPlunderedList;
-#else
 typedef FStaticVector<TradeConnectionWasPlundered, 10, false, c_eCiv5GameplayDLL > TradeConnectionWasPlunderedList;
-#endif
 
 class CvPlayerTrade
 {

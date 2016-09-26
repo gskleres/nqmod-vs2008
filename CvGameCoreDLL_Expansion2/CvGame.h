@@ -598,19 +598,6 @@ public:
 	int GetNumArchaeologySites() const;
 	int GetNumHiddenArchaeologySites() const;
 
-#ifdef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
-	FTimer  m_endTurnTimer;
-	int     m_endTurnTimerSemaphore;
-	FTimer  m_curTurnTimer;
-#ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
-	FTimer  m_timeSinceGameTurnStart;		//time since game turn started for human players
-#endif
-	float	m_fCurrentTurnTimerPauseDelta;	//
-#if defined(AUI_GAME_BETTER_HYBRID_MODE) && defined(AUI_GAME_PLAYER_BASED_TURN_LENGTH)
-	FFastVector<int, true, c_eCiv5GameplayDLL> m_aiMaxTurnLengths;
-#endif
-#endif
-
 public:
 
 	//Function to determine city size from city population
@@ -768,18 +755,14 @@ protected:
 
 	// CACHE: cache frequently used values
 
-#ifndef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 	FTimer  m_endTurnTimer;
 	int     m_endTurnTimerSemaphore;
-#endif
 	int     m_lastTurnAICivsProcessed;
-#ifndef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 	FTimer  m_curTurnTimer;
 #ifndef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	FTimer  m_timeSinceGameTurnStart;		//time since game turn started for human players
 #endif
 	float	m_fCurrentTurnTimerPauseDelta;	//
-#endif
 	bool    m_sentAutoMoves;
 	bool	m_bForceEndingTurn;
 
@@ -810,9 +793,7 @@ protected:
 	int m_iLastTurnOrderID;
 #ifdef AUI_GAME_PLAYER_BASED_TURN_LENGTH
 	void calculateMaxTurnLengths();
-#ifndef NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 	FFastVector<int, true, c_eCiv5GameplayDLL> m_aiMaxTurnLengths;
-#endif
 #endif
 #endif
 

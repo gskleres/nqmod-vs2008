@@ -1209,7 +1209,7 @@ int CvEconomicAI::AmountAvailableForPurchase(PurchaseType ePurchase)
 	int iBalance = m_pPlayer->GetTreasury()->GetGold();
 
 	// Copy into temp array and sort by priority
-#ifdef AUI_WARNING_FIXES
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
 	FStaticVector<CvPurchaseRequest, NUM_PURCHASE_TYPES, true, c_eCiv5GameplayDLL, 0> vTempRequestedSavings = m_RequestedSavings;
 	std::stable_sort(vTempRequestedSavings.begin(), vTempRequestedSavings.end());
 

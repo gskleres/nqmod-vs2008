@@ -1651,7 +1651,7 @@ void CvCity::kill()
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE)
 CvPlayer* CvCity::GetPlayer() const
 #else
 CvPlayer* CvCity::GetPlayer()
@@ -2076,7 +2076,7 @@ void CvCity::SetRouteToCapitalConnected(bool bValue)
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITYSTRATEGY_FIX_CHOOSE_PRODUCTION_SLIDING_LOGISTIC_MAINTENANCE_SCALE)
 bool CvCity::IsRouteToCapitalConnected() const
 #else
 bool CvCity::IsRouteToCapitalConnected(void)
@@ -14439,11 +14439,6 @@ void CvCity::doGrowth()
 					pNotifications->Add(NOTIFICATION_CITY_GROWTH, localizedText.toUTF8(), localizedSummary.toUTF8(), getX(), getY(), GetID());
 				}
 			}
-#ifdef AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
-			int iNewDiff = foodDifferenceTimes100() - iDiff;
-			changeFoodTimes100(iNewDiff);
-			changeFoodKept(iNewDiff / 100);
-#endif
 		}
 	}
 	else if(getFood() < 0)
@@ -14453,11 +14448,6 @@ void CvCity::doGrowth()
 		if(getPopulation() > 1)
 		{
 			changePopulation(-1);
-#ifdef AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
-			int iNewDiff = foodDifferenceTimes100() - iDiff;
-			changeFoodTimes100(iNewDiff);
-			changeFoodKept(iNewDiff / 100);
-#endif
 		}
 	}
 }
@@ -14807,23 +14797,7 @@ void CvCity::doProduction(bool bAllowNoProduction)
 
 		if(getProduction() >= getProductionNeeded() && !isProductionProcess())
 		{
-#ifdef AUI_CITY_FIX_DO_PRODUCTION_CONSIDER_FOOD_HAMMERS_FROM_NEW_BUILDING
-			bool bIsFoodProd = isFoodProduction();
-			int iOldFoodDiff = foodDifferenceTimes100();
-			int iOldProdDiff = getRawProductionDifferenceTimes100(bIsFoodProd, false);
-#endif
 			popOrder(0, true, true);
-#ifdef AUI_CITY_FIX_DO_PRODUCTION_CONSIDER_FOOD_HAMMERS_FROM_NEW_BUILDING
-			if (!bIsFoodProd && !isFoodProduction())
-			{
-				int iNewFood = foodDifferenceTimes100() - iOldFoodDiff;
-				changeFoodTimes100(iNewFood);
-				changeFoodKept(iNewFood / 100);
-			}
-
-			int iNewProd = getRawProductionDifferenceTimes100(bIsFoodProd, false) - iOldProdDiff;
-			changeProductionTimes100(iNewProd);
-#endif
 		}
 	}
 	else

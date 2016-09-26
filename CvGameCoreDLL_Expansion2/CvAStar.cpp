@@ -1623,11 +1623,7 @@ int PathCost(CvAStarNode* parent, CvAStarNode* node, int data, const void* point
 									int iDefenderStrength = pDefender->GetMaxDefenseStrength(pToPlot, pUnit);
 
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
-									bool isAttackingFromHigherElevation = 
-										((pUnit->plot()->isMountain() && !pDefender->plot()->isMountain()) || // attacking from mountain to non-mountain
-										(pUnit->plot()->isHills() && pDefender->plot()->isFlatlands())); // attacking from hills to flatlands
-									if ((pUnit->IsCanHeavyCharge() || (pUnit->GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
-										&& !pDefender->CanFallBackFromMelee(*pUnit))
+									if (pUnit->IsCanHeavyCharge(pUnit->plot(), pDefender->plot()) && !pDefender->CanFallBackFromMelee(*pUnit))
 #else
 									if (pUnit->IsCanHeavyCharge() && !pDefender->CanFallBackFromMelee(*pUnit))
 #endif
@@ -2717,11 +2713,7 @@ int IgnoreUnitsCost(CvAStarNode* parent, CvAStarNode* node, int data, const void
 									int iDefenderStrength = pDefender->GetMaxDefenseStrength(pToPlot, pUnit);
 
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
-									bool isAttackingFromHigherElevation = 
-										((pUnit->plot()->isMountain() && !pDefender->plot()->isMountain()) || // attacking from mountain to non-mountain
-										(pUnit->plot()->isHills() && pDefender->plot()->isFlatlands())); // attacking from hills to flatlands
-									if ((pUnit->IsCanHeavyCharge() || (pUnit->GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation))
-										&& !pDefender->CanFallBackFromMelee(*pUnit))
+									if (pUnit->IsCanHeavyCharge(pUnit->plot(), pDefender->plot()) && !pDefender->CanFallBackFromMelee(*pUnit))
 #else
 									if (pUnit->IsCanHeavyCharge() && !pDefender->CanFallBackFromMelee(*pUnit))
 #endif
@@ -2990,7 +2982,7 @@ int IgnoreUnitsValid(CvAStarNode* parent, CvAStarNode* node, int data, const voi
 #endif
 	{
 #ifdef AUI_ASTAR_FIX_IGNORE_UNITS_PATHFINDER_TERRITORY_CHECK
-		if (!pUnit->canEnterTerrain(*pToPlot, CvUnit::MOVEFLAG_PRETEND_CORRECT_EMBARK_STATE) || !pUnit->canEnterTerritory(pToPlot->getTeam(), false, false, pUnit->IsDeclareWar() || (GetInfo() & MOVE_DECLARE_WAR)))
+		if (!pUnit->canEnterTerrain(*pToPlot, CvUnit::MOVEFLAG_PRETEND_CORRECT_EMBARK_STATE) || !pUnit->canEnterTerritory(pToPlot->getTeam(), false, false, pUnit->IsDeclareWar() || (finder->GetInfo() & MOVE_DECLARE_WAR)))
 #else
 		if(!pUnit->canEnterTerrain(*pToPlot, CvUnit::MOVEFLAG_PRETEND_CORRECT_EMBARK_STATE) || !pUnit->canEnterTerritory(eUnitTeam))
 #endif

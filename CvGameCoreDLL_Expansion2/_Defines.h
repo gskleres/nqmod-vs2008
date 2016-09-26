@@ -23,17 +23,20 @@
 #define NQM_GUID
 /// Enables Minidump Generation (originally for Civ4 by terkhen, ported to Civ5 by ls612)
 #define NQM_MINIDUMPS
-/*
 /// Can cache doubles from XML (Delnar: DatabaseUtility actually supports double-type, don't know why Firaxis didn't bother putting this in for good measure)
 #define NQM_CACHE_DOUBLE
+/*
 /// Enables const for functions, variables, and parameters that both allow it and are intended to be const
 #define AUI_CONSTIFY
+*/
 /// Replaces instances of vector loops using indeces with ones that use iterators
 #define AUI_ITERATORIZE
 /// Removes unused functions that simply increase file size of the DLL without providing any benefit
 #define NQM_PRUNING
+/*
 /// Fixes some sources for level 4 warnings
 #define AUI_WARNING_FIXES
+*/
 /// Changes the scopes of certain functions to fall in line with other functions of the same type (eg. CvUnit::CanFallBackFromMelee() is public instead of protected)
 #define AUI_SCOPE_FIXES
 /// Replaces all instances of iterators with postfix incrementors to have prefix incrementors, increasing performance
@@ -42,8 +45,10 @@
 #define NQM_FAST_COMP
 /// Performance optimizations related to bit twiddling (http://www.graphics.stanford.edu/~seander/bithacks.html)
 #define NQM_GAME_CORE_UTILS_OPTIMIZATIONS
+/*
 /// CvWeightedVector's Top n Choices function now uses unsigned integers for indexes and choice numbers
 #define AUI_WEIGHTED_VECTOR_FIX_TOP_CHOICES_USE_UNSIGNED
+*/
 /// Optimizations and fixes to reduce distance check overhead
 #define AUI_FIX_HEX_DISTANCE_INSTEAD_OF_PLOT_DISTANCE
 /// Tweaks to make performance logs a bit more consistent and easier to read
@@ -52,8 +57,10 @@
 #define AUI_STOPWATCH_SUBTRACT_BEFORE_DELTA_CAST
 /// Implements the missing iterator typedefs for BaseVector
 #define AUI_FIX_FFASTVECTOR_BASEVECTOR_ITERATOR
+/*
 /// Functions that called ints for variables used for indexes and choice numbers now call unsigned ints instead
 #define AUI_FIX_FFASTVECTOR_USE_UNSIGNED
+*/
 /// Optimized parts of functions responsible for updating plot vision code
 #define AUI_PLOT_VISIBILITY_OPTIMIZATIONS
 /// Optimizes loops that iterate over relative coordinates to hexspace
@@ -62,8 +69,10 @@
 #define AUI_UNIT_FIX_CAN_MOVE_OR_ATTACK_INTO_NO_DUPLICATE_CALLS
 /// CvUnit::canMoveInto() is optimized to not perform redundant checks for attack flag (also improves pathfinder performance)
 #define AUI_UNIT_FIX_CAN_MOVE_INTO_OPTIMIZED
+/*
 /// The object used to store danger values is changed to an array instead of an FFastVector
 #define AUI_DANGER_PLOTS_FIX_USE_ARRAY_NOT_FFASTVECTOR
+*/
 /// Units who are delayed dead will not be fetched by functions that get enemy defenders
 #define AUI_PLOT_FIX_ENEMY_DEFENDER_GETTER_DOES_NOT_GET_DELAYED_DEAD
 /// When the citizen manager reallocates all citizens, it no longer goes through the costly process of calculating the worst plot multiple times
@@ -74,26 +83,20 @@
 #define AUI_TRADE_FIX_GET_NUM_DIFFERENT_TRADING_PARTNERS_USES_ARRAY
 /// Fixes the fact that the game's Linear Congruential RNG is set to use constants that would require a modulus of 2^31 instead of ones that need 2^32 (I couldn't introduce a modulus step because Civ5's engine really dislikes modifications to the RNG system)
 #define AUI_RANDOM_FIX_CONSTANTS_SET_TO_MODULUS_2_POW_32
+/*
 /// Fixes a possible crash when exiting the game caused by heap corruption when deallocating CvGameLeagues due to misuse of an FStaticVector
 #define AUI_LEAGUES_FIX_POSSIBLE_DEALLOCATION_CRASH
-/// Fixes a possible crash when exiting the game caused by too few items in a FStaticVector
-#define AUI_TRADE_FIX_POSSIBLE_DEALLOCATION_CRASH
-/// Adds explicit clearing functions to certain destructors to make sure they are executed to avoid memory corruption
-#define AUI_EXPLICIT_DESTRUCTION
+*/
 /// Fixes the fact that an FStaticVector type containing objects with trivial constructors (i.e. they are "Plain Old Data" = POD) is treated as the vector type wouldn't be POD (improves stability and performance)
 #define AUI_TRADE_FIX_FSTATICVECTOR_CONTENTS_ARE_POD
 /// Eliminates an unneccessary loop and a few more steps from the function that stores a trade route's path into the trade route's data
 #define AUI_TRADE_OPTIMIZE_COPY_PATH_INTO_TRADE_CONNECTION
-/// Fixes a possible crash that happens when flavors are broadcast
-#define AUI_FLAVORMANAGER_FIX_POSSIBLE_CRASH_ON_FLAVOR_BROADCAST
 /// When CvCity's constructor is called, component objects of CvCity have their parent pointers set immediately when the components are constructed (improves stability)
 #define AUI_CITY_FIX_COMPONENT_CONSTRUCTORS_CONTAIN_POINTERS
 /// Visibility update is always triggered when a plot's visibility changes for a player, thus fixing situations like purchasing a plot not updating sight immediately
 #define AUI_PLOT_FIX_RESPONSIVE_VISIBILITY_UPDATE
-*/
 /// Fixes the discrepancy where culture is not stored and calculated with hundredths in mind, which greatly messes up modifiers applied to it
 #define AUI_PLAYER_FIX_JONS_CULTURE_IS_T100
-/*
 /// Puppet cities and cities with automated production will no longer accidentally trigger the production notification
 #define AUI_CITY_FIX_PUPPET_CHOOSE_PRODUCTION_NOTIFICATION
 /// Adds a bunch of extra checks to the production notification invalidator so that it gets invalidated properly in more cases (e.g. when the city's owner changes)
@@ -112,24 +115,20 @@
 #define AUI_UNIT_MISSION_FIX_NO_MISSION_ON_DEATH
 
 // Fixes to game bugs and New/Tweaked gameplay aspects ported from AuI
-*/
 /// Yields are cached and processed after the player's turn completes, not before the player's turn starts
-// ------ #define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-/*
+#define AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
 /// Removes the cap of 8 range for unit sight; this was only needed because the for() loops weren't set up properly, resulting in too many unused cycles
 #define AUI_PLOT_SEE_FROM_SIGHT_NO_MAXIMUM_SIGHT_RANGE
-/// When choosing the top n choices from a weighted vector, choices with weight equal to the last choice are also included
-#define AUI_WEIGHTED_VECTOR_FIX_TOP_CHOICES_TIE
+/*
 /// In Hotseat (and now for all multiplayer modes), wars are now declared at the beginning of the AI's turn rather than at the beginning of the human player's turn
 #define AUI_DIPLOMACY_AI_FIX_WAR_DECLARATION_IN_MULTIPLAYER
+*/
 /// Turn timers are paused when a player is reconnecting
 #define AUI_GAME_SET_PAUSED_TURN_TIMERS_PAUSE_ON_RECONNECT
-*/
 /// If the player receives a yield from a goody hut, floating text appears above the plot indicating the number and type of yields received
 #define AUI_PLAYER_RECEIVE_GOODY_PLOT_MESSAGE_FOR_YIELD
 /// Disables the check for whether a unit is currently embarked for triggering Denmark's UA, so the pathfinder can use it properly
 #define AUI_UNIT_MOVEMENT_FIX_BAD_VIKING_DISEMBARK_PREVIEW
-/*
 /// The allows water walk check is fixed to no longer trigger if water walk improvements are not built adjacent to each other
 #define AUI_UNIT_MOVEMENT_FIX_BAD_ALLOWS_WATER_WALK_CHECK
 /// Fixes a possible null pointer dereferences in FoundPantheon()
@@ -138,7 +137,6 @@
 #define AUI_ACHIEVEMENT_FIX_RELIGION_WE_ARE_FAMILY_WORKING
 /// Promotions that grant air combat bonuses are now allowed for units with no ability for air combat if the promotion also grants the ability for air combat
 #define AUI_UNIT_FIX_ALLOW_COMBO_AIR_COMBAT_PROMOTIONS
-*/
 /// Fixes radar (Delnar: first bit was covered by GJS, remaining bits are now also covered) 
 #define AUI_ASTAR_FIX_RADAR
 /// Fixes rarer cases of radar
@@ -151,7 +149,6 @@
 */
 /// Fixes Iroquois' UA so friendly forest tiles will now connect with road tiles!
 #define AUI_UNIT_MOVEMENT_IROQUOIS_ROAD_TRANSITION_FIX
-/*
 /// Fixes base heal mod from players not actually increasing base healing
 #define AUI_UNIT_FIX_BASE_HEAL_MOD
 /// If a plot's feature is ignored when calculating the yield of a tile, this also extends to any yield changes based on the working city
@@ -168,68 +165,50 @@
 #define AUI_UNIT_FIX_BAD_BONUS_STACKS
 /// Implements the missing getter for the enemy defender based on the unit in question (rather than the player); this is important for hidden nationality units
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
-*/
 /// Fixes the bug where order-specific hammer bonuses would go into overflow for an order that may not be eligible for those bonuses
- // ------ #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT 
-/*
-#ifndef AUI_YIELDS_APPLIED_AFTER_TURN_NOT_BEFORE
-/// If a city grows or starves a population, it will add any difference in food production after the change to its food supply. Among other things, this means a) the food yields earned by new citizens are evaluated just like all other yields, and b) the food consumption of the new citizen is taken into account on the turn the citizen is added
-#define AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
-/// Food and production earned from a newly constructed building is added into the city's food and production pools, just like how new buildings add onto all other yields the turn they are constructed
-#define AUI_CITY_FIX_DO_PRODUCTION_CONSIDER_FOOD_HAMMERS_FROM_NEW_BUILDING
-#endif
+#define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT 
 /// Domain modifiers to trade route yields now stack multiplicatively with other modifiers instead of additively. Among other things, this fixes Iron Curtain giving a lower-than-expected bonus to naval trade routes
 #define AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
-*/
 /// Free courthouses are no longer removed when puppeting a city
 #define AUI_CITY_FIX_DO_CREATE_PUPPET_FREE_COURTHOUSES_KEPT
 /// Fixes the fact that in simultaneous turns multiplayer, barbarians can spawn and then move units in the same turn.
 #define AUI_GAME_FIX_MULTIPLAYER_BARBARIANS_SPAWN_AFTER_MOVING
-/*
 /// Fixes the bug where a low beaker yield put into an RA would result in an artificially lower beaker reward
 #define AUI_DEAL_FIX_ACCURATE_EARLYGAME_RESEARCH_AGREEMENT_YIELDS
-*/
 /// Automating a unit no longer resets the turn timer (from theCAndeMan)
 #define NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
 /*
 /// If multiple civs have are eligible to found the league, choose a random one instead of the one with the highest slot
 #define AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
+*/
 /// Adds a few more things that are transferred to gifted units (GS beaker count, whether the unit is set up for ranged attacks, how many interceptions the unit has made) and removed some things being applied to gifted units (eg. gifted GP no longer triggers CS quests)
 #define AUI_UNIT_FIX_GIFTED_UNITS_ARE_GIFTED_NOT_CLONED
 /// Fixes a piece of code related to setting tiles around puppets to be worked by the puppet that not only did not work as intended, but could also have strange side-effects as well.
 #define AUI_CITY_FIX_PUPPET_WORKED_PLOT_OVERRIDE
 /// Units that are marked for death no longer generate a ZoC (from RushSecond)
 #define AUI_UNIT_MOVEMENT_FIX_DELAYED_DEATH_UNITS_GENERATE_ZOC
-*/
 /// Fixed the fact that some player-based modifiers to research costs are all only aesthetic, i.e. their only effect before would be to increase the number the UI displays for tech cost (they didn't actually modify tech cost)
 #define AUI_TECH_FIX_PLAYER_BASED_RESEARCH_COST_ONLY_AESTHETIC
 /// Fixed the bug where the production bonus from having a railroad connecting a city to the capital is not removed if the railroad connection is broken (credits to Wr4ith pointing this out after having researched the "weirdness" behind harbors, railroads, and the railroad bonus)
 #define AUI_CITY_FIX_UPDATE_RAILROAD_CONNECTION_ALLOW_REMOVAL
-/*
 /// Civilian units won't even start attempting to path to attack a tile. This should hopefully also fix the occasional problem of civilian units not wanting to move to a specific tile
 #define AUI_UNIT_MISSION_FIX_CONTINUE_MISSION_CIVILIANS_DONT_ATTEMPT_ATTACK
 /// Players are allowed to research if they own a city, they no longer need to found one before researching is unlocked (helps with Germany challenge on maps with CS's)
 #define AUI_PLAYERTECH_FIX_CAN_RESEARCH_WITH_NO_FOUNDED_CITY
-*/
 /// Fixes the bug where building a new improvement on a tile with a pillaged improvement keeps the tile marked as pillaged
 #define AUI_PLOT_FIX_PILLAGED_PLOT_ON_NEW_IMPROVEMENT
-/*
 /// Hovering units will no longer embark on shallow water, but will embark in deep water
 #define AUI_UNIT_FIX_HOVERING_EMBARK
-*/
 /// Research overflow will no longer double-dip with research modifiers (once for the tech that generated it, once for the tech for which it is used). This also stops overflow from multiplying in ways that are exploitable and needed a band-aid fix from Firaxis.
 #define AUI_PLAYER_FIX_NO_RESEARCH_OVERFLOW_DOUBLE_DIP
 /// When war is manually declared by a player against another (i.e. not through a defensive pact), if the defender has any trade routes to the attacker, those trade routes get cancelled instead of destroyed. This applies to both sides of a Defensive Pact DoW.
 #define NQM_TEAM_TRADE_ROUTES_CANCELLED_NOT_DESTROYED_FOR_WAR_DEFENDER_ON_DOW
-/*
 /// If an air unit on intercept duty falls to at or below (value) HP after suffering an air sweep, it will get "knocked out" of intercept mode. This notifies human players of interceptors on low HP and hopefully stops interceptors with multiple intercepts per turn from getting killed from full health by two air sweeps, which stops increased intercepts per turn from being a death sentence
 #define NQM_UNIT_COMBAT_WITHDRAW_INTERCEPT_AFTER_SWEEP_IF_AT_OR_BELOW_TARGET_HEALTH (50)
 /// City-states are banned from building and capturing settlers outright (latter could previously not work), instead of the game relying on mishmash of flavors
 #define AUI_PLAYER_FIX_ENSURE_NO_CS_SETTLER
-*/
 /// Fixes the fact that game speed modifiers are applied twice to units that can blast tourism, i.e. Great Musicians; also fixes other, more rare bugs related to tourism blast strength (credits to FilthyRobot for finding the bug)
 #define AUI_UNIT_FIX_NO_DOUBLE_SPEED_MODIFIER_FOR_TOURISM_BLAST
-/*
 /// Adds an in-game toggleable option that allows players to gift their capitol; this is an alternative to voting someone irrelevant, especially because AIs can also do this, making it easier to conquer a player who already left because they became irrelevant
 #define AUI_DEAL_ALLOW_CAPITOL_GIFTING
 /// Changes a few lines of code so that only settlers are banned for Venice, settling as a whole is not banned (so they can have a separate settling unit)
@@ -244,53 +223,44 @@
 #define AUI_UNIT_FIX_NO_RETREAT_ON_CIVILIAN_GUARD
 /// Fixed cases where moving a friendly unit into the owner's city would pop up an attack city dialogue AND where cities could be radared in unrevealed tiles.
 #define AUI_UNIT_FIX_CAN_MOVE_INTO_CITY_ATTACK_BLOCKER
-*/
 /// Recapturing a city originally owned by a player on the same team will properly no longer cause population losses or razed buildings
 #define AUI_PLAYER_FIX_ACQUIRE_CITY_NO_CITY_LOSSES_ON_RECAPTURE
-/*
 /// Fixed the free experience recomputation function so now wonders that give free experience globally (as opposed to just units built in one city) work properly
 #define AUI_PLAYER_FIX_RECOMPUTE_FREE_EXPERIENCE_GLOBAL_FREE_EXPERIENCE
-*/
 /// Fixed research costs for multi-player teams so that they scale with total team city count, and player-based cost modifiers apply only to the effect their cities have on the total modifier
-// ------ #define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
+#define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
 /// The discount to tech cost awarded for other teams already owning a specific tech can now be toggled via an in-game option
 #define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
-/*
 /// Restores the malus to coup chance if an enemy spy from the CS ally is present in the CS
 #define AUI_ESPIONAGE_FIX_RESTORE_ENEMY_SPY_COUP_MALUS
-*/
 /// Goody hut messages now properly appear for all yields, even if there's no popup
 #define AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
-/*
 /// Relocates all per-city and capitol-based yield changes from CvPlot to CvCity, which means that hundredths will be properly accounted for instead of being rounded down immediately
 #define AUI_PLOT_FIX_CITY_YIELD_CHANGE_RELOCATED
 /// Fixes air sweeping against ground interceptors to show up correctly and properly deal damage to the air unit
 #define AUI_UNIT_COMBAT_FIX_AIR_SWEEP_VS_GROUND_INTERCEPTOR
 /// The "force end turn" control now checks to make sure nothing (invalid) is blocking it
 #define AUI_GAME_FIX_CONTROL_FORCE_END_TURN_CHECKS_FOR_BLOCKING
-/// Fixed a bug where units building a new improvement or road would have 2x build speed on their first turn of building; commented out because it causes issues with the UI
+/// (Disabled because it caused more problems than it fixed) Fixed a bug where units building a new improvement or road would have 2x build speed on their first turn of building; commented out because it causes issues with the UI
 //#define AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
 /// Promotion testing is now done every time a unit's XP is changed, instead of having it manually called all the time
 #define AUI_UNIT_TEST_PROMOTION_READY_MOVED
-*/
 /// If a friendly unit is closer to a blockaded tile than the closest enemy unit, then a tile becomes unblockaded.
 #define AUI_CITY_CITIZENS_COUNTERBLOCKADE
-/*
-/// Citadels can only be captured with a culture bomb if they would have no non-citadel, non-city tiles of friendly culture adjacent to them after the culture bomb
-#define AUI_UNIT_CITADEL_RESISTANT_TO_CULTURE_BOMB
+/// (Disabled because unsure if desirable) Citadels can only be captured with a culture bomb if they would have no non-citadel, non-city tiles of friendly culture adjacent to them after the culture bomb
+//#define AUI_UNIT_CITADEL_RESISTANT_TO_CULTURE_BOMB
 
 // Turn timer stuff
-*/
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
 #define AUI_GAME_RELATIVE_TURN_TIMERS
 /*
 /// New option that pauses the game when an active player disconnects and the game is not sequential
 #define AUI_GAME_AUTOPAUSE_ON_ACTIVE_DISCONNECT_IF_NOT_SEQUENTIAL
+*/
 /// Relaxed the limits on the slice limits before turn timers are forced to expire in network multiplayer games (should help stop resyncs due to last-second moves)
 #define NQM_GAME_MORE_RELAXED_TURN_SLICE_LIMIT_FOR_NETWORK_MULTIPLAYER
 
 // Deliberate AI hindrances
-*/
 /// AI players will no longer spread their religion to other human players' cities
 #define NQM_AI_GIMP_NO_RELIGION_SPREAD
 /// AI players will no longer attempt to build any world wonders or world projects
@@ -299,7 +269,7 @@
 #define NQM_AI_GIMP_ALWAYS_WHITE_PEACE
 /// AI players will not build units that can settle. Also disables "expansion" economic strategies
 #define NQM_AI_GIMP_NO_BUILDING_SETTLERS
-/*
+
 // Observer mode fixes
 /// Observers will see all resources
 #define AUI_PLOT_OBSERVER_SEE_ALL_RESOURCES
@@ -313,7 +283,7 @@
 #define AUI_GAME_OBSERVER_CAN_OPEN_CITIES
 /// All cities are set to be revealed to observers
 #define AUI_CITY_OBSERVER_REVEALS_ALL_CITIES
-*/
+
 // Altered score calculations as an option toggleable in-game
 #define NQM_OPTIONAL_SCORING_TWEAKS
 /*
@@ -326,8 +296,6 @@
 #define NQM_UNIT_FIX_NO_INSTAHEAL_AFTER_PARADROP
 /// Fortifying a unit will only give it a strength boost at the end of the turn. This should only affect simultaneous mode and stops players from fortifying units at the start of the turn for the defensive bonus, then using those units as normal.
 #define NQM_UNIT_FIX_FORTIFY_BONUS_RECEIVED_END_OF_TURN_NOT_INSTANTLY
-/// If the game/player who is in simultaneous mode declares war and the turn timer has less than 60 seconds remaining, it is filled back up to 60 seconds
-//#define NQM_GAME_EXTEND_TURN_TIMER_ON_LAST_MINUTE_WAR_DECLARATION_IF_SIMULTANEOUS
 */
 /// Randomizes the order in which player turns activate in simultaneous mode. E.g. this makes it so that the host no longer wins wonder races against all other players if they finish a wonder the same turn as another player.
 #define NQM_GAME_RANDOMIZE_TURN_ACTIVATION_ORDER_IN_SIMULTANEOUS
@@ -351,26 +319,29 @@
 #define AUI_ASTAR_REMOVE_MALLOC
 /// A* functions no longer run the canEnterTerrain() functions during validation (it should normally be run once and cached, but Firaxis did a bunch of stupids)
 #define AUI_ASTAR_FIX_CAN_ENTER_TERRAIN_NO_DUPLICATE_CALLS
+*/
 /// Moves the check for whether a node has no parent to the beginning of PathValid() (originally from Community Patch)
 #define AUI_ASTAR_FIX_PARENT_NODE_ALWAYS_VALID_OPTIMIZATION
 /// Reorders some checks to make sure ones that process faster get executed first (if they fail, then the function skips checking the slower ones)
 #define AUI_ASTAR_FIX_FASTER_CHECKS
+/*
 /// Calculates the neighbors of a tile on pathfinder initialization instead of at path construction (originally from Community Patch)
 #define AUI_ASTAR_PRECALCULATE_NEIGHBORS_ON_INITIALIZE
 /// Minor A* optimizations
 #define AUI_ASTAR_MINOR_OPTIMIZATION
 /// Pathfinders now have a built-in turn limiter that invalidates too long paths they are being built instead of after the best path has been calculated (also enables calculating turns to a target from a plot other than the unit's current plot)
 #define AUI_ASTAR_TURN_LIMITER
-/// Gets the last node before the parent (used for planning melee attacks to know where they'd attack from)
-#define AUI_ASTAR_GET_PENULTIMATE_NODE
+*/
 /// Fixes possible null pointer dereferences in A*
 #define AUI_ASTAR_FIX_POSSIBLE_NULL_POINTERS
 /// Human-controlled missionaries and units will still want to avoid undesirable tiles a bit when planning paths, though not to the full extent that an AI-controlled unit would (parameter value is the extra "cost" weight added)
 #define AUI_ASTAR_HUMAN_UNITS_GET_DIMINISHED_AVOID_WEIGHT (1)
+/*
 /// Pointers to the plot representing each A* node are stored in the A* node in question
 #define AUI_ASTAR_CACHE_PLOTS_AT_NODES
 /// Adds a new function that is a middle-of-the-road fix for allowing the functions to take account of roads and railroads without calling pathfinder too often
 #define AUI_ASTAR_TWEAKED_OPTIMIZED_BUT_CAN_STILL_USE_ROADS
+*/
 /// The danger of a tile will only be considered when checking path nodes, not when checking the destination (stops units from freezing in panic)
 #define AUI_ASTAR_FIX_CONSIDER_DANGER_ONLY_PATH
 /// The path's destination's danger value will be considered instead of the original plot's danger value, otherwise we're just immobilizing AI units (oddly enough, the Civ4 algorithm is fine, only the Civ5 ones needed to be fixed)
@@ -455,13 +426,15 @@
 #define AUI_DANGER_PLOTS_IS_DANGER_BY_RELATIONSHIP_ZERO_MINORS_DO_NOT_IGNORE_TRESSPASSERS
 /// Fixes bad code for visible barbarian units adding to "barbarian threat" value (affects CS)
 #define AUI_MILITARY_FIX_BARBARIAN_THREAT
+/*
 /// If the AI's religion now unlocks multiple faith buildings, AI can now purchase all of them
 #define AUI_RELIGION_FIX_MULTIPLE_FAITH_BUILDINGS
+*/
 /// Fixes the check for whether ranged damage would be more than heal rate to use >= instead of >, adds a flat value to total damage at start (both make up for randomness), and treats cities as an expected damage source instead of a flat "yes"
 #define AUI_UNIT_FIX_UNDER_ENEMY_RANGED_ATTACK_HEALRATE (1)
 /// The AI will consider promises it made not to convert cities of a player when choosing a prophet conversion target
 #define AUI_RELIGION_FIX_CHOOSE_PROPHET_CONVERSION_CITY_HONOR_NONCONVERT_PROMISE
-
+/*
 // Flavor system changes (affect CS build queue and puppet build queue)
 /// Free buildings and units that a building would generate are factored into the flavor
 #define AUI_BUILDING_PRODUCTION_AI_CONSIDER_FREE_STUFF
@@ -469,6 +442,7 @@
 //#define AUI_POLICY_BUILDING_CLASS_FLAVOR_MODIFIERS
 /// Beliefs can now alter the flavors of certain buildingclasses
 //#define AUI_BELIEF_BUILDING_CLASS_FLAVOR_MODIFIERS
+*/
 
 // Citizen Management Fixes
 /// Extra food value assigned to specialists for half food consumption now depends on the XML value for citizen food consumption (instead of assuming the default value)
@@ -631,8 +605,10 @@
 #define AUI_HOMELAND_PLOT_WORKER_MOVES_ALSO_PLOTS_WORKER_DEFENSE
 
 // Voting/League AI Stuff for when a player is defeated but their AI can still vote on proposals
+/*
 /// When voting for a player, the AI will now adjust for the fact that the voting system is First-Past-The-Post (so it will try to vote against players as well)
 #define AUI_VOTING_SCORE_VOTING_CHOICE_PLAYER_ADJUST_FOR_FPTP
+*/
 /// Uses a different algorithm for scoring voting on world ideology
 #define AUI_VOTING_TWEAKED_WORLD_IDEOLOGY
 /// Uses a different algorithm for scoring voting on world religion
@@ -649,7 +625,6 @@
 // Weird stuff
 /// Adds ranged counterattacks to the game, toggleable for now via in-game option
 #define DEL_RANGED_COUNTERATTACKS
-*/
 
 // GlobalDefines (GD) wrappers
 // INT

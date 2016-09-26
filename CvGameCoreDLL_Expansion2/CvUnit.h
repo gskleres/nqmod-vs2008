@@ -948,6 +948,7 @@ public:
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
 	int GetHeavyChargeDownhill() const;
 	void ChangeHeavyChargeDownhill(int iChange);
+	bool IsCanHeavyCharge(const CvPlot* pFromPlot, const CvPlot* pToPlot) const;
 #endif
 
 	int getFriendlyLandsModifier() const;

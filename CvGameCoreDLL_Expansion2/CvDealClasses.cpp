@@ -205,9 +205,6 @@ CvDeal::CvDeal(const CvDeal& source)
 /// Destructor
 CvDeal::~CvDeal()
 {
-#ifdef AUI_EXPLICIT_DESTRUCTION
-	m_TradedItems.clear();
-#endif
 }
 
 /// Overloaded assignment operator
@@ -2263,9 +2260,6 @@ CvGameDeals::~CvGameDeals()
 	}
 
 	m_Deals.clear();
-#ifdef AUI_EXPLICIT_DESTRUCTION
-	Init(); //clears all the deal lists
-#endif
 }
 
 /// Initialize
