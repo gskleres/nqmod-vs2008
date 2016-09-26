@@ -166,7 +166,7 @@
 /// Implements the missing getter for the enemy defender based on the unit in question (rather than the player); this is important for hidden nationality units
 #define AUI_PLOT_GET_VISIBLE_ENEMY_DEFENDER_TO_UNIT
 /// Fixes the bug where order-specific hammer bonuses would go into overflow for an order that may not be eligible for those bonuses
-// ------ #define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT 
+#define AUI_CITY_FIX_DO_PRODUCTION_NO_OVERFLOW_EXPLOIT 
 /// Domain modifiers to trade route yields now stack multiplicatively with other modifiers instead of additively. Among other things, this fixes Iron Curtain giving a lower-than-expected bonus to naval trade routes
 #define AUI_TRADE_FIX_CONNECTION_VALUE_MULTIPLICATIVE_STACKING_DOMAIN_MODIFIERS
 /// Free courthouses are no longer removed when puppeting a city
