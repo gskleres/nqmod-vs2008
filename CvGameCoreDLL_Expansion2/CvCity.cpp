@@ -5096,7 +5096,7 @@ int CvCity::GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts)
 
 	// Make the number not be funky
 #ifdef NQ_FAITH_COST_ROUNDS_TO_NEAREST_5
-	iCost /= 5;
+	iCost /= 5; // TODO: This should be put into XML as FAITH_PURCHASE_VISIBLE_DIVISOR();
 	iCost *= 5;
 #else
 	int iDivisor = /*10*/ GC.getGOLD_PURCHASE_VISIBLE_DIVISOR();

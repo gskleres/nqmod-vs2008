@@ -2,14 +2,6 @@
 <!-- Created by ModBuddy on 6/10/2015 6:13:01 AM -->
 <GameData>
 
-	<!-- Move Swords To Plowshares to Reformation belief -->
-	<Beliefs>
-		<Update>
-			<Set Follower="false" Reformation="true" />
-			<Where Type="BELIEF_SWORD_PLOWSHARES" />
-		</Update>
-	</Beliefs>
-
 	<!-- *** CHANGE EXISTING FOLLOWER BELIEFS *** -->
 	
 	<!-- Feed The World: Provides +2 Food from Temples (instead of +1). -->
@@ -189,46 +181,6 @@
 		<Delete Tag="TXT_KEY_BELIEF_RELIGIOUS_CENTER" />
 		<Row Tag="TXT_KEY_BELIEF_RELIGIOUS_CENTER">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Temples provide +1 [ICON_HAPPINESS_1] Happiness, +1 [ICON_PRODUCTION] Production, and +1 Gold [ICON_GOLD] in cities with 5 followers</Text>
-		</Row>
-	</Language_RU_RU>
-
-
-	<!-- Swords Into Plowshares: Now provides +1 Food and +25% Growth without a Peace requirement (instead of just +15% Growth while at Peace). -->
-	<Beliefs>
-		<Update>
-			<Set RequiresPeace="false" CityGrowthModifier="25" />
-			<Where Type="BELIEF_SWORD_PLOWSHARES" />
-		</Update>
-	</Beliefs>
-	<Belief_CityYieldChanges>
-		<Row>
-			<BeliefType>BELIEF_SWORD_PLOWSHARES</BeliefType>
-			<YieldType>YIELD_FOOD</YieldType>
-			<Yield>1</Yield>
-		</Row>
-	</Belief_CityYieldChanges>
-	<Language_en_US>
-		<Delete Tag="TXT_KEY_BELIEF_SWORD_PLOWSHARES" />
-		<Row Tag="TXT_KEY_BELIEF_SWORD_PLOWSHARES">
-			<Text>+1 [ICON_FOOD] Food and 25% faster [ICON_FOOD] Growth Rate for all cities</Text>
-		</Row>
-	</Language_en_US>
-	<Language_DE_DE>
-		<Delete Tag="TXT_KEY_BELIEF_SWORD_PLOWSHARES" />
-		<Row Tag="TXT_KEY_BELIEF_SWORD_PLOWSHARES">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_FOOD] Food and 25% faster [ICON_FOOD] Growth Rate for all cities</Text>
-		</Row>
-	</Language_DE_DE>
-	<Language_PL_PL>
-		<Delete Tag="TXT_KEY_BELIEF_SWORD_PLOWSHARES" />
-		<Row Tag="TXT_KEY_BELIEF_SWORD_PLOWSHARES">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_FOOD] Food and 25% faster [ICON_FOOD] Growth Rate for all cities</Text>
-		</Row>
-	</Language_PL_PL>
-	<Language_RU_RU>
-		<Delete Tag="TXT_KEY_BELIEF_SWORD_PLOWSHARES" />
-		<Row Tag="TXT_KEY_BELIEF_SWORD_PLOWSHARES">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_FOOD] Food and 25% faster [ICON_FOOD] Growth Rate for all cities</Text>
 		</Row>
 	</Language_RU_RU>
 

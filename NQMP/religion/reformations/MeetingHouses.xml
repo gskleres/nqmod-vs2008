@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2016-09-26 23:38:28 -->
+<GameData>
+
+	<!-- May purchase Churches (+1 Faith, +1 Happiness), Chapels (+1 Culture, +1 Happiness), and Chantries (+1 Gold, +1 Happiness) with Faith. -->
+	<Beliefs>
+		<Row>
+			<Type>BELIEF_NQ_MEETING_HOUSES</Type>
+			<Description>TXT_KEY_BELIEF_NQ_MEETING_HOUSES</Description>
+			<ShortDescription>TXT_KEY_BELIEF_NQ_MEETING_HOUSES_SHORT</ShortDescription>
+			<Reformation>true</Reformation>
+		</Row>
+	</Beliefs>
+	<Belief_BuildingClassFaithPurchase>
+		<Row>
+			<BeliefType>BELIEF_NQ_MEETING_HOUSES</BeliefType>
+			<BuildingClassType>BUILDINGCLASS_CHURCH</BuildingClassType>
+		</Row>
+		<Row>
+			<BeliefType>BELIEF_NQ_MEETING_HOUSES</BeliefType>
+			<BuildingClassType>BUILDINGCLASS_CHAPEL</BuildingClassType>
+		</Row>
+		<Row>
+			<BeliefType>BELIEF_NQ_MEETING_HOUSES</BeliefType>
+			<BuildingClassType>BUILDINGCLASS_CHANTRY</BuildingClassType>
+		</Row>
+	</Belief_BuildingClassFaithPurchase>
+
+	<!-- Church, Chapel, and Chantry buildings -->
+	<BuildingClasses>
+		<Row>
+			<Type>BUILDINGCLASS_CHURCH</Type>
+			<DefaultBuilding>BUILDING_CHURCH</DefaultBuilding>
+			<Description>TXT_KEY_BUILDING_CHURCH</Description>
+		</Row>
+		<Row>
+			<Type>BUILDINGCLASS_CHAPEL</Type>
+			<DefaultBuilding>BUILDING_CHAPEL</DefaultBuilding>
+			<Description>TXT_KEY_BUILDING_CHAPEL</Description>
+		</Row>
+		<Row>
+			<Type>BUILDINGCLASS_CHANTRY</Type>
+			<DefaultBuilding>BUILDING_CHANTRY</DefaultBuilding>
+			<Description>TXT_KEY_BUILDING_CHANTRY</Description>
+		</Row>
+	</BuildingClasses>
+	<Buildings>
+		<Row>
+			<Type>BUILDING_CHURCH</Type>
+			<BuildingClass>BUILDINGCLASS_CHURCH</BuildingClass>
+			<Cost>-1</Cost>
+			<FaithCost>150</FaithCost>
+			<UnlockedByBelief>true</UnlockedByBelief>
+			<Description>TXT_KEY_BUILDING_CHURCH</Description>
+			<Civilopedia>TXT_KEY_CIV5_BUILDINGS_CHURCH_TEXT</Civilopedia>
+			<Strategy>TXT_KEY_BUILDING_NQ_MEETING_HOUSES_STRATEGY</Strategy>
+			<ConquestProb>100</ConquestProb>
+			<ArtDefineTag>TEMPLE</ArtDefineTag>
+			<MinAreaSize>-1</MinAreaSize>
+			<PortraitIndex>61</PortraitIndex>
+			<IconAtlas>BW_ATLAS_1</IconAtlas>
+			<Happiness>1</Happiness>
+		</Row>
+		<Row>
+			<Type>BUILDING_CHAPEL</Type>
+			<BuildingClass>BUILDINGCLASS_CHAPEL</BuildingClass>
+			<Cost>-1</Cost>
+			<FaithCost>150</FaithCost>
+			<UnlockedByBelief>true</UnlockedByBelief>
+			<Description>TXT_KEY_BUILDING_CHAPEL</Description>
+			<Civilopedia>TXT_KEY_CIV5_BUILDINGS_CHAPEL_TEXT</Civilopedia>
+			<Strategy>TXT_KEY_BUILDING_NQ_MEETING_HOUSES_STRATEGY</Strategy>
+			<ConquestProb>100</ConquestProb>
+			<ArtDefineTag>TEMPLE</ArtDefineTag>
+			<MinAreaSize>-1</MinAreaSize>
+			<PortraitIndex>61</PortraitIndex>
+			<IconAtlas>BW_ATLAS_1</IconAtlas>
+			<Happiness>1</Happiness>
+		</Row>
+		<Row>
+			<Type>BUILDING_CHANTRY</Type>
+			<BuildingClass>BUILDINGCLASS_CHANTRY</BuildingClass>
+			<Cost>-1</Cost>
+			<FaithCost>150</FaithCost>
+			<UnlockedByBelief>true</UnlockedByBelief>
+			<Description>TXT_KEY_BUILDING_CHANTRY</Description>
+			<Civilopedia>TXT_KEY_CIV5_BUILDINGS_CHANTRY_TEXT</Civilopedia>
+			<Strategy>TXT_KEY_BUILDING_NQ_MEETING_HOUSES_STRATEGY</Strategy>
+			<ConquestProb>100</ConquestProb>
+			<ArtDefineTag>TEMPLE</ArtDefineTag>
+			<MinAreaSize>-1</MinAreaSize>
+			<PortraitIndex>61</PortraitIndex>
+			<IconAtlas>BW_ATLAS_1</IconAtlas>
+			<Happiness>1</Happiness>
+		</Row>
+	</Buildings>
+	<Building_Flavors>
+		<Row>
+			<BuildingType>BUILDING_CHURCH</BuildingType>
+			<FlavorType>FLAVOR_RELIGION</FlavorType>
+			<Flavor>2</Flavor>
+		</Row>
+		<Row>
+			<BuildingType>BUILDING_CHURCH</BuildingType>
+			<FlavorType>FLAVOR_HAPPINESS</FlavorType>
+			<Flavor>2</Flavor>
+		</Row>
+		<Row>
+			<BuildingType>BUILDING_CHAPEL</BuildingType>
+			<FlavorType>FLAVOR_CULTURE</FlavorType>
+			<Flavor>2</Flavor>
+		</Row>
+		<Row>
+			<BuildingType>BUILDING_CHAPEL</BuildingType>
+			<FlavorType>FLAVOR_HAPPINESS</FlavorType>
+			<Flavor>2</Flavor>
+		</Row>
+		<Row>
+			<BuildingType>BUILDING_CHANTRY</BuildingType>
+			<FlavorType>FLAVOR_GOLD</FlavorType>
+			<Flavor>2</Flavor>
+		</Row>
+		<Row>
+			<BuildingType>BUILDING_CHANTRY</BuildingType>
+			<FlavorType>FLAVOR_HAPPINESS</FlavorType>
+			<Flavor>2</Flavor>
+		</Row>
+	</Building_Flavors>
+	<Building_YieldChanges>
+		<Row>
+			<BuildingType>BUILDING_CHURCH</BuildingType>
+			<YieldType>YIELD_FAITH</YieldType>
+			<Yield>1</Yield>
+		</Row>
+		<Row>
+			<BuildingType>BUILDING_CHAPEL</BuildingType>
+			<YieldType>YIELD_CULTURE</YieldType>
+			<Yield>1</Yield>
+		</Row>
+		<Row>
+			<BuildingType>BUILDING_CHANTRY</BuildingType>
+			<YieldType>YIELD_GOLD</YieldType>
+			<Yield>1</Yield>
+		</Row>
+	</Building_YieldChanges>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Row Tag="TXT_KEY_BELIEF_NQ_MEETING_HOUSES">
+			<Text>Use [ICON_PEACE] Faith to purchase Churches (+1 [ICON_PEACE] Faith, +1 [ICON_HAPPINESS_1] Happiness), Chapels (+1 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness), and Chantries (+1 [ICON_GOLD] Gold, +1 [ICON_HAPPINESS_1] Happiness)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_NQ_MEETING_HOUSES_SHORT">
+			<Text>Meeting Houses</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHURCH">
+			<Text>Church</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHURCH_TEXT">
+			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Church_(building))[ENDCOLOR][NEWLINE][NEWLINE]A church building, often simply called a church, is a building used for Christian religious activities, particularly worship services. The term in its architectural sense is most often used by Christians to refer to their religious buildings, but it is sometimes used (by analogy) for buildings of other religions. In traditional Christian architecture, the church is often arranged in the shape of a Christian cross. When viewed from plan view the longest part of a cross is represented by the aisle and the junction of the cross is located at the altar area.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHAPEL">
+			<Text>Chapel</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHAPEL_TEXT">
+			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Chapel)[ENDCOLOR][NEWLINE][NEWLINE]A chapel is a religious place of fellowship, prayer and worship that is attached to a larger, often nonreligious institution or that is considered an extension of a primary religious institution. It may be part of a larger structure or complex, such as a college, hospital, palace, prison, funeral home, church, synagogue or mosque, located on board a military or commercial ship, or it may be an entirely free-standing building, sometimes with its own grounds. Many military installations have chapels for the use of military personnel, normally under the leadership of a military chaplain.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHANTRY">
+			<Text>Chantry</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHANTRY_TEXT">
+			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Chantry)[ENDCOLOR][NEWLINE][NEWLINE]A chantry or (from Latin) obiit ("he has departed"; may also refer to the mass or masses themselves) was a form of trust fund established during the pre-Reformation medieval era in England for the purpose of employing one or more priests to sing a stipulated number of masses for the benefit of the soul of a specified deceased person, usually the donor who had established the chantry in his will, during a stipulated period of time immediately following his death. It was believed such masses would speed the deceased's soul through its undesirable and indeterminate period in Purgatory onwards to eternal rest in Heaven. Clearly once the soul had reached Heaven the ideal state for the Christian human soul had been attained, and the saying of masses would serve no further function. Thus the concept of Purgatory was central to the perceived need for chantries. Chantries were commonly established in England and were endowed with lands, rents from specified properties and other assets by the donor, usually in his will. The income from these assets maintained the chantry priest.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_NQ_MEETING_HOUSES_STRATEGY">
+			<Text>Can only be built in cities following a religion with the Meeting Houses belief. Construct this building by purchasing it with [ICON_PEACE] Faith.</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_BELIEF_NQ_MEETING_HOUSES">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Churches (+1 [ICON_PEACE] Faith, +1 [ICON_HAPPINESS_1] Happiness), Chapels (+1 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness), and Chantries (+1 [ICON_GOLD] Gold, +1 [ICON_HAPPINESS_1] Happiness)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_NQ_MEETING_HOUSES_SHORT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Meeting Houses</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHURCH">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Church</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHURCH_TEXT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Church_(building))[ENDCOLOR][NEWLINE][NEWLINE]A church building, often simply called a church, is a building used for Christian religious activities, particularly worship services. The term in its architectural sense is most often used by Christians to refer to their religious buildings, but it is sometimes used (by analogy) for buildings of other religions. In traditional Christian architecture, the church is often arranged in the shape of a Christian cross. When viewed from plan view the longest part of a cross is represented by the aisle and the junction of the cross is located at the altar area.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHAPEL">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Chapel</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHAPEL_TEXT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Chapel)[ENDCOLOR][NEWLINE][NEWLINE]A chapel is a religious place of fellowship, prayer and worship that is attached to a larger, often nonreligious institution or that is considered an extension of a primary religious institution. It may be part of a larger structure or complex, such as a college, hospital, palace, prison, funeral home, church, synagogue or mosque, located on board a military or commercial ship, or it may be an entirely free-standing building, sometimes with its own grounds. Many military installations have chapels for the use of military personnel, normally under the leadership of a military chaplain.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHANTRY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Chantry</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHANTRY_TEXT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Chantry)[ENDCOLOR][NEWLINE][NEWLINE]A chantry or (from Latin) obiit ("he has departed"; may also refer to the mass or masses themselves) was a form of trust fund established during the pre-Reformation medieval era in England for the purpose of employing one or more priests to sing a stipulated number of masses for the benefit of the soul of a specified deceased person, usually the donor who had established the chantry in his will, during a stipulated period of time immediately following his death. It was believed such masses would speed the deceased's soul through its undesirable and indeterminate period in Purgatory onwards to eternal rest in Heaven. Clearly once the soul had reached Heaven the ideal state for the Christian human soul had been attained, and the saying of masses would serve no further function. Thus the concept of Purgatory was central to the perceived need for chantries. Chantries were commonly established in England and were endowed with lands, rents from specified properties and other assets by the donor, usually in his will. The income from these assets maintained the chantry priest.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_NQ_MEETING_HOUSES_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Can only be built in cities following a religion with the Meeting Houses belief. Construct this building by purchasing it with [ICON_PEACE] Faith.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_BELIEF_NQ_MEETING_HOUSES">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Churches (+1 [ICON_PEACE] Faith, +1 [ICON_HAPPINESS_1] Happiness), Chapels (+1 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness), and Chantries (+1 [ICON_GOLD] Gold, +1 [ICON_HAPPINESS_1] Happiness)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_NQ_MEETING_HOUSES_SHORT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Meeting Houses</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHURCH">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Church</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHURCH_TEXT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Church_(building))[ENDCOLOR][NEWLINE][NEWLINE]A church building, often simply called a church, is a building used for Christian religious activities, particularly worship services. The term in its architectural sense is most often used by Christians to refer to their religious buildings, but it is sometimes used (by analogy) for buildings of other religions. In traditional Christian architecture, the church is often arranged in the shape of a Christian cross. When viewed from plan view the longest part of a cross is represented by the aisle and the junction of the cross is located at the altar area.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHAPEL">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Chapel</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHAPEL_TEXT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Chapel)[ENDCOLOR][NEWLINE][NEWLINE]A chapel is a religious place of fellowship, prayer and worship that is attached to a larger, often nonreligious institution or that is considered an extension of a primary religious institution. It may be part of a larger structure or complex, such as a college, hospital, palace, prison, funeral home, church, synagogue or mosque, located on board a military or commercial ship, or it may be an entirely free-standing building, sometimes with its own grounds. Many military installations have chapels for the use of military personnel, normally under the leadership of a military chaplain.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHANTRY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Chantry</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHANTRY_TEXT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Chantry)[ENDCOLOR][NEWLINE][NEWLINE]A chantry or (from Latin) obiit ("he has departed"; may also refer to the mass or masses themselves) was a form of trust fund established during the pre-Reformation medieval era in England for the purpose of employing one or more priests to sing a stipulated number of masses for the benefit of the soul of a specified deceased person, usually the donor who had established the chantry in his will, during a stipulated period of time immediately following his death. It was believed such masses would speed the deceased's soul through its undesirable and indeterminate period in Purgatory onwards to eternal rest in Heaven. Clearly once the soul had reached Heaven the ideal state for the Christian human soul had been attained, and the saying of masses would serve no further function. Thus the concept of Purgatory was central to the perceived need for chantries. Chantries were commonly established in England and were endowed with lands, rents from specified properties and other assets by the donor, usually in his will. The income from these assets maintained the chantry priest.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_NQ_MEETING_HOUSES_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Can only be built in cities following a religion with the Meeting Houses belief. Construct this building by purchasing it with [ICON_PEACE] Faith.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_BELIEF_NQ_MEETING_HOUSES">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Churches (+1 [ICON_PEACE] Faith, +1 [ICON_HAPPINESS_1] Happiness), Chapels (+1 [ICON_CULTURE] Culture, +1 [ICON_HAPPINESS_1] Happiness), and Chantries (+1 [ICON_GOLD] Gold, +1 [ICON_HAPPINESS_1] Happiness)</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_NQ_MEETING_HOUSES_SHORT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Meeting Houses</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHURCH">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Church</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHURCH_TEXT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Church_(building))[ENDCOLOR][NEWLINE][NEWLINE]A church building, often simply called a church, is a building used for Christian religious activities, particularly worship services. The term in its architectural sense is most often used by Christians to refer to their religious buildings, but it is sometimes used (by analogy) for buildings of other religions. In traditional Christian architecture, the church is often arranged in the shape of a Christian cross. When viewed from plan view the longest part of a cross is represented by the aisle and the junction of the cross is located at the altar area.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHAPEL">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Chapel</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHAPEL_TEXT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Chapel)[ENDCOLOR][NEWLINE][NEWLINE]A chapel is a religious place of fellowship, prayer and worship that is attached to a larger, often nonreligious institution or that is considered an extension of a primary religious institution. It may be part of a larger structure or complex, such as a college, hospital, palace, prison, funeral home, church, synagogue or mosque, located on board a military or commercial ship, or it may be an entirely free-standing building, sometimes with its own grounds. Many military installations have chapels for the use of military personnel, normally under the leadership of a military chaplain.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_CHANTRY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Chantry</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_BUILDINGS_CHANTRY_TEXT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Chantry)[ENDCOLOR][NEWLINE][NEWLINE]A chantry or (from Latin) obiit ("he has departed"; may also refer to the mass or masses themselves) was a form of trust fund established during the pre-Reformation medieval era in England for the purpose of employing one or more priests to sing a stipulated number of masses for the benefit of the soul of a specified deceased person, usually the donor who had established the chantry in his will, during a stipulated period of time immediately following his death. It was believed such masses would speed the deceased's soul through its undesirable and indeterminate period in Purgatory onwards to eternal rest in Heaven. Clearly once the soul had reached Heaven the ideal state for the Christian human soul had been attained, and the saying of masses would serve no further function. Thus the concept of Purgatory was central to the perceived need for chantries. Chantries were commonly established in England and were endowed with lands, rents from specified properties and other assets by the donor, usually in his will. The income from these assets maintained the chantry priest.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_NQ_MEETING_HOUSES_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Can only be built in cities following a religion with the Meeting Houses belief. Construct this building by purchasing it with [ICON_PEACE] Faith.</Text>
+		</Row>
+	</Language_RU_RU>
+	
+</GameData>
