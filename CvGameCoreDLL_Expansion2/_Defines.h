@@ -681,5 +681,13 @@
 // This is a huge cheat so I don't have to code a whole new table for "fake features" of which lakes are labeled.
 // In NQMod, ice has no belief bonuses, and so I'm overriding FEATURE_ICE to be used for lakes instead.
 #define NQ_LAKE_BELIEF_BONUSES
+// extra missionary spreads from religious belief
+#define NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+// free units from beliefs
+#define NQ_SHEPHERD_AND_FLOCK
+// missionary cost reduction now only affects founder of religion and no longer applies to inquisitors
+#define NQ_FIX_MISSIONARY_COST_MODIFIER_BELIEF
+// faith costs now rounded to 5 instead of 10
+#define NQ_FAITH_COST_ROUNDS_TO_NEAREST_5
 
 #endif

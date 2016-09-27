@@ -2,14 +2,8 @@
 <!-- Created by ModBuddy on 2016-09-24 14:15:24 -->
 <GameData>
 
-	<!-- +2 Food, +2 Production, +2 Gold, +2 Culture, and +2 Faith in the Capital. -->
+	<!-- +2 Production, +2 Gold, +2 Culture, and +2 Faith in the Capital. -->
 	<Belief_BuildingClassYieldChanges>
-		<Row>
-			<BeliefType>BELIEF_GOD_KING</BeliefType>
-			<BuildingClassType>BUILDINGCLASS_PALACE</BuildingClassType>
-			<YieldType>YIELD_FOOD</YieldType>
-			<YieldChange>2</YieldChange>
-		</Row>
 		<Update>
 			<Set YieldChange="2" />
 			<Where BeliefType="BELIEF_GOD_KING" BuildingClassType="BUILDINGCLASS_PALACE" YieldType="YIELD_PRODUCTION" />
@@ -36,25 +30,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BELIEF_GOD_KING" />
 		<Row Tag="TXT_KEY_BELIEF_GOD_KING">
-			<Text>Palace provides +2 [ICON_FOOD] Food, +2 [ICON_PRODUCTION] Production, +2 [ICON_GOLD] Gold, +2 [ICON_CULTURE] Culture, and +2 [ICON_PEACE] Faith</Text>
+			<Text>Palace provides +2 [ICON_PRODUCTION] Production, +2 [ICON_GOLD] Gold, +2 [ICON_CULTURE] Culture, and +2 [ICON_PEACE] Faith</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BELIEF_GOD_KING" />
 		<Row Tag="TXT_KEY_BELIEF_GOD_KING">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Palace provides +2 [ICON_FOOD] Food, +2 [ICON_PRODUCTION] Production, +2 [ICON_GOLD] Gold, +2 [ICON_CULTURE] Culture, and +2 [ICON_PEACE] Faith</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Palace provides +2 [ICON_PRODUCTION] Production, +2 [ICON_GOLD] Gold, +2 [ICON_CULTURE] Culture, and +2 [ICON_PEACE] Faith</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BELIEF_GOD_KING" />
 		<Row Tag="TXT_KEY_BELIEF_GOD_KING">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Palace provides +2 [ICON_FOOD] Food, +2 [ICON_PRODUCTION] Production, +2 [ICON_GOLD] Gold, +2 [ICON_CULTURE] Culture, and +2 [ICON_PEACE] Faith</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Palace provides +2 [ICON_PRODUCTION] Production, +2 [ICON_GOLD] Gold, +2 [ICON_CULTURE] Culture, and +2 [ICON_PEACE] Faith</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BELIEF_GOD_KING" />
 		<Row Tag="TXT_KEY_BELIEF_GOD_KING">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Palace provides +2 [ICON_FOOD] Food, +2 [ICON_PRODUCTION] Production, +2 [ICON_GOLD] Gold, +2 [ICON_CULTURE] Culture, and +2 [ICON_PEACE] Faith</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Palace provides +2 [ICON_PRODUCTION] Production, +2 [ICON_GOLD] Gold, +2 [ICON_CULTURE] Culture, and +2 [ICON_PEACE] Faith</Text>
 		</Row>
 	</Language_RU_RU>
 

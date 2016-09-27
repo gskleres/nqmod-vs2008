@@ -58,6 +58,9 @@ public:
 	int GetProphetStrengthModifier() const;
 	int GetProphetCostModifier() const;
 	int GetMissionaryStrengthModifier() const;
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	int GetMissionaryExtraSpreads() const;
+#endif
 	int GetMissionaryCostModifier() const;
 	int GetFriendlyCityStateSpreadModifier() const;
 	int GetGreatPersonExpendedFaith() const;
@@ -75,6 +78,9 @@ public:
 	bool IsReformationBelief() const;
 	bool RequiresPeace() const;
 	bool ConvertsBarbarians() const;
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	bool ShepherdAndFlock() const;
+#endif
 	bool FaithPurchaseAllGreatPeople() const;
 
 	EraTypes GetObsoleteEra() const;
@@ -144,6 +150,9 @@ protected:
 	int m_iProphetStrengthModifier;
 	int m_iProphetCostModifier;
 	int m_iMissionaryStrengthModifier;
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	int m_iMissionaryExtraSpreads;
+#endif
 	int m_iMissionaryCostModifier;
 	int m_iFriendlyCityStateSpreadModifier;
 	int m_iGreatPersonExpendedFaith;
@@ -161,6 +170,9 @@ protected:
 	bool m_bReformer;
 	bool m_bRequiresPeace;
 	bool m_bConvertsBarbarians;
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	bool m_bShepherdAndFlock;
+#endif
 	bool m_bFaithPurchaseAllGreatPeople;
 
 	EraTypes m_eObsoleteEra;
@@ -322,6 +334,12 @@ public:
 	{
 		return m_iMissionaryStrengthModifier;
 	};
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	int GetMissionaryExtraSpreads() const
+	{
+		return m_iMissionaryExtraSpreads;
+	};
+#endif
 	int GetMissionaryCostModifier() const
 	{
 		return m_iMissionaryCostModifier;
@@ -411,6 +429,9 @@ public:
 	bool IsBuildingClassEnabled(BuildingClassTypes eType) const;
 	bool IsFaithBuyingEnabled(EraTypes eEra) const;
 	bool IsConvertsBarbarians() const;
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	bool IsShepherdAndFlock() const;
+#endif
 	bool IsFaithPurchaseAllGreatPeople() const;
 
 	// Serialization
@@ -433,6 +454,9 @@ private:
 	int m_iProphetStrengthModifier;
 	int m_iProphetCostModifier;
 	int m_iMissionaryStrengthModifier;
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+	int m_iMissionaryExtraSpreads;
+#endif
 	int m_iMissionaryCostModifier;
 	int m_iFriendlyCityStateSpreadModifier;
 	int m_iGreatPersonExpendedFaith;

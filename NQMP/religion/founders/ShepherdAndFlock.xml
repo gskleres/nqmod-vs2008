@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2016-09-25 05:44:53 -->
+<GameData>
+
+	<!-- Gain a Missionary, 2 Settlers, and 2 Workers. -->
+	<Beliefs>
+		<Row>
+			<Type>BELIEF_SHEPHERD_FLOCK</Type>
+			<Description>TXT_KEY_BELIEF_SHEPHERD_FLOCK</Description>
+			<ShortDescription>TXT_KEY_BELIEF_SHEPHERD_FLOCK_SHORT</ShortDescription>
+			<Founder>true</Founder>
+			<ShepherdAndFlock>true</ShepherdAndFlock>
+		</Row>
+	</Beliefs>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Row Tag="TXT_KEY_BELIEF_SHEPHERD_FLOCK">
+			<Text>Gain a Missionary, 2 Settlers, and 2 Workers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_SHEPHERD_FLOCK_SHORT">
+			<Text>Shepherd and Flock</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_BELIEF_SHEPHERD_FLOCK">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Gain a Missionary, 2 Settlers, and 2 Workers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_SHEPHERD_FLOCK_SHORT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Shepherd and Flock</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_BELIEF_SHEPHERD_FLOCK">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Gain a Missionary, 2 Settlers, and 2 Workers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_SHEPHERD_FLOCK_SHORT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Shepherd and Flock</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_BELIEF_SHEPHERD_FLOCK">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Gain a Missionary, 2 Settlers, and 2 Workers</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BELIEF_SHEPHERD_FLOCK_SHORT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Shepherd and Flock</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>

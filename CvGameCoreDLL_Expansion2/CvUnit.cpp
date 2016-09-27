@@ -657,7 +657,25 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 			if (eReligion > RELIGION_PANTHEON)
 			{
 				GetReligionData()->SetReligion(eReligion);
+#ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+				int iSpreadsLeft = getUnitInfo().GetReligionSpreads();
+				if (!getUnitInfo().IsFoundReligion())
+				{
+					iSpreadsLeft += pPlotCity->GetCityBuildings()->GetMissionaryExtraSpreads();
+					
+					// only your missionaries of your religion get this boost
+					ReligionTypes eFoundedReligion = GC.getGame().GetGameReligions()->GetFounderBenefitsReligion(kPlayer.GetID());
+					if(eFoundedReligion == eReligion)
+					{
+						const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eFoundedReligion, NO_PLAYER);
+						iSpreadsLeft += pReligion->m_Beliefs.GetMissionaryExtraSpreads();
+					}
+					
+				}
+				GetReligionData()->SetSpreadsLeft(iSpreadsLeft);
+#else
 				GetReligionData()->SetSpreadsLeft(getUnitInfo().GetReligionSpreads() + pPlotCity->GetCityBuildings()->GetMissionaryExtraSpreads());
+#endif
 				GetReligionData()->SetReligiousStrength(getUnitInfo().GetReligiousStrength());
 			}
 		}
