@@ -924,12 +924,18 @@ void CvGameReligions::FoundReligion(PlayerTypes ePlayer, ReligionTypes eReligion
 	if (kReligion.m_Beliefs.IsShepherdAndFlock())
 	{
 		// add free units if Shepherd & Flock belief - I know this is super ugly, faster/easier than making Belief_FreeUnitClasses table... :(
-		// also should be regular settlers, not uniques (like American Pioneer for example)	
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"), pkHolyCity->getX(), pkHolyCity->getY());
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"), pkHolyCity->getX(), pkHolyCity->getY());
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"), pkHolyCity->getX(), pkHolyCity->getY());
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), pkHolyCity->getX(), pkHolyCity->getY());
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), pkHolyCity->getX(), pkHolyCity->getY());
+		// also should be regular settlers, not uniques (like American Pioneer for example)
+		CvUnit* pNewUnit = NULL;
+		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"), pkHolyCity->getX(), pkHolyCity->getY());
+		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
+		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"), pkHolyCity->getX(), pkHolyCity->getY());
+		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
+		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"), pkHolyCity->getX(), pkHolyCity->getY());
+		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
+		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), pkHolyCity->getX(), pkHolyCity->getY());
+		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
+		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), pkHolyCity->getX(), pkHolyCity->getY());
+		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
 	}
 #endif
 
