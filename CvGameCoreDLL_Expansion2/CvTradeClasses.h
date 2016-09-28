@@ -363,6 +363,9 @@ public:
 	int GetNumTradeRoutesRemaining (bool bContinueTraining);
 
 	int GetNumDifferentTradingPartners (void);
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	int GetNumForeignTradeRoutes();
+#endif
 #endif
 
 	void UpdateTradeConnectionWasPlundered();

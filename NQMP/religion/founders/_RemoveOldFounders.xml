@@ -2,19 +2,13 @@
 <!-- Created by ModBuddy on 2016-09-25 05:38:26 -->
 <GameData>
 	
-	<!-- Removed or moved the following Founders: Papal Primacy, Peace Loving, Pilgrimage, World Church -->
+	<!-- Removed or moved the following Founders: Interfaith Dialogue, Papal Primacy, Peace Loving, Pilgrimage, World Church -->
 	<Beliefs>
 		<Delete Type="BELIEF_INTERFAITH_DIALOGUE" />
-		<!-- BELIEF_PAPAL_PRIMACY moved to Reformation in /religion/reformations/PapalPrimacy.xml -->
+		<!-- BELIEF_PAPAL_PRIMACY moved to Enhancer in /religion/enhancers/PapalPrimacy.xml -->
 		<Delete Type="BELIEF_PEACE_LOVING" />
-		<Delete Type="BELIEF_PILGRIMAGE" />
+		<!-- BELIEF_PILGRIMAGE moved to Enhancer in /religion/enhancers/Pilgrimage.xml -->
 		<!-- BELIEF_WORLD_CHURCH moved to Reformation in /religion/reformations/WorldChurch.xml -->
 	</Beliefs>
-	<Belief_YieldChangePerForeignCity>
-		<Delete BeliefType="BELIEF_PILGRIMAGE" />
-	</Belief_YieldChangePerForeignCity>
-	<Belief_YieldChangePerXForeignFollowers>
-		<Delete BeliefType="BELIEF_WORLD_CHURCH" />
-	</Belief_YieldChangePerXForeignFollowers>
 	
 </GameData>

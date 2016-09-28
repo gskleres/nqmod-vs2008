@@ -2835,7 +2835,7 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 			// NQMP GJS - New Merchant Confederacy begin
 			case YIELD_PRODUCTION:
 			case YIELD_FOOD:
-			//case YIELD_CULTURE: // this doesn't work yet with JONSCulture crap, figure it out later
+			//case YIELD_CULTURE: // this doesn't work yet with JONSCulture stuff, figure it out later
 				iValue = GetTradeConnectionPolicyValueTimes100(kTradeConnection, eYield);
 				break;
 			// NQMP GJS - New Merchant Confederacy end
@@ -2880,6 +2880,7 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 				}
 				break;
 			case YIELD_SCIENCE:
+				{
 				int iBaseValue = GetTradeConnectionBaseValueTimes100(kTradeConnection, eYield, bAsOriginPlayer);
 
 				iValue = iBaseValue;
@@ -2888,6 +2889,7 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 				
 				iValue *= iModifier;
 				iValue /= 100;
+				}
 				break;
 			}
 		}
@@ -4165,6 +4167,15 @@ uint CvPlayerTrade::GetNumTradeRoutesPossible (void)
 		}
 	}
 
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	ReligionTypes eFoundedReligion = GC.getGame().GetGameReligions()->GetFounderBenefitsReligion(m_pPlayer->GetID());
+	if (eFoundedReligion && eFoundedReligion != NO_RELIGION)
+	{
+		const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eFoundedReligion, NO_PLAYER);
+		iNumRoutes += pReligion->m_Beliefs.GetExtraTradeRoutes();
+	}
+#endif
+
 	CvCivilizationInfo& kCivInfo = m_pPlayer->getCivilizationInfo();
 	int iLoop = 0;
 	CvCity* pLoopCity;
@@ -4240,6 +4251,7 @@ int CvPlayerTrade::GetNumTradeRoutesUsed (bool bContinueTraining)
 	return iReturnValue;
 }
 
+
 //	--------------------------------------------------------------------------------
 #ifdef AUI_CONSTIFY
 int CvPlayerTrade::GetNumTradeRoutesRemaining(bool bContinueTraining) const
@@ -4249,6 +4261,28 @@ int CvPlayerTrade::GetNumTradeRoutesRemaining (bool bContinueTraining)
 {
 	return (GetNumTradeRoutesPossible() - GetNumTradeRoutesUsed(bContinueTraining));
 }
+
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+//	--------------------------------------------------------------------------------
+int CvPlayerTrade::GetNumForeignTradeRoutes()
+{
+	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
+	int iResult = 0;
+	for (uint ui = 0; ui < pTrade->m_aTradeConnections.size(); ui++)
+	{
+		if (pTrade->IsTradeRouteIndexEmpty(ui))
+		{
+			continue;
+		}
+		TradeConnection* pTradeConnection = &(pTrade->m_aTradeConnections[ui]);
+		if (pTradeConnection->m_eOriginOwner != pTradeConnection->m_eDestOwner)
+		{
+			iResult++;
+		}
+	}
+	return iResult;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 #ifdef AUI_CONSTIFY

@@ -11286,6 +11286,36 @@ int CvPlayer::GetFaithPerTurnFromReligion() const
 		{
 			iFaithPerTurn += pReligion->m_Beliefs.GetHolyCityYieldChange(YIELD_FAITH);
 
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+			iFaithPerTurn += pReligion->m_Beliefs.GetFaithPerForeignTradeRoute() * GetTrade()->GetNumForeignTradeRoutes();
+#endif
+
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+			int iFaithPerCityStateThisReligionBonus = pReligion->m_Beliefs.GetFaithPerCityStateThisReligion();
+			if (iFaithPerCityStateThisReligionBonus > 0)
+			{
+				int iNumCityStatesThisReligion = 0;
+				PlayerTypes ePlayer;
+				for (int iPlayerLoop = MAX_MAJOR_CIVS; iPlayerLoop < MAX_CIV_PLAYERS; iPlayerLoop++)
+				{
+					ePlayer = (PlayerTypes) iPlayerLoop;
+					if (GET_PLAYER(ePlayer).isMinorCiv())
+					{
+						CvCity* pkCity = GET_PLAYER(ePlayer).getCapitalCity();
+						if(pkCity)
+						{
+							ReligionTypes eMinorReligion = pkCity->GetCityReligions()->GetReligiousMajority();
+							if(eMinorReligion != NO_RELIGION && eMinorReligion == eFoundedReligion)
+							{
+								iNumCityStatesThisReligion++;
+							}
+						}
+					}
+				}
+				iFaithPerTurn += iFaithPerCityStateThisReligionBonus * iNumCityStatesThisReligion;
+			}
+#endif
+
 			int iTemp = pReligion->m_Beliefs.GetYieldChangePerForeignCity(YIELD_FAITH);
 			if (iTemp > 0)
 			{

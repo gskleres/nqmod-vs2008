@@ -51,6 +51,22 @@ CvBeliefEntry::CvBeliefEntry() :
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads(0),
 #endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	m_iSpreadModifierOwnedCities(0),
+	m_iSpreadModifierUnownedCities(0),
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	m_iExtraTradeRoutes(0),
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	m_iFaithPerCityStateThisReligion(0),
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	m_iFaithPerForeignTradeRoute(0),
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	m_iGoldenAgeTurns(0),
+#endif
 	m_iMissionaryCostModifier(0),
 	m_iFriendlyCityStateSpreadModifier(0),
 	m_iGreatPersonExpendedFaith(0),
@@ -70,6 +86,9 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_bConvertsBarbarians(false),
 #ifdef NQ_SHEPHERD_AND_FLOCK
 	m_bShepherdAndFlock(false),
+#endif
+#ifdef NQ_DEUS_VULT
+	m_bDeusVult(false),
 #endif
 	m_bFaithPurchaseAllGreatPeople(false),
 
@@ -324,6 +343,52 @@ int CvBeliefEntry::GetMissionaryExtraSpreads() const
 }
 #endif
 
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+/// Accessor:: spread modifier to your cities
+int CvBeliefEntry::GetSpreadModifierOwnedCities() const
+{
+	return m_iSpreadModifierOwnedCities;
+}
+
+/// Accessor:: spread modifier to other players' cities
+int CvBeliefEntry::GetSpreadModifierUnownedCities() const
+{
+	return m_iSpreadModifierUnownedCities;
+}
+#endif
+
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+/// Accessor:: extra trade routes
+int CvBeliefEntry::GetExtraTradeRoutes() const
+{
+	return m_iExtraTradeRoutes;
+}
+#endif
+
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+/// Accessor:: faith per turn from city states that are this religion
+int CvBeliefEntry::GetFaithPerCityStateThisReligion() const
+{
+	return m_iFaithPerCityStateThisReligion;
+}
+#endif
+
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+/// Accessor:: extra trade routes
+int CvBeliefEntry::GetFaithPerForeignTradeRoute() const
+{
+	return m_iFaithPerForeignTradeRoute;
+}
+#endif
+
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+/// Accessor:: golden age turns
+int CvBeliefEntry::GetGoldenAgeTurns() const
+{
+	return m_iGoldenAgeTurns;
+}
+#endif
+
 /// Accessor:: missionary cost discount
 int CvBeliefEntry::GetMissionaryCostModifier() const
 {
@@ -425,6 +490,14 @@ bool CvBeliefEntry::ConvertsBarbarians() const
 bool CvBeliefEntry::ShepherdAndFlock() const
 {
 	return m_bShepherdAndFlock;
+}
+#endif
+
+#ifdef NQ_DEUS_VULT
+/// Accessor: is this belief deus vult?
+bool CvBeliefEntry::DeusVult() const
+{
+	return m_bDeusVult;
 }
 #endif
 
@@ -712,6 +785,22 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads		  = kResults.GetInt("MissionaryExtraSpreads");
 #endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	m_iSpreadModifierOwnedCities	  = kResults.GetInt("SpreadModifierOwnedCities");
+	m_iSpreadModifierUnownedCities	  = kResults.GetInt("SpreadModifierUnownedCities");
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	m_iExtraTradeRoutes				  = kResults.GetInt("ExtraTradeRoutes");
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	m_iFaithPerCityStateThisReligion  = kResults.GetInt("FaithPerCityStateThisReligion");
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	m_iFaithPerForeignTradeRoute	  = kResults.GetInt("FaithPerForeignTradeRoute");
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	m_iGoldenAgeTurns				  = kResults.GetInt("GoldenAgeTurns");
+#endif
 	m_iMissionaryCostModifier         = kResults.GetInt("MissionaryCostModifier");
 	m_iFriendlyCityStateSpreadModifier= kResults.GetInt("FriendlyCityStateSpreadModifier");
 	m_iGreatPersonExpendedFaith       = kResults.GetInt("GreatPersonExpendedFaith");
@@ -731,6 +820,9 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_bConvertsBarbarians			  = kResults.GetBool("ConvertsBarbarians");
 #ifdef NQ_SHEPHERD_AND_FLOCK
 	m_bShepherdAndFlock				  = kResults.GetBool("ShepherdAndFlock");
+#endif
+#ifdef NQ_DEUS_VULT
+	m_bDeusVult						  = kResults.GetBool("DeusVult");
 #endif
 	m_bFaithPurchaseAllGreatPeople	  = kResults.GetBool("FaithPurchaseAllGreatPeople");
 
@@ -1039,6 +1131,22 @@ CvReligionBeliefs::CvReligionBeliefs(const CvReligionBeliefs& source)
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads = source.m_iMissionaryExtraSpreads;
 #endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	m_iSpreadModifierOwnedCities = source.m_iSpreadModifierOwnedCities;
+	m_iSpreadModifierUnownedCities = source.m_iSpreadModifierUnownedCities;
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	m_iExtraTradeRoutes	= source.m_iExtraTradeRoutes;
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	m_iFaithPerCityStateThisReligion = source.m_iFaithPerCityStateThisReligion;
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	m_iFaithPerForeignTradeRoute = source.m_iFaithPerForeignTradeRoute;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	m_iGoldenAgeTurns		  = source.m_iGoldenAgeTurns;
+#endif
 	m_iMissionaryCostModifier = source.m_iMissionaryCostModifier;
 	m_iFriendlyCityStateSpreadModifier = source.m_iFriendlyCityStateSpreadModifier;
 	m_iGreatPersonExpendedFaith = source.m_iGreatPersonExpendedFaith;
@@ -1098,6 +1206,22 @@ void CvReligionBeliefs::Reset()
 	m_iMissionaryStrengthModifier = 0;
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads = 0;
+#endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	m_iSpreadModifierOwnedCities = 0;
+	m_iSpreadModifierUnownedCities = 0;
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	m_iExtraTradeRoutes	= 0;
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	m_iFaithPerCityStateThisReligion = 0;
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	m_iFaithPerForeignTradeRoute = 0;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	m_iGoldenAgeTurns = 0;
 #endif
 	m_iMissionaryCostModifier = 0;
 	m_iFriendlyCityStateSpreadModifier = 0;
@@ -1164,6 +1288,22 @@ void CvReligionBeliefs::AddBelief(BeliefTypes eBelief)
 	m_iMissionaryStrengthModifier += belief->GetMissionaryStrengthModifier();
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads += belief->GetMissionaryExtraSpreads();
+#endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	m_iSpreadModifierOwnedCities += belief->GetSpreadModifierOwnedCities();
+	m_iSpreadModifierUnownedCities += belief->GetSpreadModifierUnownedCities();
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	m_iExtraTradeRoutes	+= belief->GetExtraTradeRoutes();
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	m_iFaithPerCityStateThisReligion += belief->GetFaithPerCityStateThisReligion();
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	m_iFaithPerForeignTradeRoute += belief->GetFaithPerForeignTradeRoute();
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	m_iGoldenAgeTurns += belief->GetGoldenAgeTurns();
 #endif
 	m_iMissionaryCostModifier += belief->GetMissionaryCostModifier();
 	m_iFriendlyCityStateSpreadModifier += belief->GetFriendlyCityStateSpreadModifier();
@@ -1854,6 +1994,27 @@ bool CvReligionBeliefs::IsShepherdAndFlock() const
 }
 #endif
 
+#ifdef NQ_DEUS_VULT
+/// Is there a belief that matches Deus Vult?
+bool CvReligionBeliefs::IsDeusVult() const
+{
+	CvBeliefXMLEntries* pBeliefs = GC.GetGameBeliefs();
+
+	for(int i = 0; i < pBeliefs->GetNumBeliefs(); i++)
+	{
+		if(HasBelief((BeliefTypes)i))
+		{
+			if (pBeliefs->GetEntry(i)->DeusVult())
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+#endif
+
 /// Is there a belief that allows faith buying of all great people
 bool CvReligionBeliefs::IsFaithPurchaseAllGreatPeople() const
 {
@@ -1896,6 +2057,22 @@ void CvReligionBeliefs::Read(FDataStream& kStream)
 	kStream >> m_iMissionaryStrengthModifier;
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	kStream >> m_iMissionaryExtraSpreads;
+#endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	kStream >> m_iSpreadModifierOwnedCities;
+	kStream >> m_iSpreadModifierUnownedCities;
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	kStream >> m_iExtraTradeRoutes;
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	kStream >> m_iFaithPerCityStateThisReligion;
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	kStream >> m_iFaithPerForeignTradeRoute;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	kStream >> m_iGoldenAgeTurns;
 #endif
 	kStream >> m_iMissionaryCostModifier;
 	kStream >> m_iFriendlyCityStateSpreadModifier;
@@ -1953,6 +2130,22 @@ void CvReligionBeliefs::Write(FDataStream& kStream) const
 	kStream << m_iMissionaryStrengthModifier;
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	kStream << m_iMissionaryExtraSpreads;
+#endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	kStream << m_iSpreadModifierOwnedCities;
+	kStream << m_iSpreadModifierUnownedCities;
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	kStream << m_iExtraTradeRoutes;
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	kStream << m_iFaithPerCityStateThisReligion;
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	kStream << m_iFaithPerForeignTradeRoute;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	kStream << m_iGoldenAgeTurns;
 #endif
 	kStream << m_iMissionaryCostModifier;
 	kStream << m_iFriendlyCityStateSpreadModifier;

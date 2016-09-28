@@ -925,17 +925,11 @@ void CvGameReligions::FoundReligion(PlayerTypes ePlayer, ReligionTypes eReligion
 	{
 		// add free units if Shepherd & Flock belief - I know this is super ugly, faster/easier than making Belief_FreeUnitClasses table... :(
 		// also should be regular settlers, not uniques (like American Pioneer for example)
-		CvUnit* pNewUnit = NULL;
-		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"), pkHolyCity->getX(), pkHolyCity->getY());
-		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
-		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"), pkHolyCity->getX(), pkHolyCity->getY());
-		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
-		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"), pkHolyCity->getX(), pkHolyCity->getY());
-		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
-		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), pkHolyCity->getX(), pkHolyCity->getY());
-		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
-		pNewUnit = kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), pkHolyCity->getX(), pkHolyCity->getY());
-		if (pNewUnit) pNewUnit->jumpToNearestValidPlot();
+		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"));
+		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
+		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
+		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"));
+		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"));
 	}
 #endif
 
@@ -1182,6 +1176,117 @@ void CvGameReligions::EnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligi
 		bool bResult;
 		LuaSupport::CallHook(pkScriptSystem, "ReligionEnhanced", args.get(), bResult);
 	}
+
+#ifdef NQ_DEUS_VULT
+	if (it->m_Beliefs.IsDeusVult())
+	{
+		// add free units if Deus Vult belief - still super ugly... :(
+		// 1 missionary
+		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"));
+		
+		// minimum mounted is horseman
+		UnitTypes eBestMountedUnit = (UnitTypes)kPlayer.getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_HORSEMAN"));
+		int iBestMountedScore = GC.getUnitInfo(eBestMountedUnit)->GetProductionCost();
+
+		// minimum melee is spearman
+		UnitTypes eBestMeleeUnit = (UnitTypes)kPlayer.getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_SPEARMAN"));
+		int iBestMeleeScore = GC.getUnitInfo(eBestMeleeUnit)->GetProductionCost();
+
+		for(int iUnitClassLoop = 0; iUnitClassLoop < GC.getNumUnitClassInfos(); iUnitClassLoop++)
+		{
+			bool bValid = false;
+			CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo((UnitClassTypes)iUnitClassLoop);
+			if(pkUnitClassInfo == NULL)
+				continue;
+
+			const UnitTypes eLoopUnit = ((UnitTypes)(kPlayer.getCivilizationInfo().getCivilizationUnits(iUnitClassLoop)));
+			if(eLoopUnit != NO_UNIT)
+			{
+				CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eLoopUnit);
+				if(pkUnitInfo == NULL)
+				{
+					continue;
+				}
+
+				// must be a combat unit
+				CvUnitEntry& kUnit = *pkUnitInfo;
+				if (kUnit.GetCombat() <= 0)
+				{
+					continue;
+				}
+
+				// cannot be able to found cities
+				if (kUnit.IsFound() || kUnit.IsFoundAbroad())
+				{
+					continue;
+				}
+				
+				// if we don't have the tech for this unit, ignore it
+				if(!(GET_TEAM(kPlayer.getTeam()).GetTeamTechs()->HasTech((TechTypes)(kUnit.GetPrereqAndTech()))))
+				{
+					continue;
+				}
+
+				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MOUNTED") ||
+					(UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MOUNTED_RANGED"))
+				{
+					if (pkUnitInfo->GetProductionCost() > iBestMountedScore)
+					{
+						iBestMountedScore = pkUnitInfo->GetProductionCost();
+						eBestMountedUnit = eLoopUnit;
+					}
+				}
+				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MELEE"))
+				{
+					if (pkUnitInfo->GetProductionCost() > iBestMeleeScore)
+					{
+						iBestMeleeScore = pkUnitInfo->GetProductionCost();
+						eBestMeleeUnit = eLoopUnit;
+					}
+				}
+			}
+		}
+
+		// 2 mounted
+		if (eBestMountedUnit)
+		{
+			kPlayer.addFreeUnit(eBestMountedUnit);
+			kPlayer.addFreeUnit(eBestMountedUnit);
+		}
+
+		// 4 melee
+		if (eBestMountedUnit)
+		{
+			kPlayer.addFreeUnit(eBestMeleeUnit);
+			kPlayer.addFreeUnit(eBestMeleeUnit);
+			kPlayer.addFreeUnit(eBestMeleeUnit);
+			kPlayer.addFreeUnit(eBestMeleeUnit);
+		}
+	}
+#endif
+
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	int iGoldenAgeTurns = it->m_Beliefs.GetGoldenAgeTurns();
+	if (iGoldenAgeTurns > 0)
+	{
+		// Player modifier
+		int iLengthModifier = kPlayer.getGoldenAgeModifier();
+
+		// Trait modifier
+		iLengthModifier += kPlayer.GetPlayerTraits()->GetGoldenAgeDurationModifier();
+
+		if (iLengthModifier > 0)
+		{
+			iGoldenAgeTurns = iGoldenAgeTurns * (100 + iLengthModifier) / 100;
+		}
+
+		// Game Speed mod
+		iGoldenAgeTurns *= GC.getGame().getGameSpeedInfo().getGoldenAgePercent();
+		iGoldenAgeTurns /= 100;
+
+		kPlayer.changeGoldenAgeTurns(iGoldenAgeTurns);
+	}
+#endif
 
 	//Notify the masses
 	for(int iNotifyLoop = 0; iNotifyLoop < MAX_MAJOR_CIVS; ++iNotifyLoop){
@@ -2252,6 +2357,24 @@ int CvGameReligions::GetAdjacentCityReligiousPressure (ReligionTypes eReligion, 
 			iPressure *= (100 + iStrengthMod);
 			iPressure /= 100;
 		}
+
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+		// modifier if this religion spreads to cities owned by founder or not owned by founder
+		int iOwnedCityModifier = 0;
+		if (pToCity->getOwner() == pReligion->m_eFounder)
+		{
+			iOwnedCityModifier = pReligion->m_Beliefs.GetSpreadModifierOwnedCities();
+		}
+		else
+		{
+			iOwnedCityModifier = pReligion->m_Beliefs.GetSpreadModifierUnownedCities();
+		}
+		if (iOwnedCityModifier != 0)
+		{
+			iPressure *= (100 + iOwnedCityModifier);
+			iPressure /= 100;
+		}
+#endif
 
 		// Strengthened spread from World Congress? (World Religion)
 		int iLeaguesMod = GC.getGame().GetGameLeagues()->GetReligionSpreadStrengthModifier(pFromCity->getOwner(), eReligion);

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2016-09-26 23:38:28 -->
+<GameData>
+
+	<!-- +1 Happiness per 6 Followers in foreign cities and religion spreads twice as fast to friendly City States -->
+	<Beliefs>
+		<Update>
+			<Set Enhancer="false" Reformation="true" HappinessPerXPeacefulForeignFollowers="6" />
+			<Where Type="BELIEF_RELIGIOUS_UNITY" />
+		</Update>
+	</Beliefs>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_BELIEF_RELIGIOUS_UNITY" />
+		<Row Tag="TXT_KEY_BELIEF_RELIGIOUS_UNITY">
+			<Text>+1 [ICON_HAPPINESS_1] Happiness for every 6 followers of this religion in foreign cities and religion spreads twice as fast to friendly City States</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_BELIEF_RELIGIOUS_UNITY" />
+		<Row Tag="TXT_KEY_BELIEF_RELIGIOUS_UNITY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_HAPPINESS_1] Happiness for every 6 followers of this religion in foreign cities and religion spreads twice as fast to friendly City States</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_BELIEF_RELIGIOUS_UNITY" />
+		<Row Tag="TXT_KEY_BELIEF_RELIGIOUS_UNITY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_HAPPINESS_1] Happiness for every 6 followers of this religion in foreign cities and religion spreads twice as fast to friendly City States</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_BELIEF_RELIGIOUS_UNITY" />
+		<Row Tag="TXT_KEY_BELIEF_RELIGIOUS_UNITY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_HAPPINESS_1] Happiness for every 6 followers of this religion in foreign cities and religion spreads twice as fast to friendly City States</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>
