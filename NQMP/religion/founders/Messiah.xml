@@ -5,7 +5,7 @@
 	<!-- Great Prophets earned with 35% less Faith. -->
 	<Beliefs>
 		<Update>
-			<Set ProphetStrengthModifier="0" ProphetCostModifier="-35" Enhancer="false" Founder="true" />
+			<Set ProphetStrengthModifier="0" ProphetCostModifier="-30" Enhancer="false" Founder="true" />
 			<Where Type="BELIEF_MESSIAH" />
 		</Update>
 	</Beliefs>
