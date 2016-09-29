@@ -10745,6 +10745,16 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 			}
 		}
 
+#ifdef NQ_ALLOW_BUILDING_HILL_YIELD_CHANGES
+		if (isHills())
+		{
+			if (NULL != pWorkingCity)
+			{
+				iYield += pWorkingCity->getHillYieldChangesFromBuildings(eYield);
+			}
+		}
+#endif
+
 		// Worked Feature extra yield (e.g. University bonus)
 #ifdef AUI_PLOT_FIX_GET_YIELD_WITH_BUILD_IGNORE_FEATURE_EXTENDS_TO_CITY
 		if (getFeatureType() != NO_FEATURE && !bIgnoreFeature)
