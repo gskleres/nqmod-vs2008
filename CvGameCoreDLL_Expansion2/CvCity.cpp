@@ -7044,6 +7044,16 @@ void CvCity::UpdateReligion(ReligionTypes eNewMajority)
 								iYieldFromBuilding += pReligion->m_Beliefs.GetYieldChangeWorldWonder((YieldTypes)iYield);
 							}
 
+#ifdef NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
+							if (iYield == YIELD_GOLD)
+							{
+								CvBuildingEntry *pkEntry = GC.getBuildingInfo(eBuilding);
+								if (pkEntry && pkEntry->GetFaithCost() > 0 && pkEntry->IsUnlockedByBelief() && pkEntry->GetProductionCost() == -1)
+								{
+									iYieldFromBuilding += pReligion->m_Beliefs.GetFaithBuildingTourism();
+								}
+							}
+#endif
 							switch(iYield)
 							{
 							case YIELD_CULTURE:

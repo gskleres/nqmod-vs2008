@@ -725,5 +725,7 @@
 #define NQ_SPREAD_MODIFIER_OWNED_CITIES
 // faith per turn for city states that follow this religion
 #define NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+// cheating so that sacred sites applies both tourism and gold
+#define NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
 
 #endif

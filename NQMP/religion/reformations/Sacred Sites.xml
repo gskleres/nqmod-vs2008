@@ -2,7 +2,9 @@
 <!-- Created by ModBuddy on 2016-09-26 23:38:28 -->
 <GameData>
 
-	<!-- +2 Tourism from religious buildings purchased with Faith. -->
+	<!-- +2 Tourism and +2 Gold from religious buildings purchased with Faith. -->
+	
+	<!-- This is cheated in the DLL by just using the same value for both Tourism and Gold. If you change it, it will update both of them (i.e. changing to 3 makes it +3 Tourism and +3 Gold from Faith buildings. -->
 
 	<!-- No changes needed. NOTE: If this file is modified, don't forget to add it to the OnModActivated list. -->
 

@@ -621,7 +621,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>religion/reformations/MeetingHouses.xml</FileName>
+        <FileName>religion/reformations/HousesOfWorship.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2228,7 +2228,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="religion\reformations\MeetingHouses.xml">
+    <Content Include="religion\reformations\HousesOfWorship.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2985,6 +2985,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
     <Folder Include="features" />
     <Folder Include="religion\founders" />
     <Folder Include="religion\enhancers" />
+    <Folder Include="religion\followers" />
     <Folder Include="religion\reformations" />
     <Folder Include="religion\pantheons" />
     <Folder Include="scoring_tweaks\" />
