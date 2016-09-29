@@ -1145,7 +1145,7 @@ CvReligionBeliefs::CvReligionBeliefs(const CvReligionBeliefs& source)
 	m_iFaithPerForeignTradeRoute = source.m_iFaithPerForeignTradeRoute;
 #endif
 #ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
-	m_iGoldenAgeTurns		  = source.m_iGoldenAgeTurns;
+	m_iGoldenAgeTurns = source.m_iGoldenAgeTurns;
 #endif
 	m_iMissionaryCostModifier = source.m_iMissionaryCostModifier;
 	m_iFriendlyCityStateSpreadModifier = source.m_iFriendlyCityStateSpreadModifier;

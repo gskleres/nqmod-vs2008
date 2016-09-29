@@ -920,25 +920,16 @@ void CvGameReligions::FoundReligion(PlayerTypes ePlayer, ReligionTypes eReligion
 	// Inform the holy city
 	pkHolyCity->GetCityReligions()->DoReligionFounded(kReligion.m_eReligion);
 
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	if (kReligion.m_Beliefs.IsShepherdAndFlock())
-	{
-		// add free units if Shepherd & Flock belief - I know this is super ugly, faster/easier than making Belief_FreeUnitClasses table... :(
-		// also should be regular settlers, not uniques (like American Pioneer for example)
-		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"));
-		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
-		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
-		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"));
-		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"));
-	}
-#endif
-
 	// Update game systems
 	kPlayer.UpdateReligion();
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
 	kPlayer.doSelfConsistencyCheckAllCities();
 #endif
 	kPlayer.GetReligions()->SetFoundingReligion(false);
+
+#ifdef NQ_ALLOW_RELIGION_ONE_SHOTS
+	kPlayer.DoReligionOneShots(eReligion);
+#endif
 
 	// In case we have another prophet sitting around, make sure he's set to this religion
 	int iLoopUnit;
@@ -1177,115 +1168,8 @@ void CvGameReligions::EnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligi
 		LuaSupport::CallHook(pkScriptSystem, "ReligionEnhanced", args.get(), bResult);
 	}
 
-#ifdef NQ_DEUS_VULT
-	if (it->m_Beliefs.IsDeusVult())
-	{
-		// add free units if Deus Vult belief - still super ugly... :(
-		// 1 missionary
-		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"));
-		
-		// minimum mounted is horseman
-		UnitTypes eBestMountedUnit = (UnitTypes)kPlayer.getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_HORSEMAN"));
-		int iBestMountedScore = GC.getUnitInfo(eBestMountedUnit)->GetProductionCost();
-
-		// minimum melee is spearman
-		UnitTypes eBestMeleeUnit = (UnitTypes)kPlayer.getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_SPEARMAN"));
-		int iBestMeleeScore = GC.getUnitInfo(eBestMeleeUnit)->GetProductionCost();
-
-		for(int iUnitClassLoop = 0; iUnitClassLoop < GC.getNumUnitClassInfos(); iUnitClassLoop++)
-		{
-			bool bValid = false;
-			CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo((UnitClassTypes)iUnitClassLoop);
-			if(pkUnitClassInfo == NULL)
-				continue;
-
-			const UnitTypes eLoopUnit = ((UnitTypes)(kPlayer.getCivilizationInfo().getCivilizationUnits(iUnitClassLoop)));
-			if(eLoopUnit != NO_UNIT)
-			{
-				CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eLoopUnit);
-				if(pkUnitInfo == NULL)
-				{
-					continue;
-				}
-
-				// must be a combat unit
-				CvUnitEntry& kUnit = *pkUnitInfo;
-				if (kUnit.GetCombat() <= 0)
-				{
-					continue;
-				}
-
-				// cannot be able to found cities
-				if (kUnit.IsFound() || kUnit.IsFoundAbroad())
-				{
-					continue;
-				}
-				
-				// if we don't have the tech for this unit, ignore it
-				if(!(GET_TEAM(kPlayer.getTeam()).GetTeamTechs()->HasTech((TechTypes)(kUnit.GetPrereqAndTech()))))
-				{
-					continue;
-				}
-
-				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MOUNTED") ||
-					(UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MOUNTED_RANGED"))
-				{
-					if (pkUnitInfo->GetProductionCost() > iBestMountedScore)
-					{
-						iBestMountedScore = pkUnitInfo->GetProductionCost();
-						eBestMountedUnit = eLoopUnit;
-					}
-				}
-				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MELEE"))
-				{
-					if (pkUnitInfo->GetProductionCost() > iBestMeleeScore)
-					{
-						iBestMeleeScore = pkUnitInfo->GetProductionCost();
-						eBestMeleeUnit = eLoopUnit;
-					}
-				}
-			}
-		}
-
-		// 2 mounted
-		if (eBestMountedUnit)
-		{
-			kPlayer.addFreeUnit(eBestMountedUnit);
-			kPlayer.addFreeUnit(eBestMountedUnit);
-		}
-
-		// 4 melee
-		if (eBestMountedUnit)
-		{
-			kPlayer.addFreeUnit(eBestMeleeUnit);
-			kPlayer.addFreeUnit(eBestMeleeUnit);
-			kPlayer.addFreeUnit(eBestMeleeUnit);
-			kPlayer.addFreeUnit(eBestMeleeUnit);
-		}
-	}
-#endif
-
-#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
-	int iGoldenAgeTurns = it->m_Beliefs.GetGoldenAgeTurns();
-	if (iGoldenAgeTurns > 0)
-	{
-		// Player modifier
-		int iLengthModifier = kPlayer.getGoldenAgeModifier();
-
-		// Trait modifier
-		iLengthModifier += kPlayer.GetPlayerTraits()->GetGoldenAgeDurationModifier();
-
-		if (iLengthModifier > 0)
-		{
-			iGoldenAgeTurns = iGoldenAgeTurns * (100 + iLengthModifier) / 100;
-		}
-
-		// Game Speed mod
-		iGoldenAgeTurns *= GC.getGame().getGameSpeedInfo().getGoldenAgePercent();
-		iGoldenAgeTurns /= 100;
-
-		kPlayer.changeGoldenAgeTurns(iGoldenAgeTurns);
-	}
+#ifdef NQ_ALLOW_RELIGION_ONE_SHOTS
+	kPlayer.DoReligionOneShots(eReligion);
 #endif
 
 	//Notify the masses

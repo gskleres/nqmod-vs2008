@@ -8,7 +8,7 @@
 		<Delete Type="BELIEF_EVANGELISM" />
 		<Delete Type="BELIEF_HEATHEN_CONVERSION" />
 		<Delete Type="BELIEF_RELIGIOUS_FERVOR" />
-=		<Delete Type="BELIEF_TO_GLORY_OF_GOD" />
+		<Delete Type="BELIEF_TO_GLORY_OF_GOD" />
 		<!-- BELIEF_UNITY_OF_PROPHETS moved to Enhancer in /religion/enhancers/UnityOfTheProphets.xml -->
 	</Beliefs>
 	<Belief_EraFaithUnitPurchase>

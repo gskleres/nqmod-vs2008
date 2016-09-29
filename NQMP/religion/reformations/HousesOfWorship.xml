@@ -20,10 +20,10 @@
 			<BeliefType>BELIEF_HOUSES_OF_WORSHIP</BeliefType>
 			<BuildingClassType>BUILDINGCLASS_CHANTRY</BuildingClassType>
 		</Row>
-		<Update>
-			<Set BeliefType="BELIEF_HOUSES_OF_WORSHIP" />
-			<Where BuildingClassType="BUILDINGCLASS_MONASTERY" BeliefType="BELIEF_MONASTERIES" />
-		</Update>
+		<Row>
+			<BeliefType>BELIEF_HOUSES_OF_WORSHIP</BeliefType>
+			<BuildingClassType>BUILDINGCLASS_MONASTERY</BuildingClassType>
+		</Row>
 	</Belief_BuildingClassFaithPurchase>
 
 	<!-- Church, Chantry, and Monastery buildings -->
@@ -50,12 +50,15 @@
 			<Civilopedia>TXT_KEY_CIV5_BUILDINGS_CHURCH_TEXT</Civilopedia>
 			<Strategy>TXT_KEY_BUILDING_HOUSES_OF_WORSHIP_STRATEGY</Strategy>
 			<Help>TXT_KEY_BUILDING_CHURCH_HELP</Help>
+			<Happiness>1</Happiness>
 			<ConquestProb>100</ConquestProb>
 			<ArtDefineTag>MONASTERY</ArtDefineTag>
 			<MinAreaSize>-1</MinAreaSize>
-			<PortraitIndex>38</PortraitIndex>
-			<IconAtlas>BW_ATLAS_1</IconAtlas>
-			<Happiness>1</Happiness>
+			<!-- stave church -->
+			<IconAtlas>EXPANSION_SCEN_BUILDING_ATLAS</IconAtlas>
+			<PortraitIndex>0</PortraitIndex>
+			<!--<IconAtlas>BW_ATLAS_1</IconAtlas>-->
+			<!--<PortraitIndex>38</PortraitIndex>-->
 		</Row>
 		<Row>
 			<Type>BUILDING_CHANTRY</Type>

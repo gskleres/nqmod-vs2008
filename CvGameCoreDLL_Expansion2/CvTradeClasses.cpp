@@ -2880,7 +2880,6 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 				}
 				break;
 			case YIELD_SCIENCE:
-				{
 				int iBaseValue = GetTradeConnectionBaseValueTimes100(kTradeConnection, eYield, bAsOriginPlayer);
 
 				iValue = iBaseValue;
@@ -2889,7 +2888,6 @@ int CvPlayerTrade::GetTradeConnectionValueTimes100 (const TradeConnection& kTrad
 				
 				iValue *= iModifier;
 				iValue /= 100;
-				}
 				break;
 			}
 		}

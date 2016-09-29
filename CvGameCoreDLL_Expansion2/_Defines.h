@@ -707,16 +707,20 @@
 #define NQ_LAKE_BELIEF_BONUSES
 // extra missionary spreads from religious belief
 #define NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
+
+// allow religion one-shots (like deus vult, shepherd & flock, dharma)
+#define NQ_ALLOW_RELIGION_ONE_SHOTS
 // free units from belief of Shepherd & Flock
 #define NQ_SHEPHERD_AND_FLOCK
 // free units from belief of Deus Vult
 #define NQ_DEUS_VULT
+// allow golden ages from beliefs
+#define NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+
 // missionary cost reduction now only affects founder of religion and no longer applies to inquisitors
 #define NQ_FIX_MISSIONARY_COST_MODIFIER_BELIEF
 // faith costs now rounded to 5 instead of 10
 #define NQ_FAITH_COST_ROUNDS_TO_NEAREST_5
-// allow golden ages from beliefs
-#define NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
 // extra trade routes from beliefs
 #define NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
 // faith per foreign trade route
