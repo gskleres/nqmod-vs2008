@@ -41,7 +41,7 @@
 	<!-- localization -->
 	<Language_en_US>
 		<Row Tag="TXT_KEY_BELIEF_RAIN_DANCING">
-			<Text>+1 [ICON_CULTURE] Culture and +1 [ICON_FAITH] Faith from Lakes and Oases</Text>
+			<Text>+1 [ICON_CULTURE] Culture and +1 [ICON_PEACE] Faith from Lakes and Oases</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_RAIN_DANCING_SHORT">
 			<Text>Rain Dancing</Text>
@@ -49,7 +49,7 @@
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_BELIEF_RAIN_DANCING">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_CULTURE] Culture and +1 [ICON_FAITH] Faith from Lakes and Oases</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_CULTURE] Culture and +1 [ICON_PEACE] Faith from Lakes and Oases</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_RAIN_DANCING_SHORT">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Rain Dancing</Text>
@@ -57,7 +57,7 @@
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_BELIEF_RAIN_DANCING">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_CULTURE] Culture and +1 [ICON_FAITH] Faith from Lakes and Oases</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_CULTURE] Culture and +1 [ICON_PEACE] Faith from Lakes and Oases</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_RAIN_DANCING_SHORT">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Rain Dancing</Text>
@@ -65,7 +65,7 @@
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BELIEF_RAIN_DANCING">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_CULTURE] Culture and +1 [ICON_FAITH] Faith from Lakes and Oases</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_CULTURE] Culture and +1 [ICON_PEACE] Faith from Lakes and Oases</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_RAIN_DANCING_SHORT">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Rain Dancing</Text>
