@@ -249,6 +249,8 @@
 #define AUI_CITY_CITIZENS_COUNTERBLOCKADE
 /// (Disabled because unsure if desirable) Citadels can only be captured with a culture bomb if they would have no non-citadel, non-city tiles of friendly culture adjacent to them after the culture bomb
 //#define AUI_UNIT_CITADEL_RESISTANT_TO_CULTURE_BOMB
+/// When spawning barbarian camps on the game's first turn, starting settlers are also considered in addition to player capitols
+#define AUI_BARBARIANS_FIX_DO_CAMPS_CONSIDER_STARTING_SETTLER
 
 // Turn timer stuff
 /// New option that allows custom turn timer settings to multiply/divide the default turn times by a certain amount instead of forcing turn times to be the custom amount
