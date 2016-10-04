@@ -677,17 +677,34 @@
 #define NQ_ART_OF_WAR_PROMOTION
 // Civ-specific luxuries (Indonesia) disallowed from being required for City State quests an WLtKD requests
 #define NQ_NO_UNIQUE_LUX_REQUESTS
-// Allow lake feature yield boosts from religion
-// This is a huge cheat so I don't have to code a whole new table for "fake features" of which lakes are labeled.
-// In NQMod, ice has no belief bonuses, and so I'm overriding FEATURE_ICE to be used for lakes instead.
+// Allow lake feature yield boosts from religion - this is a huge cheat so I don't have to code a whole new table for "fake features" which 
+// is what lakes are categorized under. In NQMod, ice has no belief bonuses, and so I'm overriding FEATURE_ICE to be used for lakes instead.
 #define NQ_LAKE_BELIEF_BONUSES
 // extra missionary spreads from religious belief
 #define NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
-// free units from beliefs
+
+// allow religion one-shots (like deus vult, shepherd & flock, dharma)
+#define NQ_ALLOW_RELIGION_ONE_SHOTS
+// free units from belief of Shepherd & Flock
 #define NQ_SHEPHERD_AND_FLOCK
+// free units from belief of Deus Vult
+#define NQ_DEUS_VULT
+// allow golden ages from beliefs
+#define NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+
 // missionary cost reduction now only affects founder of religion and no longer applies to inquisitors
 #define NQ_FIX_MISSIONARY_COST_MODIFIER_BELIEF
 // faith costs now rounded to 5 instead of 10
 #define NQ_FAITH_COST_ROUNDS_TO_NEAREST_5
+// extra trade routes from beliefs
+#define NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+// faith per foreign trade route
+#define NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+// religious pressure modifier to your cities vs cities that aren't yours
+#define NQ_SPREAD_MODIFIER_OWNED_CITIES
+// faith per turn for city states that follow this religion
+#define NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+// cheating so that sacred sites applies both tourism and gold
+#define NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
 
 #endif

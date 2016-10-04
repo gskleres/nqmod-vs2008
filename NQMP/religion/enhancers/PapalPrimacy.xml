@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2016-09-28 15:13:42 -->
+<GameData>
+
+	<!-- +5 Faith per turn for each City State following this Religion -->
+	<Beliefs>
+		<Update>
+			<Set Enhancer="true" Founder="false" CityStateMinimumInfluence="0" FaithPerCityStateThisReligion="5" />
+			<Where Type="BELIEF_PAPAL_PRIMACY" />
+		</Update>
+	</Beliefs>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_BELIEF_PAPAL_PRIMACY" />
+		<Row Tag="TXT_KEY_BELIEF_PAPAL_PRIMACY">
+			<Text>+5 [ICON_PEACE] Faith per turn for each City State following this Religion</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_BELIEF_PAPAL_PRIMACY" />
+		<Row Tag="TXT_KEY_BELIEF_PAPAL_PRIMACY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+5 [ICON_PEACE] Faith per turn for each City State following this Religion</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_BELIEF_PAPAL_PRIMACY" />
+		<Row Tag="TXT_KEY_BELIEF_PAPAL_PRIMACY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+5 [ICON_PEACE] Faith per turn for each City State following this Religion</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_BELIEF_PAPAL_PRIMACY" />
+		<Row Tag="TXT_KEY_BELIEF_PAPAL_PRIMACY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+5 [ICON_PEACE] Faith per turn for each City State following this Religion</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>

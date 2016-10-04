@@ -920,25 +920,16 @@ void CvGameReligions::FoundReligion(PlayerTypes ePlayer, ReligionTypes eReligion
 	// Inform the holy city
 	pkHolyCity->GetCityReligions()->DoReligionFounded(kReligion.m_eReligion);
 
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	if (kReligion.m_Beliefs.IsShepherdAndFlock())
-	{
-		// add free units if Shepherd & Flock belief - I know this is super ugly, faster/easier than making Belief_FreeUnitClasses table... :(
-		// also should be regular settlers, not uniques (like American Pioneer for example)	
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"), pkHolyCity->getX(), pkHolyCity->getY());
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"), pkHolyCity->getX(), pkHolyCity->getY());
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"), pkHolyCity->getX(), pkHolyCity->getY());
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), pkHolyCity->getX(), pkHolyCity->getY());
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), pkHolyCity->getX(), pkHolyCity->getY());
-	}
-#endif
-
 	// Update game systems
 	kPlayer.UpdateReligion();
 #ifdef AUI_CITIZENS_MID_TURN_ASSIGN_RUNS_SELF_CONSISTENCY
 	kPlayer.doSelfConsistencyCheckAllCities();
 #endif
 	kPlayer.GetReligions()->SetFoundingReligion(false);
+
+#ifdef NQ_ALLOW_RELIGION_ONE_SHOTS
+	kPlayer.DoReligionOneShots(eReligion);
+#endif
 
 	// In case we have another prophet sitting around, make sure he's set to this religion
 	int iLoopUnit;
@@ -1176,6 +1167,10 @@ void CvGameReligions::EnhanceReligion(PlayerTypes ePlayer, ReligionTypes eReligi
 		bool bResult;
 		LuaSupport::CallHook(pkScriptSystem, "ReligionEnhanced", args.get(), bResult);
 	}
+
+#ifdef NQ_ALLOW_RELIGION_ONE_SHOTS
+	kPlayer.DoReligionOneShots(eReligion);
+#endif
 
 	//Notify the masses
 	for(int iNotifyLoop = 0; iNotifyLoop < MAX_MAJOR_CIVS; ++iNotifyLoop){
@@ -2246,6 +2241,24 @@ int CvGameReligions::GetAdjacentCityReligiousPressure (ReligionTypes eReligion, 
 			iPressure *= (100 + iStrengthMod);
 			iPressure /= 100;
 		}
+
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+		// modifier if this religion spreads to cities owned by founder or not owned by founder
+		int iOwnedCityModifier = 0;
+		if (pToCity->getOwner() == pReligion->m_eFounder)
+		{
+			iOwnedCityModifier = pReligion->m_Beliefs.GetSpreadModifierOwnedCities();
+		}
+		else
+		{
+			iOwnedCityModifier = pReligion->m_Beliefs.GetSpreadModifierUnownedCities();
+		}
+		if (iOwnedCityModifier != 0)
+		{
+			iPressure *= (100 + iOwnedCityModifier);
+			iPressure /= 100;
+		}
+#endif
 
 		// Strengthened spread from World Congress? (World Religion)
 		int iLeaguesMod = GC.getGame().GetGameLeagues()->GetReligionSpreadStrengthModifier(pFromCity->getOwner(), eReligion);

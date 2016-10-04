@@ -427,6 +427,9 @@ public:
 	void DoUnresearchedTechBonusFromKill(UnitTypes eKilledUnitType, int iX, int iY, int &iNumBonuses);
 	void ReportYieldFromKill(YieldTypes eYield, int iValue, int iX, int iY, int iDelay);
 
+#ifdef NQ_ALLOW_RELIGION_ONE_SHOTS 
+	void DoReligionOneShots(ReligionTypes eReligion);
+#endif
 #ifdef NQ_GREAT_WORK_ON_UNIQUE_CONQUEST
 	void DoGreatWorkFromCityConquer(CvCity* pConqueredCity);
 #endif
@@ -1740,6 +1743,15 @@ protected:
 	int m_iGreatWritersCreated;
 	int m_iGreatArtistsCreated;
 	int m_iGreatMusiciansCreated;
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	bool m_bHasUsedShepherdAndFlock;
+#endif
+#ifdef NQ_DEUS_VULT
+	bool m_bHasUsedDeusVult;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	bool m_bHasUsedDharma;
+#endif
 	int m_iGreatScientistsCreated; // GJS
 	int m_iGreatEngineersCreated; // GJS
 	int m_iGreatMerchantsCreated; // GJS

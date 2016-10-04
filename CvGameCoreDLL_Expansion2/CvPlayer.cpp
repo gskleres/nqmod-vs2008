@@ -191,6 +191,15 @@ CvPlayer::CvPlayer() :
 	, m_iGreatWritersCreated(0)
 	, m_iGreatArtistsCreated(0)
 	, m_iGreatMusiciansCreated(0)
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	, m_bHasUsedShepherdAndFlock(false)
+#endif
+#ifdef NQ_DEUS_VULT
+	, m_bHasUsedDeusVult(false)
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	, m_bHasUsedDharma(false)
+#endif
 	, m_iGreatScientistsCreated(0) // GJS
 	, m_iGreatEngineersCreated(0) // GJS
 	, m_iGreatMerchantsCreated(0) // GJS
@@ -824,6 +833,15 @@ void CvPlayer::uninit()
 	m_iGreatWritersCreated = 0;
 	m_iGreatArtistsCreated = 0;
 	m_iGreatMusiciansCreated = 0;
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	m_bHasUsedShepherdAndFlock = false;
+#endif
+#ifdef NQ_DEUS_VULT
+	m_bHasUsedDeusVult = false;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	m_bHasUsedDharma = false;
+#endif
 	m_iGreatScientistsCreated = 0; // GJS
 	m_iGreatEngineersCreated = 0; // GJS
 	m_iGreatMerchantsCreated = 0; // GJS
@@ -11052,6 +11070,146 @@ void CvPlayer::ReportYieldFromKill(YieldTypes eYield, int iValue, int iX, int iY
 	}
 }
 
+#ifdef NQ_ALLOW_RELIGION_ONE_SHOTS 
+void CvPlayer::DoReligionOneShots(ReligionTypes eReligion)
+{
+	bool setUnitReligion = false;
+	const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eReligion, NO_PLAYER);
+
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	if (!m_bHasUsedShepherdAndFlock && pReligion->m_Beliefs.IsShepherdAndFlock())
+	{
+		m_bHasUsedShepherdAndFlock = true;
+		setUnitReligion = true;
+
+		// add free units if Shepherd & Flock belief - I know this is super ugly, faster/easier than making Belief_FreeUnitClasses table... :(
+		// also should be regular settlers, not uniques (like American Pioneer for example)
+		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"));
+		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
+		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
+		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"));
+		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"));
+	}
+#endif
+
+#ifdef NQ_DEUS_VULT
+	if (!m_bHasUsedDeusVult && pReligion->m_Beliefs.IsDeusVult())
+	{
+		m_bHasUsedDeusVult = true;
+		setUnitReligion = true;
+
+		// minimum mounted is chariot archer
+		UnitTypes eBestMountedUnit = (UnitTypes)getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_CHARIOT_ARCHER"));
+		int iBestMountedScore = GC.getUnitInfo(eBestMountedUnit)->GetProductionCost();
+
+		// minimum melee is warrior
+		UnitTypes eBestMeleeUnit = (UnitTypes)getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_WARRIOR"));
+		int iBestMeleeScore = GC.getUnitInfo(eBestMeleeUnit)->GetProductionCost();
+
+		for(int iUnitClassLoop = 0; iUnitClassLoop < GC.getNumUnitClassInfos(); iUnitClassLoop++)
+		{
+			bool bValid = false;
+			CvUnitClassInfo* pkUnitClassInfo = GC.getUnitClassInfo((UnitClassTypes)iUnitClassLoop);
+			if(pkUnitClassInfo == NULL)
+				continue;
+
+			const UnitTypes eLoopUnit = ((UnitTypes)(getCivilizationInfo().getCivilizationUnits(iUnitClassLoop)));
+			if(eLoopUnit != NO_UNIT)
+			{
+				CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eLoopUnit);
+				if(pkUnitInfo == NULL)
+					continue;
+
+				CvUnitEntry& kUnit = *pkUnitInfo;
+
+				// must be a combat unit and cannot be able to found cities
+				if (kUnit.GetCombat() <= 0 || kUnit.IsFound() || kUnit.IsFoundAbroad())
+					continue;
+				
+				// if we don't have the tech for this unit, ignore it
+				if(!(GET_TEAM(getTeam()).GetTeamTechs()->HasTech((TechTypes)(kUnit.GetPrereqAndTech()))))
+					continue;
+
+				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MOUNTED") ||
+					(UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MOUNTED_RANGED"))
+				{
+					if (pkUnitInfo->GetProductionCost() > iBestMountedScore)
+					{
+						iBestMountedScore = pkUnitInfo->GetProductionCost();
+						eBestMountedUnit = eLoopUnit;
+					}
+				}
+				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MELEE"))
+				{
+					if (pkUnitInfo->GetProductionCost() > iBestMeleeScore)
+					{
+						iBestMeleeScore = pkUnitInfo->GetProductionCost();
+						eBestMeleeUnit = eLoopUnit;
+					}
+				}
+			}
+		}
+
+		// 1 missionary
+		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"));
+
+		// 2 mounted
+		if (eBestMountedUnit)
+		{
+			addFreeUnit(eBestMountedUnit);
+			addFreeUnit(eBestMountedUnit);
+		}
+
+		// 4 melee
+		if (eBestMountedUnit)
+		{
+			addFreeUnit(eBestMeleeUnit);
+			addFreeUnit(eBestMeleeUnit);
+			addFreeUnit(eBestMeleeUnit);
+			addFreeUnit(eBestMeleeUnit);
+		}
+	}
+#endif
+
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	if (!m_bHasUsedDharma)
+	{
+		int iGoldenAgeTurns = pReligion->m_Beliefs.GetGoldenAgeTurns();
+		if (iGoldenAgeTurns > 0)
+		{
+			m_bHasUsedDharma = true;
+			int iLengthModifier = getGoldenAgeModifier() + GetPlayerTraits()->GetGoldenAgeDurationModifier(); // Player modifier & Trait modifier
+			if (iLengthModifier > 0)
+			{
+				iGoldenAgeTurns = iGoldenAgeTurns * (100 + iLengthModifier) / 100;
+			}
+			iGoldenAgeTurns = iGoldenAgeTurns * GC.getGame().getGameSpeedInfo().getGoldenAgePercent() / 100; // Game Speed mod
+			changeGoldenAgeTurns(iGoldenAgeTurns);
+		}
+	}
+#endif
+
+	if (setUnitReligion)
+	{
+		// make sure free religious units are of this religion (if they haven't had one assigned already)
+		int iLoopUnit;
+		CvUnit* pLoopUnit;
+		for(pLoopUnit = firstUnit(&iLoopUnit); pLoopUnit != NULL; pLoopUnit = nextUnit(&iLoopUnit))
+		{
+			if (pLoopUnit->getUnitInfo().IsSpreadReligion() || pLoopUnit->getUnitInfo().IsRemoveHeresy())
+			{
+				if (pLoopUnit->GetReligionData()->GetReligion() == NO_RELIGION)
+				{
+					pLoopUnit->GetReligionData()->SetReligion(eReligion);
+					pLoopUnit->GetReligionData()->SetSpreadsLeft(pLoopUnit->getUnitInfo().GetReligionSpreads());
+					pLoopUnit->GetReligionData()->SetReligiousStrength(pLoopUnit->getUnitInfo().GetReligiousStrength());
+				}
+			}
+		}
+	}
+}
+#endif
+
 #ifdef NQ_GREAT_WORK_ON_UNIQUE_CONQUEST
 //	--------------------------------------------------------------------------------
 /// Each a great work from conquering a city
@@ -11285,6 +11443,36 @@ int CvPlayer::GetFaithPerTurnFromReligion() const
 		if(pReligion)
 		{
 			iFaithPerTurn += pReligion->m_Beliefs.GetHolyCityYieldChange(YIELD_FAITH);
+
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+			iFaithPerTurn += pReligion->m_Beliefs.GetFaithPerForeignTradeRoute() * GetTrade()->GetNumForeignTradeRoutes();
+#endif
+
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+			int iFaithPerCityStateThisReligionBonus = pReligion->m_Beliefs.GetFaithPerCityStateThisReligion();
+			if (iFaithPerCityStateThisReligionBonus > 0)
+			{
+				int iNumCityStatesThisReligion = 0;
+				PlayerTypes ePlayer;
+				for (int iPlayerLoop = MAX_MAJOR_CIVS; iPlayerLoop < MAX_CIV_PLAYERS; iPlayerLoop++)
+				{
+					ePlayer = (PlayerTypes) iPlayerLoop;
+					if (GET_PLAYER(ePlayer).isMinorCiv())
+					{
+						CvCity* pkCity = GET_PLAYER(ePlayer).getCapitalCity();
+						if(pkCity)
+						{
+							ReligionTypes eMinorReligion = pkCity->GetCityReligions()->GetReligiousMajority();
+							if(eMinorReligion != NO_RELIGION && eMinorReligion == eFoundedReligion)
+							{
+								iNumCityStatesThisReligion++;
+							}
+						}
+					}
+				}
+				iFaithPerTurn += iFaithPerCityStateThisReligionBonus * iNumCityStatesThisReligion;
+			}
+#endif
 
 			int iTemp = pReligion->m_Beliefs.GetYieldChangePerForeignCity(YIELD_FAITH);
 			if (iTemp > 0)
@@ -23613,6 +23801,15 @@ void CvPlayer::Read(FDataStream& kStream)
 	kStream >> m_iGreatWritersCreated;
 	kStream >> m_iGreatArtistsCreated;
 	kStream >> m_iGreatMusiciansCreated;
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	kStream >> m_bHasUsedShepherdAndFlock;
+#endif
+#ifdef NQ_DEUS_VULT
+	kStream >> m_bHasUsedDeusVult;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	kStream >> m_bHasUsedDharma;
+#endif
 	kStream >> m_iGreatScientistsCreated; // GJS
 	kStream >> m_iGreatEngineersCreated; // GJS
 	kStream >> m_iGreatMerchantsCreated; // GJS
@@ -24168,6 +24365,15 @@ void CvPlayer::Write(FDataStream& kStream) const
 	kStream << m_iGreatWritersCreated;
 	kStream << m_iGreatArtistsCreated;
 	kStream << m_iGreatMusiciansCreated;
+#ifdef NQ_SHEPHERD_AND_FLOCK
+	kStream << m_bHasUsedShepherdAndFlock;
+#endif
+#ifdef NQ_DEUS_VULT
+	kStream << m_bHasUsedDeusVult;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	kStream << m_bHasUsedDharma;
+#endif
 	kStream << m_iGreatScientistsCreated; // GJS
 	kStream << m_iGreatEngineersCreated; // GJS
 	kStream << m_iGreatMerchantsCreated; // GJS

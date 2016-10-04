@@ -5096,7 +5096,7 @@ int CvCity::GetFaithPurchaseCost(UnitTypes eUnit, bool bIncludeBeliefDiscounts)
 
 	// Make the number not be funky
 #ifdef NQ_FAITH_COST_ROUNDS_TO_NEAREST_5
-	iCost /= 5;
+	iCost /= 5; // TODO: This should be put into XML as FAITH_PURCHASE_VISIBLE_DIVISOR();
 	iCost *= 5;
 #else
 	int iDivisor = /*10*/ GC.getGOLD_PURCHASE_VISIBLE_DIVISOR();
@@ -7044,6 +7044,16 @@ void CvCity::UpdateReligion(ReligionTypes eNewMajority)
 								iYieldFromBuilding += pReligion->m_Beliefs.GetYieldChangeWorldWonder((YieldTypes)iYield);
 							}
 
+#ifdef NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
+							if (iYield == YIELD_GOLD)
+							{
+								CvBuildingEntry *pkEntry = GC.getBuildingInfo(eBuilding);
+								if (pkEntry && pkEntry->GetFaithCost() > 0 && pkEntry->IsUnlockedByBelief() && pkEntry->GetProductionCost() == -1)
+								{
+									iYieldFromBuilding += pReligion->m_Beliefs.GetFaithBuildingTourism();
+								}
+							}
+#endif
 							switch(iYield)
 							{
 							case YIELD_CULTURE:

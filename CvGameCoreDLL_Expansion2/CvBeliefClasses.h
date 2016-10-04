@@ -61,6 +61,22 @@ public:
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	int GetMissionaryExtraSpreads() const;
 #endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	int GetSpreadModifierOwnedCities() const;
+	int GetSpreadModifierUnownedCities() const;
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	int GetExtraTradeRoutes() const;
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	int GetFaithPerCityStateThisReligion() const;
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	int GetFaithPerForeignTradeRoute() const;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	int GetGoldenAgeTurns() const;
+#endif
 	int GetMissionaryCostModifier() const;
 	int GetFriendlyCityStateSpreadModifier() const;
 	int GetGreatPersonExpendedFaith() const;
@@ -80,6 +96,9 @@ public:
 	bool ConvertsBarbarians() const;
 #ifdef NQ_SHEPHERD_AND_FLOCK
 	bool ShepherdAndFlock() const;
+#endif
+#ifdef NQ_DEUS_VULT
+	bool DeusVult() const;
 #endif
 	bool FaithPurchaseAllGreatPeople() const;
 
@@ -153,6 +172,22 @@ protected:
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	int m_iMissionaryExtraSpreads;
 #endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	int m_iSpreadModifierOwnedCities;
+	int m_iSpreadModifierUnownedCities;
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	int m_iExtraTradeRoutes;
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	int m_iFaithPerCityStateThisReligion;
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	int m_iFaithPerForeignTradeRoute;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	int m_iGoldenAgeTurns;
+#endif
 	int m_iMissionaryCostModifier;
 	int m_iFriendlyCityStateSpreadModifier;
 	int m_iGreatPersonExpendedFaith;
@@ -172,6 +207,9 @@ protected:
 	bool m_bConvertsBarbarians;
 #ifdef NQ_SHEPHERD_AND_FLOCK
 	bool m_bShepherdAndFlock;
+#endif
+#ifdef NQ_DEUS_VULT
+	bool m_bDeusVult;
 #endif
 	bool m_bFaithPurchaseAllGreatPeople;
 
@@ -340,6 +378,40 @@ public:
 		return m_iMissionaryExtraSpreads;
 	};
 #endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	int GetSpreadModifierOwnedCities() const
+	{
+		return m_iSpreadModifierOwnedCities;
+	};
+	int GetSpreadModifierUnownedCities() const
+	{
+		return m_iSpreadModifierUnownedCities;
+	};
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	int GetExtraTradeRoutes() const
+	{
+		return m_iExtraTradeRoutes;
+	};
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	int GetFaithPerCityStateThisReligion() const
+	{
+		return m_iFaithPerCityStateThisReligion;
+	};
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	int GetFaithPerForeignTradeRoute() const
+	{
+		return m_iFaithPerForeignTradeRoute;
+	};
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	int GetGoldenAgeTurns() const
+	{
+		return m_iGoldenAgeTurns;
+	};
+#endif
 	int GetMissionaryCostModifier() const
 	{
 		return m_iMissionaryCostModifier;
@@ -432,6 +504,9 @@ public:
 #ifdef NQ_SHEPHERD_AND_FLOCK
 	bool IsShepherdAndFlock() const;
 #endif
+#ifdef NQ_DEUS_VULT
+	bool IsDeusVult() const;
+#endif
 	bool IsFaithPurchaseAllGreatPeople() const;
 
 	// Serialization
@@ -456,6 +531,22 @@ private:
 	int m_iMissionaryStrengthModifier;
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	int m_iMissionaryExtraSpreads;
+#endif
+#ifdef NQ_SPREAD_MODIFIER_OWNED_CITIES
+	int m_iSpreadModifierOwnedCities;
+	int m_iSpreadModifierUnownedCities;
+#endif
+#ifdef NQ_EXTRA_TRADE_ROUTES_FROM_BELIEF
+	int m_iExtraTradeRoutes;
+#endif
+#ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
+	int m_iFaithPerCityStateThisReligion;
+#endif
+#ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
+	int m_iFaithPerForeignTradeRoute;
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	int m_iGoldenAgeTurns;
 #endif
 	int m_iMissionaryCostModifier;
 	int m_iFriendlyCityStateSpreadModifier;
