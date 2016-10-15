@@ -14,4 +14,11 @@
 		</Row>
 	</Colors>
 	
+	<!-- Mehal Safari is now purchasable with Faith. -->
+	<Units>
+		<Update>
+			<Where Type="UNIT_ETHIOPIAN_MEHAL_SEFARI" />
+		</Update>
+	</Units>
+	
 </GameData>
