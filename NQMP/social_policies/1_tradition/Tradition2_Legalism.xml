@@ -28,6 +28,12 @@
 		</Row>
 	</Language_RU_RU>
 	<Policy_BuildingClassCultureChanges>
+		<!-- Palace -->
+		<Row>
+			<PolicyType>POLICY_LEGALISM</PolicyType>
+			<BuildingClassType>BUILDINGCLASS_PALACE</BuildingClassType>
+			<CultureChange>2</CultureChange>
+		</Row>
 		<!-- Circus Maximus -->
 		<Row>
 			<PolicyType>POLICY_LEGALISM</PolicyType>
