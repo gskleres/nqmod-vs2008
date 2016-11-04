@@ -319,7 +319,7 @@ public:
 	{
 		return (m_iAuxData > target.m_iAuxData);
 	};
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_ITERATORIZE)
 	inline AITacticalTargetType GetTargetType() const
 #else
 	inline AITacticalTargetType GetTargetType()
@@ -331,7 +331,7 @@ public:
 	{
 		m_eTargetType = eTargetType;
 	}
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_ITERATORIZE)
 	inline int GetTargetX() const
 #else
 	inline int GetTargetX()
@@ -343,7 +343,7 @@ public:
 	{
 		m_iTargetX = iValue;
 	}
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_ITERATORIZE)
 	inline int GetTargetY() const
 #else
 	inline int GetTargetY()

@@ -19644,7 +19644,7 @@ void CvPlayer::changeResourceSiphoned(ResourceTypes eIndex, int iChange)
 }
 
 //	--------------------------------------------------------------------------------
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 int CvPlayer::getResourceInOwnedPlots(ResourceTypes eIndex) const
 #else
 int CvPlayer::getResourceInOwnedPlots(ResourceTypes eIndex)
@@ -19656,7 +19656,7 @@ int CvPlayer::getResourceInOwnedPlots(ResourceTypes eIndex)
 	int iCount = 0;
 
 	// Loop through all plots
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	for (uint uiPlotIndex = 0; uiPlotIndex < m_aiPlots.size(); uiPlotIndex++)
 	{
 		if (m_aiPlots[uiPlotIndex] == -1)
@@ -19715,7 +19715,7 @@ void CvPlayer::changeImprovementCount(ImprovementTypes eIndex, int iChange)
 
 
 //	--------------------------------------------------------------------------------
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 int CvPlayer::getGreatPersonImprovementCount() const
 #else
 int CvPlayer::getGreatPersonImprovementCount()
@@ -25225,7 +25225,7 @@ CvPlotsVector& CvPlayer::GetPlots(void)
 	return m_aiPlots;
 }
 
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 const CvPlotsVector& CvPlayer::GetPlots() const
 {
 	return m_aiPlots;
@@ -25633,14 +25633,14 @@ void CvPlayer::ChangeNumNaturalWondersDiscoveredInArea(int iChange)
 
 //	--------------------------------------------------------------------------------
 /// Calculates how many Natural Wonders are in plots this player owns
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 int CvPlayer::GetNumNaturalWondersInOwnedPlots() const
 #else
 int CvPlayer::GetNumNaturalWondersInOwnedPlots()
 #endif
 {
 	int iValue = 0;
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(AUI_VOTING_TWEAKED_PROPOSAL_SCORING)
 	const CvPlotsVector& aiPlots = GetPlots();
 #else
 	CvPlotsVector& aiPlots = GetPlots();

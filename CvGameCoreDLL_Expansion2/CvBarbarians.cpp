@@ -195,11 +195,15 @@ void CvBarbarians::BeginTurn()
 //	--------------------------------------------------------------------------------
 void CvBarbarians::MapInit(int iWorldNumPlots)
 {
+#ifndef AUI_WARNING_FIXES
 	if (m_aiPlotBarbCampSpawnCounter != NULL)
+#endif
 	{
 		SAFE_DELETE_ARRAY(m_aiPlotBarbCampSpawnCounter);
 	}
+#ifndef AUI_WARNING_FIXES
 	if (m_aiPlotBarbCampNumUnitsSpawned != NULL)
+#endif
 	{
 		SAFE_DELETE_ARRAY(m_aiPlotBarbCampNumUnitsSpawned);
 	}
@@ -476,6 +480,31 @@ void CvBarbarians::DoCamps()
 																			}
 																		}
 																	}
+#ifdef AUI_BARBARIANS_FIX_DO_CAMPS_CONSIDER_STARTING_SETTLER
+																	if (kGame.getElapsedGameTurns() == 0 && pNearbyCampPlot->isUnit())
+																	{
+																		bool bHasStartingSettler = false;
+																		const IDInfo* pUnitNode = pNearbyCampPlot->headUnitNode();
+																		const UnitHandle pLoopUnit;
+
+																		while (pUnitNode != NULL)
+																		{
+																			pLoopUnit = GetPlayerUnit(*pUnitNode);
+																			pUnitNode = pNearbyCampPlot->nextUnitNode(pUnitNode);
+																			if (!pLoopUnit->IsCanDefend() && pLoopUnit->getUnitInfo().IsFound())
+																			{
+																				bHasStartingSettler = true;
+																				pUnitNode = NULL;
+																			}
+																		}
+
+																		if (bHasStartingSettler)
+																		{
+																			bSomethingTooClose = true;
+																			break;
+																		}
+																	}
+#endif
 																}
 
 																// Can't be too close to another Camp

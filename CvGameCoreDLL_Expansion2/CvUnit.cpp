@@ -11518,16 +11518,6 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 	VALIDATE_OBJECT
 
 	bool bIsEmbarkedAttackingLand = isEmbarked() && (pToPlot && !pToPlot->isWater());
-#ifdef NQ_HEAVY_CHARGE_DOWNHILL
-	bool isAttackingFromHigherElevation = false;
-	if (pFromPlot && pToPlot)
-	{
-		if ((pFromPlot->isMountain() && !pToPlot->isMountain()) || (pFromPlot->isHills() && pToPlot->isFlatlands()))
-		{
-			isAttackingFromHigherElevation = true;
-		}
-	}
-#endif
 
 	if(isEmbarked() && !bIsEmbarkedAttackingLand)
 		return GetEmbarkedUnitDefense();
@@ -11564,15 +11554,6 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 
 	if(pToPlot != NULL)
 	{
-#ifdef NQ_HEAVY_CHARGE_DOWNHILL
-		// Heavy Charge Downhill
-		if (GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation)
-		{
-			iTempModifier = GetHeavyChargeDownhill();
-			iModifier += iTempModifier;
-		}
-#endif
-
 		// Attacking a City
 		if(pToPlot->isCity())
 		{
@@ -11653,6 +11634,14 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 
 		if(pFromPlot != NULL)
 		{
+#ifdef NQ_HEAVY_CHARGE_DOWNHILL
+			// Heavy Charge Downhill
+			if (GetHeavyChargeDownhill() > 0 && ((pFromPlot->isMountain() && !pToPlot->isMountain()) || (pFromPlot->isHills() && pToPlot->isFlatlands())))
+			{
+				iTempModifier = GetHeavyChargeDownhill();
+				iModifier += iTempModifier;
+			}
+#endif
 			// Attacking across a river
 			if(!isRiverCrossingNoPenalty())
 			{
@@ -11704,22 +11693,13 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 
 #ifdef AUI_UNIT_FIX_HEAVY_CHARGE_BONUS_INTEGRATED_INTO_STACKS
 #ifdef NQ_HEAVY_CHARGE_DOWNHILL
-	if (pDefender && pToPlot && pFromPlot)
-	{
-		bool isAttackingFromHigherElevation = 
-			(pFromPlot->isMountain() && !pToPlot->isMountain()) || // attacking from mountain to non-mountain
-			(pFromPlot->isHills() && pToPlot->isFlatlands()); // attacking from hills to flatlands
-		if ((IsCanHeavyCharge() || (GetHeavyChargeDownhill() > 0 && isAttackingFromHigherElevation)) && !pDefender->CanFallBackFromMelee(*this, pToPlot))
-		{
-			iCombat = (iCombat * 150) / 100;
-		}
-	}
+	if (IsCanHeavyCharge(pFromPlot, pToPlot) && pDefender && pToPlot && !pDefender->CanFallBackFromMelee(*this, pToPlot))
 #else
 	if (IsCanHeavyCharge() && pDefender && pToPlot && !pDefender->CanFallBackFromMelee(*this, pToPlot))
+#endif
 	{
 		iCombat = (iCombat * 150) / 100;
 	}
-#endif
 #endif
 
 	return std::max(1, iCombat);
@@ -17650,6 +17630,20 @@ void CvUnit::ChangeHeavyChargeDownhill(int iChange)
 	{
 		m_iHeavyChargeDownhill += iChange;
 	}
+}
+
+bool CvUnit::IsCanHeavyCharge(const CvPlot* pFromPlot, const CvPlot* pToPlot) const
+{
+	if (IsCanHeavyCharge())
+	{
+		return true;
+	}
+	else if (GetHeavyChargeDownhill() > 0 && pFromPlot && pToPlot)
+	{
+		// Higher PlotType = lower elevation (Mountain -> Hills -> Flatland -> Ocean)
+		return (pFromPlot->getPlotType() < pToPlot->getPlotType());
+	}
+	return false;
 }
 #endif
 

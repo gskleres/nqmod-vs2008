@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
-	<!-- Table data 
+	<!-- Table data -->
 	<GameOptions>
 		<Row>
 			<Type>GAMEOPTION_ALLOW_CAPITOL_GIFTING</Type>
@@ -55,5 +55,5 @@
 		<Row Tag="TXT_KEY_GAME_OPTION_ALLOW_CAPITOL_GIFTING_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Players are allowed to gift their capitols to other players, potentially as an alternative or supplement to being voted irrelevant. AI players can also gift capitols, but will only do so if they wish to completely capitulate.</Text>
 		</Row>
-	</Language_RU_RU>-->
+	</Language_RU_RU>
 </GameData>

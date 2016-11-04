@@ -33,7 +33,7 @@ public:
 	void Read(FDataStream& kStream);
 	void Write(FDataStream& kStream);
 
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 	CvCity* GetCity() const;
 	CvPlayer* GetPlayer() const;
 #else
@@ -55,7 +55,7 @@ public:
 	bool IsNoAutoAssignSpecialists() const;
 	void SetNoAutoAssignSpecialists(bool bValue);
 
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 	bool IsAvoidGrowth() const;
 	bool IsForcedAvoidGrowth() const;
 #else
@@ -155,7 +155,7 @@ public:
 #endif
 	void DoSpecialists();
 
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 	bool IsCanAddSpecialistToBuilding(BuildingTypes eBuilding) const;
 #else
 	bool IsCanAddSpecialistToBuilding(BuildingTypes eBuilding);
@@ -186,7 +186,7 @@ public:
 
 	void DoClearForcedSpecialists();
 
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 	int GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding) const;
 
 	int GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass) const;

@@ -233,7 +233,7 @@ void CvCityCitizens::Write(FDataStream& kStream)
 }
 
 /// Returns the City object this set of Citizens is associated with
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 CvCity* CvCityCitizens::GetCity() const
 #else
 CvCity* CvCityCitizens::GetCity()
@@ -243,7 +243,7 @@ CvCity* CvCityCitizens::GetCity()
 }
 
 /// Returns the Player object this City belongs to
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 CvPlayer* CvCityCitizens::GetPlayer() const
 #else
 CvPlayer* CvCityCitizens::GetPlayer()
@@ -761,7 +761,7 @@ void CvCityCitizens::SetNoAutoAssignSpecialists(bool bValue)
 }
 
 /// Is this City avoiding growth?
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 bool CvCityCitizens::IsAvoidGrowth() const
 #else
 bool CvCityCitizens::IsAvoidGrowth()
@@ -830,7 +830,7 @@ bool CvCityCitizens::IsAvoidGrowth()
 	return IsForcedAvoidGrowth();
 }
 
-#if defined(AUI_CONSTIFY)
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 bool CvCityCitizens::IsForcedAvoidGrowth() const
 #else
 bool CvCityCitizens::IsForcedAvoidGrowth()
@@ -3118,7 +3118,7 @@ void CvCityCitizens::DoSpecialists()
 }
 
 /// How many Specialists are assigned to this Building Type?
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 int CvCityCitizens::GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding) const
 #else
 int CvCityCitizens::GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kBuilding)
@@ -3128,7 +3128,7 @@ int CvCityCitizens::GetNumSpecialistsAllowedByBuilding(const CvBuildingEntry& kB
 }
 
 /// Are we in the position to add another Specialist to eBuilding?
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 bool CvCityCitizens::IsCanAddSpecialistToBuilding(BuildingTypes eBuilding) const
 #else
 bool CvCityCitizens::IsCanAddSpecialistToBuilding(BuildingTypes eBuilding)
@@ -3573,7 +3573,7 @@ void CvCityCitizens::DoClearForcedSpecialists()
 }
 
 /// What upgrade progress does a Specialist need to level up?
-#ifdef AUI_CONSTIFY
+#if defined(AUI_CONSTIFY) || defined(AUI_CITIZENS_FIX_REMOVE_WORST_SPECIALIST_ACTUALLY_REMOVES_WORST)
 int CvCityCitizens::GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass) const
 #else
 int CvCityCitizens::GetSpecialistUpgradeThreshold(UnitClassTypes eUnitClass)
