@@ -190,7 +190,7 @@
 #define AUI_DEAL_FIX_ACCURATE_EARLYGAME_RESEARCH_AGREEMENT_YIELDS
 */
 /// Automating a unit no longer resets the turn timer (from theCAndeMan)
-#define NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
+//#define NQM_GAME_FIX_TURN_TIMER_RESET_ON_AUTOMATION
 /*
 /// If multiple civs have are eligible to found the league, choose a random one instead of the one with the highest slot
 #define AUI_VOTING_RANDOMIZED_LEAGUE_FOUNDER
