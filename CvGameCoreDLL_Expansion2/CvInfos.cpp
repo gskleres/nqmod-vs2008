@@ -5702,27 +5702,11 @@ int CvWorldInfo::getMaxActiveReligions() const
 #ifdef NQ_ALLOW_EXTRA_RELIGIONS
 	if (GC.getGame().isOption("GAMEOPTION_ALLOW_EXTRA_RELIGIONS"))
 	{
-		int iNumMajorPlayersEver = 0;
-		SlotStatus eLoopSlotStatus = SS_OPEN;
-
-		for(int iI = 0; iI < MAX_MAJOR_CIVS; iI++)
-		{
-			eLoopSlotStatus = CvPreGame::slotStatus(PlayerTypes(iI));
-			if(eLoopSlotStatus == SS_TAKEN || eLoopSlotStatus == SS_COMPUTER)
-			{
-				iNumMajorPlayersEver++;
-			}
-		}
-
-		return iNumMajorPlayersEver;
+		return GC.getGame().countMajorCivsEverAlive();
 	}
-	else
-	{
-		return m_iMaxActiveReligions;
-	}
-#else
-	return m_iMaxActiveReligions;
 #endif
+
+	return m_iMaxActiveReligions;
 }
 //------------------------------------------------------------------------------
 int CvWorldInfo::getTerrainGrainChange() const
