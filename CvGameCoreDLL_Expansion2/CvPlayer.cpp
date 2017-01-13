@@ -191,8 +191,8 @@ CvPlayer::CvPlayer() :
 	, m_iGreatWritersCreated(0)
 	, m_iGreatArtistsCreated(0)
 	, m_iGreatMusiciansCreated(0)
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	, m_bHasUsedShepherdAndFlock(false)
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	, m_bHasUsedReligiousSettlements(false)
 #endif
 #ifdef NQ_DEUS_VULT
 	, m_bHasUsedDeusVult(false)
@@ -833,8 +833,8 @@ void CvPlayer::uninit()
 	m_iGreatWritersCreated = 0;
 	m_iGreatArtistsCreated = 0;
 	m_iGreatMusiciansCreated = 0;
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	m_bHasUsedShepherdAndFlock = false;
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	m_bHasUsedReligiousSettlements = false;
 #endif
 #ifdef NQ_DEUS_VULT
 	m_bHasUsedDeusVult = false;
@@ -11076,19 +11076,18 @@ void CvPlayer::DoReligionOneShots(ReligionTypes eReligion)
 	bool setUnitReligion = false;
 	const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eReligion, NO_PLAYER);
 
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	if (!m_bHasUsedShepherdAndFlock && pReligion->m_Beliefs.IsShepherdAndFlock())
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	if (!m_bHasUsedReligiousSettlements && pReligion->m_Beliefs.GetNumFreeSettlers() > 0)
 	{
-		m_bHasUsedShepherdAndFlock = true;
-		setUnitReligion = true;
+		m_bHasUsedReligiousSettlements = true;
 
-		// add free units if Shepherd & Flock belief - I know this is super ugly, faster/easier than making Belief_FreeUnitClasses table... :(
+		// add free settlers from Religious Settlements belief - I know this is super ugly, sorry :(
+		// real solution is to make a Belief_FreeUnitClasses table and figure out how to check for each belief being triggered only once... :(
 		// also should be regular settlers, not uniques (like American Pioneer for example)
-		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"));
-		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
-		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
-		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"));
-		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"));
+		for (int iFreeSettlerLoop = 0; iFreeSettlerLoop < pReligion->m_Beliefs.GetNumFreeSettlers(); iFreeSettlerLoop++)
+		{
+			addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_SETTLER"));
+		}
 	}
 #endif
 
@@ -23801,8 +23800,8 @@ void CvPlayer::Read(FDataStream& kStream)
 	kStream >> m_iGreatWritersCreated;
 	kStream >> m_iGreatArtistsCreated;
 	kStream >> m_iGreatMusiciansCreated;
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	kStream >> m_bHasUsedShepherdAndFlock;
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	kStream >> m_bHasUsedReligiousSettlements;
 #endif
 #ifdef NQ_DEUS_VULT
 	kStream >> m_bHasUsedDeusVult;
@@ -24365,8 +24364,8 @@ void CvPlayer::Write(FDataStream& kStream) const
 	kStream << m_iGreatWritersCreated;
 	kStream << m_iGreatArtistsCreated;
 	kStream << m_iGreatMusiciansCreated;
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	kStream << m_bHasUsedShepherdAndFlock;
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	kStream << m_bHasUsedReligiousSettlements;
 #endif
 #ifdef NQ_DEUS_VULT
 	kStream << m_bHasUsedDeusVult;

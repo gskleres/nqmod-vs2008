@@ -461,12 +461,12 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>religion/founders/ShepherdAndFlock.sql</FileName>
+        <FileName>religion/founders/ReligiousSettlements.sql</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>religion/founders/ShepherdAndFlock.xml</FileName>
+        <FileName>religion/founders/ReligiousSettlements.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2287,11 +2287,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="religion\founders\ShepherdAndFlock.sql">
+    <Content Include="religion\founders\ReligiousSettlements.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="religion\founders\ShepherdAndFlock.xml">
+    <Content Include="religion\founders\ReligiousSettlements.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

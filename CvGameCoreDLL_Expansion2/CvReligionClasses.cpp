@@ -6431,6 +6431,11 @@ int CvReligionAI::ScoreBeliefForPlayer(CvBeliefEntry* pEntry)
 		}
 	}
 
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	// extra value for expansionist civs
+	iRtnValue += pEntry->GetNumFreeSettlers() * iFlavorExpansion;
+#endif
+
 	//-----------------
 	// ENHANCER BELIEFS
 	//-----------------

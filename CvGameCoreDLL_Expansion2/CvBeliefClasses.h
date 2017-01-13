@@ -86,6 +86,9 @@ public:
 	int GetSpyPressure() const;
 	int GetInquisitorPressureRetention() const;
 	int GetFaithBuildingTourism() const;
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	int GetNumFreeSettlers() const;
+#endif
 
 	bool IsPantheonBelief() const;
 	bool IsFounderBelief() const;
@@ -94,9 +97,6 @@ public:
 	bool IsReformationBelief() const;
 	bool RequiresPeace() const;
 	bool ConvertsBarbarians() const;
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	bool ShepherdAndFlock() const;
-#endif
 #ifdef NQ_DEUS_VULT
 	bool DeusVult() const;
 #endif
@@ -197,6 +197,9 @@ protected:
 	int m_iSpyPressure;
 	int m_iInquisitorPressureRetention;
 	int m_iFaithBuildingTourism;
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	int m_iNumFreeSettlers;
+#endif
 
 	bool m_bPantheon;
 	bool m_bFounder;
@@ -205,9 +208,6 @@ protected:
 	bool m_bReformer;
 	bool m_bRequiresPeace;
 	bool m_bConvertsBarbarians;
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	bool m_bShepherdAndFlock;
-#endif
 #ifdef NQ_DEUS_VULT
 	bool m_bDeusVult;
 #endif
@@ -497,13 +497,13 @@ public:
 	int GetYieldChangeWorldWonder(YieldTypes eYieldType) const;
 	int GetYieldModifierNaturalWonder(YieldTypes eYieldType) const;
 	int GetMaxYieldModifierPerFollower(YieldTypes eYieldType) const;
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	int GetNumFreeSettlers() const;
+#endif
 
 	bool IsBuildingClassEnabled(BuildingClassTypes eType) const;
 	bool IsFaithBuyingEnabled(EraTypes eEra) const;
 	bool IsConvertsBarbarians() const;
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	bool IsShepherdAndFlock() const;
-#endif
 #ifdef NQ_DEUS_VULT
 	bool IsDeusVult() const;
 #endif

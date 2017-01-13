@@ -1743,8 +1743,8 @@ protected:
 	int m_iGreatWritersCreated;
 	int m_iGreatArtistsCreated;
 	int m_iGreatMusiciansCreated;
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	bool m_bHasUsedShepherdAndFlock;
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	bool m_bHasUsedReligiousSettlements;
 #endif
 #ifdef NQ_DEUS_VULT
 	bool m_bHasUsedDeusVult;

@@ -708,10 +708,12 @@
 // extra missionary spreads from religious belief
 #define NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 
-// allow religion one-shots (like deus vult, shepherd & flock, dharma)
+// allow religion one-shots (like deus vult, religious settlements, dharma)
 #define NQ_ALLOW_RELIGION_ONE_SHOTS
-// free units from belief of Shepherd & Flock
-#define NQ_SHEPHERD_AND_FLOCK
+// allow free settlers from beliefs
+#define NQ_FREE_SETTLERS_FROM_BELIEF
+// plot culture cost modifier from beliefs now only impacts religioun founder's cities
+#define NQ_PLOT_COST_FROM_BELIEF_IS_UNIQUE
 // free units from belief of Deus Vult
 #define NQ_DEUS_VULT
 // allow golden ages from beliefs

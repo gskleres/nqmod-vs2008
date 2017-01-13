@@ -8243,14 +8243,20 @@ int CvCity::GetJONSCultureThreshold() const
 	if(eMajority != NO_RELIGION)
 	{
 		const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eMajority, getOwner());
+#ifdef NQ_PLOT_COST_FROM_BELIEF_IS_UNIQUE
+		if (pReligion && getOwner() == pReligion->m_eFounder)
+#else
 		if(pReligion)
+#endif
 		{
 			iReligionMod = pReligion->m_Beliefs.GetPlotCultureCostModifier();
+#ifndef NQ_PLOT_COST_FROM_BELIEF_IS_UNIQUE
 			BeliefTypes eSecondaryPantheon = GetCityReligions()->GetSecondaryReligionPantheonBelief();
 			if (eSecondaryPantheon != NO_BELIEF)
 			{
 				iReligionMod += GC.GetGameBeliefs()->GetEntry(eSecondaryPantheon)->GetPlotCultureCostModifier();
 			}
+#endif
 		}
 	}
 

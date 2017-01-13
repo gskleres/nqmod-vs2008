@@ -76,6 +76,9 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_iSpyPressure(0),
 	m_iInquisitorPressureRetention(0),
 	m_iFaithBuildingTourism(0),
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	m_iNumFreeSettlers(0),
+#endif
 
 	m_bPantheon(false),
 	m_bFounder(false),
@@ -84,9 +87,6 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_bReformer(false),
 	m_bRequiresPeace(false),
 	m_bConvertsBarbarians(false),
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	m_bShepherdAndFlock(false),
-#endif
 #ifdef NQ_DEUS_VULT
 	m_bDeusVult(false),
 #endif
@@ -443,6 +443,14 @@ int CvBeliefEntry::GetFaithBuildingTourism() const
 	return m_iFaithBuildingTourism;
 }
 
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+/// Accessor: how many free settlers do I get from selecting this belief?
+int CvBeliefEntry::GetNumFreeSettlers() const
+{
+	return m_iNumFreeSettlers;
+}
+#endif
+
 /// Accessor: is this a belief a pantheon can adopt
 bool CvBeliefEntry::IsPantheonBelief() const
 {
@@ -484,14 +492,6 @@ bool CvBeliefEntry::ConvertsBarbarians() const
 {
 	return m_bConvertsBarbarians;
 }
-
-#ifdef NQ_SHEPHERD_AND_FLOCK
-/// Accessor: is this belief shepherd and flock?
-bool CvBeliefEntry::ShepherdAndFlock() const
-{
-	return m_bShepherdAndFlock;
-}
-#endif
 
 #ifdef NQ_DEUS_VULT
 /// Accessor: is this belief deus vult?
@@ -810,6 +810,9 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iSpyPressure					  = kResults.GetInt("SpyPressure");
 	m_iInquisitorPressureRetention    = kResults.GetInt("InquisitorPressureRetention");
 	m_iFaithBuildingTourism           = kResults.GetInt("FaithBuildingTourism");
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+	m_iNumFreeSettlers				  = kResults.GetInt("NumFreeSettlers");
+#endif
 
 	m_bPantheon						  = kResults.GetBool("Pantheon");
 	m_bFounder						  = kResults.GetBool("Founder");
@@ -818,9 +821,6 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_bReformer						  = kResults.GetBool("Reformation");
 	m_bRequiresPeace				  = kResults.GetBool("RequiresPeace");
 	m_bConvertsBarbarians			  = kResults.GetBool("ConvertsBarbarians");
-#ifdef NQ_SHEPHERD_AND_FLOCK
-	m_bShepherdAndFlock				  = kResults.GetBool("ShepherdAndFlock");
-#endif
 #ifdef NQ_DEUS_VULT
 	m_bDeusVult						  = kResults.GetBool("DeusVult");
 #endif
@@ -1929,6 +1929,25 @@ int CvReligionBeliefs::GetMaxYieldModifierPerFollower(YieldTypes eYieldType) con
 	return rtnValue;
 }
 
+#ifdef NQ_FREE_SETTLERS_FROM_BELIEF
+/// Get number of free settlers from beliefs
+int CvReligionBeliefs::GetNumFreeSettlers() const
+{
+	CvBeliefXMLEntries* pBeliefs = GC.GetGameBeliefs();
+	int rtnValue = 0;
+
+	for(int i = 0; i < pBeliefs->GetNumBeliefs(); i++)
+	{
+		if(HasBelief((BeliefTypes)i))
+		{
+			rtnValue += pBeliefs->GetEntry(i)->GetNumFreeSettlers();
+		}
+	}
+
+	return rtnValue;
+}
+#endif
+
 /// Does this belief allow a building to be constructed?
 bool CvReligionBeliefs::IsBuildingClassEnabled(BuildingClassTypes eType) const
 {
@@ -1972,27 +1991,6 @@ bool CvReligionBeliefs::IsConvertsBarbarians() const
 
 	return false;
 }
-
-#ifdef NQ_SHEPHERD_AND_FLOCK
-/// Is there a belief that matches Shepherd & Flock?
-bool CvReligionBeliefs::IsShepherdAndFlock() const
-{
-	CvBeliefXMLEntries* pBeliefs = GC.GetGameBeliefs();
-
-	for(int i = 0; i < pBeliefs->GetNumBeliefs(); i++)
-	{
-		if(HasBelief((BeliefTypes)i))
-		{
-			if (pBeliefs->GetEntry(i)->ShepherdAndFlock())
-			{
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-#endif
 
 #ifdef NQ_DEUS_VULT
 /// Is there a belief that matches Deus Vult?
