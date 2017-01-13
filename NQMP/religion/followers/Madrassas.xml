@@ -35,6 +35,7 @@
 			<UnlockedByBelief>true</UnlockedByBelief>
 			<Description>TXT_KEY_BUILDING_MADRASSA</Description>
 			<Civilopedia>TXT_KEY_CIV5_BUILDINGS_MADRASSA_TEXT</Civilopedia>
+			<Help>TXT_KEY_BUILDING_MADRASSA_HELP</Help>
 			<Strategy>TXT_KEY_BUILDING_MADRASSA_STRATEGY</Strategy>
 			<ArtDefineTag>TEMPLE</ArtDefineTag>
 			<MinAreaSize>-1</MinAreaSize>
@@ -81,6 +82,9 @@
 		<Row Tag="TXT_KEY_BUILDING_MADRASSA">
 			<Text>Madrassa</Text>
 		</Row>
+		<Row Tag="TXT_KEY_BUILDING_MADRASSA_HELP">
+			<Text>+1 [ICON_RESEARCH] Science for every 4 [ICON_CITIZEN] Citizens in this City</Text>
+		</Row>
 		<Row Tag="TXT_KEY_CIV5_BUILDINGS_MADRASSA_TEXT">
 			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Madrasa)[ENDCOLOR][NEWLINE][NEWLINE]Madrasa is the Arabic word for any type of educational institution, whether secular or religious (of any religion). The word is variously transliterated madrasah, medresa, madrassa, madraza, medrese, etc. In the West, the word usually refers to a specific type of religious school or college for the study of the Islamic religion, though this may not be the only subject studied. In countries like India, not all students in madrasas are Muslims; there is also a modern curriculum.</Text>
 		</Row>
@@ -97,6 +101,9 @@
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_MADRASSA">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Madrassa</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_MADRASSA_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_RESEARCH] Science for every 4 [ICON_CITIZEN] Citizens in this City</Text>
 		</Row>
 		<Row Tag="TXT_KEY_CIV5_BUILDINGS_MADRASSA_TEXT">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Madrasa)[ENDCOLOR][NEWLINE][NEWLINE]Madrasa is the Arabic word for any type of educational institution, whether secular or religious (of any religion). The word is variously transliterated madrasah, medresa, madrassa, madraza, medrese, etc. In the West, the word usually refers to a specific type of religious school or college for the study of the Islamic religion, though this may not be the only subject studied. In countries like India, not all students in madrasas are Muslims; there is also a modern curriculum.</Text>
@@ -115,6 +122,9 @@
 		<Row Tag="TXT_KEY_BUILDING_MADRASSA">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Madrassa</Text>
 		</Row>
+		<Row Tag="TXT_KEY_BUILDING_MADRASSA_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_RESEARCH] Science for every 4 [ICON_CITIZEN] Citizens in this City</Text>
+		</Row>
 		<Row Tag="TXT_KEY_CIV5_BUILDINGS_MADRASSA_TEXT">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Madrasa)[ENDCOLOR][NEWLINE][NEWLINE]Madrasa is the Arabic word for any type of educational institution, whether secular or religious (of any religion). The word is variously transliterated madrasah, medresa, madrassa, madraza, medrese, etc. In the West, the word usually refers to a specific type of religious school or college for the study of the Islamic religion, though this may not be the only subject studied. In countries like India, not all students in madrasas are Muslims; there is also a modern curriculum.</Text>
 		</Row>
@@ -131,6 +141,9 @@
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_MADRASSA">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Madrassa</Text>
+		</Row>
+		<Row Tag="TXT_KEY_BUILDING_MADRASSA_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_RESEARCH] Science for every 4 [ICON_CITIZEN] Citizens in this City</Text>
 		</Row>
 		<Row Tag="TXT_KEY_CIV5_BUILDINGS_MADRASSA_TEXT">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Madrasa)[ENDCOLOR][NEWLINE][NEWLINE]Madrasa is the Arabic word for any type of educational institution, whether secular or religious (of any religion). The word is variously transliterated madrasah, medresa, madrassa, madraza, medrese, etc. In the West, the word usually refers to a specific type of religious school or college for the study of the Islamic religion, though this may not be the only subject studied. In countries like India, not all students in madrasas are Muslims; there is also a modern curriculum.</Text>
