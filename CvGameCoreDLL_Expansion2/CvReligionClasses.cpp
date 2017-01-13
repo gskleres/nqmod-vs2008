@@ -6443,6 +6443,15 @@ int CvReligionAI::ScoreBeliefForPlayer(CvBeliefEntry* pEntry)
 	iRtnValue += iFlavorDiplomacy * pEntry->GetFriendlyCityStateSpreadModifier() / 20;
 	iRtnValue += iFlavorDefense * pEntry->GetCombatModifierFriendlyCities() / 4;
 	iRtnValue += iFlavorOffense * pEntry->GetCombatModifierEnemyCities() / 4;
+#ifdef NQ_DEUS_VULT
+	if (pEntry->DeusVult())
+	{
+		iRtnValue += (iFlavorOffense + iFlavorDefense) * 3;
+	}
+#endif
+#ifdef NQ_GOLDEN_AGE_TURNS_FROM_BELIEF
+	iRtnValue += pEntry->GetGoldenAgeTurns() * (iFlavorGold + iFlavorCulture) / 5;
+#endif
 
 	// Chosen EARLY?
 	if (iReligionsEnhancedPercent < 33)
