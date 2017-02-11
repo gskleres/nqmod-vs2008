@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2017-02-11 02:41:52 -->
+<GameData>
+	
+	<!-- Cargo Ship cost reduced to 75 (to match Caravan). -->
+	<Units>
+		<Update>
+			<Set Cost="75" />
+			<Where Type="UNIT_CARGO_SHIP" />
+		</Update>
+	</Units>
+	
+</GameData>

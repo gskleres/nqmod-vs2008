@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2017-02-11 02:51:40 -->
+<GameData>
+	
+	<!-- Mechanized Infantry moved to Advanced Ballistics (instead of Mobile Tactics). -->
+	<Units>
+		<Update>
+			<Set PrereqTech="TECH_ADVANCED_BALLISTICS" />
+			<Where Type="UNIT_MECHANIZED_INFANTRY" />
+		</Update>
+		<Update>
+			<Set ObsoleteTech="TECH_ADVANCED_BALLISTICS" />
+			<Where Type="UNIT_INFANTRY" />
+		</Update>
+		<Update>
+			<Set ObsoleteTech="TECH_ADVANCED_BALLISTICS" />
+			<Where Type="UNIT_BRAZILIAN_PRACINHA" />
+		</Update>
+	</Units>
+
+	<!-- Mobile Tactics tech removed from game. -->
+	<Technologies>
+		<Delete Type="TECH_MOBILE_TACTICS" />
+	</Technologies>
+
+</GameData>
