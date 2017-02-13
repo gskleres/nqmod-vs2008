@@ -3,5 +3,7 @@
 <GameData>
   
 	<!-- No changes. -->
-  
+
+	<!-- No changes needed. NOTE: If this file is modified, don't forget to add it to the OnModActivated list. -->
+
 </GameData>
