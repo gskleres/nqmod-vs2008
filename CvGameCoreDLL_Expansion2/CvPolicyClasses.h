@@ -163,6 +163,9 @@ public:
 	int GetExtraTerritoryClaim() const; // NQMP GJS - Colonialism
 	int GetExtraTourismPerGreatWork() const; // NQMP GJS - Cultural Exchange
 	int GetTourismPerWonder() const; // NQMP GJS - Flourishing of the Arts
+#ifdef NQ_TOURISM_PER_CITY
+	int GetTourismPerCity() const;
+#endif
 	int GetProductionFromGarrison() const; // NQMP GJS - Military Caste
 	int GetPolicyBranchType() const;
 	int GetNumExtraBranches() const;
@@ -372,6 +375,10 @@ private:
 	int m_iExtraTerritoryClaim; // NQMP GJS - Colonialism
 	int m_iExtraTourismPerGreatWork; // NQMP GJS - Cultural Exchange
 	int m_iTourismPerWonder; // NQMP GJS - Flourishing of the Arts
+#ifdef NQ_TOURISM_PER_CITY
+	int m_iTourismPerCity;
+#endif
+
 	int m_iProductionFromGarrison; // NQMP GJS - Military Caste
 	int m_iFreeSpecialist;
 	int m_iMaxConscript;
@@ -606,6 +613,9 @@ enum PolicyModifierType
 	POLICYMOD_PRODUCTION_FROM_GARRISON, // NQMP GJS - Military Caste
 	POLICYMOD_EXTRA_TOURISM_PER_GREAT_WORK, // NQMP GJS - Cultural Exchange
 	POLICYMOD_TOURISM_PER_WONDER, // NQMP GJS - Flourishing of the Arts
+#ifdef NQ_TOURISM_PER_CITY
+	POLICYMOD_TOURISM_PER_CITY,
+#endif
 	POLICYMOD_INTERNAL_TRADE_GOLD_CHANGE, // NQMP GJS - Silk Road
 };
 

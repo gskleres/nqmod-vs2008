@@ -734,4 +734,7 @@
 // cheating so that sacred sites applies both tourism and gold
 #define NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
 
+// tourism per city
+#define NQ_TOURISM_PER_CITY
+
 #endif

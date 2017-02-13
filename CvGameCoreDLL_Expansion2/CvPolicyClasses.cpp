@@ -152,6 +152,10 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_iExtraTerritoryClaim(0), // NQMP GJS - Colonialism
 	m_iExtraTourismPerGreatWork(0), // NQMP GJS - Cultural Exchange
 	m_iTourismPerWonder(0), // NQMP GJS - Flourishing of the Arts
+#ifdef NQ_TOURISM_PER_CITY
+	m_iTourismPerCity(0),
+#endif
+
 	m_iProductionFromGarrison(0), // NQMP GJS - Military Caste
 	m_bGoldenAgeCultureBonusDisabled(false),
 	m_bSecondReligionPantheon(false),
@@ -427,6 +431,10 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iExtraTerritoryClaim = kResults.GetInt("ExtraTerritoryClaim"); // NQMP GJS - Colonialism
 	m_iExtraTourismPerGreatWork = kResults.GetInt("ExtraTourismPerGreatWork"); // NQMP GJS - Cultural Exchange
 	m_iTourismPerWonder = kResults.GetInt("TourismPerWonder"); // NQMP GJS - Flourishing of the Arts
+#ifdef NQ_TOURISM_PER_CITY
+	m_iTourismPerCity = kResults.GetInt("TourismPerCity");
+#endif
+
 	m_iProductionFromGarrison = kResults.GetInt("ProductionFromGarrison"); // NQMP GJS - Military Caste
 	m_bGoldenAgeCultureBonusDisabled = kResults.GetBool("GoldenAgeCultureBonusDisabled");
 	m_bSecondReligionPantheon = kResults.GetBool("SecondReligionPantheon");
@@ -1497,6 +1505,14 @@ int CvPolicyEntry::GetTourismPerWonder() const
 {
 	return m_iTourismPerWonder;
 }
+
+#ifdef NQ_TOURISM_PER_CITY
+/// Get extra tourism per city?
+int CvPolicyEntry::GetTourismPerCity() const
+{
+	return m_iTourismPerCity;
+}
+#endif
 
 // NQMP GJS - Military Caste
 /// Get production from garrison?
@@ -2783,6 +2799,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetTourismPerWonder();
 				break;
 			// NQMP GJS - Flourishing of the Arts end
+#ifdef NQ_TOURISM_PER_CITY
+			case POLICYMOD_TOURISM_PER_CITY:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetTourismPerCity();
+				break;
+#endif
 			// NQMP GJS - Military Caste begin
 			case POLICYMOD_PRODUCTION_FROM_GARRISON:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetProductionFromGarrison();

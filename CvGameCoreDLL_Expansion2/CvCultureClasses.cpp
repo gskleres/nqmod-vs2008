@@ -4530,6 +4530,10 @@ int CvCityCulture::GetBaseTourismBeforeModifiers()
 		}
 	}
 
+#ifdef NQ_TOURISM_PER_CITY
+	iBase += GET_PLAYER(m_pCity->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_PER_CITY);
+#endif
+
 	return iBase;
 }
 
@@ -4784,6 +4788,18 @@ CvString CvCityCulture::GetTourismTooltip()
 		}
 		szRtnValue += GetLocalizedText("TXT_KEY_CO_CITY_TOURISM_TILES", iTileTourism, iPercent);
 	}
+
+#ifdef NQ_TOURISM_PER_CITY
+	int iFromTourismPerCity = GET_PLAYER(m_pCity->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_PER_CITY);
+	if (iFromTourismPerCity > 0)
+	{
+		if (szRtnValue.length() > 0)
+		{
+			szRtnValue += "[NEWLINE][NEWLINE]";
+		}
+		szRtnValue += GetLocalizedText("TXT_KEY_CO_TOURISM_PER_CITY", iFromTourismPerCity);
+	}
+#endif
 
 	// Beliefs
 	int iSacredSitesTourism = 0;
