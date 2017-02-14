@@ -22842,6 +22842,21 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 		}
 	}
 
+#ifdef NQ_EXTRA_SPIES_FROM_POLICIES
+	int iNumExtraSpies = pPolicy->GetNumExtraSpies() * iChange;
+	if (iNumExtraSpies > 0)
+	{
+		CvPlayerEspionage* pEspionage = GetEspionage();
+		if (pEspionage)
+		{
+			for (int i = 0; i < iNumExtraSpies; i++)
+			{
+				pEspionage->CreateSpy();
+			}
+		}
+	}
+#endif
+
 	GetPlayerPolicies()->ChangeNumExtraBranches(pPolicy->GetNumExtraBranches() * iChange);
 
 	ChangeAllFeatureProduction(pPolicy->GetAllFeatureProduction());

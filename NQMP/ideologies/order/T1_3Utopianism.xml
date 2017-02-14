@@ -15,6 +15,10 @@
 		<Row Tag="TXT_KEY_CO_TOURISM_PER_CITY">
 			<Text>{1_Num} [ICON_TOURISM] Tourism per City from Policies</Text>
 		</Row>
+		<Delete Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE" />
+		<Row Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE">
+			<Text>Utopianism</Text>
+		</Row>
 		<Delete Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE_HELP">
 			<Text>[COLOR_POSITIVE_TEXT]Utopianism[ENDCOLOR][NEWLINE]+6 [ICON_TOURISM] Tourism in each City.</Text>
@@ -27,6 +31,10 @@
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_CO_TOURISM_PER_CITY">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]{1_Num} [ICON_TOURISM] Tourism per City from Policies</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE" />
+		<Row Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Utopianism</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE_HELP">
@@ -41,6 +49,10 @@
 		<Row Tag="TXT_KEY_CO_TOURISM_PER_CITY">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]{1_Num} [ICON_TOURISM] Tourism per City from Policies</Text>
 		</Row>
+		<Delete Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE" />
+		<Row Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Utopianism</Text>
+		</Row>
 		<Delete Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE_HELP">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Utopianism[ENDCOLOR][NEWLINE]+6 [ICON_TOURISM] Tourism in each City.</Text>
@@ -53,6 +65,10 @@
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_CO_TOURISM_PER_CITY">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]{1_Num} [ICON_TOURISM] Tourism per City from Policies</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE" />
+		<Row Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Utopianism</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_HERO_OF_THE_PEOPLE_HELP">

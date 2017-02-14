@@ -45,6 +45,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_iNumFreeTechs(0),
 	m_iNumFreePolicies(0),
 	m_iNumFreeGreatPeople(0),
+#ifdef NQ_EXTRA_SPIES_FROM_POLICIES
+	m_iNumExtraSpies(0),
+#endif
 	m_iMedianTechPercentChange(0),
 	m_iStrategicResourceMod(0),
 	m_iWonderProductionModifier(0),
@@ -139,6 +142,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_iInternalTradeRouteYieldModifier(0),
 #ifdef FRUITY_TRADITION_LANDED_ELITE 
 	m_iInternalTradeRouteFoodYieldChange(0),
+#endif
+#ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
+	m_iInternalTradeRouteProductionYieldChange(0),
 #endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
@@ -309,6 +315,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iNumFreeTechs = kResults.GetInt("NumFreeTechs");
 	m_iNumFreePolicies = kResults.GetInt("NumFreePolicies");
 	m_iNumFreeGreatPeople = kResults.GetInt("NumFreeGreatPeople");
+#ifdef NQ_EXTRA_SPIES_FROM_POLICIES
+	m_iNumExtraSpies = kResults.GetInt("NumExtraSpies");
+#endif
 	m_iMedianTechPercentChange = kResults.GetInt("MedianTechPercentChange");
 	m_iStrategicResourceMod = kResults.GetInt("StrategicResourceMod");
 	m_iWonderProductionModifier = kResults.GetInt("WonderProductionModifier");
@@ -418,6 +427,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iInternalTradeRouteYieldModifier = kResults.GetInt("InternalTradeRouteYieldModifier");
 #ifdef FRUITY_TRADITION_LANDED_ELITE
 	m_iInternalTradeRouteFoodYieldChange = kResults.GetInt("InternalTradeRouteFoodYieldChange");
+#endif
+#ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
+	m_iInternalTradeRouteProductionYieldChange = kResults.GetInt("InternalTradeRouteProductionYieldChange");
 #endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
@@ -866,6 +878,14 @@ int CvPolicyEntry::GetNumFreeGreatPeople() const
 {
 	return m_iNumFreeGreatPeople;
 }
+
+#ifdef NQ_EXTRA_SPIES_FROM_POLICIES
+/// Number of free Spies
+int CvPolicyEntry::GetNumExtraSpies() const
+{
+	return m_iNumExtraSpies;
+}
+#endif
 
 /// Boost to percentage of median tech awarded for research agreement
 int CvPolicyEntry::GetMedianTechPercentChange() const
@@ -1428,6 +1448,15 @@ int CvPolicyEntry::GetInternalTradeRouteFoodYieldChange() const
 	return m_iInternalTradeRouteFoodYieldChange;
 }
 #endif
+
+#ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
+/// Flat production increase for internal trade routes
+int CvPolicyEntry::GetInternalTradeRouteProductionYieldChange() const
+{
+	return m_iInternalTradeRouteProductionYieldChange;
+}
+#endif
+
 
 /// Boost to tourism bonus for shared religion
 int CvPolicyEntry::GetSharedReligionTourismModifier() const
@@ -2880,6 +2909,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef FRUITY_TRADITION_LANDED_ELITE
 			case POLICYMOD_INTERNAL_TRADE_FOOD_YIELD_CHANGE:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetInternalTradeRouteFoodYieldChange();
+				break;
+#endif
+#ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
+			case POLICYMOD_INTERNAL_TRADE_PRODUCTION_YIELD_CHANGE:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetInternalTradeRouteProductionYieldChange();
 				break;
 #endif
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:

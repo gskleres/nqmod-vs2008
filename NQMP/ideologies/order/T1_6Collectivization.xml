@@ -1,10 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by ModBuddy on 2017-02-12 15:59:23 -->
 <GameData>
-  <!-- TODO: Insert table creation example here. -->
- 
-  <!-- TODO: Insert table data example here.-->
-  
-  <!-- Enter your Game Data here. -->
-  
+	
+	<!-- Collectivization (replaces Collectivization): +3 Food and +1 Happiness in each City. -->
+	<Policy_BuildingClassHappiness>
+		<Delete PolicyType="POLICY_YOUNG_PIONEERS" />
+	</Policy_BuildingClassHappiness>
+	<Policies>
+		<Update>
+			<Set ExtraHappinessPerCity="1" />
+			<Where Type="POLICY_YOUNG_PIONEERS" />
+		</Update>
+	</Policies>
+	<Policy_CityYieldChanges>
+		<Row>
+			<PolicyType>POLICY_YOUNG_PIONEERS</PolicyType>
+			<YieldType>YIELD_FOOD</YieldType>
+			<Yield>3</Yield>
+		</Row>
+	</Policy_CityYieldChanges>
+	
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_YOUNG_PIONEERS" />
+		<Row Tag="TXT_KEY_POLICY_YOUNG_PIONEERS">
+			<Text>Collectivization</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_YOUNG_PIONEERS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_YOUNG_PIONEERS_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Collectivization[ENDCOLOR][NEWLINE]+3 [ICON_FOOD] Food and +1 [ICON_HAPPINESS_1] Happiness for each City.</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_YOUNG_PIONEERS" />
+		<Row Tag="TXT_KEY_POLICY_YOUNG_PIONEERS">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Collectivization</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_YOUNG_PIONEERS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_YOUNG_PIONEERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Collectivization[ENDCOLOR][NEWLINE]+3 [ICON_FOOD] Food and +1 [ICON_HAPPINESS_1] Happiness for each City.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_YOUNG_PIONEERS" />
+		<Row Tag="TXT_KEY_POLICY_YOUNG_PIONEERS">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Collectivization</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_YOUNG_PIONEERS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_YOUNG_PIONEERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Collectivization[ENDCOLOR][NEWLINE]+3 [ICON_FOOD] Food and +1 [ICON_HAPPINESS_1] Happiness for each City.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_YOUNG_PIONEERS" />
+		<Row Tag="TXT_KEY_POLICY_YOUNG_PIONEERS">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Collectivization</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_YOUNG_PIONEERS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_YOUNG_PIONEERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Collectivization[ENDCOLOR][NEWLINE]+3 [ICON_FOOD] Food and +1 [ICON_HAPPINESS_1] Happiness for each City.</Text>
+		</Row>
+	</Language_RU_RU>
+
 </GameData>

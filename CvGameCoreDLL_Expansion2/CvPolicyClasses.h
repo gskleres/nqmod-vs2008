@@ -56,6 +56,9 @@ public:
 	int GetNumFreeTechs() const;
 	int GetNumFreePolicies() const;
 	int GetNumFreeGreatPeople() const;
+#ifdef NQ_EXTRA_SPIES_FROM_POLICIES
+	int GetNumExtraSpies() const;
+#endif
 	int GetMedianTechPercentChange() const;
 	int GetStrategicResourceMod() const;
 	int GetWonderProductionModifier() const;
@@ -150,6 +153,9 @@ public:
 	int GetInternalTradeRouteYieldModifier() const;
 #ifdef FRUITY_TRADITION_LANDED_ELITE
 	int GetInternalTradeRouteFoodYieldChange() const;
+#endif
+#ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
+	int GetInternalTradeRouteProductionYieldChange() const;
 #endif
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
@@ -271,6 +277,9 @@ private:
 	int m_iNumFreeTechs;
 	int m_iNumFreePolicies;
 	int m_iNumFreeGreatPeople;
+#ifdef NQ_EXTRA_SPIES_FROM_POLICIES
+	int m_iNumExtraSpies;
+#endif
 	int m_iMedianTechPercentChange;
 	int m_iStrategicResourceMod;
 	int m_iWonderProductionModifier;
@@ -362,6 +371,9 @@ private:
 	int m_iInternalTradeRouteYieldModifier;
 #ifdef FRUITY_TRADITION_LANDED_ELITE
 	int m_iInternalTradeRouteFoodYieldChange;
+#endif
+#ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
+	int m_iInternalTradeRouteProductionYieldChange;
 #endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
@@ -602,6 +614,9 @@ enum PolicyModifierType
 	POLICYMOD_INTERNAL_TRADE_MODIFIER,
 #ifdef FRUITY_TRADITION_LANDED_ELITE
 	POLICYMOD_INTERNAL_TRADE_FOOD_YIELD_CHANGE,
+#endif
+#ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
+	POLICYMOD_INTERNAL_TRADE_PRODUCTION_YIELD_CHANGE,
 #endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,

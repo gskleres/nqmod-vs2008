@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by ModBuddy on 2017-02-12 16:01:58 -->
 <GameData>
-  <!-- TODO: Insert table creation example here. -->
- 
-  <!-- TODO: Insert table data example here.-->
-  
-  <!-- Enter your Game Data here. -->
-  
+	
+	<!-- Socialist Realism: -->
+	<Policies>
+		<Update>
+			<Set Level="2" />
+			<Where Type="POLICY_SOCIALIST_REALISM" />
+		</Update>
+	</Policies>
+	
 </GameData>
