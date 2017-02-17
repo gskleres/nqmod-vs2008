@@ -58,7 +58,7 @@
 	</Unit_FreePromotions>
 	<UnitPromotions>
 		<Update>
-			<Set TradeMissionInfluenceModifier="200" ExtraNavalMovement="0" />
+			<Set TradeMissionInfluenceModifier="125" ExtraNavalMovement="0" />
 			<Where Type="PROMOTION_TRADE_MISSION_BONUS" />
 		</Update>
 	</UnitPromotions>
