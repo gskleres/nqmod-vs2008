@@ -58,7 +58,7 @@
 	</Unit_FreePromotions>
 	<UnitPromotions>
 		<Update>
-			<Set TradeMissionInfluenceModifier="125" ExtraNavalMovement="0" />
+			<Set TradeMissionInfluenceModifier="200" TradeMissionGoldModifier="25" ExtraNavalMovement="0" />
 			<Where Type="PROMOTION_TRADE_MISSION_BONUS" />
 		</Update>
 	</UnitPromotions>
@@ -197,10 +197,10 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_PROMOTION_TRADE_MISSION_BONUS_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_TRADE_MISSION_BONUS_HELP">
-			<Text>Double [ICON_GOLD] Gold and triple [ICON_INFLUENCE] Influence (90 total) from Trade Missions.</Text>
+			<Text>+25% [ICON_GOLD] Gold and triple [ICON_INFLUENCE] Influence (90 total) from Trade Missions.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_HELP_SWEDISH_HUMANITARIAN">
-			<Text>This Swedish unique Great Person replaces the Great Merchant. It gains triple [ICON_INFLUENCE] Influence (90 total) and double [ICON_GOLD] Gold when it conducts a Trade Mission.</Text>
+			<Text>This Swedish unique Great Person replaces the Great Merchant. It gains triple [ICON_INFLUENCE] Influence (90 total) and +25% [ICON_GOLD] Gold when it conducts a Trade Mission.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_SWEDISH_HUMANITARIAN_STRATEGY">
 			<Text>Use Great Humanitarians to conduct Trade Missions in crucial City States you need as allies.</Text>
@@ -312,10 +312,10 @@
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_PROMOTION_TRADE_MISSION_BONUS_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_TRADE_MISSION_BONUS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Double [ICON_GOLD] Gold and triple [ICON_INFLUENCE] Influence (90 total) from Trade Missions.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+25% [ICON_GOLD] Gold and triple [ICON_INFLUENCE] Influence (90 total) from Trade Missions.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_HELP_SWEDISH_HUMANITARIAN">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]This Swedish unique Great Person replaces the Great Merchant. It gains triple [ICON_INFLUENCE] Influence (90 total) and double [ICON_GOLD] Gold when it conducts a Trade Mission.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]This Swedish unique Great Person replaces the Great Merchant. It gains triple [ICON_INFLUENCE] Influence (90 total) and +25% [ICON_GOLD] Gold when it conducts a Trade Mission.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_SWEDISH_HUMANITARIAN_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Use Great Humanitarians to conduct Trade Missions in crucial City States you need as allies.</Text>
@@ -427,10 +427,10 @@
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_PROMOTION_TRADE_MISSION_BONUS_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_TRADE_MISSION_BONUS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Double [ICON_GOLD] Gold and triple [ICON_INFLUENCE] Influence (90 total) from Trade Missions.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+25% [ICON_GOLD] Gold and triple [ICON_INFLUENCE] Influence (90 total) from Trade Missions.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_HELP_SWEDISH_HUMANITARIAN">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]This Swedish unique Great Person replaces the Great Merchant. It gains triple [ICON_INFLUENCE] Influence (90 total) and double [ICON_GOLD] Gold when it conducts a Trade Mission.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]This Swedish unique Great Person replaces the Great Merchant. It gains triple [ICON_INFLUENCE] Influence (90 total) and +25% [ICON_GOLD] Gold when it conducts a Trade Mission.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_SWEDISH_HUMANITARIAN_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Use Great Humanitarians to conduct Trade Missions in crucial City States you need as allies.</Text>
@@ -542,10 +542,10 @@
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_PROMOTION_TRADE_MISSION_BONUS_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_TRADE_MISSION_BONUS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Double [ICON_GOLD] Gold and triple [ICON_INFLUENCE] Influence (90 total) from Trade Missions.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+25% [ICON_GOLD] Gold and triple [ICON_INFLUENCE] Influence (90 total) from Trade Missions.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_HELP_SWEDISH_HUMANITARIAN">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]This Swedish unique Great Person replaces the Great Merchant. It gains triple [ICON_INFLUENCE] Influence (90 total) and double [ICON_GOLD] Gold when it conducts a Trade Mission.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]This Swedish unique Great Person replaces the Great Merchant. It gains triple [ICON_INFLUENCE] Influence (90 total) and +25% [ICON_GOLD] Gold when it conducts a Trade Mission.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_UNIT_SWEDISH_HUMANITARIAN_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Use Great Humanitarians to conduct Trade Missions in crucial City States you need as allies.</Text>

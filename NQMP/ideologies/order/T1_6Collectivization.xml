@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2017-02-12 15:59:23 -->
 <GameData>
 	
-	<!-- Collectivization (replaces Collectivization): +3 Food and +1 Happiness in each City. -->
+	<!-- Collectivization (replaces Young Pioneers): +3 Food and +1 Happiness in each City. -->
 	<Policy_BuildingClassHappiness>
 		<Delete PolicyType="POLICY_YOUNG_PIONEERS" />
 	</Policy_BuildingClassHappiness>
