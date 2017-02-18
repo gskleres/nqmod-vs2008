@@ -167,6 +167,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_bSecondReligionPantheon(false),
 	m_bAddReformationBelief(false),
 	m_bEnablesSSPartHurry(false),
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	m_bDisablesResistanceTime(false),
+#endif
 	m_bEnablesSSPartPurchase(false),
 	m_iPolicyBranchType(NO_POLICY_BRANCH_TYPE),
 	m_iNumExtraBranches(0),
@@ -452,6 +455,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_bSecondReligionPantheon = kResults.GetBool("SecondReligionPantheon");
 	m_bAddReformationBelief = kResults.GetBool("AddReformationBelief");
 	m_bEnablesSSPartHurry = kResults.GetBool("EnablesSSPartHurry");
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	m_bDisablesResistanceTime = kResults.GetBool("DisablesResistanceTime");
+#endif
 	m_bEnablesSSPartPurchase = kResults.GetBool("EnablesSSPartPurchase");
 	m_bAbleToAnnexCityStates = kResults.GetBool("AbleToAnnexCityStates");
 	m_bOneShot = kResults.GetBool("OneShot");
@@ -1673,6 +1679,14 @@ bool CvPolicyEntry::IsEnablesSSPartHurry() const
 {
 	return m_bEnablesSSPartHurry;
 }
+
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+bool CvPolicyEntry::IsDisablesResistanceTime() const
+{
+	return m_bDisablesResistanceTime;
+}
+#endif
+
 
 bool CvPolicyEntry::IsEnablesSSPartPurchase() const
 {

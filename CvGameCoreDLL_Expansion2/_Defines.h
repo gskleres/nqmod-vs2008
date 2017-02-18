@@ -734,11 +734,14 @@
 // cheating so that sacred sites applies both tourism and gold
 #define NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
 
+/// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies
 #define NQ_TOURISM_PER_CITY
 // extra spies from policies
 #define NQ_EXTRA_SPIES_FROM_POLICIES
 // production from internal trade routes from policies
 #define NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
+// disables resistance time via policies
+#define NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 
 #endif

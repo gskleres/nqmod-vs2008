@@ -273,6 +273,9 @@ CvPlayer::CvPlayer() :
 	, m_iGoldenAgeCultureBonusDisabledCount(0)
 	, m_iSecondReligionPantheonCount(0)
 	, m_iEnablesSSPartHurryCount(0)
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	, m_iDisablesResistanceTimeCount(0)
+#endif
 	, m_iEnablesSSPartPurchaseCount(0)
 	, m_iConscriptCount("CvPlayer::m_iConscriptCount", m_syncArchive)
 	, m_iMaxConscript("CvPlayer::m_iMaxConscript", m_syncArchive)
@@ -922,6 +925,9 @@ void CvPlayer::uninit()
 	m_iGoldenAgeCultureBonusDisabledCount = 0;
 	m_iSecondReligionPantheonCount = 0;
 	m_iEnablesSSPartHurryCount = 0;
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	m_iDisablesResistanceTimeCount = 0;
+#endif
 	m_iEnablesSSPartPurchaseCount = 0;
 	m_iConscriptCount = 0;
 	m_iMaxConscript = 0;
@@ -2519,7 +2525,7 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 	for(iI = 0; iI < (int)freeConquestBuildings.size(); iI++)
 #endif
 	{
-		const BuildingTypes eLoopBuilding = freeConquestBuildings[iI];
+		BuildingTypes eLoopBuilding = freeConquestBuildings[iI];
 		if (eLoopBuilding != NO_BUILDING)
 		{
 			CvBuildingEntry* pkLoopBuildingInfo = GC.getBuildingInfo(eLoopBuilding);
@@ -2820,7 +2826,11 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 		}
 
 		// Is this City being Occupied?
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+		if (!IsDisablesResistanceTime() && pNewCity->getOriginalOwner() != GetID())
+#else 
 		if(pNewCity->getOriginalOwner() != GetID())
+#endif
 		{
 			pNewCity->SetOccupied(true);
 
@@ -15660,6 +15670,31 @@ void CvPlayer::ChangeEnablesSSPartHurryCount(int iChange)
 	}
 }
 
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+//	--------------------------------------------------------------------------------
+int CvPlayer::GetDisablesResistanceTimeCount() const
+{
+	return m_iDisablesResistanceTimeCount;
+}
+
+//	--------------------------------------------------------------------------------
+bool CvPlayer::IsDisablesResistanceTime() const
+{
+	return (GetDisablesResistanceTimeCount() > 0);
+}
+
+//	--------------------------------------------------------------------------------
+void CvPlayer::ChangeDisablesResistanceTimeCount(int iChange)
+{
+	if (iChange != 0)
+	{
+		m_iDisablesResistanceTimeCount = m_iDisablesResistanceTimeCount + iChange;
+		CvAssert(GetDisablesResistanceTimeCount() >= 0);
+	}
+}
+#endif
+
+
 //	--------------------------------------------------------------------------------
 int CvPlayer::GetEnablesSSPartPurchaseCount() const
 {
@@ -22815,6 +22850,9 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 	ChangeGoldenAgeCultureBonusDisabledCount((pPolicy->IsGoldenAgeCultureBonusDisabled()) ? iChange : 0);
 	ChangeSecondReligionPantheonCount((pPolicy->IsSecondReligionPantheon()) ? iChange : 0);
 	ChangeEnablesSSPartHurryCount((pPolicy->IsEnablesSSPartHurry()) ? iChange : 0);
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	ChangeDisablesResistanceTimeCount((pPolicy->IsDisablesResistanceTime()) ? iChange : 0);
+#endif
 	ChangeEnablesSSPartPurchaseCount((pPolicy->IsEnablesSSPartPurchase()) ? iChange : 0);
 	changeMaxConscript(getWorldSizeMaxConscript(kPolicy) * iChange);
 	changeExpModifier(pPolicy->GetExpModifier() * iChange);
@@ -23932,6 +23970,9 @@ void CvPlayer::Read(FDataStream& kStream)
 	{
 		m_iEnablesSSPartHurryCount = 0;
 	}
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	kStream >> m_iDisablesResistanceTimeCount;
+#endif
 	if (uiVersion >= 3)
 	{
 		kStream >> m_iEnablesSSPartPurchaseCount;
@@ -24468,6 +24509,9 @@ void CvPlayer::Write(FDataStream& kStream) const
 	kStream << m_iGoldenAgeCultureBonusDisabledCount;
 	kStream << m_iSecondReligionPantheonCount;
 	kStream << m_iEnablesSSPartHurryCount;
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	kStream << m_iDisablesResistanceTimeCount;
+#endif
 	kStream << m_iEnablesSSPartPurchaseCount;
 	kStream << m_iConscriptCount;
 	kStream << m_iMaxConscript;

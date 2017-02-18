@@ -386,7 +386,12 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T1_1WorkersFaculties.xml</FileName>
+        <FileName>ideologies/order/T1_1AcademyOfSciences.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T1_1AcademyOfSciences.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -441,22 +446,17 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T2_1AcademyOfSciences.sql</FileName>
+        <FileName>ideologies/order/T2_1WorkersFaculties.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T2_1AcademyOfSciences.xml</FileName>
+        <FileName>ideologies/order/T2_2Commissariat.sql</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T2_2SatelliteStates.sql</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T2_2SatelliteStates.xml</FileName>
+        <FileName>ideologies/order/T2_2Commissariats.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2197,7 +2197,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T1_1WorkersFaculties.xml">
+    <Content Include="ideologies\order\T2_1WorkersFaculties.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2241,19 +2241,19 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T2_1AcademyOfSciences.sql">
+    <Content Include="ideologies\order\T1_1AcademyOfSciences.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T2_1AcademyOfSciences.xml">
+    <Content Include="ideologies\order\T1_1AcademyOfSciences.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T2_2SatelliteStates.sql">
+    <Content Include="ideologies\order\T2_2Commissariat.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T2_2SatelliteStates.xml">
+    <Content Include="ideologies\order\T2_2Commissariats.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

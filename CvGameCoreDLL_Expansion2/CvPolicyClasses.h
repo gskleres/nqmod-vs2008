@@ -194,6 +194,9 @@ public:
 	bool IsSecondReligionPantheon() const;
 	bool IsAddReformationBelief() const;
 	bool IsEnablesSSPartHurry() const;
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	bool IsDisablesResistanceTime() const;
+#endif
 	bool IsEnablesSSPartPurchase() const;
 	bool IsAbleToAnnexCityStates() const;
 	std::string pyGetWeLoveTheKing()
@@ -416,6 +419,9 @@ private:
 	bool m_bSecondReligionPantheon;
 	bool m_bAddReformationBelief;
 	bool m_bEnablesSSPartHurry;
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	bool m_bDisablesResistanceTime;
+#endif
 	bool m_bEnablesSSPartPurchase;
 	bool m_bAbleToAnnexCityStates;
 

@@ -887,6 +887,13 @@ public:
 	bool IsEnablesSSPartHurry() const;
 	void ChangeEnablesSSPartHurryCount(int iChange);
 
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	int GetDisablesResistanceTimeCount() const;
+	bool IsDisablesResistanceTime() const;
+	void ChangeDisablesResistanceTimeCount(int iChange);
+#endif
+
+
 	int GetEnablesSSPartPurchaseCount() const;
 	bool IsEnablesSSPartPurchase() const;
 	void ChangeEnablesSSPartPurchaseCount(int iChange);
@@ -1832,6 +1839,9 @@ protected:
 	int m_iGoldenAgeCultureBonusDisabledCount;
 	int m_iSecondReligionPantheonCount;
 	int m_iEnablesSSPartHurryCount;
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+	int m_iDisablesResistanceTimeCount;
+#endif
 	int m_iEnablesSSPartPurchaseCount;
 	FAutoVariable<int, CvPlayer> m_iConscriptCount;
 	FAutoVariable<int, CvPlayer> m_iMaxConscript;

@@ -9171,7 +9171,12 @@ void CvCity::DoResistanceTurn()
 	VALIDATE_OBJECT
 	if(IsResistance())
 	{
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+		int turns = (GET_PLAYER(getOwner()).IsDisablesResistanceTime()) ? -GetResistanceTurns() : -1;
+		ChangeResistanceTurns(turns);
+#else
 		ChangeResistanceTurns(-1);
+#endif
 	}
 }
 
