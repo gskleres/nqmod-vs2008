@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2017-02-12 16:10:33 -->
+<GameData>
+
+	<!-- Red Army: +15% Combat Strength when fighting Units belonging to a Civilization with fewer Cities. -->
+	<Policies>
+		<Row>
+			<Type>POLICY_RED_ARMY</Type>
+			<Description>TXT_KEY_POLICY_RED_ARMY</Description>
+			<Civilopedia>TXT_KEY_POLICY_RED_ARMY_TEXT</Civilopedia>
+			<Help>TXT_KEY_POLICY_RED_ARMY_HELP</Help>
+			<PolicyBranchType>POLICY_BRANCH_ORDER</PolicyBranchType>
+			<CultureCost>10</CultureCost>
+			<Level>3</Level>
+			<PortraitIndex>11</PortraitIndex>
+			<IconAtlas>POLICY_ATLAS_EXP2</IconAtlas>
+			<IconAtlasAchieved>POLICY_A_ATLAS_EXP2</IconAtlasAchieved>
+		</Row>
+	</Policies>
+	<Policy_FreePromotions>
+		<Row>
+			<PolicyType>POLICY_RED_ARMY</PolicyType>
+			<PromotionType>PROMOTION_RED_ARMY</PromotionType>
+		</Row>
+	</Policy_FreePromotions>
+	
+	
+	
+</GameData>

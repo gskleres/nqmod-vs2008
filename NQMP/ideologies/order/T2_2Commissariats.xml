@@ -18,7 +18,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Conquered Cities have no resistance time and gain a free Constabulary and Police Station.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Conquered Cities have no resistance time and gain a free Police Station.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -28,7 +28,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Conquered Cities have no resistance time and gain a free Constabulary and Police Station.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Conquered Cities have no resistance time and gain a free Police Station.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -38,7 +38,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Conquered Cities have no resistance time and gain a free Constabulary and Police Station.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Conquered Cities have no resistance time and gain a free Police Station.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
@@ -48,7 +48,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Conquered Cities have no resistance time and gain a free Constabulary and Police Station.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Conquered Cities have no resistance time and gain a free Police Station.</Text>
 		</Row>
 	</Language_RU_RU>
 	

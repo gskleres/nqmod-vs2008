@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2017-02-12 16:10:43 -->
+<GameData>
+
+	<!-- Cultural Revolution: Unlocks Cultural Revolution project in Cities (50% of Production converted to Great Musician points). -->
+	<Policies>
+		<Update>
+			<Set Level="3" SharedIdeologyTourismModifier="0" UnlocksCulturalRevolution="true" />
+			<Where Type="POLICY_CULTURAL_REVOLUTION" />
+		</Update>
+	</Policies>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP" />
+		<Row Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Cultural Revolution[ENDCOLOR][NEWLINE]BROKEN --- Unlocks Cultural Revolution project in Cities (50% of [ICON_PRODUCTION] Production converted to Great Musician points).</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP" />
+		<Row Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Revolution[ENDCOLOR][NEWLINE]Unlocks Cultural Revolution project in Cities (50% of [ICON_PRODUCTION] Production converted to Great Musician points).</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP" />
+		<Row Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Revolution[ENDCOLOR][NEWLINE]Unlocks Cultural Revolution project in Cities (50% of [ICON_PRODUCTION] Production converted to Great Musician points).</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP" />
+		<Row Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cultural Revolution[ENDCOLOR][NEWLINE]Unlocks Cultural Revolution project in Cities (50% of [ICON_PRODUCTION] Production converted to Great Musician points).</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>

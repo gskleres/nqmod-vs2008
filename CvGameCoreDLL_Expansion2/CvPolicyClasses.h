@@ -172,6 +172,9 @@ public:
 #ifdef NQ_TOURISM_PER_CITY
 	int GetTourismPerCity() const;
 #endif
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+	int GetIdeologyPressureUnhappinessModifier() const;
+#endif
 	int GetProductionFromGarrison() const; // NQMP GJS - Military Caste
 	int GetPolicyBranchType() const;
 	int GetNumExtraBranches() const;
@@ -392,6 +395,9 @@ private:
 	int m_iTourismPerWonder; // NQMP GJS - Flourishing of the Arts
 #ifdef NQ_TOURISM_PER_CITY
 	int m_iTourismPerCity;
+#endif
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+	int m_iIdeologyPressureUnhappinessModifier;
 #endif
 
 	int m_iProductionFromGarrison; // NQMP GJS - Military Caste
@@ -636,6 +642,9 @@ enum PolicyModifierType
 	POLICYMOD_TOURISM_PER_WONDER, // NQMP GJS - Flourishing of the Arts
 #ifdef NQ_TOURISM_PER_CITY
 	POLICYMOD_TOURISM_PER_CITY,
+#endif
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+	POLICYMOD_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER,
 #endif
 	POLICYMOD_INTERNAL_TRADE_GOLD_CHANGE, // NQMP GJS - Silk Road
 };

@@ -5,7 +5,7 @@
 	<!-- Utopianism (replaces Hero of the People): +6 Tourism in each City. -->
 	<Policies>
 		<Update>
-			<Set GreatPeopleRateModifier="0" TourismPerCity="6" />
+			<Set Level="1" GreatPeopleRateModifier="0" TourismPerCity="6" />
 			<Where Type="POLICY_HERO_OF_THE_PEOPLE" />
 		</Update>
 	</Policies>

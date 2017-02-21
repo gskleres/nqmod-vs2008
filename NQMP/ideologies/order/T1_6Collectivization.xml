@@ -3,15 +3,15 @@
 <GameData>
 	
 	<!-- Collectivization (replaces Young Pioneers): +3 Food and +1 Happiness in each City. -->
-	<Policy_BuildingClassHappiness>
-		<Delete PolicyType="POLICY_YOUNG_PIONEERS" />
-	</Policy_BuildingClassHappiness>
 	<Policies>
 		<Update>
-			<Set ExtraHappinessPerCity="1" />
+			<Set Level="1" ExtraHappinessPerCity="1" />
 			<Where Type="POLICY_YOUNG_PIONEERS" />
 		</Update>
 	</Policies>
+	<Policy_BuildingClassHappiness>
+		<Delete PolicyType="POLICY_YOUNG_PIONEERS" />
+	</Policy_BuildingClassHappiness>
 	<Policy_CityYieldChanges>
 		<Row>
 			<PolicyType>POLICY_YOUNG_PIONEERS</PolicyType>

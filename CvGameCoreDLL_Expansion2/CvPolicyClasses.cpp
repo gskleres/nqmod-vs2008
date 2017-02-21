@@ -161,6 +161,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_TOURISM_PER_CITY
 	m_iTourismPerCity(0),
 #endif
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+	m_iIdeologyPressureUnhappinessModifier(0),
+#endif
 
 	m_iProductionFromGarrison(0), // NQMP GJS - Military Caste
 	m_bGoldenAgeCultureBonusDisabled(false),
@@ -448,6 +451,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iTourismPerWonder = kResults.GetInt("TourismPerWonder"); // NQMP GJS - Flourishing of the Arts
 #ifdef NQ_TOURISM_PER_CITY
 	m_iTourismPerCity = kResults.GetInt("TourismPerCity");
+#endif
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+	m_iIdeologyPressureUnhappinessModifier = kResults.GetInt("IdeologyPressureUnhappinessModifier");
 #endif
 
 	m_iProductionFromGarrison = kResults.GetInt("ProductionFromGarrison"); // NQMP GJS - Military Caste
@@ -1546,6 +1552,14 @@ int CvPolicyEntry::GetTourismPerWonder() const
 int CvPolicyEntry::GetTourismPerCity() const
 {
 	return m_iTourismPerCity;
+}
+#endif
+
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+/// Get ideology pressure unhappiness modifier?
+int CvPolicyEntry::GetIdeologyPressureUnhappinessModifier() const
+{
+	return m_iIdeologyPressureUnhappinessModifier;
 }
 #endif
 
@@ -2845,6 +2859,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef NQ_TOURISM_PER_CITY
 			case POLICYMOD_TOURISM_PER_CITY:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetTourismPerCity();
+				break;
+#endif
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+			case POLICYMOD_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetIdeologyPressureUnhappinessModifier();
 				break;
 #endif
 			// NQMP GJS - Military Caste begin

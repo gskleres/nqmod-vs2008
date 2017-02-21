@@ -3635,8 +3635,13 @@ void CvPlayerCulture::DoPublicOpinion()
 			{
 				m_eOpinion = PUBLIC_OPINION_REVOLUTIONARY_WAVE;
 			}
-
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+			int iUnhappinessModifier = m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER);
+			m_iOpinionUnhappiness = ComputePublicOpinionUnhappiness(iDissatisfaction, iPerCityUnhappy, iUnhappyPerXPop, iUnhappinessModifier);
+#else
 			m_iOpinionUnhappiness = ComputePublicOpinionUnhappiness(iDissatisfaction, iPerCityUnhappy, iUnhappyPerXPop);
+#endif
+
 
 			// Find civ exerting greatest pressure
 			int iGreatestDominance = -1;
@@ -3726,6 +3731,13 @@ void CvPlayerCulture::DoPublicOpinion()
 			locText = Localization::Lookup("TXT_KEY_CO_OPINION_TT_UNHAPPINESS_LINE4");
 			locText << iUnhappyPerXPop;
 			m_strOpinionUnhappinessTooltip += locText.toUTF8();
+
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+			int iUnhappinessModifier = m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER);
+			locText = Localization::Lookup("TXT_KEY_CO_OPINION_TT_UNHAPPINESS_LINE5");
+			locText << -iUnhappinessModifier;
+			m_strOpinionUnhappinessTooltip += locText.toUTF8();
+#endif
 		}
 	}
 }
@@ -3833,7 +3845,12 @@ int CvPlayerCulture::ComputeHypotheticalPublicOpinionUnhappiness(PolicyBranchTyp
 	}
 	else
 	{
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+		int iUnhappinessModifier = m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER);
+		return ComputePublicOpinionUnhappiness(iDissatisfaction, iPerCityUnhappy, iUnhappyPerXPop, iUnhappinessModifier);
+#else
 		return ComputePublicOpinionUnhappiness(iDissatisfaction, iPerCityUnhappy, iUnhappyPerXPop);
+#endif
 	}
 }
 
@@ -3923,7 +3940,11 @@ int CvPlayerCulture::GetTotalThemingBonuses() const
 // PRIVATE METHODS
 
 /// Compute effects of dissatisfaction
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+int CvPlayerCulture::ComputePublicOpinionUnhappiness(int iDissatisfaction, int &iPerCityUnhappy, int &iUnhappyPerXPop, int iUnhappinessModifier)
+#else
 int CvPlayerCulture::ComputePublicOpinionUnhappiness(int iDissatisfaction, int &iPerCityUnhappy, int &iUnhappyPerXPop)
+#endif
 {
 	if (iDissatisfaction < 3)
 	{
@@ -3940,8 +3961,17 @@ int CvPlayerCulture::ComputePublicOpinionUnhappiness(int iDissatisfaction, int &
 		iPerCityUnhappy = 4;
 		iUnhappyPerXPop = 3;
 	}
-
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+	int totalUnhappiness = max(m_pPlayer->getNumCities() * iPerCityUnhappy, m_pPlayer->getTotalPopulation() / iUnhappyPerXPop);
+	if (iUnhappinessModifier != 0)
+	{
+		totalUnhappiness *= (100 + iUnhappinessModifier);
+		totalUnhappiness /= 100;
+	}
+	return totalUnhappiness;
+#else
 	return max(m_pPlayer->getNumCities() * iPerCityUnhappy, m_pPlayer->getTotalPopulation() / iUnhappyPerXPop);
+#endif
 }
 
 // LOGGING FUNCTIONS

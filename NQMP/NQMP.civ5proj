@@ -451,7 +451,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T2_2Commissariat.sql</FileName>
+        <FileName>ideologies/order/T2_2Commissariats.sql</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -471,12 +471,22 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T2_4Communism.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>ideologies/order/T2_4Communism.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T2_5TransContinentalRailway.xml</FileName>
+        <FileName>ideologies/order/T2_5MinistryOfRailways.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T2_5MinistryOfRailways.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -486,12 +496,17 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T3_2CulturalRevolution.xml</FileName>
+        <FileName>ideologies/order/T3_3CulturalRevolution.sql</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T3_3RedArmy.xml</FileName>
+        <FileName>ideologies/order/T3_3CulturalRevolution.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T3_2RedArmy.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2254,7 +2269,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T2_2Commissariat.sql">
+    <Content Include="ideologies\order\T2_2Commissariats.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2270,19 +2285,19 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="ideologies\order\T2_4Communism.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="ideologies\order\T2_4Communism.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T2_5TransContinentalRailway.xml">
+    <Content Include="ideologies\order\T2_5MinistryOfRailways.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T2_CulturalRevolution.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="ideologies\order\T2_PartyLeadership.xml">
+    <Content Include="ideologies\order\T2_5MinistryOfRailways.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2290,19 +2305,19 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T3_2CulturalRevolution.xml">
+    <Content Include="ideologies\order\T3_3CulturalRevolution.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T3_3RedArmy.xml">
+    <Content Include="ideologies\order\T3_3CulturalRevolution.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\order\T3_2RedArmy.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="ideologies\order\T3_4PartyLeadership.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="ideologies\order\T3_IronCurtain.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

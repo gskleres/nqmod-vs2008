@@ -5,7 +5,7 @@
 	<!-- Double Agents: Now also provides +2 Spies. -->
 	<Policies>
 		<Update>
-			<Set NumExtraSpies="2" OneShot="true" />
+			<Set Level="1" NumExtraSpies="2" OneShot="true" />
 			<Where Type="POLICY_DOUBLE_AGENTS" />
 		</Update>
 	</Policies>
@@ -20,19 +20,19 @@
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_DOUBLE_AGENTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DOUBLE_AGENTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Universal Healthcare[ENDCOLOR][NEWLINE]+1 [ICON_HAPPINESS_1] Local Happiness from every National Wonder and Guild.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Double Agents[ENDCOLOR][NEWLINE]+2 Spies and defensive Spies in your Cities are twice as likely to kill enemy Spies.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_DOUBLE_AGENTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DOUBLE_AGENTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Universal Healthcare[ENDCOLOR][NEWLINE]+1 [ICON_HAPPINESS_1] Local Happiness from every National Wonder and Guild.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Double Agents[ENDCOLOR][NEWLINE]+2 Spies and defensive Spies in your Cities are twice as likely to kill enemy Spies.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_DOUBLE_AGENTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DOUBLE_AGENTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Universal Healthcare[ENDCOLOR][NEWLINE]+1 [ICON_HAPPINESS_1] Local Happiness from every National Wonder and Guild.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Double Agents[ENDCOLOR][NEWLINE]+2 Spies and defensive Spies in your Cities are twice as likely to kill enemy Spies.</Text>
 		</Row>
 	</Language_RU_RU>
 

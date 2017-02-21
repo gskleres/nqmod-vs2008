@@ -310,7 +310,11 @@ public:
 	int m_iSwappableMusicIndex;
 
 private:
+#ifdef NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+	int ComputePublicOpinionUnhappiness(int iDissatisfaction, int &iPerCityUnhappy, int &iUnhappyPerXPop, int iUnhappinessModifier);
+#else
 	int ComputePublicOpinionUnhappiness(int iDissatisfaction, int &iPerCityUnhappy, int &iUnhappyPerXPop);
+#endif
 
 	// Logging functions
 	void LogCultureData();
