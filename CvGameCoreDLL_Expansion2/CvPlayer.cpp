@@ -161,6 +161,9 @@ CvPlayer::CvPlayer() :
 	, m_iCityRevoltCounter("CvPlayer::m_iCityRevoltCounter", m_syncArchive)
 	, m_iHappinessPerGarrisonedUnitCount("CvPlayer::m_iHappinessPerGarrisonedUnitCount", m_syncArchive)
 	, m_iHappinessPerTradeRouteCount("CvPlayer::m_iHappinessPerTradeRouteCount", m_syncArchive)
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	, m_iHappinessPerRailConnectionCount("CvPlayer::m_iHappinessPerRailConnectionCount", m_syncArchive)
+#endif
 	, m_iHappinessPerXPopulation(0)
 	, m_iHappinessFromLeagues(0)
 	, m_iEspionageModifier(0)
@@ -806,6 +809,9 @@ void CvPlayer::uninit()
 	m_iCityRevoltCounter = 0;
 	m_iHappinessPerGarrisonedUnitCount = 0;
 	m_iHappinessPerTradeRouteCount = 0;
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	m_iHappinessPerRailConnectionCount = 0;
+#endif
 	m_iHappinessPerXPopulation = 0;
 	m_iHappinessFromLeagues = 0;
 	m_iEspionageModifier = 0;
@@ -11454,7 +11460,7 @@ int CvPlayer::GetFaithPerTurnFromReligion() const
 			iFaithPerTurn += pReligion->m_Beliefs.GetHolyCityYieldChange(YIELD_FAITH);
 
 #ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
-			iFaithPerTurn += pReligion->m_Beliefs.GetFaithPerForeignTradeRoute() * GetTrade()->GetNumForeignTradeRoutes();
+			iFaithPerTurn += pReligion->m_Beliefs.GetFaithPerForeignTradeRoute() * GetTrade()->GetNumForeignTradeRoutes(GetID());
 #endif
 
 #ifdef NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
@@ -13150,9 +13156,15 @@ int CvPlayer::GetHappinessFromTradeRoutes() const
 void CvPlayer::DoUpdateCityConnectionHappiness()
 {
 	int iHappinessPerTradeRoute = GetHappinessPerTradeRoute();
-
 	int iNumCities = 0;
-	if(iHappinessPerTradeRoute != 0)
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	int iHappinessPerRailConnection = GetHappinessPerRailConnection();
+	int iNumCitiesWithRailroads = 0;
+
+	if (iHappinessPerTradeRoute != 0 || iHappinessPerRailConnection != 0)
+#else
+	if (iHappinessPerTradeRoute != 0)
+#endif
 	{
 		CvCity* pCapitalCity = getCapitalCity();
 
@@ -13171,10 +13183,19 @@ void CvPlayer::DoUpdateCityConnectionHappiness()
 						iNumCities++;
 					}
 				}
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+				if (pLoopCity->IsIndustrialRouteToCapital())
+				{
+					iNumCitiesWithRailroads++;
+				}
+#endif
 			}
 		}
 	}
 	m_iCityConnectionHappiness = iHappinessPerTradeRoute * iNumCities / 100;	// Bring it out of hundreds
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	m_iCityConnectionHappiness += iHappinessPerRailConnection * iNumCitiesWithRailroads / 100;	// Bring it out of hundreds
+#endif
 }
 
 //	--------------------------------------------------------------------------------
@@ -13197,6 +13218,30 @@ void CvPlayer::ChangeHappinessPerTradeRoute(int iChange)
 {
 	SetHappinessPerTradeRoute(m_iHappinessPerTradeRouteCount + iChange);
 }
+
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+//	--------------------------------------------------------------------------------
+/// How muchHappiness are we getting from Rail Connections?
+int CvPlayer::GetHappinessPerRailConnection() const
+{
+	return m_iHappinessPerRailConnectionCount;
+}
+
+//	--------------------------------------------------------------------------------
+/// Set the amont of Happiness we're getting from Railroad connections
+void CvPlayer::SetHappinessPerRailConnection(int iValue)
+{
+	m_iHappinessPerRailConnectionCount = iValue;
+}
+
+//	--------------------------------------------------------------------------------
+/// Change the amont of Happiness we're getting from Railroad connections
+void CvPlayer::ChangeHappinessPerRailConnection(int iChange)
+{
+	SetHappinessPerRailConnection(m_iHappinessPerRailConnectionCount + iChange);
+}
+#endif
+
 
 //	--------------------------------------------------------------------------------
 /// How much Happiness are we getting from large cities?
@@ -22809,6 +22854,10 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 	changeBaseFreeUnits(pPolicy->GetBaseFreeUnits() * iChange);
 	ChangeHappinessPerGarrisonedUnit(pPolicy->GetHappinessPerGarrisonedUnit() * iChange);
 	ChangeHappinessPerTradeRoute(pPolicy->GetHappinessPerTradeRoute() * iChange);
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	ChangeHappinessPerRailConnection(pPolicy->GetHappinessPerRailConnection() * iChange);
+#endif
+
 	ChangeHappinessPerXPopulation(pPolicy->GetHappinessPerXPopulation() * iChange);
 	ChangeExtraHappinessPerLuxury(pPolicy->GetExtraHappinessPerLuxury() * iChange);
 	ChangeUnhappinessFromUnitsMod(pPolicy->GetUnhappinessFromUnitsMod() * iChange);
@@ -23801,6 +23850,9 @@ void CvPlayer::Read(FDataStream& kStream)
 	kStream >> m_iCityRevoltCounter;
 	kStream >> m_iHappinessPerGarrisonedUnitCount;
 	kStream >> m_iHappinessPerTradeRouteCount;
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	kStream >> m_iHappinessPerRailConnectionCount;
+#endif
 	kStream >> m_iHappinessPerXPopulation;
 	kStream >> m_iHappinessPerXPolicies;
 	if (uiVersion >= 8)
@@ -24390,6 +24442,9 @@ void CvPlayer::Write(FDataStream& kStream) const
 	kStream << m_iCityRevoltCounter;
 	kStream << m_iHappinessPerGarrisonedUnitCount;
 	kStream << m_iHappinessPerTradeRouteCount;
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	kStream << m_iHappinessPerRailConnectionCount;
+#endif
 	kStream << m_iHappinessPerXPopulation;
 	kStream << m_iHappinessPerXPolicies;
 	kStream << m_iHappinessFromLeagues;

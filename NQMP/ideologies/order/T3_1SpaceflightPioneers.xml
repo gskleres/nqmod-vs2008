@@ -17,7 +17,7 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Spaceflight Pioneers[ENDCOLOR][NEWLINE]BROKEN --- Free Research Lab (at Plastics) and Spaceship Factory (at Robotics) in every City.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Spaceflight Pioneers[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Free Research Lab (at Plastics) and Spaceship Factory (at Robotics) in every City.[ENDCOLOR]</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>

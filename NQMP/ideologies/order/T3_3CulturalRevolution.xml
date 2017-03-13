@@ -14,7 +14,7 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CULTURAL_REVOLUTION_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Cultural Revolution[ENDCOLOR][NEWLINE]BROKEN --- Unlocks Cultural Revolution project in Cities (50% of [ICON_PRODUCTION] Production converted to Great Musician points).</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Cultural Revolution[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Unlocks Cultural Revolution project in Cities (50% of [ICON_PRODUCTION] Production converted to Great Musician points).[ENDCOLOR]</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>

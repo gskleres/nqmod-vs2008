@@ -4273,7 +4273,7 @@ int CvPlayerTrade::GetNumTradeRoutesRemaining (bool bContinueTraining)
 
 #ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
 //	--------------------------------------------------------------------------------
-int CvPlayerTrade::GetNumForeignTradeRoutes()
+int CvPlayerTrade::GetNumForeignTradeRoutes(PlayerTypes ePlayer)
 {
 	CvGameTrade* pTrade = GC.getGame().GetGameTrade();
 	int iResult = 0;
@@ -4284,7 +4284,7 @@ int CvPlayerTrade::GetNumForeignTradeRoutes()
 			continue;
 		}
 		TradeConnection* pTradeConnection = &(pTrade->m_aTradeConnections[ui]);
-		if (pTradeConnection->m_eOriginOwner != pTradeConnection->m_eDestOwner)
+		if (pTradeConnection->m_eOriginOwner == ePlayer && pTradeConnection->m_eOriginOwner != pTradeConnection->m_eDestOwner)
 		{
 			iResult++;
 		}

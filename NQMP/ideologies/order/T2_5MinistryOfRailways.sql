@@ -1,3 +1,3 @@
 -- Insert SQL Rules Here
-ALTER TABLE Policies ADD RailConnectionHappiness INTEGER DEFAULT 0;
-ALTER TABLE Policies ADD RailConnectionBonusProductionModifier INTEGER DEFAULT 0;
+ALTER TABLE Policies ADD HappinessPerRailConnection INTEGER DEFAULT 0;
+ALTER TABLE Policies ADD RailConnectionProductionModifier INTEGER DEFAULT 0;

@@ -82,6 +82,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_iHappinessPerGarrisonedUnit(0),
 	m_iCulturePerGarrisonedUnit(0),
 	m_iHappinessPerTradeRoute(0),
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	m_iHappinessPerRailConnection(0),
+#endif
 	m_iHappinessPerXPopulation(0),
 	m_iExtraHappinessPerLuxury(0),
 	m_iUnhappinessFromUnitsMod(0),
@@ -145,6 +148,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #endif
 #ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
 	m_iInternalTradeRouteProductionYieldChange(0),
+#endif
+#ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+	m_iRailConnectionProductionModifier(0),
 #endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
@@ -358,6 +364,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iHappinessPerGarrisonedUnit = kResults.GetInt("HappinessPerGarrisonedUnit");
 	m_iCulturePerGarrisonedUnit = kResults.GetInt("CulturePerGarrisonedUnit");
 	m_iHappinessPerTradeRoute = kResults.GetInt("HappinessPerTradeRoute");
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	m_iHappinessPerRailConnection = kResults.GetInt("HappinessPerRailConnection");
+#endif
 	m_iHappinessPerXPopulation = kResults.GetInt("HappinessPerXPopulation");
 	m_iExtraHappinessPerLuxury = kResults.GetInt("ExtraHappinessPerLuxury");
 	m_iUnhappinessFromUnitsMod = kResults.GetInt("UnhappinessFromUnitsMod");
@@ -436,6 +445,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
 	m_iInternalTradeRouteProductionYieldChange = kResults.GetInt("InternalTradeRouteProductionYieldChange");
+#endif
+#ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+	m_iRailConnectionProductionModifier = kResults.GetInt("RailConnectionProductionModifier");
 #endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
@@ -1103,6 +1115,14 @@ int CvPolicyEntry::GetHappinessPerTradeRoute() const
 	return m_iHappinessPerTradeRoute;
 }
 
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+/// Happiness from each City with a railroad connection to the capital
+int CvPolicyEntry::GetHappinessPerRailConnection() const
+{
+	return m_iHappinessPerRailConnection;
+}
+#endif
+
 /// Happiness from large cities
 int CvPolicyEntry::GetHappinessPerXPopulation() const
 {
@@ -1466,6 +1486,14 @@ int CvPolicyEntry::GetInternalTradeRouteFoodYieldChange() const
 int CvPolicyEntry::GetInternalTradeRouteProductionYieldChange() const
 {
 	return m_iInternalTradeRouteProductionYieldChange;
+}
+#endif
+
+#ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+/// bonus production modifier from railway connections
+int CvPolicyEntry::GetRailConnectionProductionModifier() const
+{
+	return m_iRailConnectionProductionModifier;
 }
 #endif
 
@@ -2949,6 +2977,12 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetInternalTradeRouteProductionYieldChange();
 				break;
 #endif
+#ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+			case POLICYMOD_RAIL_CONNECTION_PRODUCTION_MODIFIER:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetRailConnectionProductionModifier();
+				break;
+#endif
+
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetSharedReligionTourismModifier();
 				break;

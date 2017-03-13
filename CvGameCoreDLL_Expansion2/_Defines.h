@@ -745,5 +745,9 @@
 #define NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 // unhappiness modifier for ideology pressure from policies
 #define NQ_IDEOLOGY_PRESSURE_UNHAPPINESS_MODIFIER_FROM_POLICIES
+// happineses from railway connections
+#define NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+// bonus production modifier from railway connections
+#define NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
 
 #endif

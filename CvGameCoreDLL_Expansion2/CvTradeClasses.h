@@ -364,7 +364,7 @@ public:
 
 	int GetNumDifferentTradingPartners (void);
 #ifdef NQ_FAITH_PER_FOREIGN_TRADE_ROUTE
-	int GetNumForeignTradeRoutes();
+	int GetNumForeignTradeRoutes(PlayerTypes ePlayer);
 #endif
 #endif
 

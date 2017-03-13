@@ -5,7 +5,7 @@
 	<!-- Commissariats (replaces Skyscrapers): Conquered Cities have no resistance time and gain a free Police Station. -->
 	<Policies>
 		<Update>
-			<Set Level="2" DisablesResistanceTime="true" FreeBuildingOnConquest="BUILDING_POLICE_STATION" />
+			<Set Level="2" BuildingPurchaseCostModifier="0" DisablesResistanceTime="true" FreeBuildingOnConquest="BUILDING_POLICE_STATION" />
 			<Where Type="POLICY_SKYSCRAPERS" />
 		</Update>
 	</Policies>

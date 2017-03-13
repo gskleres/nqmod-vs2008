@@ -93,6 +93,9 @@ public:
 	int GetHappinessPerGarrisonedUnit() const;
 	int GetCulturePerGarrisonedUnit() const;
 	int GetHappinessPerTradeRoute() const;
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	int GetHappinessPerRailConnection() const;
+#endif
 	int GetHappinessPerXPopulation() const;
 	int GetExtraHappinessPerLuxury() const;
 	int GetUnhappinessFromUnitsMod() const;
@@ -156,6 +159,9 @@ public:
 #endif
 #ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
 	int GetInternalTradeRouteProductionYieldChange() const;
+#endif
+#ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+	int GetRailConnectionProductionModifier() const;
 #endif
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
@@ -320,6 +326,9 @@ private:
 	int m_iHappinessPerGarrisonedUnit;
 	int m_iCulturePerGarrisonedUnit;
 	int m_iHappinessPerTradeRoute;
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	int m_iHappinessPerRailConnection;
+#endif
 	int m_iHappinessPerXPopulation;
 	int m_iExtraHappinessPerLuxury;
 	int m_iUnhappinessFromUnitsMod;
@@ -380,6 +389,9 @@ private:
 #endif
 #ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
 	int m_iInternalTradeRouteProductionYieldChange;
+#endif
+#ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+	int m_iRailConnectionProductionModifier;
 #endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
@@ -629,6 +641,9 @@ enum PolicyModifierType
 #endif
 #ifdef NQ_INTERNAL_TRADE_ROUTE_PRODUCTION_YIELD_CHANGE_FROM_POLICIES
 	POLICYMOD_INTERNAL_TRADE_PRODUCTION_YIELD_CHANGE,
+#endif
+#ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+	POLICYMOD_RAIL_CONNECTION_PRODUCTION_MODIFIER,
 #endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,

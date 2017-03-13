@@ -539,6 +539,12 @@ public:
 	void SetHappinessPerTradeRoute(int iValue);
 	void ChangeHappinessPerTradeRoute(int iChange);
 
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	int GetHappinessPerRailConnection() const;
+	void SetHappinessPerRailConnection(int iValue);
+	void ChangeHappinessPerRailConnection(int iChange);
+#endif
+
 	int GetHappinessPerXPopulation() const;
 	void SetHappinessPerXPopulation(int iValue);
 	void ChangeHappinessPerXPopulation(int iChange);
@@ -1720,6 +1726,9 @@ protected:
 	FAutoVariable<int, CvPlayer> m_iCityRevoltCounter;
 	FAutoVariable<int, CvPlayer> m_iHappinessPerGarrisonedUnitCount;
 	FAutoVariable<int, CvPlayer> m_iHappinessPerTradeRouteCount;
+#ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
+	FAutoVariable<int, CvPlayer> m_iHappinessPerRailConnectionCount;
+#endif
 	int m_iHappinessPerXPopulation;
 	int m_iHappinessFromLeagues;
 	FAutoVariable<int, CvPlayer> m_iSpecialPolicyBuildingHappiness;  //unused

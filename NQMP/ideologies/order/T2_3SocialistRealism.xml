@@ -34,7 +34,7 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_SOCIALIST_REALISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SOCIALIST_REALISM_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Socialist Realism[ENDCOLOR][NEWLINE]BROKEN --- All Guilds gain +1 [ICON_TOURISM] and +1 Great Person Point for each City in the Empire with a Monument.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Socialist Realism[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- All Guilds gain +1 [ICON_TOURISM] and +1 Great Person Point for each City in the Empire with a Monument.[ENDCOLOR]</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>

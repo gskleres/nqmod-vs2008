@@ -5399,6 +5399,18 @@ int CvCity::getGeneralProductionModifiers(CvString* toolTipSink) const
 		{
 			GC.getGame().BuildProdModHelpText(toolTipSink, "TXT_KEY_PRODMOD_RAILROAD_CONNECTION", iTempMod);
 		}
+
+#ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+		int iPolicyMod = GET_PLAYER(this->getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_RAIL_CONNECTION_PRODUCTION_MODIFIER);
+		if (iPolicyMod != 0)
+		{
+			iMultiplier += iPolicyMod;
+			if(toolTipSink)
+			{
+				GC.getGame().BuildProdModHelpText(toolTipSink, "TXT_KEY_PRODMOD_RAILROAD_CONNECTION_FROM_POLICIES", iPolicyMod);
+			}
+		}
+#endif
 	}
 
 	return iMultiplier;
