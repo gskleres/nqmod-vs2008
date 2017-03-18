@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by ModBuddy on 2017-02-11 02:51:40 -->
 <GameData>
+
+	<!-- Particle Physics no longer requires Mobile Tactics -->
+	<Technology_PrereqTechs>
+		<Delete TechType="TECH_PARTICLE_PHYSICS" PrereqTech="TECH_MOBILE_TACTICS" />
+	</Technology_PrereqTechs>
 	
 	<!-- Mechanized Infantry moved to Advanced Ballistics (instead of Mobile Tactics). -->
 	<Units>

@@ -2,11 +2,6 @@
 <!-- Created by ModBuddy on 2017-02-11 02:52:02 -->
 <GameData>
 	
-	<!-- Particle Physics no longer requires Telecommunications -->
-	<Technology_PrereqTechs>
-		<Delete TechType="TECH_PARTICLE_PHYSICS" PrereqTech="TECH_TELECOM" />
-	</Technology_PrereqTechs>
-	
 	<!-- Visually compensate by moving Particle Physics and	its prereq Advanced Ballistics, and a few others for looking nice -->
 	<Technologies>
 		<Update>
