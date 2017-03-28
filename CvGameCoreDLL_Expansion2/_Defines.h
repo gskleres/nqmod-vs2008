@@ -749,5 +749,7 @@
 #define NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
 // bonus production modifier from railway connections
 #define NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
+// free buildings in non-occupied cities from Spaceflight Pioneers
+#define NQ_SPACEFLIGHT_PIONEERS
 
 #endif

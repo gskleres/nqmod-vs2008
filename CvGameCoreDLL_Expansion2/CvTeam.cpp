@@ -5941,6 +5941,27 @@ void CvTeam::setHasTech(TechTypes eIndex, bool bNewValue, PlayerTypes ePlayer, b
 								pLoopCity->SetOwedCultureBuilding(false);
 							}
 						}
+
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+						if(pLoopCity->getOriginalOwner() == eLoopPlayer && GET_PLAYER(eLoopPlayer).IsSpaceflightPioneers())
+						{
+							BuildingTypes eSpaceflightBuilding = (BuildingTypes)GET_PLAYER(eLoopPlayer).getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_LABORATORY"));
+							CvBuildingEntry* pkSpaceflighBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
+							TechTypes ePrereqTech = (TechTypes)pkSpaceflighBuildingInfo->GetPrereqAndTech();
+							if (ePrereqTech == eIndex)
+							{
+								pLoopCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
+							}
+
+							eSpaceflightBuilding = (BuildingTypes)GET_PLAYER(eLoopPlayer).getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_SPACESHIP_FACTORY"));
+							pkSpaceflighBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
+							ePrereqTech = (TechTypes)pkSpaceflighBuildingInfo->GetPrereqAndTech();
+							if (ePrereqTech == eIndex)
+							{
+								pLoopCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
+							}
+						}
+#endif
 					}
 				}
 			}

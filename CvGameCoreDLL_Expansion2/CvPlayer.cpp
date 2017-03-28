@@ -279,6 +279,9 @@ CvPlayer::CvPlayer() :
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	, m_iDisablesResistanceTimeCount(0)
 #endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	, m_iSpaceflightPioneersCount(0)
+#endif
 	, m_iEnablesSSPartPurchaseCount(0)
 	, m_iConscriptCount("CvPlayer::m_iConscriptCount", m_syncArchive)
 	, m_iMaxConscript("CvPlayer::m_iMaxConscript", m_syncArchive)
@@ -933,6 +936,9 @@ void CvPlayer::uninit()
 	m_iEnablesSSPartHurryCount = 0;
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	m_iDisablesResistanceTimeCount = 0;
+#endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	m_iSpaceflightPioneersCount = 0;
 #endif
 	m_iEnablesSSPartPurchaseCount = 0;
 	m_iConscriptCount = 0;
@@ -7267,6 +7273,27 @@ void CvPlayer::AwardFreeBuildings(CvCity* pCity)
 		}
 		ChangeNumCitiesFreeWalls(-1);
 	}
+
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	if (IsSpaceflightPioneers())
+	{
+		BuildingTypes eSpaceflightBuilding = (BuildingTypes)getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_LABORATORY"));
+		CvBuildingEntry* pkSpaceflightBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
+		TechTypes ePrereqTech = (TechTypes)pkSpaceflightBuildingInfo->GetPrereqAndTech();
+		if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech(ePrereqTech))
+		{
+			pCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
+		}
+
+		eSpaceflightBuilding = (BuildingTypes)getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_SPACESHIP_FACTORY"));
+		pkSpaceflightBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
+		ePrereqTech = (TechTypes)pkSpaceflightBuildingInfo->GetPrereqAndTech();
+		if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech(ePrereqTech))
+		{
+			pCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
+		}
+	}
+#endif
 
 	int iNumFreeCultureBuildings = GetNumCitiesFreeCultureBuilding();
 	if(iNumFreeCultureBuildings > 0)
@@ -15739,6 +15766,30 @@ void CvPlayer::ChangeDisablesResistanceTimeCount(int iChange)
 }
 #endif
 
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+//	--------------------------------------------------------------------------------
+int CvPlayer::GetSpaceflightPioneersCount() const
+{
+	return m_iSpaceflightPioneersCount;
+}
+
+//	--------------------------------------------------------------------------------
+bool CvPlayer::IsSpaceflightPioneers() const
+{
+	return (GetSpaceflightPioneersCount() > 0);
+}
+
+//	--------------------------------------------------------------------------------
+void CvPlayer::ChangeSpaceflightPioneersCount(int iChange)
+{
+	if (iChange != 0)
+	{
+		m_iSpaceflightPioneersCount = m_iSpaceflightPioneersCount + iChange;
+		CvAssert(GetSpaceflightPioneersCount() >= 0);
+	}
+}
+#endif
+
 
 //	--------------------------------------------------------------------------------
 int CvPlayer::GetEnablesSSPartPurchaseCount() const
@@ -22902,6 +22953,9 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	ChangeDisablesResistanceTimeCount((pPolicy->IsDisablesResistanceTime()) ? iChange : 0);
 #endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	ChangeSpaceflightPioneersCount((pPolicy->IsSpaceflightPioneers()) ? iChange : 0);
+#endif
 	ChangeEnablesSSPartPurchaseCount((pPolicy->IsEnablesSSPartPurchase()) ? iChange : 0);
 	changeMaxConscript(getWorldSizeMaxConscript(kPolicy) * iChange);
 	changeExpModifier(pPolicy->GetExpModifier() * iChange);
@@ -23146,6 +23200,27 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 			}
 			iNumCitiesFreeWalls--;
 		}
+
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+		if (pPolicy->IsSpaceflightPioneers())
+		{
+			BuildingTypes eSpaceflightBuilding = (BuildingTypes)getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_LABORATORY"));
+			CvBuildingEntry* pkSpaceflightBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
+			TechTypes ePrereqTech = (TechTypes)pkSpaceflightBuildingInfo->GetPrereqAndTech();
+			if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech(ePrereqTech))
+			{
+				pLoopCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
+			}
+
+			eSpaceflightBuilding = (BuildingTypes)getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_SPACESHIP_FACTORY"));
+			pkSpaceflightBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
+			ePrereqTech = (TechTypes)pkSpaceflightBuildingInfo->GetPrereqAndTech();
+			if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech(ePrereqTech))
+			{
+				pLoopCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
+			}
+		}
+#endif
 
 		if(iNumCitiesFreeCultureBuilding > 0)
 		{
@@ -24025,6 +24100,9 @@ void CvPlayer::Read(FDataStream& kStream)
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	kStream >> m_iDisablesResistanceTimeCount;
 #endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	kStream >> m_iSpaceflightPioneersCount;
+#endif
 	if (uiVersion >= 3)
 	{
 		kStream >> m_iEnablesSSPartPurchaseCount;
@@ -24567,6 +24645,10 @@ void CvPlayer::Write(FDataStream& kStream) const
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	kStream << m_iDisablesResistanceTimeCount;
 #endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	kStream << m_iSpaceflightPioneersCount;
+#endif
+
 	kStream << m_iEnablesSSPartPurchaseCount;
 	kStream << m_iConscriptCount;
 	kStream << m_iMaxConscript;

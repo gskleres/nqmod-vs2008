@@ -206,6 +206,9 @@ public:
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	bool IsDisablesResistanceTime() const;
 #endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	bool IsSpaceflightPioneers() const;
+#endif
 	bool IsEnablesSSPartPurchase() const;
 	bool IsAbleToAnnexCityStates() const;
 	std::string pyGetWeLoveTheKing()
@@ -439,6 +442,9 @@ private:
 	bool m_bEnablesSSPartHurry;
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	bool m_bDisablesResistanceTime;
+#endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	bool m_bSpaceflightPioneers;
 #endif
 	bool m_bEnablesSSPartPurchase;
 	bool m_bAbleToAnnexCityStates;

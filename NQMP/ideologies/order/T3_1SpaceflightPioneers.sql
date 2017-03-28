@@ -1,0 +1,1 @@
+ALTER TABLE Policies ADD IsSpaceflightPioneers BOOLEAN DEFAULT false;

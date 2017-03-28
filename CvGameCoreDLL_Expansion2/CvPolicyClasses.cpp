@@ -179,6 +179,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	m_bDisablesResistanceTime(false),
 #endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	m_bSpaceflightPioneers(false),
+#endif
 	m_bEnablesSSPartPurchase(false),
 	m_iPolicyBranchType(NO_POLICY_BRANCH_TYPE),
 	m_iNumExtraBranches(0),
@@ -475,6 +478,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_bEnablesSSPartHurry = kResults.GetBool("EnablesSSPartHurry");
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	m_bDisablesResistanceTime = kResults.GetBool("DisablesResistanceTime");
+#endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	m_bSpaceflightPioneers = kResults.GetBool("IsSpaceflightPioneers");
 #endif
 	m_bEnablesSSPartPurchase = kResults.GetBool("EnablesSSPartPurchase");
 	m_bAbleToAnnexCityStates = kResults.GetBool("AbleToAnnexCityStates");
@@ -1729,6 +1735,12 @@ bool CvPolicyEntry::IsDisablesResistanceTime() const
 }
 #endif
 
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+bool CvPolicyEntry::IsSpaceflightPioneers() const
+{
+	return m_bSpaceflightPioneers;
+}
+#endif
 
 bool CvPolicyEntry::IsEnablesSSPartPurchase() const
 {

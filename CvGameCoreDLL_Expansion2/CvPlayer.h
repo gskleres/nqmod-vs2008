@@ -899,6 +899,12 @@ public:
 	void ChangeDisablesResistanceTimeCount(int iChange);
 #endif
 
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	int GetSpaceflightPioneersCount() const;
+	bool IsSpaceflightPioneers() const;
+	void ChangeSpaceflightPioneersCount(int iChange);
+#endif
+
 
 	int GetEnablesSSPartPurchaseCount() const;
 	bool IsEnablesSSPartPurchase() const;
@@ -1850,6 +1856,9 @@ protected:
 	int m_iEnablesSSPartHurryCount;
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	int m_iDisablesResistanceTimeCount;
+#endif
+#ifdef NQ_SPACEFLIGHT_PIONEERS
+	int m_iSpaceflightPioneersCount;
 #endif
 	int m_iEnablesSSPartPurchaseCount;
 	FAutoVariable<int, CvPlayer> m_iConscriptCount;
