@@ -21,8 +21,8 @@
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
-		<Delete Tag="TXT_KEY_BELIEF_MISSIONARY_ZEAL" />
-		<Row Tag="TXT_KEY_BELIEF_MISSIONARY_ZEAL">
+		<Delete Tag="TXT_KEY_BELIEF_CATHEDRALS" />
+		<Row Tag="TXT_KEY_BELIEF_CATHEDRALS">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Cathedrals (+1 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, 1 Great Work of Art slot, extra Tourism from Great Works)</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_CATHDEDRAL_HELP">
@@ -30,8 +30,8 @@
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
-		<Delete Tag="TXT_KEY_BELIEF_MISSIONARY_ZEAL" />
-		<Row Tag="TXT_KEY_BELIEF_MISSIONARY_ZEAL">
+		<Delete Tag="TXT_KEY_BELIEF_CATHEDRALS" />
+		<Row Tag="TXT_KEY_BELIEF_CATHEDRALS">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Cathedrals (+1 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, 1 Great Work of Art slot, extra Tourism from Great Works)</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_CATHDEDRAL_HELP">
@@ -39,8 +39,8 @@
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
-		<Delete Tag="TXT_KEY_BELIEF_MISSIONARY_ZEAL" />
-		<Row Tag="TXT_KEY_BELIEF_MISSIONARY_ZEAL">
+		<Delete Tag="TXT_KEY_BELIEF_CATHEDRALS" />
+		<Row Tag="TXT_KEY_BELIEF_CATHEDRALS">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Cathedrals (+1 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, 1 Great Work of Art slot, extra Tourism from Great Works)</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_CATHDEDRAL_HELP">
