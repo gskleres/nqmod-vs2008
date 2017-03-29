@@ -2838,16 +2838,23 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 		}
 
 		// Is this City being Occupied?
-#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
-		if (!IsDisablesResistanceTime() && pNewCity->getOriginalOwner() != GetID())
-#else 
 		if(pNewCity->getOriginalOwner() != GetID())
-#endif
 		{
 			pNewCity->SetOccupied(true);
 
 			int iInfluenceReduction = GetCulture()->GetInfluenceCityConquestReduction(eOldOwner);
 
+#ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
+			int iResistanceTurns = 0;
+			if (!IsDisablesResistanceTime())
+			{
+				iResistanceTurns = pNewCity->getPopulation() * GC.getGame().getGameSpeedInfo().getVictoryDelayPercent();
+				iResistanceTurns *= (100 - iInfluenceReduction); // take tourism into account
+				if (iResistanceTurns % 20000 != 0)
+					iResistanceTurns += 20000; // acts as ceil(), but without any weird int <-> float conversions
+				iResistanceTurns /= 20000;
+			}
+#else
 			// NQMP GJS - reduce resistance time BEGIN
 			int iResistanceTurns = pNewCity->getPopulation() * GC.getGame().getGameSpeedInfo().getVictoryDelayPercent();
 			iResistanceTurns *= (100 - iInfluenceReduction); // take tourism into account
@@ -2855,6 +2862,7 @@ void CvPlayer::acquireCity(CvCity* pOldCity, bool bConquest, bool bGift)
 				iResistanceTurns += 20000; // acts as ceil(), but without any weird int <-> float conversions
 			iResistanceTurns /= 20000;
 			// NQMP GJS - reduce resistance time END
+#endif
 
 			if (iResistanceTurns > 0)
 			{
