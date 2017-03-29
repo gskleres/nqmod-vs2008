@@ -1958,9 +1958,9 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       </Content>
       <Content>
         <Type>InGameUIAddin</Type>
-        <Name>T1_CovertAction</Name>
-        <Description>T1_CovertAction</Description>
-        <FileName>ideologies/freedom/T1_CovertAction.xml</FileName>
+        <Name>Freedom1_5CovertAction</Name>
+        <Description>Freedom1_5CovertAction</Description>
+        <FileName>ideologies/freedom/T1_5CovertAction.xml</FileName>
       </Content>
     </ModContent>
     <ModProperties />
@@ -2443,11 +2443,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\freedom\T1_CovertAction.lua">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="ideologies\freedom\T1_CovertAction.xml">
+    <Content Include="ideologies\freedom\T1_5CovertAction.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
