@@ -11418,6 +11418,17 @@ int CvUnit::GetGenericMaxStrengthModifier(const CvUnit* pOtherUnit, const CvPlot
 				iModifier += iTempModifier;
 			}
 		}
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+		// Policy bonus against smaller civs
+		iTempModifier = GET_PLAYER(getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_COMBAT_BONUS_VS_SMALLER_CIV);
+		if(iTempModifier > 0)
+		{
+			if(pOtherUnit && this->IsLargerCivThan(pOtherUnit))
+			{
+				iModifier += iTempModifier;
+			}
+		}
+#endif
 #endif
 	}
 

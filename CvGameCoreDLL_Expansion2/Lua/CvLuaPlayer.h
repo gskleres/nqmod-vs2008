@@ -345,6 +345,9 @@ protected:
 	static int lChangeBarbarianCombatBonus(lua_State* L);
 	static int lGetCombatBonusVsHigherTech(lua_State* L);
 	static int lGetCombatBonusVsLargerCiv(lua_State* L);
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+	static int lGetCombatBonusVsSmallerCiv(lua_State* L);
+#endif
 
 	static int lGetGarrisonedCityRangeStrikeModifier(lua_State* L);
 	static int lChangeGarrisonedCityRangeStrikeModifier(lua_State* L);

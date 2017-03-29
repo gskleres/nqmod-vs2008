@@ -364,6 +364,9 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 	Method(ChangeBarbarianCombatBonus);
 	Method(GetCombatBonusVsHigherTech);
 	Method(GetCombatBonusVsLargerCiv);
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+	Method(GetCombatBonusVsSmallerCiv);
+#endif
 
 	Method(GetGarrisonedCityRangeStrikeModifier);
 	Method(ChangeGarrisonedCityRangeStrikeModifier);
@@ -4779,6 +4782,18 @@ int CvLuaPlayer::lGetCombatBonusVsLargerCiv(lua_State* L)
 	}
 	return 1;
 }
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+//------------------------------------------------------------------------------
+int CvLuaPlayer::lGetCombatBonusVsSmallerCiv(lua_State* L)
+{
+	CvPlayer* pkPlayer = GetInstance(L);
+	if(pkPlayer)
+	{
+		lua_pushinteger(L, pkPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_COMBAT_BONUS_VS_SMALLER_CIV));
+	}
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 int CvLuaPlayer::lIsAlwaysSeeBarbCamps(lua_State* L)
 {

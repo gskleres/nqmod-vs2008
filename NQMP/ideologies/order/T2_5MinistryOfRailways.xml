@@ -18,7 +18,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]BROKEN --- Cities connected to the Capital by Railroads gain +1 [ICON_HAPPINESS_1] Happiness and an additional +10% [ICON_PRODUCTION] Production.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]Cities connected to the Capital by Railroads gain +1 [ICON_HAPPINESS_1] Happiness and an additional +10% [ICON_PRODUCTION] Production.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PRODMOD_RAILROAD_CONNECTION_FROM_POLICIES">
 			<Text>[NEWLINE][ICON_BULLET]Modifier for Ministry of Railways: {1_Num}%</Text>

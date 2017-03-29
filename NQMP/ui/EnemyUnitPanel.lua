@@ -993,6 +993,15 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 				controlTable.Text:LocalizeAndSetText(  "TXT_KEY_EUPANEL_TRAIT_SMALL_SIZE_BONUS" );
 				controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
 			end
+
+			-- #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+			iModifier = pMyPlayer:GetCombatBonusVsSmallerCiv();
+			if (iModifier ~= 0 and pMyUnit:IsLargerCivThan(pTheirUnit)) then
+				controlTable = g_MyCombatDataIM:GetInstance();
+				controlTable.Text:LocalizeAndSetText(  "TXT_KEY_EUPANEL_TRAIT_LARGE_SIZE_BONUS" );
+				controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
+			end
+			-- #endif NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 					
 			-- CapitalDefenseModifier
 			iModifier = pMyUnit:CapitalDefenseModifier();
@@ -1575,6 +1584,15 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 					controlTable.Text:LocalizeAndSetText(  "TXT_KEY_EUPANEL_TRAIT_SMALL_SIZE_BONUS" );
 					controlTable.Value:SetText( GetFormattedText(strText, iModifier, false, true) );
 				end
+
+				-- #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+				iModifier = pTheirPlayer:GetCombatBonusVsSmallerCiv();
+				if (iModifier ~= 0 and pTheirUnit:IsLargerCivThan(pMyUnit)) then
+					controlTable = g_TheirCombatDataIM:GetInstance();
+					controlTable.Text:LocalizeAndSetText(  "TXT_KEY_EUPANEL_TRAIT_LARGE_SIZE_BONUS" );
+					controlTable.Value:SetText( GetFormattedText(strText, iModifier, false, true) );
+				end
+				-- #endif NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 								
 				-- CapitalDefenseModifier
 				iModifier = pTheirUnit:CapitalDefenseModifier();

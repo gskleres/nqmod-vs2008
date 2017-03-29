@@ -751,5 +751,7 @@
 #define NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
 // free buildings in non-occupied cities from Spaceflight Pioneers
 #define NQ_SPACEFLIGHT_PIONEERS
+// combat bonus vs smaller civ from policies
+#define NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 
 #endif

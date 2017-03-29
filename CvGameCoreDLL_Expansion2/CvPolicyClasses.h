@@ -163,6 +163,9 @@ public:
 #ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
 	int GetRailConnectionProductionModifier() const;
 #endif
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+	int GetCombatBonusVsSmallerCiv() const;
+#endif
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
 	int GetOpenBordersTourismModifier() const;
@@ -395,6 +398,9 @@ private:
 #endif
 #ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
 	int m_iRailConnectionProductionModifier;
+#endif
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+	int m_iCombatBonusVsSmallerCiv;
 #endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
@@ -650,6 +656,9 @@ enum PolicyModifierType
 #endif
 #ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
 	POLICYMOD_RAIL_CONNECTION_PRODUCTION_MODIFIER,
+#endif
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+	POLICYMOD_COMBAT_BONUS_VS_SMALLER_CIV,
 #endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,

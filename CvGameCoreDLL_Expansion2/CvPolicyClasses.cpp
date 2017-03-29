@@ -152,6 +152,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
 	m_iRailConnectionProductionModifier(0),
 #endif
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+	m_iCombatBonusVsSmallerCiv(0),
+#endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
 	m_iOpenBordersTourismModifier(0),
@@ -451,6 +454,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
 	m_iRailConnectionProductionModifier = kResults.GetInt("RailConnectionProductionModifier");
+#endif
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+	m_iCombatBonusVsSmallerCiv = kResults.GetInt("CombatBonusVsSmallerCiv");
 #endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
@@ -1503,6 +1509,13 @@ int CvPolicyEntry::GetRailConnectionProductionModifier() const
 }
 #endif
 
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+/// combat modifier vs smaller civs
+int CvPolicyEntry::GetCombatBonusVsSmallerCiv() const
+{
+	return m_iCombatBonusVsSmallerCiv;
+}
+#endif
 
 /// Boost to tourism bonus for shared religion
 int CvPolicyEntry::GetSharedReligionTourismModifier() const
@@ -2994,7 +3007,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetRailConnectionProductionModifier();
 				break;
 #endif
-
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+			case POLICYMOD_COMBAT_BONUS_VS_SMALLER_CIV:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetCombatBonusVsSmallerCiv();
+				break;
+#endif
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetSharedReligionTourismModifier();
 				break;
