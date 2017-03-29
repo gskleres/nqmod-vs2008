@@ -8566,7 +8566,11 @@ bool CvUnit::canHurry(const CvPlot* pPlot, bool bTestVisible) const
 			{
 				UnitTypes eUnit = pCity->getProductionUnit();
 				CvUnitEntry *pkUnit = GC.GetGameUnits()->GetEntry(eUnit);
+#ifdef NQ_ALLOW_SS_PART_HURRY_BY_DEFAULT
+				if (pkUnit)
+#else
 				if (pkUnit && GET_PLAYER(pCity->getOwner()).IsEnablesSSPartHurry())
+#endif
 				{
 					if (pkUnit->GetSpaceshipProject() != NO_PROJECT)
 					{

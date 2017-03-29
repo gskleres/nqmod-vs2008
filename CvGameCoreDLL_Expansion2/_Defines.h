@@ -733,6 +733,8 @@
 #define NQ_FAITH_PER_CITY_STATE_THIS_RELIGION
 // cheating so that sacred sites applies both tourism and gold
 #define NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
+// all players can rush spaceship parts with Engineers now
+#define NQ_ALLOW_SS_PART_HURRY_BY_DEFAULT
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies
