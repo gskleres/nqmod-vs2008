@@ -756,4 +756,8 @@
 // combat bonus vs smaller civ from policies
 #define NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 
+/// ---- IDEOLOGY OVERHAUL: FREEDOM ----
+// trade mission influence modifier from policies
+#define NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+
 #endif

@@ -446,6 +446,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>ideologies/freedom/T1_1EconomicUnion.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>ideologies/freedom/T1_1EconomicUnion.xml</FileName>
       </Action>
       <Action>
@@ -527,31 +532,6 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>ideologies/freedom/T3_4NewDeal.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/freedom/T1_CovertAction.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/freedom/T1_CreativeExpression.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/freedom/T1_EconomicUnion.sql</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/freedom/T1_EconomicUnion.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/freedom/T2_Urbanization.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -1978,12 +1958,6 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       </Content>
       <Content>
         <Type>InGameUIAddin</Type>
-        <Name>T1_EconomicUnion</Name>
-        <Description>T1_EconomicUnion</Description>
-        <FileName>ideologies/freedom/T1_EconomicUnion.xml</FileName>
-      </Content>
-      <Content>
-        <Type>InGameUIAddin</Type>
         <Name>T1_CovertAction</Name>
         <Description>T1_CovertAction</Description>
         <FileName>ideologies/freedom/T1_CovertAction.xml</FileName>
@@ -2430,6 +2404,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="ideologies\autocracy\T3_CultOfPersonality.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\freedom\T1_1EconomicUnion.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

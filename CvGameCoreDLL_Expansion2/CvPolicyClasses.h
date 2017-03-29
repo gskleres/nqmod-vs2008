@@ -166,6 +166,9 @@ public:
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 	int GetCombatBonusVsSmallerCiv() const;
 #endif
+#ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+	int GetTradeMissionInfluenceModifier() const;
+#endif
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
 	int GetOpenBordersTourismModifier() const;
@@ -401,6 +404,9 @@ private:
 #endif
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 	int m_iCombatBonusVsSmallerCiv;
+#endif
+#ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+	int m_iTradeMissionInfluenceModifier;
 #endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
@@ -659,6 +665,9 @@ enum PolicyModifierType
 #endif
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 	POLICYMOD_COMBAT_BONUS_VS_SMALLER_CIV,
+#endif
+#ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+	POLICYMOD_TRADE_MISSION_INFLUENCE_MODIFIER,
 #endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,

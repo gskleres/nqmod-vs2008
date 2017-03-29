@@ -155,6 +155,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 	m_iCombatBonusVsSmallerCiv(0),
 #endif
+#ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+	m_iTradeMissionInfluenceModifier(0),
+#endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
 	m_iOpenBordersTourismModifier(0),
@@ -457,6 +460,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 	m_iCombatBonusVsSmallerCiv = kResults.GetInt("CombatBonusVsSmallerCiv");
+#endif
+#ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+	m_iTradeMissionInfluenceModifier = kResults.GetInt("TradeMissionInfluenceModifier");
 #endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
@@ -1516,6 +1522,15 @@ int CvPolicyEntry::GetCombatBonusVsSmallerCiv() const
 	return m_iCombatBonusVsSmallerCiv;
 }
 #endif
+
+#ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+/// trade mission influence modifier
+int CvPolicyEntry::GetTradeMissionInfluenceModifier() const
+{
+	return m_iTradeMissionInfluenceModifier;
+}
+#endif
+
 
 /// Boost to tourism bonus for shared religion
 int CvPolicyEntry::GetSharedReligionTourismModifier() const
@@ -3010,6 +3025,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 			case POLICYMOD_COMBAT_BONUS_VS_SMALLER_CIV:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetCombatBonusVsSmallerCiv();
+				break;
+#endif
+#ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+			case POLICYMOD_TRADE_MISSION_INFLUENCE_MODIFIER:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetTradeMissionInfluenceModifier();
 				break;
 #endif
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:

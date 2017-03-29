@@ -8680,7 +8680,11 @@ int CvUnit::getTradeInfluence(const CvPlot* pPlot) const
 		if (eMinor != NO_PLAYER)
 		{
 			iInf = /*30*/ GC.getMINOR_FRIENDSHIP_FROM_TRADE_MISSION();
+#ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+			int iInfTimes100 = iInf * (100 + GetTradeMissionInfluenceModifier() + GET_PLAYER(getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TRADE_MISSION_INFLUENCE_MODIFIER));
+#else
 			int iInfTimes100 = iInf * (100 + GetTradeMissionInfluenceModifier());
+#endif
 			iInf = iInfTimes100 / 100;
 		}
 	}
@@ -23087,6 +23091,13 @@ bool CvUnit::IsHigherTechThan(UnitTypes otherUnit) const
 //	--------------------------------------------------------------------------------
 bool CvUnit::IsLargerCivThan(const CvUnit* pOtherUnit) const
 {
+#ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+	// always disregard barbarians
+	if (isBarbarian() || pOtherUnit->isBarbarian())
+	{
+		return false;
+	}
+#endif
 	int iMyCities = 0;
 	int iOtherCities = 0;
 
