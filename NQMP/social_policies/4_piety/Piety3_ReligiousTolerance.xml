@@ -16,31 +16,31 @@
 			<PolicyType>POLICY_FREE_RELIGION</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_GRAND_TEMPLE</BuildingClassType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<YieldMod>25</YieldMod>
+			<YieldMod>20</YieldMod>
 		</Row>
 	</Policy_BuildingClassYieldModifiers>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_FREE_RELIGION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FREE_RELIGION_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Religious Tolerance[ENDCOLOR][NEWLINE]Cities with a majority religion also get the Pantheon belief bonus of that city's second most popular religion.[NEWLINE]+2 [ICON_RESEARCH] Science from each Temple.[NEWLINE]+25% [ICON_RESEARCH] Science from the Grand Temple.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Religious Tolerance[ENDCOLOR][NEWLINE]Cities with a majority religion also get the Pantheon belief bonus of that city's second most popular religion.[NEWLINE]+2 [ICON_RESEARCH] Science from each Temple.[NEWLINE]+20% [ICON_RESEARCH] Science from the Grand Temple.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_FREE_RELIGION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FREE_RELIGION_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Religious Tolerance[ENDCOLOR][NEWLINE]Cities with a majority religion also get the Pantheon belief bonus of that city's second most popular religion.[NEWLINE]+2 [ICON_RESEARCH] Science from each Temple.[NEWLINE]+25% [ICON_RESEARCH] Science from the Grand Temple.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Religious Tolerance[ENDCOLOR][NEWLINE]Cities with a majority religion also get the Pantheon belief bonus of that city's second most popular religion.[NEWLINE]+2 [ICON_RESEARCH] Science from each Temple.[NEWLINE]+20% [ICON_RESEARCH] Science from the Grand Temple.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_FREE_RELIGION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FREE_RELIGION_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Religious Tolerance[ENDCOLOR][NEWLINE]Cities with a majority religion also get the Pantheon belief bonus of that city's second most popular religion.[NEWLINE]+2 [ICON_RESEARCH] Science from each Temple.[NEWLINE]+25% [ICON_RESEARCH] Science from the Grand Temple.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Religious Tolerance[ENDCOLOR][NEWLINE]Cities with a majority religion also get the Pantheon belief bonus of that city's second most popular religion.[NEWLINE]+2 [ICON_RESEARCH] Science from each Temple.[NEWLINE]+20% [ICON_RESEARCH] Science from the Grand Temple.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_FREE_RELIGION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FREE_RELIGION_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Religious Tolerance[ENDCOLOR][NEWLINE]Cities with a majority religion also get the Pantheon belief bonus of that city's second most popular religion.[NEWLINE]+2 [ICON_RESEARCH] Science from each Temple.[NEWLINE]+25% [ICON_RESEARCH] Science from the Grand Temple.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Religious Tolerance[ENDCOLOR][NEWLINE]Cities with a majority religion also get the Pantheon belief bonus of that city's second most popular religion.[NEWLINE]+2 [ICON_RESEARCH] Science from each Temple.[NEWLINE]+20% [ICON_RESEARCH] Science from the Grand Temple.</Text>
 		</Row>
 	</Language_RU_RU>
 
