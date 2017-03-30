@@ -5,34 +5,41 @@
 	<!-- Avante Garde: +1 Culture and +1 Tourism from each Great Work and World Wonder. -->
 	<Policies>
 		<Update>
-			<Set Level="2" GreatPeopleRateModifier="0" />
+			<Set Level="2" GreatPeopleRateModifier="0" ExtraTourismPerGreatWork="1" CulturePerWonder="1" TourismPerWonder="1" />
 			<Where Type="POLICY_OPEN_SOCIETY" />
 		</Update>
 	</Policies>
+	<Policy_GreatWorkYieldChanges>
+		<Row>
+			<PolicyType>POLICY_OPEN_SOCIETY</PolicyType>
+			<YieldType>YIELD_CULTURE</YieldType>
+			<Yield>1</Yield>
+		</Row>
+	</Policy_GreatWorkYieldChanges>
 
 	<!-- localization -->
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_OPEN_SOCIETY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_OPEN_SOCIETY_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Avante Garde[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from each Great Work and World Wonder.[ENDCOLOR]</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Avante Garde[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from each Great Work and World Wonder.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_OPEN_SOCIETY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_OPEN_SOCIETY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Avante Garde[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from each Great Work and World Wonder.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Avante Garde[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from each Great Work and World Wonder.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_OPEN_SOCIETY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_OPEN_SOCIETY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Avante Garde[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from each Great Work and World Wonder.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Avante Garde[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from each Great Work and World Wonder.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_OPEN_SOCIETY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_OPEN_SOCIETY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Avante Garde[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from each Great Work and World Wonder.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Avante Garde[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from each Great Work and World Wonder.</Text>
 		</Row>
 	</Language_RU_RU>
 
