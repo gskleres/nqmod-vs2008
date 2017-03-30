@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by ModBuddy on 3/22/2017 7:10:30 PM -->
 <GameData>
-  <!-- TODO: Insert table creation example here. -->
- 
-  <!-- TODO: Insert table data example here.-->
-  
-  <!-- Enter your Game Data here. -->
-  
+
+	<!-- Space Procurements: Allows the purchase of Spaceship Parts with Gold. -->
+	<!-- No changes. INCLUDE THIS FILE IF YOU CHANGE IT!!! -->
+	
 </GameData>
