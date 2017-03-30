@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by ModBuddy on 3/22/2017 7:08:59 PM -->
 <GameData>
-  <!-- TODO: Insert table creation example here. -->
- 
-  <!-- TODO: Insert table data example here.-->
-  
-  <!-- Enter your Game Data here. -->
-  
+
+	<!-- Volunteer Army: Land Units gain the Homeguard promotion (While in or adjacent to your Cities, receives +15% Defense and gains +40 extra HP when healing or fortified). -->
+	<Policies>
+		<Update>
+			<Set Level="1" IncludesOneShotFreeUnits="false" BaseFreeUnits="0" />
+			<Where Type="POLICY_VOLUNTEER_ARMY" />
+		</Update>
+	</Policies>
+	<Policy_FreeUnitClasses>
+		<Delete PolicyType="POLICY_VOLUNTEER_ARMY" />
+	</Policy_FreeUnitClasses>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
+		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Land Units gain the Homeguard promotion.[ENDCOLOR]</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
+		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Land Units gain the Homeguard promotion.[ENDCOLOR]</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
+		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Land Units gain the Homeguard promotion.[ENDCOLOR]</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
+		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Land Units gain the Homeguard promotion.[ENDCOLOR]</Text>
+		</Row>
+	</Language_RU_RU>
+
 </GameData>
