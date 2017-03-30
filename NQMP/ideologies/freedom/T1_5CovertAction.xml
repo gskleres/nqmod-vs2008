@@ -4,22 +4,22 @@
 
 	<BuildingClasses>
 		<Row>
-			<Type>BUILDINGCLASS_T1_COVERT_ACTION</Type>
-			<DefaultBuilding>BUILDING_T1_COVERT_ACTION</DefaultBuilding>
+			<Type>DUMMY_BUILDINGCLASS_T1_COVERT_ACTION</Type>
+			<DefaultBuilding>DUMMY_BUILDING_T1_COVERT_ACTION</DefaultBuilding>
 			<Description>Covert Action Dummy BuildingClass</Description>
 		</Row>
 	</BuildingClasses>
 	<Buildings>
 		<Row>
-			<Type>BUILDING_T1_COVERT_ACTION</Type>
-			<BuildingClass>BUILDINGCLASS_T1_COVERT_ACTION</BuildingClass>
+			<Type>DUMMY_BUILDING_T1_COVERT_ACTION</Type>
+			<BuildingClass>DUMMY_BUILDINGCLASS_T1_COVERT_ACTION</BuildingClass>
 			<Description>Covert Action Dummy Building</Description>
 			<GreatWorkCount>-1</GreatWorkCount>
 			<Cost>-1</Cost>
 			<FaithCost>-1</FaithCost>
 			<PrereqTech>NULL</PrereqTech>
 			<NeverCapture>true</NeverCapture>
-			<!-- Gameplay Effect below -->
+			<!-- Gameplay Effects below -->
 			<ExtraSpies>2</ExtraSpies>
 		</Row>
 	</Buildings>
@@ -28,25 +28,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Covert Action[ENDCOLOR][NEWLINE]Chance of rigging election in City-States and influence change from doing so doubled. Gain 2 additional Spies.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Covert Action[ENDCOLOR][NEWLINE]+2 Spies and doubles both chance of rigging election in City-States and [ICON_INFLUENCE] Influence change from doing so.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Covert Action[ENDCOLOR][NEWLINE]Chance of rigging election in City-States and influence change from doing so doubled. Gain 2 additional Spies.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Covert Action[ENDCOLOR][NEWLINE]+2 Spies and doubles both chance of rigging election in City-States and [ICON_INFLUENCE] Influence change from doing so.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Covert Action[ENDCOLOR][NEWLINE]Chance of rigging election in City-States and influence change from doing so doubled. Gain 2 additional Spies.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Covert Action[ENDCOLOR][NEWLINE]+2 Spies and doubles both chance of rigging election in City-States and [ICON_INFLUENCE] Influence change from doing so.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Covert Action[ENDCOLOR][NEWLINE]Chance of rigging election in City-States and influence change from doing so doubled. Gain 2 additional Spies.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Covert Action[ENDCOLOR][NEWLINE]+2 Spies and doubles both chance of rigging election in City-States and [ICON_INFLUENCE] Influence change from doing so.</Text>
 		</Row>
 	</Language_RU_RU>
 
