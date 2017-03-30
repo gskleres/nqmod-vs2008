@@ -697,13 +697,26 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 		kPlayer.GetCulture()->AddTourismAllKnownCivs(iTourism);
 	}
 
-#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
-	int iScienceBonus = kPlayer.GetPlayerTraits()->GetSciencePerGreatPersonBorn();
-	if (iScienceBonus != 0)
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN || NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
+	if (IsGreatPerson())
 	{
-		if (IsGreatPerson())
+		int iScienceBonus = 0;
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
+		int iScienceBonusPerEra = kPlayer.GetPlayerTraits()->GetSciencePerGreatPersonBorn();
+		if (iScienceBonusPerEra != 0)
 		{
-			iScienceBonus *= (kPlayer.GetCurrentEra() + 1);
+			iScienceBonus += iScienceBonusPerEra * (kPlayer.GetCurrentEra() + 1);
+		}
+#endif
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
+		int iScienceBonusFromPolicies = kPlayer.GetPlayerPolicies()->GetNumericModifier(POLICYMOD_SCIENCE_PER_GREAT_PERSON_BORN);
+		if (iScienceBonusFromPolicies != 0)
+		{
+			iScienceBonus += iScienceBonusFromPolicies;
+		}
+#endif
+		if (iScienceBonus > 0)
+		{
 			iScienceBonus *= GC.getGame().getGameSpeedInfo().getTrainPercent();
 			iScienceBonus /= 100;
 

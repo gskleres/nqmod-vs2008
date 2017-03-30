@@ -759,5 +759,7 @@
 /// ---- IDEOLOGY OVERHAUL: FREEDOM ----
 // trade mission influence modifier from policies
 #define NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+// science per great person born from policies
+#define NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 
 #endif
