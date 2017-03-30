@@ -10290,7 +10290,7 @@ int CvCity::getBaseYieldRateModifier(YieldTypes eIndex, int iExtra, CvString* to
 		iTempMod = GetCityBuildings()->GetCityStateTradeRouteGoldModifier();
 		iModifier += iTempMod;
 		if(toolTipSink){
-			GC.getGame().BuildProdModHelpText(toolTipSink, "TXT_KEY_GOLDMOD_YIELD_T1_ECONOMIC_UNION", iTempMod); // Note: unsure if this will work for the tooltip
+			GC.getGame().BuildProdModHelpText(toolTipSink, "TXT_KEY_GOLDMOD_YIELD_PER_MINOR_TRADE_ROUTE", iTempMod); // Note: unsure if this will work for the tooltip
 		}
 	}
 	// NQMP GJS - new Economic Union END

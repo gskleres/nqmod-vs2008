@@ -481,6 +481,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>ideologies/freedom/T1_7FreeTrade.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>ideologies/freedom/T1_7FreeTrade.xml</FileName>
       </Action>
       <Action>
@@ -1957,6 +1962,12 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
         <Description>Freedom1_5CovertAction</Description>
         <FileName>ideologies/freedom/T1_5CovertAction.xml</FileName>
       </Content>
+      <Content>
+        <Type>InGameUIAddin</Type>
+        <Name>T1_7FreeTrade</Name>
+        <Description>T1_7FreeTrade</Description>
+        <FileName>ideologies/freedom/T1_7FreeTrade.xml</FileName>
+      </Content>
     </ModContent>
     <ModProperties />
     <Homepage>http://www.reddit.com/r/nqmod</Homepage>
@@ -2446,15 +2457,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\freedom\T1_EconomicUnion.lua">
+    <Content Include="ideologies\freedom\T1_7FreeTrade.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\freedom\T1_EconomicUnion.sql">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="ideologies\freedom\T1_EconomicUnion.xml">
+    <Content Include="ideologies\freedom\T1_7FreeTrade.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
