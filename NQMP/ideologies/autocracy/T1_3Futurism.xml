@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by ModBuddy on 3/22/2017 7:17:26 PM -->
 <GameData>
-  <!-- TODO: Insert table creation example here. -->
- 
-  <!-- TODO: Insert table data example here.-->
-  
-  <!-- Enter your Game Data here. -->
-  
+	
+	<!-- Futurism: fixed bug so futurism scales with slower game speeds, so this needs to be upped to keep it the same on quick -->
+	<Policy_TourismOnUnitCreation>
+		<Update>
+			<Set Tourism="375" />
+			<Where PolicyType="POLICY_FUTURISM" />
+		</Update>
+	</Policy_TourismOnUnitCreation>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_FUTURISM_HELP" />
+		<Row Tag="TXT_KEY_POLICY_FUTURISM_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]+250 [ICON_TOURISM] Tourism (on Quick Speed) with all known civs when a Great Writer, Artist or Musician is born.</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_FUTURISM_HELP" />
+		<Row Tag="TXT_KEY_POLICY_FUTURISM_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]+250 [ICON_TOURISM] Tourism (on Quick Speed) with all known civs when a Great Writer, Artist or Musician is born.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_FUTURISM_HELP" />
+		<Row Tag="TXT_KEY_POLICY_FUTURISM_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]+250 [ICON_TOURISM] Tourism (on Quick Speed) with all known civs when a Great Writer, Artist or Musician is born.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_FUTURISM_HELP" />
+		<Row Tag="TXT_KEY_POLICY_FUTURISM_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]+250 [ICON_TOURISM] Tourism (on Quick Speed) with all known civs when a Great Writer, Artist or Musician is born.</Text>
+		</Row>
+	</Language_RU_RU>
+	
 </GameData>

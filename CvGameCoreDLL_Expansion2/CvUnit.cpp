@@ -694,6 +694,9 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 	int iTourism = kPlayer.GetPlayerPolicies()->GetTourismFromUnitCreation((UnitClassTypes)(getUnitInfo().GetUnitClassType()));
 	if (iTourism > 0)
 	{
+#ifdef NQ_FIX_ADD_TOURISM_GAME_SPEED_MOD
+		iTourism = iTourism * GC.getGame().getGameSpeedInfo().getCulturePercent() / 100;
+#endif
 		kPlayer.GetCulture()->AddTourismAllKnownCivs(iTourism);
 	}
 
@@ -8777,6 +8780,15 @@ bool CvUnit::trade()
 #endif
 		kPlayer.DoGreatPersonExpended(getUnitType());
 	}
+
+#ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+	int iTourismFromTradeMissions = GET_PLAYER(getOwner()).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_TOURISM_FROM_TRADE_MISSIONS);
+	if (iTourismFromTradeMissions > 0)
+	{
+		int iTourismBonus = iTradeGold * iTourismFromTradeMissions / 100;
+		GET_PLAYER(getOwner()).GetCulture()->AddTourismAllKnownCivs(iTourismBonus);
+	}
+#endif
 
 	kill(true);
 

@@ -172,7 +172,9 @@ public:
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 	int GetSciencePerGreatPersonBorn() const;
 #endif
-
+#ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+	int GetTourismFromTradeMissions() const;
+#endif
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
 	int GetOpenBordersTourismModifier() const;
@@ -417,6 +419,9 @@ private:
 #endif
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 	int m_iSciencePerGreatPersonBorn;
+#endif
+#ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+	int m_iTourismFromTradeMissions;
 #endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
@@ -684,6 +689,9 @@ enum PolicyModifierType
 #endif
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 	POLICYMOD_SCIENCE_PER_GREAT_PERSON_BORN,
+#endif
+#ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+	POLICYMOD_TOURISM_FROM_TRADE_MISSIONS,
 #endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,

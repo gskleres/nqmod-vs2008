@@ -161,6 +161,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 	m_iSciencePerGreatPersonBorn(0),
 #endif
+#ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+	m_iTourismFromTradeMissions(0),
+#endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
 	m_iOpenBordersTourismModifier(0),
@@ -475,6 +478,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 	m_iSciencePerGreatPersonBorn = kResults.GetInt("SciencePerGreatPersonBorn");
+#endif
+#ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+	m_iTourismFromTradeMissions = kResults.GetInt("TourismFromTradeMissions");
 #endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
@@ -1548,6 +1554,14 @@ int CvPolicyEntry::GetTradeMissionInfluenceModifier() const
 int CvPolicyEntry::GetSciencePerGreatPersonBorn() const
 {
 	return m_iSciencePerGreatPersonBorn;
+}
+#endif
+
+#ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+/// tourism from trade missions, percentage of gold converted into tourism with all known civs
+int CvPolicyEntry::GetTourismFromTradeMissions() const
+{
+	return m_iTourismFromTradeMissions;
 }
 #endif
 
@@ -3062,6 +3076,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 			case POLICYMOD_SCIENCE_PER_GREAT_PERSON_BORN:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetSciencePerGreatPersonBorn();
+				break;
+#endif
+#ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+			case POLICYMOD_TOURISM_FROM_TRADE_MISSIONS:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetTourismFromTradeMissions();
 				break;
 #endif
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:

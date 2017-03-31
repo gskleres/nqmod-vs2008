@@ -735,6 +735,8 @@
 #define NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
 // all players can rush spaceship parts with Engineers now
 #define NQ_ALLOW_SS_PART_HURRY_BY_DEFAULT
+// fix tourism from futurism so it scales at different game speeds
+#define NQ_FIX_ADD_TOURISM_GAME_SPEED_MOD
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies
@@ -763,5 +765,7 @@
 #define NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 // gold to science conversion ratio at empire level from policies
 #define NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+// tourism with all known civs on trade missions from policies
+#define NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 
 #endif
