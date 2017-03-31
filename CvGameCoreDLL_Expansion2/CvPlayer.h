@@ -868,6 +868,10 @@ public:
 
 	int getHappinessToScience() const;
 	void changeHappinessToScience(int iChange);
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	int getGoldToScience() const;
+	void changeGoldToScience(int iChange);
+#endif
 
 	int getHalfSpecialistUnhappinessCount() const;
 	bool isHalfSpecialistUnhappiness() const;
@@ -1137,6 +1141,9 @@ public:
 	int GetScienceFromHappinessTimes100(bool bIgnoreHappinessRequirement = false) const;
 #else
 	int GetScienceFromHappinessTimes100() const;
+#endif
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	int GetScienceFromGoldTimes100() const;
 #endif
 	int GetScienceFromResearchAgreementsTimes100() const;
 	int GetScienceFromBudgetDeficitTimes100() const;
@@ -1848,6 +1855,9 @@ protected:
 	FAutoVariable<int, CvPlayer> m_iHappyPerMilitaryUnit;
 	FAutoVariable<int, CvPlayer> m_iHappinessToCulture;
 	FAutoVariable<int, CvPlayer> m_iHappinessToScience;
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	FAutoVariable<int, CvPlayer> m_iGoldToScience;
+#endif
 	FAutoVariable<int, CvPlayer> m_iHalfSpecialistUnhappinessCount;
 	FAutoVariable<int, CvPlayer> m_iHalfSpecialistFoodCount;
 	FAutoVariable<int, CvPlayer> m_iMilitaryFoodProductionCount;

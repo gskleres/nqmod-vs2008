@@ -270,6 +270,9 @@ CvPlayer::CvPlayer() :
 	, m_iHappyPerMilitaryUnit("CvPlayer::m_iHappyPerMilitaryUnit", m_syncArchive)
 	, m_iHappinessToCulture("CvPlayer::m_iHappinessToCulture", m_syncArchive)
 	, m_iHappinessToScience("CvPlayer::m_iHappinessToScience", m_syncArchive)
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	, m_iGoldToScience("CvPlayer::m_iGoldToScience", m_syncArchive)
+#endif
 	, m_iHalfSpecialistUnhappinessCount("CvPlayer::m_iHalfSpecialistUnhappinessCount", m_syncArchive)
 	, m_iHalfSpecialistFoodCount("CvPlayer::m_iHalfSpecialistFoodCount", m_syncArchive)
 	, m_iMilitaryFoodProductionCount("CvPlayer::m_iMilitaryFoodProductionCount", m_syncArchive)
@@ -928,6 +931,9 @@ void CvPlayer::uninit()
 	m_iHappyPerMilitaryUnit = 0;
 	m_iHappinessToCulture = 0;
 	m_iHappinessToScience = 0;
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	m_iGoldToScience = 0;
+#endif
 	m_iHalfSpecialistUnhappinessCount = 0;
 	m_iHalfSpecialistFoodCount = 0;
 	m_iMilitaryFoodProductionCount = 0;
@@ -15606,6 +15612,24 @@ void CvPlayer::changeHappinessToScience(int iChange)
 	}
 }
 
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+//	--------------------------------------------------------------------------------
+int CvPlayer::getGoldToScience() const
+{
+	return m_iGoldToScience;
+}
+
+//	--------------------------------------------------------------------------------
+void CvPlayer::changeGoldToScience(int iChange)
+{
+	if(iChange != 0)
+	{
+		m_iGoldToScience = (m_iGoldToScience + iChange);
+		CvAssert(getGoldToScience() >= 0);
+	}
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 int CvPlayer::getHalfSpecialistUnhappinessCount() const
 {
@@ -18419,6 +18443,11 @@ int CvPlayer::GetScienceTimes100() const
 	// Happiness converted to Science? (Policies, etc.)
 	iValue += GetScienceFromHappinessTimes100();
 
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	// Gold output of empire converted to Science? (Ideology tenet Free Market)
+	iValue += GetScienceFromGoldTimes100();
+#endif
+
 	// Research Agreement bonuses
 	iValue += GetScienceFromResearchAgreementsTimes100();
 
@@ -18563,6 +18592,26 @@ int CvPlayer::GetScienceFromHappinessTimes100() const
 
 	return iScience;
 }
+
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+// Gold output of empire converted to Science? (Ideology tenet Free Market)
+int CvPlayer::GetScienceFromGoldTimes100() const
+{
+	int iScience = 0;
+	int iGoldToScience = getGoldToScience();
+
+	if(iGoldToScience != 0)
+	{
+		int iGoldPerTurn = calculateGoldRateTimes100();
+		if(iGoldPerTurn > 0)
+		{
+			iScience += iGoldPerTurn * iGoldToScience / 100;
+		}
+	}
+
+	return iScience;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 /// Where is our Science coming from?
@@ -22952,6 +23001,9 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 	changeHappyPerMilitaryUnit(pPolicy->GetHappyPerMilitaryUnit() * iChange);
 	changeHappinessToCulture(pPolicy->GetHappinessToCulture() * iChange);
 	changeHappinessToScience(pPolicy->GetHappinessToScience() * iChange);
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	changeGoldToScience(pPolicy->GetGoldToScience() * iChange);
+#endif
 	changeHalfSpecialistUnhappinessCount((pPolicy->IsHalfSpecialistUnhappiness()) ? iChange : 0);
 	changeHalfSpecialistFoodCount((pPolicy->IsHalfSpecialistFood()) ? iChange : 0);
 	changeMilitaryFoodProductionCount((pPolicy->IsMilitaryFoodProduction()) ? iChange : 0);
@@ -24092,6 +24144,9 @@ void CvPlayer::Read(FDataStream& kStream)
 	kStream >> m_iHappyPerMilitaryUnit;
 	kStream >> m_iHappinessToCulture;
 	kStream >> m_iHappinessToScience;
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	kStream >> m_iGoldToScience;
+#endif
 	kStream >> m_iHalfSpecialistUnhappinessCount;
 	kStream >> m_iHalfSpecialistFoodCount;
 	kStream >> m_iMilitaryFoodProductionCount;
@@ -24644,6 +24699,9 @@ void CvPlayer::Write(FDataStream& kStream) const
 	kStream << m_iHappyPerMilitaryUnit;
 	kStream << m_iHappinessToCulture;
 	kStream << m_iHappinessToScience;
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	kStream << m_iGoldToScience;
+#endif
 	kStream << m_iHalfSpecialistUnhappinessCount;
 	kStream << m_iHalfSpecialistFoodCount;
 	kStream << m_iMilitaryFoodProductionCount;

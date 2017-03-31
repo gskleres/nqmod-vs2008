@@ -196,6 +196,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 	m_iNumExtraBranches(0),
 	m_iHappinessToCulture(0),
 	m_iHappinessToScience(0),
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	m_iGoldToScience(0),
+#endif
 	m_iNumCitiesFreeAestheticsSchools(0), // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
 	m_iNumCitiesFreeWalls(0), // NQMP GJS - New Oligarchy add support for NumCitiesFreeWalls
 	m_iNumCitiesFreeCultureBuilding(0),
@@ -414,6 +417,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iHappyPerMilitaryUnit = kResults.GetInt("HappyPerMilitaryUnit");
 	m_iHappinessToCulture = kResults.GetInt("HappinessToCulture");
 	m_iHappinessToScience = kResults.GetInt("HappinessToScience");
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	m_iGoldToScience = kResults.GetInt("GoldToScience");
+#endif
 	m_iNumCitiesFreeAestheticsSchools = kResults.GetInt("NumCitiesFreeAestheticsSchools"); // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
 	m_iNumCitiesFreeWalls = kResults.GetInt("NumCitiesFreeWalls"); // NQMP GJS - New Oligarchy add support for NumCitiesFreeWalls
 	m_iNumCitiesFreeCultureBuilding = kResults.GetInt("NumCitiesFreeCultureBuilding");
@@ -1668,6 +1674,14 @@ int CvPolicyEntry::GetHappinessToScience() const
 {
 	return m_iHappinessToScience;
 }
+
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+/// Gold converted into Science
+int CvPolicyEntry::GetGoldToScience() const
+{
+	return m_iGoldToScience;
+}
+#endif
 
 // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
 /// Cities that receive free Aesthetics Schools from Fine Arts social policy

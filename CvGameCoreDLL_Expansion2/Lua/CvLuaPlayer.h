@@ -649,6 +649,9 @@ protected:
 	static int lGetScienceFromCitiesTimes100(lua_State* L);
 	static int lGetScienceFromOtherPlayersTimes100(lua_State* L);
 	static int lGetScienceFromHappinessTimes100(lua_State* L);
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	static int lGetScienceFromGoldTimes100(lua_State* L);
+#endif
 	static int lGetScienceFromResearchAgreementsTimes100(lua_State* L);
 	static int lGetScienceFromBudgetDeficitTimes100(lua_State* L);
 

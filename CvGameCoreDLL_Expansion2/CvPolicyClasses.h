@@ -196,6 +196,9 @@ public:
 	int GetNumExtraBranches() const;
 	int GetHappinessToCulture() const;
 	int GetHappinessToScience() const;
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	int GetGoldToScience() const;
+#endif
 	int GetNumCitiesFreeAestheticsSchools() const; // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
 	int GetNumCitiesFreeWalls() const; // NQMP GJS - New Oligarchy add support for NumCitiesFreeWalls
 	int GetNumCitiesFreeCultureBuilding() const;
@@ -444,6 +447,9 @@ private:
 	int m_iBarbarianCombatBonus;
 	int m_iHappinessToCulture;
 	int m_iHappinessToScience;
+#ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+	int m_iGoldToScience;
+#endif
 	int m_iNumCitiesFreeAestheticsSchools; // NQMP GJS - add support for NumCitiesFreeAestheticsSchools
 	int m_iNumCitiesFreeWalls; // NQMP GJS - New Oligarchy add support for NumCitiesFreeWalls
 	int m_iNumCitiesFreeCultureBuilding;
