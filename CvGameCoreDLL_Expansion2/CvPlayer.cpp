@@ -12205,6 +12205,10 @@ int CvPlayer::GetHappinessFromPolicies() const
 		}
 	}
 
+#ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+	iHappiness += (getGreatPersonImprovementCount() * m_pPlayerPolicies->GetNumericModifier(POLICYMOD_HAPPINESS_FROM_GREAT_IMPROVEMENTS));
+#endif
+
 	return iHappiness;
 }
 
@@ -19902,7 +19906,7 @@ void CvPlayer::changeImprovementCount(ImprovementTypes eIndex, int iChange)
 
 
 //	--------------------------------------------------------------------------------
-#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY)
+#if defined(AUI_WARNING_FIXES) || defined(AUI_CONSTIFY) || defined(NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES)
 int CvPlayer::getGreatPersonImprovementCount() const
 #else
 int CvPlayer::getGreatPersonImprovementCount()

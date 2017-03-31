@@ -175,6 +175,9 @@ public:
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 	int GetTourismFromTradeMissions() const;
 #endif
+#ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+	int GetHappinessFromGreatImprovements() const;
+#endif
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
 	int GetOpenBordersTourismModifier() const;
@@ -422,6 +425,9 @@ private:
 #endif
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 	int m_iTourismFromTradeMissions;
+#endif
+#ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+	int m_iHappinessFromGreatImprovements;
 #endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
@@ -692,6 +698,9 @@ enum PolicyModifierType
 #endif
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 	POLICYMOD_TOURISM_FROM_TRADE_MISSIONS,
+#endif
+#ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+	POLICYMOD_HAPPINESS_FROM_GREAT_IMPROVEMENTS,
 #endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,

@@ -767,5 +767,7 @@
 #define NQ_GOLD_TO_SCIENCE_FROM_POLICIES
 // tourism with all known civs on trade missions from policies
 #define NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+// happiness from great person tile improvements from policies
+#define NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 
 #endif

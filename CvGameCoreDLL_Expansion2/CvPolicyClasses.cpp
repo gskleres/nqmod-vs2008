@@ -164,6 +164,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 	m_iTourismFromTradeMissions(0),
 #endif
+#ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+	m_iHappinessFromGreatImprovements(0),
+#endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
 	m_iOpenBordersTourismModifier(0),
@@ -481,6 +484,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 	m_iTourismFromTradeMissions = kResults.GetInt("TourismFromTradeMissions");
+#endif
+#ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+	m_iHappinessFromGreatImprovements = kResults.GetInt("HappinessFromGreatImprovements");
 #endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
@@ -1562,6 +1568,14 @@ int CvPolicyEntry::GetSciencePerGreatPersonBorn() const
 int CvPolicyEntry::GetTourismFromTradeMissions() const
 {
 	return m_iTourismFromTradeMissions;
+}
+#endif
+
+#ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+/// happiness from great person tile improvements
+int CvPolicyEntry::GetHappinessFromGreatImprovements() const
+{
+	return m_iHappinessFromGreatImprovements;
 }
 #endif
 
@@ -3081,6 +3095,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 			case POLICYMOD_TOURISM_FROM_TRADE_MISSIONS:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetTourismFromTradeMissions();
+				break;
+#endif
+#ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+			case POLICYMOD_HAPPINESS_FROM_GREAT_IMPROVEMENTS:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetHappinessFromGreatImprovements();
 				break;
 #endif
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:
