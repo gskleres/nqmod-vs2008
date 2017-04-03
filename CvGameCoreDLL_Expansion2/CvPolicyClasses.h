@@ -178,6 +178,9 @@ public:
 #ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 	int GetHappinessFromGreatImprovements() const;
 #endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	int GetMinorFriendshipGainBullyGoldSuccess() const;
+#endif
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
 	int GetOpenBordersTourismModifier() const;
@@ -428,6 +431,9 @@ private:
 #endif
 #ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 	int m_iHappinessFromGreatImprovements;
+#endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	int m_iMinorFriendshipGainBullyGoldSuccess;
 #endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
@@ -701,6 +707,9 @@ enum PolicyModifierType
 #endif
 #ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 	POLICYMOD_HAPPINESS_FROM_GREAT_IMPROVEMENTS,
+#endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	POLICYMOD_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS,
 #endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,

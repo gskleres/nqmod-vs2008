@@ -167,6 +167,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 	m_iHappinessFromGreatImprovements(0),
 #endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	m_iMinorFriendshipGainBullyGoldSuccess(0),
+#endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
 	m_iOpenBordersTourismModifier(0),
@@ -487,6 +490,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 	m_iHappinessFromGreatImprovements = kResults.GetInt("HappinessFromGreatImprovements");
+#endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	m_iMinorFriendshipGainBullyGoldSuccess = kResults.GetInt("MinorFriendshipGainBullyGoldSuccess");
 #endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
@@ -1578,6 +1584,15 @@ int CvPolicyEntry::GetHappinessFromGreatImprovements() const
 	return m_iHappinessFromGreatImprovements;
 }
 #endif
+
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+/// influence gained when tributing (instead of losing influence)
+int CvPolicyEntry::GetMinorFriendshipGainBullyGoldSuccess() const
+{
+	return m_iMinorFriendshipGainBullyGoldSuccess;
+}
+#endif
+
 
 /// Boost to tourism bonus for shared religion
 int CvPolicyEntry::GetSharedReligionTourismModifier() const
@@ -3100,6 +3115,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 			case POLICYMOD_HAPPINESS_FROM_GREAT_IMPROVEMENTS:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetHappinessFromGreatImprovements();
+				break;
+#endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+			case POLICYMOD_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetMinorFriendshipGainBullyGoldSuccess();
 				break;
 #endif
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:

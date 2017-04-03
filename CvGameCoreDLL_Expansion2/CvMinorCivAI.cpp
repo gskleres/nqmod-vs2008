@@ -8501,7 +8501,21 @@ void CvMinorCivAI::DoMajorBullyGold(PlayerTypes eBully, int iGold)
 		}
 
 		GET_PLAYER(eBully).GetTreasury()->ChangeGold(iGold);
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+		int iInfluenceChange = 0;
+		int iBullyInfluenceGain = GET_PLAYER(eBully).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS);
+		if (iBullyInfluenceGain > 0)
+		{
+			iInfluenceChange = iBullyInfluenceGain;
+		}
+		else
+		{
+			iInfluenceChange = GC.getMINOR_FRIENDSHIP_DROP_BULLY_GOLD_SUCCESS();
+		}
+		DoBulliedByMajorReaction(eBully, iInfluenceChange);
+#else
 		DoBulliedByMajorReaction(eBully, GC.getMINOR_FRIENDSHIP_DROP_BULLY_GOLD_SUCCESS());
+#endif
 	}
 
 	// Logging

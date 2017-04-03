@@ -737,6 +737,8 @@
 #define NQ_ALLOW_SS_PART_HURRY_BY_DEFAULT
 // fix tourism from futurism so it scales at different game speeds
 #define NQ_FIX_ADD_TOURISM_GAME_SPEED_MOD
+// golden age points accrue even while in golden ages
+#define NQ_GOLDEN_AGE_OVERHAUL
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies
@@ -769,5 +771,9 @@
 #define NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 // happiness from great person tile improvements from policies
 #define NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+
+/// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
+// influence gain on gold tribute from policies
+#define NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 
 #endif
