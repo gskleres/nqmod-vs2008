@@ -23,3 +23,21 @@ ALTER TABLE Policies ADD TourismFromTradeMissions INTEGER DEFAULT 0;
 ALTER TABLE Policies ADD GoldToScience INTEGER DEFAULT 0;
 -- Happiness gained per great person tile improved in borders
 ALTER TABLE Policies ADD HappinessFromGreatImprovements INTEGER DEFAULT 0;
+
+----------------------------
+-- *** ORDER CHANGES *** ---
+----------------------------
+-- percentage reduction in the increased science cost per city (5%) ... ex: "-20" here = -20% which is (5% * 0.8 = 4%)
+ALTER TABLE Policies ADD NumCitiesResearchCostDiscount INTEGER DEFAULT 0;
+-- flat tourism boost in each city
+ALTER TABLE Policies ADD TourismPerCity INTEGER DEFAULT 0;
+-- flat production boost from internal trade routes (both food and production routes)
+ALTER TABLE Policies ADD InternalTradeRouteProductionYieldChange INTEGER DEFAULT 0;
+-- toggle that disables resistance time in conquered cities if this policy is active
+ALTER TABLE Policies ADD DisablesResistanceTime BOOLEAN DEFAULT false;
+-- percentage modifier to unhappiness applied via ideological pressure from other civs (ex: -75 = only 25% of normal unhappiness)
+ALTER TABLE Policies ADD IdeologyPressureUnhappinessModifier INTEGER DEFAULT 0;
+-- cheat implementation - if true, free Research Lab (at plastics) and free Spaceship Factory (at robotics) in every city
+ALTER TABLE Policies ADD IsSpaceflightPioneers BOOLEAN DEFAULT false;
+-- combat bonus when fighting civs with fewer cities (basically opposite of Ethiopia UA)
+ALTER TABLE Policies ADD CombatBonusVsSmallerCiv INTEGER DEFAULT 0;
