@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 3/22/2017 7:17:12 PM -->
 <GameData>
 
-	<!-- Mobilization: +25% Production towards Military Units and -25% Gold to purchase, upgrade, and maintain them. -->
+	<!-- Mobilization: +25% Production towards Military Units and -25% Gold to purchase or upgrade them. -->
 	<Policies>
 		<Update>
-			<Set Level="2" UnitPurchaseCostModifier="-25" />
+			<Set Level="2" MilitaryProductionModifier="25" UnitPurchaseCostModifier="-25" UnitUpgradeCostMod="-25" />
 			<Where Type="POLICY_MOBILIZATION" />
 		</Update>
 	</Policies>
@@ -14,25 +14,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_MOBILIZATION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MOBILIZATION_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Mobilization[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +25% [ICON_PRODUCTION] Production towards Military Units and -25% [ICON_GOLD] Gold to purchase, upgrade, and maintain them.[ENDCOLOR]</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Mobilization[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]+25% [ICON_PRODUCTION] Production towards Military Units and -25% [ICON_GOLD] Gold to purchase or upgrade them.[ENDCOLOR]</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_MOBILIZATION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MOBILIZATION_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Mobilization[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +25% [ICON_PRODUCTION] Production towards Military Units and -25% [ICON_GOLD] Gold to purchase, upgrade, and maintain them.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Mobilization[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]+25% [ICON_PRODUCTION] Production towards Military Units and -25% [ICON_GOLD] Gold to purchase or upgrade them.[ENDCOLOR]</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_MOBILIZATION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MOBILIZATION_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Mobilization[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +25% [ICON_PRODUCTION] Production towards Military Units and -25% [ICON_GOLD] Gold to purchase, upgrade, and maintain them.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Mobilization[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]+25% [ICON_PRODUCTION] Production towards Military Units and -25% [ICON_GOLD] Gold to purchase or upgrade them.[ENDCOLOR]</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_MOBILIZATION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MOBILIZATION_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Mobilization[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +25% [ICON_PRODUCTION] Production towards Military Units and -25% [ICON_GOLD] Gold to purchase, upgrade, and maintain them.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Mobilization[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]+25% [ICON_PRODUCTION] Production towards Military Units and -25% [ICON_GOLD] Gold to purchase or upgrade them.[ENDCOLOR]</Text>
 		</Row>
 	</Language_RU_RU>
 
