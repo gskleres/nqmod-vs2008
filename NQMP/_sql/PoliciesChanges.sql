@@ -1,5 +1,5 @@
 --------------------------------
--- *** UNIVERSAL CHANGES *** ---
+-- *** IDEOLOGY UNIVERSAL CHANGES *** ---
 --------------------------------
 -- Number of extra spies granted from the policy
 ALTER TABLE Policies ADD NumExtraSpies INTEGER DEFAULT 0;
