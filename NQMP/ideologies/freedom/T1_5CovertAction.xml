@@ -3,28 +3,13 @@
 <GameData>
 
 	<!-- Covert Action: +2 Spies and doubles both chance of rigging election in City-States and Influence change from doing so. -->
-	<BuildingClasses>
-		<Row>
-			<Type>DUMMY_BUILDINGCLASS_T1_COVERT_ACTION</Type>
-			<DefaultBuilding>DUMMY_BUILDING_T1_COVERT_ACTION</DefaultBuilding>
-			<Description>Covert Action Dummy BuildingClass</Description>
-		</Row>
-	</BuildingClasses>
-	<Buildings>
-		<Row>
-			<Type>DUMMY_BUILDING_T1_COVERT_ACTION</Type>
-			<BuildingClass>DUMMY_BUILDINGCLASS_T1_COVERT_ACTION</BuildingClass>
-			<Description>Covert Action Dummy Building</Description>
-			<GreatWorkCount>-1</GreatWorkCount>
-			<Cost>-1</Cost>
-			<FaithCost>-1</FaithCost>
-			<PrereqTech>NULL</PrereqTech>
-			<NeverCapture>true</NeverCapture>
-			<!-- Gameplay Effects below -->
-			<ExtraSpies>2</ExtraSpies>
-		</Row>
-	</Buildings>
-	
+	<Policies>
+		<Update>
+			<Set Level="1" NumExtraSpies="2" OneShot="true" />
+			<Where Type="POLICY_COVERT_ACTION" />
+		</Update>
+	</Policies>
+
 	<!-- Covert Action tooltip -->
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_COVERT_ACTION_HELP" />

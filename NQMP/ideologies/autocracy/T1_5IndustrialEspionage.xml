@@ -5,7 +5,7 @@
 	<!-- Industrial Espionage: +2 Spies and Spies steal technology twice as fast. -->
 	<Policies>
 		<Update>
-			<Set Level="1" />
+			<Set Level="1" NumExtraSpies="2" OneShot="true" />
 			<Where Type="POLICY_INDUSTRIAL_ESPIONAGE" />
 		</Update>
 	</Policies>
@@ -14,25 +14,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_INDUSTRIAL_ESPIONAGE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_INDUSTRIAL_ESPIONAGE_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Industrial Espionage[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +2 Spies and Spies steal technology twice as fast.[ENDCOLOR]</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Industrial Espionage[ENDCOLOR][NEWLINE]+2 Spies and Spies steal technology twice as fast.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_INDUSTRIAL_ESPIONAGE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_INDUSTRIAL_ESPIONAGE_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Industrial Espionage[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +2 Spies and Spies steal technology twice as fast.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Industrial Espionage[ENDCOLOR][NEWLINE]+2 Spies and Spies steal technology twice as fast.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_INDUSTRIAL_ESPIONAGE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_INDUSTRIAL_ESPIONAGE_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Industrial Espionage[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +2 Spies and Spies steal technology twice as fast.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Industrial Espionage[ENDCOLOR][NEWLINE]+2 Spies and Spies steal technology twice as fast.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_INDUSTRIAL_ESPIONAGE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_INDUSTRIAL_ESPIONAGE_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Industrial Espionage[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +2 Spies and Spies steal technology twice as fast.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Industrial Espionage[ENDCOLOR][NEWLINE]+2 Spies and Spies steal technology twice as fast.</Text>
 		</Row>
 	</Language_RU_RU>
 
