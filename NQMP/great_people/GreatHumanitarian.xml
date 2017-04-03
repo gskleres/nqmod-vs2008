@@ -8,7 +8,7 @@
 			<Class>UNITCLASS_MERCHANT</Class>
 			<Type>UNIT_SWEDISH_HUMANITARIAN</Type>
 			<Cost>-1</Cost>
-			<Moves>2</Moves>
+			<Moves>4</Moves>
 			<CivilianAttackPriority>CIVILIAN_ATTACK_PRIORITY_HIGH</CivilianAttackPriority>
 			<Special>SPECIALUNIT_PEOPLE</Special>
 			<Domain>DOMAIN_LAND</Domain>

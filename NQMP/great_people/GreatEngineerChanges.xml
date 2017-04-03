@@ -3,10 +3,11 @@
 <GameData>
 	
 	<!-- Great Engineer equation set to (50 + (24 * pop)) instead of (200 + (20 * pop)) on quick speed -->
+	<!-- movement increased to 4 -->
 	<Units>
 		<Update>
-			<Set BaseHurry="75" HurryMultiplier="36" />
-			<Where Class="UNITCLASS_ENGINEER" />
+			<Set BaseHurry="75" HurryMultiplier="36" Moves="4" />
+			<Where Type="UNIT_ENGINEER" />
 		</Update>
 	</Units>
 	
