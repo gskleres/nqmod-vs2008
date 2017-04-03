@@ -1,1 +1,0 @@
-ALTER TABLE Policies ADD TradeMissionInfluenceModifier INTEGER DEFAULT 0;
