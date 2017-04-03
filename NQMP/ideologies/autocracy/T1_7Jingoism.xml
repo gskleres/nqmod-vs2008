@@ -1,10 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Created by ModBuddy on 3/22/2017 7:17:52 PM -->
+<!-- Created by ModBuddy on 3/22/2017 7:17:12 PM -->
 <GameData>
-  <!-- TODO: Insert table creation example here. -->
- 
-  <!-- TODO: Insert table data example here.-->
-  
-  <!-- Enter your Game Data here. -->
-  
+
+	<!-- Jingoism (replaces Clauswitz's Legacy): +15% Combat Strength in enemy territory during Golden Ages. -->
+	<Policies>
+		<Update>
+			<Set Level="1" AttackBonusTurns="0" OneShot="false" />
+			<Where Type="POLICY_NEW_ORDER" />
+		</Update>
+	</Policies>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER" />
+		<Row Tag="TXT_KEY_POLICY_NEW_ORDER">
+			<Text>Jingoism</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER_HELP" />
+		<Row Tag="TXT_KEY_POLICY_NEW_ORDER_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +15% [ICON_STRENGTH] Combat Strength in enemy territory during [ICON_GOLDEN_AGE] Golden Ages.[ENDCOLOR]</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER" />
+		<Row Tag="TXT_KEY_POLICY_NEW_ORDER">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Jingoism</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER_HELP" />
+		<Row Tag="TXT_KEY_POLICY_NEW_ORDER_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +15% [ICON_STRENGTH] Combat Strength in enemy territory during [ICON_GOLDEN_AGE] Golden Ages.[ENDCOLOR]</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER" />
+		<Row Tag="TXT_KEY_POLICY_NEW_ORDER">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Jingoism</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER_HELP" />
+		<Row Tag="TXT_KEY_POLICY_NEW_ORDER_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +15% [ICON_STRENGTH] Combat Strength in enemy territory during [ICON_GOLDEN_AGE] Golden Ages.[ENDCOLOR]</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER" />
+		<Row Tag="TXT_KEY_POLICY_NEW_ORDER">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Jingoism</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER_HELP" />
+		<Row Tag="TXT_KEY_POLICY_NEW_ORDER_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- +15% [ICON_STRENGTH] Combat Strength in enemy territory during [ICON_GOLDEN_AGE] Golden Ages.[ENDCOLOR]</Text>
+		</Row>
+	</Language_RU_RU>
+
 </GameData>

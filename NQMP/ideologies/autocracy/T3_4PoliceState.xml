@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Created by ModBuddy on 3/22/2017 7:19:13 PM -->
+<!-- Created by ModBuddy on 3/22/2017 7:17:12 PM -->
 <GameData>
-  <!-- TODO: Insert table creation example here. -->
- 
-  <!-- TODO: Insert table data example here.-->
-  
-  <!-- Enter your Game Data here. -->
-  
+
+	<!-- Police State: Barracks, Armories, and Military Academies each provide -10% Unhappiness. -->
+	<Policies>
+		<Update>
+			<Set Level="3" />
+			<Where Type="POLICY_POLICE_STATE" />
+		</Update>
+	</Policies>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_POLICE_STATE_HELP" />
+		<Row Tag="TXT_KEY_POLICY_POLICE_STATE_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Police State[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Barracks, Armories, and Military Academies each provide [ICON_HAPPINESS_4] -10% Unhappiness.[ENDCOLOR]</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_POLICE_STATE_HELP" />
+		<Row Tag="TXT_KEY_POLICY_POLICE_STATE_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Police State[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Barracks, Armories, and Military Academies each provide [ICON_HAPPINESS_4] -10% Unhappiness.[ENDCOLOR]</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_POLICE_STATE_HELP" />
+		<Row Tag="TXT_KEY_POLICY_POLICE_STATE_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Police State[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Barracks, Armories, and Military Academies each provide [ICON_HAPPINESS_4] -10% Unhappiness.[ENDCOLOR]</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_POLICE_STATE_HELP" />
+		<Row Tag="TXT_KEY_POLICY_POLICE_STATE_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Police State[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Barracks, Armories, and Military Academies each provide [ICON_HAPPINESS_4] -10% Unhappiness.[ENDCOLOR]</Text>
+		</Row>
+	</Language_RU_RU>
+
 </GameData>

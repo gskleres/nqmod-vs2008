@@ -441,26 +441,6 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/autocracy/T1_EliteForces.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/autocracy/T1_Fascism.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/autocracy/T1_Mobilization.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/autocracy/T3_CultOfPersonality.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
         <FileName>ideologies/freedom/T1_1EconomicUnion.sql</FileName>
       </Action>
       <Action>
@@ -2408,18 +2388,6 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\autocracy\T1_EliteForces.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="ideologies\autocracy\T1_Fascism.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="ideologies\autocracy\T1_Mobilization.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
     <Content Include="ideologies\autocracy\T2_1Mobilization.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -2453,10 +2421,6 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="ideologies\autocracy\T3_4PoliceState.xml">
-      <SubType>Lua</SubType>
-      <ImportIntoVFS>False</ImportIntoVFS>
-    </Content>
-    <Content Include="ideologies\autocracy\T3_CultOfPersonality.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
