@@ -13787,6 +13787,8 @@ void CvPlayer::DoProcessGoldenAge()
 #else
 			ChangeGoldenAgeProgressMeter(GetExcessHappiness());
 #endif
+#ifdef NQ_GOLDEN_AGE_OVERHAUL
+#endif
 
 			// Enough GA Progress to trigger new GA?
 			if(GetGoldenAgeProgressMeter() >= GetGoldenAgeProgressThreshold())
