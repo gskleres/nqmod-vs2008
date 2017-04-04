@@ -1902,7 +1902,11 @@ bool CvPlayerEspionage::AttemptCoup(uint uiSpyIndex)
 	int aiNewInfluenceValueTimes100[MAX_MAJOR_CIVS];
 	for(uint ui = 0; ui < MAX_MAJOR_CIVS; ui++)
 	{
+#ifdef NQ_COUP_FORMULA_USES_BASE_FRIENDSHIP_NOT_EFFECTIVE_FRIENDSHIP
+		aiNewInfluenceValueTimes100[ui] = pMinorCivAI->GetBaseFriendshipWithMajorTimes100((PlayerTypes)ui);
+#else
 		aiNewInfluenceValueTimes100[ui] = pMinorCivAI->GetEffectiveFriendshipWithMajorTimes100((PlayerTypes)ui);
+#endif
 	}
 
 	m_aSpyList[uiSpyIndex].m_bEvaluateReassignment = true; // flag for reassignment
