@@ -181,6 +181,10 @@ public:
 #ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 	int GetMinorFriendshipGainBullyGoldSuccess() const;
 #endif
+#ifdef NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+	int GetCoupChanceModifier() const;
+#endif
+
 	int GetSharedReligionTourismModifier() const;
 	int GetTradeRouteTourismModifier() const;
 	int GetOpenBordersTourismModifier() const;
@@ -434,6 +438,9 @@ private:
 #endif
 #ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 	int m_iMinorFriendshipGainBullyGoldSuccess;
+#endif
+#ifdef NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+	int m_iCoupChanceModifier;
 #endif
 	int m_iSharedReligionTourismModifier;
 	int m_iTradeRouteTourismModifier;
@@ -710,6 +717,9 @@ enum PolicyModifierType
 #endif
 #ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 	POLICYMOD_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS,
+#endif
+#ifdef NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+	POLICYMOD_COUP_CHANCE_MODIFIER,
 #endif
     POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER,
     POLICYMOD_TRADE_ROUTE_TOURISM_MODIFIER,

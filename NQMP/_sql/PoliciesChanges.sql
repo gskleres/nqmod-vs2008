@@ -9,13 +9,15 @@ ALTER TABLE Policies ADD NumExtraSpies INTEGER DEFAULT 0;
 --------------------------------
 -- Influence gained when tributing gold from a city state (instead of losing it)
 ALTER TABLE Policies ADD MinorFriendshipGainBullyGoldSuccess INTEGER DEFAULT 0;
+-- Flat change to % chance for all city state coups
+ALTER TABLE Policies ADD CoupChanceModifier INTEGER DEFAULT 0;
 
 ------------------------------
 -- *** FREEDOM CHANGES *** ---
 ------------------------------
--- Influence modifier when conducting trade missions (great merchant)
+-- Influence modifier (percentage) when conducting trade missions (great merchant)
 ALTER TABLE Policies ADD TradeMissionInfluenceModifier INTEGER DEFAULT 0;
--- Science gain whenever a great person is born
+-- Science gained whenever a great person is born
 ALTER TABLE Policies ADD SciencePerGreatPersonBorn INTEGER DEFAULT 0;
 -- Percentage of trade mission (great merchant) gold converted to immediate flat tourism (like futurism, but on trade mission)
 ALTER TABLE Policies ADD TourismFromTradeMissions INTEGER DEFAULT 0;

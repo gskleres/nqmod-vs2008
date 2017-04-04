@@ -255,10 +255,8 @@
 // ------ #define AUI_TECH_FIX_TEAMER_RESEARCH_COSTS
 /// The discount to tech cost awarded for other teams already owning a specific tech can now be toggled via an in-game option
 #define AUI_TECH_TOGGLEABLE_ALREADY_KNOWN_TECH_COST_DISCOUNT
-/*
 /// Restores the malus to coup chance if an enemy spy from the CS ally is present in the CS
 #define AUI_ESPIONAGE_FIX_RESTORE_ENEMY_SPY_COUP_MALUS
-*/
 /// Goody hut messages now properly appear for all yields, even if there's no popup
 #define AUI_PLAYER_FIX_RECEIVE_GOODY_MESSAGE
 /*
@@ -775,5 +773,7 @@
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies
 #define NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+// flat coup chance modifier
+#define NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
 
 #endif

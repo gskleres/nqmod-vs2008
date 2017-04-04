@@ -1838,6 +1838,10 @@ int CvPlayerEspionage::GetCoupChanceOfSuccess(uint uiSpyIndex)
 
 	int iResultPercentage = 100 - (int)((iDeltaInfluence * fSpyMultipier) / 100);
 
+#ifdef NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+	iResultPercentage += m_pPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_COUP_CHANCE_MODIFIER);
+#endif
+
 	if(iResultPercentage > 85)
 	{
 		iResultPercentage = 85;

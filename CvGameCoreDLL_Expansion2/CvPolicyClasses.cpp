@@ -170,6 +170,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 	m_iMinorFriendshipGainBullyGoldSuccess(0),
 #endif
+#ifdef NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+	m_iCoupChanceModifier(0),
+#endif
 	m_iSharedReligionTourismModifier(0),
 	m_iTradeRouteTourismModifier(0),
 	m_iOpenBordersTourismModifier(0),
@@ -493,6 +496,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 	m_iMinorFriendshipGainBullyGoldSuccess = kResults.GetInt("MinorFriendshipGainBullyGoldSuccess");
+#endif
+#ifdef NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+	m_iCoupChanceModifier = kResults.GetInt("CoupChanceModifier");
 #endif
 	m_iSharedReligionTourismModifier = kResults.GetInt("SharedReligionTourismModifier");
 	m_iTradeRouteTourismModifier = kResults.GetInt("TradeRouteTourismModifier");
@@ -1593,6 +1599,13 @@ int CvPolicyEntry::GetMinorFriendshipGainBullyGoldSuccess() const
 }
 #endif
 
+#ifdef NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+/// flat boost to % chance for all coups
+int CvPolicyEntry::GetCoupChanceModifier() const
+{
+	return m_iCoupChanceModifier;
+}
+#endif
 
 /// Boost to tourism bonus for shared religion
 int CvPolicyEntry::GetSharedReligionTourismModifier() const
@@ -3120,6 +3133,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 			case POLICYMOD_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetMinorFriendshipGainBullyGoldSuccess();
+				break;
+#endif
+#ifdef NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+			case POLICYMOD_COUP_CHANCE_MODIFIER:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetCoupChanceModifier();
 				break;
 #endif
 			case POLICYMOD_SHARED_RELIGION_TOURISM_MODIFIER:
