@@ -567,6 +567,9 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 	Method(IsPlayerHasOpenBordersAutomatically);
 	Method(GetFriendshipChangePerTurnTimes100);
 	Method(GetMinorCivFriendshipWithMajor);
+#ifdef NQ_SHOW_BASE_INFLUENCE_WHILE_AT_WAR_IN_CS_TOOLTIP
+	Method(GetMinorCivBaseFriendshipWithMajor);
+#endif
 	Method(ChangeMinorCivFriendshipWithMajor);
 	Method(GetMinorCivFriendshipAnchorWithMajor);
 	Method(GetMinorCivFriendshipLevelWithMajor);
@@ -6127,6 +6130,18 @@ int CvLuaPlayer::lGetMinorCivFriendshipWithMajor(lua_State* L)
 	lua_pushinteger(L, iResult);
 	return 1;
 }
+#ifdef NQ_SHOW_BASE_INFLUENCE_WHILE_AT_WAR_IN_CS_TOOLTIP
+//------------------------------------------------------------------------------
+int CvLuaPlayer::lGetMinorCivBaseFriendshipWithMajor(lua_State* L)
+{
+	CvPlayerAI* pkPlayer = GetInstance(L);
+	const PlayerTypes ePlayer = (PlayerTypes) lua_tointeger(L, 2);
+
+	const int iResult = pkPlayer->GetMinorCivAI()->GetBaseFriendshipWithMajor(ePlayer);
+	lua_pushinteger(L, iResult);
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 //void ChangeMinorCivFriendshipWithMajor(PlayerTypes ePlayer, int iChange);
 int CvLuaPlayer::lChangeMinorCivFriendshipWithMajor(lua_State* L)

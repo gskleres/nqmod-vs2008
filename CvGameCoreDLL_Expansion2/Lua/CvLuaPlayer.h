@@ -550,6 +550,9 @@ protected:
 	static int lIsPlayerHasOpenBordersAutomatically(lua_State* L);
 	static int lGetFriendshipChangePerTurnTimes100(lua_State* L);
 	static int lGetMinorCivFriendshipWithMajor(lua_State* L);
+#ifdef NQ_SHOW_BASE_INFLUENCE_WHILE_AT_WAR_IN_CS_TOOLTIP
+	static int lGetMinorCivBaseFriendshipWithMajor(lua_State* L);
+#endif
 	static int lChangeMinorCivFriendshipWithMajor(lua_State* L);
 	static int lGetMinorCivFriendshipAnchorWithMajor(lua_State* L);
 	static int lGetFriendshipNeededForNextLevel(lua_State* L);

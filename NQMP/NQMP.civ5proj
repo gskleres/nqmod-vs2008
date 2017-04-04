@@ -1873,6 +1873,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
         <Type>UpdateDatabase</Type>
         <FileName>gameplay/FlatlandCityExtraFood.xml</FileName>
       </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>ui/CityStateStatusHelperText.xml</FileName>
+      </Action>
     </ModActions>
     <ModContent>
       <Content>
@@ -3181,6 +3186,14 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
     <Content Include="ui\AdvancedSetup.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\CityStateStatusHelper.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\CityStateStatusHelperText.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="ui\CIV5GameOptions_AI_Gimps.xml">
       <SubType>Lua</SubType>
