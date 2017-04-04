@@ -737,6 +737,8 @@
 #define NQ_FIX_ADD_TOURISM_GAME_SPEED_MOD
 // golden age points accrue even while in golden ages
 #define NQ_GOLDEN_AGE_OVERHAUL
+// coup chances now use base influence instead of effective influence (which would be -60 during war)
+#define NQ_COUP_FORMULA_USES_BASE_FRIENDSHIP_NOT_EFFECTIVE_FRIENDSHIP
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies

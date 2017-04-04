@@ -1771,7 +1771,11 @@ int CvPlayerEspionage::GetCoupChanceOfSuccess(uint uiSpyIndex)
 	}
 
 	int iAllyInfluence = pMinorCivAI->GetEffectiveFriendshipWithMajorTimes100(eAllyPlayer);
+#ifdef NQ_COUP_FORMULA_USES_BASE_FRIENDSHIP_NOT_EFFECTIVE_FRIENDSHIP
+	int iMyInfluence = pMinorCivAI->GetBaseFriendshipWithMajorTimes100(m_pPlayer->GetID());
+#else
 	int iMyInfluence = pMinorCivAI->GetEffectiveFriendshipWithMajorTimes100(m_pPlayer->GetID());
+#endif
 	int iDeltaInfluence = iAllyInfluence - iMyInfluence;
 
 	//float fNobodyBonus = 0.5;
