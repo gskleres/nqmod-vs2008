@@ -146,5 +146,6 @@
 		<Row Tag="TXT_KEY_PROMOTION_ELITE_FORCES_HELP">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+10% [ICON_STRENGTH] Combat Strength and gains an extra 10 HP when healing.</Text>
 		</Row>
+	</Language_RU_RU>
 
 </GameData>
