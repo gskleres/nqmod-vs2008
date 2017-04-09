@@ -3,6 +3,8 @@
 -----------------------------------------
 -- Number of extra spies granted from the policy
 ALTER TABLE Policies ADD NumExtraSpies INTEGER DEFAULT 0;
+-- (really ugly code) Gives a free Great Artist whenever you get a Great General if you have this policy
+ALTER TABLE Policies ADD IsWarHero BOOLEAN DEFAULT false;
 
 --------------------------------
 -- *** AUTOCRACY CHANGES *** ---

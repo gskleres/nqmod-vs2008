@@ -781,5 +781,7 @@
 #define NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
 // attack bonus in foreign lands during golden ages
 #define NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+// with this policy, gain a free great artist whenever a great general is born (very ugly cheat code)
+#define NQ_WAR_HERO
 
 #endif

@@ -6387,6 +6387,12 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 								owningPlayer.incrementGreatGeneralsCreated();
 								if (!pFreeUnit->jumpToNearestValidPlot())
 									pFreeUnit->kill(false);	// Could not find a valid spot!
+#ifdef NQ_WAR_HERO
+								if (owningPlayer.IsWarHero())
+								{
+									owningPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST"));
+								}
+#endif
 							}
 							else if(pFreeUnit->IsGreatAdmiral())
 							{

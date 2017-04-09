@@ -234,6 +234,9 @@ public:
 #ifdef NQ_SPACEFLIGHT_PIONEERS
 	bool IsSpaceflightPioneers() const;
 #endif
+#ifdef NQ_WAR_HERO
+	bool IsWarHero() const;
+#endif
 	bool IsEnablesSSPartPurchase() const;
 	bool IsAbleToAnnexCityStates() const;
 	std::string pyGetWeLoveTheKing()
@@ -494,6 +497,9 @@ private:
 #endif
 #ifdef NQ_SPACEFLIGHT_PIONEERS
 	bool m_bSpaceflightPioneers;
+#endif
+#ifdef NQ_WAR_HERO
+	bool m_bWarHero;
 #endif
 	bool m_bEnablesSSPartPurchase;
 	bool m_bAbleToAnnexCityStates;

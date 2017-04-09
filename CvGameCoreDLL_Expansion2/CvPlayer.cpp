@@ -285,6 +285,9 @@ CvPlayer::CvPlayer() :
 #ifdef NQ_SPACEFLIGHT_PIONEERS
 	, m_iSpaceflightPioneersCount(0)
 #endif
+#ifdef NQ_WAR_HERO
+	, m_iWarHeroCount(0)
+#endif
 	, m_iEnablesSSPartPurchaseCount(0)
 	, m_iConscriptCount("CvPlayer::m_iConscriptCount", m_syncArchive)
 	, m_iMaxConscript("CvPlayer::m_iMaxConscript", m_syncArchive)
@@ -945,6 +948,9 @@ void CvPlayer::uninit()
 #endif
 #ifdef NQ_SPACEFLIGHT_PIONEERS
 	m_iSpaceflightPioneersCount = 0;
+#endif
+#ifdef NQ_WAR_HERO
+	m_iWarHeroCount = 0;
 #endif
 	m_iEnablesSSPartPurchaseCount = 0;
 	m_iConscriptCount = 0;
@@ -14811,6 +14817,12 @@ void CvPlayer::DoSpawnGreatPerson(PlayerTypes eMinor)
 
 		if (pNewGreatPeople)
 		{
+#ifdef NQ_WAR_HERO
+			if(pNewGreatPeople->IsGreatGeneral() && IsWarHero())
+			{
+				addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST"));
+			}
+#endif
 			// Bump up the count
 			/* NQMP GJS: Actually don't bump up the count lolz ... patronage finisher now gives free Great People :)
 			if(pNewGreatPeople->IsGreatGeneral())
@@ -15824,6 +15836,30 @@ void CvPlayer::ChangeSpaceflightPioneersCount(int iChange)
 	{
 		m_iSpaceflightPioneersCount = m_iSpaceflightPioneersCount + iChange;
 		CvAssert(GetSpaceflightPioneersCount() >= 0);
+	}
+}
+#endif
+
+#ifdef NQ_WAR_HERO
+//	--------------------------------------------------------------------------------
+int CvPlayer::GetWarHeroCount() const
+{
+	return m_iWarHeroCount;
+}
+
+//	--------------------------------------------------------------------------------
+bool CvPlayer::IsWarHero() const
+{
+	return (GetWarHeroCount() > 0);
+}
+
+//	--------------------------------------------------------------------------------
+void CvPlayer::ChangeWarHeroCount(int iChange)
+{
+	if (iChange != 0)
+	{
+		m_iWarHeroCount = m_iWarHeroCount + iChange;
+		CvAssert(GetWarHeroCount() >= 0);
 	}
 }
 #endif
@@ -23022,6 +23058,9 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 #ifdef NQ_SPACEFLIGHT_PIONEERS
 	ChangeSpaceflightPioneersCount((pPolicy->IsSpaceflightPioneers()) ? iChange : 0);
 #endif
+#ifdef NQ_WAR_HERO
+	ChangeWarHeroCount((pPolicy->IsWarHero()) ? iChange : 0);
+#endif
 	ChangeEnablesSSPartPurchaseCount((pPolicy->IsEnablesSSPartPurchase()) ? iChange : 0);
 	changeMaxConscript(getWorldSizeMaxConscript(kPolicy) * iChange);
 	changeExpModifier(pPolicy->GetExpModifier() * iChange);
@@ -23587,6 +23626,12 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 									{
 										incrementGreatGeneralsCreated();
 										pNewUnit->jumpToNearestValidPlot();
+#ifdef NQ_WAR_HERO
+										if (IsWarHero())
+										{
+											addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST"));
+										}
+#endif
 									}
 									else if(pNewUnit->IsGreatAdmiral())
 									{
@@ -24172,6 +24217,9 @@ void CvPlayer::Read(FDataStream& kStream)
 #ifdef NQ_SPACEFLIGHT_PIONEERS
 	kStream >> m_iSpaceflightPioneersCount;
 #endif
+#ifdef NQ_WAR_HERO
+	kStream >> m_iWarHeroCount;
+#endif
 	if (uiVersion >= 3)
 	{
 		kStream >> m_iEnablesSSPartPurchaseCount;
@@ -24720,6 +24768,9 @@ void CvPlayer::Write(FDataStream& kStream) const
 #ifdef NQ_SPACEFLIGHT_PIONEERS
 	kStream << m_iSpaceflightPioneersCount;
 #endif
+#ifdef NQ_WAR_HERO
+	kStream << m_iWarHeroCount;
+#endif
 
 	kStream << m_iEnablesSSPartPurchaseCount;
 	kStream << m_iConscriptCount;
@@ -25010,6 +25061,12 @@ void CvPlayer::createGreatGeneral(UnitTypes eGreatPersonUnit, int iX, int iY)
 	ChangeNumGreatPeople(1);
 
 	incrementGreatGeneralsCreated();
+#ifdef NQ_WAR_HERO
+	if (IsWarHero())
+	{
+		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST"));
+	}
+#endif
 
 	changeGreatGeneralsThresholdModifier(/*50*/ GC.getGREAT_GENERALS_THRESHOLD_INCREASE() * ((getGreatGeneralsCreated() / 10) + 1));
 

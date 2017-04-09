@@ -3663,6 +3663,12 @@ void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, b
 		if(newUnit->IsGreatGeneral())
 		{
 			kPlayer.incrementGreatGeneralsCreated();
+#ifdef NQ_WAR_HERO
+			if (kPlayer.IsWarHero())
+			{
+				kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST"));
+			}
+#endif
 		}
 		else if(newUnit->IsGreatAdmiral())
 		{

@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 3/22/2017 7:17:12 PM -->
 <GameData>
 
-	<!-- War Hero (replaces Total War): Gain a free Great Artist whenever you earn a Great General, and a free Great General appears. -->
+	<!-- War Hero (replaces Total War): Gain a free Great Artist with every Great General, and a free Great General appears. -->
 	<Policies>
 		<Update>
-			<Set Level="2" MilitaryProductionModifier="0" FreeExperience="0" />
+			<Set Level="2" MilitaryProductionModifier="0" FreeExperience="0" IsWarHero="true" />
 			<Where Type="POLICY_TOTAL_WAR" />
 		</Update>
 	</Policies>
@@ -18,7 +18,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_TOTAL_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_TOTAL_WAR_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]War Hero[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Gain a free Great Artist whenever you earn a Great General, and a free Great General appears.[ENDCOLOR]</Text>
+			<Text>[COLOR_POSITIVE_TEXT]War Hero[ENDCOLOR][NEWLINE]Gain a free Great Artist with every Great General, and a free Great General appears.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -28,7 +28,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_TOTAL_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_TOTAL_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]War Hero[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Gain a free Great Artist whenever you earn a Great General, and a free Great General appears.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]War Hero[ENDCOLOR][NEWLINE]Gain a free Great Artist with every Great General, and a free Great General appears.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -38,7 +38,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_TOTAL_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_TOTAL_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]War Hero[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Gain a free Great Artist whenever you earn a Great General, and a free Great General appears.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]War Hero[ENDCOLOR][NEWLINE]Gain a free Great Artist with every Great General, and a free Great General appears.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
@@ -48,7 +48,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_TOTAL_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_TOTAL_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]War Hero[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Gain a free Great Artist whenever you earn a Great General, and a free Great General appears.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]War Hero[ENDCOLOR][NEWLINE]Gain a free Great Artist with every Great General, and a free Great General appears.</Text>
 		</Row>
 	</Language_RU_RU>
 

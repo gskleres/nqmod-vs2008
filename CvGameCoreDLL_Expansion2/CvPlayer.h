@@ -909,6 +909,11 @@ public:
 	void ChangeSpaceflightPioneersCount(int iChange);
 #endif
 
+#ifdef NQ_WAR_HERO
+	int GetWarHeroCount() const;
+	bool IsWarHero() const;
+	void ChangeWarHeroCount(int iChange);
+#endif
 
 	int GetEnablesSSPartPurchaseCount() const;
 	bool IsEnablesSSPartPurchase() const;
@@ -1869,6 +1874,9 @@ protected:
 #endif
 #ifdef NQ_SPACEFLIGHT_PIONEERS
 	int m_iSpaceflightPioneersCount;
+#endif
+#ifdef NQ_WAR_HERO
+	int m_iWarHeroCount;
 #endif
 	int m_iEnablesSSPartPurchaseCount;
 	FAutoVariable<int, CvPlayer> m_iConscriptCount;
