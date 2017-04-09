@@ -4,7 +4,7 @@
 
 	<Units>
 		<Update>
-			<Set FaithCost="120" />
+			<Set FaithCost="120" Moves="4" />
 			<Where Type="UNIT_INQUISITOR" />
 		</Update>
 	</Units>
