@@ -12,7 +12,7 @@
 		<Row>
 			<Class>UNITCLASS_TRIREME</Class>
 			<Type>UNIT_DANISH_LONGSHIP</Type>
-			<PrereqTech>TECH_SAILING</PrereqTech>
+			<PrereqTech>TECH_OPTICS</PrereqTech>
 			<Combat>10</Combat>
 			<Cost>45</Cost>
 			<Moves>6</Moves>
