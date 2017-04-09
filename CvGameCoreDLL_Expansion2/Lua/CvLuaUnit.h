@@ -379,6 +379,9 @@ protected:
 	static int lGetFriendlyLandsModifier(lua_State* L);
 	static int lGetFriendlyLandsAttackModifier(lua_State* L);
 	static int lGetOutsideFriendlyLandsModifier(lua_State* L);
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+	static int lGetGoldenAgeForeignAttackBonus(lua_State* L);
+#endif
 	static int lGetExtraCityAttackPercent(lua_State* L);
 	static int lGetExtraCityDefensePercent(lua_State* L);
 	static int lGetExtraHillsAttackPercent(lua_State* L);

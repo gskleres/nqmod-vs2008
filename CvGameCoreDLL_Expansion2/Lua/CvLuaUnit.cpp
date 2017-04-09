@@ -367,6 +367,9 @@ void CvLuaUnit::PushMethods(lua_State* L, int t)
 	Method(GetFriendlyLandsModifier);
 	Method(GetFriendlyLandsAttackModifier);
 	Method(GetOutsideFriendlyLandsModifier);
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+	Method(GetGoldenAgeForeignAttackBonus);
+#endif
 	Method(GetExtraCityAttackPercent);
 	Method(GetExtraCityDefensePercent);
 	Method(GetExtraHillsAttackPercent);
@@ -3647,6 +3650,18 @@ int CvLuaUnit::lGetOutsideFriendlyLandsModifier(lua_State* L)
 	lua_pushinteger(L, iResult);
 	return 1;
 }
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+//------------------------------------------------------------------------------
+//int GetGoldenAgeForeignAttackBonus();
+int CvLuaUnit::lGetGoldenAgeForeignAttackBonus(lua_State* L)
+{
+	CvUnit* pkUnit = GetInstance(L);
+
+	const int iResult = pkUnit->getGoldenAgeForeignAttackBonus();
+	lua_pushinteger(L, iResult);
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 //int getExtraCityAttackPercent();
 int CvLuaUnit::lGetExtraCityAttackPercent(lua_State* L)

@@ -251,6 +251,9 @@ CvUnit::CvUnit() :
 	, m_iFriendlyLandsModifier("CvUnit::m_iFriendlyLandsModifier", m_syncArchive)
 	, m_iFriendlyLandsAttackModifier("CvUnit::m_iFriendlyLandsAttackModifier", m_syncArchive)
 	, m_iOutsideFriendlyLandsModifier("CvUnit::m_iOutsideFriendlyLandsModifier", m_syncArchive)
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+	, m_iGoldenAgeForeignAttackBonus("CvUnit::m_iGoldenAgeForeignAttackBonus", m_syncArchive)
+#endif
 	, m_iNumInterceptions("CvUnit::m_iNumInterceptions", m_syncArchive)
 	, m_iMadeInterceptionCount("CvUnit::m_iMadeInterceptionCount", m_syncArchive)
 	, m_iEverSelectedCount(0)
@@ -11617,6 +11620,17 @@ int CvUnit::GetMaxAttackStrength(const CvPlot* pFromPlot, const CvPlot* pToPlot,
 		}
 #endif
 
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+		if (pToPlot->getOwner() != getOwner())
+		{
+			if (GET_PLAYER(getOwner()).isGoldenAge())
+			{
+				iTempModifier = getGoldenAgeForeignAttackBonus();
+				iModifier += iTempModifier;
+			}
+		}
+#endif
+
 		// Attacking a City
 		if(pToPlot->isCity())
 		{
@@ -17748,6 +17762,25 @@ void CvUnit::changeOutsideFriendlyLandsModifier(int iChange)
 	}
 }
 
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+//	--------------------------------------------------------------------------------
+int CvUnit::getGoldenAgeForeignAttackBonus() const
+{
+	VALIDATE_OBJECT
+	return m_iGoldenAgeForeignAttackBonus;
+}
+
+//	--------------------------------------------------------------------------------
+void CvUnit::changeGoldenAgeForeignAttackBonus(int iChange)
+{
+	VALIDATE_OBJECT
+	if(iChange != 0)
+	{
+		m_iGoldenAgeForeignAttackBonus += iChange;
+	}
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 int CvUnit::getPillageChange() const
 {
@@ -19283,6 +19316,9 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 		changeFriendlyLandsModifier(thisPromotion.GetFriendlyLandsModifier() * iChange);
 		changeFriendlyLandsAttackModifier(thisPromotion.GetFriendlyLandsAttackModifier() * iChange);
 		changeOutsideFriendlyLandsModifier(thisPromotion.GetOutsideFriendlyLandsModifier() * iChange);
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+		changeGoldenAgeForeignAttackBonus(thisPromotion.GetGoldenAgeForeignAttackBonus() * iChange);
+#endif
 		changeUpgradeDiscount(thisPromotion.GetUpgradeDiscount() * iChange);
 		changeExperiencePercent(thisPromotion.GetExperiencePercent() * iChange);
 		changeCargoSpace(thisPromotion.GetCargoChange() * iChange);

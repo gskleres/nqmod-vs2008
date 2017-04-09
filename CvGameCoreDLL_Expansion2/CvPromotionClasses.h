@@ -104,6 +104,9 @@ public:
 	int  GetFriendlyLandsModifier() const;
 	int  GetFriendlyLandsAttackModifier() const;
 	int  GetOutsideFriendlyLandsModifier() const;
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+	int GetGoldenAgeForeignAttackBonus() const;
+#endif
 	int  GetCommandType() const;
 	void SetCommandType(int iNewType);
 
@@ -291,6 +294,9 @@ protected:
 	int m_iFriendlyLandsModifier;
 	int m_iFriendlyLandsAttackModifier;
 	int m_iOutsideFriendlyLandsModifier;
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+	int m_iGoldenAgeForeignAttackBonus;
+#endif
 	int m_iCommandType;
 	int m_iUpgradeDiscount;
 	int m_iExperiencePercent;

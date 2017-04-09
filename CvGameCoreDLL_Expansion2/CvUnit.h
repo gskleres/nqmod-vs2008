@@ -959,6 +959,11 @@ public:
 	int getOutsideFriendlyLandsModifier() const;
 	void changeOutsideFriendlyLandsModifier(int iChange);
 
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+	int getGoldenAgeForeignAttackBonus() const;
+	void changeGoldenAgeForeignAttackBonus(int iChange);
+#endif
+
 	int getPillageChange() const;
 	void changePillageChange(int iChange);
 
@@ -1479,6 +1484,9 @@ protected:
 	FAutoVariable<int, CvUnit> m_iFriendlyLandsModifier;
 	FAutoVariable<int, CvUnit> m_iFriendlyLandsAttackModifier;
 	FAutoVariable<int, CvUnit> m_iOutsideFriendlyLandsModifier;
+#ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+	FAutoVariable<int, CvUnit> m_iGoldenAgeForeignAttackBonus;
+#endif
 	FAutoVariable<int, CvUnit> m_iHealIfDefeatExcludeBarbariansCount;
 	FAutoVariable<int, CvUnit> m_iNumInterceptions;
 	FAutoVariable<int, CvUnit> m_iMadeInterceptionCount;

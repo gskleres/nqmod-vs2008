@@ -1033,6 +1033,17 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 					controlTable.Text:LocalizeAndSetText( "TXT_KEY_EUPANEL_OUTSIDE_HOME_BONUS" );
 					controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
 				end
+
+				-- start #NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+				if (pMyPlayer:IsGoldenAge()) then
+					iModifier = pMyUnit:GetGoldenAgeForeignAttackBonus();
+					if (iModifier ~= 0) then
+						controlTable = g_MyCombatDataIM:GetInstance();
+						controlTable.Text:LocalizeAndSetText( "TXT_KEY_EUPANEL_GOLDEN_AGE_FOREIGN_ATTACK_BONUS" );
+						controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
+					end
+				end
+				-- end #NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 				
 				iModifier = pMyPlayer:GetFoundedReligionEnemyCityCombatMod(pToPlot);
 				if (iModifier ~= 0) then

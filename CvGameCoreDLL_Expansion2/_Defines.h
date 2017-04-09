@@ -779,5 +779,7 @@
 #define NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 // flat coup chance modifier
 #define NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+// attack bonus in foreign lands during golden ages
+#define NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 
 #endif
