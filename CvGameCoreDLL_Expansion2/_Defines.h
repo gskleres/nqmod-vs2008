@@ -741,6 +741,8 @@
 #define NQ_COUP_FORMULA_USES_BASE_FRIENDSHIP_NOT_EFFECTIVE_FRIENDSHIP
 // show base influence you would have at peace in tooltip while at war with city states
 #define NQ_SHOW_BASE_INFLUENCE_WHILE_AT_WAR_IN_CS_TOOLTIP
+// disable gifting of great people between major powers
+#define NQ_NO_GIFTING_GREAT_PEOPLE_TO_MAJORS
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies

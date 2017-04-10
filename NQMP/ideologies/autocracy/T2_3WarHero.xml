@@ -5,10 +5,17 @@
 	<!-- War Hero (replaces Total War): Gain a free Great Artist with every Great General, and a free Great General appears. -->
 	<Policies>
 		<Update>
-			<Set Level="2" MilitaryProductionModifier="0" FreeExperience="0" IsWarHero="true" />
+			<Set Level="2" MilitaryProductionModifier="0" FreeExperience="0" IsWarHero="true" IncludesOneShotFreeUnits="true" />
 			<Where Type="POLICY_TOTAL_WAR" />
 		</Update>
 	</Policies>
+	<Policy_FreeUnitClasses>
+		<Row>
+			<PolicyType>POLICY_TOTAL_WAR</PolicyType>
+			<UnitClassType>UNITCLASS_GREAT_GENERAL</UnitClassType>
+			<Count>1</Count>
+		</Row>
+	</Policy_FreeUnitClasses>
 
 	<!-- localization -->
 	<Language_en_US>

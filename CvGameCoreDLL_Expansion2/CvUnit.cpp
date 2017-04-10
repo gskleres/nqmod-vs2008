@@ -4143,6 +4143,16 @@ bool CvUnit::canGift(bool bTestVisible, bool bTestTransport) const
 			}
 		}
 	}
+#ifdef NQ_NO_GIFTING_GREAT_PEOPLE_TO_MAJORS
+	// no gifting great people to non-city states
+	else 
+	{
+		if (IsGreatPerson())
+		{
+			return false;
+		}
+	}
+#endif
 
 	// No for religious units
 	if (getUnitInfo().IsSpreadReligion() || getUnitInfo().IsRemoveHeresy())

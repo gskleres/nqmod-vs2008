@@ -3663,12 +3663,6 @@ void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, b
 		if(newUnit->IsGreatGeneral())
 		{
 			kPlayer.incrementGreatGeneralsCreated();
-#ifdef NQ_WAR_HERO
-			if (kPlayer.IsWarHero())
-			{
-				kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST"));
-			}
-#endif
 		}
 		else if(newUnit->IsGreatAdmiral())
 		{
@@ -3745,6 +3739,13 @@ void CvCityCitizens::DoSpawnGreatPerson(UnitTypes eUnit, bool bIncrementCount, b
 	{
 		newUnit->SetResearchBulbAmount(kPlayer.GetScienceYieldFromPreviousTurns(GC.getGame().getGameTurn(), newUnit->getUnitInfo().GetBaseBeakersTurnsToCount()));
 	}
+
+#ifdef NQ_WAR_HERO
+	if (newUnit->IsGreatGeneral() && kPlayer.IsWarHero())
+	{
+		kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST"));
+	}
+#endif
 
 	// Notification
 	if(GET_PLAYER(GetOwner()).GetNotifications())

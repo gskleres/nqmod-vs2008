@@ -14350,6 +14350,12 @@ void CvCity::Purchase(UnitTypes eUnitType, BuildingTypes eBuildingType, ProjectT
 			else if (eUnitClass == GC.getInfoTypeForString("UNITCLASS_GREAT_GENERAL"))
 			{
 				kPlayer.incrementGeneralsFromFaith();
+#ifdef NQ_WAR_HERO
+				if (kPlayer.IsWarHero())
+				{
+					kPlayer.addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_ARTIST"));
+				}
+#endif
 			}
 			else if (eUnitClass == GC.getInfoTypeForString("UNITCLASS_GREAT_ADMIRAL"))
 			{
