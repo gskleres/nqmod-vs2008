@@ -703,7 +703,7 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 		kPlayer.GetCulture()->AddTourismAllKnownCivs(iTourism);
 	}
 
-#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN || NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
+#ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN || NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES || NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
 	if (IsGreatPerson())
 	{
 		int iScienceBonus = 0;
@@ -745,6 +745,17 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 				DLLUI->AddPopupText(plot()->getX(), plot()->getY(), text, fDelay);
 			}
 		}
+
+#ifdef NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
+		for (int iMinorCivLoop = MAX_MAJOR_CIVS; iMinorCivLoop < MAX_CIV_PLAYERS; iMinorCivLoop++)
+		{
+			PlayerTypes eMinorCivLoop = (PlayerTypes) iMinorCivLoop;
+			if (GET_PLAYER(eMinorCivLoop).isAlive() && GET_TEAM(kPlayer.getTeam()).isHasMet(GET_PLAYER(eMinorCivLoop).getTeam()))
+			{
+				GET_PLAYER(eMinorCivLoop).GetMinorCivAI()->ChangeFriendshipWithMajor(kPlayer.GetID(), kPlayer.GetPlayerPolicies()->GetNumericModifier(POLICYMOD_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN));
+			}
+		}
+#endif
 	}
 #endif
 

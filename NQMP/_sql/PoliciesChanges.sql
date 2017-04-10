@@ -21,6 +21,8 @@ ALTER TABLE Policies ADD CoupChanceModifier INTEGER DEFAULT 0;
 ALTER TABLE Policies ADD TradeMissionInfluenceModifier INTEGER DEFAULT 0;
 -- Science gained whenever a great person is born
 ALTER TABLE Policies ADD SciencePerGreatPersonBorn INTEGER DEFAULT 0;
+-- Influence boost with all known city states whenever a great person is born
+ALTER TABLE Policies ADD InfluenceBoostPerGreatPersonBorn INTEGER DEFAULT 0;
 -- Percentage of trade mission (great merchant) gold converted to immediate flat tourism (like futurism, but on trade mission)
 ALTER TABLE Policies ADD TourismFromTradeMissions INTEGER DEFAULT 0;
 -- Percentage of empire's positive gold per turn income that is converted into science per turn

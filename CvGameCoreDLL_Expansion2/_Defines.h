@@ -769,6 +769,8 @@
 #define NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
 // science per great person born from policies
 #define NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
+// influence with all known city states per great person born from policies
+#define NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
 // gold to science conversion ratio at empire level from policies
 #define NQ_GOLD_TO_SCIENCE_FROM_POLICIES
 // tourism with all known civs on trade missions from policies

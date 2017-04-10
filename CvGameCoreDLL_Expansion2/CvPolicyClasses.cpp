@@ -161,6 +161,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 	m_iSciencePerGreatPersonBorn(0),
 #endif
+#ifdef NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
+	m_iInfluenceBoostPerGreatPersonBorn(0),
+#endif
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 	m_iTourismFromTradeMissions(0),
 #endif
@@ -490,6 +493,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 	m_iSciencePerGreatPersonBorn = kResults.GetInt("SciencePerGreatPersonBorn");
+#endif
+#ifdef NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
+	m_iInfluenceBoostPerGreatPersonBorn = kResults.GetInt("InfluenceBoostPerGreatPersonBorn");
 #endif
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 	m_iTourismFromTradeMissions = kResults.GetInt("TourismFromTradeMissions");
@@ -1579,6 +1585,14 @@ int CvPolicyEntry::GetTradeMissionInfluenceModifier() const
 int CvPolicyEntry::GetSciencePerGreatPersonBorn() const
 {
 	return m_iSciencePerGreatPersonBorn;
+}
+#endif
+
+#ifdef NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
+/// influence boost per great person born
+int CvPolicyEntry::GetInfluenceBoostPerGreatPersonBorn() const
+{
+	return m_iInfluenceBoostPerGreatPersonBorn;
 }
 #endif
 
@@ -3132,6 +3146,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
 			case POLICYMOD_SCIENCE_PER_GREAT_PERSON_BORN:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetSciencePerGreatPersonBorn();
+				break;
+#endif
+#ifdef NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
+			case POLICYMOD_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetInfluenceBoostPerGreatPersonBorn();
 				break;
 #endif
 #ifdef NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
