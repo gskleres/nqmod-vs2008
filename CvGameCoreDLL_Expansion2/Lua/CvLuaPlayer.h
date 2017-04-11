@@ -938,6 +938,9 @@ protected:
 	static int lGetDealTheyreValue(lua_State* L);
 
 	static int lMayNotAnnex(lua_State* L);
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	static int lIsAllowPuppetPurchasing(lua_State* L);
+#endif
 
 	//Espionage Methods
 	static int lGetEspionageCityStatus(lua_State* L);

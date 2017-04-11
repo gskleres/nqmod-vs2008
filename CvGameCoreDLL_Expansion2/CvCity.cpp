@@ -13877,8 +13877,14 @@ bool CvCity::IsCanPurchase(bool bTestPurchaseCost, bool bTestTrainable, UnitType
 
 	// Can't purchase anything in a puppeted city
 	// slewis - The Venetian Exception
-#ifdef AUI_CITY_FIX_VENICE_PUPPETS_GET_NO_YIELD_PENALTIES_BESIDES_CULTURE
-	if (IsPuppet() && !GetPlayer()->GetPlayerTraits()->IsNoAnnexing())
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	if (IsPuppet())
+	{
+		if (!GetPlayer()->GetPlayerTraits()->IsNoAnnexing() && !GetPlayer()->IsAllowPuppetPurchasing())
+		{
+			return false;
+		}
+	}
 #else
 	bool bIsPuppet = IsPuppet();
 	bool bVenetianException = false;
@@ -13888,10 +13894,10 @@ bool CvCity::IsCanPurchase(bool bTestPurchaseCost, bool bTestTrainable, UnitType
 	}
 
 	if (bIsPuppet && !bVenetianException)
-#endif
 	{
 		return false;
 	}
+#endif
 
 	// Check situational reasons we can't purchase now (similar to not having enough gold or faith)
 	if(bTestPurchaseCost)

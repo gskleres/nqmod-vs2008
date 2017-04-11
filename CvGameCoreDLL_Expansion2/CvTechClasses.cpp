@@ -1515,7 +1515,12 @@ int CvPlayerTechs::GetResearchCost(TechTypes eTech) const
 	}
 	// NQMP GJS - new Dictatorship of the Proletariat i.e. Communism END
 
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	bool bIncludePuppets = !m_pPlayer->IsIgnorePuppetsForResearchCosts();
+	iMod = iMod * m_pPlayer->GetMaxEffectiveCities(bIncludePuppets);
+#else
 	iMod = iMod * m_pPlayer->GetMaxEffectiveCities(/*bIncludePuppets*/ true);
+#endif
 	iResearchCost = iResearchCost * (100 + iMod) / 100;
 
 	// We're going to round up so that the user wont get confused when the research progress seems to be equal to the research cost, but it is not acutally done.

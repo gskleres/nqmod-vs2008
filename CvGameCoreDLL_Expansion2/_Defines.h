@@ -789,5 +789,9 @@
 #define NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 // with this policy, gain a free great artist whenever a great general is born (very ugly cheat code)
 #define NQ_WAR_HERO
+// ignore puppets when calculating tech research cost
+#define NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+// allows purchasing of units in puppet cities from policies
+#define NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 
 #endif

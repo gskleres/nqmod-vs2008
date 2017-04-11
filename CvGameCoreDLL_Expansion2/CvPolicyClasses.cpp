@@ -209,6 +209,12 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_WAR_HERO
 	m_bWarHero(false),
 #endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	m_bIgnorePuppetsForResearchCosts(false),
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	m_bAllowPuppetPurchasing(false),
+#endif
 	m_bEnablesSSPartPurchase(false),
 	m_iPolicyBranchType(NO_POLICY_BRANCH_TYPE),
 	m_iNumExtraBranches(0),
@@ -541,6 +547,12 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_WAR_HERO
 	m_bWarHero = kResults.GetBool("IsWarHero");
+#endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	m_bIgnorePuppetsForResearchCosts = kResults.GetBool("IgnorePuppetsForResearchCosts");
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	m_bAllowPuppetPurchasing = kResults.GetBool("AllowPuppetPurchasing");
 #endif
 
 	m_bEnablesSSPartPurchase = kResults.GetBool("EnablesSSPartPurchase");
@@ -1878,6 +1890,20 @@ bool CvPolicyEntry::IsSpaceflightPioneers() const
 bool CvPolicyEntry::IsWarHero() const
 {
 	return m_bWarHero;
+}
+#endif
+
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+bool CvPolicyEntry::IsIgnorePuppetsForResearchCosts() const
+{
+	return m_bIgnorePuppetsForResearchCosts;
+}
+#endif
+
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+bool CvPolicyEntry::IsAllowPuppetPurchasing() const
+{
+	return m_bAllowPuppetPurchasing;
 }
 #endif
 

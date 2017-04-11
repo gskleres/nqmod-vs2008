@@ -240,6 +240,13 @@ public:
 #ifdef NQ_WAR_HERO
 	bool IsWarHero() const;
 #endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	bool IsIgnorePuppetsForResearchCosts() const;
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	bool IsAllowPuppetPurchasing() const;
+#endif
+
 	bool IsEnablesSSPartPurchase() const;
 	bool IsAbleToAnnexCityStates() const;
 	std::string pyGetWeLoveTheKing()
@@ -506,6 +513,12 @@ private:
 #endif
 #ifdef NQ_WAR_HERO
 	bool m_bWarHero;
+#endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	bool m_bIgnorePuppetsForResearchCosts;
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	bool m_bAllowPuppetPurchasing;
 #endif
 	bool m_bEnablesSSPartPurchase;
 	bool m_bAbleToAnnexCityStates;

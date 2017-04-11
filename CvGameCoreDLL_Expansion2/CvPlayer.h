@@ -915,6 +915,18 @@ public:
 	void ChangeWarHeroCount(int iChange);
 #endif
 
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	int GetIgnorePuppetsForResearchCostsCount() const;
+	bool IsIgnorePuppetsForResearchCosts() const;
+	void ChangeIgnorePuppetsForResearchCostsCount(int iChange);
+#endif
+
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	int GetAllowPuppetPurchasingCount() const;
+	bool IsAllowPuppetPurchasing() const;
+	void ChangeAllowPuppetPurchasingCount(int iChange);
+#endif
+
 	int GetEnablesSSPartPurchaseCount() const;
 	bool IsEnablesSSPartPurchase() const;
 	void ChangeEnablesSSPartPurchaseCount(int iChange);
@@ -1878,6 +1890,13 @@ protected:
 #ifdef NQ_WAR_HERO
 	int m_iWarHeroCount;
 #endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	int m_iIgnorePuppetsForResearchCostsCount;
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	int m_iAllowPuppetPurchasingCount;
+#endif
+
 	int m_iEnablesSSPartPurchaseCount;
 	FAutoVariable<int, CvPlayer> m_iConscriptCount;
 	FAutoVariable<int, CvPlayer> m_iMaxConscript;

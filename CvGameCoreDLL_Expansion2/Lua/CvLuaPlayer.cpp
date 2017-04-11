@@ -940,6 +940,9 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 	Method(GetDealMyValue);
 	Method(GetDealTheyreValue);
 	Method(MayNotAnnex);
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	Method(IsAllowPuppetPurchasing);
+#endif
 
 	Method(GetEspionageCityStatus);
 	Method(GetNumSpies);
@@ -10632,6 +10635,16 @@ int CvLuaPlayer::lMayNotAnnex(lua_State* L)
 	lua_pushboolean(L, pkThisPlayer->GetPlayerTraits()->IsNoAnnexing());
 	return 1;
 }
+
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+//------------------------------------------------------------------------------
+int CvLuaPlayer::lIsAllowPuppetPurchasing(lua_State* L)
+{
+	CvPlayerAI* pkThisPlayer = GetInstance(L);
+	lua_pushboolean(L, pkThisPlayer->IsAllowPuppetPurchasing());
+	return 1;
+}
+#endif
 
 //------------------------------------------------------------------------------
 int CvLuaPlayer::lGetEspionageCityStatus(lua_State* L)

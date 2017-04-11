@@ -396,7 +396,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/autocracy/T1_6Militarism.xml</FileName>
+        <FileName>ideologies/autocracy/T1_6ClientStates.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -431,7 +431,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/autocracy/T2_5ClientStates.xml</FileName>
+        <FileName>ideologies/autocracy/T2_5Militarism.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2334,7 +2334,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\autocracy\T1_6Militarism.xml">
+    <Content Include="ideologies\autocracy\T2_5Militarism.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2362,7 +2362,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\autocracy\T2_5ClientStates.xml">
+    <Content Include="ideologies\autocracy\T1_6ClientStates.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -3251,6 +3251,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="ui\InfoTooltipInclude.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
+    <Content Include="ui\ProductionPopup.lua">
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>

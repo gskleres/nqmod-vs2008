@@ -288,6 +288,12 @@ CvPlayer::CvPlayer() :
 #ifdef NQ_WAR_HERO
 	, m_iWarHeroCount(0)
 #endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	, m_iIgnorePuppetsForResearchCostsCount(0)
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	, m_iAllowPuppetPurchasingCount(0)
+#endif
 	, m_iEnablesSSPartPurchaseCount(0)
 	, m_iConscriptCount("CvPlayer::m_iConscriptCount", m_syncArchive)
 	, m_iMaxConscript("CvPlayer::m_iMaxConscript", m_syncArchive)
@@ -951,6 +957,12 @@ void CvPlayer::uninit()
 #endif
 #ifdef NQ_WAR_HERO
 	m_iWarHeroCount = 0;
+#endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	m_iIgnorePuppetsForResearchCostsCount = 0;
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	m_iAllowPuppetPurchasingCount = 0;
 #endif
 	m_iEnablesSSPartPurchaseCount = 0;
 	m_iConscriptCount = 0;
@@ -15863,7 +15875,52 @@ void CvPlayer::ChangeWarHeroCount(int iChange)
 	}
 }
 #endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+//	--------------------------------------------------------------------------------
+int CvPlayer::GetIgnorePuppetsForResearchCostsCount() const
+{
+	return m_iIgnorePuppetsForResearchCostsCount;
+}
 
+//	--------------------------------------------------------------------------------
+bool CvPlayer::IsIgnorePuppetsForResearchCosts() const
+{
+	return (GetIgnorePuppetsForResearchCostsCount() > 0);
+}
+
+//	--------------------------------------------------------------------------------
+void CvPlayer::ChangeIgnorePuppetsForResearchCostsCount(int iChange)
+{
+	if (iChange != 0)
+	{
+		m_iIgnorePuppetsForResearchCostsCount = m_iIgnorePuppetsForResearchCostsCount + iChange;
+		CvAssert(GetIgnorePuppetsForResearchCostsCount() >= 0);
+	}
+}
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+//	--------------------------------------------------------------------------------
+int CvPlayer::GetAllowPuppetPurchasingCount() const
+{
+	return m_iAllowPuppetPurchasingCount;
+}
+
+//	--------------------------------------------------------------------------------
+bool CvPlayer::IsAllowPuppetPurchasing() const
+{
+	return (GetAllowPuppetPurchasingCount() > 0);
+}
+
+//	--------------------------------------------------------------------------------
+void CvPlayer::ChangeAllowPuppetPurchasingCount(int iChange)
+{
+	if (iChange != 0)
+	{
+		m_iAllowPuppetPurchasingCount = m_iAllowPuppetPurchasingCount + iChange;
+		CvAssert(GetAllowPuppetPurchasingCount() >= 0);
+	}
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 int CvPlayer::GetEnablesSSPartPurchaseCount() const
@@ -23061,6 +23118,12 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 #ifdef NQ_WAR_HERO
 	ChangeWarHeroCount((pPolicy->IsWarHero()) ? iChange : 0);
 #endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	ChangeIgnorePuppetsForResearchCostsCount((pPolicy->IsIgnorePuppetsForResearchCosts()) ? iChange : 0);
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	ChangeAllowPuppetPurchasingCount((pPolicy->IsAllowPuppetPurchasing()) ? iChange : 0);
+#endif
 	ChangeEnablesSSPartPurchaseCount((pPolicy->IsEnablesSSPartPurchase()) ? iChange : 0);
 	changeMaxConscript(getWorldSizeMaxConscript(kPolicy) * iChange);
 	changeExpModifier(pPolicy->GetExpModifier() * iChange);
@@ -24220,6 +24283,12 @@ void CvPlayer::Read(FDataStream& kStream)
 #ifdef NQ_WAR_HERO
 	kStream >> m_iWarHeroCount;
 #endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	kStream >> m_iIgnorePuppetsForResearchCostsCount;
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	kStream >> m_iAllowPuppetPurchasingCount;
+#endif
 	if (uiVersion >= 3)
 	{
 		kStream >> m_iEnablesSSPartPurchaseCount;
@@ -24770,6 +24839,12 @@ void CvPlayer::Write(FDataStream& kStream) const
 #endif
 #ifdef NQ_WAR_HERO
 	kStream << m_iWarHeroCount;
+#endif
+#ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+	kStream << m_iIgnorePuppetsForResearchCostsCount;
+#endif
+#ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+	kStream << m_iAllowPuppetPurchasingCount;
 #endif
 
 	kStream << m_iEnablesSSPartPurchaseCount;

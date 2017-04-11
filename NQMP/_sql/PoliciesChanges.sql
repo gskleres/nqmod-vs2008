@@ -3,8 +3,6 @@
 -----------------------------------------
 -- Number of extra spies granted from the policy
 ALTER TABLE Policies ADD NumExtraSpies INTEGER DEFAULT 0;
--- (really ugly code) Gives a free Great Artist whenever you get a Great General if you have this policy
-ALTER TABLE Policies ADD IsWarHero BOOLEAN DEFAULT false;
 
 --------------------------------
 -- *** AUTOCRACY CHANGES *** ---
@@ -13,6 +11,13 @@ ALTER TABLE Policies ADD IsWarHero BOOLEAN DEFAULT false;
 ALTER TABLE Policies ADD MinorFriendshipGainBullyGoldSuccess INTEGER DEFAULT 0;
 -- Flat change to % chance for all city state coups
 ALTER TABLE Policies ADD CoupChanceModifier INTEGER DEFAULT 0;
+-- (really ugly code) Gives a free Great Artist whenever you get a Great General if you have this policy
+ALTER TABLE Policies ADD IsWarHero BOOLEAN DEFAULT false;
+-- if true, puppet cities will not increase the science cost of technologies
+ALTER TABLE Policies ADD IgnorePuppetsForResearchCosts BOOLEAN DEFAULT false;
+-- if true, allows purchasing units in puppet cities
+ALTER TABLE Policies ADD AllowPuppetPurchasing BOOLEAN DEFAULT false;
+
 
 ------------------------------
 -- *** FREEDOM CHANGES *** ---
