@@ -743,6 +743,8 @@
 #define NQ_SHOW_BASE_INFLUENCE_WHILE_AT_WAR_IN_CS_TOOLTIP
 // disable gifting of great people between major powers
 #define NQ_NO_GIFTING_GREAT_PEOPLE_TO_MAJORS
+// world's fair # of turns scales with game speed now
+#define NQ_WORLDS_FAIR_GAME_SPEED_SCALING
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies

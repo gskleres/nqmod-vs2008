@@ -6517,7 +6517,13 @@ void CvLeague::DoProjectReward(PlayerTypes ePlayer, LeagueProjectTypes eLeaguePr
 		// Temporary Culture Modifier
 		if (pRewardInfo->GetCultureBonusTurns() > 0)
 		{
+#ifdef NQ_WORLDS_FAIR_GAME_SPEED_SCALING
+			int iNumTurns = pRewardInfo->GetCultureBonusTurns();
+			iNumTurns = iNumTurns * GC.getGame().getGameSpeedInfo().getCulturePercent() / 100;
+			GET_PLAYER(ePlayer).ChangeCultureBonusTurns(iNumTurns);
+#else
 			GET_PLAYER(ePlayer).ChangeCultureBonusTurns(pRewardInfo->GetCultureBonusTurns());
+#endif
 		}
 
 		// Temporary Tourism Modifier

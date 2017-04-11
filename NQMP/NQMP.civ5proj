@@ -666,6 +666,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>projects/WorldsFairChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>religion/founders/_RemoveOldFounders.xml</FileName>
       </Action>
       <Action>
@@ -2565,6 +2570,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="projects\WorldsFairChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="religion\AllowExtraReligions.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -3660,6 +3669,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
     <Folder Include="improvements" />
     <Folder Include="ideologies" />
     <Folder Include="features" />
+    <Folder Include="projects" />
     <Folder Include="religion\founders" />
     <Folder Include="religion\enhancers" />
     <Folder Include="religion\followers" />
