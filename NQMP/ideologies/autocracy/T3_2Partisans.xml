@@ -5,7 +5,7 @@
 	<!-- Partisans (replaces Nationalism): +50% chance to succeed at City State coups. (Example: If coup chance is 24%, this tenet increases it to 74% -->
 	<Policies>
 		<Update>
-			<Set Level="2" UnitGoldMaintenanceMod="0" CoupChanceModifier="50" />
+			<Set Level="3" UnitGoldMaintenanceMod="0" CoupChanceModifier="50" />
 			<Where Type="POLICY_NATIONALISM" />
 		</Update>
 	</Policies>
