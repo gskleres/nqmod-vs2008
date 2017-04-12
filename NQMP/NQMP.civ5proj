@@ -416,7 +416,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/autocracy/T2_2Partisans.xml</FileName>
+        <FileName>ideologies/autocracy/T2_2UnitedFront.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -441,7 +441,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/autocracy/T3_2UnitedFront.xml</FileName>
+        <FileName>ideologies/autocracy/T3_2Partisans.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2350,7 +2350,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\autocracy\T2_2Partisans.xml">
+    <Content Include="ideologies\autocracy\T3_2Partisans.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2370,7 +2370,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\autocracy\T3_2UnitedFront.xml">
+    <Content Include="ideologies\autocracy\T2_2UnitedFront.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
