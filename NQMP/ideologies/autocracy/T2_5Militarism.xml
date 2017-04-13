@@ -5,7 +5,7 @@
 	<!-- Militarism: +10% Science in the Empire when researching Technologies that unlock a new Unit. -->
 	<Policies>
 		<Update>
-			<Set Level="2" />
+			<Set Level="2" MilitaryProductionModifier="25"  />
 			<Where Type="POLICY_MILITARISM" />
 		</Update>
 	</Policies>
