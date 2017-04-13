@@ -179,6 +179,9 @@ protected:
 	static int lIsFound(lua_State* L);
 	static int lIsWork(lua_State* L);
 	static int lIsGoldenAge(lua_State* L);
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	static int lIsNearFriendlyMinor(lua_State* L);
+#endif
 	static int lCanCoexistWithEnemyUnit(lua_State* L);
 
 	static int lIsGreatPerson(lua_State* L);
@@ -381,6 +384,9 @@ protected:
 	static int lGetOutsideFriendlyLandsModifier(lua_State* L);
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	static int lGetGoldenAgeForeignAttackBonus(lua_State* L);
+#endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	static int lGetCombatStrengthNearFriendlyMinor(lua_State* L);
 #endif
 	static int lGetExtraCityAttackPercent(lua_State* L);
 	static int lGetExtraCityDefensePercent(lua_State* L);

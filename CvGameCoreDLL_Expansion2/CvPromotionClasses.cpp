@@ -83,6 +83,9 @@ CvPromotionEntry::CvPromotionEntry():
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	m_iGoldenAgeForeignAttackBonus(0),
 #endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	m_iCombatStrengthNearFriendlyMinor(0),
+#endif
 	m_iCommandType(NO_COMMAND),
 	m_iUpgradeDiscount(0),
 	m_iExperiencePercent(0),
@@ -304,6 +307,9 @@ bool CvPromotionEntry::CacheResults(Database::Results& kResults, CvDatabaseUtili
 	m_iOutsideFriendlyLandsModifier = kResults.GetInt("OutsideFriendlyLandsModifier");
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	m_iGoldenAgeForeignAttackBonus = kResults.GetInt("GoldenAgeForeignAttackBonus");
+#endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	m_iCombatStrengthNearFriendlyMinor = kResults.GetInt("CombatStrengthNearFriendlyMinor");
 #endif
 	m_iUpgradeDiscount = kResults.GetInt("UpgradeDiscount");
 	m_iExperiencePercent = kResults.GetInt("ExperiencePercent");
@@ -1074,6 +1080,14 @@ int CvPromotionEntry::GetOutsideFriendlyLandsModifier() const
 int CvPromotionEntry::GetGoldenAgeForeignAttackBonus() const
 {
 	return m_iGoldenAgeForeignAttackBonus;
+}
+#endif
+
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+/// Accessor: Combat mod for being within 3 tiles of a friendly city state or a city state conquered by another civ
+int CvPromotionEntry::GetCombatStrengthNearFriendlyMinor() const
+{
+	return m_iCombatStrengthNearFriendlyMinor;
 }
 #endif
 

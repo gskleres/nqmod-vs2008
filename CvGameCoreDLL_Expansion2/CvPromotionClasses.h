@@ -107,6 +107,9 @@ public:
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	int GetGoldenAgeForeignAttackBonus() const;
 #endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	int GetCombatStrengthNearFriendlyMinor() const;
+#endif
 	int  GetCommandType() const;
 	void SetCommandType(int iNewType);
 
@@ -296,6 +299,9 @@ protected:
 	int m_iOutsideFriendlyLandsModifier;
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	int m_iGoldenAgeForeignAttackBonus;
+#endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	int m_iCombatStrengthNearFriendlyMinor;
 #endif
 	int m_iCommandType;
 	int m_iUpgradeDiscount;

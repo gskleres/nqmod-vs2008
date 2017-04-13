@@ -1002,6 +1002,15 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 				controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
 			end
 			-- #endif NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+
+			-- #ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+			iModifier = pMyUnit:GetCombatStrengthNearFriendlyMinor();
+			if (iModifier ~= 0 and pMyUnit:IsNearFriendlyMinor()) then
+				controlTable = g_MyCombatDataIM:GetInstance();
+				controlTable.Text:LocalizeAndSetText(  "TXT_KEY_EUPANEL_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR" );
+				controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
+			end
+			-- #endif NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
 					
 			-- CapitalDefenseModifier
 			iModifier = pMyUnit:CapitalDefenseModifier();
@@ -1604,6 +1613,15 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 					controlTable.Value:SetText( GetFormattedText(strText, iModifier, false, true) );
 				end
 				-- #endif NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+
+				-- #ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+				iModifier = pTheirUnit:GetCombatStrengthNearFriendlyMinor();
+				if (iModifier ~= 0 and pTheirUnit:IsNearFriendlyMinor()) then
+					controlTable = g_MyCombatDataIM:GetInstance();
+					controlTable.Text:LocalizeAndSetText(  "TXT_KEY_EUPANEL_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR" );
+					controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
+				end
+				-- #endif NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
 								
 				-- CapitalDefenseModifier
 				iModifier = pTheirUnit:CapitalDefenseModifier();

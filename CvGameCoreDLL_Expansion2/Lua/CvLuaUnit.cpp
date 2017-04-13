@@ -173,6 +173,9 @@ void CvLuaUnit::PushMethods(lua_State* L, int t)
 	Method(IsFound);
 	Method(IsWork);
 	Method(IsGoldenAge);
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	Method(IsNearFriendlyMinor);
+#endif
 	Method(CanCoexistWithEnemyUnit);
 
 	Method(IsGreatPerson);
@@ -369,6 +372,9 @@ void CvLuaUnit::PushMethods(lua_State* L, int t)
 	Method(GetOutsideFriendlyLandsModifier);
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	Method(GetGoldenAgeForeignAttackBonus);
+#endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	Method(GetCombatStrengthNearFriendlyMinor);
 #endif
 	Method(GetExtraCityAttackPercent);
 	Method(GetExtraCityDefensePercent);
@@ -1863,10 +1869,22 @@ int CvLuaUnit::lIsGoldenAge(lua_State* L)
 {
 	CvUnit* pkUnit = GetInstance(L);
 	const bool bResult = pkUnit->isGoldenAge();
+	
+	lua_pushboolean(L, bResult);
+	return 1;
+}
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+//------------------------------------------------------------------------------
+//bool IsNearFriendlyMinor();
+int CvLuaUnit::lIsNearFriendlyMinor(lua_State* L)
+{
+	CvUnit* pkUnit = GetInstance(L);
+	const bool bResult = pkUnit->IsNearFriendlyMinor();
 
 	lua_pushboolean(L, bResult);
 	return 1;
 }
+#endif
 //------------------------------------------------------------------------------
 //bool canCoexistWithEnemyUnit(int /*TeamTypes*/ eTeam);
 int CvLuaUnit::lCanCoexistWithEnemyUnit(lua_State* L)
@@ -3658,6 +3676,18 @@ int CvLuaUnit::lGetGoldenAgeForeignAttackBonus(lua_State* L)
 	CvUnit* pkUnit = GetInstance(L);
 
 	const int iResult = pkUnit->getGoldenAgeForeignAttackBonus();
+	lua_pushinteger(L, iResult);
+	return 1;
+}
+#endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+//------------------------------------------------------------------------------
+//int GetCombatStrengthNearFriendlyMinor();
+int CvLuaUnit::lGetCombatStrengthNearFriendlyMinor(lua_State* L)
+{
+	CvUnit* pkUnit = GetInstance(L);
+
+	const int iResult = pkUnit->getCombatStrengthNearFriendlyMinor();
 	lua_pushinteger(L, iResult);
 	return 1;
 }

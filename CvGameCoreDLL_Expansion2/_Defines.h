@@ -793,5 +793,7 @@
 #define NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 // allows purchasing of units in puppet cities from policies
 #define NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+// bonus strength when near friendly city states or city states conquered by another civ
+#define NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
 
 #endif

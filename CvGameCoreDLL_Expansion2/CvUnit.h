@@ -450,6 +450,9 @@ public:
 	bool IsFoundAbroad() const;
 	bool IsWork() const;
 	bool isGoldenAge() const;
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	bool IsNearFriendlyMinor() const;
+#endif
 	bool isGivesPolicies() const;
 	bool isBlastTourism() const;
 	bool canCoexistWithEnemyUnit(TeamTypes eTeam) const;
@@ -962,6 +965,11 @@ public:
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	int getGoldenAgeForeignAttackBonus() const;
 	void changeGoldenAgeForeignAttackBonus(int iChange);
+#endif
+
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	int getCombatStrengthNearFriendlyMinor() const;
+	void changeCombatStrengthNearFriendlyMinor(int iChange);
 #endif
 
 	int getPillageChange() const;
@@ -1486,6 +1494,9 @@ protected:
 	FAutoVariable<int, CvUnit> m_iOutsideFriendlyLandsModifier;
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	FAutoVariable<int, CvUnit> m_iGoldenAgeForeignAttackBonus;
+#endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	FAutoVariable<int, CvUnit> m_iCombatStrengthNearFriendlyMinor;
 #endif
 	FAutoVariable<int, CvUnit> m_iHealIfDefeatExcludeBarbariansCount;
 	FAutoVariable<int, CvUnit> m_iNumInterceptions;

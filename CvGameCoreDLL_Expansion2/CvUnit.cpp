@@ -254,6 +254,9 @@ CvUnit::CvUnit() :
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 	, m_iGoldenAgeForeignAttackBonus("CvUnit::m_iGoldenAgeForeignAttackBonus", m_syncArchive)
 #endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+	, m_iCombatStrengthNearFriendlyMinor("CvUnit::m_iCombatStrengthNearFriendlyMinor", m_syncArchive)
+#endif
 	, m_iNumInterceptions("CvUnit::m_iNumInterceptions", m_syncArchive)
 	, m_iMadeInterceptionCount("CvUnit::m_iMadeInterceptionCount", m_syncArchive)
 	, m_iEverSelectedCount(0)
@@ -11055,6 +11058,80 @@ bool CvUnit::isGoldenAge() const
 	return m_pUnitInfo->GetGoldenAgeTurns() > 0;
 }
 
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+//	--------------------------------------------------------------------------------
+bool CvUnit::IsNearFriendlyMinor() const
+{
+	VALIDATE_OBJECT
+	if(isDelayedDeath())
+	{
+		return false;
+	}
+
+	bool bIsNearFriendlyMinor = false;
+	for (int iMinorCivLoop = MAX_MAJOR_CIVS; iMinorCivLoop < MAX_CIV_PLAYERS; iMinorCivLoop++)
+	{
+		CvPlayerAI& kMinor = GET_PLAYER((PlayerTypes) iMinorCivLoop);
+		if (!kMinor.isEverAlive() || !kMinor.isMinorCiv())
+		{
+			continue;
+		}
+		
+		CvMinorCivAI* pMinorAI = kMinor.GetMinorCivAI();
+		if (pMinorAI)
+		{
+			// if the minor was bought out, this will never apply
+			if (pMinorAI->IsBoughtOut())
+			{
+				continue;
+			}
+			
+			// if the minor was conquered...
+			if (!kMinor.isAlive())
+			{
+				CvCity* pCity = GC.getMap().findCity(kMinor.GetOriginalCapitalX(), kMinor.GetOriginalCapitalY());
+				
+				if (pCity)
+				{
+					// ... by someone other than us ...
+					if (pCity->getOwner() != getOwner())
+					{
+						// ... and we are near it, give us the bonus!
+						if (plotDistance(getX(), getY(), kMinor.GetOriginalCapitalX(), kMinor.GetOriginalCapitalY()) <= 3)
+						{
+							bIsNearFriendlyMinor = true;
+							break;
+						}
+					}
+				}
+			}
+			
+			// if the minor is alive, and we have non-negative relations ...
+			if (kMinor.isAlive() && kMinor.GetMinorCivAI()->GetEffectiveFriendshipWithMajor(getOwner()) >= GC.getFRIENDSHIP_THRESHOLD_FRIENDS())
+			{
+				// check each of its cities, and if we are near one, give us the bonus!
+				int iLoop;
+				CvCity *pLoopCity;
+				for(pLoopCity = kMinor.firstCity(&iLoop); pLoopCity != NULL; pLoopCity = kMinor.nextCity(&iLoop))
+				{
+					if (pLoopCity)
+					{
+						if (plotDistance(getX(), getY(), pLoopCity->getX(), pLoopCity->getY()) <= 3)
+						{
+							bIsNearFriendlyMinor = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return bIsNearFriendlyMinor;
+}
+#endif
+
+
 //	--------------------------------------------------------------------------------
 bool CvUnit::isGivesPolicies() const
 {
@@ -11448,6 +11525,15 @@ int CvUnit::GetGenericMaxStrengthModifier(const CvUnit* pOtherUnit, const CvPlot
 				}
 			}
 		}
+
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+		// combat strength near city states that are friendly or have been conquered by another civ
+		iTempModifier = getCombatStrengthNearFriendlyMinor();
+		if (iTempModifier > 0 && IsNearFriendlyMinor())
+		{
+			iModifier += iTempModifier;
+		}
+#endif
 
 		// Trait (player level) bonus against higher tech units
 		iTempModifier = GET_PLAYER(getOwner()).GetPlayerTraits()->GetCombatBonusVsHigherTech();
@@ -17802,6 +17888,27 @@ void CvUnit::changeGoldenAgeForeignAttackBonus(int iChange)
 }
 #endif
 
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+//	--------------------------------------------------------------------------------
+int CvUnit::getCombatStrengthNearFriendlyMinor() const
+{
+	VALIDATE_OBJECT
+	return m_iCombatStrengthNearFriendlyMinor;
+}
+
+//	--------------------------------------------------------------------------------
+void CvUnit::changeCombatStrengthNearFriendlyMinor(int iChange)
+{
+	VALIDATE_OBJECT
+	if(iChange != 0)
+	{
+		m_iCombatStrengthNearFriendlyMinor += iChange;
+	}
+}
+#endif
+
+
+
 //	--------------------------------------------------------------------------------
 int CvUnit::getPillageChange() const
 {
@@ -19340,6 +19447,10 @@ void CvUnit::setHasPromotion(PromotionTypes eIndex, bool bNewValue)
 #ifdef NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
 		changeGoldenAgeForeignAttackBonus(thisPromotion.GetGoldenAgeForeignAttackBonus() * iChange);
 #endif
+#ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+		changeCombatStrengthNearFriendlyMinor(thisPromotion.GetCombatStrengthNearFriendlyMinor() * iChange);
+#endif
+
 		changeUpgradeDiscount(thisPromotion.GetUpgradeDiscount() * iChange);
 		changeExperiencePercent(thisPromotion.GetExperiencePercent() * iChange);
 		changeCargoSpace(thisPromotion.GetCargoChange() * iChange);
