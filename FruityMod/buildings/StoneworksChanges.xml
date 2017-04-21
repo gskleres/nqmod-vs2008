@@ -22,11 +22,11 @@
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BUILDING_STONE_WORKS_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_STONE_WORKS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Each source of [ICON_RES_MARBLE] Marble and [ICON_RES_STONE] Stone worked by this City produce +1 [ICON_PRODUCTION] Production.[NEWLINE][NEWLINE]City must have at least one of these resources improved with a Quarry.</Text>
+			<Text>Alle Quellen von [ICON_RES_MARBLE] Marmor und [ICON_RES_STONE] Stein, die von dieser Stadt bearbeitet werden, generieren +1 [ICON_PRODUCTION] Produktion.[NEWLINE][NEWLINE]Die Stadt muss mindestens eine dieser Ressourcen mit einem Steinbruch verbessern.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_BUILDING_STONE_WORKS_STRATEGY" />
 		<Row Tag="TXT_KEY_BUILDING_STONE_WORKS_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Stone Works can only be constructed in a city near an improved [ICON_RES_STONE] Stone or [ICON_RES_MARBLE] Marble resource. Stone Works increase a city's [ICON_PRODUCTION] production.</Text>
+			<Text>Steinwerke können nur in einer Stadt gebaut werden, die an einer verbesserten [ICON_RES_STONE] Stein- oder [ICON_RES_MARBLE] Marmor-Ressource liegt. Steinwerke erhöhen die [ICON_PRODUCTION] Produktion einer Stadt.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
