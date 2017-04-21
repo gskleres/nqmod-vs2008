@@ -3,19 +3,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:core="clr-namespace:Fruitylator.Core;assembly=Fruitylator.Core"
              xmlns:interfaces="clr-namespace:Fruitylator.Core.Interfaces;assembly=Fruitylator.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"
+                           MinHeight="25"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" /> 
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" /> 
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Filepath: "
+                       Grid.Column="0"
+                       Margin="5 0 0 0"
+                       VerticalAlignment="Center"/>
+            <TextBox x:Name="FilePath"
+                     Grid.Column="1"
+                     VerticalContentAlignment="Center"/>
+            <Button x:Name="SelectFilePath"
+                    Grid.Column="2"
+                    Content="..."
+                    Margin="5 0 0 0"
+                    Width="25" />
+        </Grid>
         <ListBox x:Name="Files"
+                 SelectedItem="{Binding SelectedFile, Mode=TwoWay}"
                  SelectionMode="Single"
-                 SelectedItem="{Binding SelectedFile, Mode=TwoWay}">
+                 Grid.Row="1"
+                 Margin="0 5 0 0">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="interfaces:ITranslatableContent">
                     <TextBlock Text="{Binding FilePath}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Button x:Name="SearchTranslatableFiles"
+                Content="Search"
+                Margin="5 5 0 5"
+                Height="25"
+                Grid.Row="2"/> 
     </Grid>
 </UserControl>
