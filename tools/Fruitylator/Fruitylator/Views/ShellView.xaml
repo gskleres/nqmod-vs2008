@@ -10,9 +10,15 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
         <ContentControl x:Name="FileExplorerViewModel"  Grid.Column="0"/>
-        <ContentControl x:Name="ActiveItem"  Grid.Column="1"/>
+        <GridSplitter Grid.Column="1"
+                      VerticalAlignment="Stretch"
+                      HorizontalAlignment="Center"
+                      ShowsPreview="True"
+                      Width="3"/>
+        <ContentControl x:Name="ActiveItem"  Grid.Column="2"/>
     </Grid>
 </UserControl>

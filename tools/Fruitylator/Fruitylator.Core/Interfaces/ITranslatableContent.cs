@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Fruitylator.Core
+namespace Fruitylator.Core.Interfaces
 {
     public interface ITranslatableContent
     {

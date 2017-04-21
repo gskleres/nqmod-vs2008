@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Fruitylator.Core.Interfaces;
 
 namespace Fruitylator.Core
 {
@@ -28,12 +29,6 @@ namespace Fruitylator.Core
 
                 if (!translatableXmlElements.Any()) return null;
 
-                var translatableContent = new TranslatableContent
-                {
-                    FilePath = path,
-                    XmlContent = xDoc.ToString()
-                };
-
                 var translatableParts = new List<ITranslatablePart>();
                 foreach (var element in translatableXmlElements)
                 {
@@ -41,11 +36,8 @@ namespace Fruitylator.Core
                     foreach (var row in rows)
                     {
                         var tag = row.Attribute("Tag");
-
                         if (string.IsNullOrWhiteSpace(tag?.Value)) continue;
-
                         var text = row.Descendants("Text").Single();
-
                         translatableParts.Add(new TranslatablePart
                         {
                             Language = element.Name.LocalName.Substring(langPrefix.Length),
@@ -55,14 +47,8 @@ namespace Fruitylator.Core
                     }
                 }
 
-                translatableContent.Parts = translatableParts;
-                return translatableContent;
+                return new TranslatableContent(path, xDoc.ToString(), translatableParts);
             }
         }
-    }
-
-    public interface IXmlTransformer
-    {
-        ITranslatableContent LoadFile(string path);
     }
 }

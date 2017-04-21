@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Caliburn.Micro;
 using Fruitylator.Core;
+using Fruitylator.Core.Interfaces;
 using Fruitylator.Events;
 
 namespace Fruitylator.ViewModels

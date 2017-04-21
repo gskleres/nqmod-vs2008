@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:core="clr-namespace:Fruitylator.Core;assembly=Fruitylator.Core"
+             xmlns:interfaces="clr-namespace:Fruitylator.Core.Interfaces;assembly=Fruitylator.Core"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -11,7 +12,7 @@
                  SelectionMode="Single"
                  SelectedItem="{Binding SelectedFile, Mode=TwoWay}">
             <ListBox.ItemTemplate>
-                <DataTemplate DataType="core:ITranslatableContent">
+                <DataTemplate DataType="interfaces:ITranslatableContent">
                     <TextBlock Text="{Binding FilePath}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
