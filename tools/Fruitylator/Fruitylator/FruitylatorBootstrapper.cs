@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.Primitives;
 using System.Reflection;
 using System.Windows;
 using Caliburn.Micro;
@@ -16,8 +17,12 @@ namespace Fruitylator
         public FruitylatorBootstrapper()
         {
             Initialize();
-            _container = new CompositionContainer(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
+            var catalog = new AggregateCatalog(
+                new AssemblyCatalog(Assembly.GetExecutingAssembly()),
+                new DirectoryCatalog(AppDomain.CurrentDomain.BaseDirectory));
+            _container = new CompositionContainer(catalog);
             _container.ComposeExportedValue<IWindowManager>(new WindowManager());
+            _container.ComposeExportedValue<IEventAggregator>(new EventAggregator());
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)

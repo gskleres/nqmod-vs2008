@@ -71,6 +71,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Events\FileChangedEvent.cs" />
     <Compile Include="ViewModels\EditorViewModel.cs" />
     <Compile Include="ViewModels\FileExplorerViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />

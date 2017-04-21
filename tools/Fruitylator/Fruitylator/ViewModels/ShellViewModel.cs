@@ -9,6 +9,12 @@ namespace Fruitylator.ViewModels
     {
         private FileExplorerViewModel _fileExplorerViewModel;
 
+        public override string DisplayName
+        {
+            get { return "Fruitylator"; }
+            set { }
+        }
+
         public FileExplorerViewModel FileExplorerViewModel
         {
             get { return _fileExplorerViewModel; }
