@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="Fruitylator.Views.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModels="clr-namespace:Fruitylator.ViewModels"
+             xmlns:styles="clr-namespace:Fruitylator.Styles;assembly=Fruitylator.Styles"
+             xmlns:micro="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance viewModels:SearchViewModel}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Height="25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="8*" />
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0"
+                          VerticalAlignment="Center"
+                          ItemsSource="{Binding LanguagePatterns}"
+                          SelectedItem="{Binding SelectedLanguagePattern, Mode=TwoWay}" />
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Static styles:Fa.Search}"
+                               FontFamily="{StaticResource FontAwesome}"
+                               Grid.Column="0"
+                               Margin="5 0 0 0" />
+                    <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=200}"
+                             VerticalContentAlignment="Center"
+                             Margin="5 0 0 0"
+                             Grid.Column="1" />
+                </Grid>
+            </Grid>
+            <DataGrid x:Name="Results"
+                      SelectedItem="{Binding SelectedResult}"
+                      AutoGenerateColumns="False"
+                      Margin="0 10 0 0"
+                      Grid.Row="1">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="tag"
+                                        Binding="{Binding Tag}" />
+                    <DataGridTextColumn Header="language"
+                                        Binding="{Binding Language}" />
+                    <DataGridTextColumn Header="filepath"
+                                        Binding="{Binding OriginalFilePath}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid Margin="0 5 0 5"
+                  Grid.Row="2">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding HideDuplicates}" />
+                    <TextBlock Text="hide duplicates"
+                               Margin="5 0 0 0" />
+                </StackPanel>
+                <TextBlock Text="{Binding ResultsInfo}"
+                           HorizontalAlignment="Right" />
+            </Grid>
+        </Grid>
+        <GridSplitter Grid.Row="1"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Stretch"
+                      Height="5"/>
+        <ContentControl x:Name="ActiveItem"
+                        Grid.Row="2"/>
+    </Grid>
+</UserControl>
+
+
+

@@ -1,8 +1,8 @@
 ﻿namespace Fruitylator.Views
 {
-    public partial class FileExplorerView
+    public partial class BrowserView 
     {
-        public FileExplorerView()
+        public BrowserView()
         {
             InitializeComponent();
         }

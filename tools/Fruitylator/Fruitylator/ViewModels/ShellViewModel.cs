@@ -7,40 +7,23 @@ namespace Fruitylator.ViewModels
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class ShellViewModel : Screen
     {
-        private FileExplorerViewModel _fileExplorerViewModel;
-        private TabViewModel _tabViewModel;
+        public ExplorerViewModel Explorer { get; }
+
+        public BrowserConductorViewModel BrowserConductor { get; }
 
         [ImportingConstructor]
-        public ShellViewModel(FileExplorerViewModel fileExplorerViewModel, TabViewModel tabViewModel)
+        public ShellViewModel(
+            ExplorerViewModel explorer,
+            BrowserConductorViewModel browserConductor)
         {
-            FileExplorerViewModel = fileExplorerViewModel;
-            TabViewModel = tabViewModel;
+            Explorer = explorer;
+            BrowserConductor = browserConductor;
         }
 
         public override string DisplayName
         {
             get { return "Fruitylator"; }
             set { }
-        }
-
-        public FileExplorerViewModel FileExplorerViewModel
-        {
-            get { return _fileExplorerViewModel; }
-            set
-            {
-                _fileExplorerViewModel = value;
-                NotifyOfPropertyChange();
-            }
-        }
-
-        public TabViewModel TabViewModel
-        {
-            get { return _tabViewModel; }
-            set
-            {
-                _tabViewModel = value;
-                NotifyOfPropertyChange();
-            }
         }
     }
 }

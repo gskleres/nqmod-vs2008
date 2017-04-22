@@ -25,10 +25,16 @@ namespace Fruitylator
             _container.ComposeExportedValue<IEventAggregator>(new EventAggregator());
 
             // editor factory
-            _container.ComposeExportedValue<Func<ITranslatableFile, EditorViewModel>>(translatable =>
+            _container.ComposeExportedValue<Func<SolutionItem, BrowserViewModel>>(solutionItem =>
             {
-                var editor = IoC.Get<EditorViewModel>();
-                editor.LoadTranslatable(translatable);
+                var editor = IoC.Get<BrowserViewModel>();
+                editor.LoadSolution(solutionItem);
+                return editor;
+            });
+            _container.ComposeExportedValue<Func<ITranslatablePart, SearchDetailsViewModel>>(tlPart =>
+            {
+                var editor = IoC.Get<SearchDetailsViewModel>();
+                editor.LoadTranslatablePart(tlPart);
                 return editor;
             });
         }

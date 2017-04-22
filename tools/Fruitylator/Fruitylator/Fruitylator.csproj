@@ -8,11 +8,12 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Fruitylator</RootNamespace>
     <AssemblyName>Fruitylator</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,6 +47,9 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.3.0.3\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -72,22 +76,41 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Events\FileChangedEvent.cs" />
-    <Compile Include="ViewModels\EditorViewModel.cs" />
-    <Compile Include="ViewModels\TabViewModel.cs" />
-    <Compile Include="ViewModels\FileExplorerViewModel.cs" />
+    <Compile Include="Events\SearchResultChangedEvent.cs" />
+    <Compile Include="Events\SolutionChangedEvent.cs" />
+    <Compile Include="SolutionItem.cs" />
+    <Compile Include="ViewModels\BrowserConductorViewModel.cs" />
+    <Compile Include="ViewModels\BrowserViewModel.cs" />
+    <Compile Include="ViewModels\FileEditorViewModel.cs" />
+    <Compile Include="ViewModels\RawEditorViewModel.cs" />
+    <Compile Include="ViewModels\SolutionItemViewModel.cs" />
+    <Compile Include="ViewModels\ExplorerViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
-    <Compile Include="Views\EditorView.xaml.cs">
-      <DependentUpon>EditorView.xaml</DependentUpon>
+    <Compile Include="ViewModels\SearchDetailsViewModel.cs" />
+    <Compile Include="ViewModels\SearchViewModel.cs" />
+    <Compile Include="Views\BrowserConductorView.xaml.cs">
+      <DependentUpon>BrowserConductorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FileExplorerView.xaml.cs">
-      <DependentUpon>FileExplorerView.xaml</DependentUpon>
+    <Compile Include="Views\BrowserView.xaml.cs">
+      <DependentUpon>BrowserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchDetailsView.xaml.cs">
+      <DependentUpon>SearchDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SearchView.xaml.cs">
+      <DependentUpon>SearchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RawEditorView.xaml.cs">
+      <DependentUpon>RawEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExplorerView.xaml.cs">
+      <DependentUpon>ExplorerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TabView.xaml.cs">
-      <DependentUpon>TabView.xaml</DependentUpon>
+    <Compile Include="Views\SolutionItemView.xaml.cs">
+      <DependentUpon>SolutionItemView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -123,13 +146,33 @@
       <Project>{a5741ee7-5d4d-4a11-92b9-264de77de94d}</Project>
       <Name>Fruitylator.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fruitylator.Styles\Fruitylator.Styles.csproj">
+      <Project>{0eae5c75-9e6f-411c-a718-0c38d0b40215}</Project>
+      <Name>Fruitylator.Styles</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\EditorView.xaml">
+    <Page Include="Views\BrowserConductorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\BrowserView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FileExplorerView.xaml">
+    <Page Include="Views\SearchDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SearchView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\RawEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -137,7 +180,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TabView.xaml">
+    <Page Include="Views\SolutionItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

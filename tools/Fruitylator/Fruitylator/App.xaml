@@ -5,6 +5,7 @@
     <Application.Resources>
          <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Fruitylator.Styles;component/Styles.xaml" />
                 <ResourceDictionary>
                     <local:FruitylatorBootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>

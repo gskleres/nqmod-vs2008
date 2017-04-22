@@ -1,8 +1,8 @@
 ﻿namespace Fruitylator.Views
 {
-    public partial class EditorView
+    public partial class SolutionItemView
     {
-        public EditorView()
+        public SolutionItemView()
         {
             InitializeComponent();
         }

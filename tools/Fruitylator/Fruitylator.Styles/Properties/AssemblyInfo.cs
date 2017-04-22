@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Fruitylator.Core")]
+[assembly: AssemblyTitle("Fruitylator.Styles")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Fruitylator.Core")]
+[assembly: AssemblyProduct("Fruitylator.Styles")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a5741ee7-5d4d-4a11-92b9-264de77de94d")]
+[assembly: Guid("0eae5c75-9e6f-411c-a718-0c38d0b40215")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -7,5 +7,7 @@
         string Tag { get; }
 
         string Text { get; set; }
+
+        string OriginalFilePath { get; }
     }
 }
