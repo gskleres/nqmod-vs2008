@@ -155,6 +155,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 	m_iCombatBonusVsSmallerCiv(0),
 #endif
+#ifdef NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
+	m_iProductionToGreatMusiciansModifier(0),
+#endif
 #ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
 	m_iTradeMissionInfluenceModifier(0),
 #endif
@@ -493,6 +496,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 	m_iCombatBonusVsSmallerCiv = kResults.GetInt("CombatBonusVsSmallerCiv");
+#endif
+#ifdef NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
+	m_iProductionToGreatMusiciansModifier = kResults.GetInt("ProductionToGreatMusiciansModifier");
 #endif
 #ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
 	m_iTradeMissionInfluenceModifier = kResults.GetInt("TradeMissionInfluenceModifier");
@@ -1583,6 +1589,15 @@ int CvPolicyEntry::GetCombatBonusVsSmallerCiv() const
 	return m_iCombatBonusVsSmallerCiv;
 }
 #endif
+
+#ifdef NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
+/// % of empire production converted into a +X% bonus to Great Musician points
+int CvPolicyEntry::GetProductionToGreatMusiciansModifier() const
+{
+	return m_iProductionToGreatMusiciansModifier;
+}
+#endif
+
 
 #ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
 /// trade mission influence modifier
@@ -3162,6 +3177,11 @@ int CvPlayerPolicies::GetNumericModifier(PolicyModifierType eType)
 #ifdef NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 			case POLICYMOD_COMBAT_BONUS_VS_SMALLER_CIV:
 				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetCombatBonusVsSmallerCiv();
+				break;
+#endif
+#ifdef NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
+			case POLICYMOD_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER:
+				rtnValue += m_pPolicies->GetPolicyEntry(i)->GetProductionToGreatMusiciansModifier();
 				break;
 #endif
 #ifdef NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES

@@ -765,6 +765,8 @@
 #define NQ_SPACEFLIGHT_PIONEERS
 // combat bonus vs smaller civ from policies
 #define NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
+// percent of production converted into bonus % for great musician points
+#define NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
 
 /// ---- IDEOLOGY OVERHAUL: FREEDOM ----
 // trade mission influence modifier from policies
@@ -779,6 +781,8 @@
 #define NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
 // happiness from great person tile improvements from policies
 #define NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+// prevent friendly minors declaring war on you in support of their ally, policy toggle
+#define NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

@@ -3072,6 +3072,13 @@ void CvCityCitizens::DoSpecialists()
 						{
 							iMod += GetPlayer()->GetPlayerTraits()->GetGoldenAgeGreatMusicianRateModifier();
 						}
+#ifdef NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
+						int iProductionToGreatMusiciansModifier = GetPlayer()->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER);
+						if (iProductionToGreatMusiciansModifier > 0)
+						{
+							iMod += GetPlayer()->calculateTotalYield(YIELD_PRODUCTION) * iProductionToGreatMusiciansModifier / 100;
+						}
+#endif
 						iMod += GetPlayer()->getGreatMusicianRateModifier();
 					}
 					else if((UnitClassTypes)pkSpecialistInfo->getGreatPeopleUnitClass() == GC.getInfoTypeForString("UNITCLASS_MERCHANT"))

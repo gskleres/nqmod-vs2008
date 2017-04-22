@@ -5514,7 +5514,18 @@ int CvLuaPlayer::lGetPolicyGreatMusicianRateModifier(lua_State* L)
 	CvPlayer* pkPlayer = GetInstance(L);
 	if(pkPlayer)
 	{
+		
+#ifdef NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
+		int iMod = pkPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_GREAT_MUSICIAN_RATE);
+		int iProductionToGreatMusiciansModifier = pkPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER);
+		if (iProductionToGreatMusiciansModifier > 0)
+		{
+			iMod += pkPlayer->calculateTotalYield(YIELD_PRODUCTION) * iProductionToGreatMusiciansModifier / 100;
+		}
+		lua_pushinteger(L, iMod);
+#else
 		lua_pushinteger(L, pkPlayer->GetPlayerPolicies()->GetNumericModifier(POLICYMOD_GREAT_MUSICIAN_RATE));
+#endif
 	}
 	return 1;
 }

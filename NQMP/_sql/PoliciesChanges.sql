@@ -52,3 +52,5 @@ ALTER TABLE Policies ADD IdeologyPressureUnhappinessModifier INTEGER DEFAULT 0;
 ALTER TABLE Policies ADD IsSpaceflightPioneers BOOLEAN DEFAULT false;
 -- combat bonus when fighting civs with fewer cities (basically opposite of Ethiopia UA)
 ALTER TABLE Policies ADD CombatBonusVsSmallerCiv INTEGER DEFAULT 0;
+-- percentage of empire's production output converted to bonus % for great musician points
+ALTER TABLE Policies ADD ProductionToGreatMusiciansModifier INTEGER DEFAULT 0;
