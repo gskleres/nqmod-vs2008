@@ -104,6 +104,12 @@
 		<Row Tag="TXT_KEY_EUPANEL_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR">
 			<Text>United Front near City State</Text>
 		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_UNITED_FRONT">
+			<Text>United Front</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_UNITED_FRONT_HELP">
+			<Text>+33% [ICON_STRENGTH] Combat Strength near City States that are friendly, allied, or can be liberated.</Text>
+		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_UNITED_FRONT_HELP" />
@@ -112,6 +118,12 @@
 		</Row>
 		<Row Tag="TXT_KEY_EUPANEL_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]United Front near City State</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_UNITED_FRONT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]United Front</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_UNITED_FRONT_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+33% [ICON_STRENGTH] Combat Strength near City States that are friendly, allied, or can be liberated.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -122,6 +134,12 @@
 		<Row Tag="TXT_KEY_EUPANEL_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]United Front near City State</Text>
 		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_UNITED_FRONT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]United Front</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_UNITED_FRONT_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+33% [ICON_STRENGTH] Combat Strength near City States that are friendly, allied, or can be liberated.</Text>
+		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_UNITED_FRONT_HELP" />
@@ -130,6 +148,12 @@
 		</Row>
 		<Row Tag="TXT_KEY_EUPANEL_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]United Front near City State</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_UNITED_FRONT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]United Front</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_UNITED_FRONT_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+33% [ICON_STRENGTH] Combat Strength near City States that are friendly, allied, or can be liberated.</Text>
 		</Row>
 	</Language_RU_RU>
 
