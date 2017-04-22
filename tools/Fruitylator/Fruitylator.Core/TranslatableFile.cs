@@ -3,7 +3,7 @@ using Fruitylator.Core.Interfaces;
 
 namespace Fruitylator.Core
 {
-    internal class TranslatableContent : ITranslatableContent
+    internal class TranslatableFile : ITranslatableFile
     {
         public string FilePath { get; }
         
@@ -11,7 +11,7 @@ namespace Fruitylator.Core
 
         public IEnumerable<ITranslatablePart> Parts { get; }
 
-        public TranslatableContent(string filePath, string xmlContent, IEnumerable<ITranslatablePart> parts)
+        public TranslatableFile(string filePath, string xmlContent, IEnumerable<ITranslatablePart> parts)
         {
             FilePath = filePath;
             XmlContent = xmlContent;

@@ -19,13 +19,13 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" /> 
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Filepath: "
+            <TextBlock Text="Filepath"
                        Grid.Column="0"
-                       Margin="5 0 0 0"
                        VerticalAlignment="Center"/>
             <TextBox x:Name="FilePath"
                      Grid.Column="1"
-                     VerticalContentAlignment="Center"/>
+                     VerticalContentAlignment="Center"
+                     Margin="5 0 0 0"/>
             <Button x:Name="SelectFilePath"
                     Grid.Column="2"
                     Content="..."
@@ -33,19 +33,19 @@
                     Width="25" />
         </Grid>
         <ListBox x:Name="Files"
-                 SelectedItem="{Binding SelectedFile, Mode=TwoWay}"
+                 SelectedItem="{Binding SelectedTranslatable, Mode=TwoWay}"
                  SelectionMode="Single"
                  Grid.Row="1"
                  Margin="0 5 0 0">
             <ListBox.ItemTemplate>
-                <DataTemplate DataType="interfaces:ITranslatableContent">
+                <DataTemplate DataType="interfaces:ITranslatableFile">
                     <TextBlock Text="{Binding FilePath}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <Button x:Name="SearchTranslatableFiles"
                 Content="Search"
-                Margin="5 5 0 5"
+                Margin="0 5 0 0"
                 Height="25"
                 Grid.Row="2"/> 
     </Grid>

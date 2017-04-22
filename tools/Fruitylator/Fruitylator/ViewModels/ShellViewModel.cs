@@ -5,9 +5,17 @@ namespace Fruitylator.ViewModels
 {
     [Export(typeof(ShellViewModel))]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    public class ShellViewModel : Conductor<Screen>
+    public class ShellViewModel : Screen
     {
         private FileExplorerViewModel _fileExplorerViewModel;
+        private TabViewModel _tabViewModel;
+
+        [ImportingConstructor]
+        public ShellViewModel(FileExplorerViewModel fileExplorerViewModel, TabViewModel tabViewModel)
+        {
+            FileExplorerViewModel = fileExplorerViewModel;
+            TabViewModel = tabViewModel;
+        }
 
         public override string DisplayName
         {
@@ -25,11 +33,14 @@ namespace Fruitylator.ViewModels
             }
         }
 
-        [ImportingConstructor]
-        public ShellViewModel(FileExplorerViewModel fileExplorerViewModel)
+        public TabViewModel TabViewModel
         {
-            FileExplorerViewModel = fileExplorerViewModel;
-            base.ActivateItem(IoC.Get<EditorViewModel>());
+            get { return _tabViewModel; }
+            set
+            {
+                _tabViewModel = value;
+                NotifyOfPropertyChange();
+            }
         }
     }
 }

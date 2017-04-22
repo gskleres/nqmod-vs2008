@@ -2,7 +2,7 @@
 
 namespace Fruitylator.Core.Interfaces
 {
-    public interface ITranslatableContent
+    public interface ITranslatableFile
     {
         string FilePath { get; }
 

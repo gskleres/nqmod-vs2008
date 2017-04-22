@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Caliburn.Micro;
-using Fruitylator.Core;
 using Fruitylator.Core.Interfaces;
 using Fruitylator.Events;
 using Screen = Caliburn.Micro.Screen;
@@ -15,17 +14,26 @@ namespace Fruitylator.ViewModels
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class FileExplorerViewModel : Screen
     {
-        private readonly IXmlTransformer _transformer;
+        private readonly string _defaultPath;
 
         private readonly IEventAggregator _events;
-
-        private string _selectedFile;
-
-        private readonly string _defaultPath;
+        private readonly IXmlTransformer _transformer;
 
         private string _filePath;
 
-        public BindableCollection<ITranslatableContent> Files { get; } = new BindableCollection<ITranslatableContent>();
+        private ITranslatableFile _selectedTranslatable;
+
+        [ImportingConstructor]
+        public FileExplorerViewModel(IXmlTransformer transformer, IEventAggregator events)
+        {
+            _transformer = transformer;
+            _events = events;
+            _defaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Repos",
+                "nqmod-vs2008");
+            FilePath = _defaultPath;
+        }
+
+        public BindableCollection<ITranslatableFile> Files { get; } = new BindableCollection<ITranslatableFile>();
 
         public string FilePath
         {
@@ -37,45 +45,34 @@ namespace Fruitylator.ViewModels
             }
         }
 
-        public string SelectedFile
+        public ITranslatableFile SelectedTranslatable
         {
-            get { return _selectedFile; }
+            get { return _selectedTranslatable; }
             set
             {
-                _selectedFile = value;
-                _events.PublishOnUIThread(new FileChangedEvent(_selectedFile));
+                _selectedTranslatable = value;
+                _events.PublishOnUIThread(new FileChangedEvent(_selectedTranslatable));
                 NotifyOfPropertyChange();
             }
-        }
-
-        [ImportingConstructor]
-        public FileExplorerViewModel(IXmlTransformer transformer, IEventAggregator events)
-        {
-            _transformer = transformer;
-            _events = events;
-            _defaultPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            FilePath = _defaultPath;
         }
 
         public void SelectFilePath()
         {
             var selectedPath = Directory.Exists(_filePath) ? _filePath : _defaultPath;
-            using (var dialog = new FolderBrowserDialog { SelectedPath = selectedPath })
+            using (var dialog = new FolderBrowserDialog {SelectedPath = selectedPath})
             {
                 var result = dialog.ShowDialog();
                 if (result == DialogResult.OK)
-                {
                     FilePath = dialog.SelectedPath;
-                }
             }
         }
 
         public void SearchTranslatableFiles()
         {
-            var xmlFiles = Directory.GetFiles(_filePath, "*.xml", SearchOption.AllDirectories);
             Files.Clear();
+            if (!Directory.Exists(_filePath)) return;
+            var xmlFiles = Directory.GetFiles(_filePath, "*.xml", SearchOption.AllDirectories);
             Files.AddRange(xmlFiles.Select(_transformer.LoadFile).Where(t => t != null && t.Parts.Any()));
-
         }
     }
 }

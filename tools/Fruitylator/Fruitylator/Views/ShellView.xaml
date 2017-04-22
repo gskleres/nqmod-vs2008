@@ -7,18 +7,21 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*"
+                              MinWidth="200"/>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
         <ContentControl x:Name="FileExplorerViewModel"
-                        Grid.Column="0" />
+                        Grid.Column="0"
+                        Margin="5"/>
         <GridSplitter Grid.Column="1"
                       VerticalAlignment="Stretch"
                       HorizontalAlignment="Center"
                       Background="Transparent"
                       Width="5"/>
-        <ContentControl x:Name="ActiveItem" 
-                        Grid.Column="2"/>
+        <ContentControl x:Name="TabViewModel" 
+                        Grid.Column="2"
+                        Margin="5"/>
     </Grid>
 </Window>

@@ -1,22 +1,33 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
+using System.Linq;
 using Caliburn.Micro;
-using Fruitylator.Events;
+using Fruitylator.Core.Interfaces;
 
 namespace Fruitylator.ViewModels
 {
     [Export(typeof(EditorViewModel))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public class EditorViewModel : Screen, IHandle<FileChangedEvent>
+    public class EditorViewModel : Screen
     {
-        [ImportingConstructor]
-        public EditorViewModel(IEventAggregator events)
+        private ITranslatableFile _translatable;
+
+        public ITranslatableFile Translatable
         {
-            events.Subscribe(this);
+            get { return _translatable; }
+            set
+            {
+                _translatable = value;
+                NotifyOfPropertyChange();
+            }
         }
 
-        public void Handle(FileChangedEvent message)
+        public void LoadTranslatable(ITranslatableFile translatable)
         {
+            if (translatable == null) throw new ArgumentNullException(nameof(translatable));
 
+            DisplayName = translatable.FilePath.Split('\\').Last();
+            Translatable = translatable;
         }
     }
 }

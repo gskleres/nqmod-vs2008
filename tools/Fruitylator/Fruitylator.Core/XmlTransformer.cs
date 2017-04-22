@@ -11,7 +11,7 @@ namespace Fruitylator.Core
     [Export(typeof(IXmlTransformer))]
     internal class XmlTransformer : IXmlTransformer
     {
-        public ITranslatableContent LoadFile(string path)
+        public ITranslatableFile LoadFile(string path)
         {
             if (!File.Exists(path)) return null;
             using (var fileStream = File.OpenRead(path))
@@ -47,7 +47,7 @@ namespace Fruitylator.Core
                     }
                 }
 
-                return new TranslatableContent(path, xDoc.ToString(), translatableParts);
+                return new TranslatableFile(path, xDoc.ToString(), translatableParts);
             }
         }
     }

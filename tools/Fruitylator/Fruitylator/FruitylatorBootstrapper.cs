@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.Primitives;
 using System.Reflection;
 using System.Windows;
 using Caliburn.Micro;
+using Fruitylator.Core.Interfaces;
 using Fruitylator.ViewModels;
 
 namespace Fruitylator
@@ -23,6 +23,14 @@ namespace Fruitylator
             _container = new CompositionContainer(catalog);
             _container.ComposeExportedValue<IWindowManager>(new WindowManager());
             _container.ComposeExportedValue<IEventAggregator>(new EventAggregator());
+
+            // editor factory
+            _container.ComposeExportedValue<Func<ITranslatableFile, EditorViewModel>>(translatable =>
+            {
+                var editor = IoC.Get<EditorViewModel>();
+                editor.LoadTranslatable(translatable);
+                return editor;
+            });
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
