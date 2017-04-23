@@ -44,11 +44,11 @@
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +6 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>+1 [ICON_RESEARCH] Wissenschaft durch Tundra-Geländefelder und +6 [ICON_RESEARCH] Wissenschaft durch Berg-Geländefelder.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +6 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>+1 [ICON_RESEARCH] Wissenschaft durch Tundra-Geländefelder und +6 [ICON_RESEARCH] Wissenschaft durch Berg-Geländefelder.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>

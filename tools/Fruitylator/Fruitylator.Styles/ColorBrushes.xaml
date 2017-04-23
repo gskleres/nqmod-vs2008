@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Colors.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <SolidColorBrush x:Key="MainBrush"
+                     Color="{StaticResource TulsaTwilight}"/>
+    <SolidColorBrush x:Key="HighlightBrush"
+                     Color="{StaticResource SquirrelTail}"/>
+    <SolidColorBrush x:Key="AccentBrush"
+                     Color="{StaticResource ValeMist}"/>
+</ResourceDictionary>

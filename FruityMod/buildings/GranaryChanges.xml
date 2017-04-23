@@ -20,7 +20,7 @@
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BUILDING_GRANARY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_GRANARY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Each source of [ICON_RES_WHEAT] Wheat, [ICON_RES_BANANA] Bananas, [ICON_RES_DEER] Deer, and [ICON_RES_BISON] Bison worked by this City produce +1 [ICON_FOOD] Food.[NEWLINE][NEWLINE]Allows [ICON_FOOD] Food to be moved from this city along trade routes inside your civilization.</Text>
+			<Text>Jede von dieser Stadt genutzte Quelle von [ICON_RES_WHEAT] Weizen, [ICON_RES_BANANA] Bananen, [ICON_RES_DEER] Wild und [ICON_RES_BISON] Bison produziert +1 [ICON_FOOD] Nahrung.[NEWLINE][NEWLINE]Ermöglicht den Transport von [ICON_FOOD] Nahrung aus dieser Stadt über Handelswege innerhalb Eurer Zivilisation.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
