@@ -36,7 +36,7 @@ namespace Fruitylator.ViewModels
 
         private void SelectItem(SolutionItem value)
         {
-            _events.PublishOnUIThread(new SolutionChangedEvent(value));
+            _events.PublishOnUIThread(new SolutionItemChangedEvent(value));
         }
 
         public void OpenFolder()

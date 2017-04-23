@@ -49,10 +49,11 @@
                       SelectedItem="{Binding SelectedResult}"
                       AutoGenerateColumns="False"
                       Margin="0 10 0 0"
-                      Grid.Row="1">
+                      Grid.Row="1"
+                      IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="tag"
-                                        Binding="{Binding Tag}" />
+                                        Binding="{Binding Tag}"/>
                     <DataGridTextColumn Header="language"
                                         Binding="{Binding Language}" />
                     <DataGridTextColumn Header="filepath"

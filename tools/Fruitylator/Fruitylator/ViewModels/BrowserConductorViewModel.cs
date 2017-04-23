@@ -10,7 +10,7 @@ namespace Fruitylator.ViewModels
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class BrowserConductorViewModel :
         Conductor<BrowserViewModel>.Collection.OneActive,
-        IHandle<SolutionChangedEvent>
+        IHandle<SolutionItemChangedEvent>
     {
         private readonly Func<SolutionItem, BrowserViewModel> _browserFactory;
 
@@ -23,7 +23,7 @@ namespace Fruitylator.ViewModels
             events.Subscribe(this);
         }
 
-        public void Handle(SolutionChangedEvent message)
+        public void Handle(SolutionItemChangedEvent message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 

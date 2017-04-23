@@ -12,7 +12,9 @@ namespace Fruitylator.ViewModels
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class SearchViewModel :
         Conductor<SearchDetailsViewModel>.Collection.OneActive,
-        IHandle<SearchResultChangedEvent>
+        IHandle<SearchResultChangedEvent>,
+        IHandle<SolutionItemChangedEvent>
+
     {
         private readonly Func<ITranslatablePart, SearchDetailsViewModel> _searchDetailsFactory;
 
@@ -26,6 +28,7 @@ namespace Fruitylator.ViewModels
         private string _selectedLanguagePattern;
         private bool _hideDuplicates = true;
         private ITranslatablePart _selectedResult;
+        private string _selectedFilePath;
 
         public BindableCollection<string> LanguagePatterns { get; } =
             new BindableCollection<string>();
@@ -59,7 +62,7 @@ namespace Fruitylator.ViewModels
             {
                 _selectedLanguagePattern = value;
                 NotifyOfPropertyChange();
-                Search(_searchText, _selectedLanguagePattern);
+                Search(_searchText, _selectedLanguagePattern, _selectedFilePath);
             }
         }
 
@@ -73,7 +76,7 @@ namespace Fruitylator.ViewModels
             set
             {
                 _searchText = value;
-                Search(_searchText, _selectedLanguagePattern);
+                Search(_searchText, _selectedLanguagePattern, _selectedFilePath);
                 NotifyOfPropertyChange();
             }
         }
@@ -86,11 +89,15 @@ namespace Fruitylator.ViewModels
             Func<ITranslatablePart, SearchDetailsViewModel> searchDetailsFactory)
         {
             _searchDetailsFactory = searchDetailsFactory;
-//            events.Subscribe(this);
+            events.Subscribe(this);
         }
 
-        private void Search(string searchText, string languagePattern)
+        private void Search(string searchText, string languagePattern, string filePath)
         {
+            if (searchText == null) searchText = string.Empty;
+            if (languagePattern == null) languagePattern = string.Empty;
+            if (filePath == null) filePath = string.Empty;
+
             var patterns = searchText
                 .ToLower()
                 .Split(' ')
@@ -100,6 +107,7 @@ namespace Fruitylator.ViewModels
             var filtered = _translatableData.Values
                 .Where(r =>
                     r.Language.ToLower().StartsWith(languagePattern.ToLower()) &&
+                    r.OriginalFilePath.ToLower().Contains(filePath.ToLower()) &&
                     patterns
                         .All(p =>
                             r.Language.ToLower().Contains(p) ||
@@ -169,9 +177,13 @@ namespace Fruitylator.ViewModels
         public void Handle(SearchResultChangedEvent message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
+            if (message.SelectedResult == null)
+            {
+                ActivateItem(null);
+                return;
+            }
 
             var alreadyOpened = Items.FirstOrDefault(vm => vm.Part == message.SelectedResult);
-
             if (alreadyOpened != null)
             {
                 ActivateItem(alreadyOpened);
@@ -180,6 +192,12 @@ namespace Fruitylator.ViewModels
 
             var solutionBrowser = _searchDetailsFactory(message.SelectedResult);
             ActivateItem(solutionBrowser);
+        }
+
+        public void Handle(SolutionItemChangedEvent message)
+        {
+            _selectedFilePath = message.SolutionItem.Path;
+            Search(_searchText, _selectedLanguagePattern, _selectedFilePath);
         }
     }
 }

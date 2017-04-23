@@ -77,13 +77,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Events\SearchResultChangedEvent.cs" />
-    <Compile Include="Events\SolutionChangedEvent.cs" />
+    <Compile Include="Events\SolutionItemChangedEvent.cs" />
     <Compile Include="SolutionItem.cs" />
     <Compile Include="ViewModels\BrowserConductorViewModel.cs" />
     <Compile Include="ViewModels\BrowserViewModel.cs" />
     <Compile Include="ViewModels\FileEditorViewModel.cs" />
     <Compile Include="ViewModels\RawEditorViewModel.cs" />
-    <Compile Include="ViewModels\SolutionItemViewModel.cs" />
     <Compile Include="ViewModels\ExplorerViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SearchDetailsViewModel.cs" />
@@ -108,9 +107,6 @@
     </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SolutionItemView.xaml.cs">
-      <DependentUpon>SolutionItemView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -177,10 +173,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShellView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SolutionItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

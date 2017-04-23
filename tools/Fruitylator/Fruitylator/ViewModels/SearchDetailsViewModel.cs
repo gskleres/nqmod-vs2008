@@ -25,6 +25,7 @@ namespace Fruitylator.ViewModels
 
         public void LoadTranslatablePart(ITranslatablePart part)
         {
+
             Part = part;
             _rawEditor.LoadTranslatable(part);
             _fileEditor.LoadFile(part.OriginalFilePath);
