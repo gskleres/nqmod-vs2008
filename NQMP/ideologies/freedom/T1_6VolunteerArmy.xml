@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 3/22/2017 7:08:59 PM -->
 <GameData>
 
-	<!-- Volunteer Army: Land Units gain the Homeguard promotion (While in or adjacent to your Cities, receives +15% Defense and gains +40 extra HP when healing or fortified). -->
+	<!-- Volunteer Army: Military Land Units in friendly territory gain +15 additional HP when healing and +15% Combat Strength. -->
 	<Policies>
 		<Update>
 			<Set Level="1" IncludesOneShotFreeUnits="false" BaseFreeUnits="0" />
@@ -13,29 +13,141 @@
 		<Delete PolicyType="POLICY_VOLUNTEER_ARMY" />
 	</Policy_FreeUnitClasses>
 
+	<!-- new promotion -->
+	<UnitPromotions>
+		<Row>
+			<Type>PROMOTION_VOLUNTEER_ARMY</Type>
+			<Description>TXT_KEY_PROMOTION_VOLUNTEER_ARMY</Description>
+			<Help>TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP</Help>
+			<Sound>AS2D_IF_LEVELUP</Sound>
+			<OrderPriority>6</OrderPriority>
+			<PortraitIndex>59</PortraitIndex>
+			<IconAtlas>ABILITY_ATLAS</IconAtlas>
+			<PediaType>PEDIA_MELEE</PediaType>
+			<PediaEntry>TXT_KEY_PROMOTION_VOLUNTEER_ARMY</PediaEntry>
+			<CannotBeChosen>true</CannotBeChosen>
+			<FriendlyHealChange>15</FriendlyHealChange>
+			<FriendlyLandsModifier>15</FriendlyLandsModifier>
+		</Row>
+	</UnitPromotions>
+	<Policy_FreePromotions>
+		<Row>
+			<PolicyType>POLICY_VOLUNTEER_ARMY</PolicyType>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+		</Row>
+	</Policy_FreePromotions>
+	<UnitPromotions_UnitCombats>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_RECON</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_ARCHER</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_MOUNTED</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_MELEE</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_SIEGE</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_GUN</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_ARMOR</UnitCombatType>
+		</Row>
+		<!--
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_HELICOPTER</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_NAVALRANGED</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_FIGHTER</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_BOMBER</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_NAVALMELEE</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_SUBMARINE</UnitCombatType>
+		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_CARRIER</UnitCombatType>
+		</Row>
+		-->
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_PARADROPPER</UnitCombatType>
+		</Row>
+	</UnitPromotions_UnitCombats>
+
 	<!-- localization -->
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Land Units gain the Homeguard promotion.[ENDCOLOR]</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +15 additional HP when healing and +15% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY">
+			<Text>Volunteer Army</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP">
+			<Text>In friendly territory, gains +15% [ICON_STRENGTH] Combat Strength and +15 additional HP when healing.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Land Units gain the Homeguard promotion.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +15 additional HP when healing and +15% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Volunteer Army</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]In friendly territory, gains +15% [ICON_STRENGTH] Combat Strength and +15 additional HP when healing.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Land Units gain the Homeguard promotion.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +15 additional HP when healing and +15% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Volunteer Army</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]In friendly territory, gains +15% [ICON_STRENGTH] Combat Strength and +15 additional HP when healing.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT]BROKEN --- Land Units gain the Homeguard promotion.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +15 additional HP when healing and +15% [ICON_STRENGTH] Combat Strength.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Volunteer Army</Text>
+		</Row>
+		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]In friendly territory, gains +15% [ICON_STRENGTH] Combat Strength and +15 additional HP when healing.</Text>
 		</Row>
 	</Language_RU_RU>
 
