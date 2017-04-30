@@ -162,6 +162,9 @@ public:
 	int GetCityCountUnhappinessMod() const;
 	bool IsNoOccupiedUnhappiness() const;
 	int GetGlobalPopulationChange() const;
+#ifdef NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
+	int GetLocalPopulationChange() const;
+#endif
 	int GetTechShare() const;
 	int GetFreeTechs() const;
 	int GetFreePolicies() const;
@@ -386,6 +389,9 @@ private:
 	int m_iCityCountUnhappinessMod;
 	bool m_bNoOccupiedUnhappiness;
 	int m_iGlobalPopulationChange;
+#ifdef NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
+	int m_iLocalPopulationChange;
+#endif
 	int m_iTechShare;
 	int m_iFreeTechs;
 	int m_iFreePolicies;

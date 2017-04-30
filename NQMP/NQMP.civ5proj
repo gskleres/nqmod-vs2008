@@ -31,6 +31,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>_sql/BuildingsChanges.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>_sql/Policies_ExtraTourismPerGreatWork.sql</FileName>
       </Action>
       <Action>
@@ -1442,6 +1447,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>wonders_world/PyramidChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>wonders_world/StatueOfLibertyChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -3563,6 +3573,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
+    <Content Include="wonders_world\StatueOfLibertyChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="wonders_world\StonehengeChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -3648,6 +3662,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="_from_AuI\AuI_GlobalDiplomacyAIDefines.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="_sql\BuildingsChanges.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

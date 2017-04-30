@@ -6280,6 +6280,15 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			if(pBuildingInfo->IsCapital())
 				owningPlayer.setCapitalCity(this);
 
+#ifdef NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
+			// Local Pop change
+			int iLocalPopulationChange = (BuildingClassTypes)pBuildingInfo->GetLocalPopulationChange();
+			if (iLocalPopulationChange != 0)
+			{
+				setPopulation(std::max(1, (getPopulation() + iLocalPopulationChange)));
+			}
+#endif
+
 			// Free Units
 			CvUnit* pFreeUnit;
 

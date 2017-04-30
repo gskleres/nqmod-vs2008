@@ -745,6 +745,9 @@
 #define NQ_NO_GIFTING_GREAT_PEOPLE_TO_MAJORS
 // world's fair # of turns scales with game speed now
 #define NQ_WORLDS_FAIR_GAME_SPEED_SCALING
+// one shot local population change when a building is constructed
+#define NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
+
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies

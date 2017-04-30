@@ -86,6 +86,9 @@ CvBuildingEntry::CvBuildingEntry(void):
 	m_iCityCountUnhappinessMod(0),
 	m_bNoOccupiedUnhappiness(false),
 	m_iGlobalPopulationChange(0),
+#ifdef NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
+	m_iLocalPopulationChange(0),
+#endif
 	m_iTechShare(0),
 	m_iFreeTechs(0),
 	m_iFreePolicies(0),
@@ -357,6 +360,9 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 	m_iPlotBuyCostModifier = kResults.GetInt("PlotBuyCostModifier");
 	m_iGlobalPlotBuyCostModifier = kResults.GetInt("GlobalPlotBuyCostModifier");
 	m_iGlobalPopulationChange = kResults.GetInt("GlobalPopulationChange");
+#ifdef NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
+	m_iLocalPopulationChange = kResults.GetInt("LocalPopulationChange");
+#endif
 	m_iTechShare = kResults.GetInt("TechShare");
 	m_iFreeTechs = kResults.GetInt("FreeTechs");
 	m_iFreePolicies = kResults.GetInt("FreePolicies");
@@ -1206,6 +1212,14 @@ int CvBuildingEntry::GetGlobalPopulationChange() const
 {
 	return m_iGlobalPopulationChange;
 }
+
+#ifdef NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
+/// Population added to this city
+int CvBuildingEntry::GetLocalPopulationChange() const
+{
+	return m_iLocalPopulationChange;
+}
+#endif
 
 /// If this # of players have a Tech then the owner of this Building gets that Tech as well
 int CvBuildingEntry::GetTechShare() const
