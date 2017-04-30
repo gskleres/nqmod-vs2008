@@ -291,6 +291,9 @@ CvPlayer::CvPlayer() :
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	, m_iIgnorePuppetsForResearchCostsCount(0)
 #endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	, m_iNoMinorDOWIfFriendsCount(0)
+#endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	, m_iAllowPuppetPurchasingCount(0)
 #endif
@@ -960,6 +963,9 @@ void CvPlayer::uninit()
 #endif
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	m_iIgnorePuppetsForResearchCostsCount = 0;
+#endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	m_iNoMinorDOWIfFriendsCount = 0;
 #endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	m_iAllowPuppetPurchasingCount = 0;
@@ -15898,6 +15904,31 @@ void CvPlayer::ChangeIgnorePuppetsForResearchCostsCount(int iChange)
 	}
 }
 #endif
+
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+//	--------------------------------------------------------------------------------
+int CvPlayer::GetNoMinorDOWIfFriendsCount() const
+{
+	return m_iNoMinorDOWIfFriendsCount;
+}
+
+//	--------------------------------------------------------------------------------
+bool CvPlayer::IsNoMinorDOWIfFriends() const
+{
+	return (GetNoMinorDOWIfFriendsCount() > 0);
+}
+
+//	--------------------------------------------------------------------------------
+void CvPlayer::ChangeNoMinorDOWIfFriendsCount(int iChange)
+{
+	if (iChange != 0)
+	{
+		m_iNoMinorDOWIfFriendsCount = m_iNoMinorDOWIfFriendsCount + iChange;
+		CvAssert(GetNoMinorDOWIfFriendsCount() >= 0);
+	}
+}
+#endif
+
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 //	--------------------------------------------------------------------------------
 int CvPlayer::GetAllowPuppetPurchasingCount() const
@@ -23121,6 +23152,9 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	ChangeIgnorePuppetsForResearchCostsCount((pPolicy->IsIgnorePuppetsForResearchCosts()) ? iChange : 0);
 #endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	ChangeNoMinorDOWIfFriendsCount((pPolicy->IsNoMinorDOWIfFriends()) ? iChange : 0);
+#endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	ChangeAllowPuppetPurchasingCount((pPolicy->IsAllowPuppetPurchasing()) ? iChange : 0);
 #endif
@@ -24286,6 +24320,9 @@ void CvPlayer::Read(FDataStream& kStream)
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	kStream >> m_iIgnorePuppetsForResearchCostsCount;
 #endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	kStream >> m_iNoMinorDOWIfFriendsCount;
+#endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	kStream >> m_iAllowPuppetPurchasingCount;
 #endif
@@ -24842,6 +24879,9 @@ void CvPlayer::Write(FDataStream& kStream) const
 #endif
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	kStream << m_iIgnorePuppetsForResearchCostsCount;
+#endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	kStream << m_iNoMinorDOWIfFriendsCount;
 #endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	kStream << m_iAllowPuppetPurchasingCount;

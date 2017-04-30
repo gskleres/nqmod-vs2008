@@ -5,7 +5,7 @@
 	<!-- Treaty Organization: City State Friends will no longer declare war on you in support of their Ally. -->
 	<Policies>
 		<Update>
-			<Set Level="3" ProtectedMinorPerTurnInfluence="0" />
+			<Set Level="3" ProtectedMinorPerTurnInfluence="0" NoMinorDOWIfFriends="true" />
 			<Where Type="POLICY_TREATY_ORGANIZATION" />
 		</Update>
 	</Policies>

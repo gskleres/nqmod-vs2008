@@ -215,6 +215,9 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	m_bIgnorePuppetsForResearchCosts(false),
 #endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	m_bNoMinorDOWIfFriends(false),
+#endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	m_bAllowPuppetPurchasing(false),
 #endif
@@ -556,6 +559,9 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #endif
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	m_bIgnorePuppetsForResearchCosts = kResults.GetBool("IgnorePuppetsForResearchCosts");
+#endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	m_bNoMinorDOWIfFriends = kResults.GetBool("NoMinorDOWIfFriends");
 #endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	m_bAllowPuppetPurchasing = kResults.GetBool("AllowPuppetPurchasing");
@@ -1912,6 +1918,13 @@ bool CvPolicyEntry::IsWarHero() const
 bool CvPolicyEntry::IsIgnorePuppetsForResearchCosts() const
 {
 	return m_bIgnorePuppetsForResearchCosts;
+}
+#endif
+
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+bool CvPolicyEntry::IsNoMinorDOWIfFriends() const
+{
+	return m_bNoMinorDOWIfFriends;
 }
 #endif
 

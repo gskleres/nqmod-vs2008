@@ -921,6 +921,12 @@ public:
 	void ChangeIgnorePuppetsForResearchCostsCount(int iChange);
 #endif
 
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	int GetNoMinorDOWIfFriendsCount() const;
+	bool IsNoMinorDOWIfFriends() const;
+	void ChangeNoMinorDOWIfFriendsCount(int iChange);
+#endif
+
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	int GetAllowPuppetPurchasingCount() const;
 	bool IsAllowPuppetPurchasing() const;
@@ -1892,6 +1898,9 @@ protected:
 #endif
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	int m_iIgnorePuppetsForResearchCostsCount;
+#endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	int m_iNoMinorDOWIfFriendsCount;
 #endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	int m_iAllowPuppetPurchasingCount;

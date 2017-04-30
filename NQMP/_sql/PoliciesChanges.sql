@@ -34,6 +34,8 @@ ALTER TABLE Policies ADD TourismFromTradeMissions INTEGER DEFAULT 0;
 ALTER TABLE Policies ADD GoldToScience INTEGER DEFAULT 0;
 -- Happiness gained per great person tile improved in borders
 ALTER TABLE Policies ADD HappinessFromGreatImprovements INTEGER DEFAULT 0;
+-- Prevents city states from declaring war if you are at least friends and have this policy
+ALTER TABLE Policies ADD NoMinorDOWIfFriends BOOLEAN DEFAULT false;
 
 ----------------------------
 -- *** ORDER CHANGES *** ---

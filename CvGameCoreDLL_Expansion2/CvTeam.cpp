@@ -1525,11 +1525,43 @@ void CvTeam::DoNowAtWarOrPeace(TeamTypes eTeam, bool bWar)
 					// Don't declare war on self! (just in case)
 					if(GET_PLAYER(eMinor).getTeam() != eTeam)
 					{
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+						// this = team that declared war
+						// eTeam = team that is targeted for war
+						// ePlayer = current position of iterator over every major civ in the game on this team
+						// eMinor = current position of iterator over every city state in the game
+
+						bool bFriendshipPreventsWar = false;
+						PlayerTypes eTargetPlayer;
+						for (int iTargetTeamCivLoop = 0; iTargetTeamCivLoop < MAX_MAJOR_CIVS; iTargetTeamCivLoop++)
+						{
+							eTargetPlayer = (PlayerTypes) iTargetTeamCivLoop;
+
+							if(GET_PLAYER(eTargetPlayer).isAlive() && GET_PLAYER(eTargetPlayer).getTeam() == eTeam)
+							{
+								if (GET_PLAYER(eTargetPlayer).IsNoMinorDOWIfFriends() && GET_PLAYER(eMinor).GetMinorCivAI()->IsFriends(eTargetPlayer))
+								{
+									bFriendshipPreventsWar = true;
+								}
+							}
+						}
+
+						if (!bFriendshipPreventsWar)
+						{
+							// Match war state
+							GET_TEAM(GET_PLAYER(eMinor).getTeam()).DoDeclareWar(eTeam, /*bDefensivePact*/ false, /*bMinorAllyPact*/ true);
+
+							// Add to vector for notification sent out
+							veMinorAllies.push_back(eMinor);
+						}
+					
+#else
 						// Match war state
 						GET_TEAM(GET_PLAYER(eMinor).getTeam()).DoDeclareWar(eTeam, /*bDefensivePact*/ false, /*bMinorAllyPact*/ true);
 
 						// Add to vector for notification sent out
 						veMinorAllies.push_back(eMinor);
+#endif
 					}
 				}
 			}

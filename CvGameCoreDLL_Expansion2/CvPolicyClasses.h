@@ -246,6 +246,9 @@ public:
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	bool IsIgnorePuppetsForResearchCosts() const;
 #endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	bool IsNoMinorDOWIfFriends() const;
+#endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	bool IsAllowPuppetPurchasing() const;
 #endif
@@ -522,6 +525,9 @@ private:
 #endif
 #ifdef NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
 	bool m_bIgnorePuppetsForResearchCosts;
+#endif
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+	bool m_bNoMinorDOWIfFriends;
 #endif
 #ifdef NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
 	bool m_bAllowPuppetPurchasing;

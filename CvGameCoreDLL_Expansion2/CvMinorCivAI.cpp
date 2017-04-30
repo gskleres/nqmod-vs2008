@@ -5951,6 +5951,22 @@ void CvMinorCivAI::DoFriendshipChangeEffects(PlayerTypes ePlayer, int iOldFriend
 		bAdd = false;
 		bFriends = true;
 
+#ifdef NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+		// if we are at war with a city state's ally but it didn't declare on us because we were friends and had a special policy 
+		// preventing that declaration, declare war here
+
+		if (GetAlly() != NO_PLAYER)
+		{
+			TeamTypes ePlayerTeam = GET_PLAYER(ePlayer).getTeam();
+			TeamTypes eAllyTeam = GET_PLAYER(GetAlly()).getTeam();
+			TeamTypes eOurTeam = GetPlayer()->getTeam();
+			if (GET_TEAM(ePlayerTeam).isAtWar(eAllyTeam))
+			{
+				GET_TEAM(eOurTeam).declareWar(ePlayerTeam);
+			}
+		}
+#endif
+
 		ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 		if (pkScriptSystem) 
 		{
