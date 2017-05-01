@@ -5,7 +5,7 @@
 	<!-- Gunboat Diplomacy: Gain 50 Influence when you Tribute a City State (instead of losing Influence). -->
 	<Policies>
 		<Update>
-			<Set Level="1" MinorFriendshipGainBullyGoldSuccess="5000" MinorBullyScoreModifier="0" />
+			<Set Level="1" MinorFriendshipGainBullyGoldSuccess="5000" MinorBullyScoreModifier="0" AfraidMinorPerTurnInfluence="0" />
 			<Where Type="POLICY_GUNBOAT_DIPLOMACY" />
 		</Update>
 	</Policies>
