@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 3/22/2017 7:17:12 PM -->
 <GameData>
 
-	<!-- Client States (NEW POLICY): Puppeted Cities allow Unit purchasing and no longer increase the Science cost of Technologies. -->
+	<!-- Client States (NEW POLICY): Puppeted Cities do not increase Science costs and allow purchasing as if they were annexed. -->
 	<Policies>
 		<Row>
 			<Type>POLICY_CLIENT_STATES</Type>
@@ -43,7 +43,7 @@
 			<Text>Client States</Text>
 		</Row>
 		<Row Tag="TXT_KEY_POLICY_CLIENT_STATES_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Client States[ENDCOLOR][NEWLINE]Puppeted Cities allow Unit purchasing and no longer increase the [ICON_RESEARCH] Science cost of Technologies.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Client States[ENDCOLOR][NEWLINE]Puppeted Cities do not increase [ICON_RESEARCH] Science costs and allow purchasing as if they were annexed.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_POLICY_CLIENT_STATES_TEXT">
 			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Client_state)[ENDCOLOR][NEWLINE][NEWLINE]A client state is a state that is economically, politically, or militarily subordinate to another more powerful state in international affairs. Types of client states include: satellite state, associated state, puppet state, neo-colony, protectorate, vassal state, and tributary state.</Text>
@@ -54,7 +54,7 @@
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Client States</Text>
 		</Row>
 		<Row Tag="TXT_KEY_POLICY_CLIENT_STATES_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Client States[ENDCOLOR][NEWLINE]Puppeted Cities allow Unit purchasing and no longer increase the [ICON_RESEARCH] Science cost of Technologies.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Client States[ENDCOLOR][NEWLINE]Puppeted Cities do not increase [ICON_RESEARCH] Science costs and allow purchasing as if they were annexed.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_POLICY_CLIENT_STATES_TEXT">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Client_state)[ENDCOLOR][NEWLINE][NEWLINE]A client state is a state that is economically, politically, or militarily subordinate to another more powerful state in international affairs. Types of client states include: satellite state, associated state, puppet state, neo-colony, protectorate, vassal state, and tributary state.</Text>
@@ -65,7 +65,7 @@
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Client States</Text>
 		</Row>
 		<Row Tag="TXT_KEY_POLICY_CLIENT_STATES_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Client States[ENDCOLOR][NEWLINE]Puppeted Cities allow Unit purchasing and no longer increase the [ICON_RESEARCH] Science cost of Technologies.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Client States[ENDCOLOR][NEWLINE]Puppeted Cities do not increase [ICON_RESEARCH] Science costs and allow purchasing as if they were annexed.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_POLICY_CLIENT_STATES_TEXT">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Client_state)[ENDCOLOR][NEWLINE][NEWLINE]A client state is a state that is economically, politically, or militarily subordinate to another more powerful state in international affairs. Types of client states include: satellite state, associated state, puppet state, neo-colony, protectorate, vassal state, and tributary state.</Text>
@@ -76,7 +76,7 @@
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Client States</Text>
 		</Row>
 		<Row Tag="TXT_KEY_POLICY_CLIENT_STATES_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Client States[ENDCOLOR][NEWLINE]Puppeted Cities allow Unit purchasing and no longer increase the [ICON_RESEARCH] Science cost of Technologies.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Client States[ENDCOLOR][NEWLINE]Puppeted Cities do not increase [ICON_RESEARCH] Science costs and allow purchasing as if they were annexed.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_POLICY_CLIENT_STATES_TEXT">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Client_state)[ENDCOLOR][NEWLINE][NEWLINE]A client state is a state that is economically, politically, or militarily subordinate to another more powerful state in international affairs. Types of client states include: satellite state, associated state, puppet state, neo-colony, protectorate, vassal state, and tributary state.</Text>
