@@ -9,7 +9,7 @@
 	</Building_SpecialistYieldChanges>
 	<Buildings>
 		<Update>
-			<Set Happiness="10" LocalPopulationChange="5" />
+			<Set UnmoddedHappiness="10" LocalPopulationChange="5" />
 			<Where Type="BUILDING_STATUE_OF_LIBERTY" />
 		</Update>
 	</Buildings>
