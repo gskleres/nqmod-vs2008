@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 3/22/2017 7:17:12 PM -->
 <GameData>
 
-	<!-- Jingoism (replaces Clauswitz's Legacy): +15% Attack Strength in foreign territory during Golden Ages. -->
+	<!-- Jingoism (replaces Clauswitz's Legacy): +15% Attack Strength in foreign territory during Golden Ages, and they last 25% longer. -->
 	<Policies>
 		<Update>
-			<Set Level="1" AttackBonusTurns="0" OneShot="false" />
+			<Set Level="1" AttackBonusTurns="0" OneShot="false" GoldenAgeDurationMod="25" />
 			<Where Type="POLICY_NEW_ORDER" />
 		</Update>
 	</Policies>
@@ -103,7 +103,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NEW_ORDER_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE]+15% [ICON_STRENGTH] Attack Strength in foreign territory during [ICON_GOLDEN_AGE] Golden Ages.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE]+15% [ICON_STRENGTH] Attack Strength in foreign territory during [ICON_GOLDEN_AGE] Golden Ages, and they last 25% longer.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_JINGOISM">
 			<Text>Jingoism</Text>
@@ -122,7 +122,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NEW_ORDER_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE]+15% [ICON_STRENGTH] Attack Strength in foreign territory during [ICON_GOLDEN_AGE] Golden Ages.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE]+15% [ICON_STRENGTH] Attack Strength in foreign territory during [ICON_GOLDEN_AGE] Golden Ages, and they last 25% longer.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_JINGOISM">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Jingoism</Text>
@@ -141,7 +141,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NEW_ORDER_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE]+15% [ICON_STRENGTH] Attack Strength in foreign territory during [ICON_GOLDEN_AGE] Golden Ages.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE]+15% [ICON_STRENGTH] Attack Strength in foreign territory during [ICON_GOLDEN_AGE] Golden Ages, and they last 25% longer.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_JINGOISM">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Jingoism</Text>
@@ -160,7 +160,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_NEW_ORDER_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NEW_ORDER_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE]+15% [ICON_STRENGTH] Attack Strength in foreign territory during [ICON_GOLDEN_AGE] Golden Ages.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Jingoism[ENDCOLOR][NEWLINE]+15% [ICON_STRENGTH] Attack Strength in foreign territory during [ICON_GOLDEN_AGE] Golden Ages, and they last 25% longer.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_JINGOISM">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Jingoism</Text>
