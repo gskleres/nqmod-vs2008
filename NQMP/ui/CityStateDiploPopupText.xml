@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 5/1/2017 1:04:14 PM -->
+<GameData>
+	
+	<!-- localization -->
+	<Language_en_US>
+		<Row Tag="TXT_KEY_POPUP_MINOR_BULLY_GOLD_AMOUNT_GAIN_INFLUENCE">
+			<Text>Take {1_NumGold} [ICON_GOLD] Gold - will gain {2_NumInfluence} [ICON_INFLUENCE] Influence</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_POPUP_MINOR_BULLY_GOLD_AMOUNT_GAIN_INFLUENCE">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Take {1_NumGold} [ICON_GOLD] Gold - will gain {2_NumInfluence} [ICON_INFLUENCE] Influence</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_POPUP_MINOR_BULLY_GOLD_AMOUNT_GAIN_INFLUENCE">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Take {1_NumGold} [ICON_GOLD] Gold - will gain {2_NumInfluence} [ICON_INFLUENCE] Influence</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_POPUP_MINOR_BULLY_GOLD_AMOUNT_GAIN_INFLUENCE">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Take {1_NumGold} [ICON_GOLD] Gold - will gain {2_NumInfluence} [ICON_INFLUENCE] Influence</Text>
+		</Row>
+	</Language_RU_RU>
+	
+</GameData>

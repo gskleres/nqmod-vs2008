@@ -9,12 +9,6 @@
 			<Where Type="POLICY_GUNBOAT_DIPLOMACY" />
 		</Update>
 	</Policies>
-	<Defines>
-		<Row Name="MINOR_FRIENDSHIP_DROP_BULLY_GOLD_SUCCESS_GUNBOAT">
-			MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS
-			<Value>5000</Value>
-		</Row>
-	</Defines>
 
 	<!-- localization -->
 	<Language_en_US>

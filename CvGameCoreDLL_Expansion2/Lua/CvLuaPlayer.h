@@ -655,6 +655,9 @@ protected:
 #ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
 	static int lGetScienceFromGoldTimes100(lua_State* L);
 #endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	static int lGetMinorFriendshipGainBullyGoldSuccess(lua_State* L);
+#endif
 	static int lGetScienceFromResearchAgreementsTimes100(lua_State* L);
 	static int lGetScienceFromBudgetDeficitTimes100(lua_State* L);
 

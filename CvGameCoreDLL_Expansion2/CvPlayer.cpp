@@ -18743,6 +18743,15 @@ int CvPlayer::GetScienceFromGoldTimes100() const
 }
 #endif
 
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+// Influence gain from tributing gold (instead of losing influence)
+int CvPlayer::GetMinorFriendshipGainBullyGoldSuccess() const
+{
+	int iInfluenceChange = GetPlayerPolicies()->GetNumericModifier(POLICYMOD_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS) / 100;
+	return iInfluenceChange;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 /// Where is our Science coming from?
 int CvPlayer::GetScienceFromResearchAgreementsTimes100() const

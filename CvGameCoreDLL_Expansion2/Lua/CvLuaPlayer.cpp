@@ -672,6 +672,9 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 #ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
 	Method(GetScienceFromGoldTimes100);
 #endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	Method(GetMinorFriendshipGainBullyGoldSuccess);
+#endif
 	Method(GetScienceFromResearchAgreementsTimes100);
 	Method(GetScienceFromBudgetDeficitTimes100);
 
@@ -7005,6 +7008,13 @@ int CvLuaPlayer::lGetScienceFromHappinessTimes100(lua_State* L)
 int CvLuaPlayer::lGetScienceFromGoldTimes100(lua_State* L)
 {
 	return BasicLuaMethod(L, &CvPlayerAI::GetScienceFromGoldTimes100);
+}
+#endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+//int GetMinorFriendshipGainBullyGoldSuccess();
+int CvLuaPlayer::lGetMinorFriendshipGainBullyGoldSuccess(lua_State* L)
+{
+	return BasicLuaMethod(L, &CvPlayerAI::GetMinorFriendshipGainBullyGoldSuccess);
 }
 #endif
 //int GetScienceFromResearchAgreementsTimes100();

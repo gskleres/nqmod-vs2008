@@ -1168,6 +1168,9 @@ public:
 #ifdef NQ_GOLD_TO_SCIENCE_FROM_POLICIES
 	int GetScienceFromGoldTimes100() const;
 #endif
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	int GetMinorFriendshipGainBullyGoldSuccess() const;
+#endif
 	int GetScienceFromResearchAgreementsTimes100() const;
 	int GetScienceFromBudgetDeficitTimes100() const;
 
