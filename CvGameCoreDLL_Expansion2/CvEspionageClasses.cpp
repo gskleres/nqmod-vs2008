@@ -1944,6 +1944,10 @@ bool CvPlayerEspionage::AttemptCoup(uint uiSpyIndex)
 			{
 				int iNewInfluence = aiNewInfluenceValueTimes100[ui] - (GC.getESPIONAGE_COUP_OTHER_PLAYERS_INFLUENCE_DROP() * 100);
 				iNewInfluence = max(iNewInfluence, 0);
+#ifdef NQ_COUP_FORMULA_USES_BASE_FRIENDSHIP_NOT_EFFECTIVE_FRIENDSHIP
+				// cap all others at the ally threshold of 60 though (it's further reduced by 20 later)
+				iNewInfluence = min(iNewInfluence, GC.getFRIENDSHIP_THRESHOLD_ALLIES());
+#endif
 				aiNewInfluenceValueTimes100[ui] = iNewInfluence;
 			}
 		}
@@ -2030,9 +2034,10 @@ bool CvPlayerEspionage::AttemptCoup(uint uiSpyIndex)
 			pNotifications->Add(eNotification, strNotification.toUTF8(), strSummary.toUTF8(), pCity->getX(), pCity->getY(), -1);
 		}
 	}
-
+	
 	pMinorCivAI->SetFriendshipWithMajorTimes100(m_pPlayer->GetID(), aiNewInfluenceValueTimes100[m_pPlayer->GetID()]);
 	pMinorCivAI->SetDisableNotifications(false);
+
 	// send notification to player
 	CvNotifications* pNotifications = m_pPlayer->GetNotifications();
 	if(pNotifications)
