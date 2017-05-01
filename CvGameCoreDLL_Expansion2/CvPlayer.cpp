@@ -13253,7 +13253,7 @@ void CvPlayer::DoUpdateCityConnectionHappiness()
 					}
 				}
 #ifdef NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
-				if (pLoopCity->IsIndustrialRouteToCapital())
+				if (pLoopCity != pCapitalCity && pLoopCity->IsIndustrialRouteToCapital())
 				{
 					iNumCitiesWithRailroads++;
 				}
