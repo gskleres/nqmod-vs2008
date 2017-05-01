@@ -561,7 +561,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T1_2PatrioticWar.xml</FileName>
+        <FileName>ideologies/order/T1_2Commissariats.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -601,7 +601,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T2_2Commissariats.xml</FileName>
+        <FileName>ideologies/order/T2_2SatelliteStates.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2502,7 +2502,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T1_2PatrioticWar.xml">
+    <Content Include="ideologies\order\T2_2SatelliteStates.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2534,7 +2534,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T2_2Commissariats.xml">
+    <Content Include="ideologies\order\T1_2Commissariats.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

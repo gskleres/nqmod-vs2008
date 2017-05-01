@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2017-02-12 16:01:48 -->
+<GameData>
+	
+	<!-- Commissariats (replaces Skyscrapers): Free Constabulary when you conquer a City, and +1 Production from Constabularies. -->
+	<Policies>
+		<Update>
+			<Set Level="1" BuildingPurchaseCostModifier="0" FreeBuildingOnConquest="BUILDING_CONSTABLE" />
+			<Where Type="POLICY_SKYSCRAPERS" />
+		</Update>
+	</Policies>
+	<Policy_BuildingClassYieldChanges>
+		<Row>
+			<PolicyType>POLICY_SKYSCRAPERS</PolicyType>
+			<BuildingClassType>BUILDINGCLASS_CONSTABLE</BuildingClassType>
+			<YieldType>YIELD_PRODUCTION</YieldType>
+			<YieldChange>1</YieldChange>
+		</Row>
+	</Policy_BuildingClassYieldChanges>
+	<Policy_Flavors>
+		<Update>
+			<Set FlavorType="FLAVOR_OFFENSE" Flavor="25" />
+			<Where PolicyType="POLICY_SKYSCRAPERS" FlavorType="FLAVOR_GOLD" />
+		</Update>
+	</Policy_Flavors>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS">
+			<Text>Commissariats</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Free Constabulary when you conquer a City, and +1 [ICON_PRODUCTION] Production from Constabularies.</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT">
+			<Text>[COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Military_commissariat)[ENDCOLOR][NEWLINE][NEWLINE]Military commissariat is a local military administrative agency in the former Soviet Union as well as in present-day Russia and some other CIS countries that prepares and executes plans for military mobilization, maintains records on military manpower and economic resources available to the armed forces, provides premilitary training, drafts men for military service, organizes reserves for training, and performs other military functions at the local level.</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Commissariats</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Free Constabulary when you conquer a City, and +1 [ICON_PRODUCTION] Production from Constabularies.</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Military_commissariat)[ENDCOLOR][NEWLINE][NEWLINE]Military commissariat is a local military administrative agency in the former Soviet Union as well as in present-day Russia and some other CIS countries that prepares and executes plans for military mobilization, maintains records on military manpower and economic resources available to the armed forces, provides premilitary training, drafts men for military service, organizes reserves for training, and performs other military functions at the local level.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Commissariats</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Free Constabulary when you conquer a City, and +1 [ICON_PRODUCTION] Production from Constabularies.</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Military_commissariat)[ENDCOLOR][NEWLINE][NEWLINE]Military commissariat is a local military administrative agency in the former Soviet Union as well as in present-day Russia and some other CIS countries that prepares and executes plans for military mobilization, maintains records on military manpower and economic resources available to the armed forces, provides premilitary training, drafts men for military service, organizes reserves for training, and performs other military functions at the local level.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Commissariats</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Commissariats[ENDCOLOR][NEWLINE]Free Constabulary when you conquer a City, and +1 [ICON_PRODUCTION] Production from Constabularies.</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT" />
+		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Source: Wikipedia (https://en.wikipedia.org/wiki/Military_commissariat)[ENDCOLOR][NEWLINE][NEWLINE]Military commissariat is a local military administrative agency in the former Soviet Union as well as in present-day Russia and some other CIS countries that prepares and executes plans for military mobilization, maintains records on military manpower and economic resources available to the armed forces, provides premilitary training, drafts men for military service, organizes reserves for training, and performs other military functions at the local level.</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>
