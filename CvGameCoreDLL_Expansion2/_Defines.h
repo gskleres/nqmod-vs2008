@@ -748,6 +748,37 @@
 // one shot local population change when a building is constructed
 #define NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
 
+/// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
+// influence gain on gold tribute from policies
+#define NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+// flat coup chance modifier
+#define NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
+// attack bonus in foreign lands during golden ages
+#define NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
+// with this policy, gain a free great artist whenever a great general is born (very ugly cheat code)
+#define NQ_WAR_HERO
+// ignore puppets when calculating tech research cost
+#define NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
+// allows purchasing of units in puppet cities from policies
+#define NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
+// bonus strength when near friendly city states or city states conquered by another civ
+#define NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
+
+/// ---- IDEOLOGY OVERHAUL: FREEDOM ----
+// trade mission influence modifier from policies
+#define NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
+// science per great person born from policies
+#define NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
+// influence with all known city states per great person born from policies
+#define NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
+// gold to science conversion ratio at empire level from policies
+#define NQ_GOLD_TO_SCIENCE_FROM_POLICIES
+// tourism with all known civs on trade missions from policies
+#define NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
+// happiness from great person tile improvements from policies
+#define NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
+// prevent friendly minors declaring war on you in support of their ally, policy toggle
+#define NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies
@@ -770,37 +801,5 @@
 #define NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 // percent of production converted into bonus % for great musician points
 #define NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
-
-/// ---- IDEOLOGY OVERHAUL: FREEDOM ----
-// trade mission influence modifier from policies
-#define NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
-// science per great person born from policies
-#define NQ_SCIENCE_PER_GREAT_PERSON_BORN_FROM_POLICIES
-// influence with all known city states per great person born from policies
-#define NQ_INFLUENCE_BOOST_PER_GREAT_PERSON_BORN_FROM_POLICIES
-// gold to science conversion ratio at empire level from policies
-#define NQ_GOLD_TO_SCIENCE_FROM_POLICIES
-// tourism with all known civs on trade missions from policies
-#define NQ_TOURISM_FROM_TRADE_MISSIONS_FROM_POLICIES
-// happiness from great person tile improvements from policies
-#define NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
-// prevent friendly minors declaring war on you in support of their ally, policy toggle
-#define NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
-
-/// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
-// influence gain on gold tribute from policies
-#define NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
-// flat coup chance modifier
-#define NQ_COUP_CHANCE_MODIFIER_FROM_POLICIES
-// attack bonus in foreign lands during golden ages
-#define NQ_GOLDEN_AGE_FOREIGN_ATTACK_BONUS
-// with this policy, gain a free great artist whenever a great general is born (very ugly cheat code)
-#define NQ_WAR_HERO
-// ignore puppets when calculating tech research cost
-#define NQ_IGNORE_PUPPETS_FOR_RESEARCH_COSTS_FROM_POLICIES
-// allows purchasing of units in puppet cities from policies
-#define NQ_ALLOW_PUPPET_PURCHASING_FROM_POLICIES
-// bonus strength when near friendly city states or city states conquered by another civ
-#define NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
 
 #endif
