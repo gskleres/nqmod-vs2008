@@ -52,6 +52,10 @@
 			<PromotionType>PROMOTION_LIGHTNING_WARFARE</PromotionType>
 			<UnitCombatType>UNITCOMBAT_PARADROPPER</UnitCombatType>
 		</Row>
+		<Row>
+			<PromotionType>PROMOTION_LIGHTNING_WARFARE</PromotionType>
+			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
+		</Row>
 	</UnitPromotions_UnitCombats>
 
 	<!-- localization -->

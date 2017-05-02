@@ -99,6 +99,10 @@
 			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
 			<UnitCombatType>UNITCOMBAT_PARADROPPER</UnitCombatType>
 		</Row>
+		<Row>
+			<PromotionType>PROMOTION_VOLUNTEER_ARMY</PromotionType>
+			<UnitCombatType>UNITCOMBAT_MOUNTED_RANGED</UnitCombatType>
+		</Row>
 	</UnitPromotions_UnitCombats>
 
 	<!-- localization -->
