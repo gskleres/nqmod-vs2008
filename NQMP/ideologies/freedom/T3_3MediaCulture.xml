@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 3/22/2017 7:10:37 PM -->
 <GameData>
 
-	<!-- Media Culture: +25% Tourism from Amphitheaters, Opera Houses, Museums, and Broadcast Towers. -->
+	<!-- Media Culture: Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase City Tourism output by 25%. -->
 	<Policy_BuildingClassTourismModifiers>
 		<Row>
 			<PolicyType>POLICY_MEDIA_CULTURE</PolicyType>
@@ -29,25 +29,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_MEDIA_CULTURE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MEDIA_CULTURE_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Media Culture[ENDCOLOR][NEWLINE]Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 25%.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Media Culture[ENDCOLOR][NEWLINE]Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase City [ICON_TOURISM] Tourism output by 25%.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_MEDIA_CULTURE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MEDIA_CULTURE_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Media Culture[ENDCOLOR][NEWLINE]Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 25%.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Media Culture[ENDCOLOR][NEWLINE]Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase City [ICON_TOURISM] Tourism output by 25%.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_MEDIA_CULTURE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MEDIA_CULTURE_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Media Culture[ENDCOLOR][NEWLINE]Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 25%.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Media Culture[ENDCOLOR][NEWLINE]Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase City [ICON_TOURISM] Tourism output by 25%.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_MEDIA_CULTURE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_MEDIA_CULTURE_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Media Culture[ENDCOLOR][NEWLINE]Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 25%.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Media Culture[ENDCOLOR][NEWLINE]Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase City [ICON_TOURISM] Tourism output by 25%.</Text>
 		</Row>
 	</Language_RU_RU>
 

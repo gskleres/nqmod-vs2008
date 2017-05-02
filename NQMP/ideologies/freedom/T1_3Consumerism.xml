@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 3/22/2017 7:08:40 PM -->
 <GameData>
 
-	<!-- Consumerism (replaces Creative Expression): Trade Missions (Great Merchants) provide 50% of Gold gained as Tourism with all known Civs. -->
+	<!-- Consumerism (replaces Creative Expression): Trade Missions (Great Merchants) provide 50% of Gold gained as Tourism with all known Civilizations. -->
 	<Policies>
 		<Update>
 			<Set Level="1" TourismFromTradeMissions="50" />
@@ -21,7 +21,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_CREATIVE_EXPRESSION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CREATIVE_EXPRESSION_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Consumerism[ENDCOLOR][NEWLINE]Trade Missions (Great Merchants) provide 50% of [ICON_GOLD] Gold gained as [ICON_TOURISM] Tourism with all known Civs.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Consumerism[ENDCOLOR][NEWLINE]Trade Missions (Great Merchants) provide 50% of [ICON_GOLD] Gold gained as [ICON_TOURISM] Tourism with all known Civilizations.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -31,7 +31,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_CREATIVE_EXPRESSION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CREATIVE_EXPRESSION_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Consumerism[ENDCOLOR][NEWLINE]Trade Missions (Great Merchants) provide 50% of [ICON_GOLD] Gold gained as [ICON_TOURISM] Tourism with all known Civs.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Consumerism[ENDCOLOR][NEWLINE]Trade Missions (Great Merchants) provide 50% of [ICON_GOLD] Gold gained as [ICON_TOURISM] Tourism with all known Civilizations.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -41,7 +41,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_CREATIVE_EXPRESSION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CREATIVE_EXPRESSION_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Consumerism[ENDCOLOR][NEWLINE]Trade Missions (Great Merchants) provide 50% of [ICON_GOLD] Gold gained as [ICON_TOURISM] Tourism with all known Civs.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Consumerism[ENDCOLOR][NEWLINE]Trade Missions (Great Merchants) provide 50% of [ICON_GOLD] Gold gained as [ICON_TOURISM] Tourism with all known Civilizations.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
@@ -51,7 +51,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_CREATIVE_EXPRESSION_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CREATIVE_EXPRESSION_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Consumerism[ENDCOLOR][NEWLINE]Trade Missions (Great Merchants) provide 50% of [ICON_GOLD] Gold gained as [ICON_TOURISM] Tourism with all known Civs.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Consumerism[ENDCOLOR][NEWLINE]Trade Missions (Great Merchants) provide 50% of [ICON_GOLD] Gold gained as [ICON_TOURISM] Tourism with all known Civilizations.</Text>
 		</Row>
 	</Language_RU_RU>
 

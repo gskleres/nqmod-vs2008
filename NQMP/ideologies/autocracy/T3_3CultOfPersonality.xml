@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 3/22/2017 7:17:12 PM -->
 <GameData>
 
-	<!-- Cult of Personality: The Empire gains up to +100% Tourism based on Soldiers rank compared to the world (demographics screen). -->
+	<!-- Cult of Personality: Gain up to +100% Tourism depending on your military strength (Soldiers) relative to other Civilizations. -->
 	<Policies>
 		<Update>
 			<Set Level="3" CommonFoeTourismModifier="100" />
@@ -13,7 +13,7 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_CULT_PERSONALITY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CULT_PERSONALITY_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Cult of Personality[ENDCOLOR][NEWLINE]Gain up to +100% Tourism [ICON_TOURISM] depending on your military strength (Soldiers) relative to other players.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Cult of Personality[ENDCOLOR][NEWLINE]Gain up to +100% Tourism [ICON_TOURISM] depending on your military strength (Soldiers) relative to other Civilizations.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS" />
 		<Row Tag="TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS">
@@ -27,7 +27,7 @@
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_CULT_PERSONALITY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CULT_PERSONALITY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cult of Personality[ENDCOLOR][NEWLINE]Gain up to +100% Tourism [ICON_TOURISM] depending on your military strength (Soldiers) relative to other players.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cult of Personality[ENDCOLOR][NEWLINE]Gain up to +100% Tourism [ICON_TOURISM] depending on your military strength (Soldiers) relative to other Civilizations.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS" />
 		<Row Tag="TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS">
@@ -41,7 +41,7 @@
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_CULT_PERSONALITY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CULT_PERSONALITY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cult of Personality[ENDCOLOR][NEWLINE]Gain up to +100% Tourism [ICON_TOURISM] depending on your military strength (Soldiers) relative to other players.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cult of Personality[ENDCOLOR][NEWLINE]Gain up to +100% Tourism [ICON_TOURISM] depending on your military strength (Soldiers) relative to other Civilizations.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS" />
 		<Row Tag="TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS">
@@ -55,7 +55,7 @@
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_CULT_PERSONALITY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CULT_PERSONALITY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cult of Personality[ENDCOLOR][NEWLINE]Gain up to +100% Tourism [ICON_TOURISM] depending on your military strength (Soldiers) relative to other players.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Cult of Personality[ENDCOLOR][NEWLINE]Gain up to +100% Tourism [ICON_TOURISM] depending on your military strength (Soldiers) relative to other Civilizations.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS" />
 		<Row Tag="TXT_KEY_CO_CITY_TOURISM_COMMON_FOE_BONUS">

@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2017-02-12 16:00:13 -->
 <GameData>
 
-	<!-- Five Year Plan: +25% Production towards Buildings in all Cities and +1 Production for every Mine, Quarry, and Manufactory. -->
+	<!-- Five Year Plan: +25% Production towards Buildings in all Cities and +1 Production from every Mine, Quarry, and Manufactory. -->
 	<Policies>
 		<Update>
 			<Set Level="1" BuildingProductionModifier="25" />
@@ -25,25 +25,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_FIVE_YEAR_PLAN_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FIVE_YEAR_PLAN_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Five-Year Plan[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production towards Buildings in all Cities and +1 [ICON_PRODUCTION] Production for every Mine, Quarry, and Manufactory.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Five-Year Plan[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production towards Buildings in all Cities and +1 [ICON_PRODUCTION] Production from each Mine, Quarry, and Manufactory.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_FIVE_YEAR_PLAN_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FIVE_YEAR_PLAN_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Five-Year Plan[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production towards Buildings in all Cities and +1 [ICON_PRODUCTION] Production for every Mine, Quarry, and Manufactory.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Five-Year Plan[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production towards Buildings in all Cities and +1 [ICON_PRODUCTION] Production from each Mine, Quarry, and Manufactory.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_FIVE_YEAR_PLAN_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FIVE_YEAR_PLAN_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Five-Year Plan[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production towards Buildings in all Cities and +1 [ICON_PRODUCTION] Production for every Mine, Quarry, and Manufactory.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Five-Year Plan[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production towards Buildings in all Cities and +1 [ICON_PRODUCTION] Production from each Mine, Quarry, and Manufactory.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_FIVE_YEAR_PLAN_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FIVE_YEAR_PLAN_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Five-Year Plan[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production towards Buildings in all Cities and +1 [ICON_PRODUCTION] Production for every Mine, Quarry, and Manufactory.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Five-Year Plan[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production towards Buildings in all Cities and +1 [ICON_PRODUCTION] Production from each Mine, Quarry, and Manufactory.</Text>
 		</Row>
 	</Language_RU_RU>
 

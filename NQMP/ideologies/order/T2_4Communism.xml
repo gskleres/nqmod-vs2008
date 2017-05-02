@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2017-02-12 16:02:08 -->
 <GameData>
 
-	<!-- Communism (replaces Dictatorship of the Proletariat): Unhappiness from Ideology pressure of other civs reduced by 75%. -->
+	<!-- Communism (replaces Dictatorship of the Proletariat): Reduces Unhappiness from Ideology pressure by 75%. -->
 	<Policies>
 		<Update>
 			<Set Level="2" LessHappyTourismModifier="0" IdeologyPressureUnhappinessModifier="-75" />
@@ -16,7 +16,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE][ICON_HAPPINESS_4] Unhappiness from Ideology pressure of other civs reduced by 75%.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Reduces [ICON_HAPPINESS_4] Unhappiness from Ideology pressure by 75%.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT">
@@ -33,7 +33,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE][ICON_HAPPINESS_4] Unhappiness from Ideology pressure of other civs reduced by 75%.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Reduces [ICON_HAPPINESS_4] Unhappiness from Ideology pressure by 75%.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT">
@@ -50,7 +50,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE][ICON_HAPPINESS_4] Unhappiness from Ideology pressure of other civs reduced by 75%.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Reduces [ICON_HAPPINESS_4] Unhappiness from Ideology pressure by 75%.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT">
@@ -67,7 +67,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE][ICON_HAPPINESS_4] Unhappiness from Ideology pressure of other civs reduced by 75%.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Communism[ENDCOLOR][NEWLINE]Reduces [ICON_HAPPINESS_4] Unhappiness from Ideology pressure by 75%.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_DICTATORSHIP_PROLETARIAT_TEXT">
