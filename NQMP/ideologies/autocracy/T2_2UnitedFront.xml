@@ -5,7 +5,7 @@
 	<!-- United Front: +33% Combat Strength for Land and Naval Units near City States that are friendly, allied or can be liberated. -->
 	<Policies>
 		<Update>
-			<Set Level="2" />
+			<Set Level="2" CityStateUnitFrequencyModifier="0" />
 			<Where Type="POLICY_UNITED_FRONT" />
 		</Update>
 	</Policies>
