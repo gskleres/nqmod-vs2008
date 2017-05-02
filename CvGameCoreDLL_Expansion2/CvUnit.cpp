@@ -11085,15 +11085,15 @@ bool CvUnit::IsNearFriendlyMinor() const
 			{
 				continue;
 			}
-			
-			// if the minor was conquered...
-			if (!kMinor.isAlive())
+
+			// if the minor was conquered and we can liberate it...
+			if (!kMinor.isAlive() && !kMinor.IsEverConqueredBy(getOwner()))
 			{
 				CvCity* pCity = GC.getMap().findCity(kMinor.GetOriginalCapitalX(), kMinor.GetOriginalCapitalY());
 				
 				if (pCity)
 				{
-					// ... by someone other than us ...
+					// ... and we don't own the city ...
 					if (pCity->getOwner() != getOwner())
 					{
 						// ... and we are near it, give us the bonus!
