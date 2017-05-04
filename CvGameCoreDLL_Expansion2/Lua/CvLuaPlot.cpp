@@ -72,6 +72,9 @@ void CvLuaPlot::PushMethods(lua_State* L, int t)
 	Method(GetBuildTurnsLeft);
 	Method(GetBuildTurnsTotal);
 	Method(GetFeatureProduction);
+#ifdef NQ_FOOD_FROM_CHOPS
+	Method(GetFeatureFood);
+#endif
 
 	Method(GetBestDefender);
 	Method(GetSelectedUnit);
@@ -573,6 +576,22 @@ int CvLuaPlot::lGetFeatureProduction(lua_State* L)
 	lua_pushinteger(L, iResult);
 	return 1;
 }
+#ifdef NQ_FOOD_FROM_CHOPS
+//------------------------------------------------------------------------------
+//int getFeatureFood(BuildTypes eBuild, TeamTypes eTeam, CyCity* ppCity);
+int CvLuaPlot::lGetFeatureFood(lua_State* L)
+{
+	CvPlot* pkPlot = GetInstance(L);
+	const BuildTypes eBuild = (BuildTypes)lua_tointeger(L, 2);
+	const PlayerTypes ePlayer = (PlayerTypes)lua_tointeger(L, 3);
+	CvCity* pCity;
+
+	const int iResult = pkPlot->getFeatureFood(eBuild, ePlayer, &pCity);
+
+	lua_pushinteger(L, iResult);
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 //CyUnit* getBestDefender(PlayerTypes eOwner, PlayerTypes eAttackingPlayer, CyUnit* pAttacker, bool bTestAtWar, bool bTestPotentialEnemy, bool bTestCanMove);
 int CvLuaPlot::lGetBestDefender(lua_State* L)

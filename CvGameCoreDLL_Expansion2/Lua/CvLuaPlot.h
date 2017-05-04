@@ -89,6 +89,9 @@ protected:
 	static int lGetBuildTurnsLeft(lua_State* L);
 	static int lGetBuildTurnsTotal(lua_State* L);
 	static int lGetFeatureProduction(lua_State* L);
+#ifdef NQ_FOOD_FROM_CHOPS
+	static int lGetFeatureFood(lua_State* L);
+#endif
 
 	static int lGetBestDefender(lua_State* L);
 	static int lGetSelectedUnit(lua_State* L);

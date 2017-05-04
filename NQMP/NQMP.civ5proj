@@ -36,6 +36,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>_sql/ChopChanges.sql</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>_sql/Policies_ExtraTourismPerGreatWork.sql</FileName>
       </Action>
       <Action>
@@ -312,6 +317,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>civs/VeniceChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
+        <FileName>features/ChopChanges.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2272,6 +2282,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
+    <Content Include="features\ChopChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="features\LakeChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -3336,6 +3350,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>True</ImportIntoVFS>
     </Content>
+    <Content Include="ui\UnitPanel.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>True</ImportIntoVFS>
+    </Content>
     <Content Include="units\AfricanForestElephant.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -3725,6 +3743,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="_sql\BuildingsChanges.sql">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="_sql\ChopChanges.sql">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

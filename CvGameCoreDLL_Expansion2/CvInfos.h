@@ -1101,6 +1101,9 @@ public:
 	int getFeatureTech(int i) const;
 	int getFeatureTime(int i) const;
 	int getFeatureProduction(int i) const;
+#ifdef NQ_FOOD_FROM_CHOPS
+	int getFeatureFood(int i) const;
+#endif
 	int getFeatureCost(int i) const;
 	int getTechTimeChange(int i) const;
 
@@ -1128,6 +1131,9 @@ protected:
 	int* m_paiFeatureTech;
 	int* m_paiFeatureTime;
 	int* m_paiFeatureProduction;
+#ifdef NQ_FOOD_FROM_CHOPS
+	int* m_paiFeatureFood;
+#endif
 	int* m_paiFeatureCost;
 	int* m_paiTechTimeChange;
 	bool* m_pabFeatureRemove;

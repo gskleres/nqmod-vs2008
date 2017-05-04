@@ -2818,6 +2818,60 @@ int CvPlot::getFeatureProduction(BuildTypes eBuild, PlayerTypes ePlayer, CvCity*
 	return std::max(0, iProduction);
 }
 
+#ifdef NQ_FOOD_FROM_CHOPS
+//	--------------------------------------------------------------------------------
+int CvPlot::getFeatureFood(BuildTypes eBuild, PlayerTypes ePlayer, CvCity** ppCity) const
+{
+	int iFood;
+
+	TeamTypes eTeam = GET_PLAYER(ePlayer).getTeam();
+
+	if(getFeatureType() == NO_FEATURE)
+	{
+		return 0;
+	}
+
+	*ppCity = getWorkingCity();
+
+	if(*ppCity == NULL)
+	{
+		*ppCity = GC.getMap().findCity(getX(), getY(), NO_PLAYER, eTeam, false);
+	}
+
+	if(*ppCity == NULL)
+	{
+		return 0;
+	}
+
+	// Base value
+	//if(GET_PLAYER(ePlayer).GetAllFeatureProduction() > 0)
+	//{
+	//	iProduction = GET_PLAYER(ePlayer).GetAllFeatureProduction();
+	//}
+	//else
+	//{
+	iFood = GC.getBuildInfo(eBuild)->getFeatureFood(getFeatureType());
+	//}
+
+	// Distance mod
+	iFood -= (std::max(0, (plotDistance(getX(), getY(), (*ppCity)->getX(), (*ppCity)->getY()) - 2)) * 5);
+
+	iFood *= std::max(0, (GET_PLAYER((*ppCity)->getOwner()).getFeatureProductionModifier() + 100));
+	iFood /= 100;
+
+	iFood *= GC.getGame().getGameSpeedInfo().getFeatureProductionPercent();
+	iFood /= 100;
+
+	if(getTeam() != eTeam)
+	{
+		iFood *= GC.getDIFFERENT_TEAM_FEATURE_PRODUCTION_PERCENT();
+		iFood /= 100;
+	}
+
+	return std::max(0, iFood);
+}
+#endif
+
 
 //	--------------------------------------------------------------------------------
 UnitHandle CvPlot::getBestDefender(PlayerTypes eOwner, PlayerTypes eAttackingPlayer, const CvUnit* pAttacker, bool bTestAtWar, bool bTestPotentialEnemy, bool bTestCanMove, bool bNoncombatAllowed)
@@ -9309,7 +9363,18 @@ bool CvPlot::changeBuildProgress(BuildTypes eBuild, int iChange, PlayerTypes ePl
 							GC.GetEngineUserInterface()->AddCityMessage(0, pCity->GetIDInfo(), pCity->getOwner(), false, GC.getEVENT_MESSAGE_TIME(), strBuffer);
 						}
 					}
-
+#ifdef NQ_FOOD_FROM_CHOPS
+					int iFood = getFeatureFood(eBuild, ePlayer, &pCity);
+					if (iFood > 0)
+					{
+						pCity->changeFood(iFood);
+						if(pCity->getOwner() == GC.getGame().getActivePlayer())
+						{
+							strBuffer = GetLocalizedText("TXT_KEY_MISC_CLEARING_FEATURE_FOOD", GC.getFeatureInfo(getFeatureType())->GetTextKey(), iFood, pCity->getNameKey());
+							GC.GetEngineUserInterface()->AddCityMessage(0, pCity->GetIDInfo(), pCity->getOwner(), false, GC.getEVENT_MESSAGE_TIME(), strBuffer);
+						}
+					}
+#endif
 					setFeatureType(NO_FEATURE);
 				}
 			}

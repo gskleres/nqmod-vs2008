@@ -3672,6 +3672,9 @@ CvBuildInfo::CvBuildInfo() :
 	m_paiFeatureTech(NULL),
 	m_paiFeatureTime(NULL),
 	m_paiFeatureProduction(NULL),
+#ifdef NQ_FOOD_FROM_CHOPS
+	m_paiFeatureFood(NULL),
+#endif
 	m_paiFeatureCost(NULL),
 	m_paiTechTimeChange(NULL),
 	m_pabFeatureRemove(NULL)
@@ -3683,6 +3686,9 @@ CvBuildInfo::~CvBuildInfo()
 	SAFE_DELETE_ARRAY(m_paiFeatureTech);
 	SAFE_DELETE_ARRAY(m_paiFeatureTime);
 	SAFE_DELETE_ARRAY(m_paiFeatureProduction);
+#ifdef NQ_FOOD_FROM_CHOPS
+	SAFE_DELETE_ARRAY(m_paiFeatureFood);
+#endif
 	SAFE_DELETE_ARRAY(m_paiFeatureCost);
 	SAFE_DELETE_ARRAY(m_paiTechTimeChange);
 	SAFE_DELETE_ARRAY(m_pabFeatureRemove);
@@ -3779,6 +3785,15 @@ int CvBuildInfo::getFeatureProduction(int i) const
 	CvAssertMsg(i > -1, "Index out of bounds");
 	return m_paiFeatureProduction ? m_paiFeatureProduction[i] : -1;
 }
+#ifdef NQ_FOOD_FROM_CHOPS
+//------------------------------------------------------------------------------
+int CvBuildInfo::getFeatureFood(int i) const
+{
+	CvAssertMsg(i < GC.getNumFeatureInfos(), "Index out of bounds");
+	CvAssertMsg(i > -1, "Index out of bounds");
+	return m_paiFeatureFood ? m_paiFeatureFood[i] : -1;
+}
+#endif
 //------------------------------------------------------------------------------
 int CvBuildInfo::getFeatureCost(int i) const
 {
@@ -3834,6 +3849,9 @@ bool CvBuildInfo::CacheResults(Database::Results& kResults, CvDatabaseUtility& k
 		kUtility.InitializeArray(m_paiFeatureTech, "Features");
 		kUtility.InitializeArray(m_paiFeatureTime, "Features");
 		kUtility.InitializeArray(m_paiFeatureProduction, "Features");
+#ifdef NQ_FOOD_FROM_CHOPS
+		kUtility.InitializeArray(m_paiFeatureFood, "Features");
+#endif
 		kUtility.InitializeArray(m_paiFeatureCost, "Features");
 		kUtility.InitializeArray(m_pabFeatureRemove, "Features");
 
@@ -3855,6 +3873,9 @@ bool CvBuildInfo::CacheResults(Database::Results& kResults, CvDatabaseUtility& k
 				m_paiFeatureTech[iFeatureIdx]		= GC.getInfoTypeForString(szFeatureTech, true);
 				m_paiFeatureTime[iFeatureIdx]		= kArrayResults.GetInt("Time");
 				m_paiFeatureProduction[iFeatureIdx] = kArrayResults.GetInt("Production");
+#ifdef NQ_FOOD_FROM_CHOPS
+				m_paiFeatureFood[iFeatureIdx]		= kArrayResults.GetInt("Food");
+#endif
 				m_paiFeatureCost[iFeatureIdx]		= kArrayResults.GetInt("Cost");
 				m_pabFeatureRemove[iFeatureIdx]		= kArrayResults.GetBool("Remove");
 			}

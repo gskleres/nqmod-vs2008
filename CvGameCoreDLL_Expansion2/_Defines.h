@@ -749,6 +749,8 @@
 #define NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
 // Lua hook for game event when reformation belief is added
 #define NQ_ADD_REFORMATION_LUA_HOOK
+// Food bonus for removing features
+#define NQ_FOOD_FROM_CHOPS
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

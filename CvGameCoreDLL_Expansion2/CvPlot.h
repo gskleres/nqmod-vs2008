@@ -155,6 +155,9 @@ public:
 	int getBuildTurnsTotal(BuildTypes eBuild, PlayerTypes ePlayer) const;
 	int getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowExtra, int iThenExtra) const;
 	int getFeatureProduction(BuildTypes eBuild, PlayerTypes ePlayer, CvCity** ppCity) const;
+#ifdef NQ_FOOD_FROM_CHOPS
+	int getFeatureFood(BuildTypes eBuild, PlayerTypes ePlayer, CvCity** ppCity) const;
+#endif
 
 	UnitHandle getBestDefender(PlayerTypes eOwner, PlayerTypes eAttackingPlayer = NO_PLAYER, const CvUnit* pAttacker = NULL, bool bTestAtWar = false, bool bTestPotentialEnemy = false, bool bTestCanMove = false, bool bNoncombatAllowed = false);
 	const UnitHandle getBestDefender(PlayerTypes eOwner, PlayerTypes eAttackingPlayer = NO_PLAYER, const CvUnit* pAttacker = NULL, bool bTestAtWar = false, bool bTestPotentialEnemy = false, bool bTestCanMove = false, bool bNoncombatAllowed = false) const;
