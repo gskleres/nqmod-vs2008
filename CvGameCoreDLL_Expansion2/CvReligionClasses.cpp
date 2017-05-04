@@ -1315,6 +1315,19 @@ void CvGameReligions::AddReformationBelief(PlayerTypes ePlayer, ReligionTypes eR
 	kPlayer.doSelfConsistencyCheckAllCities();
 #endif
 
+#ifdef NQ_ADD_REFORMATION_LUA_HOOK
+	ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
+	if(pkScriptSystem) 
+	{
+		CvLuaArgsHandle args;
+		args->Push(ePlayer);
+		args->Push(eReligion);
+		args->Push(eBelief1);
+		bool bResult;
+		LuaSupport::CallHook(pkScriptSystem, "ReformationAdded", args.get(), bResult);
+	}
+#endif
+
 	//Notify the masses
 	for(int iNotifyLoop = 0; iNotifyLoop < MAX_MAJOR_CIVS; ++iNotifyLoop){
 		PlayerTypes eNotifyPlayer = (PlayerTypes) iNotifyLoop;
@@ -1359,6 +1372,7 @@ void CvGameReligions::AddReformationBelief(PlayerTypes ePlayer, ReligionTypes eR
 			LogReligionMessage(strLogMsg);
 		}
 	}
+
 	GC.GetEngineUserInterface()->setDirty(CityInfo_DIRTY_BIT, true);
 }
 

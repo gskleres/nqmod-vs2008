@@ -747,6 +747,8 @@
 #define NQ_WORLDS_FAIR_GAME_SPEED_SCALING
 // one shot local population change when a building is constructed
 #define NQ_LOCAL_POPULATION_CHANGE_FROM_BUILDING
+// Lua hook for game event when reformation belief is added
+#define NQ_ADD_REFORMATION_LUA_HOOK
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies
