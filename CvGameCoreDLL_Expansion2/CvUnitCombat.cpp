@@ -561,7 +561,11 @@ void CvUnitCombat::ResolveMeleeCombat(const CvCombatInfo& kCombatInfo, uint uiPa
 			}
 
 			// If a Unit loses his moves after attacking, do so
+#ifdef NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
+			if(!pkAttacker->canMoveAfterAttacking() && pkAttacker->isOutOfAttacks())
+#else
 			if(!pkAttacker->canMoveAfterAttacking())
+#endif
 			{
 				pkAttacker->finishMoves();
 				GC.GetEngineUserInterface()->changeCycleSelectionCounter(1);
@@ -1495,7 +1499,11 @@ void CvUnitCombat::ResolveCityMeleeCombat(const CvCombatInfo& kCombatInfo, uint 
 	{
 		pkAttacker->PublishQueuedVisualizationMoves();
 
+#ifdef NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
+		if(!pkAttacker->canMoveAfterAttacking() && pkAttacker->isOutOfAttacks())
+#else
 		if(!pkAttacker->canMoveAfterAttacking())
+#endif
 		{
 			pkAttacker->finishMoves();
 			GC.GetEngineUserInterface()->changeCycleSelectionCounter(1);
@@ -1929,7 +1937,11 @@ void CvUnitCombat::ResolveAirUnitVsCombat(const CvCombatInfo& kCombatInfo, uint 
 			pkAttacker->changeMoves(-GC.getMOVE_DENOMINATOR());
 
 			// Can't move or attack again
+#ifdef NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
+			if(!pkAttacker->canMoveAfterAttacking() && pkAttacker->isOutOfAttacks())
+#else
 			if(!pkAttacker->canMoveAfterAttacking())
+#endif
 			{
 				pkAttacker->finishMoves();
 			}
@@ -2288,7 +2300,11 @@ void CvUnitCombat::ResolveAirSweep(const CvCombatInfo& kCombatInfo, uint uiParen
 		pkAttacker->changeMoves(-GC.getMOVE_DENOMINATOR());
 
 		// Can't move or attack again
+#ifdef NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
+		if(!pkAttacker->canMoveAfterAttacking() && pkAttacker->isOutOfAttacks())
+#else
 		if(!pkAttacker->canMoveAfterAttacking())
+#endif
 		{
 			pkAttacker->finishMoves();
 		}
@@ -2797,7 +2813,11 @@ void CvUnitCombat::ResolveNuclearCombat(const CvCombatInfo& kCombatInfo, uint ui
 			pkAttacker->changeMoves(-GC.getMOVE_DENOMINATOR());
 
 			// Can't move or attack again
+#ifdef NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
+			if(!pkAttacker->canMoveAfterAttacking() && pkAttacker->isOutOfAttacks())
+#else
 			if(!pkAttacker->canMoveAfterAttacking())
+#endif
 			{
 				pkAttacker->finishMoves();
 			}
@@ -3157,7 +3177,7 @@ CvUnitCombat::ATTACK_RESULT CvUnitCombat::AttackRanged(CvUnit& kAttacker, int iX
 
 	// New test feature - attacking/range striking uses up all moves for most Units
 #ifdef NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
-	if((!kAttacker.canMoveAfterAttacking() && !kAttacker.isRangedSupportFire()) || kAttacker.isOutOfAttacks())
+	if(!kAttacker.canMoveAfterAttacking() && !kAttacker.isRangedSupportFire() && kAttacker.isOutOfAttacks())
 #else
 	if(!kAttacker.canMoveAfterAttacking() && !kAttacker.isRangedSupportFire())
 #endif
@@ -3418,7 +3438,11 @@ CvUnitCombat::ATTACK_RESULT CvUnitCombat::AttackAirSweep(CvUnit& kAttacker, CvPl
 		kAttacker.changeMoves(-GC.getMOVE_DENOMINATOR());
 
 		// Can't move or attack again
+#ifdef NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
+		if(!kAttacker.canMoveAfterAttacking() && kAttacker.isOutOfAttacks())
+#else
 		if(!kAttacker.canMoveAfterAttacking())
+#endif
 		{
 			kAttacker.finishMoves();
 		}
