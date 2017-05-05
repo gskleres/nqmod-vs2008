@@ -751,6 +751,10 @@
 #define NQ_ADD_REFORMATION_LUA_HOOK
 // Food bonus for removing features
 #define NQ_FOOD_FROM_CHOPS
+// Clearing barbarian camps gives influence to all nearby city states
+#define NQ_CLEARING_CAMPS_GIVES_INFLUENCE_NEARBY
+// Unit turn ends on final attack even with multiple attacks per turn
+#define NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

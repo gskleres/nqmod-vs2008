@@ -3156,7 +3156,11 @@ CvUnitCombat::ATTACK_RESULT CvUnitCombat::AttackRanged(CvUnit& kAttacker, int iX
 	kAttacker.setFortifyTurns(0);
 
 	// New test feature - attacking/range striking uses up all moves for most Units
+#ifdef NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
+	if((!kAttacker.canMoveAfterAttacking() && !kAttacker.isRangedSupportFire()) || kAttacker.isOutOfAttacks())
+#else
 	if(!kAttacker.canMoveAfterAttacking() && !kAttacker.isRangedSupportFire())
+#endif
 	{
 		kAttacker.finishMoves();
 		GC.GetEngineUserInterface()->changeCycleSelectionCounter(1);

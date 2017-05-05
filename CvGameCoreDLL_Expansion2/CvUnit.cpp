@@ -15095,6 +15095,8 @@ void CvUnit::setXY(int iX, int iY, bool bGroup, bool bUpdate, bool bShow, bool b
 
 						if(getOwner() < MAX_MAJOR_CIVS)
 						{
+#ifdef NQ_CLEARING_CAMPS_GIVES_INFLUENCE_NEARBY
+#endif
 							// Completes a quest for anyone?
 							PlayerTypes eMinor;
 							for(int iMinorLoop = MAX_MAJOR_CIVS; iMinorLoop < MAX_CIV_PLAYERS; iMinorLoop++)
