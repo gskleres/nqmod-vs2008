@@ -544,7 +544,11 @@ void CvUnitCombat::ResolveMeleeCombat(const CvCombatInfo& kCombatInfo, uint uiPa
 				}
 				else
 				{
+#ifdef NQ_FIX_MOVES_THAT_CONSUME_ALL_MOVEMENT
+					pkAttacker->changeMoves(-1 * std::max(GC.getMOVE_DENOMINATOR(), pkTargetPlot->movementCost(pkAttacker, pkAttacker->plot(), pkAttacker->getMoves())));
+#else
 					pkAttacker->changeMoves(-1 * std::max(GC.getMOVE_DENOMINATOR(), pkTargetPlot->movementCost(pkAttacker, pkAttacker->plot())));
+#endif
 
 					if(!pkAttacker->canMove() || !pkAttacker->isBlitz())
 					{

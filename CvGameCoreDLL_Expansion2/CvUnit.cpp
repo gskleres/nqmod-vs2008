@@ -3650,7 +3650,11 @@ void CvUnit::move(CvPlot& targetPlot, bool bShow)
 #endif
 
 	bool bShouldDeductCost = true;
+#ifdef NQ_FIX_MOVES_THAT_CONSUME_ALL_MOVEMENT
+	int iMoveCost = targetPlot.movementCost(this, plot(), getMoves());
+#else
 	int iMoveCost = targetPlot.movementCost(this, plot());
+#endif
 #ifdef AUI_UNIT_FIX_HOVERING_EMBARK
 	if (pOldPlot && CanEverEmbark())
 	{
@@ -3718,6 +3722,13 @@ void CvUnit::move(CvPlot& targetPlot, bool bShow)
 				bShouldDeductCost = false;
 			}
 		}
+	}
+#endif
+
+#ifdef NQ_FIX_MOVES_THAT_CONSUME_ALL_MOVEMENT
+	if (iMoveCost > getMoves())
+	{
+		iMoveCost = getMoves();
 	}
 #endif
 

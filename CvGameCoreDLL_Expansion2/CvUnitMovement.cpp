@@ -48,18 +48,22 @@ void CvUnitMovement::GetCostsForMove(const CvUnit* pUnit, const CvPlot* pFromPlo
 	}
 
 	// Is a unit's movement consumed for entering rough terrain?
+#ifdef NQ_FIX_MOVES_THAT_CONSUME_ALL_MOVEMENT
+	if ((pToPlot->isRoughGround() && pUnit->IsRoughTerrainEndsTurn()) || (!(bIgnoreTerrainCost || bFasterAlongRiver) && bRiverCrossing))
+#else
 	if(pToPlot->isRoughGround() && pUnit->IsRoughTerrainEndsTurn())
+#endif
 	{
 		iRegularCost = INT_MAX;
 	}
-
 	else
 	{
+#ifndef NQ_FIX_MOVES_THAT_CONSUME_ALL_MOVEMENT
 		if(!(bIgnoreTerrainCost || bFasterAlongRiver) && bRiverCrossing)
 		{
 			iRegularCost += GC.getRIVER_EXTRA_MOVEMENT();
 		}
-
+#endif
 		iRegularCost *= iMoveDenominator;
 
 		if(pToPlot->isHills() && pUnit->isHillsDoubleMove())
@@ -73,7 +77,9 @@ void CvUnitMovement::GetCostsForMove(const CvUnit* pUnit, const CvPlot* pFromPlo
 		}
 	}
 
+#ifndef NQ_FIX_MOVES_THAT_CONSUME_ALL_MOVEMENT
 	iRegularCost = std::min(iRegularCost, (iBaseMoves * iMoveDenominator));
+#endif
 
 	if(pFromPlot->isValidRoute(pUnit) && pToPlot->isValidRoute(pUnit) && ((kUnitTeam.isBridgeBuilding() || !(pFromPlot->isRiverCrossing(directionXY(pFromPlot, pToPlot))))))
 	{
