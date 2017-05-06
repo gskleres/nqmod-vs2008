@@ -752,7 +752,19 @@ void CvPlot::verifyUnitValidPlot()
 							
 							if (pLoopUnit != NULL)
 							{
+#ifdef NQ_NEVER_PUSH_OUT_OF_MINORS_ON_PEACE
+								bool bIsOwnedByMinor = false;
+								if (isOwned())
+								{
+									if (GET_PLAYER(getOwner()).isMinorCiv())
+									{
+										bIsOwnedByMinor = true;
+									}
+								}
+								if(!isValidDomainForLocation(*pLoopUnit) || (!bIsOwnedByMinor && !(pLoopUnit->canEnterTerritory(getTeam(), false /*bIgnoreRightOfPassage*/, isCity()))))
+#else
 								if(!isValidDomainForLocation(*pLoopUnit) || !(pLoopUnit->canEnterTerritory(getTeam(), false /*bIgnoreRightOfPassage*/, isCity())))
+#endif
 								{
 									if (!pLoopUnit->jumpToNearestValidPlot())
 										pLoopUnit->kill(false);
@@ -779,7 +791,11 @@ void CvPlot::verifyUnitValidPlot()
 					{
 						if(!(pLoopUnit->isInCombat()))
 						{
+#ifdef NQ_NEVER_PUSH_OUT_OF_MINORS_ON_PEACE
+							if(pLoopUnit->getTeam() != getTeam() && !GET_PLAYER(getOwner()).isMinorCiv())
+#else
 							if(pLoopUnit->getTeam() != getTeam()) // && getTeam() == NO_TEAM)// || !GET_TEAM(getTeam()).isVassal(pLoopUnit->getTeam())))
+#endif
 							{
 								if(isVisibleEnemyUnit(pLoopUnit))
 								{

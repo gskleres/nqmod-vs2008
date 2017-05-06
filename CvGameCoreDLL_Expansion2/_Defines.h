@@ -756,7 +756,7 @@
 // units that cross rivers always lose all movement unless amphibious (broken by 3/2 movement remaining bug)
 #define NQ_FIX_MOVES_THAT_CONSUME_ALL_MOVEMENT
 // Clearing barbarian camps gives influence to all nearby city states
-#define NQ_CLEARING_CAMPS_GIVES_INFLUENCE_NEARBY
+#define NQ_NEVER_PUSH_OUT_OF_MINORS_ON_PEACE
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies
