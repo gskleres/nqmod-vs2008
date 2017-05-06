@@ -17,6 +17,12 @@
 			<Where Type="POLICY_BRANCH_AUTOCRACY" />
 		</Update>
 	</PolicyBranchTypes>
+	<Defines>
+		<Update>
+			<Where Name="SWITCH_POLICY_BRANCHES_TENETS_LOST"/>
+			<Set Value="1"/>
+		</Update>
+	</Defines>
 	
 	<!-- Center of Progress -->
 	<BuildingClasses>
