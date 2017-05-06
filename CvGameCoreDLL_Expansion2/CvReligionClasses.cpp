@@ -2500,7 +2500,11 @@ bool CvGameReligions::CheckSpawnGreatProphet(CvPlayer& kPlayer)
 	if(pSpawnCity != NULL && pSpawnCity->getOwner() == kPlayer.GetID())
 	{
 		pSpawnCity->GetCityCitizens()->DoSpawnGreatPerson(eUnit, false /*bIncrementCount*/, true);
+#ifdef NQ_SPAWN_PROPHETS_REMOVE_ONLY_REQUIRED_FAITH
+		kPlayer.ChangeFaith(-iCost);
+#else
 		kPlayer.SetFaith(0);
+#endif
 	}
 	else
 	{
@@ -2508,7 +2512,11 @@ bool CvGameReligions::CheckSpawnGreatProphet(CvPlayer& kPlayer)
 		if(pSpawnCity != NULL)
 		{
 			pSpawnCity->GetCityCitizens()->DoSpawnGreatPerson(eUnit, false /*bIncrementCount*/, true);
+#ifdef NQ_SPAWN_PROPHETS_REMOVE_ONLY_REQUIRED_FAITH
+			kPlayer.ChangeFaith(-iCost);
+#else
 			kPlayer.SetFaith(0);
+#endif
 		}
 	}
 
@@ -2767,6 +2775,13 @@ int CvPlayerReligions::GetCostNextProphet(bool bIncludeBeliefDiscounts, bool bAd
 			iCost /= 100;
 		}
 	}
+
+#ifdef NQ_SPAWN_PROPHETS_REMOVE_ONLY_REQUIRED_FAITH
+	// Make the number not be funky
+	int iDivisor = /*10*/ GC.getGOLD_PURCHASE_VISIBLE_DIVISOR();
+	iCost /= iDivisor;
+	iCost *= iDivisor;
+#endif
 
 	return iCost;
 }

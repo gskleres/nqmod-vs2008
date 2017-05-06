@@ -755,8 +755,10 @@
 #define NQ_UNIT_TURN_ENDS_ON_FINAL_ATTACK
 // units that cross rivers always lose all movement unless amphibious (broken by 3/2 movement remaining bug)
 #define NQ_FIX_MOVES_THAT_CONSUME_ALL_MOVEMENT
-// Clearing barbarian camps gives influence to all nearby city states
+// clearing barbarian camps gives influence to all nearby city states
 #define NQ_NEVER_PUSH_OUT_OF_MINORS_ON_PEACE
+// spawning prohets now reduces faith by the amount required instead of all faith
+#define NQ_SPAWN_PROPHETS_REMOVE_ONLY_REQUIRED_FAITH
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies
