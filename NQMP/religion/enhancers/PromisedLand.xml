@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2016-09-25 05:44:53 -->
 <GameData>
 
-	<!-- Religion spreads twice as fast to your cities but only 25% as fast to other cities -->
+	<!-- Religion spreads twice as fast to your cities but 75% slower to other cities -->
 	<Beliefs>
 		<Row>
 			<Type>BELIEF_PROMISED_LAND</Type>
@@ -17,7 +17,7 @@
 	<!-- localization -->
 	<Language_en_US>
 		<Row Tag="TXT_KEY_BELIEF_PROMISED_LAND">
-			<Text>Religion spreads twice as fast to your cities but only 25% as fast to other cities</Text>
+			<Text>Religion spreads twice as fast to your cities but 75% slower to other cities</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_PROMISED_LAND_SHORT">
 			<Text>Promised Land</Text>
@@ -25,7 +25,7 @@
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_BELIEF_PROMISED_LAND">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Religion spreads twice as fast to your cities but only 25% as fast to other cities</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Religion spreads twice as fast to your cities but 75% slower to other cities</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_PROMISED_LAND_SHORT">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Promised Land</Text>
@@ -33,7 +33,7 @@
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_BELIEF_PROMISED_LAND">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Religion spreads twice as fast to your cities but only 25% as fast to other cities</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Religion spreads twice as fast to your cities but 75% slower to other cities</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_PROMISED_LAND_SHORT">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Promised Land</Text>
@@ -41,7 +41,7 @@
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BELIEF_PROMISED_LAND">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Religion spreads twice as fast to your cities but only 25% as fast to other cities</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Religion spreads twice as fast to your cities but 75% slower to other cities</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_PROMISED_LAND_SHORT">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Promised Land</Text>
