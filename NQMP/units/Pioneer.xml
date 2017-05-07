@@ -7,7 +7,7 @@
 		<Row>
 			<Class>UNITCLASS_SETTLER</Class>
 			<Type>UNIT_AMERICAN_PIONEER</Type>
-			<Cost>127</Cost>
+			<!--Cost>96</Cost-->
 			<Moves>2</Moves>
 			<Capture>UNITCLASS_WORKER</Capture>
 			<CivilianAttackPriority>CIVILIAN_ATTACK_PRIORITY_HIGH_EARLY_GAME_ONLY</CivilianAttackPriority>
