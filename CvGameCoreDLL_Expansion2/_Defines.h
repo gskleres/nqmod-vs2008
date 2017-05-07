@@ -759,6 +759,8 @@
 #define NQ_NEVER_PUSH_OUT_OF_MINORS_ON_PEACE
 // spawning prohets now reduces faith by the amount required instead of all faith
 #define NQ_SPAWN_PROPHETS_REMOVE_ONLY_REQUIRED_FAITH
+// flat faith whenever a citizen is born from beliefs
+#define NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

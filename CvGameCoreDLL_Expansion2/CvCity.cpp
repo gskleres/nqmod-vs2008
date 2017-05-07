@@ -8589,6 +8589,30 @@ void CvCity::ChangeFaithPerTurnFromReligion(int iChange)
 	}
 }
 
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+//	--------------------------------------------------------------------------------
+int CvCity::GetFlatFaithOnCitizenBorn() const
+{
+	VALIDATE_OBJECT
+	int iValue = 0;
+	ReligionTypes eMajority = GetCityReligions()->GetReligiousMajority();
+	if (eMajority != NO_RELIGION)
+	{
+		const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eMajority, getOwner());
+		if (pReligion)
+		{
+			iValue = pReligion->m_Beliefs.GetFlatFaithPerCitizenBorn();
+			BeliefTypes eSecondaryPantheon = GetCityReligions()->GetSecondaryReligionPantheonBelief();
+			if (eSecondaryPantheon != NO_BELIEF)
+			{
+				iValue += GC.GetGameBeliefs()->GetEntry(eSecondaryPantheon)->GetFlatFaithPerCitizenBorn();
+			}
+		}
+	}
+	return iValue;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 int CvCity::getCultureRateModifier() const
 {
@@ -14509,6 +14533,23 @@ void CvCity::doGrowth()
 		}
 		else
 		{
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+			// first calculate any bonuses the player gets from growing a pop, then actually grow since religion may change at that point
+			int iFaith = this->GetFlatFaithOnCitizenBorn();
+			if (iFaith > 0)
+			{
+				GET_PLAYER(getOwner()).ChangeFaith(iFaith);
+				if(getOwner() == GC.getGame().getActivePlayer())
+				{
+					char text[256] = {0};
+					//float fDelay = GC.getPOST_COMBAT_TEXT_DELAY() * (1 + ((float)iDelay * 0.5f)); // 1 is added to avoid overlapping with XP text
+					sprintf_s(text, "[COLOR_WHITE]+%d[ENDCOLOR][ICON_PEACE]", iFaith);
+					GC.GetEngineUserInterface()->AddPopupText(getX(), getY(), text, 0.0);//fDelay);
+				}
+
+			}
+#endif
+
 #ifdef NQM_FAST_COMP
 			changeFood(-MAX(0, growthThreshold() - getFoodKept()));
 #else

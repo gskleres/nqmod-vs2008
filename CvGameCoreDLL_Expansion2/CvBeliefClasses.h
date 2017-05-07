@@ -58,6 +58,9 @@ public:
 	int GetProphetStrengthModifier() const;
 	int GetProphetCostModifier() const;
 	int GetMissionaryStrengthModifier() const;
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	int GetFlatFaithPerCitizenBorn() const;
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	int GetMissionaryExtraSpreads() const;
 #endif
@@ -169,6 +172,9 @@ protected:
 	int m_iProphetStrengthModifier;
 	int m_iProphetCostModifier;
 	int m_iMissionaryStrengthModifier;
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	int m_iFlatFaithPerCitizenBorn;
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	int m_iMissionaryExtraSpreads;
 #endif
@@ -372,6 +378,12 @@ public:
 	{
 		return m_iMissionaryStrengthModifier;
 	};
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	int GetFlatFaithPerCitizenBorn() const
+	{
+		return m_iFlatFaithPerCitizenBorn;
+	};
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	int GetMissionaryExtraSpreads() const
 	{
@@ -529,6 +541,9 @@ private:
 	int m_iProphetStrengthModifier;
 	int m_iProphetCostModifier;
 	int m_iMissionaryStrengthModifier;
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	int m_iFlatFaithPerCitizenBorn;
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	int m_iMissionaryExtraSpreads;
 #endif

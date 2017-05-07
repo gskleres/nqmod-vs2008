@@ -435,6 +435,10 @@ public:
 	int GetFaithPerTurnFromReligion() const;
 	void ChangeFaithPerTurnFromReligion(int iChange);
 
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	int GetFlatFaithOnCitizenBorn() const;
+#endif
+
 	int getNumWorldWonders() const;
 	void changeNumWorldWonders(int iChange);
 

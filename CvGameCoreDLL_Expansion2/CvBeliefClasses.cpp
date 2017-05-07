@@ -48,6 +48,9 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_iProphetStrengthModifier(0),
 	m_iProphetCostModifier(0),
 	m_iMissionaryStrengthModifier(0),
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	m_iFlatFaithPerCitizenBorn(0),
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads(0),
 #endif
@@ -334,6 +337,14 @@ int CvBeliefEntry::GetMissionaryStrengthModifier() const
 {
 	return m_iMissionaryStrengthModifier;
 }
+
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+/// Accessor:: flat faith gain in the empire when a citizen is born
+int CvBeliefEntry::GetFlatFaithPerCitizenBorn() const
+{
+	return m_iFlatFaithPerCitizenBorn;
+}
+#endif
 
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 /// Accessor:: missionary extra spreads
@@ -782,6 +793,9 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_iProphetStrengthModifier        = kResults.GetInt("ProphetStrengthModifier");
 	m_iProphetCostModifier            = kResults.GetInt("ProphetCostModifier");
 	m_iMissionaryStrengthModifier     = kResults.GetInt("MissionaryStrengthModifier");
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	m_iFlatFaithPerCitizenBorn        = kResults.GetInt("FlatFaithPerCitizenBorn");
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads		  = kResults.GetInt("MissionaryExtraSpreads");
 #endif
@@ -1128,6 +1142,9 @@ CvReligionBeliefs::CvReligionBeliefs(const CvReligionBeliefs& source)
 	m_iProphetStrengthModifier = source.m_iProphetStrengthModifier;
 	m_iProphetCostModifier = source.m_iProphetCostModifier;
 	m_iMissionaryStrengthModifier = source.m_iMissionaryStrengthModifier;
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	m_iFlatFaithPerCitizenBorn = source.m_iFlatFaithPerCitizenBorn;
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads = source.m_iMissionaryExtraSpreads;
 #endif
@@ -1204,6 +1221,9 @@ void CvReligionBeliefs::Reset()
 	m_iProphetStrengthModifier = 0;
 	m_iProphetCostModifier = 0;
 	m_iMissionaryStrengthModifier = 0;
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	m_iFlatFaithPerCitizenBorn = 0;
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads = 0;
 #endif
@@ -1286,6 +1306,9 @@ void CvReligionBeliefs::AddBelief(BeliefTypes eBelief)
 	m_iProphetStrengthModifier += belief->GetProphetStrengthModifier();
 	m_iProphetCostModifier += belief->GetProphetCostModifier();
 	m_iMissionaryStrengthModifier += belief->GetMissionaryStrengthModifier();
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	m_iFlatFaithPerCitizenBorn += belief->GetFlatFaithPerCitizenBorn();
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	m_iMissionaryExtraSpreads += belief->GetMissionaryExtraSpreads();
 #endif
@@ -2053,6 +2076,9 @@ void CvReligionBeliefs::Read(FDataStream& kStream)
 	kStream >> m_iProphetStrengthModifier;
 	kStream >> m_iProphetCostModifier;
 	kStream >> m_iMissionaryStrengthModifier;
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	kStream >> m_iFlatFaithPerCitizenBorn;
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	kStream >> m_iMissionaryExtraSpreads;
 #endif
@@ -2126,6 +2152,9 @@ void CvReligionBeliefs::Write(FDataStream& kStream) const
 	kStream << m_iProphetStrengthModifier;
 	kStream << m_iProphetCostModifier;
 	kStream << m_iMissionaryStrengthModifier;
+#ifdef NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+	kStream << m_iFlatFaithPerCitizenBorn;
+#endif
 #ifdef NQ_BELIEF_EXTRA_MISSIONARY_SPREADS
 	kStream << m_iMissionaryExtraSpreads;
 #endif
