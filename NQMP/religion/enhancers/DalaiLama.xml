@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2016-09-25 05:44:53 -->
 <GameData>
 
-	<!-- +8 Culture in the Empire -->
+	<!-- +7 Culture in the Empire -->
 	<Beliefs>
 		<Row>
 			<Type>BELIEF_DALAI_LAMA</Type>
@@ -15,14 +15,14 @@
 		<Row>
 			<BeliefType>BELIEF_DALAI_LAMA</BeliefType>
 			<YieldType>YIELD_CULTURE</YieldType>
-			<Yield>8</Yield>
+			<Yield>7</Yield>
 		</Row>
 	</Belief_HolyCityYieldChanges>
 
 	<!-- localization -->
 	<Language_en_US>
 		<Row Tag="TXT_KEY_BELIEF_DALAI_LAMA">
-			<Text>+8 [ICON_CULTURE] Culture in the Empire</Text>
+			<Text>+7 [ICON_CULTURE] Culture in the Empire</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DALAI_LAMA_SHORT">
 			<Text>Dalai Lama</Text>
@@ -30,7 +30,7 @@
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_BELIEF_DALAI_LAMA">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+8 [ICON_CULTURE] Culture in the Empire</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+7 [ICON_CULTURE] Culture in the Empire</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DALAI_LAMA_SHORT">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Dalai Lama</Text>
@@ -38,7 +38,7 @@
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_BELIEF_DALAI_LAMA">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+8 [ICON_CULTURE] Culture in the Empire</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+7 [ICON_CULTURE] Culture in the Empire</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DALAI_LAMA_SHORT">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Dalai Lama</Text>
@@ -46,7 +46,7 @@
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BELIEF_DALAI_LAMA">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+8 [ICON_CULTURE] Culture in the Empire</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+7 [ICON_CULTURE] Culture in the Empire</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DALAI_LAMA_SHORT">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Dalai Lama</Text>
