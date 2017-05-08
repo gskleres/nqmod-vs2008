@@ -6,25 +6,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_AESTHETICS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_AESTHETICS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Aesthetics[ENDCOLOR] improves the civilization's ability to generate [ICON_CULTURE] Culture.[NEWLINE][NEWLINE]Adopting Aesthetics allows you to earn Great Writers, Artists, and Musicians 25% faster. Unlocks building Uffizi.[NEWLINE][NEWLINE]Adopting all policies doubles both the speed at which Archaeologists are trained and the theming bonus you receive from Museums and Wonders. It also reveals Hidden Antiquity Sites and and allows the purchase of Great Writers, Artists, or Musicians with [ICON_PEACE] Faith starting in the Industrial Era. Grants 1 free Social Policy upon completing the tree.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Aesthetics[ENDCOLOR] improves the civilization's ability to generate [ICON_CULTURE] Culture.[NEWLINE][NEWLINE]Adopting Aesthetics allows you to earn Great Writers, Artists, and Musicians 25% faster. Unlocks building Uffizi.[NEWLINE][NEWLINE]Adopting all policies reveals Hidden Antiquity Sites and and allows the purchase of Great Writers, Artists, or Musicians with [ICON_PEACE] Faith starting in the Industrial Era. Grants 1 free Social Policy upon completing the tree.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_AESTHETICS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_AESTHETICS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Aesthetics[ENDCOLOR] improves the civilization's ability to generate [ICON_CULTURE] Culture.[NEWLINE][NEWLINE]Adopting Aesthetics allows you to earn Great Writers, Artists, and Musicians 25% faster. Unlocks building Uffizi.[NEWLINE][NEWLINE]Adopting all policies doubles both the speed at which Archaeologists are trained and the theming bonus you receive from Museums and Wonders. It also reveals Hidden Antiquity Sites and and allows the purchase of Great Writers, Artists, or Musicians with [ICON_PEACE] Faith starting in the Industrial Era. Grants 1 free Social Policy upon completing the tree.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Aesthetics[ENDCOLOR] improves the civilization's ability to generate [ICON_CULTURE] Culture.[NEWLINE][NEWLINE]Adopting Aesthetics allows you to earn Great Writers, Artists, and Musicians 25% faster. Unlocks building Uffizi.[NEWLINE][NEWLINE]Adopting all policies reveals Hidden Antiquity Sites and and allows the purchase of Great Writers, Artists, or Musicians with [ICON_PEACE] Faith starting in the Industrial Era. Grants 1 free Social Policy upon completing the tree.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_AESTHETICS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_AESTHETICS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Aesthetics[ENDCOLOR] improves the civilization's ability to generate [ICON_CULTURE] Culture.[NEWLINE][NEWLINE]Adopting Aesthetics allows you to earn Great Writers, Artists, and Musicians 25% faster. Unlocks building Uffizi.[NEWLINE][NEWLINE]Adopting all policies doubles both the speed at which Archaeologists are trained and the theming bonus you receive from Museums and Wonders. It also reveals Hidden Antiquity Sites and and allows the purchase of Great Writers, Artists, or Musicians with [ICON_PEACE] Faith starting in the Industrial Era. Grants 1 free Social Policy upon completing the tree.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Aesthetics[ENDCOLOR] improves the civilization's ability to generate [ICON_CULTURE] Culture.[NEWLINE][NEWLINE]Adopting Aesthetics allows you to earn Great Writers, Artists, and Musicians 25% faster. Unlocks building Uffizi.[NEWLINE][NEWLINE]Adopting all policies reveals Hidden Antiquity Sites and and allows the purchase of Great Writers, Artists, or Musicians with [ICON_PEACE] Faith starting in the Industrial Era. Grants 1 free Social Policy upon completing the tree.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_AESTHETICS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_AESTHETICS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Aesthetics[ENDCOLOR] improves the civilization's ability to generate [ICON_CULTURE] Culture.[NEWLINE][NEWLINE]Adopting Aesthetics allows you to earn Great Writers, Artists, and Musicians 25% faster. Unlocks building Uffizi.[NEWLINE][NEWLINE]Adopting all policies doubles both the speed at which Archaeologists are trained and the theming bonus you receive from Museums and Wonders. It also reveals Hidden Antiquity Sites and and allows the purchase of Great Writers, Artists, or Musicians with [ICON_PEACE] Faith starting in the Industrial Era. Grants 1 free Social Policy upon completing the tree.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Aesthetics[ENDCOLOR] improves the civilization's ability to generate [ICON_CULTURE] Culture.[NEWLINE][NEWLINE]Adopting Aesthetics allows you to earn Great Writers, Artists, and Musicians 25% faster. Unlocks building Uffizi.[NEWLINE][NEWLINE]Adopting all policies reveals Hidden Antiquity Sites and and allows the purchase of Great Writers, Artists, or Musicians with [ICON_PEACE] Faith starting in the Industrial Era. Grants 1 free Social Policy upon completing the tree.</Text>
 		</Row>
 	</Language_RU_RU>
 
@@ -35,31 +35,18 @@
 
 	<!-- Aesthetics Finisher -->
 	<!-- NOTE: tooltip is updated in opener -->
+	<Policies>
+		<Update>
+			<Set ThemingBonusMultiplier="0" />
+			<Where Type="POLICY_AESTHETICS_FINISHER" />
+		</Update>
+	</Policies>
 	<Resources>
 		<Update>
 			<Set PolicyReveal="POLICY_AESTHETICS_FINISHER" />
 			<Where Type="RESOURCE_HIDDEN_ARTIFACTS" />
 		</Update>
 	</Resources>
-	<UnitCombatInfos>
-		<Row>
-			<Type>UNITCOMBAT_ARCHAEOLOGIST</Type>
-			<Description>TXT_KEY_UNITCOMBAT_ARCHAEOLOGIST</Description>
-		</Row>
-	</UnitCombatInfos>
-	<Units>
-		<Update>
-			<Set CombatClass="UNITCOMBAT_ARCHAEOLOGIST" />
-			<Where Class="UNITCLASS_ARCHAEOLOGIST" />
-		</Update>
-	</Units>
-	<Policy_UnitCombatProductionModifiers>
-		<Row>
-			<PolicyType>POLICY_AESTHETICS_FINISHER</PolicyType>
-			<UnitCombatType>UNITCOMBAT_ARCHAEOLOGIST</UnitCombatType>
-			<ProductionModifier>100</ProductionModifier>
-		</Row>
-	</Policy_UnitCombatProductionModifiers>
 	<BuildingClasses>
 		<Row>
 			<Type>BUILDINGCLASS_GRAND_MONUMENT</Type>
@@ -87,13 +74,6 @@
 			<PortraitIndex>43</PortraitIndex>
 		</Row>
 	</Buildings>
-	<Policy_GreatWorkYieldChanges>
-		<Row>
-			<PolicyType>POLICY_AESTHETICS_FINISHER</PolicyType>
-			<YieldType>YIELD_TOURISM</YieldType>
-			<Yield>2</Yield>
-		</Row>
-	</Policy_GreatWorkYieldChanges>
 	<Language_en_US>
 		<Row Tag="TXT_KEY_BUILDING_GRAND_MONUMENT_DESC">
 			<Text>Grand Monument</Text>
@@ -103,9 +83,6 @@
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_GRAND_MONUMENT_STRATEGY">
 			<Text>The Grand Monument is your reward when you complete the Aesthetics Social Policy Tree. It grants you 1 free Social Policy.</Text>
-		</Row>
-		<Row Tag="TXT_KEY_UNITCOMBAT_ARCHAEOLOGIST">
-			<Text>Archaeologist Units</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -118,9 +95,6 @@
 		<Row Tag="TXT_KEY_BUILDING_GRAND_MONUMENT_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Grand Monument is your reward when you complete the Aesthetics Social Policy Tree. It grants you 1 free Social Policy.</Text>
 		</Row>
-		<Row Tag="TXT_KEY_UNITCOMBAT_ARCHAEOLOGIST">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Archaeologist Units</Text>
-		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_BUILDING_GRAND_MONUMENT_DESC">
@@ -132,9 +106,6 @@
 		<Row Tag="TXT_KEY_BUILDING_GRAND_MONUMENT_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The Grand Monument is your reward when you complete the Aesthetics Social Policy Tree. It grants you 1 free Social Policy.</Text>
 		</Row>
-		<Row Tag="TXT_KEY_UNITCOMBAT_ARCHAEOLOGIST">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Archaeologist Units</Text>
-		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BUILDING_GRAND_MONUMENT_DESC">
@@ -145,9 +116,6 @@
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_GRAND_MONUMENT_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The Grand Monument is your reward when you complete the Aesthetics Social Policy Tree. It grants you 1 free Social Policy.</Text>
-		</Row>
-		<Row Tag="TXT_KEY_UNITCOMBAT_ARCHAEOLOGIST">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Archaeologist Units</Text>
 		</Row>
 	</Language_RU_RU>
 	
