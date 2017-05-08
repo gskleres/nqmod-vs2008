@@ -680,8 +680,6 @@
 #define NQ_NO_FAITH_PURCHASING_SCIENTISTS
 // Game Option: Extra Religions (allows any number of religions up to max players or 8, whichever is lower)
 #define NQ_ALLOW_EXTRA_RELIGIONS
-// American Pioneer
-#define NQ_AMERICAN_PIONEER
 /// Adds a new field for minimum city yield that adjust said yield when the city is on hills (currently -1)
 #define NQM_YIELD_MIN_CITY_ON_HILLS_ADJUST
 // Sweden UA now gives flat science in the empire when a great person is born
@@ -761,6 +759,8 @@
 #define NQ_SPAWN_PROPHETS_REMOVE_ONLY_REQUIRED_FAITH
 // flat faith whenever a citizen is born from beliefs
 #define NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
+// % modifier to final unit production cost total (useful for settlers which have variable costs depending on start era)
+#define NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

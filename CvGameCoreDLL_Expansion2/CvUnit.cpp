@@ -7573,14 +7573,6 @@ bool CvUnit::found()
 	CvPlayerAI& kPlayer = GET_PLAYER(getOwner());
 	CvPlayerAI& kActivePlayer = GET_PLAYER(eActivePlayer);
 
-#ifdef NQ_AMERICAN_PIONEER
-	// When American Pioneer settles non-capital cities, a free Worker appears.
-	if (getUnitType() == (UnitTypes)GC.getInfoTypeForString("UNIT_AMERICAN_PIONEER") && kPlayer.getNumCities() > 0)
-	{
-		kPlayer.initUnit((UnitTypes)GC.getInfoTypeForString("UNIT_WORKER"), getX(), getY());
-	}
-	//TODO: maybe put this into XML as a trait for the pioneer? it seems like a unique snowflake so not sure how to/why we should make it generic...
-#endif
 	kPlayer.found(getX(), getY());
 
 	if(pPlot->isActiveVisible(false))

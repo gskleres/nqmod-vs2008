@@ -8550,6 +8550,11 @@ int CvPlayer::getProductionNeeded(UnitTypes eUnit) const
 
 	iProductionNeeded += getUnitExtraCost(eUnitClass);
 
+#ifdef NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
+	iProductionNeeded *= (100 + pkUnitEntry->GetFinalProductionCostModifier());
+	iProductionNeeded /= 100;
+#endif
+
 	return std::max(1, iProductionNeeded);
 }
 

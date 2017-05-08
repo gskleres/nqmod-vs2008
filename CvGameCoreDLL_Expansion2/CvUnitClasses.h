@@ -29,6 +29,10 @@ public:
 
 	// Accessor Functions (Non-Arrays)
 	int GetProductionCost() const;
+#ifdef NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
+	int GetFinalProductionCostModifier() const;
+#endif
+
 	int GetFaithCost() const;
 	bool IsRequiresFaithPurchaseEnabled() const;
 	bool IsPurchaseOnly() const;
@@ -161,6 +165,9 @@ public:
 private:
 
 	int m_iProductionCost;
+#ifdef NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
+	int m_iFinalProductionCostModifier;
+#endif
 	int m_iFaithCost;
 	bool m_bRequiresFaithPurchaseEnabled;
 	bool m_bPurchaseOnly;

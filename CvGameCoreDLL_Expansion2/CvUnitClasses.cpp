@@ -14,6 +14,9 @@
 /// Constructor
 CvUnitEntry::CvUnitEntry(void) :
 	m_iProductionCost(0),
+#ifdef NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
+	m_iFinalProductionCostModifier(0),
+#endif
 	m_iFaithCost(0),
 	m_bRequiresFaithPurchaseEnabled(false),
 	m_bPurchaseOnly(false),
@@ -164,6 +167,9 @@ bool CvUnitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& k
 
 	//Basic Properties
 	m_iProductionCost = kResults.GetInt("Cost");
+#ifdef NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
+	m_iFinalProductionCostModifier = kResults.GetInt("FinalProductionCostModifier");
+#endif
 	m_iFaithCost = kResults.GetInt("FaithCost");
 	m_bRequiresFaithPurchaseEnabled = kResults.GetBool("RequiresFaithPurchaseEnabled");
 	m_bPurchaseOnly = kResults.GetBool("PurchaseOnly");
@@ -438,6 +444,15 @@ int CvUnitEntry::GetProductionCost() const
 {
 	return m_iProductionCost;
 }
+
+#ifdef NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
+/// % modifier to final cost of the unit
+int CvUnitEntry::GetFinalProductionCostModifier() const
+{
+	return m_iFinalProductionCostModifier;
+}
+#endif
+
 
 /// Faith to construct the unit (as a percentage of cost of next Great Prophet)
 int CvUnitEntry::GetFaithCost() const
