@@ -761,6 +761,7 @@ void CvPlot::verifyUnitValidPlot()
 										bIsOwnedByMinor = true;
 									}
 								}
+								// may want to make an extra check here about if it's owned by minor, we can still enter territory but with ignoring right of passage
 								if(!isValidDomainForLocation(*pLoopUnit) || (!bIsOwnedByMinor && !(pLoopUnit->canEnterTerritory(getTeam(), false /*bIgnoreRightOfPassage*/, isCity()))))
 #else
 								if(!isValidDomainForLocation(*pLoopUnit) || !(pLoopUnit->canEnterTerritory(getTeam(), false /*bIgnoreRightOfPassage*/, isCity())))

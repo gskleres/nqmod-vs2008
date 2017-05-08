@@ -3477,7 +3477,7 @@ void CvPlayer::DoLiberatePlayer(PlayerTypes ePlayer, int iOldCityID)
 
 	// Move Units from player that don't belong here
 #ifdef NQ_NEVER_PUSH_OUT_OF_MINORS_ON_PEACE
-	if(pPlot->getNumUnits() > 0 && !GET_PLAYER(ePlayer).isMinorCiv())
+	if(pPlot && pPlot->getNumUnits() > 0 && !GET_PLAYER(ePlayer).isMinorCiv())
 #else
 	if(pPlot->getNumUnits() > 0)
 #endif
