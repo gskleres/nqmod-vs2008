@@ -5,16 +5,10 @@
 	<!-- Update Angkor Wat to provide a free University and 3 Culture (up from 1) -->
 	<Buildings>
 		<Update>
-			<Set FreeBuildingThisCity="BUILDINGCLASS_UNIVERSITY" PrereqTech="TECH_THEOLOGY" Cost="300" GlobalPlotCultureCostModifier="0" GlobalPlotBuyCostModifier="0" />
+			<Set FreeBuildingThisCity="BUILDINGCLASS_UNIVERSITY" PrereqTech="TECH_THEOLOGY" Cost="300" GlobalPlotCultureCostModifier="0" GlobalPlotBuyCostModifier="0" SpecialistType="NULL" GreatPeopleRateChange="0" />
 			<Where BuildingClass="BUILDINGCLASS_ANGKOR_WAT" />
 		</Update>
 	</Buildings>
-	<Building_YieldChanges>
-		<Update>
-			<Set Yield="3" />
-			<Where BuildingType="BUILDING_ANGKOR_WAT" YieldType="YIELD_CULTURE" />
-		</Update>
-	</Building_YieldChanges>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
 		<Row Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP">
