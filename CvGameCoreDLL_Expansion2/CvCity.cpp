@@ -7072,14 +7072,14 @@ void CvCity::UpdateReligion(ReligionTypes eNewMajority)
 							}
 
 #ifdef NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
-							if (iYield == YIELD_GOLD)
+							if (iYield == YIELD_GOLD || iYield == YIELD_FAITH) // and now also faith ... man this is getting ugly
 							{
 								CvBuildingEntry *pkEntry = GC.getBuildingInfo(eBuilding);
 								if (pkEntry && pkEntry->GetFaithCost() > 0 && pkEntry->IsUnlockedByBelief() && pkEntry->GetProductionCost() == -1)
 								{
-									iYieldFromBuilding += pReligion->m_Beliefs.GetFaithBuildingTourism();
+									iYieldFromBuilding += pReligion->m_Beliefs.GetFaithBuildingTourism(); // ... super ugly...
 								}
-							}
+							} // ... may Google forgive my eSoul...
 #endif
 							switch(iYield)
 							{
