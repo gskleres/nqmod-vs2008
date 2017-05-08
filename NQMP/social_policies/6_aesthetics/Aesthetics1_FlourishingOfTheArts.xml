@@ -5,7 +5,7 @@
 	<!-- Flourishing of the Arts -->
 	<Policies>
 		<Update>
-			<Set CultureWonderMultiplier="0" ExtraTourismPerGreatWork="1" CulturePerWonder="1" TourismPerWonder="1" ThemingBonusMultiplier="100" />
+			<Set CultureWonderMultiplier="0" CulturePerWonder="1" ThemingBonusMultiplier="100" />
 			<Where Type="POLICY_FLOURISHING_OF_ARTS" />
 		</Update>
 	</Policies>
@@ -19,25 +19,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age. Doubles theming bonuses in Museums and Wonders.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age. Doubles theming bonuses in Museums and Wonders.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age. Doubles theming bonuses in Museums and Wonders.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age. Doubles theming bonuses in Museums and Wonders.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age. Doubles theming bonuses in Museums and Wonders.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age. Doubles theming bonuses in Museums and Wonders.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FLOURISHING_OF_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture and +1 [ICON_TOURISM] Tourism from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age. Doubles theming bonuses in Museums and Wonders.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Flourishing of the Arts[ENDCOLOR][NEWLINE]+1 [ICON_CULTURE] Culture from every Great Work and World Wonder. The empire immediately enters a [ICON_GOLDEN_AGE] Golden Age. Doubles theming bonuses in Museums and Wonders.</Text>
 		</Row>
 	</Language_RU_RU>
 
