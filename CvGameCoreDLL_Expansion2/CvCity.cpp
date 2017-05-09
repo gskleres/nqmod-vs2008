@@ -6501,6 +6501,68 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 				m_pCityBuildings->SetBuildingGreatWork(eBuildingClass, 0, iGWindex);
 			}
 
+#ifdef NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+			// This is going to be really ugly. May Google forgive my eSoul. You should get a free great work with your first Royal Library.
+			if (eBuilding == (BuildingTypes)GC.getInfoTypeForString("BUILDING_ROYAL_LIBRARY") && !owningPlayer.GetHasEverBuiltRoyalLibrary())
+			{
+				CvGameCulture *pCulture = GC.getGame().GetGameCulture();
+				if(pCulture == NULL)
+				{
+					CvAssertMsg(pCulture != NULL, "This should never happen.");
+				}
+				else
+				{
+					// get the great work we're spawning		
+					GreatWorkSlotType eGreatWorkSlot = CvTypes::getGREAT_WORK_SLOT_LITERATURE();
+					GreatWorkClass eGreatWorkClass = (GreatWorkClass)GC.getInfoTypeForString("GREAT_WORK_LITERATURE");
+					UnitTypes eUnitType = (UnitTypes)GC.getInfoTypeForString("UNIT_WRITER");
+					GreatWorkType eGreatWorkType = NO_GREAT_WORK;
+					CvString strName;
+					CvUnitEntry* pkUnitEntry = GC.getUnitInfo(eUnitType);
+					int iNumUnitCreated = GC.getGame().getUnitCreatedCount(eUnitType);
+					int iNumNames = pkUnitEntry->GetNumUnitNames();
+					if (iNumUnitCreated < iNumNames)
+					{
+						int iNameOffset = GC.getGame().getJonRandNum(iNumNames, "Unit name selection");
+						int iI;
+						for(iI = 0; iI < iNumNames; iI++)
+						{
+							int iIndex = (iNameOffset + iI) % iNumNames;
+							strName = pkUnitEntry->GetUnitNames(iIndex);
+							if(!GC.getGame().isGreatPersonBorn(strName))
+							{
+								eGreatWorkType = pkUnitEntry->GetGreatWorks(iIndex);
+								GC.getGame().addGreatPersonBornName(strName);
+								break;
+							}
+						}
+					}
+
+					// now spawn it
+					if (eGreatWorkType != NO_GREAT_WORK)
+					{
+						owningPlayer.SetHasEverBuiltRoyalLibrary(true); // this is where it should trigger permanently
+
+						Localization::String name = Localization::Lookup(strName);
+						CvString strBuffer;
+						strBuffer.Format("%s (%s)", name.toUTF8(), pkUnitEntry->GetDescription());
+						int iGWindex = GC.getGame().GetGameCulture()->CreateGreatWork(eGreatWorkType, eGreatWorkClass, m_eOwner, owningPlayer.GetCurrentEra(), strBuffer);
+						m_pCityBuildings->SetBuildingGreatWork(eBuildingClass, 0, iGWindex);
+
+						// --- notification ---
+						CvNotifications* pNotifications = owningPlayer.GetNotifications();
+						if(pNotifications)
+						{
+							Localization::String localizedText;
+							localizedText = Localization::Lookup("TXT_KEY_MISC_WONDER_COMPLETED");
+							localizedText << owningPlayer.getNameKey() << pCulture->GetGreatWorkName(iGWindex);
+							pNotifications->Add(NOTIFICATION_GREAT_WORK_COMPLETED_ACTIVE_PLAYER, localizedText.toUTF8(), localizedText.toUTF8(), getX(), getY(), iGWindex, owningPlayer.GetID());
+						}
+					}
+				}
+			}
+#endif
+
 			// Tech boost for science buildings in capital
 			if(owningPlayer.GetPlayerTraits()->IsTechBoostFromCapitalScienceBuildings())
 			{

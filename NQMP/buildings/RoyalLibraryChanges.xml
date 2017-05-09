@@ -14,25 +14,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP">
-			<Text>Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units.</Text>
+			<Text>Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units. If this is the first Royal Library you've ever built, it comes with a Great Work of Writing.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units. If this is the first Royal Library you've ever built, it comes with a Great Work of Writing.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units. If this is the first Royal Library you've ever built, it comes with a Great Work of Writing.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_ROYAL_LIBRARY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Unique Assyrian Library replacement. +1 [ICON_RESEARCH] Science for every 2 [ICON_CITIZEN] Citizens in this City. Also has a slot for a Great Work of Writing which, when filled, gives 15 extra XP to trained Units. If this is the first Royal Library you've ever built, it comes with a Great Work of Writing.</Text>
 		</Row>
 	</Language_RU_RU>
 

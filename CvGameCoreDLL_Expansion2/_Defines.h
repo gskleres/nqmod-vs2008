@@ -763,6 +763,8 @@
 #define NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
 // defense from Citizens as a stat for buildings
 #define NQ_BUILDING_DEFENSE_FROM_CITIZENS
+// free great work in this building if built in capital
+#define NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

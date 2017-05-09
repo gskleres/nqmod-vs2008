@@ -1038,6 +1038,11 @@ public:
 	void setStartTime(uint uiStartTime);
 	uint getTotalTimePlayed() const;
 
+#ifdef NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+	void SetHasEverBuiltRoyalLibrary(bool bValue);
+	bool GetHasEverBuiltRoyalLibrary();
+#endif
+
 	bool isMinorCiv() const;
 	bool IsHasBetrayedMinorCiv() const;
 	void SetHasBetrayedMinorCiv(bool bValue);
@@ -1991,6 +1996,9 @@ protected:
 
 	FAutoVariable<uint, CvPlayer> m_uiStartTime;  // XXX save these?
 
+#ifdef NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+	FAutoVariable<bool, CvPlayer> m_bHasEverBuiltRoyalLibrary;
+#endif
 	FAutoVariable<bool, CvPlayer> m_bHasBetrayedMinorCiv;
 	FAutoVariable<bool, CvPlayer> m_bAlive;
 	FAutoVariable<bool, CvPlayer> m_bEverAlive;

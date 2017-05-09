@@ -360,6 +360,9 @@ CvPlayer::CvPlayer() :
 	, m_iNumPolicies("CvPlayer::m_iNumPolicies", m_syncArchive)
 	, m_iNumGreatPeople("CvPlayer::m_iNumGreatPeople", m_syncArchive)
 	, m_uiStartTime("CvPlayer::m_uiStartTime", m_syncArchive)  // XXX save these?
+#ifdef NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+	, m_bHasEverBuiltRoyalLibrary("CvPlayer::m_bHasEverBuiltRoyalLibrary", m_syncArchive)
+#endif
 	, m_bHasBetrayedMinorCiv("CvPlayer::m_bHasBetrayedMinorCiv", m_syncArchive)
 	, m_bAlive("CvPlayer::m_bAlive", m_syncArchive)
 	, m_bEverAlive("CvPlayer::m_bEverAlive", m_syncArchive)
@@ -1053,6 +1056,9 @@ void CvPlayer::uninit()
 	m_iMaxEffectiveCities = 1;
 	m_iLastSliceMoved = 0;
 
+#ifdef NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+	m_bHasEverBuiltRoyalLibrary = false;
+#endif
 	m_bHasBetrayedMinorCiv = false;
 	m_bAlive = false;
 	m_bEverAlive = false;
@@ -17401,6 +17407,19 @@ bool CvPlayer::isMinorCiv() const
 	return CvPreGame::isMinorCiv(m_eID);
 }
 
+#ifdef NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+//	--------------------------------------------------------------------------------
+void CvPlayer::SetHasEverBuiltRoyalLibrary(bool bValue)
+{
+	m_bHasEverBuiltRoyalLibrary = bValue;
+}
+
+//	--------------------------------------------------------------------------------
+bool CvPlayer::GetHasEverBuiltRoyalLibrary()
+{
+	return m_bHasEverBuiltRoyalLibrary;
+}
+#endif
 
 //	--------------------------------------------------------------------------------
 /// Has this player betrayed a Minor Civ he was bullying by declaring war on him?
@@ -24456,6 +24475,9 @@ void CvPlayer::Read(FDataStream& kStream)
 	}
 
 	kStream >> m_iLastSliceMoved;
+#ifdef NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+	kStream >> m_bHasEverBuiltRoyalLibrary;
+#endif
 	kStream >> m_bHasBetrayedMinorCiv;
 	kStream >> m_bAlive;
 	kStream >> m_bEverAlive;
@@ -24985,6 +25007,9 @@ void CvPlayer::Write(FDataStream& kStream) const
 	kStream << m_iMaxEffectiveCities;
 	kStream << m_iLastSliceMoved;
 
+#ifdef NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+	kStream << m_bHasEverBuiltRoyalLibrary;
+#endif
 	kStream << m_bHasBetrayedMinorCiv;
 	kStream << m_bAlive;
 	kStream << m_bEverAlive;
