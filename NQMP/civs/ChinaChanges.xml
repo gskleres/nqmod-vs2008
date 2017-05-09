@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2016-09-14 20:53:27 -->
 <GameData>
 	
-	<!-- UA no longer provides +50% GG points. Instead, now any unit that starts it turn on or adjacent to a GG gets +1 movement for the turn. -->
+	<!-- UA no longer provides +50% GG points or extra combat strength. Instead, now any unit that starts it turn on or adjacent to a GG gets +1 movement for the turn. -->
 	<Traits>
 		<Update>
 			<Set GreatGeneralRateModifier="0" />
