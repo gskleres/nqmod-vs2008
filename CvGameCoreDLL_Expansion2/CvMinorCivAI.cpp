@@ -8980,6 +8980,17 @@ void CvMinorCivAI::ChangeNumGoldGifted(PlayerTypes ePlayer, int iChange)
 /// Major Civ gifted some Gold to this Minor
 void CvMinorCivAI::DoGoldGiftFromMajor(PlayerTypes ePlayer, int iGold)
 {
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	PlayerTypes iAlly = GetAlly();
+	if (iAlly != NO_PLAYER && iAlly != ePlayer)
+	{
+		int iNumTurns = GET_PLAYER(iAlly).GetNumTurnsBeforeMinorAlliesRefuseBribes();
+		if (iNumTurns > 0 && GetAlliedTurns() >= iNumTurns)
+		{
+			return;
+		}
+	}
+#endif
 	if(GET_PLAYER(ePlayer).GetTreasury()->GetGold() >= iGold)
 	{
 		int iFriendshipChange = GetFriendshipFromGoldGift(ePlayer, iGold);

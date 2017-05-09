@@ -904,6 +904,9 @@ protected:
 	static int lIsTraitBonusReligiousBelief(lua_State* L);
 	static int lGetHappinessFromLuxury(lua_State* L);
 	static int lIsAbleToAnnexCityStates(lua_State* L);
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	static int lGetNumTurnsBeforeMinorAlliesRefuseBribes(lua_State* L);
+#endif
 	static int lIsUsingMayaCalendar(lua_State* L);
 	static int lGetMayaCalendarString(lua_State* L);
 	static int lGetMayaCalendarLongString(lua_State* L);

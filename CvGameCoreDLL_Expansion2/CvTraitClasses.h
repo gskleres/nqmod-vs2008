@@ -76,6 +76,9 @@ public:
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 	int GetSciencePerGreatPersonBorn() const;
 #endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	int GetNumTurnsBeforeMinorAlliesRefuseBribes() const;
+#endif
 	int GetCultureFromKills() const;
 	int GetFaithFromKills() const;
 	int GetCityCultureBonus() const;
@@ -214,6 +217,9 @@ protected:
 	int m_iPlotCultureCostModifier;
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 	int m_iSciencePerGreatPersonBorn;
+#endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	int m_iNumTurnsBeforeMinorAlliesRefuseBribes;
 #endif
 	int m_iCultureFromKills;
 	int m_iFaithFromKills;
@@ -475,6 +481,12 @@ public:
 	int GetSciencePerGreatPersonBorn() const
 	{
 		return m_iSciencePerGreatPersonBorn;
+	}
+#endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	int GetNumTurnsBeforeMinorAlliesRefuseBribes() const
+	{
+		return m_iNumTurnsBeforeMinorAlliesRefuseBribes;
 	}
 #endif
 	int GetCultureFromKills() const
@@ -903,6 +915,9 @@ private:
 	int m_iPlotCultureCostModifier;
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 	int m_iSciencePerGreatPersonBorn;
+#endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	int m_iNumTurnsBeforeMinorAlliesRefuseBribes;
 #endif
 	int m_iCultureFromKills;
 	int m_iFaithFromKills;

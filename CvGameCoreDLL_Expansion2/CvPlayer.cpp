@@ -16264,6 +16264,14 @@ bool CvPlayer::IsAbleToAnnexCityStates() const
 	return false;
 }
 
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+//	--------------------------------------------------------------------------------
+int CvPlayer::GetNumTurnsBeforeMinorAlliesRefuseBribes() const
+{
+	return GetPlayerTraits()->GetNumTurnsBeforeMinorAlliesRefuseBribes();
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 int CvPlayer::GetAbleToAnnexCityStatesCount() const
 {

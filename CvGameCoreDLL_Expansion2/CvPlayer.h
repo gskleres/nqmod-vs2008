@@ -988,6 +988,10 @@ public:
 	int GetAbleToAnnexCityStatesCount() const;
 	void ChangeAbleToAnnexCityStatesCount(int iChange);
 
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	int GetNumTurnsBeforeMinorAlliesRefuseBribes() const;
+#endif
+
 	int getCultureBombTimer() const;
 	void setCultureBombTimer(int iNewValue);
 	void changeCultureBombTimer(int iChange);

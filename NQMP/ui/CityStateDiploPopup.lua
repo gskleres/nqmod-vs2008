@@ -246,7 +246,20 @@ function OnDisplay()
 	local iAlly = pPlayer:GetAlly();
 	local bHideIcon = true;
 	local bHideText = true;
+	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	local bRefusesBribes = false;
+	local bIsDiplomaticMarriage = false;
+	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	if (iAlly ~= nil and iAlly ~= -1) then
+		-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+		local iNumAlliedTurnsRequired = Players[iAlly]:GetNumTurnsBeforeMinorAlliesRefuseBribes();
+		if (iNumAlliedTurnsRequired > 0 and pPlayer:GetAlliedTurns() >= iNumAlliedTurnsRequired) then
+			bIsDiplomaticMarriage = true;
+			if (iAlly ~= iActivePlayer) then
+				bRefusesBribes = true;
+			end
+		end
+		-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 		if (iAlly ~= iActivePlayer) then
 			if (Teams[Players[iAlly]:GetTeam()]:IsHasMet(Game.GetActiveTeam())) then
 				bHideIcon = false;
@@ -262,8 +275,28 @@ function OnDisplay()
 		bHideText = false;
 	end
 	local strAlly = GetAllyText(iActivePlayer, iPlayer);
+	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	if (bIsDiplomaticMarriage) then
+		if (bRefusesBribes) then
+			bHideText = false;
+			strAlly = "    [COLOR_NEGATIVE_TEXT]";
+		end
+		strAlly = strAlly .. " (" .. Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_DIPLOMATIC_MARRIAGE") .. ")";
+		if (bRefusesBribes) then
+			strAlly = strAlly .. "[ENDCOLOR]";
+		end
+	end
+	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	Controls.AllyText:SetText(strAlly);
 	local strAllyTT = GetAllyToolTip(iActivePlayer, iPlayer);
+	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	if (bIsDiplomaticMarriage) then
+		strAllyTT = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_WE_ARE_MARRIED") .. "[NEWLINE][NEWLINE]" .. strAllyTT;
+	end
+	if (bRefusesBribes) then
+		strAllyTT = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_REFUSE_BRIBE_REASON", Locale.ConvertTextKey(Players[iAlly]:GetCivilizationShortDescriptionKey())) .. "[NEWLINE][NEWLINE]" .. strAllyTT;
+	end
+	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	Controls.AllyIcon:SetToolTipString(strAllyTT);
 	Controls.AllyIconBG:SetToolTipString(strAllyTT);
 	Controls.AllyIconShadow:SetToolTipString(strAllyTT);
@@ -767,6 +800,19 @@ function PopulateGiftChoices()
 	local iActivePlayer = Game.GetActivePlayer();
 	local pActivePlayer = Players[iActivePlayer];
 	
+	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	local bRefusesBribes = false;
+	local iPlayerAlly = pPlayer:GetAlly();
+	if (iPlayerAlly ~= nil and iPlayerAlly ~= -1) then
+		local iNumAlliedTurnsRequired = Players[iPlayerAlly]:GetNumTurnsBeforeMinorAlliesRefuseBribes();
+		if (iNumAlliedTurnsRequired > 0 and  pPlayer:GetAlliedTurns() >= iNumAlliedTurnsRequired) then
+			if (iPlayerAlly ~= iActivePlayer) then
+				bRefusesBribes = true;
+			end
+		end
+	end
+	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+
 	-- Small Gold
 	local iNumGoldPlayerHas = pActivePlayer:GetGold();
 	
@@ -774,7 +820,13 @@ function PopulateGiftChoices()
 	iLowestGold = iGold;
 	iFriendshipAmount = pPlayer:GetFriendshipFromGoldGift(iActivePlayer, iGold);
 	local buttonText = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_GOLD_GIFT_AMOUNT", iGold, iFriendshipAmount);
-	if (iNumGoldPlayerHas < iGold) then
+	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	if (bRefusesBribes) then
+		buttonText = "[COLOR_WARNING_TEXT]" .. Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_REFUSES_BRIBES") .. "[ENDCOLOR]";
+		Controls.SmallGiftAnim:SetHide(true);
+	elseif (iNumGoldPlayerHas < iGold) then
+	--if (iNumGoldPlayerHas < iGold) then
+	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 		buttonText = "[COLOR_WARNING_TEXT]" .. buttonText .. "[ENDCOLOR]";
 		Controls.SmallGiftAnim:SetHide(true);
 	else
@@ -787,7 +839,13 @@ function PopulateGiftChoices()
 	iGold = iGoldGiftMedium;
 	iFriendshipAmount = pPlayer:GetFriendshipFromGoldGift(iActivePlayer, iGold);
 	local buttonText = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_GOLD_GIFT_AMOUNT", iGold, iFriendshipAmount);
-	if (iNumGoldPlayerHas < iGold) then
+	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	if (bRefusesBribes) then
+		buttonText = "";
+		Controls.SmallGiftAnim:SetHide(true);
+	elseif (iNumGoldPlayerHas < iGold) then
+	--if (iNumGoldPlayerHas < iGold) then
+	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 		buttonText = "[COLOR_WARNING_TEXT]" .. buttonText .. "[ENDCOLOR]";
 		Controls.MediumGiftAnim:SetHide(true);
 	else
@@ -800,7 +858,13 @@ function PopulateGiftChoices()
 	iGold = iGoldGiftLarge;
 	iFriendshipAmount = pPlayer:GetFriendshipFromGoldGift(iActivePlayer, iGold);
 	local buttonText = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_GOLD_GIFT_AMOUNT", iGold, iFriendshipAmount);
-	if (iNumGoldPlayerHas < iGold) then
+	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	if (bRefusesBribes) then
+		buttonText = "";
+		Controls.SmallGiftAnim:SetHide(true);
+	elseif (iNumGoldPlayerHas < iGold) then
+	--if (iNumGoldPlayerHas < iGold) then
+	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 		buttonText = "[COLOR_WARNING_TEXT]" .. buttonText .. "[ENDCOLOR]";
 		Controls.LargeGiftAnim:SetHide(true);
 	else
@@ -846,6 +910,11 @@ function PopulateGiftChoices()
 	local strInfoTT = Locale.ConvertTextKey("TXT_KEY_POP_CSTATE_GOLD_STATUS_TT", iFriendsAmount, iAlliesAmount, iFriendship);
 	strInfoTT = strInfoTT .. "[NEWLINE][NEWLINE]";
 	strInfoTT = strInfoTT .. Locale.ConvertTextKey("TXT_KEY_POP_CSTATE_GOLD_TT");
+	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	if (bRefusesBribes) then
+		strInfoTT = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_REFUSE_BRIBE_REASON", Locale.ConvertTextKey(Players[iPlayerAlly]:GetCivilizationShortDescriptionKey())) .. "[NEWLINE][NEWLINE]" .. strInfoTT;
+	end
+	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	Controls.SmallGiftButton:SetToolTipString(strInfoTT);
 	Controls.MediumGiftButton:SetToolTipString(strInfoTT);
 	Controls.LargeGiftButton:SetToolTipString(strInfoTT);

@@ -765,6 +765,8 @@
 #define NQ_BUILDING_DEFENSE_FROM_CITIZENS
 // free great work in this building if built in capital
 #define NQ_CHEAT_FIRST_ROYAL_LIBRARY_COMES_WITH_GREAT_WORK
+// trait that makes long term city state allies refuse bribes
+#define	NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

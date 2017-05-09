@@ -12894,7 +12894,21 @@ void CvDiplomacyAI::DoContactMinorCivs()
 					//antonjs: consider: different behavior to CS that have been bullied by others, bullied by rival, etc.
 
 					// Do we want it enough?
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+					bool bAcceptsBribes = true;
+					PlayerTypes iAlly = pMinorCivAI->GetAlly();
+					if (iAlly != NO_PLAYER && iAlly != eID)
+					{
+						int iNumTurns = GET_PLAYER(iAlly).GetNumTurnsBeforeMinorAlliesRefuseBribes();
+						if (iNumTurns > 0 && pMinorCivAI->GetAlliedTurns() >= iNumTurns)
+						{
+							bAcceptsBribes = false;
+						}
+					}
+					if(iValue > GC.getMC_GIFT_WEIGHT_THRESHOLD() && bAcceptsBribes)
+#else
 					if(iValue > GC.getMC_GIFT_WEIGHT_THRESHOLD())
+#endif
 					{
 						veMinorsToGiveGold.push_back(sGiftInfo, iValue);
 						bWantsToGiveGoldToThisMinor = true;

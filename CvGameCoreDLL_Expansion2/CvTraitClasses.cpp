@@ -43,6 +43,9 @@ CvTraitEntry::CvTraitEntry() :
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 	m_iSciencePerGreatPersonBorn(0),
 #endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	m_iNumTurnsBeforeMinorAlliesRefuseBribes(0),
+#endif
 	m_iCultureFromKills(0),
 	m_iFaithFromKills(0),
 	m_iCityCultureBonus(0),
@@ -305,6 +308,14 @@ int CvTraitEntry::GetPlotCultureCostModifier() const
 int CvTraitEntry::GetSciencePerGreatPersonBorn() const
 {
 	return m_iSciencePerGreatPersonBorn;
+}
+#endif
+
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+/// Accessor:: num turns before minor allies refuse bribes
+int CvTraitEntry::GetNumTurnsBeforeMinorAlliesRefuseBribes() const
+{
+	return m_iNumTurnsBeforeMinorAlliesRefuseBribes;
 }
 #endif
 
@@ -1011,6 +1022,9 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 	m_iSciencePerGreatPersonBorn			= kResults.GetInt("SciencePerGreatPersonBorn");
 #endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	m_iNumTurnsBeforeMinorAlliesRefuseBribes = kResults.GetInt("NumTurnsBeforeMinorAlliesRefuseBribes");
+#endif
 	m_iCultureFromKills						= kResults.GetInt("CultureFromKills");
 	m_iFaithFromKills						= kResults.GetInt("FaithFromKills");
 	m_iCityCultureBonus						= kResults.GetInt("CityCultureBonus");
@@ -1520,6 +1534,9 @@ void CvPlayerTraits::InitPlayerTraits()
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 			m_iSciencePerGreatPersonBorn += trait->GetSciencePerGreatPersonBorn();
 #endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+			m_iNumTurnsBeforeMinorAlliesRefuseBribes += trait->GetNumTurnsBeforeMinorAlliesRefuseBribes();
+#endif
 			m_iCultureFromKills += trait->GetCultureFromKills();
 			m_iFaithFromKills += trait->GetFaithFromKills();
 			m_iCityCultureBonus += trait->GetCityCultureBonus();
@@ -1821,6 +1838,9 @@ void CvPlayerTraits::Reset()
 	m_iPlotCultureCostModifier = 0;
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 	m_iSciencePerGreatPersonBorn = 0;
+#endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	m_iNumTurnsBeforeMinorAlliesRefuseBribes = 0;
 #endif
 	m_iCultureFromKills = 0;
 	m_iFaithFromKills = 0;
@@ -2833,6 +2853,9 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 	kStream >> m_iSciencePerGreatPersonBorn;
 #endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	kStream >> m_iNumTurnsBeforeMinorAlliesRefuseBribes;
+#endif
 	kStream >> m_iCultureFromKills;
 	if (uiVersion >= 19)
 	{
@@ -3230,6 +3253,9 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << m_iPlotCultureCostModifier;
 #ifdef NQ_SCIENCE_PER_GREAT_PERSON_BORN
 	kStream << m_iSciencePerGreatPersonBorn;
+#endif
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	kStream << m_iNumTurnsBeforeMinorAlliesRefuseBribes;
 #endif
 	kStream << m_iCultureFromKills;
 	kStream << m_iFaithFromKills;

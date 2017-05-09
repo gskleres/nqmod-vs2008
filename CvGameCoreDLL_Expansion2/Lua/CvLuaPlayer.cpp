@@ -907,6 +907,9 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 	Method(IsTraitBonusReligiousBelief);
 	Method(GetHappinessFromLuxury);
 	Method(IsAbleToAnnexCityStates);
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+	Method(GetNumTurnsBeforeMinorAlliesRefuseBribes);
+#endif
 	Method(IsUsingMayaCalendar);
 	Method(GetMayaCalendarString);
 	Method(GetMayaCalendarLongString);
@@ -9389,6 +9392,17 @@ int CvLuaPlayer::lIsAbleToAnnexCityStates(lua_State* L)
 	}
 	return 1;
 }
+#ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
+//------------------------------------------------------------------------------
+int CvLuaPlayer::lGetNumTurnsBeforeMinorAlliesRefuseBribes(lua_State* L)
+{
+	CvPlayerAI* pkPlayer = GetInstance(L);
+
+	const int iResult = pkPlayer->GetNumTurnsBeforeMinorAlliesRefuseBribes();
+	lua_pushinteger(L, iResult);
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 int CvLuaPlayer::lIsUsingMayaCalendar(lua_State* L)
 {
