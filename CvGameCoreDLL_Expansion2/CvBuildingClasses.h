@@ -176,6 +176,9 @@ public:
 	bool IsNearbyMountainRequired() const;
 	bool IsAllowsRangeStrike() const;
 	int GetDefenseModifier() const;
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	int GetDefensePerCitizen() const;
+#endif
 	int GetGlobalDefenseModifier() const;
 	int GetExtraCityHitPoints() const;
 	int GetMinorFriendshipChange() const;
@@ -403,6 +406,9 @@ private:
 	bool m_bNearbyMountainRequired;
 	bool m_bAllowsRangeStrike;
 	int m_iDefenseModifier;
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	int m_iDefensePerCitizen;
+#endif
 	int m_iGlobalDefenseModifier;
 	int m_iExtraCityHitPoints;
 	int m_iMissionType;
@@ -682,6 +688,10 @@ public:
 
 	int GetBuildingDefense() const;
 	void ChangeBuildingDefense(int iChange);
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	int GetBuildingDefensePerCitizen() const;
+	void ChangeBuildingDefensePerCitizen(int iChange);
+#endif
 	int GetBuildingDefenseMod() const;
 	void ChangeBuildingDefenseMod(int iChange);
 
@@ -698,6 +708,9 @@ private:
 	int m_iNumBuildings;
 	int m_iBuildingProductionModifier;
 	int m_iBuildingDefense;
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	int m_iBuildingDefensePerCitizen;
+#endif
 	int m_iBuildingDefenseMod;
 	int m_iMissionaryExtraSpreads;
 	int m_iLandmarksTourismPercent;

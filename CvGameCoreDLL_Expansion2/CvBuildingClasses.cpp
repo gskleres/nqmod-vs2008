@@ -100,6 +100,9 @@ CvBuildingEntry::CvBuildingEntry(void):
 	m_bNearbyMountainRequired(false),
 	m_bAllowsRangeStrike(false),
 	m_iDefenseModifier(0),
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	m_iDefensePerCitizen(0),
+#endif
 	m_iGlobalDefenseModifier(0),
 	m_iExtraCityHitPoints(0),
 	m_iMissionType(NO_MISSION),
@@ -374,6 +377,9 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 	m_bNearbyMountainRequired = kResults.GetInt("NearbyMountainRequired");
 	m_bAllowsRangeStrike = kResults.GetInt("AllowsRangeStrike");
 	m_iDefenseModifier = kResults.GetInt("Defense");
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	m_iDefensePerCitizen = kResults.GetInt("DefensePerCitizen");
+#endif
 	m_iGlobalDefenseModifier = kResults.GetInt("GlobalDefenseMod");
 	m_iExtraCityHitPoints = kResults.GetInt("ExtraCityHitPoints");
 	m_iMinorFriendshipChange = kResults.GetInt("MinorFriendshipChange");
@@ -1290,6 +1296,15 @@ int CvBuildingEntry::GetDefenseModifier() const
 {
 	return m_iDefenseModifier;
 }
+
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+/// defense per population point in a city
+int CvBuildingEntry::GetDefensePerCitizen() const
+{
+	return m_iDefensePerCitizen;
+}
+#endif
+
 
 /// Modifier to every City's Building defense
 int CvBuildingEntry::GetGlobalDefenseModifier() const
@@ -2250,6 +2265,9 @@ CvCityBuildings::CvCityBuildings():
 	m_iNumBuildings(0),
 	m_iBuildingProductionModifier(0),
 	m_iBuildingDefense(0),
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	m_iBuildingDefensePerCitizen(0),
+#endif
 	m_iBuildingDefenseMod(0),
 	m_iMissionaryExtraSpreads(0),
 	m_iLandmarksTourismPercent(0),
@@ -2330,6 +2348,9 @@ void CvCityBuildings::Reset()
 	m_iNumBuildings = 0;
 	m_iBuildingProductionModifier = 0;
 	m_iBuildingDefense = 0;
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	m_iBuildingDefensePerCitizen = 0;
+#endif
 	m_iBuildingDefenseMod = 0;
 	m_iMissionaryExtraSpreads = 0;
 	m_iLandmarksTourismPercent = 0;
@@ -2360,6 +2381,9 @@ void CvCityBuildings::Read(FDataStream& kStream)
 	kStream >> m_iNumBuildings;
 	kStream >> m_iBuildingProductionModifier;
 	kStream >> m_iBuildingDefense;
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	kStream >> m_iBuildingDefensePerCitizen;
+#endif
 	kStream >> m_iBuildingDefenseMod;
 	kStream >> m_iMissionaryExtraSpreads;
 	kStream >> m_iLandmarksTourismPercent;
@@ -2390,6 +2414,9 @@ void CvCityBuildings::Write(FDataStream& kStream)
 	kStream << m_iNumBuildings;
 	kStream << m_iBuildingProductionModifier;
 	kStream << m_iBuildingDefense;
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	kStream << m_iBuildingDefensePerCitizen;
+#endif
 	kStream << m_iBuildingDefenseMod;
 	kStream << m_iMissionaryExtraSpreads;
 	kStream << m_iLandmarksTourismPercent;
@@ -3673,6 +3700,27 @@ void CvCityBuildings::ChangeBuildingDefense(int iChange)
 		m_pCity->plot()->plotAction(PUF_makeInfoBarDirty);
 	}
 }
+
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+/// Accessor: Get current defense boost from buildings
+int CvCityBuildings::GetBuildingDefensePerCitizen() const
+{
+	return m_iBuildingDefensePerCitizen;
+}
+
+/// Accessor: Change current defense boost from buildings
+void CvCityBuildings::ChangeBuildingDefensePerCitizen(int iChange)
+{
+	if(iChange != 0)
+	{
+		m_iBuildingDefensePerCitizen = (m_iBuildingDefensePerCitizen + iChange);
+		CvAssert(GetBuildingDefensePerCitizen() >= 0);
+
+		m_pCity->plot()->plotAction(PUF_makeInfoBarDirty);
+	}
+}
+#endif
+
 
 /// Accessor: Get current defense boost Mod from buildings
 int CvCityBuildings::GetBuildingDefenseMod() const

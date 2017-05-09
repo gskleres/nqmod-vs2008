@@ -1727,6 +1727,10 @@ void CvCity::doTurn()
 			iHitsHealed++;
 		}
 		int iBuildingDefense = m_pCityBuildings->GetBuildingDefense();
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+		// add in defense per citizen here
+		iBuildingDefense += (m_pCityBuildings->GetBuildingDefensePerCitizen() * getPopulation());
+#endif
 		iBuildingDefense *= (100 + m_pCityBuildings->GetBuildingDefenseMod());
 		iBuildingDefense /= 100;
 		iHitsHealed += iBuildingDefense / 500;
@@ -6879,6 +6883,9 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 	if(!bObsolete)
 	{
 		m_pCityBuildings->ChangeBuildingDefense(pBuildingInfo->GetDefenseModifier() * iChange);
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+		m_pCityBuildings->ChangeBuildingDefensePerCitizen(pBuildingInfo->GetDefensePerCitizen() * iChange);
+#endif
 
 		owningTeam.changeBuildingClassCount(eBuildingClass, iChange);
 		owningPlayer.changeBuildingClassCount(eBuildingClass, iChange);
@@ -11466,6 +11473,10 @@ void CvCity::updateStrengthValue()
 
 	// Building Defense
 	int iBuildingDefense = m_pCityBuildings->GetBuildingDefense();
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+	// add in defense per citizen here
+	iBuildingDefense += (m_pCityBuildings->GetBuildingDefensePerCitizen() * getPopulation());
+#endif
 
 	iBuildingDefense *= (100 + m_pCityBuildings->GetBuildingDefenseMod());
 	iBuildingDefense /= 100;
@@ -11533,6 +11544,10 @@ int CvCity::getStrengthValue(bool bForRangeStrike) const
 		int iValue = m_iStrengthValue;
 
 		iValue -= m_pCityBuildings->GetBuildingDefense();
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+		// subtract defense per citizen here as well (city strikes don't use defense values)
+		iValue -= (m_pCityBuildings->GetBuildingDefensePerCitizen() * getPopulation());
+#endif
 
 		CvAssertMsg(iValue > 0, "City strength should always be greater than zero. Please show Jon this and send your last 5 autosaves.");
 

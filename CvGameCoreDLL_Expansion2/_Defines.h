@@ -761,6 +761,8 @@
 #define NQ_FLAT_FAITH_PER_CITIZEN_BORN_FROM_BELIEFS
 // % modifier to final unit production cost total (useful for settlers which have variable costs depending on start era)
 #define NQ_UNIT_FINAL_PRODUCTION_COST_MODIFIER
+// defense from Citizens as a stat for buildings
+#define NQ_BUILDING_DEFENSE_FROM_CITIZENS
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

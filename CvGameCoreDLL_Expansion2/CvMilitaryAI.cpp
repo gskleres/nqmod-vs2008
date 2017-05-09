@@ -939,7 +939,11 @@ bool CvMilitaryAI::BuyEmergencyBuilding(CvCity* pCity)
 		if(pkBuildingInfo)
 		{
 			// Make sure this building can be built now
+#ifdef NQ_BUILDING_DEFENSE_FROM_CITIZENS
+			if(pCity->canConstruct(eBldg) && (pkBuildingInfo->GetDefenseModifier() > 0 || pkBuildingInfo->GetDefensePerCitizen() > 0))
+#else
 			if(pCity->canConstruct(eBldg) && pkBuildingInfo->GetDefenseModifier() > 0)
+#endif
 			{
 				if(pCity->IsCanPurchase(/*bTestPurchaseCost*/ true, /*bTestTrainable*/ true, NO_UNIT, eBldg, NO_PROJECT, YIELD_GOLD))
 				{
