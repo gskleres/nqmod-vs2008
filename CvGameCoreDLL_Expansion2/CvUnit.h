@@ -295,6 +295,9 @@ public:
 	bool canChangeAdmiralPortAt(const CvPlot* pPlot, int iX, int iY) const;
 	bool changeAdmiralPort(int iX, int iY);
 
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	bool IsPlunderBlockedByOpposingTrait() const;
+#endif
 	bool canPlunderTradeRoute(const CvPlot* pPlot, bool bOnlyTestVisibility = false) const;
 	bool plunderTradeRoute();
 

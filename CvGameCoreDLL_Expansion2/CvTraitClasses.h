@@ -142,7 +142,9 @@ public:
 	bool IsTechBoostFromCapitalScienceBuildings() const;
 	bool IsStaysAliveZeroCities() const;
 	bool IsFaithFromUnimprovedForest() const;
-
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	bool IsSeaTradeRoutesArePlunderImmune() const;
+#endif
 	// NQMP GJS - New France UA begin
 	bool IsEarnsGreatPersonOnSlotOrGuild() const;
 	bool IsHasBuiltWritersGuild() const;
@@ -286,6 +288,9 @@ protected:
 	bool m_bTechBoostFromCapitalScienceBuildings;
 	bool m_bStaysAliveZeroCities;
 	bool m_bFaithFromUnimprovedForest;
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	bool m_bSeaTradeRoutesArePlunderImmune;
+#endif
 
 	// NQMP GJS - New France UA begin
 	bool m_bEarnsGreatPersonOnSlotOrGuild;
@@ -750,6 +755,12 @@ public:
 	{
 		return m_bFaithFromUnimprovedForest;
 	};
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	bool IsSeaTradeRoutesArePlunderImmune() const
+	{
+		return m_bSeaTradeRoutesArePlunderImmune;
+	};
+#endif
 	bool IsBonusReligiousBelief() const
 	{
 		return m_bBonusReligiousBelief;
@@ -978,6 +989,9 @@ private:
 	bool m_bTechBoostFromCapitalScienceBuildings;
 	bool m_bStaysAliveZeroCities;
 	bool m_bFaithFromUnimprovedForest;
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	bool m_bSeaTradeRoutesArePlunderImmune;
+#endif
 
 	// NQMP GJS - New France UA begin
 	bool m_bEarnsGreatPersonOnSlotOrGuild;

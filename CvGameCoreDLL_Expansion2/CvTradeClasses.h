@@ -172,6 +172,9 @@ public:
 	int GetIndexFromID (int iID);
 	PlayerTypes GetOwnerFromID (int iID);
 	PlayerTypes GetDestFromID (int iID);
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	DomainTypes GetDomainFromID (int iID);
+#endif
 	
 	int GetIndexFromUnitID(int iUnitID, PlayerTypes eOwner);
 	bool IsUnitIDUsed (int iUnitID);

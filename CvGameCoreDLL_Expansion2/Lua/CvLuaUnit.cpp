@@ -486,6 +486,9 @@ void CvLuaUnit::PushMethods(lua_State* L, int t)
 	Method(IsLargerCivThan);
 
 	Method(IsRangedSupportFire);
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	Method(IsPlunderBlockedByOpposingTrait);
+#endif
 }
 //------------------------------------------------------------------------------
 const char* CvLuaUnit::GetTypeName()
@@ -4591,7 +4594,8 @@ int CvLuaUnit::lIsLargerCivThan(lua_State* L)
 
 	lua_pushboolean(L, bResult);
 	return 1;
-}//------------------------------------------------------------------------------
+}
+//------------------------------------------------------------------------------
 //bool IsRangedSupportFire();
 int CvLuaUnit::lIsRangedSupportFire(lua_State* L)
 {
@@ -4601,3 +4605,15 @@ int CvLuaUnit::lIsRangedSupportFire(lua_State* L)
 	lua_pushboolean(L, bResult);
 	return 1;
 }
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+//------------------------------------------------------------------------------
+//bool IsPlunderBlockedByOpposingTrait();
+int CvLuaUnit::lIsPlunderBlockedByOpposingTrait(lua_State* L)
+{
+	CvUnit* pkUnit = GetInstance(L);
+	const bool bResult = pkUnit->IsPlunderBlockedByOpposingTrait();
+
+	lua_pushboolean(L, bResult);
+	return 1;
+}
+#endif

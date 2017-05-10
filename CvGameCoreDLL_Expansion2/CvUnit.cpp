@@ -6732,6 +6732,32 @@ bool CvUnit::changeAdmiralPort(int iX, int iY)
 	return true;
 }
 
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+bool CvUnit::IsPlunderBlockedByOpposingTrait() const
+{
+	CvPlot* pPlot = plot();
+	if (pPlot != NULL && GET_PLAYER(m_eOwner).GetTrade()->ContainsOpposingPlayerTradeUnit(pPlot))
+	{
+		std::vector<int> aiTradeUnitsAtPlot;
+		aiTradeUnitsAtPlot = GET_PLAYER(m_eOwner).GetTrade()->GetOpposingTradeUnitsAtPlot(pPlot, true);
+		if (aiTradeUnitsAtPlot.size() > 0)
+		{
+			PlayerTypes eTradeUnitOwner = GC.getGame().GetGameTrade()->GetOwnerFromID(aiTradeUnitsAtPlot[0]);
+			if (eTradeUnitOwner != NO_PLAYER)
+			{
+				DomainTypes eDomain = GC.getGame().GetGameTrade()->GetDomainFromID(aiTradeUnitsAtPlot[0]);
+				if (eDomain == DOMAIN_SEA && GET_PLAYER(eTradeUnitOwner).GetPlayerTraits()->IsSeaTradeRoutesArePlunderImmune())
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 bool CvUnit::canPlunderTradeRoute(const CvPlot* pPlot, bool bOnlyTestVisibility) const
 {
@@ -6773,6 +6799,15 @@ bool CvUnit::canPlunderTradeRoute(const CvPlot* pPlot, bool bOnlyTestVisibility)
 			{
 				return false;
 			}
+
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+			DomainTypes eDomain = GC.getGame().GetGameTrade()->GetDomainFromID(aiTradeUnitsAtPlot[0]);
+			if (eDomain == DOMAIN_SEA && GET_PLAYER(eTradeUnitOwner).GetPlayerTraits()->IsSeaTradeRoutesArePlunderImmune())
+			{
+				return false;
+			}
+#endif
+
 		}
 
 		return true;

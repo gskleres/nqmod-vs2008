@@ -105,6 +105,9 @@ CvTraitEntry::CvTraitEntry() :
 	m_bTechBoostFromCapitalScienceBuildings(false),
 	m_bStaysAliveZeroCities(false),
 	m_bFaithFromUnimprovedForest(false),
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	m_bSeaTradeRoutesArePlunderImmune(false),
+#endif
 
 	// NQMP GJS - New France UA begin
 	m_bEarnsGreatPersonOnSlotOrGuild(false),
@@ -680,6 +683,14 @@ bool CvTraitEntry::IsFaithFromUnimprovedForest() const
 	return m_bFaithFromUnimprovedForest;
 }
 
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+/// Accessor: does this civ have naval trade units that are immune to plundering?
+bool CvTraitEntry::IsSeaTradeRoutesArePlunderImmune() const
+{
+	return m_bSeaTradeRoutesArePlunderImmune;
+}
+#endif
+
 // NQMP GJS - New France UA begin
 // Accessor: does this civ get free cultural Great People from Guilds and Wonders with Great Works Slots?
 bool CvTraitEntry::IsEarnsGreatPersonOnSlotOrGuild() const
@@ -1125,6 +1136,9 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 	m_bTechBoostFromCapitalScienceBuildings = kResults.GetBool("TechBoostFromCapitalScienceBuildings");
 	m_bStaysAliveZeroCities = kResults.GetBool("StaysAliveZeroCities");
 	m_bFaithFromUnimprovedForest = kResults.GetBool("FaithFromUnimprovedForest");
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	m_bSeaTradeRoutesArePlunderImmune = kResults.GetBool("SeaTradeRoutesArePlunderImmune");
+#endif
 	m_bEarnsGreatPersonOnSlotOrGuild = kResults.GetBool("EarnsGreatPersonOnSlotOrGuild"); // NQMP GJS - New France UA
 	m_bBonusReligiousBelief = kResults.GetBool("BonusReligiousBelief");
 	m_bAbleToAnnexCityStates = kResults.GetBool("AbleToAnnexCityStates");
@@ -1627,6 +1641,12 @@ void CvPlayerTraits::InitPlayerTraits()
 			{
 				m_bFaithFromUnimprovedForest = true;
 			}
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+			if(trait->IsSeaTradeRoutesArePlunderImmune())
+			{
+				m_bSeaTradeRoutesArePlunderImmune = true;
+			}
+#endif
 			// NQMP GJS - New France UA begin
 			if(trait->IsEarnsGreatPersonOnSlotOrGuild())
 			{
@@ -1899,6 +1919,9 @@ void CvPlayerTraits::Reset()
 	m_bTechBoostFromCapitalScienceBuildings = false;
 	m_bStaysAliveZeroCities = false;
 	m_bFaithFromUnimprovedForest = false;
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	m_bSeaTradeRoutesArePlunderImmune = false;
+#endif
 	
 	// NQMP GJS - New France UA begin
 	m_bEarnsGreatPersonOnSlotOrGuild = false;
@@ -3048,6 +3071,9 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 	kStream >> m_bStaysAliveZeroCities;
 
 	kStream >> m_bFaithFromUnimprovedForest;
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	kStream >> m_bSeaTradeRoutesArePlunderImmune;
+#endif
 
 	// NQMP GJS - New France UA begin
 	kStream >> m_bEarnsGreatPersonOnSlotOrGuild;
@@ -3315,6 +3341,9 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 	kStream << m_bTechBoostFromCapitalScienceBuildings;
 	kStream << m_bStaysAliveZeroCities;
 	kStream << m_bFaithFromUnimprovedForest;
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	kStream << m_bSeaTradeRoutesArePlunderImmune;
+#endif
 
 	// NQMP GJS - New France UA begin
 	kStream << m_bEarnsGreatPersonOnSlotOrGuild;

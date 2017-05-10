@@ -1481,6 +1481,21 @@ PlayerTypes CvGameTrade::GetDestFromID (int iID)
 	return m_aTradeConnections[iIndex].m_eDestOwner;
 }
 
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+//	--------------------------------------------------------------------------------
+/// GetDomainFromID
+DomainTypes CvGameTrade::GetDomainFromID (int iID)
+{
+	int iIndex = GetIndexFromID(iID);
+	if (iIndex < -1)
+	{
+		return NO_DOMAIN;
+	}
+
+	return m_aTradeConnections[iIndex].m_eDomain;
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 /// GetIndexFromUnitID
 #ifdef AUI_CONSTIFY

@@ -495,6 +495,9 @@ protected:
 	static int lIsLargerCivThan(lua_State* L);
 
 	static int lIsRangedSupportFire(lua_State* L);
+#ifdef NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+	static int lIsPlunderBlockedByOpposingTrait(lua_State* L);
+#endif
 };
 
 

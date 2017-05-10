@@ -1519,7 +1519,20 @@ function TipHandler( control )
 				end
 				
 				strDisabledString = strDisabledString .. Locale.ConvertTextKey("TXT_KEY_MISSION_CULTURE_BOMB_DISABLED_COOLDOWN", pActivePlayer:GetCultureBombTimer());
-				
+			-- begin NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+			-- if this is a plunder mission and we are attacking carthage and it's a cargo ship, show different text
+			elseif (action.Type == "MISSION_PLUNDER_TRADE_ROUTE") then
+				if (bFirstEntry) then
+					bFirstEntry = false;
+				elseif (not bFirstEntry) then
+					strDisabledString = strDisabledString .. "[NEWLINE][NEWLINE]";
+				end
+				if (unit:IsPlunderBlockedByOpposingTrait()) then
+					strDisabledString = strDisabledString .. Locale.ConvertTextKey("TXT_KEY_MISSION_PLUNDER_TRADE_ROUTE_DISABLED_BY_OPPOSING_TRAIT_HELP");
+				else
+					strDisabledString = strDisabledString .. Locale.ConvertTextKey(action.DisabledHelp);
+				end
+			-- end NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
 			elseif (action.DisabledHelp and action.DisabledHelp ~= "") then
 				-- Add spacing for all entries after the first
 				if (bFirstEntry) then
