@@ -5,7 +5,7 @@
 	<!-- Goddess of Love: +12 Faith (on Quick Speed) when a new Citizen is born. -->
 	<Beliefs>
 		<Update>
-			<Set MinPopulation="0" HappinessPerCity="0" FlatFaithPerCitizenBorn="12" />
+			<Set MinPopulation="0" HappinessPerCity="0" FlatFaithPerCitizenBorn="18" />
 			<Where Type="BELIEF_GODDESS_LOVE" />
 		</Update>
 	</Beliefs>
