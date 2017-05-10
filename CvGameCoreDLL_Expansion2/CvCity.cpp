@@ -14615,6 +14615,8 @@ void CvCity::doGrowth()
 			int iFaith = this->GetFlatFaithOnCitizenBorn();
 			if (iFaith > 0)
 			{
+				iFaith *= GC.getGame().getGameSpeedInfo().getTrainPercent();
+				iFaith /= 100;
 				GET_PLAYER(getOwner()).ChangeFaith(iFaith);
 				if(getOwner() == GC.getGame().getActivePlayer())
 				{
