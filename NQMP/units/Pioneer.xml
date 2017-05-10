@@ -9,7 +9,7 @@
 			<Type>UNIT_AMERICAN_PIONEER</Type>
 			<FinalProductionCostModifier>-25</FinalProductionCostModifier>
 			<Moves>3</Moves>
-			<Combat>7</Combat>
+			<Combat>5</Combat>
 			<Capture>UNITCLASS_WORKER</Capture>
 			<CivilianAttackPriority>CIVILIAN_ATTACK_PRIORITY_HIGH_EARLY_GAME_ONLY</CivilianAttackPriority>
 			<HurryCostModifier>20</HurryCostModifier>
@@ -35,6 +35,10 @@
 		<Row>
 			<UnitType>UNIT_AMERICAN_PIONEER</UnitType>
 			<PromotionType>PROMOTION_IGNORE_TERRAIN_COST</PromotionType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_AMERICAN_PIONEER</UnitType>
+			<PromotionType>PROMOTION_ONLY_DEFENSIVE</PromotionType>
 		</Row>
 	</Unit_FreePromotions>
 	<Unit_AITypes>
