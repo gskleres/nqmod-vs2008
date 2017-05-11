@@ -509,6 +509,10 @@ public:
 
 	void DoGoldGiftFromMajor(PlayerTypes ePlayer, int iGold);
 	int GetFriendshipFromGoldGift(PlayerTypes eMajor, int iGold);
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	void DoFaithGiftFromMajor(PlayerTypes ePlayer, int iFaith);
+	int GetFriendshipFromFaithGift(PlayerTypes eMajor, int iFaith);
+#endif
 
 	bool CanMajorGiftTileImprovement(PlayerTypes eMajor);
 	bool IsLackingGiftableTileImprovementAtPlot(PlayerTypes eMajor, int iPlotX, int iPlotY);

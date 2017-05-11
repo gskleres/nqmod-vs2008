@@ -427,6 +427,9 @@ public:
 	void DoUnresearchedTechBonusFromKill(UnitTypes eKilledUnitType, int iX, int iY, int &iNumBonuses);
 	void ReportYieldFromKill(YieldTypes eYield, int iValue, int iX, int iY, int iDelay);
 
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	bool CanFaithGiftMinors();
+#endif
 #ifdef NQ_ALLOW_RELIGION_ONE_SHOTS 
 	void DoReligionOneShots(ReligionTypes eReligion);
 #endif

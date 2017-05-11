@@ -793,8 +793,12 @@ Controls.FindOnMapButton:RegisterCallback( Mouse.eLClick, OnFindOnMapButtonClick
 local iGoldGiftLarge = GameDefines["MINOR_GOLD_GIFT_LARGE"];
 local iGoldGiftMedium = GameDefines["MINOR_GOLD_GIFT_MEDIUM"];
 local iGoldGiftSmall = GameDefines["MINOR_GOLD_GIFT_SMALL"];
+-- begin NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+local iFaithGift = GameDefines["MINOR_FAITH_GIFT"];
+-- end NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
 
-function PopulateGiftChoices()	
+function PopulateGiftChoices()
+	
 	local pPlayer = Players[g_iMinorCivID];
 	
 	local iActivePlayer = Game.GetActivePlayer();
@@ -873,6 +877,21 @@ function PopulateGiftChoices()
 	Controls.LargeGift:SetText(buttonText);
 	SetButtonSize(Controls.LargeGift, Controls.LargeGiftButton, Controls.LargeGiftAnim, Controls.LargeGiftButtonHL);
 	
+	-- begin NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	-- Faith
+	iFaith = iFaithGift;
+	iFriendshipAmount = pPlayer:GetFriendshipFromFaithGift(iActivePlayer, iFaith);
+	local buttonText = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_FAITH_GIFT_AMOUNT", iFaith, iFriendshipAmount);
+	if (pActivePlayer:GetFaith() < iFaith or not pActivePlayer:CanFaithGiftMinors()) then
+		buttonText = "[COLOR_WARNING_TEXT]" .. buttonText .. "[ENDCOLOR]";
+		Controls.FaithGiftAnim:SetHide(true);
+	else
+		Controls.FaithGiftAnim:SetHide(false);
+	end
+	Controls.FaithGift:SetText(buttonText);
+	SetButtonSize(Controls.FaithGift, Controls.FaithGiftButton, Controls.FaithGiftAnim, Controls.FaithGiftButtonHL);
+	-- end NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	
 	-- Unit
 	local iInfluence = pPlayer:GetFriendshipFromUnitGift(iActivePlayer, false, true);
 	local iTravelTurns = GameDefines.MINOR_UNIT_GIFT_TRAVEL_TURNS;
@@ -908,16 +927,49 @@ function PopulateGiftChoices()
 	local iAlliesAmount = GameDefines["FRIENDSHIP_THRESHOLD_ALLIES"];
     local iFriendship = pPlayer:GetMinorCivFriendshipWithMajor(iActivePlayer);
 	local strInfoTT = Locale.ConvertTextKey("TXT_KEY_POP_CSTATE_GOLD_STATUS_TT", iFriendsAmount, iAlliesAmount, iFriendship);
-	strInfoTT = strInfoTT .. "[NEWLINE][NEWLINE]";
-	strInfoTT = strInfoTT .. Locale.ConvertTextKey("TXT_KEY_POP_CSTATE_GOLD_TT");
+	
+	-- begin NQ_FIX_CITY_STATE_GIFT_TOOLTIPS
+	-- we get ride of these 2 lines so that the tooltip isn't cluttered with (only semi-accurate) extraneous info
+	--strInfoTT = strInfoTT .. "[NEWLINE][NEWLINE]";
+	--strInfoTT = strInfoTT .. Locale.ConvertTextKey("TXT_KEY_POP_CSTATE_GOLD_TT");
+	-- end NQ_FIX_CITY_STATE_GIFT_TOOLTIPS
+
 	-- begin NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	if (bRefusesBribes) then
 		strInfoTT = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_REFUSE_BRIBE_REASON", Locale.ConvertTextKey(Players[iPlayerAlly]:GetCivilizationShortDescriptionKey())) .. "[NEWLINE][NEWLINE]" .. strInfoTT;
 	end
 	-- end NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
-	Controls.SmallGiftButton:SetToolTipString(strInfoTT);
-	Controls.MediumGiftButton:SetToolTipString(strInfoTT);
-	Controls.LargeGiftButton:SetToolTipString(strInfoTT);
+
+	-- begin NQ_FIX_CITY_STATE_GIFT_TOOLTIPS
+	local strSmallGiftButtonTT = strInfoTT;
+	if (iNumGoldPlayerHas < iGoldGiftSmall) then
+		strSmallGiftButtonTT = "[COLOR_NEGATIVE_TEXT]" .. Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_NOT_ENOUGH_GOLD") .. "[ENDCOLOR][NEWLINE][NEWLINE]" .. strSmallGiftButtonTT;
+	end
+	Controls.SmallGiftButton:SetToolTipString(strSmallGiftButtonTT);
+
+	local strMediumGiftButtonTT = strInfoTT;
+	if (iNumGoldPlayerHas < iGoldGiftMedium) then
+		strMediumGiftButtonTT = "[COLOR_NEGATIVE_TEXT]" .. Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_NOT_ENOUGH_GOLD") .. "[ENDCOLOR][NEWLINE][NEWLINE]" .. strMediumGiftButtonTT;
+	end
+	Controls.MediumGiftButton:SetToolTipString(strMediumGiftButtonTT);
+
+	local strLargeGiftButtonTT = strInfoTT;
+	if (iNumGoldPlayerHas < iGoldGiftLarge) then
+		strLargeGiftButtonTT = "[COLOR_NEGATIVE_TEXT]" .. Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_NOT_ENOUGH_GOLD") .. "[ENDCOLOR][NEWLINE][NEWLINE]" .. strLargeGiftButtonTT;
+	end
+	Controls.LargeGiftButton:SetToolTipString(strLargeGiftButtonTT);
+	-- end NQ_FIX_CITY_STATE_GIFT_TOOLTIPS
+
+	-- begin NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	local strFaithButtonTT = strInfoTT;
+	if (pActivePlayer:GetFaith() < iFaith) then
+		strFaithButtonTT = "[COLOR_NEGATIVE_TEXT]" .. Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH") .. "[ENDCOLOR][NEWLINE][NEWLINE]" .. strFaithButtonTT;
+	end
+	if (not pActivePlayer:CanFaithGiftMinors()) then
+		strFaithButtonTT = "[COLOR_NEGATIVE_TEXT]" .. Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_CANNOT_FAITH_GIFT_REASON") .. "[ENDCOLOR][NEWLINE][NEWLINE]" .. strFaithButtonTT;
+	end
+	Controls.FaithGiftButton:SetToolTipString(strFaithButtonTT);
+	-- end NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
 	
 	UpdateButtonStack();
 end
@@ -963,6 +1015,20 @@ function OnBigGold ()
 	end
 end
 Controls.LargeGiftButton:RegisterCallback( Mouse.eLClick, OnBigGold );
+
+-- begin NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+function OnFaithGift ()
+	local iActivePlayer = Game.GetActivePlayer();
+	local pActivePlayer = Players[iActivePlayer];
+	
+	if (pActivePlayer:GetFaith() >= iFaithGift) then
+		Game.DoMinorGoldGift(g_iMinorCivID, iFaithGift + 100000); -- hack!!! see C++
+		m_iLastAction = kiGiftedGold; -- this is fine because the text is the same for gold and faith
+		OnCloseGive();
+	end
+end
+Controls.FaithGiftButton:RegisterCallback( Mouse.eLClick, OnFaithGift );
+-- end NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
 
 ----------------------------------------------------------------
 -- Gift Unit

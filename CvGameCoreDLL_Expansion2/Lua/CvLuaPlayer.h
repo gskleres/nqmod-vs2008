@@ -269,6 +269,9 @@ protected:
 	static int lGetFaithPerTurnFromCities(lua_State* L);
 	static int lGetFaithPerTurnFromMinorCivs(lua_State* L);
 	static int lGetFaithPerTurnFromReligion(lua_State* L);
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	static int lCanFaithGiftMinors(lua_State* L);
+#endif
 	static int lHasCreatedPantheon(lua_State* L);
 	static int lGetBeliefInPantheon(lua_State* L);
 	static int lCanCreatePantheon(lua_State* L);
@@ -577,6 +580,9 @@ protected:
 	static int lGetTurnsSinceThreatenedByBarbarians(lua_State* L); // DEPRECATED, use lGetTurnsSinceThreatenedAnnouncement instead
 	static int lGetTurnsSinceThreatenedAnnouncement(lua_State* L);
 	static int lGetFriendshipFromGoldGift(lua_State* L);
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	static int lGetFriendshipFromFaithGift(lua_State* L);
+#endif
 	static int lGetMinorCivFavoriteMajor(lua_State* L);
 	static int lGetMinorCivScienceFriendshipBonus(lua_State* L);
 	static int lGetMinorCivCultureFriendshipBonus(lua_State* L); // DEPRECATED

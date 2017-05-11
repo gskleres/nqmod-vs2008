@@ -11166,6 +11166,23 @@ void CvPlayer::ReportYieldFromKill(YieldTypes eYield, int iValue, int iX, int iY
 	}
 }
 
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+bool CvPlayer::CanFaithGiftMinors()
+{
+	ReligionTypes eReligion = GC.getGame().GetGameReligions()->GetReligionCreatedByPlayer(GetID());
+	if (eReligion != NO_RELIGION)
+	{
+		const CvReligion* pReligion = GC.getGame().GetGameReligions()->GetReligion(eReligion, NO_PLAYER);
+		if (pReligion && pReligion->m_Beliefs.IsAllowsFaithGiftsToMinors())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+#endif
+
 #ifdef NQ_ALLOW_RELIGION_ONE_SHOTS 
 void CvPlayer::DoReligionOneShots(ReligionTypes eReligion)
 {
@@ -11196,6 +11213,14 @@ void CvPlayer::DoReligionOneShots(ReligionTypes eReligion)
 		// minimum mounted is chariot archer
 		UnitTypes eBestMountedUnit = (UnitTypes)getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_CHARIOT_ARCHER"));
 		int iBestMountedScore = GC.getUnitInfo(eBestMountedUnit)->GetProductionCost();
+		
+		// minimum ranged is archer
+		UnitTypes eBestRangedUnit = (UnitTypes)getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_ARCHER"));
+		int iBestRangedScore = GC.getUnitInfo(eBestRangedUnit)->GetProductionCost();
+
+		// minimum siege is catapult
+		UnitTypes eBestSiegeUnit = (UnitTypes)getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_CATAPULT"));
+		int iBestSiegeScore = GC.getUnitInfo(eBestSiegeUnit)->GetProductionCost();
 
 		// minimum melee is warrior
 		UnitTypes eBestMeleeUnit = (UnitTypes)getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_WARRIOR"));
@@ -11234,6 +11259,22 @@ void CvPlayer::DoReligionOneShots(ReligionTypes eReligion)
 						eBestMountedUnit = eLoopUnit;
 					}
 				}
+				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_ARCHER"))
+				{
+					if (pkUnitInfo->GetProductionCost() > iBestRangedScore)
+					{
+						iBestRangedScore = pkUnitInfo->GetProductionCost();
+						eBestRangedUnit = eLoopUnit;
+					}
+				}
+				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_SIEGE"))
+				{
+					if (pkUnitInfo->GetProductionCost() > iBestSiegeScore)
+					{
+						iBestSiegeScore = pkUnitInfo->GetProductionCost();
+						eBestSiegeUnit = eLoopUnit;
+					}
+				}
 				if ((UnitCombatTypes)pkUnitInfo->GetUnitCombatType() == (UnitCombatTypes)GC.getInfoTypeForString("UNITCOMBAT_MELEE"))
 				{
 					if (pkUnitInfo->GetProductionCost() > iBestMeleeScore)
@@ -11255,14 +11296,28 @@ void CvPlayer::DoReligionOneShots(ReligionTypes eReligion)
 			addFreeUnit(eBestMountedUnit);
 		}
 
-		// 4 melee
-		if (eBestMountedUnit)
+		// 2 ranged
+		if (eBestRangedUnit)
+		{
+			addFreeUnit(eBestRangedUnit);
+			addFreeUnit(eBestRangedUnit);
+		}
+
+		// 2 siege
+		if (eBestSiegeUnit)
+		{
+			addFreeUnit(eBestSiegeUnit);
+			addFreeUnit(eBestSiegeUnit);
+		}
+
+		// no longer gives any melee
+		/*if (eBestMeleeUnit)
 		{
 			addFreeUnit(eBestMeleeUnit);
 			addFreeUnit(eBestMeleeUnit);
 			addFreeUnit(eBestMeleeUnit);
 			addFreeUnit(eBestMeleeUnit);
-		}
+		}*/
 	}
 #endif
 

@@ -9010,6 +9010,7 @@ void CvMinorCivAI::DoGoldGiftFromMajor(PlayerTypes ePlayer, int iGold)
 	GC.GetEngineUserInterface()->setDirty(GameData_DIRTY_BIT, true);
 }
 
+
 /// How many friendship points gained from a gift of Gold
 int CvMinorCivAI::GetFriendshipFromGoldGift(PlayerTypes eMajor, int iGold)
 {
@@ -9061,6 +9062,56 @@ int CvMinorCivAI::GetFriendshipFromGoldGift(PlayerTypes eMajor, int iGold)
 
 	return iFriendship;
 }
+
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+/// Major Civ gifted some Faith to this Minor
+void CvMinorCivAI::DoFaithGiftFromMajor(PlayerTypes ePlayer, int iFaith)
+{
+	if(GET_PLAYER(ePlayer).GetFaith() >= iFaith)
+	{
+		int iFriendshipChange = GetFriendshipFromFaithGift(ePlayer, iFaith);
+
+		// GJS: not sure what this part here does, but I am going to skip it for now.
+		//if(iFriendshipChange > 0)
+			//GET_PLAYER(ePlayer).GetTreasury()->LogExpenditure(GetPlayer()->GetMinorCivAI()->GetNamesListAsString(0), iGold,4);
+
+		GET_PLAYER(ePlayer).ChangeFaith(-iFaith);
+		
+		// GJS: we're not gifting gold, so it's fine to skip this.
+		//ChangeNumGoldGifted(ePlayer, iGold);
+		
+		ChangeFriendshipWithMajor(ePlayer, iFriendshipChange);
+
+		// GJS: this is no longer applicable, but might want to do somethign with this in the future: 
+		// In case we had a Gold Gift quest active, complete it now
+		//DoTestActiveQuestsForPlayer(ePlayer, /*bTestComplete*/ true, /*bTestObsolete*/ false, MINOR_CIV_QUEST_GIVE_GOLD);
+	}
+
+	GC.GetEngineUserInterface()->setDirty(GameData_DIRTY_BIT, true);
+}
+
+/// How much influence do you get from a faith gift of a specific amount?
+int CvMinorCivAI::GetFriendshipFromFaithGift(PlayerTypes eMajor, int iFaith)
+{
+	int iFriendship = iFaith * 24; // hard-coded to be 24% of faith spent, which becomes 30% on quick speed
+	iFriendship /= 100;
+
+	// Game Speed Mod
+	iFriendship *= GC.getGame().getGameSpeedInfo().getGoldGiftMod(); // on quick speed this multiplies it by 125%
+	iFriendship /= 100;
+
+	// Friendship gained should always be positive
+	iFriendship = max(iFriendship, /*5*/ GC.getMINOR_CIV_GOLD_GIFT_MINIMUM_FRIENDSHIP_REWARD());
+
+	// Round the number so it's pretty
+	int iVisibleDivisor = /*5*/ GC.getMINOR_CIV_GOLD_GIFT_VISIBLE_DIVISOR();
+	iFriendship /= iVisibleDivisor;
+	iFriendship *= iVisibleDivisor;
+
+	return iFriendship;
+}
+#endif
+
 
 // Can this major gift us a tile improvement?
 bool CvMinorCivAI::CanMajorGiftTileImprovement(PlayerTypes eMajor)

@@ -19,6 +19,18 @@
 		<Row Tag="TXT_KEY_POPUP_MINOR_DIPLOMATIC_MARRIAGE">
 			<Text>Diplomatic Marriage</Text>
 		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_FAITH_GIFT_AMOUNT">
+			<Text>{1_NumGold} [ICON_PEACE] Faith - will earn {2_NumFriendship} [ICON_INFLUENCE] Influence</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_CANNOT_FAITH_GIFT_REASON">
+			<Text>Your Religion does not have the ability to gift [ICON_PEACE] Faith to City States.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_GOLD">
+			<Text>You do not have enough [ICON_GOLD] Gold to select this option.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH">
+			<Text>You do not have enough [ICON_PEACE] Faith to select this option.</Text>
+		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_POPUP_MINOR_BULLY_GOLD_AMOUNT_GAIN_INFLUENCE">
@@ -35,6 +47,18 @@
 		</Row>
 		<Row Tag="TXT_KEY_POPUP_MINOR_DIPLOMATIC_MARRIAGE">
 			<Text>Diplomatic Marriage</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_FAITH_GIFT_AMOUNT">
+			<Text>{1_NumGold} [ICON_PEACE] Faith - will earn {2_NumFriendship} [ICON_INFLUENCE] Influence</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_CANNOT_FAITH_GIFT_REASON">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Your Religion does not have the ability to gift [ICON_PEACE] Faith to City States.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_GOLD">
+			<Text>You do not have enough [ICON_GOLD] Gold to select this option.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH">
+			<Text>You do not have enough [ICON_PEACE] Faith to select this option.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -53,6 +77,18 @@
 		<Row Tag="TXT_KEY_POPUP_MINOR_DIPLOMATIC_MARRIAGE">
 			<Text>Diplomatic Marriage</Text>
 		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_FAITH_GIFT_AMOUNT">
+			<Text>{1_NumGold} [ICON_PEACE] Faith - will earn {2_NumFriendship} [ICON_INFLUENCE] Influence</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_CANNOT_FAITH_GIFT_REASON">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Your Religion does not have the ability to gift [ICON_PEACE] Faith to City States.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_GOLD">
+			<Text>You do not have enough [ICON_GOLD] Gold to select this option.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH">
+			<Text>You do not have enough [ICON_PEACE] Faith to select this option.</Text>
+		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_POPUP_MINOR_BULLY_GOLD_AMOUNT_GAIN_INFLUENCE">
@@ -69,6 +105,18 @@
 		</Row>
 		<Row Tag="TXT_KEY_POPUP_MINOR_DIPLOMATIC_MARRIAGE">
 			<Text>Diplomatic Marriage</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_FAITH_GIFT_AMOUNT">
+			<Text>{1_NumGold} [ICON_PEACE] Faith - will earn {2_NumFriendship} [ICON_INFLUENCE] Influence</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_CANNOT_FAITH_GIFT_REASON">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Your Religion does not have the ability to gift [ICON_PEACE] Faith to City States.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_GOLD">
+			<Text>You do not have enough [ICON_GOLD] Gold to select this option.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH">
+			<Text>You do not have enough [ICON_PEACE] Faith to select this option.</Text>
 		</Row>
 	</Language_RU_RU>
 	

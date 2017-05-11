@@ -801,6 +801,8 @@
 #define NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 // prevent friendly minors declaring war on you in support of their ally, policy toggle
 #define NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
+// allow gifting faith to minors via beliefs
+#define NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies

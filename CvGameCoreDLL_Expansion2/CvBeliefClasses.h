@@ -104,6 +104,9 @@ public:
 	bool DeusVult() const;
 #endif
 	bool FaithPurchaseAllGreatPeople() const;
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	bool AllowsFaithGiftsToMinors() const;
+#endif
 
 	EraTypes GetObsoleteEra() const;
 	ResourceTypes GetResourceRevealed() const;
@@ -218,6 +221,9 @@ protected:
 	bool m_bDeusVult;
 #endif
 	bool m_bFaithPurchaseAllGreatPeople;
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	bool m_bAllowsFaithGiftsToMinors;
+#endif
 
 	EraTypes m_eObsoleteEra;
 	ResourceTypes m_eResourceRevealed;
@@ -520,6 +526,9 @@ public:
 	bool IsDeusVult() const;
 #endif
 	bool IsFaithPurchaseAllGreatPeople() const;
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	bool IsAllowsFaithGiftsToMinors() const;
+#endif
 
 	// Serialization
 	void Read(FDataStream& kStream);

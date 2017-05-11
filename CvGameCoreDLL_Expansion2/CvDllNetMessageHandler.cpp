@@ -734,11 +734,31 @@ void CvDllNetMessageHandler::ResponseMinorCivBullyUnit(PlayerTypes ePlayer, Play
 //------------------------------------------------------------------------------
 void CvDllNetMessageHandler::ResponseMinorCivGiftGold(PlayerTypes ePlayer, PlayerTypes eMinor, int iGold)
 {
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	if (iGold > 100000) // HACK!!! ... when sending a faith gift, we still use this function but we add in 100K to clue us in
+	{
+		int iFaith = iGold - 100000;
+		// Enough Faith?
+		if(GET_PLAYER(ePlayer).GetFaith() >= iFaith)
+		{
+			GET_PLAYER(eMinor).GetMinorCivAI()->DoFaithGiftFromMajor(ePlayer, iFaith);
+		}
+	}
+	else
+	{
+		// Enough Gold?
+		if(GET_PLAYER(ePlayer).GetTreasury()->GetGold() >= iGold)
+		{
+			GET_PLAYER(eMinor).GetMinorCivAI()->DoGoldGiftFromMajor(ePlayer, iGold);
+		}
+	}
+#else
 	// Enough Gold?
 	if(GET_PLAYER(ePlayer).GetTreasury()->GetGold() >= iGold)
 	{
 		GET_PLAYER(eMinor).GetMinorCivAI()->DoGoldGiftFromMajor(ePlayer, iGold);
 	}
+#endif
 }
 //------------------------------------------------------------------------------
 void CvDllNetMessageHandler::ResponseMinorCivGiftTileImprovement(PlayerTypes eMajor, PlayerTypes eMinor, int iPlotX, int iPlotY)

@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2016-09-25 05:44:53 -->
 <GameData>
 
-	<!-- Gain a Missionary, 2 mounted units, and 4 melee units -->
+	<!-- Gain a Missionary, 2 mounted units, 2 ranged units, and 2 siege units -->
 	<Beliefs>
 		<Row>
 			<Type>BELIEF_DEUS_VULT</Type>
@@ -16,7 +16,7 @@
 	<!-- localization -->
 	<Language_en_US>
 		<Row Tag="TXT_KEY_BELIEF_DEUS_VULT">
-			<Text>Gain a Missionary, 2 mounted units, and 4 melee units</Text>
+			<Text>Gain a Missionary, 2 mounted units, 2 ranged units, and 2 siege units</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DEUS_VULT_SHORT">
 			<Text>Deus Vult</Text>
@@ -24,7 +24,7 @@
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_BELIEF_DEUS_VULT">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Gain a Missionary, 2 mounted units, and 4 melee units</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Gain a Missionary, 2 mounted units, 2 ranged units, and 2 siege units</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DEUS_VULT_SHORT">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Deus Vult</Text>
@@ -32,7 +32,7 @@
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_BELIEF_DEUS_VULT">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Gain a Missionary, 2 mounted units, and 4 melee units</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Gain a Missionary, 2 mounted units, 2 ranged units, and 2 siege units</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DEUS_VULT_SHORT">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Deus Vult</Text>
@@ -40,7 +40,7 @@
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BELIEF_DEUS_VULT">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Gain a Missionary, 2 mounted units, and 4 melee units</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Gain a Missionary, 2 mounted units, 2 ranged units, and 2 siege units</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_DEUS_VULT_SHORT">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Deus Vult</Text>

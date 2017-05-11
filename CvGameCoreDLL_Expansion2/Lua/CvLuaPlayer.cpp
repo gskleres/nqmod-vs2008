@@ -285,6 +285,9 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 	Method(GetFaithPerTurnFromCities);
 	Method(GetFaithPerTurnFromMinorCivs);
 	Method(GetFaithPerTurnFromReligion);
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	Method(CanFaithGiftMinors);
+#endif
 	Method(HasCreatedPantheon);
 	Method(GetBeliefInPantheon);
 	Method(HasCreatedReligion);
@@ -593,6 +596,9 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 	Method(GetTurnsSinceThreatenedByBarbarians);
 	Method(GetTurnsSinceThreatenedAnnouncement);
 	Method(GetFriendshipFromGoldGift);
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	Method(GetFriendshipFromFaithGift);
+#endif
 	Method(GetFriendshipNeededForNextLevel);
 	Method(GetMinorCivFavoriteMajor);
 	Method(GetMinorCivScienceFriendshipBonus);
@@ -2707,6 +2713,18 @@ int CvLuaPlayer::lGetFaithPerTurnFromReligion(lua_State* L)
 {
 	return BasicLuaMethod(L, &CvPlayerAI::GetFaithPerTurnFromReligion);
 }
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+//------------------------------------------------------------------------------
+//bool CanFaithGiftMinors();
+int CvLuaPlayer::lCanFaithGiftMinors(lua_State* L)
+{
+	CvPlayerAI* pkPlayer = GetInstance(L);
+	const bool bResult = pkPlayer->CanFaithGiftMinors();
+	lua_pushboolean(L, bResult);
+
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 //bool HasCreatedPantheon();
 int CvLuaPlayer::lHasCreatedPantheon(lua_State* L)
@@ -6445,6 +6463,19 @@ int CvLuaPlayer::lGetFriendshipFromGoldGift(lua_State* L)
 	lua_pushinteger(L, iResult);
 	return 1;
 }
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+//------------------------------------------------------------------------------
+int CvLuaPlayer::lGetFriendshipFromFaithGift(lua_State* L)
+{
+	CvPlayerAI* pkPlayer = GetInstance(L);
+	const PlayerTypes eMajor = (PlayerTypes) lua_tointeger(L, 2);
+	const int iFaith = lua_tointeger(L, 3);
+
+	const int iResult = pkPlayer->GetMinorCivAI()->GetFriendshipFromFaithGift(eMajor, iFaith);
+	lua_pushinteger(L, iResult);
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 int CvLuaPlayer::lGetMinorCivFavoriteMajor(lua_State* L)
 {

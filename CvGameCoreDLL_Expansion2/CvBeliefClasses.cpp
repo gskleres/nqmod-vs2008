@@ -94,6 +94,9 @@ CvBeliefEntry::CvBeliefEntry() :
 	m_bDeusVult(false),
 #endif
 	m_bFaithPurchaseAllGreatPeople(false),
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	m_bAllowsFaithGiftsToMinors(false),
+#endif
 
 	m_eObsoleteEra(NO_ERA),
 	m_eResourceRevealed(NO_RESOURCE),
@@ -518,6 +521,14 @@ bool CvBeliefEntry::FaithPurchaseAllGreatPeople() const
 	return m_bFaithPurchaseAllGreatPeople;
 }
 
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+/// Accessor: is this a belief that allows you to gift Faith to city states?
+bool CvBeliefEntry::AllowsFaithGiftsToMinors() const
+{
+	return m_bAllowsFaithGiftsToMinors;
+}
+#endif
+
 /// Accessor: era when wonder production modifier goes obsolete
 EraTypes CvBeliefEntry::GetObsoleteEra() const
 {
@@ -839,6 +850,9 @@ bool CvBeliefEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 	m_bDeusVult						  = kResults.GetBool("DeusVult");
 #endif
 	m_bFaithPurchaseAllGreatPeople	  = kResults.GetBool("FaithPurchaseAllGreatPeople");
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+	m_bAllowsFaithGiftsToMinors       = kResults.GetBool("AllowsFaithGiftsToMinors");
+#endif
 
 	//References
 	const char* szTextVal;
@@ -2054,6 +2068,27 @@ bool CvReligionBeliefs::IsFaithPurchaseAllGreatPeople() const
 
 	return false;
 }
+
+#ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+/// Is there a belief that allows faith gifts to city states?
+bool CvReligionBeliefs::IsAllowsFaithGiftsToMinors() const
+{
+	CvBeliefXMLEntries* pBeliefs = GC.GetGameBeliefs();
+
+	for(int i = 0; i < pBeliefs->GetNumBeliefs(); i++)
+	{
+		if(HasBelief((BeliefTypes)i))
+		{
+			if (pBeliefs->GetEntry(i)->AllowsFaithGiftsToMinors())
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+#endif
 
 /// Serialization read
 void CvReligionBeliefs::Read(FDataStream& kStream)
