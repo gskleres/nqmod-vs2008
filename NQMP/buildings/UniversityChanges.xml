@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 5/11/2017 12:15:28 AM -->
+<GameData>
+	
+	<!-- University (and Wat) now provides +25% Science (down from +33%). -->
+	<Building_YieldModifiers>
+		<Update>
+			<Set Yield="25" />
+			<Where BuildingType="BUILDING_UNIVERSITY" YieldType="YIELD_SCIENCE" />
+		</Update>
+		<Update>
+			<Set Yield="25" />
+			<Where BuildingType="BUILDING_WAT" YieldType="YIELD_SCIENCE" />
+		</Update>
+	</Building_YieldModifiers>
+	
+</GameData>
