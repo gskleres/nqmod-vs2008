@@ -9847,7 +9847,7 @@ bool CvUnit::build(BuildTypes eBuild)
 			}
 		}
 
-#ifndef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
+#ifndef NQ_FIX_BUILD_TIMES_UI
 		// wipe out all build progress also
 
 		bFinished = pPlot->changeBuildProgress(eBuild, workRate(false), getOwner());

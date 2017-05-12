@@ -389,7 +389,10 @@ function UpdateUnitActions( unit )
 		local thisBuild = GameInfo.Builds[buildType];
 		--print("thisBuild.Type:"..tostring(thisBuild.Type));
 		local civilianUnitStr = Locale.ConvertTextKey(thisBuild.Description);
-		local iTurnsLeft = unit:GetPlot():GetBuildTurnsLeft(buildType, Game.GetActivePlayer(),  0, 0) + 1;	
+		-- begin NQ_FIX_BUILD_TIMES_UI
+		--local iTurnsLeft = unit:GetPlot():GetBuildTurnsLeft(buildType, Game.GetActivePlayer(),  0, 0) + 1;
+		local iTurnsLeft = unit:GetPlot():GetBuildTurnsLeft(buildType, Game.GetActivePlayer(),  0, 0);
+		-- end NQ_FIX_BUILD_TIMES_UI
 		local iTurnsTotal = unit:GetPlot():GetBuildTurnsTotal(buildType);	
 		if (iTurnsLeft < 4000 and iTurnsLeft > 0) then
 			civilianUnitStr = civilianUnitStr.." ("..tostring(iTurnsLeft)..")";
@@ -397,7 +400,10 @@ function UpdateUnitActions( unit )
 		IconHookup( thisBuild.IconIndex, 45, thisBuild.IconAtlas, Controls.WorkerProgressIcon ); 		
 		Controls.WorkerProgressLabel:SetText( civilianUnitStr );
 		Controls.WorkerProgressLabel:SetToolTipString(civilianUnitStr );
-		local percent = (iTurnsTotal - (iTurnsLeft - 1)) / iTurnsTotal;
+		-- begin NQ_FIX_BUILD_TIMES_UI
+		--local percent = (iTurnsTotal - (iTurnsLeft - 1)) / iTurnsTotal;
+		local percent = (iTurnsTotal - iTurnsLeft) / iTurnsTotal;
+		-- end NQ_FIX_BUILD_TIMES_UI
 		Controls.WorkerProgressBar:SetPercent( percent );
 		Controls.WorkerProgressIconFrame:SetHide( false );
 		Controls.WorkerProgressFrame:SetHide( false );
@@ -1561,7 +1567,10 @@ function TipHandler( control )
 			iExtraBuildRate = unit:WorkRate(true, iBuildID);
 		end
 		
-		local iBuildTurns = pPlot:GetBuildTurnsLeft(iBuildID, Game.GetActivePlayer(), iExtraBuildRate, iExtraBuildRate);
+		-- begin NQ_FIX_BUILD_TIMES_UI
+		-- local iBuildTurns = pPlot:GetBuildTurnsLeft(iBuildID, Game.GetActivePlayer(), iExtraBuildRate, iExtraBuildRate);
+		local iBuildTurns = pPlot:GetBuildTurnsLeft(iBuildID, Game.GetActivePlayer(), 0, iExtraBuildRate);
+		-- end NQ_FIX_BUILD_TIMES_UI
 		--print("iBuildTurns: " .. iBuildTurns);
 		if (iBuildTurns > 1) then
 			strBuildTurnsString = " ... " .. Locale.ConvertTextKey("TXT_KEY_BUILD_NUM_TURNS", iBuildTurns);

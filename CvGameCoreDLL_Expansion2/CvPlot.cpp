@@ -2612,6 +2612,11 @@ int CvPlot::getBuildTime(BuildTypes eBuild, PlayerTypes ePlayer) const
 	iTime *= GC.getGame().getStartEraInfo().getBuildPercent();
 	iTime /= 100;
 
+#ifdef NQ_ROUND_BUILD_TIMES_DOWN
+	iTime /= 10; // round to lowest 10 for the sake of quick speed
+	iTime *= 10;
+#endif
+
 	return iTime;
 }
 
@@ -2619,33 +2624,53 @@ int CvPlot::getBuildTime(BuildTypes eBuild, PlayerTypes ePlayer) const
 //	--------------------------------------------------------------------------------
 int CvPlot::getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowExtra, int iThenExtra) const
 {
-#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
-	int iBuildLeft = getBuildTime(eBuild, ePlayer) - getBuildProgress(eBuild);
+#ifdef NQ_FIX_BUILD_TIMES_UI
+	// work rate
+	int iTotalWorkRate = iThenExtra;
+	const CvUnit* pLoopUnit;
+	const IDInfo* pUnitNode = headUnitNode();
+	while(pUnitNode != NULL)
+	{
+		pLoopUnit = GetPlayerUnit(*pUnitNode);
+		pUnitNode = nextUnitNode(pUnitNode);
 
-	if (iBuildLeft <= 0)
+		if(pLoopUnit && pLoopUnit->getBuildType() == eBuild)
+		{
+			iTotalWorkRate += pLoopUnit->workRate(true);
+		}
+	}
+	if(iTotalWorkRate <= 0)
+	{
+		//this means it will take forever under current circumstances
+		return INT_MAX;
+	}
+
+	// turns left = roundUp(build left / worker rate)
+	int iBuildLeft = getBuildTime(eBuild, ePlayer) - getBuildProgress(eBuild);
+	int iTurnsLeft = iBuildLeft / iTotalWorkRate;
+
+	// if there's anything leftover, we actually have to bump up by 1 turn
+	if (iBuildLeft % iTotalWorkRate > 0)
+	{
+		iTurnsLeft++;
+	}
+
+	return iTurnsLeft;
 #else
+
 	int iBuildLeft = getBuildTime(eBuild, ePlayer);
 
 	if(iBuildLeft == 0)
-#endif
 		return 0;
 
 	const IDInfo* pUnitNode;
 	const CvUnit* pLoopUnit;
-#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
-	int iLoopBuildRate = 0;
-	int iTurnsLeft = 0;
-	// Max'es needed to counteract EUI code
-	int iNowBuildRate = MAX(iNowExtra, 0);
-	int iThenBuildRate = MAX(iThenExtra, 0);
-#else
 	int iNowBuildRate;
 	int iThenBuildRate;
 	int iTurnsLeft;
 
 	iNowBuildRate = iNowExtra;
 	iThenBuildRate = iThenExtra;
-#endif
 
 	pUnitNode = headUnitNode();
 
@@ -2656,20 +2681,11 @@ int CvPlot::getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowEx
 
 		if(pLoopUnit && pLoopUnit->getBuildType() == eBuild)
 		{
-#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
-			iLoopBuildRate = pLoopUnit->workRate(true);
-			//if (pLoopUnit->canMove())
-			//{
-			//	iNowBuildRate += iLoopBuildRate;
-			//}
-			iThenBuildRate += iLoopBuildRate;
-#else
 			if(pLoopUnit->canMove())
 			{
 				iNowBuildRate += pLoopUnit->workRate(false);
 			}
 			iThenBuildRate += pLoopUnit->workRate(true);
-#endif
 		}
 	}
 
@@ -2679,17 +2695,6 @@ int CvPlot::getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowEx
 		return INT_MAX;
 	}
 
-#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
-	iBuildLeft = MAX(0, iBuildLeft - iNowBuildRate);
-
-	iTurnsLeft = ((iBuildLeft + iThenBuildRate - 1) / iThenBuildRate);
-
-	// Works around weird UI bug
-	if (getBuildProgress(eBuild) == 0 && iTurnsLeft > 1)
-		iTurnsLeft++;
-
-	return MAX(1, iTurnsLeft);
-#else
 	iBuildLeft -= getBuildProgress(eBuild);
 	iBuildLeft -= iNowBuildRate;
 
@@ -2713,18 +2718,44 @@ int CvPlot::getBuildTurnsLeft(BuildTypes eBuild, PlayerTypes ePlayer, int iNowEx
 //	--------------------------------------------------------------------------------
 int CvPlot::getBuildTurnsTotal(BuildTypes eBuild, PlayerTypes ePlayer) const
 {
+#ifdef NQ_FIX_BUILD_TIMES_UI
+	// work rate
+	int iTotalWorkRate = 0;
+	const CvUnit* pLoopUnit;
+	const IDInfo* pUnitNode = headUnitNode();
+	while(pUnitNode != NULL)
+	{
+		pLoopUnit = GetPlayerUnit(*pUnitNode);
+		pUnitNode = nextUnitNode(pUnitNode);
+
+		if(pLoopUnit && pLoopUnit->getBuildType() == eBuild)
+		{
+			iTotalWorkRate += pLoopUnit->workRate(true);
+		}
+	}
+	if(iTotalWorkRate <= 0)
+	{
+		//this means it will take forever under current circumstances
+		return INT_MAX;
+	}
+
+	// turns left = roundUp(build left / worker rate)
+	int iBuildTime = getBuildTime(eBuild, ePlayer);
+	int iTurnsTotal = iBuildTime / iTotalWorkRate;
+
+	// if there's anything leftover, we actually have to bump up by 1 turn
+	if (iBuildTime % iTotalWorkRate > 0)
+	{
+		iTurnsTotal++;
+	}
+
+	return iTurnsTotal;
+#else
 	const IDInfo* pUnitNode;
 	const CvUnit* pLoopUnit;
 	int iNowBuildRate = 0;
 	int iThenBuildRate = 0;
-#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
-	int iLoopBuildRate = 0;
-	int iBuildLeft = getBuildTime(eBuild, ePlayer);
-	if (iBuildLeft <= 0)
-		return 1;
-#else
 	int iBuildLeft = 0;
-#endif
 	int iTurnsLeft = 0;
 
 	pUnitNode = headUnitNode();
@@ -2736,20 +2767,11 @@ int CvPlot::getBuildTurnsTotal(BuildTypes eBuild, PlayerTypes ePlayer) const
 
 		if(pLoopUnit && pLoopUnit->getBuildType() == eBuild)
 		{
-#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
-			iLoopBuildRate = pLoopUnit->workRate(true);
-			//if (pLoopUnit->canMove())
-			//{
-			//	iNowBuildRate += iLoopBuildRate;
-			//}
-			iThenBuildRate += iLoopBuildRate;
-#else
 			if(pLoopUnit->canMove())
 			{
 				iNowBuildRate += pLoopUnit->workRate(false);
 			}
 			iThenBuildRate += pLoopUnit->workRate(true);
-#endif
 		}
 	}
 
@@ -2759,17 +2781,6 @@ int CvPlot::getBuildTurnsTotal(BuildTypes eBuild, PlayerTypes ePlayer) const
 		return INT_MAX;
 	}
 
-#ifdef AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
-	iBuildLeft = MAX(0, iBuildLeft - iNowBuildRate);
-
-	iTurnsLeft = ((iBuildLeft + iThenBuildRate - 1) / iThenBuildRate);
-
-	// Works around weird UI bug
-	if (getBuildProgress(eBuild) == 0 && iTurnsLeft > 1)
-		iTurnsLeft++;
-
-	return MAX(1, iTurnsLeft);
-#else
 	iBuildLeft = getBuildTime(eBuild, ePlayer);
 
 	iBuildLeft = std::max(0, iBuildLeft);

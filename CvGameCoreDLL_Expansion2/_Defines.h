@@ -266,8 +266,6 @@
 #define AUI_UNIT_COMBAT_FIX_AIR_SWEEP_VS_GROUND_INTERCEPTOR
 /// The "force end turn" control now checks to make sure nothing (invalid) is blocking it
 #define AUI_GAME_FIX_CONTROL_FORCE_END_TURN_CHECKS_FOR_BLOCKING
-/// Fixed a bug where units building a new improvement or road would have 2x build speed on their first turn of building; commented out because it causes issues with the UI
-//#define AUI_UNIT_FIX_2X_BUILD_SPEED_ON_FIRST_TURN_OF_BUILDING
 /// Promotion testing is now done every time a unit's XP is changed, instead of having it manually called all the time
 #define AUI_UNIT_TEST_PROMOTION_READY_MOVED
 */
@@ -769,6 +767,10 @@
 #define	NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 // trait attribute that make specific unit types immune to plunder mission
 #define NQ_UNIT_IMMUNE_TO_PLUNDER_FROM_TRAIT
+// fixing build times (sub-part of Delnar's fixes)
+#define NQ_FIX_BUILD_TIMES_UI
+// make build times round down to lowest 10 so that Quick Speed doesn't have built times of 201 or 402
+#define NQ_ROUND_BUILD_TIMES_DOWN
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

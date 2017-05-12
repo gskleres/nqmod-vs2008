@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 5/11/2017 6:04:42 PM -->
+<GameData>
+
+	<Builds>
+		
+		<!-- Roads will always take 2 turns on Quick Speed, even with +50% speed (Liberty + Pyramids). -->
+		<Update>
+			<Set Time="300" />
+			<Where Type="BUILD_ROAD" />
+		</Update>
+		
+		<!-- Cap the build time of all improvements to 600 (6 turns standard, 4 turns quick) -->
+		<Update>
+			<Set Time="600" />
+			<Where Time="700" />
+		</Update>
+		<Update>
+			<Set Time="600" />
+			<Where Time="800" />
+		</Update>
+		<Update>
+			<Set Time="600" />
+			<Where Time="900" />
+		</Update>
+
+	</Builds>
+
+	<!-- Jungle, Forest, and Marsh chops are all 2 turns now -->
+	<BuildFeatures>
+		<Update>
+			<Set Time="300" />
+			<Where Time="400" />
+		</Update>
+		<Update>
+			<Set Time="300" />
+			<Where Time="600" />
+		</Update>
+		<Update>
+			<Set Time="300" />
+			<Where Time="700" />
+		</Update>
+	</BuildFeatures>
+	
+</GameData>
