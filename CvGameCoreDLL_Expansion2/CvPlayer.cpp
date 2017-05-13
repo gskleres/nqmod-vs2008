@@ -16327,6 +16327,14 @@ int CvPlayer::GetNumTurnsBeforeMinorAlliesRefuseBribes() const
 }
 #endif
 
+#ifdef NQ_GOLDEN_PILGRIMAGE
+//	--------------------------------------------------------------------------------
+int CvPlayer::GetGoldenAgeTileBonusFaith() const
+{
+	return GetPlayerTraits()->GetGoldenAgeTileBonusFaith();
+}
+#endif
+
 //	--------------------------------------------------------------------------------
 int CvPlayer::GetAbleToAnnexCityStatesCount() const
 {

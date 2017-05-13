@@ -994,6 +994,9 @@ public:
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	int GetNumTurnsBeforeMinorAlliesRefuseBribes() const;
 #endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	int GetGoldenAgeTileBonusFaith() const;
+#endif
 
 	int getCultureBombTimer() const;
 	void setCultureBombTimer(int iNewValue);

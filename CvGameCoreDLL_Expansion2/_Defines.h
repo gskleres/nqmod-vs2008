@@ -771,6 +771,8 @@
 #define NQ_FIX_BUILD_TIMES_UI
 // make build times round down to lowest 10 so that Quick Speed doesn't have built times of 201 or 402
 #define NQ_ROUND_BUILD_TIMES_DOWN
+// HACK: Golden Pilgrimage Trait (new civ Mali) needs to give +1 Faith to tiles that make at least 1 Gold during a golden age
+#define NQ_GOLDEN_PILGRIMAGE
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies

@@ -46,6 +46,9 @@ CvTraitEntry::CvTraitEntry() :
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	m_iNumTurnsBeforeMinorAlliesRefuseBribes(0),
 #endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	m_iGoldenAgeTileBonusFaith(0),
+#endif
 	m_iCultureFromKills(0),
 	m_iFaithFromKills(0),
 	m_iCityCultureBonus(0),
@@ -321,6 +324,15 @@ int CvTraitEntry::GetNumTurnsBeforeMinorAlliesRefuseBribes() const
 	return m_iNumTurnsBeforeMinorAlliesRefuseBribes;
 }
 #endif
+
+#ifdef NQ_GOLDEN_PILGRIMAGE
+/// Accessor:: during golden ages, tiles that get bonus gold also get this much bonus faith
+int CvTraitEntry::GetGoldenAgeTileBonusFaith() const
+{
+	return m_iGoldenAgeTileBonusFaith;
+}
+#endif
+
 
 /// Accessor:: culture for kills
 int CvTraitEntry::GetCultureFromKills() const
@@ -1036,6 +1048,9 @@ bool CvTraitEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility& 
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	m_iNumTurnsBeforeMinorAlliesRefuseBribes = kResults.GetInt("NumTurnsBeforeMinorAlliesRefuseBribes");
 #endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	m_iGoldenAgeTileBonusFaith              = kResults.GetInt("GoldenAgeTileBonusFaith");
+#endif
 	m_iCultureFromKills						= kResults.GetInt("CultureFromKills");
 	m_iFaithFromKills						= kResults.GetInt("FaithFromKills");
 	m_iCityCultureBonus						= kResults.GetInt("CityCultureBonus");
@@ -1551,6 +1566,9 @@ void CvPlayerTraits::InitPlayerTraits()
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 			m_iNumTurnsBeforeMinorAlliesRefuseBribes += trait->GetNumTurnsBeforeMinorAlliesRefuseBribes();
 #endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+			m_iGoldenAgeTileBonusFaith += trait->GetGoldenAgeTileBonusFaith();
+#endif
 			m_iCultureFromKills += trait->GetCultureFromKills();
 			m_iFaithFromKills += trait->GetFaithFromKills();
 			m_iCityCultureBonus += trait->GetCityCultureBonus();
@@ -1861,6 +1879,9 @@ void CvPlayerTraits::Reset()
 #endif
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	m_iNumTurnsBeforeMinorAlliesRefuseBribes = 0;
+#endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	m_iGoldenAgeTileBonusFaith = 0;
 #endif
 	m_iCultureFromKills = 0;
 	m_iFaithFromKills = 0;
@@ -2879,6 +2900,9 @@ void CvPlayerTraits::Read(FDataStream& kStream)
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	kStream >> m_iNumTurnsBeforeMinorAlliesRefuseBribes;
 #endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	kStream >> m_iGoldenAgeTileBonusFaith;
+#endif
 	kStream >> m_iCultureFromKills;
 	if (uiVersion >= 19)
 	{
@@ -3282,6 +3306,9 @@ void CvPlayerTraits::Write(FDataStream& kStream)
 #endif
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	kStream << m_iNumTurnsBeforeMinorAlliesRefuseBribes;
+#endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	kStream << m_iGoldenAgeTileBonusFaith;
 #endif
 	kStream << m_iCultureFromKills;
 	kStream << m_iFaithFromKills;

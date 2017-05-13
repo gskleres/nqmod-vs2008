@@ -79,6 +79,9 @@ public:
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	int GetNumTurnsBeforeMinorAlliesRefuseBribes() const;
 #endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	int GetGoldenAgeTileBonusFaith() const;
+#endif
 	int GetCultureFromKills() const;
 	int GetFaithFromKills() const;
 	int GetCityCultureBonus() const;
@@ -223,6 +226,10 @@ protected:
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	int m_iNumTurnsBeforeMinorAlliesRefuseBribes;
 #endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	int m_iGoldenAgeTileBonusFaith;
+#endif
+
 	int m_iCultureFromKills;
 	int m_iFaithFromKills;
 	int m_iCityCultureBonus;
@@ -492,6 +499,12 @@ public:
 	int GetNumTurnsBeforeMinorAlliesRefuseBribes() const
 	{
 		return m_iNumTurnsBeforeMinorAlliesRefuseBribes;
+	}
+#endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	int GetGoldenAgeTileBonusFaith() const
+	{
+		return m_iGoldenAgeTileBonusFaith;
 	}
 #endif
 	int GetCultureFromKills() const
@@ -929,6 +942,9 @@ private:
 #endif
 #ifdef NQ_NUM_TURNS_BEFORE_MINOR_ALLIES_REFUSE_BRIBES_FROM_TRAIT
 	int m_iNumTurnsBeforeMinorAlliesRefuseBribes;
+#endif
+#ifdef NQ_GOLDEN_PILGRIMAGE
+	int m_iGoldenAgeTileBonusFaith;
 #endif
 	int m_iCultureFromKills;
 	int m_iFaithFromKills;

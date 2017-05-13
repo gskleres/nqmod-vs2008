@@ -8049,6 +8049,14 @@ int CvPlot::calculateYield(YieldTypes eYield, bool bDisplay)
 			{
 				iYield += kYield.getGoldenAgeYield();
 			}
+#ifdef NQ_GOLDEN_PILGRIMAGE
+			// this is super hacky, I am a bad person and I should feel bad...
+			if (eYield == YIELD_FAITH && calculateYield(YIELD_GOLD, bDisplay) > 0)
+			{
+				iYield += GET_PLAYER(ePlayer).GetPlayerTraits()->GetGoldenAgeTileBonusFaith();
+			}
+//int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUpgrade, PlayerTypes ePlayer) const
+#endif
 		}
 	}
 
@@ -10943,6 +10951,14 @@ int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUp
 			{
 				iYield += kYield.getGoldenAgeYield();
 			}
+#ifdef NQ_GOLDEN_PILGRIMAGE
+			// this is super hacky, I am a bad person and I should feel bad...
+			if (eYield == YIELD_FAITH && getYieldWithBuild(eBuild, YIELD_GOLD, bWithUpgrade, ePlayer) > 0)
+			{
+				iYield += GET_PLAYER(ePlayer).GetPlayerTraits()->GetGoldenAgeTileBonusFaith();
+			}
+//int CvPlot::getYieldWithBuild(BuildTypes eBuild, YieldTypes eYield, bool bWithUpgrade, PlayerTypes ePlayer) const
+#endif
 		}
 	}
 
