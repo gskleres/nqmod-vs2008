@@ -10,9 +10,17 @@ function OnBuildingCheckIfMalianTreasury(iPlayer, iCity, eBuildingType)
 			local pPlot = pCity:GetCityIndexPlot( i );
 			local iTerrain = pPlot:GetTerrainType();
 			if (pPlot ~= nil) then
-				if (pPlot:GetOwner() == pCity:GetOwner() and not pPlot:IsWater()) then
+			
+				-- must be owned, no water, no mountains
+				if (pPlot:GetOwner() == pCity:GetOwner() and not pPlot:IsWater() and not pPlot:IsMountain()) then
+				
+					-- must be unimproved, no resource already exists
 					if (pPlot:GetImprovementType() == -1 and pPlot:GetResourceType(-1) == -1) then
+					
+						-- must be on Desert, Plains, Tundra, or Grass
 						if (iTerrain == TerrainTypes.TERRAIN_DESERT or iTerrain == TerrainTypes.TERRAIN_PLAINS or iTerrain == TerrainTypes.TERRAIN_TUNDRA or iTerrain == TerrainTypes.TERRAIN_GRASS) then
+						
+							-- allow Forest/Jungle, no Marsh/Natural Wonders/other features
 							if (pPlot:GetFeatureType() == -1 or pPlot:GetFeatureType() == FeatureTypes.FEATURE_FOREST or pPlot:GetFeatureType() == FeatureTypes.FEATURE_JUNGLE) then
 								iValidPlotsIndex = iValidPlotsIndex + 1;
 								validPlots[iValidPlotsIndex] = i;
@@ -34,48 +42,51 @@ function OnBuildingCheckIfMalianTreasury(iPlayer, iCity, eBuildingType)
 				local iCopperWeight = 0;
 				local iSaltWeight = 0;
 
-				if (iTerrain == TerrainTypes.TERRAIN_DESERT) then
+				if (pPlot:IsHills()) then
 					iGoldWeight = 2;
 					iSilverWeight = 1;
 					iCopperWeight = 1;
-					iSaltWeight = 2;
-				elseif (iTerrain == TerrainTypes.TERRAIN_PLAINS) then
-					iGoldWeight = 1;
-					iSilverWeight = 1;
-					iCopperWeight = 1;
-					iSaltWeight = 2;
-				elseif (iTerrain == TerrainTypes.TERRAIN_TUNDRA) then
-					iGoldWeight = 1;
-					iSilverWeight = 2;
-					iCopperWeight = 2;
-					iSaltWeight = 1;
-				elseif (iTerrain == TerrainTypes.TERRAIN_GRASS) then
-					iGoldWeight = 1;
-					iSilverWeight = 1;
-					iCopperWeight = 1;
-					iSaltWeight = 0;
+					iSaltWeight = 0; -- no salt on hills
+				else
+					if (iTerrain == TerrainTypes.TERRAIN_DESERT) then
+						iGoldWeight = 4;
+						iSilverWeight = 1;
+						iCopperWeight = 2;
+						iSaltWeight = 3;
+					elseif (iTerrain == TerrainTypes.TERRAIN_PLAINS) then
+						iGoldWeight = 3;
+						iSilverWeight = 1;
+						iCopperWeight = 2;
+						iSaltWeight = 3;
+					elseif (iTerrain == TerrainTypes.TERRAIN_TUNDRA) then
+						iGoldWeight = 1;
+						iSilverWeight = 1;
+						iCopperWeight = 1;
+						iSaltWeight = 1;
+					elseif (iTerrain == TerrainTypes.TERRAIN_GRASS) then
+						iGoldWeight = 4;
+						iSilverWeight = 1;
+						iCopperWeight = 3;
+						iSaltWeight = 1;
+					end
 				end
 
-				if (pPlot:IsHills()) then
-					iSaltWeight = 0; -- no salt on hills
-				end
-				
 				local iTotalWeight = iGoldWeight + iSilverWeight + iCopperWeight + iSaltWeight;
 				
 				if (iTotalWeight > 0) then
-					local iGoldThreshold = iGoldWeight;
-					local iSilverThreshold = iGoldWeight + iSilverWeight;
-					local iCopperThreshold = iGoldWeight + iSilverWeight + iCopperWeight;
+					local iSaltThreshold = iSaltWeight;
+					local iCopperThreshold = iSaltThreshold + iCopperWeight;
+					local iSilverThreshold = iCopperThreshold + iSilverWeight;
 
 					local iResourceType = math.random(iTotalWeight);
-					if (iResourceType <= iGoldThreshold) then
-						pPlot:SetResourceType(GameInfoTypes.RESOURCE_GOLD, 1);
-					elseif (iResourceType <= iSilverThreshold) then
-						pPlot:SetResourceType(GameInfoTypes.RESOURCE_SILVER, 1);
+					if (iResourceType <= iSaltThreshold) then
+						pPlot:SetResourceType(GameInfoTypes.RESOURCE_SALT, 1);
 					elseif (iResourceType <= iCopperThreshold) then
 						pPlot:SetResourceType(GameInfoTypes.RESOURCE_COPPER, 1);
+					elseif (iResourceType <= iSilverThreshold) then
+						pPlot:SetResourceType(GameInfoTypes.RESOURCE_SILVER, 1);
 					else
-						pPlot:SetResourceType(GameInfoTypes.RESOURCE_SALT, 1);
+						pPlot:SetResourceType(GameInfoTypes.RESOURCE_GOLD, 1);
 					end
 				end
 			end

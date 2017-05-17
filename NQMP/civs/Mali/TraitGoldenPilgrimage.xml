@@ -28,11 +28,36 @@
 	<!-- localization -->
 	<Language_en_US>
 		<Row Tag="TXT_KEY_TRAIT_GOLDEN_PILGRIMAGE_SHORT">
-			<Text>Golden Pilgrimage</Text>
+			<Text>Golden Hajj</Text>
 		</Row>
 		<Row Tag="TXT_KEY_TRAIT_GOLDEN_PILGRIMAGE">
 			<Text>+1 [ICON_GOLD] Gold from Mines. During [ICON_GOLDEN_AGE] Golden Ages, any tile that produces at least 1 [ICON_GOLD] Gold also produces 1 [ICON_PEACE] Faith.</Text>
 		</Row>
 	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_TRAIT_GOLDEN_PILGRIMAGE_SHORT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Golden Hajj</Text>
+		</Row>
+		<Row Tag="TXT_KEY_TRAIT_GOLDEN_PILGRIMAGE">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+1 [ICON_GOLD] Gold from Mines. During [ICON_GOLDEN_AGE] Golden Ages, any tile that produces at least 1 [ICON_GOLD] Gold also produces 1 [ICON_PEACE] Faith.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_TRAIT_GOLDEN_PILGRIMAGE_SHORT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Golden Hajj</Text>
+		</Row>
+		<Row Tag="TXT_KEY_TRAIT_GOLDEN_PILGRIMAGE">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+1 [ICON_GOLD] Gold from Mines. During [ICON_GOLDEN_AGE] Golden Ages, any tile that produces at least 1 [ICON_GOLD] Gold also produces 1 [ICON_PEACE] Faith.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_TRAIT_GOLDEN_PILGRIMAGE_SHORT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Golden Hajj</Text>
+		</Row>
+		<Row Tag="TXT_KEY_TRAIT_GOLDEN_PILGRIMAGE">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+1 [ICON_GOLD] Gold from Mines. During [ICON_GOLDEN_AGE] Golden Ages, any tile that produces at least 1 [ICON_GOLD] Gold also produces 1 [ICON_PEACE] Faith.</Text>
+		</Row>
+	</Language_RU_RU>
+
 
 </GameData>

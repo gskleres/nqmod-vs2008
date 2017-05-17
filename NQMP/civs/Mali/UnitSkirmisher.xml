@@ -98,5 +98,47 @@
 			<Text>At its height, the Mali Empire stretched halfway across Africa, and included many subordinate tribes. To keep order, the Mali employed a huge standing army. During war, the Mali often fought as "skirmishers" - soldiers who fan out in loose formation to protect the main force's flanks or front. The Mali skirmishers were lightly-armed archers in that force, famed for their courage and their marksmanship.</Text>
 		</Row>
 	</Language_en_US>
+	<Language_DE_DE>
+		<Row Tag="TXT_KEY_UNIT_MALIAN_SKIRMISHER">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Skirmisher</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_HELP_MALIAN_SKIRMISHER">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Classical ranged infantry Unit. Ignores terrain costs. Only Mali can build it.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_MALIAN_SKIRMISHER_TEXT">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Skirmisher is the unique Malian replacement for the Composite Bowman. Its ability to ignore terrain costs makes it flexible for both offense and defense, able to move and shoot in the same turn even in rough terrain. Use them for suprise volleys against vulnerable enemy units, or bait enemies into chasing you through rough terrain while you rain shots from one step father each turn.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_MALIAN_SKIRMISHER_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]At its height, the Mali Empire stretched halfway across Africa, and included many subordinate tribes. To keep order, the Mali employed a huge standing army. During war, the Mali often fought as "skirmishers" - soldiers who fan out in loose formation to protect the main force's flanks or front. The Mali skirmishers were lightly-armed archers in that force, famed for their courage and their marksmanship.</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Row Tag="TXT_KEY_UNIT_MALIAN_SKIRMISHER">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Skirmisher</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_HELP_MALIAN_SKIRMISHER">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Classical ranged infantry Unit. Ignores terrain costs. Only Mali can build it.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_MALIAN_SKIRMISHER_TEXT">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The Skirmisher is the unique Malian replacement for the Composite Bowman. Its ability to ignore terrain costs makes it flexible for both offense and defense, able to move and shoot in the same turn even in rough terrain. Use them for suprise volleys against vulnerable enemy units, or bait enemies into chasing you through rough terrain while you rain shots from one step father each turn.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_MALIAN_SKIRMISHER_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]At its height, the Mali Empire stretched halfway across Africa, and included many subordinate tribes. To keep order, the Mali employed a huge standing army. During war, the Mali often fought as "skirmishers" - soldiers who fan out in loose formation to protect the main force's flanks or front. The Mali skirmishers were lightly-armed archers in that force, famed for their courage and their marksmanship.</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Row Tag="TXT_KEY_UNIT_MALIAN_SKIRMISHER">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Skirmisher</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_HELP_MALIAN_SKIRMISHER">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Classical ranged infantry Unit. Ignores terrain costs. Only Mali can build it.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_CIV5_MALIAN_SKIRMISHER_TEXT">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The Skirmisher is the unique Malian replacement for the Composite Bowman. Its ability to ignore terrain costs makes it flexible for both offense and defense, able to move and shoot in the same turn even in rough terrain. Use them for suprise volleys against vulnerable enemy units, or bait enemies into chasing you through rough terrain while you rain shots from one step father each turn.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_UNIT_MALIAN_SKIRMISHER_STRATEGY">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]At its height, the Mali Empire stretched halfway across Africa, and included many subordinate tribes. To keep order, the Mali employed a huge standing army. During war, the Mali often fought as "skirmishers" - soldiers who fan out in loose formation to protect the main force's flanks or front. The Mali skirmishers were lightly-armed archers in that force, famed for their courage and their marksmanship.</Text>
+		</Row>
+	</Language_RU_RU>
 
 </GameData>
