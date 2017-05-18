@@ -14,7 +14,7 @@
 			<Description>TXT_KEY_LEADER_MANSA_MUSA</Description>
 			<!-- ADD <Civilopedia>TXT_KEY_LEADER_MANSA_MUSA_PEDIA</Civilopedia>-->
 			<CivilopediaTag>TXT_KEY_CIVILOPEDIA_LEADERS_MANSA_MUSA</CivilopediaTag>
-			<ArtDefineTag>Morocco_Almansur_Scene.xml</ArtDefineTag>
+			<ArtDefineTag>Mali_Mansa_Musa_Scene.xml</ArtDefineTag>
 			<VictoryCompetitiveness>5</VictoryCompetitiveness>
 			<WonderCompetitiveness>4</WonderCompetitiveness>
 			<MinorCivCompetitiveness>5</MinorCivCompetitiveness>
@@ -28,8 +28,8 @@
 			<Forgiveness>5</Forgiveness>
 			<Chattiness>6</Chattiness>
 			<Meanness>5</Meanness>
-			<PortraitIndex>3</PortraitIndex>
-			<IconAtlas>EXPANSION2_LEADER_ATLAS</IconAtlas>
+			<PortraitIndex>1</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
 		</Row>
 	</Leaders>
 	<Leader_MajorCivApproachBiases>
@@ -289,6 +289,17 @@
 		</Row>
 	</Leader_Flavors>
 
+	<Diplomacy_Responses>
+		<Row LeaderType="LEADER_MANSA_MUSA">
+			<ResponseType>RESPONSE_FIRST_GREETING</ResponseType>
+			<Response>TXT_KEY_LEADER_MANSA_MUSA_FIRSTGREETING%</Response>
+		</Row>
+		<Row LeaderType="LEADER_MANSA_MUSA">
+			<ResponseType>RESPONSE_DEFEATED</ResponseType>
+			<Response>TXT_KEY_LEADER_MANSA_MUSA_DEFEATED%</Response>
+		</Row>
+	</Diplomacy_Responses>
+
 	<!-- localization -->
 	<Language_en_US>
 		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA">
@@ -314,6 +325,12 @@
 		</Row>
 		<Row Tag="TXT_KEY_CIVILOPEDIA_LEADERS_MANSA_MUSA_TEXT_2">
 			<Text>Musa was the grandson of Sundiata Keita, the Muslim founder of the Mali Empire, which existed on the Mandinka plateau in West Africa from the 14th to the 17th centuries. At the time Mali was the source of over half of the world's gold, and Musa was fabulously wealthy. During his famous hajj (pilgrimage to Mecca) in 1324, Musa gave away so much gold in Cairo that the price of gold there was depressed for the next twenty years. He gave away so much treasure, in fact, that he had to borrow money to pay for his return trip. Legend has it that Musa was accompanied on his journey by a huge retinue and honor guard, not to mention 60,000 porters to carry the supplies.[NEWLINE][NEWLINE]Called "Musa the Magnificent," Mansa was celebrated for his enlightenment and piety. He added the important towns of Timbuktu and Gao to his kingdom. Upon reaching the throne, Musa became a feverish Muslim, and he built countless mosques across the country and made Islam the state religion, though he did not persecute other religions in his country.[NEWLINE][NEWLINE]Musa encouraged trade between Mali and the world beyond, using his country's vast resources of kola nuts, ivory, salt, and gold to attain goods from three continents. A believer in knowledge, Musa made the city of Timbuktu into a center of learning and craftsmanship, and Sankore University was one of the great schools in the Muslim world. Students came from all over to receive a free education there.[NEWLINE][NEWLINE]Musa died in 1337, after ruling Mali for twenty-five years. A contemporary historian said of Mansa Musa, that, of all of the leaders in West Africa, he was, "the most powerful, the richest, the most fortunate, and the most feared by his enemies and the most able to do good for those around him."</Text>
+		</Row>
+		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA_FIRSTGREETING_1">
+			<Text>Greetings, stranger! You stand before Mansa Musa of Mali, Emir of Melle, Lord of the Mines of Wangara, and Conqueror of Ghanata. Tell me of your lands!</Text>
+		</Row>
+		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA_DEFEATED_1">
+			<Text>Enough! You have won. The riches of Mali are yours. Treat my people with mercy and they will serve you faithfully.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -341,6 +358,12 @@
 		<Row Tag="TXT_KEY_CIVILOPEDIA_LEADERS_MANSA_MUSA_TEXT_2">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Musa was the grandson of Sundiata Keita, the Muslim founder of the Mali Empire, which existed on the Mandinka plateau in West Africa from the 14th to the 17th centuries. At the time Mali was the source of over half of the world's gold, and Musa was fabulously wealthy. During his famous hajj (pilgrimage to Mecca) in 1324, Musa gave away so much gold in Cairo that the price of gold there was depressed for the next twenty years. He gave away so much treasure, in fact, that he had to borrow money to pay for his return trip. Legend has it that Musa was accompanied on his journey by a huge retinue and honor guard, not to mention 60,000 porters to carry the supplies.[NEWLINE][NEWLINE]Called "Musa the Magnificent," Mansa was celebrated for his enlightenment and piety. He added the important towns of Timbuktu and Gao to his kingdom. Upon reaching the throne, Musa became a feverish Muslim, and he built countless mosques across the country and made Islam the state religion, though he did not persecute other religions in his country.[NEWLINE][NEWLINE]Musa encouraged trade between Mali and the world beyond, using his country's vast resources of kola nuts, ivory, salt, and gold to attain goods from three continents. A believer in knowledge, Musa made the city of Timbuktu into a center of learning and craftsmanship, and Sankore University was one of the great schools in the Muslim world. Students came from all over to receive a free education there.[NEWLINE][NEWLINE]Musa died in 1337, after ruling Mali for twenty-five years. A contemporary historian said of Mansa Musa, that, of all of the leaders in West Africa, he was, "the most powerful, the richest, the most fortunate, and the most feared by his enemies and the most able to do good for those around him."</Text>
 		</Row>
+		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA_FIRSTGREETING_1">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Greetings, stranger! You stand before Mansa Musa of Mali, Emir of Melle, Lord of the Mines of Wangara, and Conqueror of Ghanata. Tell me of your lands!</Text>
+		</Row>
+		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA_DEFEATED_1">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Enough! You have won. The riches of Mali are yours. Treat my people with mercy and they will serve you faithfully.</Text>
+		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA">
@@ -367,6 +390,12 @@
 		<Row Tag="TXT_KEY_CIVILOPEDIA_LEADERS_MANSA_MUSA_TEXT_2">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Musa was the grandson of Sundiata Keita, the Muslim founder of the Mali Empire, which existed on the Mandinka plateau in West Africa from the 14th to the 17th centuries. At the time Mali was the source of over half of the world's gold, and Musa was fabulously wealthy. During his famous hajj (pilgrimage to Mecca) in 1324, Musa gave away so much gold in Cairo that the price of gold there was depressed for the next twenty years. He gave away so much treasure, in fact, that he had to borrow money to pay for his return trip. Legend has it that Musa was accompanied on his journey by a huge retinue and honor guard, not to mention 60,000 porters to carry the supplies.[NEWLINE][NEWLINE]Called "Musa the Magnificent," Mansa was celebrated for his enlightenment and piety. He added the important towns of Timbuktu and Gao to his kingdom. Upon reaching the throne, Musa became a feverish Muslim, and he built countless mosques across the country and made Islam the state religion, though he did not persecute other religions in his country.[NEWLINE][NEWLINE]Musa encouraged trade between Mali and the world beyond, using his country's vast resources of kola nuts, ivory, salt, and gold to attain goods from three continents. A believer in knowledge, Musa made the city of Timbuktu into a center of learning and craftsmanship, and Sankore University was one of the great schools in the Muslim world. Students came from all over to receive a free education there.[NEWLINE][NEWLINE]Musa died in 1337, after ruling Mali for twenty-five years. A contemporary historian said of Mansa Musa, that, of all of the leaders in West Africa, he was, "the most powerful, the richest, the most fortunate, and the most feared by his enemies and the most able to do good for those around him."</Text>
 		</Row>
+		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA_FIRSTGREETING_1">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Greetings, stranger! You stand before Mansa Musa of Mali, Emir of Melle, Lord of the Mines of Wangara, and Conqueror of Ghanata. Tell me of your lands!</Text>
+		</Row>
+		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA_DEFEATED_1">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Enough! You have won. The riches of Mali are yours. Treat my people with mercy and they will serve you faithfully.</Text>
+		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA">
@@ -392,6 +421,12 @@
 		</Row>
 		<Row Tag="TXT_KEY_CIVILOPEDIA_LEADERS_MANSA_MUSA_TEXT_2">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Musa was the grandson of Sundiata Keita, the Muslim founder of the Mali Empire, which existed on the Mandinka plateau in West Africa from the 14th to the 17th centuries. At the time Mali was the source of over half of the world's gold, and Musa was fabulously wealthy. During his famous hajj (pilgrimage to Mecca) in 1324, Musa gave away so much gold in Cairo that the price of gold there was depressed for the next twenty years. He gave away so much treasure, in fact, that he had to borrow money to pay for his return trip. Legend has it that Musa was accompanied on his journey by a huge retinue and honor guard, not to mention 60,000 porters to carry the supplies.[NEWLINE][NEWLINE]Called "Musa the Magnificent," Mansa was celebrated for his enlightenment and piety. He added the important towns of Timbuktu and Gao to his kingdom. Upon reaching the throne, Musa became a feverish Muslim, and he built countless mosques across the country and made Islam the state religion, though he did not persecute other religions in his country.[NEWLINE][NEWLINE]Musa encouraged trade between Mali and the world beyond, using his country's vast resources of kola nuts, ivory, salt, and gold to attain goods from three continents. A believer in knowledge, Musa made the city of Timbuktu into a center of learning and craftsmanship, and Sankore University was one of the great schools in the Muslim world. Students came from all over to receive a free education there.[NEWLINE][NEWLINE]Musa died in 1337, after ruling Mali for twenty-five years. A contemporary historian said of Mansa Musa, that, of all of the leaders in West Africa, he was, "the most powerful, the richest, the most fortunate, and the most feared by his enemies and the most able to do good for those around him."</Text>
+		</Row>
+		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA_FIRSTGREETING_1">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Greetings, stranger! You stand before Mansa Musa of Mali, Emir of Melle, Lord of the Mines of Wangara, and Conqueror of Ghanata. Tell me of your lands!</Text>
+		</Row>
+		<Row Tag="TXT_KEY_LEADER_MANSA_MUSA_DEFEATED_1">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Enough! You have won. The riches of Mali are yours. Treat my people with mercy and they will serve you faithfully.</Text>
 		</Row>
 	</Language_RU_RU>
 

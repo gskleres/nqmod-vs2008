@@ -14,12 +14,12 @@
 			<ArtStyleType>ARTSTYLE_MIDDLE_EAST</ArtStyleType>
 			<ArtStyleSuffix>_AFRI</ArtStyleSuffix>
 			<ArtStylePrefix>AFRICAN </ArtStylePrefix>
-			<!-- FIX --><PortraitIndex>3</PortraitIndex>
-			<!-- FIX --><IconAtlas>EXPANSION2_CIV_COLOR_ATLAS</IconAtlas>
-			<!-- FIX --><AlphaIconAtlas>EXPANSION2_CIV_ALPHA_ATLAS</AlphaIconAtlas>
-			<!-- FIX --><MapImage>MapMorocco360x410.dds</MapImage>
+			<PortraitIndex>0</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
+			<AlphaIconAtlas>NQ_MALI_ALPHA_ATLAS</AlphaIconAtlas>
+			<MapImage>MapMali360x412.dds</MapImage>
 			<DawnOfManQuote>TXT_KEY_CIV5_DAWN_MALI_TEXT</DawnOfManQuote>
-			<!-- FIX --><DawnOfManImage>DOM_Ahmed_AlMansur.dds</DawnOfManImage>
+			<DawnOfManImage>DOM_Mansa_Musa.dds</DawnOfManImage>
 			<!-- FIX <DawnOfManAudio>AS2D_DOM_SPEECH_MOROCCO</DawnOfManAudio>-->
 		</Row>
 	</Civilizations>

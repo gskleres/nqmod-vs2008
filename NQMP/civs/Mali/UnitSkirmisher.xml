@@ -37,10 +37,10 @@
 			<XPValueAttack>3</XPValueAttack>
 			<XPValueDefense>3</XPValueDefense>
 			<UnitArtInfo>ART_DEF_UNIT_COMPOSITE_BOWMAN</UnitArtInfo>
-			<!-- FIX --><UnitFlagAtlas>UNIT_FLAG_ATLAS</UnitFlagAtlas>
-			<!-- FIX --><UnitFlagIconOffset>83</UnitFlagIconOffset>
-			<!-- FIX --><IconAtlas>UNIT_ATLAS_2</IconAtlas>
-			<!-- FIX --><PortraitIndex>36</PortraitIndex>
+			<UnitFlagAtlas>NQ_UNIT_FLAG_ATLAS</UnitFlagAtlas>
+			<UnitFlagIconOffset>0</UnitFlagIconOffset>
+			<!-- FIX --><IconAtlas>EXPANSION2_UNIT_ATLAS</IconAtlas>
+			<!-- FIX --><PortraitIndex>10</PortraitIndex>
 		</Row>
 	</Units>
 	<Unit_AITypes>
