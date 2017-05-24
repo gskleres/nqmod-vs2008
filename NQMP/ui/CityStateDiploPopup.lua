@@ -1021,7 +1021,7 @@ function OnFaithGift ()
 	local iActivePlayer = Game.GetActivePlayer();
 	local pActivePlayer = Players[iActivePlayer];
 	
-	if (pActivePlayer:GetFaith() >= iFaithGift) then
+	if (pActivePlayer:GetFaith() >= iFaithGift and pActivePlayer:CanFaithGiftMinors()) then
 		Game.DoMinorGoldGift(g_iMinorCivID, iFaithGift + 100000); -- hack!!! see C++
 		m_iLastAction = kiGiftedGold; -- this is fine because the text is the same for gold and faith
 		OnCloseGive();

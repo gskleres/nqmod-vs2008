@@ -9067,7 +9067,7 @@ int CvMinorCivAI::GetFriendshipFromGoldGift(PlayerTypes eMajor, int iGold)
 /// Major Civ gifted some Faith to this Minor
 void CvMinorCivAI::DoFaithGiftFromMajor(PlayerTypes ePlayer, int iFaith)
 {
-	if(GET_PLAYER(ePlayer).GetFaith() >= iFaith)
+	if(GET_PLAYER(ePlayer).CanFaithGiftMinors() && GET_PLAYER(ePlayer).GetFaith() >= iFaith)
 	{
 		int iFriendshipChange = GetFriendshipFromFaithGift(ePlayer, iFaith);
 
