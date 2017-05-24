@@ -25,6 +25,7 @@
 			<HurryCostModifier>25</HurryCostModifier>
 			<IconAtlas>TECH_ATLAS_1</IconAtlas>
 			<PortraitIndex>17</PortraitIndex>
+			<MaliTreasury>true</MaliTreasury>
 		</Row>
 	</Buildings>
 	<Building_Flavors>

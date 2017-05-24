@@ -6293,6 +6293,116 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 			}
 #endif
 
+#ifdef NQ_MALI_TREASURY
+			// HACK: Mali Treasury needs to be here instead
+			if (pBuildingInfo->IsMalianTreasury())
+			{
+				int validPlotCount = 0;
+				int validPlotList[NUM_CITY_PLOTS];
+				CvPlot* pLoopPlot;
+				for (int iCityPlotLoop = 1; iCityPlotLoop < NUM_CITY_PLOTS; iCityPlotLoop++) // start loop skipping city plot
+				{
+					pLoopPlot = plotCity(getX(), getY(), iCityPlotLoop);
+
+					// must have a valid plot
+					if(pLoopPlot == NULL)
+						continue;
+
+					// Must be owned by this player, not water, not mountain, and unimproved with no resources
+					if(pLoopPlot->getOwner() != getOwner() || pLoopPlot->isWater() || pLoopPlot->isMountain() || 
+						pLoopPlot->getImprovementType() != NO_IMPROVEMENT || pLoopPlot->getResourceType() != NO_RESOURCE)
+						continue;
+
+					// must be desert, tundra, plains, or grassland
+					if (pLoopPlot->getTerrainType() != TERRAIN_DESERT && pLoopPlot->getTerrainType() != TERRAIN_PLAINS && 
+						pLoopPlot->getTerrainType() != TERRAIN_TUNDRA && pLoopPlot->getTerrainType() != TERRAIN_GRASS)
+						continue;
+					
+					// cannot have any feature other than forest or jungle
+					if (pLoopPlot->getFeatureType() != NO_FEATURE && pLoopPlot->getFeatureType() != FEATURE_FOREST && 
+						pLoopPlot->getFeatureType() != FEATURE_JUNGLE)
+						continue;
+					
+					validPlotList[validPlotCount] = iCityPlotLoop;
+					validPlotCount++;
+				}
+
+				if (validPlotCount > 0)
+				{
+					int iIndex = GC.getGame().getJonRandNum(validPlotCount, "Mali Treasury random plot selection");
+					CvPlot* pPlot = GetCityCitizens()->GetCityPlotFromIndex(validPlotList[iIndex]);
+					
+					ResourceTypes eResourceGold = (ResourceTypes)GC.getInfoTypeForString("RESOURCE_GOLD", true);
+					ResourceTypes eResourceSalt = (ResourceTypes)GC.getInfoTypeForString("RESOURCE_SALT", true);
+					ResourceTypes eResourceCopper = (ResourceTypes)GC.getInfoTypeForString("RESOURCE_COPPER", true);
+					ResourceTypes eResourceSilver = (ResourceTypes)GC.getInfoTypeForString("RESOURCE_SILVER", true);
+					
+					int iGoldWeight = 0;
+					int iSaltWeight = 0;
+					int iCopperWeight = 0;
+					int iSilverWeight = 0;
+
+					if (pPlot->isHills())
+					{
+						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 2 : 0;
+						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 0 : 0;
+						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 1 : 0;
+						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+					}
+					if (pPlot->getTerrainType() == TERRAIN_DESERT)
+					{
+						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 4 : 0;
+						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 3 : 0;
+						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 2 : 0;
+						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+					}
+					if (pPlot->getTerrainType() == TERRAIN_GRASS)
+					{
+						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 4 : 0;
+						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 1 : 0;
+						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 3 : 0;
+						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+					}
+					if (pPlot->getTerrainType() == TERRAIN_PLAINS)
+					{
+						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 3 : 0;
+						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 3 : 0;
+						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 2 : 0;
+						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+					}
+					if (pPlot->getTerrainType() == TERRAIN_TUNDRA)
+					{
+						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 1 : 0;
+						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 1 : 0;
+						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 1 : 0;
+						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+					}
+
+					int iTotalWeight = iGoldWeight + iSaltWeight + iCopperWeight + iSilverWeight;
+					if (iTotalWeight > 0)
+					{
+						int iRoll = GC.getGame().getJonRandNum(iTotalWeight, "Rolling for Mali Treasury resource type");
+						if (iRoll < iSilverWeight)
+						{
+							pPlot->setResourceType(eResourceSilver, 1);
+						}
+						else if (iRoll < iSilverWeight + iCopperWeight)
+						{
+							pPlot->setResourceType(eResourceCopper, 1);
+						}
+						else if (iRoll < iSilverWeight + iCopperWeight + iSaltWeight)
+						{
+							pPlot->setResourceType(eResourceSalt, 1);
+						}
+						else
+						{
+							pPlot->setResourceType(eResourceGold, 1);
+						}
+					}
+				}
+			}
+#endif
+
 			// Free Units
 			CvUnit* pFreeUnit;
 

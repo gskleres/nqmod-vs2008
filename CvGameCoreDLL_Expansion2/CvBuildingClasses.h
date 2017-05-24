@@ -234,6 +234,9 @@ public:
 	bool IsRequiresHolyCity() const;
 	bool AffectSpiesNow() const;
 	bool IsEspionage() const;
+#ifdef NQ_MALI_TREASURY
+	bool IsMalianTreasury() const;
+#endif
 	bool AllowsFoodTradeRoutes() const;
 	bool AllowsProductionTradeRoutes() const;
 	bool NullifyInfluenceModifier() const;
@@ -465,6 +468,9 @@ private:
 	bool m_bRequiresHolyCity;
 	bool m_bAffectSpiesNow;
 	bool m_bEspionage;
+#ifdef NQ_MALI_TREASURY
+	bool m_bMalianTreasury;
+#endif
 	bool m_bAllowsFoodTradeRoutes;
 	bool m_bAllowsProductionTradeRoutes;
 	bool m_bNullifyInfluenceModifier;

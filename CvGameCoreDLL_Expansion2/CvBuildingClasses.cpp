@@ -158,6 +158,9 @@ CvBuildingEntry::CvBuildingEntry(void):
 	m_bRequiresHolyCity(false),
 	m_bAffectSpiesNow(false),
 	m_bEspionage(false),
+#ifdef NQ_MALI_TREASURY
+	m_bMalianTreasury(false),
+#endif
 	m_bAllowsFoodTradeRoutes(false),
 	m_bAllowsProductionTradeRoutes(false),
 	m_bNullifyInfluenceModifier(false),
@@ -317,6 +320,9 @@ bool CvBuildingEntry::CacheResults(Database::Results& kResults, CvDatabaseUtilit
 	m_bRequiresHolyCity = kResults.GetBool("HolyCity");
 	m_bAffectSpiesNow = kResults.GetBool("AffectSpiesNow");
 	m_bEspionage = kResults.GetBool("Espionage");
+#ifdef NQ_MALI_TREASURY
+	m_bMalianTreasury = kResults.GetBool("MaliTreasury");
+#endif
 	m_bAllowsFoodTradeRoutes = kResults.GetBool("AllowsFoodTradeRoutes");
 	m_bAllowsProductionTradeRoutes = kResults.GetBool("AllowsProductionTradeRoutes");
 	m_bNullifyInfluenceModifier = kResults.GetBool("NullifyInfluenceModifier");
@@ -1569,6 +1575,14 @@ bool CvBuildingEntry::IsEspionage() const
 {
 	return m_bEspionage;
 }
+
+#ifdef NQ_MALI_TREASURY
+// HACK: Is this a Malian Treasury?
+bool CvBuildingEntry::IsMalianTreasury() const
+{
+	return m_bMalianTreasury;
+}
+#endif
 
 bool CvBuildingEntry::AllowsFoodTradeRoutes() const
 {

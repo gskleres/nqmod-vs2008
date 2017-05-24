@@ -773,6 +773,11 @@
 #define NQ_ROUND_BUILD_TIMES_DOWN
 // HACK: Golden Pilgrimage Trait (new civ Mali) needs to give +1 Faith to tiles that make at least 1 Gold during a golden age
 #define NQ_GOLDEN_PILGRIMAGE
+// HACK: Mali Treasury needs to be in C++ instead of Lua to fix the resync issue
+#define NQ_MALI_TREASURY
+// allow gifting faith to minors via beliefs
+#define NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
 // influence gain on gold tribute from policies
@@ -790,6 +795,7 @@
 // bonus strength when near friendly city states or city states conquered by another civ
 #define NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
 
+
 /// ---- IDEOLOGY OVERHAUL: FREEDOM ----
 // trade mission influence modifier from policies
 #define NQ_TRADE_MISSION_INFLUENCE_MODIFIER_FROM_POLICIES
@@ -805,8 +811,6 @@
 #define NQ_HAPPINESS_FROM_GREAT_IMPROVEMENTS_FROM_POLICIES
 // prevent friendly minors declaring war on you in support of their ally, policy toggle
 #define NQ_POLICY_TOGGLE_NO_MINOR_DOW_IF_FRIENDS
-// allow gifting faith to minors via beliefs
-#define NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
 
 /// ---- IDEOLOGY OVERHAUL: ORDER ----
 // tourism per city from policies
