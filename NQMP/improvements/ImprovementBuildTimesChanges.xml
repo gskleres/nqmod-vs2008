@@ -28,15 +28,15 @@
 
 		<!-- Cap the build time of all improvements to 600 (6 turns standard, 4 turns quick) -->
 		<Update>
-			<Set Time="600" />
+			<Set Time="565" />
 			<Where Time="700" />
 		</Update>
 		<Update>
-			<Set Time="600" />
+			<Set Time="565" />
 			<Where Time="800" />
 		</Update>
 		<Update>
-			<Set Time="600" />
+			<Set Time="565" />
 			<Where Time="900" />
 		</Update>
 
@@ -45,15 +45,15 @@
 	<!-- Jungle, Forest, and Marsh chops are all 2/2/1 turns now -->
 	<BuildFeatures>
 		<Update>
-			<Set Time="175" />
+			<Set Time="200" />
 			<Where Time="400" />
 		</Update>
 		<Update>
-			<Set Time="175" />
+			<Set Time="200" />
 			<Where Time="600" />
 		</Update>
 		<Update>
-			<Set Time="175" />
+			<Set Time="200" />
 			<Where Time="700" />
 		</Update>
 	</BuildFeatures>
