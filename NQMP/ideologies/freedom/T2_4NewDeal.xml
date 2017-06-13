@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 3/22/2017 7:10:47 PM -->
 <GameData>
 
-	<!-- New Deal: Great Person tile improvements each provide +2 Production, +2 Culture, +2 Gold, +2 Science, and +2 Happiness. -->
+	<!-- New Deal: Great Person tile improvements each provide +1 Production, +1 Culture, +1 Gold, +1 Science, and +1 Happiness. -->
 	<Policies>
 		<Update>
-			<Set Level="3" HappinessFromGreatImprovements="2" />
+			<Set Level="3" HappinessFromGreatImprovements="1" />
 			<Where Type="POLICY_NEW_DEAL" />
 		</Update>
 	</Policies>
@@ -15,118 +15,118 @@
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_ACADEMY</ImprovementType>
 			<YieldType>YIELD_PRODUCTION</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_ACADEMY</ImprovementType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_ACADEMY</ImprovementType>
 			<YieldType>YIELD_GOLD</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_CUSTOMS_HOUSE</ImprovementType>
 			<YieldType>YIELD_PRODUCTION</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_CUSTOMS_HOUSE</ImprovementType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_CUSTOMS_HOUSE</ImprovementType>
 			<YieldType>YIELD_GOLD</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_MANUFACTORY</ImprovementType>
 			<YieldType>YIELD_PRODUCTION</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_MANUFACTORY</ImprovementType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_MANUFACTORY</ImprovementType>
 			<YieldType>YIELD_GOLD</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_HOLY_SITE</ImprovementType>
 			<YieldType>YIELD_PRODUCTION</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_HOLY_SITE</ImprovementType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_HOLY_SITE</ImprovementType>
 			<YieldType>YIELD_GOLD</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_CITADEL</ImprovementType>
 			<YieldType>YIELD_PRODUCTION</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_CITADEL</ImprovementType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_CITADEL</ImprovementType>
 			<YieldType>YIELD_GOLD</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 	</Policy_ImprovementYieldChanges>
 	<Policy_ImprovementCultureChanges>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_ACADEMY</ImprovementType>
-			<CultureChange>2</CultureChange>
+			<CultureChange>1</CultureChange>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_CUSTOMS_HOUSE</ImprovementType>
-			<CultureChange>2</CultureChange>
+			<CultureChange>1</CultureChange>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_MANUFACTORY</ImprovementType>
-			<CultureChange>2</CultureChange>
+			<CultureChange>1</CultureChange>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_HOLY_SITE</ImprovementType>
-			<CultureChange>2</CultureChange>
+			<CultureChange>1</CultureChange>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_NEW_DEAL</PolicyType>
 			<ImprovementType>IMPROVEMENT_CITADEL</ImprovementType>
-			<CultureChange>2</CultureChange>
+			<CultureChange>1</CultureChange>
 		</Row>
 	</Policy_ImprovementCultureChanges>
 	
@@ -134,25 +134,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_NEW_DEAL_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NEW_DEAL_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]New Deal[ENDCOLOR][NEWLINE]Great Person tile improvements each provide +2 [ICON_PRODUCTION] Production, +2 [ICON_CULTURE] Culture, +2 [ICON_GOLD] Gold, +2 [ICON_RESEARCH] Science, and +2 [ICON_HAPPINESS_1] Happiness.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]New Deal[ENDCOLOR][NEWLINE]Great Person tile improvements each provide +1 [ICON_PRODUCTION] Production, +1 [ICON_CULTURE] Culture, +1 [ICON_GOLD] Gold, +1 [ICON_RESEARCH] Science, and +1 [ICON_HAPPINESS_1] Happiness.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_NEW_DEAL_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NEW_DEAL_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]New Deal[ENDCOLOR][NEWLINE]Great Person tile improvements each provide +2 [ICON_PRODUCTION] Production, +2 [ICON_CULTURE] Culture, +2 [ICON_GOLD] Gold, +2 [ICON_RESEARCH] Science, and +2 [ICON_HAPPINESS_1] Happiness.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]New Deal[ENDCOLOR][NEWLINE]Great Person tile improvements each provide +1 [ICON_PRODUCTION] Production, +1 [ICON_CULTURE] Culture, +1 [ICON_GOLD] Gold, +1 [ICON_RESEARCH] Science, and +1 [ICON_HAPPINESS_1] Happiness.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_NEW_DEAL_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NEW_DEAL_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]New Deal[ENDCOLOR][NEWLINE]Great Person tile improvements each provide +2 [ICON_PRODUCTION] Production, +2 [ICON_CULTURE] Culture, +2 [ICON_GOLD] Gold, +2 [ICON_RESEARCH] Science, and +2 [ICON_HAPPINESS_1] Happiness.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]New Deal[ENDCOLOR][NEWLINE]Great Person tile improvements each provide +1 [ICON_PRODUCTION] Production, +1 [ICON_CULTURE] Culture, +1 [ICON_GOLD] Gold, +1 [ICON_RESEARCH] Science, and +1 [ICON_HAPPINESS_1] Happiness.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_NEW_DEAL_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NEW_DEAL_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]New Deal[ENDCOLOR][NEWLINE]Great Person tile improvements each provide +2 [ICON_PRODUCTION] Production, +2 [ICON_CULTURE] Culture, +2 [ICON_GOLD] Gold, +2 [ICON_RESEARCH] Science, and +2 [ICON_HAPPINESS_1] Happiness.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]New Deal[ENDCOLOR][NEWLINE]Great Person tile improvements each provide +1 [ICON_PRODUCTION] Production, +1 [ICON_CULTURE] Culture, +1 [ICON_GOLD] Gold, +1 [ICON_RESEARCH] Science, and +1 [ICON_HAPPINESS_1] Happiness.</Text>
 		</Row>
 	</Language_RU_RU>
 

@@ -656,7 +656,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/freedom/T2_4Capitalism.xml</FileName>
+        <FileName>ideologies/freedom/T2_4NewDeal.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -681,7 +681,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/freedom/T3_4NewDeal.xml</FileName>
+        <FileName>ideologies/freedom/T3_4Capitalism.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2731,7 +2731,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\freedom\T2_4Capitalism.xml">
+    <Content Include="ideologies\freedom\T3_4Capitalism.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
@@ -2755,7 +2755,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\freedom\T3_4NewDeal.xml">
+    <Content Include="ideologies\freedom\T2_4NewDeal.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
