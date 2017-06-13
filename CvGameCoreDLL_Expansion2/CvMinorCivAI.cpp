@@ -8520,15 +8520,18 @@ void CvMinorCivAI::DoMajorBullyGold(PlayerTypes eBully, int iGold)
 #ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
 		int iInfluenceChange = 0;
 		int iBullyInfluenceGain = GET_PLAYER(eBully).GetPlayerPolicies()->GetNumericModifier(POLICYMOD_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS);
+		bool bShouldRemoveQuests;
 		if (iBullyInfluenceGain > 0)
 		{
 			iInfluenceChange = iBullyInfluenceGain;
+			bShouldRemoveQuests = false;
 		}
 		else
 		{
 			iInfluenceChange = GC.getMINOR_FRIENDSHIP_DROP_BULLY_GOLD_SUCCESS();
+			bShouldRemoveQuests = true;
 		}
-		DoBulliedByMajorReaction(eBully, iInfluenceChange);
+		DoBulliedByMajorReaction(eBully, iInfluenceChange, bShouldRemoveQuests);
 #else
 		DoBulliedByMajorReaction(eBully, GC.getMINOR_FRIENDSHIP_DROP_BULLY_GOLD_SUCCESS());
 #endif
@@ -8577,7 +8580,11 @@ void CvMinorCivAI::DoMajorBullyUnit(PlayerTypes eBully, UnitTypes eUnitType)
 			if(GetPlayer()->getCapitalCity())
 				GetPlayer()->getCapitalCity()->addProductionExperience(pNewUnit);
 
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+			DoBulliedByMajorReaction(eBully, GC.getMINOR_FRIENDSHIP_DROP_BULLY_WORKER_SUCCESS(), true);
+#else
 			DoBulliedByMajorReaction(eBully, GC.getMINOR_FRIENDSHIP_DROP_BULLY_WORKER_SUCCESS());
+#endif
 		}
 		else
 			pNewUnit->kill(false);	// Could not find a spot for the unit!
@@ -8590,7 +8597,12 @@ void CvMinorCivAI::DoMajorBullyUnit(PlayerTypes eBully, UnitTypes eUnitType)
 }
 
 // We were just bullied, how do we react?
+
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+void CvMinorCivAI::DoBulliedByMajorReaction(PlayerTypes eBully, int iInfluenceChangeTimes100, bool bShouldRemoveQuests)
+#else
 void CvMinorCivAI::DoBulliedByMajorReaction(PlayerTypes eBully, int iInfluenceChangeTimes100)
+#endif
 {
 	CvAssertMsg(eBully >= 0, "eBully is expected to be non-negative (invalid Index)");
 	CvAssertMsg(eBully < MAX_MAJOR_CIVS, "eBully is expected to be within maximum bounds (invalid Index)");
@@ -8603,6 +8615,9 @@ void CvMinorCivAI::DoBulliedByMajorReaction(PlayerTypes eBully, int iInfluenceCh
 	SetTurnLastBulliedByMajor(eBully, GC.getGame().getGameTurn());
 	ChangeFriendshipWithMajorTimes100(eBully, iInfluenceChangeTimes100);
 
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	if (bShouldRemoveQuests)
+#endif
 	// In case we have quests that bullying makes obsolete, check now
 	DoTestActiveQuests(/*bTestComplete*/ false, /*bTestObsolete*/ true);
 

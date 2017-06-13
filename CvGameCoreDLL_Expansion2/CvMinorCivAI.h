@@ -478,7 +478,11 @@ public:
 	void DoMajorBullyGold(PlayerTypes eBully, int iGold);
 	void DoMajorBullyUnit(PlayerTypes eBully, UnitTypes eUnitType);
 	
+#ifdef NQ_MINOR_FRIENDSHIP_GAIN_BULLY_GOLD_SUCCESS_FROM_POLICIES
+	void DoBulliedByMajorReaction(PlayerTypes eBully, int iInfluenceChangeTimes100, bool bShouldRemoveQuests);
+#else
 	void DoBulliedByMajorReaction(PlayerTypes eBully, int iInfluenceChangeTimes100);
+#endif
 
 	bool IsEverBulliedByAnyMajor() const;
 	bool IsEverBulliedByMajor(PlayerTypes ePlayer) const;
