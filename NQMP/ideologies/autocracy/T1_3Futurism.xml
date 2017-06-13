@@ -15,25 +15,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_FUTURISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FUTURISM_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]Gain 250 [ICON_TOURISM] Tourism (on Quick Speed) with all known Civilizations whenever a Great Writer, Great Artist, or Great Musician is born.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]Gain 250 global [ICON_TOURISM] Tourism (on Quick Speed) whenever a Great Writer, Great Artist, or Great Musician is born.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_FUTURISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FUTURISM_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]Gain 250 [ICON_TOURISM] Tourism (on Quick Speed) with all known Civilizations whenever a Great Writer, Great Artist, or Great Musician is born.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]Gain 250 global [ICON_TOURISM] Tourism (on Quick Speed) whenever a Great Writer, Great Artist, or Great Musician is born.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_FUTURISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FUTURISM_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]Gain 250 [ICON_TOURISM] Tourism (on Quick Speed) with all known Civilizations whenever a Great Writer, Great Artist, or Great Musician is born.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]Gain 250 global [ICON_TOURISM] Tourism (on Quick Speed) whenever a Great Writer, Great Artist, or Great Musician is born.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_FUTURISM_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FUTURISM_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]Gain 250 [ICON_TOURISM] Tourism (on Quick Speed) with all known Civilizations whenever a Great Writer, Great Artist, or Great Musician is born.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Futurism[ENDCOLOR][NEWLINE]Gain 250 global [ICON_TOURISM] Tourism (on Quick Speed) whenever a Great Writer, Great Artist, or Great Musician is born.</Text>
 		</Row>
 	</Language_RU_RU>
 	
