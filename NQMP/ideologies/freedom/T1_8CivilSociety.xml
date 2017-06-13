@@ -1,39 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created by ModBuddy on 3/22/2017 7:09:16 PM -->
 <GameData>
-
-	<!-- Civil Society: Specialists provide +1 Gold and consume half the normal amount of Food. -->
-	<Policy_SpecialistExtraYields>
-		<Row>
-			<PolicyType>POLICY_CIVIL_SOCIETY</PolicyType>
-			<YieldType>YIELD_GOLD</YieldType>
-			<Yield>1</Yield>
-		</Row>
-	</Policy_SpecialistExtraYields>
+	
+	<!-- Civil Society: Specialists consume half the normal amount of Food. -->
 
 	<!-- localization -->
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_CIVIL_SOCIETY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CIVIL_SOCIETY_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Civil Society[ENDCOLOR][NEWLINE]Specialists provide +1 [ICON_GOLD] Gold and consume half the normal amount of [ICON_FOOD] Food.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Civil Society[ENDCOLOR][NEWLINE]Specialists consume half the normal amount of [ICON_FOOD] Food.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_CIVIL_SOCIETY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CIVIL_SOCIETY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Civil Society[ENDCOLOR][NEWLINE]Specialists provide +1 [ICON_GOLD] Gold and consume half the normal amount of [ICON_FOOD] Food.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Civil Society[ENDCOLOR][NEWLINE]Specialists consume half the normal amount of [ICON_FOOD] Food.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_CIVIL_SOCIETY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CIVIL_SOCIETY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Civil Society[ENDCOLOR][NEWLINE]Specialists provide +1 [ICON_GOLD] Gold and consume half the normal amount of [ICON_FOOD] Food.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Civil Society[ENDCOLOR][NEWLINE]Specialists consume half the normal amount of [ICON_FOOD] Food.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_CIVIL_SOCIETY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CIVIL_SOCIETY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Civil Society[ENDCOLOR][NEWLINE]Specialists provide +1 [ICON_GOLD] Gold and consume half the normal amount of [ICON_FOOD] Food.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Civil Society[ENDCOLOR][NEWLINE]Specialists consume half the normal amount of [ICON_FOOD] Food.</Text>
 		</Row>
 	</Language_RU_RU>
 
