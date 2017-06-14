@@ -5,8 +5,8 @@
 	<!-- Angkor Wat: +10 Science, +3 Culture, +1 Great Engineer point -->
 	<Buildings>
 		<Update>
-			<Set PrereqTech="TECH_THEOLOGY" Cost="300" GlobalPlotCultureCostModifier="0" GlobalPlotBuyCostModifier="0" />
-			<Where Type="BUILDING_ANGKOR_WAT" Help="NULL" />
+			<Set PrereqTech="TECH_THEOLOGY" Cost="300" GlobalPlotCultureCostModifier="0" GlobalPlotBuyCostModifier="0" Help="NULL" />
+			<Where Type="BUILDING_ANGKOR_WAT" />
 		</Update>
 	</Buildings>
 	<Building_YieldChanges>
