@@ -5,8 +5,8 @@
 	<!-- Angkor Wat: +10 Science, +3 Culture, +1 Great Engineer point -->
 	<Buildings>
 		<Update>
-			<Set PrereqTech="TECH_THEOLOGY" Cost="300" GlobalPlotCultureCostModifier="0" GlobalPlotBuyCostModifier="0" SpecialistType="NULL" />
-			<Where BuildingClass="BUILDINGCLASS_ANGKOR_WAT" />
+			<Set PrereqTech="TECH_THEOLOGY" Cost="300" GlobalPlotCultureCostModifier="0" GlobalPlotBuyCostModifier="0" />
+			<Where Type="BUILDING_ANGKOR_WAT" Help="NULL" />
 		</Update>
 	</Buildings>
 	<Building_YieldChanges>
@@ -20,17 +20,5 @@
 			<Where BuildingType="BUILDING_ANGKOR_WAT" YieldType="YIELD_CULTURE" />
 		</Update>
 	</Building_YieldChanges>
-	<Language_en_US>
-		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
-	</Language_en_US>
-	<Language_DE_DE>
-		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
-	</Language_DE_DE>
-	<Language_PL_PL>
-		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
-	</Language_PL_PL>
-	<Language_RU_RU>
-		<Delete Tag="TXT_KEY_WONDER_ANGKOR_WAT_HELP" />
-	</Language_RU_RU>
 
 </GameData>
