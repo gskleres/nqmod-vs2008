@@ -5,7 +5,7 @@
 	<!-- Capitalism: Specialists provide +1 Production and produce half the normal amount of Unhappiness. -->
 	<Policies>
 		<Update>
-			<Set Level="2" HalfSpecialistUnhappiness="true" />
+			<Set Level="3" HalfSpecialistUnhappiness="true" />
 			<Where Type="POLICY_CAPITALISM" />
 		</Update>
 	</Policies>

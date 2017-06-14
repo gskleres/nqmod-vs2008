@@ -5,7 +5,7 @@
 	<!-- New Deal: Great Person tile improvements each provide +1 Production, +1 Culture, +1 Gold, +1 Science, and +1 Happiness. -->
 	<Policies>
 		<Update>
-			<Set Level="3" HappinessFromGreatImprovements="1" />
+			<Set Level="2" HappinessFromGreatImprovements="1" />
 			<Where Type="POLICY_NEW_DEAL" />
 		</Update>
 	</Policies>
