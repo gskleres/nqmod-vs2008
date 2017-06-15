@@ -12,7 +12,7 @@
 			<PolicyBranchType>POLICY_BRANCH_ORDER</PolicyBranchType>
 			<CultureCost>10</CultureCost>
 			<CombatBonusVsSmallerCiv>15</CombatBonusVsSmallerCiv>
-			<Level>3</Level>
+			<Level>1</Level>
 			<PortraitIndex>11</PortraitIndex>
 			<IconAtlas>POLICY_ATLAS_EXP2</IconAtlas>
 			<IconAtlasAchieved>POLICY_A_ATLAS_EXP2</IconAtlasAchieved>
