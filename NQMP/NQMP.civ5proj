@@ -756,6 +756,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>ideologies/order/T2_5PartyLeadership.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>ideologies/order/T2_5MinistryOfRailways.xml</FileName>
       </Action>
       <Action>
@@ -767,11 +772,6 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
         <FileName>ideologies/order/T3_3CulturalRevolution.xml</FileName>
-      </Action>
-      <Action>
-        <Set>OnModActivated</Set>
-        <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T3_4PartyLeadership.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2831,7 +2831,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T3_4PartyLeadership.xml">
+    <Content Include="ideologies\order\T2_5PartyLeadership.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
