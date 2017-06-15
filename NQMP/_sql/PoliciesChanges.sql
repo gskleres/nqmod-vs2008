@@ -56,3 +56,7 @@ ALTER TABLE Policies ADD IsSpaceflightPioneers BOOLEAN DEFAULT false;
 ALTER TABLE Policies ADD CombatBonusVsSmallerCiv INTEGER DEFAULT 0;
 -- percentage of empire's production output converted to bonus % for great musician points
 ALTER TABLE Policies ADD ProductionToGreatMusiciansModifier INTEGER DEFAULT 0;
+-- flat happiness gain from a rail connection (similar to road connection in liberty)
+ALTER TABLE Policies ADD HappinessPerRailConnection INTEGER DEFAULT 0;
+-- Bonus % production from having a rail connection (additive with base bonus)
+ALTER TABLE Policies ADD RailConnectionProductionModifier INTEGER DEFAULT 0;
