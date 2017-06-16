@@ -691,7 +691,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
-        <FileName>ideologies/order/T1_2Commissariats.xml</FileName>
+        <FileName>ideologies/order/T3_2SatelliteStates.xml</FileName>
       </Action>
       <Action>
         <Set>OnModActivated</Set>
@@ -2133,6 +2133,12 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
         <Description>BuildingTreasury</Description>
         <FileName>civs/Mali/BuildingTreasury.xml</FileName>
       </Content>
+      <Content>
+        <Type>InGameUIAddin</Type>
+        <Name>T3_2_SatelliteStates</Name>
+        <Description>T3_2_SatelliteStates</Description>
+        <FileName>ideologies/order/T3_2SatelliteStates.xml</FileName>
+      </Content>
     </ModContent>
     <ModProperties />
     <Homepage>http://www.reddit.com/r/nqmod</Homepage>
@@ -2794,7 +2800,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
-    <Content Include="ideologies\order\T1_2Commissariats.xml">
+    <Content Include="ideologies\order\T3_2SatelliteStates.lua">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="ideologies\order\T3_2SatelliteStates.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
