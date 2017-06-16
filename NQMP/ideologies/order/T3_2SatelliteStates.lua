@@ -8,9 +8,8 @@ function T3_2SatelliteStates_OnPolicyAdopted(iPlayerID, iPolicyID)
 	local pPlayer = Players[iPlayerID];
 	local bHasPolicy = pPlayer:HasPolicy(GameInfo.Policies["POLICY_SKYSCRAPERS"].ID);
 	for loopCity in pPlayer:Cities() do
-		if (bHasPolicy and loopCity:GetNumBuilding(GameInfo.Buildings["BUILDING_COURTHOUSE"].ID)) then
+		if (bHasPolicy and loopCity:GetNumBuilding(GameInfo.Buildings["BUILDING_COURTHOUSE"].ID) > 0) then
 			loopCity:SetNumRealBuilding(GameInfoTypes["DUMMY_BUILDING_T3_2_SATELLITE_STATES"], 1);
-			pPlayer:ChangeGold(10000);
 		else
 			loopCity:SetNumRealBuilding(GameInfoTypes["DUMMY_BUILDING_T3_2_SATELLITE_STATES"], 0);
 		end
@@ -25,7 +24,6 @@ function T3_2SatelliteStates_OnCityConstructed(iPlayerID, iCityID, iBuildingID)
 		if (pPlayer:HasPolicy(GameInfo.Policies["POLICY_SKYSCRAPERS"].ID)) then
 			local pCity = pPlayer:GetCityByID(iCityID);
 			pCity:SetNumRealBuilding(GameInfoTypes["DUMMY_BUILDING_T3_2_SATELLITE_STATES"], 1);
-			pPlayer:ChangeGold(1000);
 		end
 	end
 end

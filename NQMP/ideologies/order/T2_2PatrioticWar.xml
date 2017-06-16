@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2017-02-12 15:58:13 -->
+<GameData>
+  
+	<!-- Patriotic War: Training military Land Units in your Cities produces 2 Units instead of 1. -->
+
+	<Policies>
+		<Update>
+			<Set Level="2" />
+			<Where Type="POLICY_PATRIOTIC_WAR" />
+		</Update>
+	</Policies>
+	<Policy_FreePromotions>
+		<Delete PolicyType="POLICY_PATRIOTIC_WAR" />
+	</Policy_FreePromotions>
+	<Policy_Flavors>
+		<Update>
+			<Set FlavorType="FLAVOR_OFFENSE" Flavor="50" />
+			<Where PolicyType="POLICY_PATRIOTIC_WAR" />
+		</Update>
+	</Policy_Flavors>
+
+	<!-- localization -->
+	<Language_en_US>
+		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR" />
+		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR">
+			<Text>Patriotic War</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
+		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
+			<Text>[COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT](BROKEN) Training military Land Units in your Cities produces 2 Units instead of 1.[ENDCOLOR]</Text>
+		</Row>
+	</Language_en_US>
+	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR" />
+		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Patriotic War</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
+		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT](BROKEN) Training military Land Units in your Cities produces 2 Units instead of 1.[ENDCOLOR]</Text>
+		</Row>
+	</Language_DE_DE>
+	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR" />
+		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Patriotic War</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
+		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT](BROKEN) Training military Land Units in your Cities produces 2 Units instead of 1.[ENDCOLOR]</Text>
+		</Row>
+	</Language_PL_PL>
+	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR" />
+		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Patriotic War</Text>
+		</Row>
+		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
+		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT](BROKEN) Training military Land Units in your Cities produces 2 Units instead of 1.[ENDCOLOR]</Text>
+		</Row>
+	</Language_RU_RU>
+
+</GameData>
