@@ -728,7 +728,7 @@
 // cheating so that sacred sites applies both tourism and gold
 #define NQ_CHEAT_SACRED_SITES_AFFECTS_GOLD
 // all players can rush spaceship parts with Engineers now
-#define NQ_ALLOW_SS_PART_HURRY_BY_DEFAULT
+//#define NQ_ALLOW_SS_PART_HURRY_BY_DEFAULT // --- disabled
 // fix tourism from futurism so it scales at different game speeds
 #define NQ_FIX_ADD_TOURISM_GAME_SPEED_MOD
 // golden age points accrue even while in golden ages
