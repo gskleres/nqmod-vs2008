@@ -2,41 +2,8 @@
 <!-- Created by ModBuddy on 2017-02-12 16:02:44 -->
 <GameData>
 
-	<!-- Spaceflight Pioneers: Free Research Lab (at Plastics) and Spaceship Factory (at Robotics) in every non-occupied City. -->
-	<Policies>
-		<Update>
-			<Set Level="3" IncludesOneShotFreeUnits="false" EnablesSSPartHurry="false" IsSpaceflightPioneers="true" />
-			<Where Type="POLICY_SPACEFLIGHT_PIONEERS" />
-		</Update>
-	</Policies>
-	<Policy_FreeUnitClasses>
-		<Delete PolicyType="POLICY_SPACEFLIGHT_PIONEERS" />
-	</Policy_FreeUnitClasses>
-
-	<!-- localization -->
-	<Language_en_US>
-		<Delete Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP" />
-		<Row Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Spaceflight Pioneers[ENDCOLOR][NEWLINE]Free Research Lab (at Plastics) and Spaceship Factory (at Robotics) in every non-occupied City.</Text>
-		</Row>
-	</Language_en_US>
-	<Language_DE_DE>
-		<Delete Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP" />
-		<Row Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Spaceflight Pioneers[ENDCOLOR][NEWLINE]Free Research Lab (at Plastics) and Spaceship Factory (at Robotics) in every non-occupied City.</Text>
-		</Row>
-	</Language_DE_DE>
-	<Language_PL_PL>
-		<Delete Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP" />
-		<Row Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Spaceflight Pioneers[ENDCOLOR][NEWLINE]Free Research Lab (at Plastics) and Spaceship Factory (at Robotics) in every non-occupied City.</Text>
-		</Row>
-	</Language_PL_PL>
-	<Language_RU_RU>
-		<Delete Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP" />
-		<Row Tag="TXT_KEY_POLICY_SPACEFLIGHT_PIONEERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Spaceflight Pioneers[ENDCOLOR][NEWLINE]Free Research Lab (at Plastics) and Spaceship Factory (at Robotics) in every non-occupied City.</Text>
-		</Row>
-	</Language_RU_RU>
+	<!-- (Unchanged) Spaceflight Pioneers: May finish Spaceship parts with Great Engineers. A Great Engineer and a Great Scientist appear outside the Capital. -->
+	
+	<!-- NOTE: You must include this file if you want to modify this tenet! -->
 
 </GameData>
