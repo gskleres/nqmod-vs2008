@@ -5,7 +5,7 @@
 	<!-- Party Leadership: +3 Happiness per City. -->
 	<Policies>
 		<Update>
-			<Set Level="3" ExtraHappinessPerCity="3" />
+			<Set Level="2" ExtraHappinessPerCity="3" />
 			<Where Type="POLICY_PARTY_LEADERSHIP" />
 		</Update>
 	</Policies>

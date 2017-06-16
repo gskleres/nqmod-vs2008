@@ -5,7 +5,7 @@
 	<!-- Ministry of Railways (replaces Resettlement): +33% Production and +3 Happiness in Cities with a Railroad connection to the Capital. -->
 	<Policies>
 		<Update>
-			<Set Level="2" NewCityExtraPopulation="0" HappinessPerRailConnection="300" RailConnectionProductionModifier="33" />
+			<Set Level="3" NewCityExtraPopulation="0" HappinessPerRailConnection="300" RailConnectionProductionModifier="33" />
 			<Where Type="POLICY_RESETTLEMENT" />
 		</Update>
 	</Policies>
