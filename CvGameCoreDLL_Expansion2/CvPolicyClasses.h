@@ -237,8 +237,8 @@ public:
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	bool IsDisablesResistanceTime() const;
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	bool IsSpaceflightPioneers() const;
+#ifdef NQ_PATRIOTIC_WAR
+	bool IsDoubleTrainedMilitaryLandUnit() const;
 #endif
 #ifdef NQ_WAR_HERO
 	bool IsWarHero() const;
@@ -517,8 +517,8 @@ private:
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	bool m_bDisablesResistanceTime;
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	bool m_bSpaceflightPioneers;
+#ifdef NQ_PATRIOTIC_WAR
+	bool m_bDoubleTrainedMilitaryLandUnit;
 #endif
 #ifdef NQ_WAR_HERO
 	bool m_bWarHero;

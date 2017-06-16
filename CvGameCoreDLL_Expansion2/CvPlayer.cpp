@@ -282,8 +282,8 @@ CvPlayer::CvPlayer() :
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	, m_iDisablesResistanceTimeCount(0)
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	, m_iSpaceflightPioneersCount(0)
+#ifdef NQ_PATRIOTIC_WAR
+	, m_iDoubleTrainedMilitaryLandUnitCount(0)
 #endif
 #ifdef NQ_WAR_HERO
 	, m_iWarHeroCount(0)
@@ -958,8 +958,8 @@ void CvPlayer::uninit()
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	m_iDisablesResistanceTimeCount = 0;
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	m_iSpaceflightPioneersCount = 0;
+#ifdef NQ_PATRIOTIC_WAR
+	m_iDoubleTrainedMilitaryLandUnitCount = 0;
 #endif
 #ifdef NQ_WAR_HERO
 	m_iWarHeroCount = 0;
@@ -7322,27 +7322,6 @@ void CvPlayer::AwardFreeBuildings(CvCity* pCity)
 		ChangeNumCitiesFreeWalls(-1);
 	}
 
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	if (IsSpaceflightPioneers())
-	{
-		BuildingTypes eSpaceflightBuilding = (BuildingTypes)getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_LABORATORY"));
-		CvBuildingEntry* pkSpaceflightBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
-		TechTypes ePrereqTech = (TechTypes)pkSpaceflightBuildingInfo->GetPrereqAndTech();
-		if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech(ePrereqTech))
-		{
-			pCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
-		}
-
-		eSpaceflightBuilding = (BuildingTypes)getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_SPACESHIP_FACTORY"));
-		pkSpaceflightBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
-		ePrereqTech = (TechTypes)pkSpaceflightBuildingInfo->GetPrereqAndTech();
-		if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech(ePrereqTech))
-		{
-			pCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
-		}
-	}
-#endif
-
 	int iNumFreeCultureBuildings = GetNumCitiesFreeCultureBuilding();
 	if(iNumFreeCultureBuildings > 0)
 	{
@@ -11442,9 +11421,7 @@ void CvPlayer::DoGreatWorkFromCityConquer(CvCity* pConqueredCity)
 				pCity->GetCityBuildings()->SetBuildingGreatWork(eBuildingClass, iSlot, iGWindex);
 
 				// --- notification ---
-				bool bDontShowRewardPopup = GC.GetEngineUserInterface()->IsOptionNoRewardPopups();
 				Localization::String localizedText;
-
 				CvNotifications* pNotifications = this->GetNotifications();
 				if(pNotifications)
 				{
@@ -15904,26 +15881,26 @@ void CvPlayer::ChangeDisablesResistanceTimeCount(int iChange)
 }
 #endif
 
-#ifdef NQ_SPACEFLIGHT_PIONEERS
+#ifdef NQ_PATRIOTIC_WAR
 //	--------------------------------------------------------------------------------
-int CvPlayer::GetSpaceflightPioneersCount() const
+int CvPlayer::GetDoubleTrainedMilitaryLandUnitCount() const
 {
-	return m_iSpaceflightPioneersCount;
+	return m_iDoubleTrainedMilitaryLandUnitCount;
 }
 
 //	--------------------------------------------------------------------------------
-bool CvPlayer::IsSpaceflightPioneers() const
+bool CvPlayer::IsDoubleTrainedMilitaryLandUnit() const
 {
-	return (GetSpaceflightPioneersCount() > 0);
+	return (GetDoubleTrainedMilitaryLandUnitCount() > 0);
 }
 
 //	--------------------------------------------------------------------------------
-void CvPlayer::ChangeSpaceflightPioneersCount(int iChange)
+void CvPlayer::ChangeDoubleTrainedMilitaryLandUnitCount(int iChange)
 {
 	if (iChange != 0)
 	{
-		m_iSpaceflightPioneersCount = m_iSpaceflightPioneersCount + iChange;
-		CvAssert(GetSpaceflightPioneersCount() >= 0);
+		m_iDoubleTrainedMilitaryLandUnitCount = m_iDoubleTrainedMilitaryLandUnitCount + iChange;
+		CvAssert(GetDoubleTrainedMilitaryLandUnitCount() >= 0);
 	}
 }
 #endif
@@ -23251,8 +23228,8 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	ChangeDisablesResistanceTimeCount((pPolicy->IsDisablesResistanceTime()) ? iChange : 0);
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	ChangeSpaceflightPioneersCount((pPolicy->IsSpaceflightPioneers()) ? iChange : 0);
+#ifdef NQ_PATRIOTIC_WAR
+	ChangeDoubleTrainedMilitaryLandUnitCount((pPolicy->IsDoubleTrainedMilitaryLandUnit()) ? iChange : 0);
 #endif
 #ifdef NQ_WAR_HERO
 	ChangeWarHeroCount((pPolicy->IsWarHero()) ? iChange : 0);
@@ -23510,27 +23487,6 @@ void CvPlayer::processPolicies(PolicyTypes ePolicy, int iChange)
 			}
 			iNumCitiesFreeWalls--;
 		}
-
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-		if (pPolicy->IsSpaceflightPioneers())
-		{
-			BuildingTypes eSpaceflightBuilding = (BuildingTypes)getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_LABORATORY"));
-			CvBuildingEntry* pkSpaceflightBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
-			TechTypes ePrereqTech = (TechTypes)pkSpaceflightBuildingInfo->GetPrereqAndTech();
-			if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech(ePrereqTech))
-			{
-				pLoopCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
-			}
-
-			eSpaceflightBuilding = (BuildingTypes)getCivilizationInfo().getCivilizationBuildings(GC.getInfoTypeForString("BUILDINGCLASS_SPACESHIP_FACTORY"));
-			pkSpaceflightBuildingInfo = GC.GetGameBuildings()->GetEntry(eSpaceflightBuilding);
-			ePrereqTech = (TechTypes)pkSpaceflightBuildingInfo->GetPrereqAndTech();
-			if (GET_TEAM(getTeam()).GetTeamTechs()->HasTech(ePrereqTech))
-			{
-				pLoopCity->GetCityBuildings()->SetNumFreeBuilding(eSpaceflightBuilding, 1);
-			}
-		}
-#endif
 
 		if(iNumCitiesFreeCultureBuilding > 0)
 		{
@@ -24419,8 +24375,8 @@ void CvPlayer::Read(FDataStream& kStream)
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	kStream >> m_iDisablesResistanceTimeCount;
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	kStream >> m_iSpaceflightPioneersCount;
+#ifdef NQ_PATRIOTIC_WAR
+	kStream >> m_iDoubleTrainedMilitaryLandUnitCount;
 #endif
 #ifdef NQ_WAR_HERO
 	kStream >> m_iWarHeroCount;
@@ -24982,8 +24938,8 @@ void CvPlayer::Write(FDataStream& kStream) const
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	kStream << m_iDisablesResistanceTimeCount;
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	kStream << m_iSpaceflightPioneersCount;
+#ifdef NQ_PATRIOTIC_WAR
+	kStream << m_iDoubleTrainedMilitaryLandUnitCount;
 #endif
 #ifdef NQ_WAR_HERO
 	kStream << m_iWarHeroCount;

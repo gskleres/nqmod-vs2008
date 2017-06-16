@@ -6,7 +6,7 @@
 
 	<Policies>
 		<Update>
-			<Set Level="2" />
+			<Set Level="2" IsDoubleTrainedMilitaryLandUnits="true" />
 			<Where Type="POLICY_PATRIOTIC_WAR" />
 		</Update>
 	</Policies>
@@ -28,7 +28,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT](BROKEN) Training military Land Units in your Cities produces 2 Units instead of 1.[ENDCOLOR]</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]Training military Land Units in your Cities produces 2 Units instead of 1.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -38,7 +38,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT](BROKEN) Training military Land Units in your Cities produces 2 Units instead of 1.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]Training military Land Units in your Cities produces 2 Units instead of 1.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -48,7 +48,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT](BROKEN) Training military Land Units in your Cities produces 2 Units instead of 1.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]Training military Land Units in your Cities produces 2 Units instead of 1.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
@@ -58,7 +58,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE][COLOR_NEGATIVE_TEXT](BROKEN) Training military Land Units in your Cities produces 2 Units instead of 1.[ENDCOLOR]</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]Training military Land Units in your Cities produces 2 Units instead of 1.</Text>
 		</Row>
 	</Language_RU_RU>
 

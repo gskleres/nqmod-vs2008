@@ -50,8 +50,6 @@ ALTER TABLE Policies ADD InternalTradeRouteProductionYieldChange INTEGER DEFAULT
 ALTER TABLE Policies ADD DisablesResistanceTime BOOLEAN DEFAULT false;
 -- percentage modifier to unhappiness applied via ideological pressure from other civs (ex: -75 = only 25% of normal unhappiness)
 ALTER TABLE Policies ADD IdeologyPressureUnhappinessModifier INTEGER DEFAULT 0;
--- cheat implementation - if true, free Research Lab (at plastics) and free Spaceship Factory (at robotics) in every city
-ALTER TABLE Policies ADD IsSpaceflightPioneers BOOLEAN DEFAULT false;
 -- combat bonus when fighting civs with fewer cities (basically opposite of Ethiopia UA)
 ALTER TABLE Policies ADD CombatBonusVsSmallerCiv INTEGER DEFAULT 0;
 -- percentage of empire's production output converted to bonus % for great musician points
@@ -60,3 +58,5 @@ ALTER TABLE Policies ADD ProductionToGreatMusiciansModifier INTEGER DEFAULT 0;
 ALTER TABLE Policies ADD HappinessPerRailConnection INTEGER DEFAULT 0;
 -- Bonus % production from having a rail connection (additive with base bonus)
 ALTER TABLE Policies ADD RailConnectionProductionModifier INTEGER DEFAULT 0;
+-- if true, training military land units produces 2 units instead of 1
+ALTER TABLE Policies ADD IsDoubleTrainedMilitaryLandUnits BOOLEAN DEFAULT false;

@@ -6381,22 +6381,42 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 					int iTotalWeight = iGoldWeight + iSaltWeight + iCopperWeight + iSilverWeight;
 					if (iTotalWeight > 0)
 					{
+						const char* resourceName = "";
+						int resourceID;
 						int iRoll = GC.getGame().getJonRandNum(iTotalWeight, "Rolling for Mali Treasury resource type");
 						if (iRoll < iSilverWeight)
 						{
 							pPlot->setResourceType(eResourceSilver, 1);
+							resourceName = GC.getResourceInfo(eResourceSilver)->GetTextKey();
+							resourceID = eResourceSilver;
 						}
 						else if (iRoll < iSilverWeight + iCopperWeight)
 						{
 							pPlot->setResourceType(eResourceCopper, 1);
+							resourceName = GC.getResourceInfo(eResourceCopper)->GetTextKey();
+							resourceID = eResourceCopper;
 						}
 						else if (iRoll < iSilverWeight + iCopperWeight + iSaltWeight)
 						{
 							pPlot->setResourceType(eResourceSalt, 1);
+							resourceName = GC.getResourceInfo(eResourceSalt)->GetTextKey();
+							resourceID = eResourceSalt;
 						}
 						else
 						{
 							pPlot->setResourceType(eResourceGold, 1);
+							resourceName = GC.getResourceInfo(eResourceGold)->GetTextKey();
+							resourceID = eResourceGold;
+						}
+
+						// --- notification ---
+						Localization::String localizedText;
+						CvNotifications* pNotifications = GET_PLAYER(getOwner()).GetNotifications();
+						if(pNotifications)
+						{
+							localizedText = Localization::Lookup("TXT_KEY_TREASURY_RESOURCE_FOUND");
+							localizedText << resourceName << getNameKey();
+							pNotifications->Add(NOTIFICATION_DISCOVERED_BONUS_RESOURCE, localizedText.toUTF8(), localizedText.toUTF8(), pPlot->getX(), pPlot->getY(), resourceID);
 						}
 					}
 				}
@@ -13278,6 +13298,17 @@ void CvCity::popOrder(int iNum, bool bFinish, bool bChoose)
 			int iResult = CreateUnit(eTrainUnit, eTrainAIUnit);
 			if(iResult != FFreeList::INVALID_INDEX)
 			{
+#ifdef NQ_PATRIOTIC_WAR
+				if (GET_PLAYER(getOwner()).IsDoubleTrainedMilitaryLandUnit())
+				{
+					CvUnitEntry* pkUnitInfo = GC.getUnitInfo(eTrainUnit);
+					if (pkUnitInfo->GetDomainType() == DOMAIN_LAND && pkUnitInfo->GetCombat() > 0)
+					{
+						CreateUnit(eTrainUnit, eTrainAIUnit);
+					}
+				}
+#endif
+
 				ICvEngineScriptSystem1* pkScriptSystem = gDLL->GetScriptSystem();
 				if (pkScriptSystem) 
 				{

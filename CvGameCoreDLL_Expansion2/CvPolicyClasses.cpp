@@ -206,8 +206,8 @@ CvPolicyEntry::CvPolicyEntry(void):
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	m_bDisablesResistanceTime(false),
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	m_bSpaceflightPioneers(false),
+#ifdef NQ_PATRIOTIC_WAR
+	m_bDoubleTrainedMilitaryLandUnit(false),
 #endif
 #ifdef NQ_WAR_HERO
 	m_bWarHero(false),
@@ -551,8 +551,8 @@ bool CvPolicyEntry::CacheResults(Database::Results& kResults, CvDatabaseUtility&
 #ifdef NQ_DIABLE_RESISTANCE_TIME_VIA_POLICIES
 	m_bDisablesResistanceTime = kResults.GetBool("DisablesResistanceTime");
 #endif
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-	m_bSpaceflightPioneers = kResults.GetBool("IsSpaceflightPioneers");
+#ifdef NQ_PATRIOTIC_WAR
+	m_bDoubleTrainedMilitaryLandUnit = kResults.GetBool("IsDoubleTrainedMilitaryLandUnits");
 #endif
 #ifdef NQ_WAR_HERO
 	m_bWarHero = kResults.GetBool("IsWarHero");
@@ -1900,10 +1900,10 @@ bool CvPolicyEntry::IsDisablesResistanceTime() const
 }
 #endif
 
-#ifdef NQ_SPACEFLIGHT_PIONEERS
-bool CvPolicyEntry::IsSpaceflightPioneers() const
+#ifdef NQ_PATRIOTIC_WAR
+bool CvPolicyEntry::IsDoubleTrainedMilitaryLandUnit() const
 {
-	return m_bSpaceflightPioneers;
+	return m_bDoubleTrainedMilitaryLandUnit;
 }
 #endif
 

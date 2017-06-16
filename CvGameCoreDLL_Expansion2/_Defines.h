@@ -827,8 +827,8 @@
 #define NQ_RAIL_CONNECTION_HAPPINESS_FROM_POLICIES
 // bonus production modifier from railway connections
 #define NQ_RAIL_CONNECTION_PRODUCTION_MODIFIER_FROM_POLICIES
-// free buildings in non-occupied cities from Spaceflight Pioneers
-#define NQ_SPACEFLIGHT_PIONEERS
+// policy toggle, when true makes each military land unit trained result in 2 units instead of 1
+#define NQ_PATRIOTIC_WAR
 // combat bonus vs smaller civ from policies
 #define NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 // percent of production converted into bonus % for great musician points

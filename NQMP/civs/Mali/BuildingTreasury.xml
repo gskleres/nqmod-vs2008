@@ -81,6 +81,9 @@
 		<Row Tag="TXT_KEY_BUILDING_MALIAN_TREASURY_STRATEGY">
 			<Text>The Treasury increases the [ICON_GOLD] Gold output of the city as long as there is a copy of [ICON_RES_GOLD] Gold, [ICON_RES_SILVER] Silver, [ICON_RES_COPPER] Copper, and [ICON_RES_SALT] Salt. If there isn't, just make sure that the City's borders include an unimproved tile that can support discovery of one of these resources when it is built.</Text>
 		</Row>
+		<Row Tag="TXT_KEY_TREASURY_RESOURCE_FOUND">
+			<Text>A source of {@1_ResourceName} has been discovered near the Treasury in {@2_CityName}</Text>
+		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_BUILDING_MALIAN_TREASURY">
@@ -94,6 +97,9 @@
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_MALIAN_TREASURY_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Treasury increases the [ICON_GOLD] Gold output of the city as long as there is a copy of [ICON_RES_GOLD] Gold, [ICON_RES_SILVER] Silver, [ICON_RES_COPPER] Copper, and [ICON_RES_SALT] Salt. If there isn't, just make sure that the City's borders include an unimproved tile that can support discovery of one of these resources when it is built.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_TREASURY_RESOURCE_FOUND">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]A source of {@1_ResourceName} has been discovered near the Treasury in {@2_CityName}</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -109,6 +115,9 @@
 		<Row Tag="TXT_KEY_BUILDING_MALIAN_TREASURY_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The Treasury increases the [ICON_GOLD] Gold output of the city as long as there is a copy of [ICON_RES_GOLD] Gold, [ICON_RES_SILVER] Silver, [ICON_RES_COPPER] Copper, and [ICON_RES_SALT] Salt. If there isn't, just make sure that the City's borders include an unimproved tile that can support discovery of one of these resources when it is built.</Text>
 		</Row>
+		<Row Tag="TXT_KEY_TREASURY_RESOURCE_FOUND">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]A source of {@1_ResourceName} has been discovered near the Treasury in {@2_CityName}</Text>
+		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BUILDING_MALIAN_TREASURY">
@@ -122,6 +131,9 @@
 		</Row>
 		<Row Tag="TXT_KEY_BUILDING_MALIAN_TREASURY_STRATEGY">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The Treasury increases the [ICON_GOLD] Gold output of the city as long as there is a copy of [ICON_RES_GOLD] Gold, [ICON_RES_SILVER] Silver, [ICON_RES_COPPER] Copper, and [ICON_RES_SALT] Salt. If there isn't, just make sure that the City's borders include an unimproved tile that can support discovery of one of these resources when it is built.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_TREASURY_RESOURCE_FOUND">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]A source of {@1_ResourceName} has been discovered near the Treasury in {@2_CityName}</Text>
 		</Row>
 	</Language_RU_RU>
 
