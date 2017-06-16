@@ -1946,7 +1946,7 @@ bool CvPlayerEspionage::AttemptCoup(uint uiSpyIndex)
 				iNewInfluence = max(iNewInfluence, 0);
 #ifdef NQ_COUP_FORMULA_USES_BASE_FRIENDSHIP_NOT_EFFECTIVE_FRIENDSHIP
 				// cap all others at the ally threshold of 60 though (it's further reduced by 20 later)
-				iNewInfluence = min(iNewInfluence, GC.getFRIENDSHIP_THRESHOLD_ALLIES());
+				iNewInfluence = min(iNewInfluence, GC.getFRIENDSHIP_THRESHOLD_ALLIES() * 100);
 #endif
 				aiNewInfluenceValueTimes100[ui] = iNewInfluence;
 			}
