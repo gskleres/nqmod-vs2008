@@ -13,46 +13,46 @@
 		<Row>
 			<PolicyType>POLICY_FINE_ARTS</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_AMPHITHEATER</BuildingClassType>
-			<TourismModifier>15</TourismModifier>
+			<TourismModifier>10</TourismModifier>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_FINE_ARTS</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_OPERA_HOUSE</BuildingClassType>
-			<TourismModifier>15</TourismModifier>
+			<TourismModifier>10</TourismModifier>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_FINE_ARTS</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_MUSEUM</BuildingClassType>
-			<TourismModifier>15</TourismModifier>
+			<TourismModifier>10</TourismModifier>
 		</Row>
 		<Row>
 			<PolicyType>POLICY_FINE_ARTS</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_BROADCAST_TOWER</BuildingClassType>
-			<TourismModifier>15</TourismModifier>
+			<TourismModifier>10</TourismModifier>
 		</Row>
 	</Policy_BuildingClassTourismModifiers>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_FINE_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FINE_ARTS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Fine Arts[ENDCOLOR][NEWLINE]Provides a free Scriptorium, Gallery, and Conservatory in your first 4 cities. Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 15%.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Fine Arts[ENDCOLOR][NEWLINE]Provides a free Scriptorium, Gallery, and Conservatory in your first 4 cities. Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 10%.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_FINE_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FINE_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Fine Arts[ENDCOLOR][NEWLINE]Provides a free Scriptorium, Gallery, and Conservatory in your first 4 cities. Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 15%.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Fine Arts[ENDCOLOR][NEWLINE]Provides a free Scriptorium, Gallery, and Conservatory in your first 4 cities. Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 10%.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_FINE_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FINE_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Fine Arts[ENDCOLOR][NEWLINE]Provides a free Scriptorium, Gallery, and Conservatory in your first 4 cities. Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 15%.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Fine Arts[ENDCOLOR][NEWLINE]Provides a free Scriptorium, Gallery, and Conservatory in your first 4 cities. Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 10%.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_FINE_ARTS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_FINE_ARTS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Fine Arts[ENDCOLOR][NEWLINE]Provides a free Scriptorium, Gallery, and Conservatory in your first 4 cities. Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 15%.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Fine Arts[ENDCOLOR][NEWLINE]Provides a free Scriptorium, Gallery, and Conservatory in your first 4 cities. Amphitheaters, Opera Houses, Museums, and Broadcast Towers increase city [ICON_TOURISM] Tourism output by 10%.</Text>
 		</Row>
 	</Language_RU_RU>
 
