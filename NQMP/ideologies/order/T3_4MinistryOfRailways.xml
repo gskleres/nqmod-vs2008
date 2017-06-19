@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 2017-02-12 16:02:19 -->
 <GameData>
 	
-	<!-- Ministry of Railways (replaces Resettlement): +33% Production and +3 Happiness in Cities with a Railroad connection to the Capital. -->
+	<!-- Ministry of Railways (replaces Resettlement): +25% Production and +3 Happiness in Cities with a Railroad connection to the Capital. -->
 	<Policies>
 		<Update>
-			<Set Level="3" NewCityExtraPopulation="0" HappinessPerRailConnection="300" RailConnectionProductionModifier="33" />
+			<Set Level="3" NewCityExtraPopulation="0" HappinessPerRailConnection="300" RailConnectionProductionModifier="25" />
 			<Where Type="POLICY_RESETTLEMENT" />
 		</Update>
 	</Policies>
@@ -18,7 +18,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]+33% [ICON_PRODUCTION] Production and +3 [ICON_HAPPINESS_1] Happiness in Cities with a Railroad connection to the Capital.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production and +3 [ICON_HAPPINESS_1] Happiness in Cities with a Railroad connection to the Capital.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PRODMOD_RAILROAD_CONNECTION_FROM_POLICIES">
 			<Text>[NEWLINE][ICON_BULLET]Modifier for Ministry of Railways: {1_Num}%</Text>
@@ -31,7 +31,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]+33% [ICON_PRODUCTION] Production and +3 [ICON_HAPPINESS_1] Happiness in Cities with a Railroad connection to the Capital.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production and +3 [ICON_HAPPINESS_1] Happiness in Cities with a Railroad connection to the Capital.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PRODMOD_RAILROAD_CONNECTION_FROM_POLICIES">
 			<Text>[NEWLINE][ICON_BULLET][COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Modifier for Ministry of Railways: {1_Num}%</Text>
@@ -44,7 +44,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]+33% [ICON_PRODUCTION] Production and +3 [ICON_HAPPINESS_1] Happiness in Cities with a Railroad connection to the Capital.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production and +3 [ICON_HAPPINESS_1] Happiness in Cities with a Railroad connection to the Capital.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PRODMOD_RAILROAD_CONNECTION_FROM_POLICIES">
 			<Text>[NEWLINE][ICON_BULLET][COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Modifier for Ministry of Railways: {1_Num}%</Text>
@@ -57,7 +57,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP" />
 		<Row Tag="TXT_KEY_POLICY_RESETTLEMENT_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]+33% [ICON_PRODUCTION] Production and +3 [ICON_HAPPINESS_1] Happiness in Cities with a Railroad connection to the Capital.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Ministry of Railways[ENDCOLOR][NEWLINE]+25% [ICON_PRODUCTION] Production and +3 [ICON_HAPPINESS_1] Happiness in Cities with a Railroad connection to the Capital.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PRODMOD_RAILROAD_CONNECTION_FROM_POLICIES">
 			<Text>[NEWLINE][ICON_BULLET][COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Modifier for Ministry of Railways: {1_Num}%</Text>
