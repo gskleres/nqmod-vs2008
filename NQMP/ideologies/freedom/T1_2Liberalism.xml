@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 3/22/2017 7:08:34 PM -->
 <GameData>
 
-	<!-- Liberalism (replaces Their Finest Hour): Gain 300 Science (on Quick Speed) whenever a Great Person is born. -->
+	<!-- Liberalism (replaces Their Finest Hour): Gain 250 Science (on Quick Speed) whenever a Great Person is born. -->
 	<Policies>
 		<Update>
-			<Set Level="1" CityStrengthMod="0" SciencePerGreatPersonBorn="450" />
+			<Set Level="1" CityStrengthMod="0" SciencePerGreatPersonBorn="375" />
 			<Where Type="POLICY_THEIR_FINEST_HOUR" />
 		</Update>
 	</Policies>
@@ -18,7 +18,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_THEIR_FINEST_HOUR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_THEIR_FINEST_HOUR_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Liberalism[ENDCOLOR][NEWLINE]Gain 300 [ICON_RESEARCH] Science (on Quick Speed) whenever a Great Person is born.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Liberalism[ENDCOLOR][NEWLINE]Gain 250 [ICON_RESEARCH] Science (on Quick Speed) whenever a Great Person is born.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -28,7 +28,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_THEIR_FINEST_HOUR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_THEIR_FINEST_HOUR_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberalism[ENDCOLOR][NEWLINE]Gain 300 [ICON_RESEARCH] Science (on Quick Speed) whenever a Great Person is born.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberalism[ENDCOLOR][NEWLINE]Gain 250 [ICON_RESEARCH] Science (on Quick Speed) whenever a Great Person is born.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -38,7 +38,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_THEIR_FINEST_HOUR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_THEIR_FINEST_HOUR_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberalism[ENDCOLOR][NEWLINE]Gain 300 [ICON_RESEARCH] Science (on Quick Speed) whenever a Great Person is born.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberalism[ENDCOLOR][NEWLINE]Gain 250 [ICON_RESEARCH] Science (on Quick Speed) whenever a Great Person is born.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
@@ -48,7 +48,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_THEIR_FINEST_HOUR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_THEIR_FINEST_HOUR_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberalism[ENDCOLOR][NEWLINE]Gain 300 [ICON_RESEARCH] Science (on Quick Speed) whenever a Great Person is born.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberalism[ENDCOLOR][NEWLINE]Gain 250 [ICON_RESEARCH] Science (on Quick Speed) whenever a Great Person is born.</Text>
 		</Row>
 	</Language_RU_RU>
 	
