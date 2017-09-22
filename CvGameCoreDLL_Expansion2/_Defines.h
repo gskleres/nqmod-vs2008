@@ -777,8 +777,6 @@
 #define NQ_MALI_TREASURY
 // allow gifting faith to minors via beliefs
 #define NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
-// notifications of city growth occur at all pop levels (not just less than 5)
-#define NQ_ALWAYS_SHOW_POP_GROWTH_NOTIFICATION
 
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
@@ -835,5 +833,12 @@
 #define NQ_COMBAT_BONUS_VS_SMALLER_CIV_FROM_POLICIES
 // percent of production converted into bonus % for great musician points
 #define NQ_PRODUCTION_TO_GREAT_MUSICIANS_MODIFIER_FROM_POLICIES
+
+
+/// -- MORE OPTIONS FOR v12.3 AND ON ---
+#define NQ_GAME_OPTION_DISABLE_RECKLESS_EXPANDER
+// notifications of city growth occur at all pop levels (not just less than 5)
+#define NQ_ALWAYS_SHOW_POP_GROWTH_NOTIFICATION
+
 
 #endif

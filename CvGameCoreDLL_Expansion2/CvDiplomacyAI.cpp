@@ -22662,7 +22662,10 @@ int CvDiplomacyAI::GetDenouncedEnemyScore(PlayerTypes ePlayer)
 int CvDiplomacyAI::GetRecklessExpanderScore(PlayerTypes ePlayer)
 {
 	int iOpinionWeight = 0;
+#ifdef NQ_GAME_OPTION_DISABLE_RECKLESS_EXPANDER
+#else
 	if(IsPlayerRecklessExpander(ePlayer))
+#endif
 		iOpinionWeight += /*35*/ GC.getOPINION_WEIGHT_RECKLESS_EXPANDER();
 	return iOpinionWeight;
 }

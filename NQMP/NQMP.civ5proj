@@ -86,6 +86,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>ai/GameOption_DisableRecklessExpander.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>buildings/AmphitheaterChanges.xml</FileName>
       </Action>
       <Action>
@@ -2205,6 +2210,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
     <DeployMod>true</DeployMod>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="ai\GameOption_DisableRecklessExpander.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
     <Content Include="buildings\AmphitheaterChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
@@ -4097,6 +4106,7 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
     <Folder Include="improvements" />
     <Folder Include="ideologies" />
     <Folder Include="features" />
+    <Folder Include="ai" />
     <Folder Include="_art" />
     <Folder Include="projects" />
     <Folder Include="religion\founders" />
