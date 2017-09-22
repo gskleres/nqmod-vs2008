@@ -8,7 +8,7 @@
 			<Class>UNITCLASS_SETTLER</Class>
 			<Type>UNIT_AMERICAN_PIONEER</Type>
 			<FinalProductionCostModifier>-25</FinalProductionCostModifier>
-			<Moves>3</Moves>
+			<Moves>2</Moves>
 			<Combat>5</Combat>
 			<Capture>UNITCLASS_WORKER</Capture>
 			<CivilianAttackPriority>CIVILIAN_ATTACK_PRIORITY_HIGH_EARLY_GAME_ONLY</CivilianAttackPriority>

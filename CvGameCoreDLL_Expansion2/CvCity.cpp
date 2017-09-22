@@ -6349,33 +6349,36 @@ void CvCity::processBuilding(BuildingTypes eBuilding, int iChange, bool bFirst, 
 						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 1 : 0;
 						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
 					}
-					if (pPlot->getTerrainType() == TERRAIN_DESERT)
+					else
 					{
-						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 4 : 0;
-						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 3 : 0;
-						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 2 : 0;
-						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
-					}
-					if (pPlot->getTerrainType() == TERRAIN_GRASS)
-					{
-						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 4 : 0;
-						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 1 : 0;
-						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 3 : 0;
-						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
-					}
-					if (pPlot->getTerrainType() == TERRAIN_PLAINS)
-					{
-						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 3 : 0;
-						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 3 : 0;
-						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 2 : 0;
-						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
-					}
-					if (pPlot->getTerrainType() == TERRAIN_TUNDRA)
-					{
-						iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 1 : 0;
-						iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 1 : 0;
-						iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 1 : 0;
-						iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+						if (pPlot->getTerrainType() == TERRAIN_DESERT)
+						{
+							iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 4 : 0;
+							iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 3 : 0;
+							iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 2 : 0;
+							iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+						}
+						if (pPlot->getTerrainType() == TERRAIN_GRASS)
+						{
+							iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 4 : 0;
+							iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 1 : 0;
+							iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 3 : 0;
+							iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+						}
+						if (pPlot->getTerrainType() == TERRAIN_PLAINS)
+						{
+							iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 3 : 0;
+							iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 3 : 0;
+							iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 2 : 0;
+							iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+						}
+						if (pPlot->getTerrainType() == TERRAIN_TUNDRA)
+						{
+							iGoldWeight =   (eResourceGold != NO_RESOURCE)   ? 1 : 0;
+							iSaltWeight =   (eResourceSalt != NO_RESOURCE)   ? 1 : 0;
+							iCopperWeight = (eResourceCopper != NO_RESOURCE) ? 1 : 0;
+							iSilverWeight = (eResourceSilver != NO_RESOURCE) ? 1 : 0;
+						}
 					}
 
 					int iTotalWeight = iGoldWeight + iSaltWeight + iCopperWeight + iSilverWeight;
