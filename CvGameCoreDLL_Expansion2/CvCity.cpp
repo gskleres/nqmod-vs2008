@@ -14781,8 +14781,10 @@ void CvCity::doGrowth()
 			changePopulation(1);
 
 			// Only show notification if the city is small
+#ifndef NQ_ALWAYS_SHOW_POP_GROWTH_NOTIFICATION
 			if(getPopulation() <= 5)
 			{
+#endif
 				CvNotifications* pNotifications = GET_PLAYER(getOwner()).GetNotifications();
 				if(pNotifications)
 				{
@@ -14792,7 +14794,9 @@ void CvCity::doGrowth()
 					localizedSummary << getNameKey();
 					pNotifications->Add(NOTIFICATION_CITY_GROWTH, localizedText.toUTF8(), localizedSummary.toUTF8(), getX(), getY(), GetID());
 				}
+#ifndef NQ_ALWAYS_SHOW_POP_GROWTH_NOTIFICATION
 			}
+#endif
 #ifdef AUI_CITY_FIX_DO_GROWTH_USE_FOOD_AFTER_POP_CHANGE
 			int iNewDiff = foodDifferenceTimes100() - iDiff;
 			changeFoodTimes100(iNewDiff);

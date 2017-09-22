@@ -777,6 +777,8 @@
 #define NQ_MALI_TREASURY
 // allow gifting faith to minors via beliefs
 #define NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
+// notifications of city growth occur at all pop levels (not just less than 5)
+#define NQ_ALWAYS_SHOW_POP_GROWTH_NOTIFICATION
 
 
 /// ---- IDEOLOGY OVERHAUL: AUTOCRACY ----
