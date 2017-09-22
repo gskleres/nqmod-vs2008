@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2016-09-14 20:40:54 -->
 <GameData>
 
-	<!-- [New UU] Pioneer (replaces Settler): Ignores terrain costs & becomes worker if it settle non-Capital city -->
+	<!-- [New UU] Pioneer (replaces Settler): Ignores terrain costs, has combat value of 5, defense only, cheaper to build -->
 	<Units>
 		<Row>
 			<Class>UNITCLASS_SETTLER</Class>

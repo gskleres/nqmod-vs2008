@@ -99,7 +99,7 @@
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_BELIEF_SYNAGOGUES">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Synagogues (+1 [ICON_HAPPINESS_1] Happiness, each Religion in the City adds +1 [ICON_PEACE] Faith and +1 [ICON_CULTURE] Culture)</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Synagogues (+1 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, +10% [ICON_PRODUCTION] Production when constructing Buildings)</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_SYNAGOGUES_SHORT">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Synagogues</Text>
@@ -119,7 +119,7 @@
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Row Tag="TXT_KEY_BELIEF_SYNAGOGUES">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Synagogues (+1 [ICON_HAPPINESS_1] Happiness, each Religion in the City adds +1 [ICON_PEACE] Faith and +1 [ICON_CULTURE] Culture)</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Synagogues (+1 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, +10% [ICON_PRODUCTION] Production when constructing Buildings)</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_SYNAGOGUES_SHORT">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Synagogues</Text>
@@ -139,7 +139,7 @@
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_BELIEF_SYNAGOGUES">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Synagogues (+1 [ICON_HAPPINESS_1] Happiness, each Religion in the City adds +1 [ICON_PEACE] Faith and +1 [ICON_CULTURE] Culture)</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Use [ICON_PEACE] Faith to purchase Synagogues (+1 [ICON_PEACE] Faith, +1 [ICON_CULTURE] Culture, +10% [ICON_PRODUCTION] Production when constructing Buildings)</Text>
 		</Row>
 		<Row Tag="TXT_KEY_BELIEF_SYNAGOGUES_SHORT">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Synagogues</Text>
