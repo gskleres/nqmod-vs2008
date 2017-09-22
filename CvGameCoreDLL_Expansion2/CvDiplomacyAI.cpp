@@ -22663,6 +22663,7 @@ int CvDiplomacyAI::GetRecklessExpanderScore(PlayerTypes ePlayer)
 {
 	int iOpinionWeight = 0;
 #ifdef NQ_GAME_OPTION_DISABLE_RECKLESS_EXPANDER
+	if(IsPlayerRecklessExpander(ePlayer) && !GC.getGame().isOption("GAMEOPTION_DISABLE_RECKLESS_EXPANDER"))
 #else
 	if(IsPlayerRecklessExpander(ePlayer))
 #endif
