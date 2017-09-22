@@ -30,11 +30,11 @@
 			<Where Name="ALLIES_CULTURE_BONUS_AMOUNT_INDUSTRIAL" />
 		</Update>
 
-		<!-- Maritime City States: If Friends, provides +2 Food in Capital. If Allies provides +4 Food in Capital and +2 Food in every other City. -->
+		<!-- Maritime City States: If Friends, provides +2 Food in Capital. If Allies provides +4 Food in Capital pre-Renaissance and +6 Food post-Renaissance. -->
 		<Update>
-			<Set Value="200" />
+			<Set Value="0" />
 			<Where Name="ALLIES_OTHER_CITIES_FOOD_BONUS_AMOUNT" />
 		</Update>
-		
+
 	</Defines>
 </GameData>
