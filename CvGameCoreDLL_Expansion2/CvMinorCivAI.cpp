@@ -9086,6 +9086,10 @@ void CvMinorCivAI::DoFaithGiftFromMajor(PlayerTypes ePlayer, int iFaith)
 	{
 		int iFriendshipChange = GetFriendshipFromFaithGift(ePlayer, iFaith);
 
+		// if the city state is the same religion as you, triple the effect
+		if (IsSameReligionAsMajor(ePlayer))
+			iFriendshipChange *= 3;
+
 		// GJS: not sure what this part here does, but I am going to skip it for now.
 		//if(iFriendshipChange > 0)
 			//GET_PLAYER(ePlayer).GetTreasury()->LogExpenditure(GetPlayer()->GetMinorCivAI()->GetNamesListAsString(0), iGold,4);
@@ -9108,7 +9112,7 @@ void CvMinorCivAI::DoFaithGiftFromMajor(PlayerTypes ePlayer, int iFaith)
 /// How much influence do you get from a faith gift of a specific amount?
 int CvMinorCivAI::GetFriendshipFromFaithGift(PlayerTypes eMajor, int iFaith)
 {
-	int iFriendship = iFaith * 24; // hard-coded to be 24% of faith spent, which becomes 30% on quick speed
+	int iFriendship = iFaith * 8; // hard-coded to be 8% of faith spent, which becomes 10% on quick speed
 	iFriendship /= 100;
 
 	// Game Speed Mod
