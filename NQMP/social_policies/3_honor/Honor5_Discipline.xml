@@ -28,48 +28,48 @@
 	</UnitPromotions_UnitCombats>
 	<UnitPromotions>
 		<Update>
-			<Set AdjacentMod="0" CombatPercent="10" />
+			<Set AdjacentMod="0" CombatPercent="8" />
 			<Where Type="PROMOTION_ADJACENT_BONUS" />
 		</Update>
 	</UnitPromotions>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_DISCIPLINE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DISCIPLINE_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Discipline[ENDCOLOR][NEWLINE]+10% [ICON_STRENGTH] combat strength for Land Units and military units gain 50% more Experience from combat.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Discipline[ENDCOLOR][NEWLINE]+8% [ICON_STRENGTH] combat strength for Land Units and military units gain 50% more Experience from combat.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_PROMOTION_DISCIPLINE_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_DISCIPLINE_HELP">
-			<Text>+10% [ICON_STRENGTH] Combat Strength.</Text>
+			<Text>+8% [ICON_STRENGTH] Combat Strength.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_DISCIPLINE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DISCIPLINE_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Discipline[ENDCOLOR][NEWLINE]+10% [ICON_STRENGTH] combat strength for Land Units and military units gain 50% more Experience from combat.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Discipline[ENDCOLOR][NEWLINE]+8% [ICON_STRENGTH] combat strength for Land Units and military units gain 50% more Experience from combat.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_PROMOTION_DISCIPLINE_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_DISCIPLINE_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+10% [ICON_STRENGTH] Combat Strength.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]+8% [ICON_STRENGTH] Combat Strength.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_DISCIPLINE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DISCIPLINE_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Discipline[ENDCOLOR][NEWLINE]+10% [ICON_STRENGTH] combat strength for Land Units and military units gain 50% more Experience from combat.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Discipline[ENDCOLOR][NEWLINE]+8% [ICON_STRENGTH] combat strength for Land Units and military units gain 50% more Experience from combat.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_PROMOTION_DISCIPLINE_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_DISCIPLINE_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+10% [ICON_STRENGTH] Combat Strength.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]+8% [ICON_STRENGTH] Combat Strength.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_DISCIPLINE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_DISCIPLINE_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Discipline[ENDCOLOR][NEWLINE]+10% [ICON_STRENGTH] combat strength for Land Units and military units gain 50% more Experience from combat.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Discipline[ENDCOLOR][NEWLINE]+8% [ICON_STRENGTH] combat strength for Land Units and military units gain 50% more Experience from combat.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_PROMOTION_DISCIPLINE_HELP" />
 		<Row Tag="TXT_KEY_PROMOTION_DISCIPLINE_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+10% [ICON_STRENGTH] Combat Strength.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]+8% [ICON_STRENGTH] Combat Strength.</Text>
 		</Row>
 	</Language_RU_RU>
 
