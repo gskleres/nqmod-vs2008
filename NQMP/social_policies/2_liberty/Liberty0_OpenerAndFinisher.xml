@@ -147,25 +147,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_LIBERTY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_LIBERTY_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Liberty[ENDCOLOR] is best for civilizations which desire rapid expansion.[NEWLINE][NEWLINE]Adopting Liberty will provide 1 [ICON_CULTURE] Culture per city. Unlocks building the Pyramids.[NEWLINE][NEWLINE]Adopting all policies in the Liberty tree will grant a free Great Person of your choice near the [ICON_CAPITAL] Capital. All cities gain +33% [ICON_PRODUCTION] Production towards National Wonders and +15% [ICON_PRODUCTION] Production towards any building required for a National Wonder.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Liberty[ENDCOLOR] is best for civilizations which desire rapid expansion.[NEWLINE][NEWLINE]Adopting Liberty will provide 1 [ICON_CULTURE] Culture per city. Unlocks building the Pyramids.[NEWLINE][NEWLINE]Adopting all policies in the Liberty tree will grant a free Great Person of your choice near the [ICON_CAPITAL] Capital. All cities gain +25% [ICON_PRODUCTION] Production towards National Wonders and +15% [ICON_PRODUCTION] Production towards any building required for a National Wonder.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_LIBERTY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_LIBERTY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberty[ENDCOLOR] is best for civilizations which desire rapid expansion.[NEWLINE][NEWLINE]Adopting Liberty will provide 1 [ICON_CULTURE] Culture per city. Unlocks building the Pyramids.[NEWLINE][NEWLINE]Adopting all policies in the Liberty tree will grant a free Great Person of your choice near the [ICON_CAPITAL] Capital. All cities gain +33% [ICON_PRODUCTION] Production towards National Wonders and +15% [ICON_PRODUCTION] Production towards any building required for a National Wonder.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberty[ENDCOLOR] is best for civilizations which desire rapid expansion.[NEWLINE][NEWLINE]Adopting Liberty will provide 1 [ICON_CULTURE] Culture per city. Unlocks building the Pyramids.[NEWLINE][NEWLINE]Adopting all policies in the Liberty tree will grant a free Great Person of your choice near the [ICON_CAPITAL] Capital. All cities gain +25% [ICON_PRODUCTION] Production towards National Wonders and +15% [ICON_PRODUCTION] Production towards any building required for a National Wonder.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_LIBERTY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_LIBERTY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberty[ENDCOLOR] is best for civilizations which desire rapid expansion.[NEWLINE][NEWLINE]Adopting Liberty will provide 1 [ICON_CULTURE] Culture per city. Unlocks building the Pyramids.[NEWLINE][NEWLINE]Adopting all policies in the Liberty tree will grant a free Great Person of your choice near the [ICON_CAPITAL] Capital. All cities gain +33% [ICON_PRODUCTION] Production towards National Wonders and +15% [ICON_PRODUCTION] Production towards any building required for a National Wonder.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberty[ENDCOLOR] is best for civilizations which desire rapid expansion.[NEWLINE][NEWLINE]Adopting Liberty will provide 1 [ICON_CULTURE] Culture per city. Unlocks building the Pyramids.[NEWLINE][NEWLINE]Adopting all policies in the Liberty tree will grant a free Great Person of your choice near the [ICON_CAPITAL] Capital. All cities gain +25% [ICON_PRODUCTION] Production towards National Wonders and +15% [ICON_PRODUCTION] Production towards any building required for a National Wonder.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_BRANCH_LIBERTY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_BRANCH_LIBERTY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberty[ENDCOLOR] is best for civilizations which desire rapid expansion.[NEWLINE][NEWLINE]Adopting Liberty will provide 1 [ICON_CULTURE] Culture per city. Unlocks building the Pyramids.[NEWLINE][NEWLINE]Adopting all policies in the Liberty tree will grant a free Great Person of your choice near the [ICON_CAPITAL] Capital. All cities gain +33% [ICON_PRODUCTION] Production towards National Wonders and +15% [ICON_PRODUCTION] Production towards any building required for a National Wonder.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Liberty[ENDCOLOR] is best for civilizations which desire rapid expansion.[NEWLINE][NEWLINE]Adopting Liberty will provide 1 [ICON_CULTURE] Culture per city. Unlocks building the Pyramids.[NEWLINE][NEWLINE]Adopting all policies in the Liberty tree will grant a free Great Person of your choice near the [ICON_CAPITAL] Capital. All cities gain +25% [ICON_PRODUCTION] Production towards National Wonders and +15% [ICON_PRODUCTION] Production towards any building required for a National Wonder.</Text>
 		</Row>
 	</Language_RU_RU>
 

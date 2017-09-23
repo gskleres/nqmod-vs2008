@@ -2,10 +2,12 @@
 <GameData>
 
 	<!-- Tradition Finisher now provides +10% Growth (down from +15%). -->
-	<Update>
-		<Where Type="POLICY_TRADITION_FINISHER" />
-		<Set CityGrowthMod="10" />
-	</Update>
+	<Policies>
+		<Update>
+			<Where Type="POLICY_TRADITION_FINISHER" />
+			<Set CityGrowthMod="10" />
+		</Update>
+	</Policies>
 	
 	<!-- Localization -->
 	<Language_en_US>
