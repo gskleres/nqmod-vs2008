@@ -1671,6 +1671,11 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>social_policies/2_liberty/Liberty1_Republic.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>social_policies/2_liberty/Liberty4_Representation.xml</FileName>
       </Action>
       <Action>
@@ -3238,6 +3243,10 @@ Big thanks to Delnar_Ersike for all of his code, fixes, and knowledge!!</Descrip
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="social_policies\2_liberty\Liberty0_OpenerAndFinisher.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="social_policies\2_liberty\Liberty1_Republic.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>

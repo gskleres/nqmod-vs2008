@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 6/2/2015 9:37:04 PM -->
 <GameData>
 
-	<!-- Finisher now also provides +50% Production towards National Wonders and +15% Production towards buildings required for National Wonders. -->
+	<!-- Finisher now also provides +25% Production towards National Wonders and +15% Production towards buildings required for National Wonders. -->
 	<Policy_BuildingClassProductionModifiers>
 
 		<!-- *** NATIONAL WONDERS *** -->
@@ -10,67 +10,67 @@
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_CIRCUS_MAXIMUS</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- East India Company -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_NATIONAL_TREASURY</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- Grand Temple -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_GRAND_TEMPLE</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- Hermitage -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_HERMITAGE</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- Heroic Epic -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_HEROIC_EPIC</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- Ironworks -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_IRONWORKS</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- National College -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_NATIONAL_COLLEGE</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- National Epic -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_NATIONAL_EPIC</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- National Intelligence Agency -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_INTELLIGENCE_AGENCY</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- National Visitor Center -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_TOURIST_CENTER</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 		<!-- Oxford University -->
 		<Row>
 			<PolicyType>POLICY_LIBERTY_FINISHER</PolicyType>
 			<BuildingClassType>BUILDINGCLASS_OXFORD_UNIVERSITY</BuildingClassType>
-			<ProductionModifier>33</ProductionModifier>
+			<ProductionModifier>25</ProductionModifier>
 		</Row>
 
 		<!-- *** BUILDINGS REQUIRED FOR NATIONAL WONDERS *** -->
