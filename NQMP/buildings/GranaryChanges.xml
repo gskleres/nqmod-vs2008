@@ -2,7 +2,19 @@
 <!-- Created by ModBuddy on 6/13/2015 6:48:49 PM -->
 <GameData>
 
-	<!-- Granary now works on Bison as well. -->
+	<!-- Granary no longer provides a bonus from Deer, and only provides +1 Food (down from +2). Production cost reduced by 20%. -->
+	<Buildings>
+		<Update>
+			<Where Type="BUILDING_GRANARY" />
+			<Set Cost="48" />
+		</Update>
+	</Buildings>
+	<Building_YieldChanges>
+		<Update>
+			<Where BuildingType="BUILDING_GRANARY" YieldType="YIELD_FOOD" />
+			<Set Yield="1" />
+		</Update>
+	</Building_YieldChanges>
 	<Building_ResourceYieldChanges>
 		<Delete BuildingType="BUILDING_GRANARY" ResourceType="RESOURCE_DEER" YieldType="YIELD_FOOD" />
 	</Building_ResourceYieldChanges>

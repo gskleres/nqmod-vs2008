@@ -15,7 +15,7 @@
 			<Type>BUILDING_HUNTING_LODGE</Type>
 			<BuildingClass>BUILDINGCLASS_HUNTING_LODGE</BuildingClass>
 			<FreeStartEra>ERA_RENAISSANCE</FreeStartEra>
-			<Cost>60</Cost>
+			<Cost>48</Cost>
 			<GoldMaintenance>1</GoldMaintenance>
 			<PrereqTech>TECH_ARCHERY</PrereqTech>
 			<Help>TXT_KEY_BUILDING_HUNTING_LODGE_HELP</Help>
@@ -81,7 +81,7 @@
 		<Row>
 			<BuildingType>BUILDING_HUNTING_LODGE</BuildingType>
 			<YieldType>YIELD_FOOD</YieldType>
-			<Yield>2</Yield>
+			<Yield>1</Yield>
 		</Row>
 	</Building_YieldChanges>
 
