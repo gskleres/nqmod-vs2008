@@ -31,6 +31,9 @@
 		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH">
 			<Text>You do not have enough [ICON_PEACE] Faith to select this option.</Text>
 		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_IS_SAME_RELIGION">
+			<Text>[COLOR_POSITIVE_TEXT]You share the same Religion, tripling [ICON_INFLUENCE] from Faith gifts.[ENDCOLOR]</Text>
+		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Row Tag="TXT_KEY_POPUP_MINOR_BULLY_GOLD_AMOUNT_GAIN_INFLUENCE">
@@ -59,6 +62,9 @@
 		</Row>
 		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH">
 			<Text>You do not have enough [ICON_PEACE] Faith to select this option.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_IS_SAME_RELIGION">
+			<Text>[COLOR_POSITIVE_TEXT]You share the same Religion, tripling [ICON_INFLUENCE] from Faith gifts.[ENDCOLOR]</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -89,6 +95,9 @@
 		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH">
 			<Text>You do not have enough [ICON_PEACE] Faith to select this option.</Text>
 		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_IS_SAME_RELIGION">
+			<Text>[COLOR_POSITIVE_TEXT]You share the same Religion, tripling [ICON_INFLUENCE] from Faith gifts.[ENDCOLOR]</Text>
+		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Row Tag="TXT_KEY_POPUP_MINOR_BULLY_GOLD_AMOUNT_GAIN_INFLUENCE">
@@ -117,6 +126,9 @@
 		</Row>
 		<Row Tag="TXT_KEY_POPUP_MINOR_NOT_ENOUGH_FAITH">
 			<Text>You do not have enough [ICON_PEACE] Faith to select this option.</Text>
+		</Row>
+		<Row Tag="TXT_KEY_POPUP_MINOR_IS_SAME_RELIGION">
+			<Text>[COLOR_POSITIVE_TEXT]You share the same Religion, tripling [ICON_INFLUENCE] from Faith gifts.[ENDCOLOR]</Text>
 		</Row>
 	</Language_RU_RU>
 	

@@ -598,6 +598,7 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 	Method(GetFriendshipFromGoldGift);
 #ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
 	Method(GetFriendshipFromFaithGift);
+	Method(IsSameReligionAsMajor);
 #endif
 	Method(GetFriendshipNeededForNextLevel);
 	Method(GetMinorCivFavoriteMajor);
@@ -6473,6 +6474,17 @@ int CvLuaPlayer::lGetFriendshipFromFaithGift(lua_State* L)
 
 	const int iResult = pkPlayer->GetMinorCivAI()->GetFriendshipFromFaithGift(eMajor, iFaith);
 	lua_pushinteger(L, iResult);
+	return 1;
+}
+//------------------------------------------------------------------------------
+//bool IsSameReligionAsMajor(PlayerTypes eMajor);
+int CvLuaPlayer::lIsSameReligionAsMajor(lua_State* L)
+{
+	CvPlayerAI* pkPlayer = GetInstance(L);
+	PlayerTypes eMajor = (PlayerTypes) lua_tointeger(L, 2);
+
+	const bool bResult = pkPlayer->GetMinorCivAI()->IsSameReligionAsMajor(eMajor);
+	lua_pushboolean(L, bResult);
 	return 1;
 }
 #endif

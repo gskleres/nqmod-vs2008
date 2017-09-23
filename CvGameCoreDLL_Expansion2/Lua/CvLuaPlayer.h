@@ -582,6 +582,7 @@ protected:
 	static int lGetFriendshipFromGoldGift(lua_State* L);
 #ifdef NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
 	static int lGetFriendshipFromFaithGift(lua_State* L);
+	static int lIsSameReligionAsMajor(lua_State* L);
 #endif
 	static int lGetMinorCivFavoriteMajor(lua_State* L);
 	static int lGetMinorCivScienceFriendshipBonus(lua_State* L);

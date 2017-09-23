@@ -35,6 +35,10 @@
 			<Set Value="0" />
 			<Where Name="ALLIES_OTHER_CITIES_FOOD_BONUS_AMOUNT" />
 		</Update>
-
+		<Update>
+			<Set Value="200" />
+			<Where Name="ALLIES_CAPITAL_FOOD_BONUS_AMOUNT" />
+		</Update>
+		
 	</Defines>
 </GameData>

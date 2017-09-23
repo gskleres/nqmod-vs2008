@@ -836,6 +836,7 @@
 
 
 /// -- MORE OPTIONS FOR v12.3 AND ON ---
+// remove the diplomatic penalty for expanding like crazy
 #define NQ_GAME_OPTION_DISABLE_RECKLESS_EXPANDER
 // notifications of city growth occur at all pop levels (not just less than 5)
 #define NQ_ALWAYS_SHOW_POP_GROWTH_NOTIFICATION

@@ -9086,10 +9086,6 @@ void CvMinorCivAI::DoFaithGiftFromMajor(PlayerTypes ePlayer, int iFaith)
 	{
 		int iFriendshipChange = GetFriendshipFromFaithGift(ePlayer, iFaith);
 
-		// if the city state is the same religion as you, triple the effect
-		if (IsSameReligionAsMajor(ePlayer))
-			iFriendshipChange *= 3;
-
 		// GJS: not sure what this part here does, but I am going to skip it for now.
 		//if(iFriendshipChange > 0)
 			//GET_PLAYER(ePlayer).GetTreasury()->LogExpenditure(GetPlayer()->GetMinorCivAI()->GetNamesListAsString(0), iGold,4);
@@ -9126,6 +9122,10 @@ int CvMinorCivAI::GetFriendshipFromFaithGift(PlayerTypes eMajor, int iFaith)
 	int iVisibleDivisor = /*5*/ GC.getMINOR_CIV_GOLD_GIFT_VISIBLE_DIVISOR();
 	iFriendship /= iVisibleDivisor;
 	iFriendship *= iVisibleDivisor;
+
+	// if the city state is the same religion as you, triple the effect
+	if (IsSameReligionAsMajor(eMajor))
+		iFriendship *= 3;
 
 	return iFriendship;
 }

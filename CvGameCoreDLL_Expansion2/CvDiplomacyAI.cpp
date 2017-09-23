@@ -8103,6 +8103,11 @@ void CvDiplomacyAI::SetEstimateOtherPlayerLandDisputeLevel(PlayerTypes ePlayer, 
 /// Is ePlayer expanding recklessly?
 bool CvDiplomacyAI::IsPlayerRecklessExpander(PlayerTypes ePlayer)
 {
+#ifdef NQ_GAME_OPTION_DISABLE_RECKLESS_EXPANDER
+	if (GC.getGame().isOption("GAMEOPTION_DISABLE_RECKLESS_EXPANDER"))
+		return false;
+#endif
+
 	// If the player is too far away from us, we don't care
 	if(GetPlayer()->GetProximityToPlayer(ePlayer) < PLAYER_PROXIMITY_CLOSE)
 		return false;
@@ -22662,11 +22667,7 @@ int CvDiplomacyAI::GetDenouncedEnemyScore(PlayerTypes ePlayer)
 int CvDiplomacyAI::GetRecklessExpanderScore(PlayerTypes ePlayer)
 {
 	int iOpinionWeight = 0;
-#ifdef NQ_GAME_OPTION_DISABLE_RECKLESS_EXPANDER
-	if(IsPlayerRecklessExpander(ePlayer) && !GC.getGame().isOption("GAMEOPTION_DISABLE_RECKLESS_EXPANDER"))
-#else
 	if(IsPlayerRecklessExpander(ePlayer))
-#endif
 		iOpinionWeight += /*35*/ GC.getOPINION_WEIGHT_RECKLESS_EXPANDER();
 	return iOpinionWeight;
 }

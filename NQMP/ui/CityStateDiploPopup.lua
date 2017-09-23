@@ -968,6 +968,9 @@ function PopulateGiftChoices()
 	if (not pActivePlayer:CanFaithGiftMinors()) then
 		strFaithButtonTT = "[COLOR_NEGATIVE_TEXT]" .. Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_CANNOT_FAITH_GIFT_REASON") .. "[ENDCOLOR][NEWLINE][NEWLINE]" .. strFaithButtonTT;
 	end
+	if (pActivePlayer:CanFaithGiftMinors() and pPlayer:IsSameReligionAsMajor(iActivePlayer)) then
+		strFaithButtonTT = Locale.ConvertTextKey("TXT_KEY_POPUP_MINOR_IS_SAME_RELIGION") .. "[NEWLINE][NEWLINE]" .. strFaithButtonTT;
+	end
 	Controls.FaithGiftButton:SetToolTipString(strFaithButtonTT);
 	-- end NQ_BELIEF_TOGGLE_ALLOW_FAITH_GIFTS_TO_MINORS
 	
