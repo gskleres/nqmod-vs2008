@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2017-02-12 16:01:48 -->
 <GameData>
 	
-	<!-- Satellite States (replaces Skyscrapers): +5% Food, Production, and Science in all Cities for each Courthouse in the Empire. -->
+	<!-- Satellite States (replaces Skyscrapers): +4% Food and Production in all Cities for each Courthouse in the Empire. -->
 	<Policies>
 		<Update>
 			<Set Level="3" BuildingPurchaseCostModifier="0" />
@@ -40,17 +40,12 @@
 		<Row>
 			<BuildingType>DUMMY_BUILDING_T3_2_SATELLITE_STATES</BuildingType>
 			<YieldType>YIELD_FOOD</YieldType>
-			<Yield>5</Yield>
+			<Yield>4</Yield>
 		</Row>
 		<Row>
 			<BuildingType>DUMMY_BUILDING_T3_2_SATELLITE_STATES</BuildingType>
 			<YieldType>YIELD_PRODUCTION</YieldType>
-			<Yield>5</Yield>
-		</Row>
-		<Row>
-			<BuildingType>DUMMY_BUILDING_T3_2_SATELLITE_STATES</BuildingType>
-			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>5</Yield>
+			<Yield>4</Yield>
 		</Row>
 	</Building_GlobalYieldModifiers>
 	
@@ -62,7 +57,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Satellite States[ENDCOLOR][NEWLINE]+5% [ICON_FOOD] Food, [ICON_PRODUCTION] Production, and [ICON_RESEARCH] Science in all Cities for each Courthouse in the Empire.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Satellite States[ENDCOLOR][NEWLINE]+4% [ICON_FOOD] Food and [ICON_PRODUCTION] Production in all Cities for each Courthouse in the Empire.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT">
@@ -76,7 +71,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Satellite States[ENDCOLOR][NEWLINE]+5% [ICON_FOOD] Food, [ICON_PRODUCTION] Production, and [ICON_RESEARCH] Science in all Cities for each Courthouse in the Empire.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Satellite States[ENDCOLOR][NEWLINE]+4% [ICON_FOOD] Food and [ICON_PRODUCTION] Production in all Cities for each Courthouse in the Empire.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT">
@@ -90,7 +85,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Satellite States[ENDCOLOR][NEWLINE]+5% [ICON_FOOD] Food, [ICON_PRODUCTION] Production, and [ICON_RESEARCH] Science in all Cities for each Courthouse in the Empire.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Satellite States[ENDCOLOR][NEWLINE]+4% [ICON_FOOD] Food and [ICON_PRODUCTION] Production in all Cities for each Courthouse in the Empire.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT">
@@ -104,7 +99,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Satellite States[ENDCOLOR][NEWLINE]+5% [ICON_FOOD] Food, [ICON_PRODUCTION] Production, and [ICON_RESEARCH] Science in all Cities for each Courthouse in the Empire.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Satellite States[ENDCOLOR][NEWLINE]+4% [ICON_FOOD] Food and [ICON_PRODUCTION] Production in all Cities for each Courthouse in the Empire.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT" />
 		<Row Tag="TXT_KEY_POLICY_SKYSCRAPERS_TEXT">
