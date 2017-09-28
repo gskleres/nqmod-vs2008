@@ -62,22 +62,18 @@
 		</Row>
 	</Improvement_ResourceType_Yields>
 
-	<!-- Plantations now provides +1 Faith from Incense -->
+	<!-- Plantations now provides +2 Faith from Incense -->
 	<Improvement_ResourceType_Yields>
 		<Row>
 			<ImprovementType>IMPROVEMENT_PLANTATION</ImprovementType>
 			<ResourceType>RESOURCE_INCENSE</ResourceType>
 			<YieldType>YIELD_FAITH</YieldType>
-			<Yield>1</Yield>
+			<Yield>2</Yield>
 		</Row>
 	</Improvement_ResourceType_Yields>
 
-	<!-- Plantations now provides +3 Food from Bananas (up from +2) and no longer remove plains +1 production after jungle chop -->
+	<!-- Plantations no longer remove plains +1 production after jungle chop -->
 	<Improvement_ResourceType_Yields>
-		<Update>
-			<Set Yield="3" />
-			<Where ImprovementType="IMPROVEMENT_PLANTATION" ResourceType="RESOURCE_BANANA" YieldType="YIELD_FOOD" />
-		</Update>
 		<Update>
 			<Set Yield="0" />
 			<Where ImprovementType="IMPROVEMENT_PLANTATION" ResourceType="RESOURCE_BANANA" YieldType="YIELD_PRODUCTION" />
