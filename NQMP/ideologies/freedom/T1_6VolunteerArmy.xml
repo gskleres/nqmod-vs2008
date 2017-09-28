@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 3/22/2017 7:08:59 PM -->
 <GameData>
 
-	<!-- Volunteer Army: Military Land Units in friendly territory gain +15 additional HP when healing and +15% Combat Strength. -->
+	<!-- Volunteer Army: Military Land Units in friendly territory gain +25 additional HP when healing. -->
 	<Policies>
 		<Update>
 			<Set Level="1" IncludesOneShotFreeUnits="false" BaseFreeUnits="0" />
@@ -26,8 +26,7 @@
 			<PediaType>PEDIA_MELEE</PediaType>
 			<PediaEntry>TXT_KEY_PROMOTION_VOLUNTEER_ARMY</PediaEntry>
 			<CannotBeChosen>true</CannotBeChosen>
-			<FriendlyHealChange>15</FriendlyHealChange>
-			<FriendlyLandsModifier>15</FriendlyLandsModifier>
+			<FriendlyHealChange>25</FriendlyHealChange>
 		</Row>
 	</UnitPromotions>
 	<Policy_FreePromotions>
@@ -109,49 +108,49 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +15 additional HP when healing and +15% [ICON_STRENGTH] Combat Strength.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +25 additional HP when healing.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY">
 			<Text>Volunteer Army</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP">
-			<Text>In friendly territory, gains +15% [ICON_STRENGTH] Combat Strength and +15 additional HP when healing.</Text>
+			<Text>In friendly territory, gains +25 additional HP when healing.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +15 additional HP when healing and +15% [ICON_STRENGTH] Combat Strength.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +25 additional HP when healing.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Volunteer Army</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]In friendly territory, gains +15% [ICON_STRENGTH] Combat Strength and +15 additional HP when healing.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]In friendly territory, gains +25 additional HP when healing.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +15 additional HP when healing and +15% [ICON_STRENGTH] Combat Strength.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +25 additional HP when healing.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Volunteer Army</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]In friendly territory, gains +15% [ICON_STRENGTH] Combat Strength and +15 additional HP when healing.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]In friendly territory, gains +25 additional HP when healing.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +15 additional HP when healing and +15% [ICON_STRENGTH] Combat Strength.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Volunteer Army[ENDCOLOR][NEWLINE]Military Land Units in friendly territory gain +25 additional HP when healing.</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Volunteer Army</Text>
 		</Row>
 		<Row Tag="TXT_KEY_PROMOTION_VOLUNTEER_ARMY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]In friendly territory, gains +15% [ICON_STRENGTH] Combat Strength and +15 additional HP when healing.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]In friendly territory, gains +25 additional HP when healing.</Text>
 		</Row>
 	</Language_RU_RU>
 
