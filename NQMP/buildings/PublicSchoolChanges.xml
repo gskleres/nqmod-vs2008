@@ -6,7 +6,7 @@
 	<Building_YieldChanges>
 		<Update>
 			<Set Yield="2" />
-			<Where BuildingType="BUILDING_OBSERVATORY" YieldType="YIELD_SCIENCE" />
+			<Where BuildingType="BUILDING_PUBLIC_SCHOOL" YieldType="YIELD_SCIENCE" />
 		</Update>
 	</Building_YieldChanges>
 
