@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 4/22/2017 2:39:03 AM -->
 <GameData>
 	
-	<!-- Kremlin: 1 free Social Policy, +1 Culture, +1 Happiness from Workshops, Factories, Hydro Plants, Solar Plants, and Nuclear Plants. -->
+	<!-- Kremlin: 1 free Social Policy, +1 Culture, +1 Happiness from Workshops, Factories, Solar Plants, and Nuclear Plants. -->
 	<Building_UnitCombatProductionModifiers>
 		<Delete BuildingType="BUILDING_KREMLIN" />
 	</Building_UnitCombatProductionModifiers>
@@ -38,25 +38,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_WONDER_KREMLIN_HELP" />
 		<Row Tag="TXT_KEY_WONDER_KREMLIN_HELP">
-			<Text>Requires Order. 1 Free Social Policy. +1 [ICON_HAPPINESS_1] Happiness from Workshops, Factories, Hydro Plants, Solar Plants, and Nuclear Plants.</Text>
+			<Text>Requires Order. 1 Free Social Policy. +1 [ICON_HAPPINESS_1] Happiness from Workshops, Factories, Solar Plants, and Nuclear Plants.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_WONDER_KREMLIN_HELP" />
 		<Row Tag="TXT_KEY_WONDER_KREMLIN_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Requires Order. 1 Free Social Policy. +1 [ICON_HAPPINESS_1] Happiness from Workshops, Factories, Hydro Plants, Solar Plants, and Nuclear Plants.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Requires Order. 1 Free Social Policy. +1 [ICON_HAPPINESS_1] Happiness from Workshops, Factories, Solar Plants, and Nuclear Plants.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_WONDER_KREMLIN_HELP" />
 		<Row Tag="TXT_KEY_WONDER_KREMLIN_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Requires Order. 1 Free Social Policy. +1 [ICON_HAPPINESS_1] Happiness from Workshops, Factories, Hydro Plants, Solar Plants, and Nuclear Plants.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Requires Order. 1 Free Social Policy. +1 [ICON_HAPPINESS_1] Happiness from Workshops, Factories, Solar Plants, and Nuclear Plants.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_WONDER_KREMLIN_HELP" />
 		<Row Tag="TXT_KEY_WONDER_KREMLIN_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Requires Order. 1 Free Social Policy. +1 [ICON_HAPPINESS_1] Happiness from Workshops, Factories, Hydro Plants, Solar Plants, and Nuclear Plants.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Requires Order. 1 Free Social Policy. +1 [ICON_HAPPINESS_1] Happiness from Workshops, Factories, Solar Plants, and Nuclear Plants.</Text>
 		</Row>
 	</Language_RU_RU>
 
