@@ -840,6 +840,7 @@
 #define NQ_GAME_OPTION_DISABLE_RECKLESS_EXPANDER
 // notifications of city growth occur at all pop levels (not just less than 5)
 #define NQ_ALWAYS_SHOW_POP_GROWTH_NOTIFICATION
-
+// tributing now relies more on local military power rather than global
+#define NQ_TRIBUTE_EASIER_WITH_LOCAL_POWER
 
 #endif

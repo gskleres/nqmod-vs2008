@@ -8053,7 +8053,11 @@ int CvMinorCivAI::CalculateBullyMetric(PlayerTypes eBullyPlayer, bool bForUnit, 
 		if(veMilitaryRankings.GetElement(iRanking) == eBullyPlayer)
 		{
 			float fRankRatio = (float)(veMilitaryRankings.size() - iRanking) / (float)(veMilitaryRankings.size());
+#ifdef NQ_TRIBUTE_EASIER_WITH_LOCAL_POWER
+			iGlobalMilitaryScore = (int)(fRankRatio * 50); // A score between 50*(1 / num majors alive) and 50, with the highest rank major getting 50
+#else
 			iGlobalMilitaryScore = (int)(fRankRatio * 75); // A score between 75*(1 / num majors alive) and 75, with the highest rank major getting 75
+#endif
 			iScore += iGlobalMilitaryScore;
 			break;
 		}
@@ -8145,23 +8149,43 @@ int CvMinorCivAI::CalculateBullyMetric(PlayerTypes eBullyPlayer, bool bForUnit, 
 	int iLocalPowerScore = 0;
 	if(fLocalPowerRatio >= 3.0)
 	{
+#ifdef NQ_TRIBUTE_EASIER_WITH_LOCAL_POWER
+		iLocalPowerScore += 150;
+#else
 		iLocalPowerScore += 125;
+#endif
 	}
 	else if(fLocalPowerRatio >= 2.0)
 	{
+#ifdef NQ_TRIBUTE_EASIER_WITH_LOCAL_POWER
+		iLocalPowerScore += 120;
+#else
 		iLocalPowerScore += 100;
+#endif
 	}
 	else if(fLocalPowerRatio >= 1.5)
 	{
+#ifdef NQ_TRIBUTE_EASIER_WITH_LOCAL_POWER
+		iLocalPowerScore += 90;
+#else
 		iLocalPowerScore += 75;
+#endif
 	}
 	else if(fLocalPowerRatio >= 1.0)
 	{
+#ifdef NQ_TRIBUTE_EASIER_WITH_LOCAL_POWER
+		iLocalPowerScore += 60;
+#else
 		iLocalPowerScore += 50;
+#endif
 	}
 	else if(fLocalPowerRatio >= 0.5)
 	{
+#ifdef NQ_TRIBUTE_EASIER_WITH_LOCAL_POWER
+		iLocalPowerScore += 30;
+#else
 		iLocalPowerScore += 25;
+#endif
 	}
 	iScore += iLocalPowerScore;
 	
