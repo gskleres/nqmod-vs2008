@@ -19,11 +19,6 @@
 		</Row>
 		<Row>
 			<BuildingType>BUILDING_KREMLIN</BuildingType>
-			<BuildingClassType>BUILDINGCLASS_HYDRO_PLANT</BuildingClassType>
-			<Happiness>1</Happiness>
-		</Row>
-		<Row>
-			<BuildingType>BUILDING_KREMLIN</BuildingType>
 			<BuildingClassType>BUILDINGCLASS_SOLAR_PLANT</BuildingClassType>
 			<Happiness>1</Happiness>
 		</Row>
