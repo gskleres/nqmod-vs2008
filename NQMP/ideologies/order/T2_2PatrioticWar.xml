@@ -5,6 +5,7 @@
 	<!-- Patriotic War: +50% Production towards Gunpowder units. -->
 	<Policies>
 		<Update>
+			<Set Level="2" IsDoubleTrainedMilitaryLandUnits="false" />
 			<Where Type="POLICY_PATRIOTIC_WAR" />
 		</Update>
 	</Policies>
