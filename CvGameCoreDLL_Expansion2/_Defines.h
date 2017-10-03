@@ -842,5 +842,15 @@
 #define NQ_ALWAYS_SHOW_POP_GROWTH_NOTIFICATION
 // tributing now relies more on local military power rather than global
 #define NQ_TRIBUTE_EASIER_WITH_LOCAL_POWER
+// city states will no longer declare peace if influence is less than -50
+#define NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW
+// We Love The King Day now scales based on game speed
+#define NQ_WLTKD_SCALES_BY_GAME_SPEED
+// We Love The King Day resource requested changes if it takes too long to fulfill
+#define NQ_WLTKD_RESOURCE_DEMAND_EXPIRES
+// We Love The King Day initial seed now scales with game speed
+#define NQ_WLTKD_SEED_SCALES_WITH_GAME_SPEED
+// Trade Route duration now scales with game speed
+#define NQ_TRADE_ROUTE_DURATION_SCALES_WITH_GAME_SPEED
 
 #endif

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by ModBuddy on 2017-10-03 00:48:19 -->
+<GameData>
+	
+	<!-- We Love The King Day base duration is now 18 turns (down from 20). -->
+	<Update>
+		<Set Value="18" />
+		<Where Name="CITY_RESOURCE_WLTKD_TURNS" />
+	</Update>
+	
+</GameData>
