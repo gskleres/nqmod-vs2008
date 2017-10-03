@@ -2,29 +2,29 @@
 <!-- Created by ModBuddy on 6/6/2015 4:51:27 PM -->
 <GameData>
 
-	<!-- Navigation School: +10% Combat strength for Naval units. +3 Science in coastal Cities. -->
+	<!-- Navigation School: +10% Combat strength for Naval units. +2 Science in coastal Cities. -->
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_NAVIGATION_SCHOOL_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NAVIGATION_SCHOOL_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Navigation School[ENDCOLOR][NEWLINE]+3 [ICON_RESEARCH] Science in all coastal cities. +10% [ICON_STRENGTH] Combat Strength for Naval combat units.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Navigation School[ENDCOLOR][NEWLINE]+2 [ICON_RESEARCH] Science in all coastal cities. +10% [ICON_STRENGTH] Combat Strength for Naval combat units.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_NAVIGATION_SCHOOL_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NAVIGATION_SCHOOL_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Navigation School[ENDCOLOR][NEWLINE]+3 [ICON_RESEARCH] Science in all coastal cities. +10% [ICON_STRENGTH] Combat Strength for Naval combat units.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Navigation School[ENDCOLOR][NEWLINE]+2 [ICON_RESEARCH] Science in all coastal cities. +10% [ICON_STRENGTH] Combat Strength for Naval combat units.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_NAVIGATION_SCHOOL_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NAVIGATION_SCHOOL_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Navigation School[ENDCOLOR][NEWLINE]+3 [ICON_RESEARCH] Science in all coastal cities. +10% [ICON_STRENGTH] Combat Strength for Naval combat units.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Navigation School[ENDCOLOR][NEWLINE]+2 [ICON_RESEARCH] Science in all coastal cities. +10% [ICON_STRENGTH] Combat Strength for Naval combat units.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_NAVIGATION_SCHOOL_HELP" />
 		<Row Tag="TXT_KEY_POLICY_NAVIGATION_SCHOOL_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Navigation School[ENDCOLOR][NEWLINE]+3 [ICON_RESEARCH] Science in all coastal cities. +10% [ICON_STRENGTH] Combat Strength for Naval combat units.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Navigation School[ENDCOLOR][NEWLINE]+2 [ICON_RESEARCH] Science in all coastal cities. +10% [ICON_STRENGTH] Combat Strength for Naval combat units.</Text>
 		</Row>
 	</Language_RU_RU>
 
@@ -38,7 +38,7 @@
 		<Row>
 			<PolicyType>POLICY_NAVIGATION_SCHOOL</PolicyType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>3</Yield>
+			<Yield>2</Yield>
 		</Row>
 	</Policy_CoastalCityYieldChanges>
 	<Policy_FreePromotions>
