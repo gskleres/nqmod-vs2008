@@ -9372,7 +9372,11 @@ void CvMinorCivAI::DoNowPeaceWithTeam(TeamTypes eTeam)
 }
 
 /// Will this AI allow peace with ePlayer?
+#ifdef NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW
+bool CvMinorCivAI::IsPeaceBlocked(TeamTypes eTeam)
+#else
 bool CvMinorCivAI::IsPeaceBlocked(TeamTypes eTeam) const
+#endif
 {
 	// Permanent war?
 	if(IsPermanentWar(eTeam))
@@ -9386,15 +9390,11 @@ bool CvMinorCivAI::IsPeaceBlocked(TeamTypes eTeam) const
 
 #ifdef NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW
 		// first check if influence of anyone on my team is less than -50
-		if(GET_TEAM(GET_PLAYER(eMajor).getTeam()) == eTeam)
+		if(GetEffectiveFriendshipWithMajor(eMajor) < -50)
 		{
-			if(GetEffectiveFriendshipWithMajor(eMajor) < -50)
-			{
-				return true;
-			}
+			return true;
 		}
 #endif
-
 		// Major must be alive
 		if(!GET_PLAYER(eMajor).isAlive())
 			continue;
