@@ -3,13 +3,23 @@
 <GameData>
 	
 	<!-- University (and Wat) now provides +20% Science (down from +33%). Scientist specialist slots reduced to 1 (down from 2). -->
+	<Buildings>
+		<Update>
+			<Set SpecialistCount="1" />
+			<Where Type="BUILDING_UNIVERSITY" />
+		</Update>
+		<Update>
+			<Set SpecialistCount="1" />
+			<Where Type="BUILDING_WAT" />
+		</Update>
+	</Buildings>
 	<Building_YieldModifiers>
 		<Update>
-			<Set Yield="20" SpecialistCount="1" />
+			<Set Yield="20" />
 			<Where BuildingType="BUILDING_UNIVERSITY" YieldType="YIELD_SCIENCE" />
 		</Update>
 		<Update>
-			<Set Yield="20" SpecialistCount="1" />
+			<Set Yield="20" />
 			<Where BuildingType="BUILDING_WAT" YieldType="YIELD_SCIENCE" />
 		</Update>
 	</Building_YieldModifiers>

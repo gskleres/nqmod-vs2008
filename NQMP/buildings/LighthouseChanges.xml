@@ -7,9 +7,7 @@
 		<Delete BuildingType="BUILDING_LIGHTHOUSE" ResourceType="RESOURCE_FISH" YieldType="YIELD_FOOD" />
 	</Building_ResourceYieldChanges>
 	<Building_SeaResourceYieldChanges>
-		<Update>
-			<Delete BuildingType="BUILDING_LIGHTHOUSE" YieldType="YIELD_PRODUCTION" />
-		</Update>
+		<Delete BuildingType="BUILDING_LIGHTHOUSE" YieldType="YIELD_PRODUCTION" />
 	</Building_SeaResourceYieldChanges>
 
 	<!-- localizaion -->
