@@ -9,7 +9,9 @@
 		</Update>
 	</Eras>
 	
+	<!-- Removed but kept commented in case we need to go back to this. -->
 	<!-- Increased base cost of Universities, Public Schools, and Research Labs to compensate. -->
+	<!--
 	<Buildings>
 		<Update>
 			<Set FaithCost="400" />
@@ -24,5 +26,6 @@
 			<Where BuildingClass="BUILDINGCLASS_LABORATORY" />
 		</Update>
 	</Buildings>
+	-->
   
 </GameData>
