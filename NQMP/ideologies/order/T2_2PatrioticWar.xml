@@ -2,22 +2,28 @@
 <!-- Created by ModBuddy on 2017-02-12 15:58:13 -->
 <GameData>
   
-	<!-- Patriotic War: Training military Land Units in your Cities produces 2 Units instead of 1. -->
-
+	<!-- Patriotic War: +50% Production towards Gunpowder units. -->
 	<Policies>
 		<Update>
-			<Set Level="2" IsDoubleTrainedMilitaryLandUnits="true" />
 			<Where Type="POLICY_PATRIOTIC_WAR" />
 		</Update>
 	</Policies>
+	<Policy_UnitCombatProductionModifiers>
+		<Row>
+			<PolicyType>POLICY_PATRIOTIC_WAR</PolicyType>
+			<UnitCombatType>UNITCOMBAT_GUN</UnitCombatType>
+			<ProductionModifier>50</ProductionModifier>
+		</Row>
+	</Policy_UnitCombatProductionModifiers>
 	<Policy_FreePromotions>
 		<Delete PolicyType="POLICY_PATRIOTIC_WAR" />
 	</Policy_FreePromotions>
 	<Policy_Flavors>
-		<Update>
-			<Set FlavorType="FLAVOR_OFFENSE" Flavor="50" />
-			<Where PolicyType="POLICY_PATRIOTIC_WAR" />
-		</Update>
+		<Row>
+			<PolicyType>POLICY_PATRIOTIC_WAR</PolicyType>
+			<FlavorType>FLAVOR_OFFENSE</FlavorType>
+			<Flavor>33</Flavor>
+		</Row>
 	</Policy_Flavors>
 
 	<!-- localization -->
@@ -28,7 +34,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]Training military Land Units in your Cities produces 2 Units instead of 1.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+50% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -38,7 +44,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]Training military Land Units in your Cities produces 2 Units instead of 1.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+50% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -48,7 +54,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]Training military Land Units in your Cities produces 2 Units instead of 1.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+50% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
@@ -58,7 +64,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]Training military Land Units in your Cities produces 2 Units instead of 1.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+50% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
 		</Row>
 	</Language_RU_RU>
 
