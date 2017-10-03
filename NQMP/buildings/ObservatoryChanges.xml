@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 1/5/2016 6:07:57 PM -->
 <GameData>
 
-	<!-- Allows Observatories anywhere and they provide +2 Science, +1 Science from Tundra, and +5 Science from Mountains -->
+	<!-- Allows Observatories anywhere and they provide +2 Science, +1 Science from Tundra, and +4 Science from Mountains -->
 	<Buildings>
 		<Update>
-			<Set Mountain="0" MountainScienceYield="5" />
+			<Set Mountain="0" MountainScienceYield="4" />
 			<Where BuildingClass="BUILDINGCLASS_OBSERVATORY" />
 		</Update>
 	</Buildings>
@@ -34,41 +34,41 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY">
-			<Text>The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +5 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +4 [ICON_RESEARCH] Science on Mountain tiles.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP">
-			<Text>The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +5 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +4 [ICON_RESEARCH] Science on Mountain tiles.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +5 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +4 [ICON_RESEARCH] Science on Mountain tiles.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +5 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +4 [ICON_RESEARCH] Science on Mountain tiles.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +5 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +4 [ICON_RESEARCH] Science on Mountain tiles.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +5 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +4 [ICON_RESEARCH] Science on Mountain tiles.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_STRATEGY">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +5 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +4 [ICON_RESEARCH] Science on Mountain tiles.</Text>
 		</Row>
 		<Delete Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP" />
 		<Row Tag="TXT_KEY_BUILDING_OBSERVATORY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +5 [ICON_RESEARCH] Science on Mountain tiles.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]The Observatory produces +1 [ICON_RESEARCH] Science on Tundra tiles and +4 [ICON_RESEARCH] Science on Mountain tiles.</Text>
 		</Row>
 	</Language_RU_RU>
 
