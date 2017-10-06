@@ -3,9 +3,15 @@
 <GameData>
 	
 	<!-- Now provide +2 Science (down from +3). -->
+	<Buildings>
+		<Update>
+			<Set SpecialistType="SPECIALIST_SCIENTIST" SpecialistCount="2" />
+			<Where Type="BUILDING_PUBLIC_SCHOOL" />
+		</Update>
+	</Buildings>
 	<Building_YieldChanges>
 		<Update>
-			<Set Yield="2" SpecialistType="SPECIALIST_SCIENTIST" SpecialistCount="2" />
+			<Set Yield="2" />
 			<Where BuildingType="BUILDING_PUBLIC_SCHOOL" YieldType="YIELD_SCIENCE" />
 		</Update>
 	</Building_YieldChanges>
