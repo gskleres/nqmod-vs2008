@@ -9,60 +9,84 @@
 			<UnitType>UNIT_RIFLEMAN</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_ETHIOPIAN_MEHAL_SEFARI</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_SWEDISH_CAROLEAN</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_DANISH_SKI_INFANTRY</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_FRENCH_FOREIGNLEGION</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_GREAT_WAR_INFANTRY</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_INFANTRY</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_BRAZILIAN_PRACINHA</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_MARINE</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
-	</Unit_Builds>
-	<Unit_Builds>
 		<Row>
 			<UnitType>UNIT_MECHANIZED_INFANTRY</UnitType>
 			<BuildType>BUILD_ROAD</BuildType>
 		</Row>
 	</Unit_Builds>
+	<Units>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_RIFLEMAN" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_ETHIOPIAN_MEHAL_SEFARI" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_SWEDISH_CAROLEAN" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_DANISH_SKI_INFANTRY" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_FRENCH_FOREIGNLEGION" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_GREAT_WAR_INFANTRY" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_INFANTRY" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_BRAZILIAN_PRACINHA" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_MARINE" />
+		</Update>
+		<Update>
+			<Set WorkRate="100" />
+			<Where Type="UNIT_MECHANIZED_INFANTRY" />
+		</Update>
+	</Units>
 	
 </GameData>
