@@ -5,7 +5,7 @@
 	<!-- Now provide +2 Science (down from +3). -->
 	<Building_YieldChanges>
 		<Update>
-			<Set Yield="2" />
+			<Set Yield="2" SpecialistType="SPECIALIST_SCIENTIST" SpecialistCount="2" />
 			<Where BuildingType="BUILDING_PUBLIC_SCHOOL" YieldType="YIELD_SCIENCE" />
 		</Update>
 	</Building_YieldChanges>

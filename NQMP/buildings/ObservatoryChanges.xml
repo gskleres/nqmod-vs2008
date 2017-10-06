@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 1/5/2016 6:07:57 PM -->
 <GameData>
 
-	<!-- Allows Observatories anywhere and they provide +2 Science, +1 Science from Tundra, and +4 Science from Mountains -->
+	<!-- Allows Observatories anywhere and they provide +3 Science, +1 Science from Tundra, and +4 Science from Mountains -->
 	<Buildings>
 		<Update>
 			<Set Mountain="0" MountainScienceYield="4" />
@@ -19,7 +19,7 @@
 		<Row>
 			<BuildingType>BUILDING_OBSERVATORY</BuildingType>
 			<YieldType>YIELD_SCIENCE</YieldType>
-			<Yield>2</Yield>
+			<Yield>3</Yield>
 		</Row>
 	</Building_YieldChanges>
 	<Building_TerrainYieldChanges>

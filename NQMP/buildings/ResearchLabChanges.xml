@@ -2,22 +2,16 @@
 <!-- Created by ModBuddy on 2017-09-27 20:48:11 -->
 <GameData>
 
-	<!-- Now provide +2 Science (down from +4) and +30% Science (down from +50%). Now has 1 Scientist specialist slot. -->
-	<Buildings>
-		<Update>
-			<Set SpecialistType="SPECIALIST_SCIENTIST" SpecialistCount="1" />
-			<Where Type="BUILDING_UNIVERSITY" />
-		</Update>
-	</Buildings>
+	<!-- Now provide +3 Science (down from +4) and +35% Science (down from +50%). -->
 	<Building_YieldChanges>
 		<Update>
-			<Set Yield="2" />
+			<Set Yield="3" />
 			<Where BuildingType="BUILDING_LABORATORY" YieldType="YIELD_SCIENCE" />
 		</Update>
 	</Building_YieldChanges>
 	<Building_YieldModifiers>
 		<Update>
-			<Set Yield="30" />
+			<Set Yield="35" />
 			<Where BuildingType="BUILDING_LABORATORY" YieldType="YIELD_SCIENCE" />
 		</Update>
 	</Building_YieldModifiers>
