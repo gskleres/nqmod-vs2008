@@ -9389,8 +9389,8 @@ bool CvMinorCivAI::IsPeaceBlocked(TeamTypes eTeam) const
 		eMajor = (PlayerTypes) iMajorLoop;
 
 #ifdef NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW
-		// first check if influence of anyone on my team is less than -50
-		if(GetEffectiveFriendshipWithMajor(eMajor) < -50)
+		// first check if I am less than -50
+		if(GetBaseFriendshipWithMajor(eMajor) < -50)
 		{
 			return true;
 		}
