@@ -88,5 +88,47 @@
 			<Where Type="UNIT_MECHANIZED_INFANTRY" />
 		</Update>
 	</Units>
+	<Unit_AITypes>
+		<Row>
+			<UnitType>UNIT_RIFLEMAN</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_ETHIOPIAN_MEHAL_SEFARI</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_SWEDISH_CAROLEAN</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_DANISH_SKI_INFANTRY</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_FRENCH_FOREIGNLEGION</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_GREAT_WAR_INFANTRY</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_INFANTRY</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_BRAZILIAN_PRACINHA</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_MARINE</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+		<Row>
+			<UnitType>UNIT_MECHANIZED_INFANTRY</UnitType>
+			<UnitAIType>UNITAI_WORKER</UnitAIType>
+		</Row>
+	</Unit_AITypes>
 	
 </GameData>
