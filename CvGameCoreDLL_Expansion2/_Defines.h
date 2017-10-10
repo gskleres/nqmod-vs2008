@@ -852,5 +852,7 @@
 #define NQ_WLTKD_SEED_SCALES_WITH_GAME_SPEED
 // Trade Route duration now scales with game speed
 #define NQ_TRADE_ROUTE_DURATION_SCALES_WITH_GAME_SPEED
+// Remove random extra turns from seed of WTLKD resource demand
+#define NQ_DISABLE_WLTKD_SEED_RANDOM_EXTRA_TURNS
 
 #endif

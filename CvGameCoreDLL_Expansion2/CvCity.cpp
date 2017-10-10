@@ -3711,10 +3711,16 @@ void CvCity::DoSeedResourceDemandedCountdown()
 		iNumTurns += /*25*/ GC.getRESOURCE_DEMAND_COUNTDOWN_CAPITAL_ADD();
 	}
 
+#ifndef NQ_DISABLE_WLTKD_SEED_RANDOM_EXTRA_TURNS
 	int iRand = /*10*/ GC.getRESOURCE_DEMAND_COUNTDOWN_RAND();
 	iNumTurns += GC.getGame().getJonRandNum(iRand, "City Resource demanded rand.");
+#endif
 
 #ifdef NQ_WLTKD_SEED_SCALES_WITH_GAME_SPEED
+	// XML was changed to make the variables above = base 24 and capital 24
+	// this means capital will get first resource demanded at [(24 + 24) * 2/3] = turn 32
+	// every other city will get first resource demanded at [24 * 2/3] = 16 turns after it is settled
+	// previously it was turn 40-50 for capital, and 15-25 turns after other cities were settled
 	iNumTurns = iNumTurns * GC.getGame().getGameSpeedInfo().getCulturePercent() / 100;
 #endif
 
