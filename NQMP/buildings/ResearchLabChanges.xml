@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2017-09-27 20:48:11 -->
 <GameData>
 
-	<!-- Now provide +3 Science (down from +4) and +35% Science (down from +50%). -->
+	<!-- Now provide +3 Science (down from +4) and +33% Science (down from +50%). -->
 	<Building_YieldChanges>
 		<Update>
 			<Set Yield="3" />
@@ -11,7 +11,7 @@
 	</Building_YieldChanges>
 	<Building_YieldModifiers>
 		<Update>
-			<Set Yield="35" />
+			<Set Yield="33" />
 			<Where BuildingType="BUILDING_LABORATORY" YieldType="YIELD_SCIENCE" />
 		</Update>
 	</Building_YieldModifiers>
