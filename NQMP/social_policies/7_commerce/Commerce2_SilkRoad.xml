@@ -17,7 +17,7 @@
 		</Row>
 		<Row>
 			<PolicyType>POLICY_CARAVANS</PolicyType>
-			<BuildingClassType>BUILDINGCLASS_CARAVANSARY</BuildingClassType>
+			<BuildingClassType>BUILDINGCLASS_MARKET</BuildingClassType>
 			<CultureChange>1</CultureChange>
 		</Row>
 	</Policy_BuildingClassCultureChanges>
@@ -28,7 +28,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_CARAVANS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CARAVANS_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Silk Road[ENDCOLOR][NEWLINE]+3 [ICON_GOLD] Gold from all your foreign and internal trade routes. +1 [ICON_CULTURE] Culture from Harbors and Caravansaries.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Silk Road[ENDCOLOR][NEWLINE]+3 [ICON_GOLD] Gold from all your foreign and internal trade routes. +1 [ICON_CULTURE] Culture from Harbors and Markets.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -38,7 +38,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_CARAVANS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CARAVANS_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Silk Road[ENDCOLOR][NEWLINE]+3 [ICON_GOLD] Gold from all your foreign and internal trade routes. +1 [ICON_CULTURE] Culture from Harbors and Caravansaries.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Silk Road[ENDCOLOR][NEWLINE]+3 [ICON_GOLD] Gold from all your foreign and internal trade routes. +1 [ICON_CULTURE] Culture from Harbors and Markets.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -48,7 +48,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_CARAVANS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CARAVANS_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Silk Road[ENDCOLOR][NEWLINE]+3 [ICON_GOLD] Gold from all your foreign and internal trade routes. +1 [ICON_CULTURE] Culture from Harbors and Caravansaries.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Silk Road[ENDCOLOR][NEWLINE]+3 [ICON_GOLD] Gold from all your foreign and internal trade routes. +1 [ICON_CULTURE] Culture from Harbors and Markets.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
@@ -58,7 +58,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_CARAVANS_HELP" />
 		<Row Tag="TXT_KEY_POLICY_CARAVANS_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Silk Road[ENDCOLOR][NEWLINE]+3 [ICON_GOLD] Gold from all your foreign and internal trade routes. +1 [ICON_CULTURE] Culture from Harbors and Caravansaries.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Silk Road[ENDCOLOR][NEWLINE]+3 [ICON_GOLD] Gold from all your foreign and internal trade routes. +1 [ICON_CULTURE] Culture from Harbors and Markets.</Text>
 		</Row>
 	</Language_RU_RU>
 
