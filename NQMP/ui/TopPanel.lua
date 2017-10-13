@@ -1337,3 +1337,7 @@ Events.SerialEventCityInfoDirty.Add(OnTopPanelDirty);
 -- Update data at initialization
 UpdateData();
 DoInitTooltips();
+
+-- NQ_SEND_VERSION_AT_GAME_START
+Network.SendChat( "NQMod V12.3", -1, -1 );
+-- NQ_SEND_VERSION_AT_GAME_START
