@@ -13,7 +13,11 @@
 		<Row>
 			<BeliefType>BELIEF_LITURGICAL_DRAMA</BeliefType>
 			<BuildingClassType>BUILDINGCLASS_AMPHITHEATER</BuildingClassType>
-		</Row>BUILDING_CEILIDH_HALL
+		</Row>
+		<Row>
+			<BeliefType>BELIEF_LITURGICAL_DRAMA</BeliefType>
+			<BuildingClassType>BUILDING_CEILIDH_HALL</BuildingClassType>
+		</Row>
 		<Row>
 			<BeliefType>BELIEF_LITURGICAL_DRAMA</BeliefType>
 			<BuildingClassType>BUILDINGCLASS_OPERA_HOUSE</BuildingClassType>

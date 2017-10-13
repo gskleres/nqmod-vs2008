@@ -11,21 +11,19 @@
 	
 	<!-- Removed but kept commented in case we need to go back to this. -->
 	<!-- Increased base cost of Universities, Public Schools, and Research Labs to compensate. -->
-	<!--
 	<Buildings>
 		<Update>
-			<Set FaithCost="400" />
+			<Set FaithCost="280" />
 			<Where BuildingClass="BUILDINGCLASS_UNIVERSITY" />
 		</Update>
 		<Update>
-			<Set FaithCost="533" />
+			<Set FaithCost="380" />
 			<Where BuildingClass="BUILDINGCLASS_PUBLIC_SCHOOL" />
 		</Update>
 		<Update>
-			<Set FaithCost="667" />
+			<Set FaithCost="480" />
 			<Where BuildingClass="BUILDINGCLASS_LABORATORY" />
 		</Update>
 	</Buildings>
-	-->
   
 </GameData>
