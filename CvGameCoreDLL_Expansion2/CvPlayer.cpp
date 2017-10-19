@@ -11265,8 +11265,9 @@ void CvPlayer::DoReligionOneShots(ReligionTypes eReligion)
 			}
 		}
 
-		// 1 missionary
-		addFreeUnit((UnitTypes)GC.getInfoTypeForString("UNIT_MISSIONARY"));
+		// 2 inquisitors
+		addFreeUnit((UnitTypes)getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_INQUISITOR")));
+		addFreeUnit((UnitTypes)getCivilizationInfo().getCivilizationUnits((UnitClassTypes)GC.getInfoTypeForString("UNITCLASS_INQUISITOR")));
 
 		// 2 mounted
 		if (eBestMountedUnit)
@@ -11288,15 +11289,6 @@ void CvPlayer::DoReligionOneShots(ReligionTypes eReligion)
 			addFreeUnit(eBestSiegeUnit);
 			addFreeUnit(eBestSiegeUnit);
 		}
-
-		// no longer gives any melee
-		/*if (eBestMeleeUnit)
-		{
-			addFreeUnit(eBestMeleeUnit);
-			addFreeUnit(eBestMeleeUnit);
-			addFreeUnit(eBestMeleeUnit);
-			addFreeUnit(eBestMeleeUnit);
-		}*/
 	}
 #endif
 
