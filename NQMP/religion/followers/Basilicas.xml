@@ -35,7 +35,7 @@
 			<UnlockedByBelief>true</UnlockedByBelief>
 			<Description>TXT_KEY_BUILDING_BASILICA</Description>
 			<Civilopedia>TXT_KEY_CIV5_BUILDINGS_BASILICA_TEXT</Civilopedia>
-			<Help>TXT_KEY_BUILDING_BASILICA_HELP</Help>
+			<!--Help>TXT_KEY_BUILDING_BASILICA_HELP</Help> This is not needed because there's no extra effects to be explained in text. -->
 			<Strategy>TXT_KEY_BUILDING_BASILICA_STRATEGY</Strategy>
 			<SpecialistType>SPECIALIST_MERCHANT</SpecialistType>
 			<SpecialistCount>1</SpecialistCount>
