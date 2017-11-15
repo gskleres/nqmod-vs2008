@@ -20,6 +20,7 @@
 			<MapImage>MapMali360x412.dds</MapImage>
 			<DawnOfManQuote>TXT_KEY_CIV5_DAWN_MALI_TEXT</DawnOfManQuote>
 			<DawnOfManImage>DOM_Mansa_Musa.dds</DawnOfManImage>
+			<SoundtrackTag>Songhai</SoundtrackTag>
 			<!-- FIX <DawnOfManAudio>AS2D_DOM_SPEECH_MOROCCO</DawnOfManAudio>-->
 		</Row>
 	</Civilizations>
