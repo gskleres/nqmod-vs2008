@@ -724,13 +724,15 @@ void CvUnit::initWithNameOffset(int iID, UnitTypes eUnit, int iNameOffset, UnitA
 			iScienceBonus += iScienceBonusFromPolicies;
 		}
 #endif
-		// round it to the lowest 5
-		iScienceBonus = (iScienceBonus / 5) * 5;
 
 		if (iScienceBonus > 0)
 		{
 			iScienceBonus *= GC.getGame().getGameSpeedInfo().getTrainPercent();
 			iScienceBonus /= 100;
+
+			// round it to the lowest 5
+			iScienceBonus /= 5;
+			iScienceBonus *= 5;
 
 			TechTypes eCurrentTech = kPlayer.GetPlayerTechs()->GetCurrentResearch();
 			if(eCurrentTech == NO_TECH)
