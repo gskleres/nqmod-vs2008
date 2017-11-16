@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 2017-02-12 15:58:13 -->
 <GameData>
   
-	<!-- Patriotic War: +50% Production towards Gunpowder units. -->
+	<!-- Patriotic War: +30% Production towards Gunpowder units. -->
 	<Policies>
 		<Update>
 			<Set Level="2" IsDoubleTrainedMilitaryLandUnits="false" />
@@ -13,7 +13,7 @@
 		<Row>
 			<PolicyType>POLICY_PATRIOTIC_WAR</PolicyType>
 			<UnitCombatType>UNITCOMBAT_GUN</UnitCombatType>
-			<ProductionModifier>50</ProductionModifier>
+			<ProductionModifier>33</ProductionModifier>
 		</Row>
 	</Policy_UnitCombatProductionModifiers>
 	<Policy_FreePromotions>
@@ -35,7 +35,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+50% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+30% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
@@ -45,7 +45,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+50% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+30% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
@@ -55,7 +55,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+50% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+30% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
@@ -65,7 +65,7 @@
 		</Row>
 		<Delete Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP" />
 		<Row Tag="TXT_KEY_POLICY_PATRIOTIC_WAR_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+50% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Patriotic War[ENDCOLOR][NEWLINE]+30% [ICON_PRODUCTION] Production towards Gunpowder units.</Text>
 		</Row>
 	</Language_RU_RU>
 

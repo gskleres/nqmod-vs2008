@@ -2,10 +2,10 @@
 <!-- Created by ModBuddy on 3/22/2017 7:17:12 PM -->
 <GameData>
 
-	<!-- Third Alternative: Starts or extends a Golden Age for 8 turns (on Quick Speed). -->
+	<!-- Third Alternative: Quantity of Strategic Resources produced is doubled. Starts or extends a Golden Age for 8 turns (on Quick Speed). -->
 	<Policies>
 		<Update>
-			<Set Level="1" StrategicResourceMod="0" GoldenAgeTurns="10" />
+			<Set Level="1" GoldenAgeTurns="10" />
 			<Where Type="POLICY_THIRD_ALTERNATIVE" />
 		</Update>
 	</Policies>
@@ -17,25 +17,25 @@
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_THIRD_ALTERNATIVE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_THIRD_ALTERNATIVE_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Third Alternative[ENDCOLOR][NEWLINE]Starts or extends a [ICON_GOLDEN_AGE] Golden Age for 8 turns (on Quick Speed).</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Third Alternative[ENDCOLOR][NEWLINE]Quantity of Strategic Resources produced is doubled. Starts or extends a [ICON_GOLDEN_AGE] Golden Age for 8 turns (on Quick Speed).</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_THIRD_ALTERNATIVE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_THIRD_ALTERNATIVE_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Third Alternative[ENDCOLOR][NEWLINE]Starts or extends a [ICON_GOLDEN_AGE] Golden Age for 8 turns (on Quick Speed).</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Third Alternative[ENDCOLOR][NEWLINE]Quantity of Strategic Resources produced is doubled. Starts or extends a [ICON_GOLDEN_AGE] Golden Age for 8 turns (on Quick Speed).</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_THIRD_ALTERNATIVE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_THIRD_ALTERNATIVE_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Third Alternative[ENDCOLOR][NEWLINE]Starts or extends a [ICON_GOLDEN_AGE] Golden Age for 8 turns (on Quick Speed).</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Third Alternative[ENDCOLOR][NEWLINE]Quantity of Strategic Resources produced is doubled. Starts or extends a [ICON_GOLDEN_AGE] Golden Age for 8 turns (on Quick Speed).</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_THIRD_ALTERNATIVE_HELP" />
 		<Row Tag="TXT_KEY_POLICY_THIRD_ALTERNATIVE_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Third Alternative[ENDCOLOR][NEWLINE]Starts or extends a [ICON_GOLDEN_AGE] Golden Age for 8 turns (on Quick Speed).</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Third Alternative[ENDCOLOR][NEWLINE]Quantity of Strategic Resources produced is doubled. Starts or extends a [ICON_GOLDEN_AGE] Golden Age for 8 turns (on Quick Speed).</Text>
 		</Row>
 	</Language_RU_RU>
 
