@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 5/7/2017 9:54:31 PM -->
 <GameData>
 	
-	<!-- [NEW BUILDING] Hunting Lodge (Archery tech): +2 Food and +1 Food from Deer and Bison. Allows Food trade routes. -->
+	<!-- [NEW BUILDING] Hunting Lodge (Archery tech): +1 flat Food. +1 Food from Deer and Bison. Allows Food trade routes. -->
 	<BuildingClasses>
 		<Row>
 			<Type>BUILDINGCLASS_HUNTING_LODGE</Type>

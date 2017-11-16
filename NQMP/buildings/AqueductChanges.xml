@@ -2,38 +2,6 @@
 <!-- Created by ModBuddy on 2017-10-02 22:14:38 -->
 <GameData>
 	
-	<!-- Aqueduct production cost reduced by 20% and now only provides 30% of food kept (down from 40%). -->
-	<Buildings>
-		<Update>
-			<Where Type="BUILDING_AQUEDUCT" />
-			<Set FoodKept="30" Cost="80" />
-		</Update>
-	</Buildings>
-	
-	<!-- localizaion -->
-	<Language_en_US>
-		<Delete Tag="TXT_KEY_BUILDING_AQUEDUCT_HELP" />
-		<Row Tag="TXT_KEY_BUILDING_AQUEDUCT_HELP">
-			<Text>30% of [ICON_FOOD] Food is carried over after a new [ICON_CITIZEN] Citizen is born.</Text>
-		</Row>
-	</Language_en_US>
-	<Language_DE_DE>
-		<Delete Tag="TXT_KEY_BUILDING_AQUEDUCT_HELP" />
-		<Row Tag="TXT_KEY_BUILDING_AQUEDUCT_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]30% of [ICON_FOOD] Food is carried over after a new [ICON_CITIZEN] Citizen is born.</Text>
-		</Row>
-	</Language_DE_DE>
-	<Language_PL_PL>
-		<Delete Tag="TXT_KEY_BUILDING_AQUEDUCT_HELP" />
-		<Row Tag="TXT_KEY_BUILDING_AQUEDUCT_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]30% of [ICON_FOOD] Food is carried over after a new [ICON_CITIZEN] Citizen is born.</Text>
-		</Row>
-	</Language_PL_PL>
-	<Language_RU_RU>
-		<Delete Tag="TXT_KEY_BUILDING_AQUEDUCT_HELP" />
-		<Row Tag="TXT_KEY_BUILDING_AQUEDUCT_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]30% of [ICON_FOOD] Food is carried over after a new [ICON_CITIZEN] Citizen is born.</Text>
-		</Row>
-	</Language_RU_RU>
+	<!-- No changes (if changes are added, file must be included in build once more). -->
 
 </GameData>

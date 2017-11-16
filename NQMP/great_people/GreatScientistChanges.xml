@@ -5,7 +5,7 @@
 	<!-- movement increased to 4 -->
 	<Units>
 		<Update>
-			<Set Moves="4" BaseBeakersTurnsToCount="6" />
+			<Set Moves="4" />
 			<Where Type="UNIT_SCIENTIST" />
 		</Update>
 	</Units>
