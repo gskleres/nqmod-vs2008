@@ -149,8 +149,8 @@
 			<Happiness>1</Happiness>
 			<ArtDefineTag>ART_DEF_BUILDING_ARTISTS_GUILD</ArtDefineTag>
 			<MinAreaSize>-1</MinAreaSize>
-			<PortraitIndex>4</PortraitIndex>
-			<IconAtlas>TECH_ATLAS_1</IconAtlas>
+			<PortraitIndex>8</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
 		</Row>
 	</Buildings>
 	<Language_en_US>
@@ -212,8 +212,8 @@
 			<TechEnhancedTourism>1</TechEnhancedTourism>
 			<ArtDefineTag>ART_DEF_BUILDING_MUSICIANS_GUILD</ArtDefineTag>
 			<MinAreaSize>-1</MinAreaSize>
-			<PortraitIndex>14</PortraitIndex>
-			<IconAtlas>TECH_ATLAS_2</IconAtlas>
+			<PortraitIndex>5</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
 		</Row>
 	</Buildings>
 	<Language_en_US>

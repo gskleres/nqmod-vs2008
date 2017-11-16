@@ -57,8 +57,8 @@
 			<Strategy>TXT_KEY_BUILDING_GRAND_BAZAAR_HELP</Strategy>
 			<ArtDefineTag>ART_DEF_BUILDING_MARKET</ArtDefineTag>
 			<MinAreaSize>-1</MinAreaSize>
-			<PortraitIndex>2</PortraitIndex>
-			<IconAtlas>EXPANSION_TECH_ATLAS_1</IconAtlas>
+			<PortraitIndex>6</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
 		</Row>
 	</Buildings>
 	<Language_en_US>

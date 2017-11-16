@@ -23,8 +23,8 @@
 			<MinAreaSize>-1</MinAreaSize>
 			<ConquestProb>66</ConquestProb>
 			<HurryCostModifier>25</HurryCostModifier>
-			<IconAtlas>TECH_ATLAS_1</IconAtlas>
-			<PortraitIndex>17</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
+			<PortraitIndex>3</PortraitIndex>
 			<MaliTreasury>true</MaliTreasury>
 		</Row>
 	</Buildings>

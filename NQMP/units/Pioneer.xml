@@ -27,8 +27,8 @@
 			<UnitArtInfo>ART_DEF_UNIT_HAND_AXE_BARBARIAN</UnitArtInfo>
 			<UnitFlagAtlas>EXPANSION2_UNIT_FLAG_ATLAS</UnitFlagAtlas>
 			<UnitFlagIconOffset>9</UnitFlagIconOffset>
-			<IconAtlas>EXPANSION2_UNIT_ATLAS</IconAtlas>
-			<PortraitIndex>9</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
+			<PortraitIndex>10</PortraitIndex>
 		</Row>
 	</Units>
 	<Unit_FreePromotions>

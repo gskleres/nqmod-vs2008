@@ -39,8 +39,8 @@
 			<UnitArtInfo>ART_DEF_UNIT_COMPOSITE_BOWMAN</UnitArtInfo>
 			<UnitFlagAtlas>NQ_UNIT_FLAG_ATLAS</UnitFlagAtlas>
 			<UnitFlagIconOffset>0</UnitFlagIconOffset>
-			<!-- FIX --><IconAtlas>EXPANSION2_UNIT_ATLAS</IconAtlas>
-			<!-- FIX --><PortraitIndex>10</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
+			<PortraitIndex>2</PortraitIndex>
 		</Row>
 	</Units>
 	<Unit_AITypes>

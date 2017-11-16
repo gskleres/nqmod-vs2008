@@ -35,8 +35,8 @@
 			<UnitArtInfo>ART_DEF_UNIT_BARBARIAN_GALLEY</UnitArtInfo>
 			<UnitFlagAtlas>UNIT_FLAG_ATLAS</UnitFlagAtlas>
 			<UnitFlagIconOffset>23</UnitFlagIconOffset>
-			<IconAtlas>UNIT_ATLAS_1</IconAtlas>
-			<PortraitIndex>23</PortraitIndex>
+			<IconAtlas>NQ_ATLAS</IconAtlas>
+			<PortraitIndex>9</PortraitIndex>
 			<MoveRate>WOODEN_BOAT</MoveRate>
 		</Row>
 	</Units>
