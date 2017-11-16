@@ -1339,5 +1339,7 @@ UpdateData();
 DoInitTooltips();
 
 -- NQ_SEND_VERSION_AT_GAME_START
-Network.SendChat( "NQMod V12.3", -1, -1 );
+if (PreGame.IsMultiplayerGame()) then
+	Network.SendChat( "NQMod V12.3", -1, -1 );
+end
 -- NQ_SEND_VERSION_AT_GAME_START
