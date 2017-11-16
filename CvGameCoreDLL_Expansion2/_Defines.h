@@ -854,5 +854,7 @@
 #define NQ_TRADE_ROUTE_DURATION_SCALES_WITH_GAME_SPEED
 // Remove random extra turns from seed of WTLKD resource demand
 #define NQ_DISABLE_WLTKD_SEED_RANDOM_EXTRA_TURNS
+// Adjacent Mod (PROMOTION_ADJACENT_BONUS) now requires same combat type
+#define NQ_ADJACENT_MOD_REQUIRES_SAME_COMBAT_TYPE
 
 #endif

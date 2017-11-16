@@ -13980,7 +13980,12 @@ bool CvUnit::IsFriendlyUnitAdjacent(bool bCombatUnit) const
 						// Combat Unit?
 						if(!bCombatUnit || pLoopUnit->IsCombatUnit())
 						{
+#ifdef NQ_ADJACENT_MOD_REQUIRES_SAME_COMBAT_TYPE
+							if (pLoopUnit->getUnitCombatType() == getUnitCombatType())
+								return true;
+#else
 							return true;
+#endif
 						}
 					}
 				}
