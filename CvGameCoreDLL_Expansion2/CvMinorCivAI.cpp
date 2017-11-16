@@ -9388,17 +9388,17 @@ bool CvMinorCivAI::IsPeaceBlocked(TeamTypes eTeam) const
 	{
 		eMajor = (PlayerTypes) iMajorLoop;
 
-#ifdef NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW
-		// first check if I am less than -50
-		if(GetBaseFriendshipWithMajor(eMajor) < -50)
-		{
-			return true;
-		}
-#endif
 		// Major must be alive
 		if(!GET_PLAYER(eMajor).isAlive())
 			continue;
 
+#ifdef NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW
+		// also first check if any player on my team is less than -50
+		if(GET_PLAYER(eMajor).getTeam() == eTeam && GetBaseFriendshipWithMajor(eMajor) < -50)
+		{
+			return true;
+		}
+#endif
 		// Must be allies
 		if(!IsAllies(eMajor))
 			continue;
