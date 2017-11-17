@@ -187,6 +187,12 @@ function GetCityStateStatusText(iMajor, iMinor)
 		strStatusText = Locale.ConvertTextKey("TXT_KEY_PEACE_BLOCKED");
 		strStatusText = "[COLOR_NEGATIVE_TEXT]" .. strStatusText .. "[ENDCOLOR]";
 		
+	-- NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW begin
+	elseif (pMinor:IsInfluenceTooLowForPeace(iMajor)) then		-- Peace blocked by being less than -50 influence
+		strStatusText = Locale.ConvertTextKey("TXT_KEY_PEACE_BLOCKED");
+		strStatusText = "[COLOR_NEGATIVE_TEXT]" .. strStatusText .. "[ENDCOLOR]";
+	-- NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW end
+
 	elseif (bWar) then		-- War
 		strStatusText = Locale.ConvertTextKey("TXT_KEY_WAR");
 		strStatusText = "[COLOR_NEGATIVE_TEXT]" .. strStatusText .. "[ENDCOLOR]";
@@ -262,7 +268,15 @@ function GetCityStateStatusToolTip(iMajor, iMinor, bFullInfo)
 										    iInfluence, GameDefines["MINOR_FRIENDSHIP_AT_WAR"]);
 										    
 		strStatusTT = strStatusTT .. "[NEWLINE][NEWLINE]" .. Locale.ConvertTextKey("TXT_KEY_PEACE_BLOCKED_CSTATE_TT", strShortDescKey);
-		
+	
+	-- NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW begin
+	elseif (pMinor:IsInfluenceTooLowForPeace(iMajor)) then		-- Peace blocked by being less than -50 influence
+		strStatusTT = Locale.ConvertTextKey("TXT_KEY_DIPLO_STATUS_TT", Locale.ConvertTextKey(strShortDescKey), Locale.ConvertTextKey("TXT_KEY_ANGRY"),
+										    iInfluence, GameDefines["MINOR_FRIENDSHIP_AT_WAR"]);
+										    
+		strStatusTT = strStatusTT .. "[NEWLINE][NEWLINE]" .. Locale.ConvertTextKey("TXT_KEY_INFLUENCE_TOO_LOW_FOR_PEACE_CSTATE_TT", strShortDescKey);
+	-- NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW end
+
 	elseif (bWar) then		-- War
 		strStatusTT = Locale.ConvertTextKey("TXT_KEY_DIPLO_STATUS_TT", Locale.ConvertTextKey(strShortDescKey), Locale.ConvertTextKey("TXT_KEY_ANGRY"),
 										    iInfluence, GameDefines["MINOR_FRIENDSHIP_AT_WAR"]);

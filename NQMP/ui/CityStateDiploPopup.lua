@@ -488,7 +488,10 @@ function OnDisplay()
 	else
 		
 		-- Warmongering player
-		if (pPlayer:IsPeaceBlocked(iActiveTeam)) then
+		-- NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW begin
+		--if (pPlayer:IsPeaceBlocked(iActiveTeam)) then
+		if (pPlayer:IsPeaceBlocked(iActiveTeam) or pPlayer:IsInfluenceTooLowForPeace(iActivePlayer)) then
+		-- NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW end
 			strText = Locale.ConvertTextKey("TXT_KEY_CITY_STATE_DIPLO_HELLO_WARMONGER");
 			Controls.PeaceButton:SetHide(true);
 			

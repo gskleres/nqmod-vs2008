@@ -618,6 +618,9 @@ void CvLuaPlayer::PushMethods(lua_State* L, int t)
 	Method(GetCurrentSpawnEstimate);
 	Method(GetCurrentScienceFriendshipBonusTimes100);
 	Method(IsPeaceBlocked);
+#ifdef NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW
+	Method(IsInfluenceTooLowForPeace);
+#endif
 	Method(IsMinorPermanentWar);
 	Method(GetNumMinorCivsMet);
 	Method(DoMinorLiberationByMajor);
@@ -6213,6 +6216,18 @@ int CvLuaPlayer::lIsPeaceBlocked(lua_State* L)
 	lua_pushboolean(L, bResult);
 	return 1;
 }
+#ifdef NQ_PEACE_BLOCKED_IF_INFLUENCE_TOO_LOW
+//------------------------------------------------------------------------------
+int CvLuaPlayer::lIsInfluenceTooLowForPeace(lua_State* L)
+{
+	CvPlayerAI* pkPlayer = GetInstance(L);
+	const PlayerTypes ePlayer = (PlayerTypes) lua_tointeger(L, 2);
+
+	const bool bResult = pkPlayer->GetMinorCivAI()->IsInfluenceTooLowForPeace(ePlayer);
+	lua_pushboolean(L, bResult);
+	return 1;
+}
+#endif
 //------------------------------------------------------------------------------
 int CvLuaPlayer::lIsMinorPermanentWar(lua_State* L)
 {
