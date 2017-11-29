@@ -1617,7 +1617,7 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 				-- #ifdef NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
 				iModifier = pTheirUnit:GetCombatStrengthNearFriendlyMinor();
 				if (iModifier ~= 0 and pTheirUnit:IsNearFriendlyMinor()) then
-					controlTable = g_MyCombatDataIM:GetInstance();
+					controlTable = g_TheirCombatDataIM:GetInstance();
 					controlTable.Text:LocalizeAndSetText(  "TXT_KEY_EUPANEL_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR" );
 					controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
 				end
