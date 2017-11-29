@@ -1619,7 +1619,7 @@ function UpdateCombatOddsUnitVsUnit(pMyUnit, pTheirUnit)
 				if (iModifier ~= 0 and pTheirUnit:IsNearFriendlyMinor()) then
 					controlTable = g_TheirCombatDataIM:GetInstance();
 					controlTable.Text:LocalizeAndSetText(  "TXT_KEY_EUPANEL_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR" );
-					controlTable.Value:SetText( GetFormattedText(strText, iModifier, true, true) );
+					controlTable.Value:SetText( GetFormattedText(strText, iModifier, false, true) );
 				end
 				-- #endif NQ_COMBAT_STRENGTH_NEAR_FRIENDLY_MINOR
 								
