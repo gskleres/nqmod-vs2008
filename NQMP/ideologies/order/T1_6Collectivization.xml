@@ -9,6 +9,9 @@
 			<Where Type="POLICY_YOUNG_PIONEERS" />
 		</Update>
 	</Policies>
+	<Policy_BuildingClassHappiness>
+		<Delete PolicyType="POLICY_YOUNG_PIONEERS" />
+	</Policy_BuildingClassHappiness>
 	<Policy_ImprovementYieldChanges>
 		<Row>
 			<PolicyType>POLICY_YOUNG_PIONEERS</PolicyType>
