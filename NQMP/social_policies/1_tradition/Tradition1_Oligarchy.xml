@@ -2,7 +2,7 @@
 <!-- Created by ModBuddy on 6/4/2015 2:14:17 AM -->
 <GameData>
 	
-	<!-- Oligarchy no longer provides free maintenance for garrisoned units. Instead it gives you +100% Production towards Walls. -->
+	<!-- Oligarchy no longer provides free maintenance for garrisoned units. Instead it gives you +100% Production towards Walls, Castles, and Arsenals. -->
 	<Policies>
 		<Update>
 			<Set GarrisonFreeMaintenance="false" NumCitiesFreeWalls="0" />
@@ -15,29 +15,39 @@
 			<BuildingClassType>BUILDINGCLASS_WALLS</BuildingClassType>
 			<ProductionModifier>100</ProductionModifier>
 		</Row>
+		<Row>
+			<PolicyType>POLICY_OLIGARCHY</PolicyType>
+			<BuildingClassType>BUILDINGCLASS_CASTLE</BuildingClassType>
+			<ProductionModifier>100</ProductionModifier>
+		</Row>
+		<Row>
+			<PolicyType>POLICY_OLIGARCHY</PolicyType>
+			<BuildingClassType>BUILDINGCLASS_ARSENAL</BuildingClassType>
+			<ProductionModifier>100</ProductionModifier>
+		</Row>
 	</Policy_BuildingClassProductionModifiers>
 	<Language_en_US>
 		<Delete Tag="TXT_KEY_POLICY_OLIGARCHY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_OLIGARCHY_HELP">
-			<Text>[COLOR_POSITIVE_TEXT]Oligarchy[ENDCOLOR][NEWLINE]Cities with a garrison gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength. +100% Production towards Walls.</Text>
+			<Text>[COLOR_POSITIVE_TEXT]Oligarchy[ENDCOLOR][NEWLINE]Cities with a garrison gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength. +100% Production towards Walls, Castles, and Arsenals.</Text>
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
 		<Delete Tag="TXT_KEY_POLICY_OLIGARCHY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_OLIGARCHY_HELP">
-			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Oligarchy[ENDCOLOR][NEWLINE]Cities with a garrison gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength. +100% Production towards Walls.</Text>
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Oligarchy[ENDCOLOR][NEWLINE]Cities with a garrison gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength. +100% Production towards Walls, Castles, and Arsenals.</Text>
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
 		<Delete Tag="TXT_KEY_POLICY_OLIGARCHY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_OLIGARCHY_HELP">
-			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Oligarchy[ENDCOLOR][NEWLINE]Cities with a garrison gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength. +100% Production towards Walls.</Text>
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Oligarchy[ENDCOLOR][NEWLINE]Cities with a garrison gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength. +100% Production towards Walls, Castles, and Arsenals.</Text>
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
 		<Delete Tag="TXT_KEY_POLICY_OLIGARCHY_HELP" />
 		<Row Tag="TXT_KEY_POLICY_OLIGARCHY_HELP">
-			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Oligarchy[ENDCOLOR][NEWLINE]Cities with a garrison gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength. +100% Production towards Walls.</Text>
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR][COLOR_POSITIVE_TEXT]Oligarchy[ENDCOLOR][NEWLINE]Cities with a garrison gain +50% [ICON_RANGE_STRENGTH] Ranged Combat Strength. +100% Production towards Walls, Castles, and Arsenals.</Text>
 		</Row>
 	</Language_RU_RU>
 
