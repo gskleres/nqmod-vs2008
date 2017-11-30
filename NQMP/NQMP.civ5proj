@@ -1680,6 +1680,11 @@ Mali Skirmisher &amp; Treasury art by Tomatekh.</Description>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>wonders_world/PyramidsChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>wonders_world/StatueOfLibertyChanges.xml</FileName>
       </Action>
       <Action>
@@ -4034,6 +4039,10 @@ Mali Skirmisher &amp; Treasury art by Tomatekh.</Description>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="wonders_world\PorcelainTowerChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="wonders_world\PyramidsChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
