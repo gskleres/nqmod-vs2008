@@ -26,6 +26,10 @@
 	
 	<!-- Localization -->
 	<Language_en_US>
+		<Delete Tag="TXT_KEY_NOTIFICATION_CHOOSE_IDEOLOGY_FACTORIES" />
+		<Row Tag="TXT_KEY_NOTIFICATION_CHOOSE_IDEOLOGY_FACTORIES">
+			<Text>You have a Center of Progress. The ideas of the Industrial Revolution now permeate your society. Your people clamor for you to pick an Ideology for your civilization.</Text>
+		</Row>
 		<Delete Tag="TXT_KEY_POLICYSCREEN_IDEOLOGY_NOT_STARTED" />
 		<Row Tag="TXT_KEY_POLICYSCREEN_IDEOLOGY_NOT_STARTED">
 			<Text>Ideological tenets may not be purchased until you have chosen an Ideology. This choice becomes available when you build a Center of Progress (requires Factories in every City) or enter the Modern Era, whichever comes first.</Text>
@@ -44,6 +48,10 @@
 		</Row>
 	</Language_en_US>
 	<Language_DE_DE>
+		<Delete Tag="TXT_KEY_NOTIFICATION_CHOOSE_IDEOLOGY_FACTORIES" />
+		<Row Tag="TXT_KEY_NOTIFICATION_CHOOSE_IDEOLOGY_FACTORIES">
+			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]You have a Center of Progress. The ideas of the Industrial Revolution now permeate your society. Your people clamor for you to pick an Ideology for your civilization.</Text>
+		</Row>
 		<Delete Tag="TXT_KEY_POLICYSCREEN_IDEOLOGY_NOT_STARTED" />
 		<Row Tag="TXT_KEY_POLICYSCREEN_IDEOLOGY_NOT_STARTED">
 			<Text>[COLOR_WARNING_TEXT](DE_DE text) [ENDCOLOR]Ideological tenets may not be purchased until you have chosen an Ideology. This choice becomes available when you build a Center of Progress (requires Factories in every City) or enter the Modern Era, whichever comes first.</Text>
@@ -62,6 +70,10 @@
 		</Row>
 	</Language_DE_DE>
 	<Language_PL_PL>
+		<Delete Tag="TXT_KEY_NOTIFICATION_CHOOSE_IDEOLOGY_FACTORIES" />
+		<Row Tag="TXT_KEY_NOTIFICATION_CHOOSE_IDEOLOGY_FACTORIES">
+			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]You have a Center of Progress. The ideas of the Industrial Revolution now permeate your society. Your people clamor for you to pick an Ideology for your civilization.</Text>
+		</Row>
 		<Delete Tag="TXT_KEY_POLICYSCREEN_IDEOLOGY_NOT_STARTED" />
 		<Row Tag="TXT_KEY_POLICYSCREEN_IDEOLOGY_NOT_STARTED">
 			<Text>[COLOR_WARNING_TEXT](PL_PL text) [ENDCOLOR]Ideological tenets may not be purchased until you have chosen an Ideology. This choice becomes available when you build a Center of Progress (requires Factories in every City) or enter the Modern Era, whichever comes first.</Text>
@@ -80,6 +92,10 @@
 		</Row>
 	</Language_PL_PL>
 	<Language_RU_RU>
+		<Delete Tag="TXT_KEY_NOTIFICATION_CHOOSE_IDEOLOGY_FACTORIES" />
+		<Row Tag="TXT_KEY_NOTIFICATION_CHOOSE_IDEOLOGY_FACTORIES">
+			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]You have a Center of Progress. The ideas of the Industrial Revolution now permeate your society. Your people clamor for you to pick an Ideology for your civilization.</Text>
+		</Row>
 		<Delete Tag="TXT_KEY_POLICYSCREEN_IDEOLOGY_NOT_STARTED" />
 		<Row Tag="TXT_KEY_POLICYSCREEN_IDEOLOGY_NOT_STARTED">
 			<Text>[COLOR_WARNING_TEXT](RU_RU text) [ENDCOLOR]Ideological tenets may not be purchased until you have chosen an Ideology. This choice becomes available when you build a Center of Progress (requires Factories in every City) or enter the Modern Era, whichever comes first.</Text>
