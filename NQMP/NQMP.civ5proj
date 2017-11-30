@@ -1230,6 +1230,11 @@ Mali Skirmisher &amp; Treasury art by Tomatekh.</Description>
       <Action>
         <Set>OnModActivated</Set>
         <Type>UpdateDatabase</Type>
+        <FileName>technologies/MobileTacticsChanges.xml</FileName>
+      </Action>
+      <Action>
+        <Set>OnModActivated</Set>
+        <Type>UpdateDatabase</Type>
         <FileName>technologies/OpenBordersTechChange.xml</FileName>
       </Action>
       <Action>
@@ -3597,6 +3602,10 @@ Mali Skirmisher &amp; Treasury art by Tomatekh.</Description>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
     <Content Include="technologies\IronTechChanges.xml">
+      <SubType>Lua</SubType>
+      <ImportIntoVFS>False</ImportIntoVFS>
+    </Content>
+    <Content Include="technologies\MobileTacticsChanges.xml">
       <SubType>Lua</SubType>
       <ImportIntoVFS>False</ImportIntoVFS>
     </Content>
